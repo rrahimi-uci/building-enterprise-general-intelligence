@@ -1,0 +1,5 @@
+FROM texlive/texlive:latest-full
+WORKDIR /book
+COPY . /book
+RUN chmod +x latex/compile.sh && latex/compile.sh
+CMD ["latex/compile.sh"]

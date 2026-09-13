@@ -1,0 +1,232 @@
+% Enterprise Agentic AI Architecture — publication style
+% Book v1.0.0 · generated and maintained with the package design system.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{bookstyle}[2026/09/13 v1.0.0 Enterprise Agentic AI book style]
+
+\RequirePackage[letterpaper,top=0.68in,bottom=0.65in,left=0.72in,right=0.72in,headheight=15pt,headsep=0.18in,footskip=0.32in]{geometry}
+\RequirePackage{fontspec}
+\RequirePackage{microtype}
+\RequirePackage[table]{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{grffile}
+\RequirePackage{longtable}
+\RequirePackage{array}
+\RequirePackage{booktabs}
+\RequirePackage{ragged2e}
+\RequirePackage{enumitem}
+\RequirePackage{fancyhdr}
+\RequirePackage{titlesec}
+\RequirePackage{caption}
+\RequirePackage{hyperref}
+\RequirePackage{bookmark}
+\RequirePackage{listings}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{needspace}
+\RequirePackage{setspace}
+\RequirePackage{etoolbox}
+\RequirePackage{lastpage}
+\RequirePackage{pdflscape}
+\RequirePackage{amssymb}
+\RequirePackage{textcomp}
+
+% Redistributable fonts are bundled with the LaTeX project.
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\setmainfont[
+  Path=latex/fonts/,
+  UprightFont=LiberationSans-Regular.ttf,
+  BoldFont=LiberationSans-Bold.ttf,
+  ItalicFont=LiberationSans-Italic.ttf,
+  BoldItalicFont=LiberationSans-BoldItalic.ttf
+]{Liberation Sans}
+\setsansfont[
+  Path=latex/fonts/,
+  UprightFont=LiberationSans-Regular.ttf,
+  BoldFont=LiberationSans-Bold.ttf,
+  ItalicFont=LiberationSans-Italic.ttf,
+  BoldItalicFont=LiberationSans-BoldItalic.ttf
+]{Liberation Sans}
+\setmonofont[
+  Path=latex/fonts/,
+  UprightFont=LiberationMono-Regular.ttf,
+  BoldFont=LiberationMono-Bold.ttf,
+  ItalicFont=LiberationMono-Italic.ttf,
+  BoldItalicFont=LiberationMono-BoldItalic.ttf,
+  Scale=0.91
+]{Liberation Mono}
+\renewcommand{\familydefault}{\sfdefault}
+
+% Accessible palette: all body-size foreground/background pairs meet strong contrast.
+\definecolor{BookNavy}{HTML}{102A4C}
+\definecolor{BookNavyTwo}{HTML}{173E68}
+\definecolor{BookBlue}{HTML}{1450A3}
+\definecolor{BookCyan}{HTML}{20B8D8}
+\definecolor{BookTeal}{HTML}{0D6E69}
+\definecolor{BookAmber}{HTML}{8A5600}
+\definecolor{BookRed}{HTML}{A62C2C}
+\definecolor{BookLight}{HTML}{EEF4FA}
+\definecolor{BookPaleBlue}{HTML}{EAF3FB}
+\definecolor{BookPaleAmber}{HTML}{FFF4DF}
+\definecolor{BookPaleRed}{HTML}{FCECEC}
+\definecolor{BookInk}{HTML}{12233F}
+\definecolor{BookSlate}{HTML}{4A6078}
+\definecolor{BookRule}{HTML}{B9C8D8}
+\definecolor{CodeBackground}{HTML}{F7F9FC}
+\definecolor{CodeNumber}{HTML}{5E7185}
+\definecolor{CodeString}{HTML}{0B6B65}
+\definecolor{CodeComment}{HTML}{52687D}
+
+\color{BookInk}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt minus 1pt}
+\setstretch{1.06}
+\emergencystretch=2.5em
+\tolerance=1800
+\hbadness=4000
+\widowpenalty=10000
+\clubpenalty=10000
+\displaywidowpenalty=10000
+\raggedbottom
+
+\hypersetup{
+  unicode=true,
+  colorlinks=true,
+  linkcolor=BookBlue,
+  urlcolor=BookBlue,
+  citecolor=BookBlue,
+  pdfborder={0 0 0},
+  pdftitle={Enterprise Agentic AI Architecture \& Developer Platform Guide — Book v1.0.0},
+  pdfauthor={Reza Rahimi, PhD},
+  pdfsubject={Enterprise Agentic AI architecture and developer platform},
+  pdfkeywords={agentic AI, enterprise architecture, developer platform, security, governance, operations}
+}
+\urlstyle{same}
+\Urlmuskip=0mu plus 1mu\relax
+
+% Header and footer.
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\color{BookSlate}\fontsize{7.2}{8.6}\selectfont\bfseries ENTERPRISE AGENTIC AI ARCHITECTURE \& DEVELOPER PLATFORM GUIDE}
+\fancyfoot[C]{\color{BookSlate}\fontsize{7.5}{9}\selectfont BOOK v1.0.0\quad\textbar\quad PAGE \thepage\ OF \pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\color{BookSlate}\fontsize{7.5}{9}\selectfont BOOK v1.0.0\quad\textbar\quad PAGE \thepage\ OF \pageref*{LastPage}}\renewcommand{\headrulewidth}{0pt}}
+
+% Heading hierarchy.
+\titleformat{\section}{\color{BookBlue}\fontsize{16}{19}\selectfont\bfseries}{\thesection}{0.65em}{}
+\titleformat{\subsection}{\color{BookNavyTwo}\fontsize{12}{14.5}\selectfont\bfseries}{\thesubsection}{0.65em}{}
+\titleformat{\subsubsection}{\color{BookTeal}\fontsize{10}{12}\selectfont\bfseries}{\thesubsubsection}{0.65em}{}
+\titlespacing*{\section}{0pt}{9pt plus 2pt}{5pt}
+\titlespacing*{\subsection}{0pt}{7pt plus 2pt}{4pt}
+\titlespacing*{\subsubsection}{0pt}{5pt plus 1pt}{3pt}
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{2}
+
+\newcommand{\BookFrontChapter}[1]{%
+  \clearpage\phantomsection\addcontentsline{toc}{chapter}{#1}%
+  {\color{BookNavy}\fontsize{24}{28}\selectfont\bfseries #1\par}\vspace{7pt}%
+  \markboth{#1}{#1}}
+
+\newcommand{\BookChapter}[2]{%
+  \clearpage\phantomsection\addcontentsline{toc}{chapter}{#1 — #2}%
+  {\color{BookCyan}\fontsize{10}{12}\selectfont\bfseries\MakeUppercase{CHAPTER #1}\par}%
+  \vspace{4pt}{\color{BookNavy}\fontsize{24}{28}\selectfont\bfseries #2\par}%
+  \vspace{7pt}\markboth{#1 — #2}{#1 — #2}}
+
+\newcommand{\BookAppendix}[2]{%
+  \clearpage\phantomsection\addcontentsline{toc}{chapter}{Appendix #1 — #2}%
+  {\color{BookCyan}\fontsize{10}{12}\selectfont\bfseries APPENDIX #1\par}%
+  \vspace{4pt}{\color{BookNavy}\fontsize{24}{28}\selectfont\bfseries #2\par}%
+  \vspace{7pt}\markboth{Appendix #1 — #2}{Appendix #1 — #2}}
+
+\newcommand{\BookPartPage}[3]{%
+  \clearpage\pagecolor{BookNavy}\color{white}\thispagestyle{empty}%
+  \phantomsection\addcontentsline{toc}{part}{Part #1 — #2}%
+  \vspace*{0.20\textheight}%
+  \begin{center}
+    {\color{BookCyan}\fontsize{15}{18}\selectfont\bfseries PART #1\par}
+    \vspace{16pt}
+    {\color{white}\fontsize{28}{33}\selectfont\bfseries\MakeUppercase{#2}\par}
+    \vspace{26pt}
+    \begin{minipage}{0.78\textwidth}\centering\color[HTML]{D8E8F5}\fontsize{11}{16}\selectfont #3\end{minipage}
+  \end{center}
+  \vfill\clearpage\nopagecolor\color{BookInk}\pagestyle{fancy}%
+}
+
+\newcommand{\BookCover}[1]{%
+  \clearpage\newgeometry{margin=0pt}\thispagestyle{empty}%
+  \noindent\includegraphics[width=\paperwidth,height=\paperheight]{#1}%
+  \clearpage\restoregeometry}
+
+\newcommand{\BookTitlePage}[4]{%
+  \thispagestyle{empty}\vspace*{0.11\textheight}%
+  {\color{BookCyan}\rule{1.15in}{4pt}\par}\vspace{18pt}%
+  {\color{BookNavy}\fontsize{30}{35}\selectfont\bfseries #1\par}%
+  \vspace{16pt}{\color{BookTeal}\fontsize{14}{18}\selectfont #2\par}%
+  \vspace{28pt}{\color{BookInk}\fontsize{13}{16}\selectfont\bfseries #3\par}%
+  \vfill
+  \begin{tcolorbox}[enhanced,colback=BookLight,colframe=BookNavy,boxrule=0.7pt,arc=2pt,left=14pt,right=14pt,top=12pt,bottom=12pt]
+    \color{BookInk}\fontsize{10.5}{15}\selectfont #4
+  \end{tcolorbox}
+  \vspace*{0.07\textheight}\clearpage}
+
+% Callouts and evidence.
+\newtcolorbox{bookcallout}[1][Architecture note]{enhanced,breakable,colback=BookPaleBlue,colframe=BookBlue,coltitle=white,fonttitle=\bfseries,title=#1,boxrule=0.7pt,arc=2pt,left=10pt,right=10pt,top=8pt,bottom=8pt,before skip=7pt,after skip=7pt}
+\newtcolorbox{bookcaution}[1][Caution]{enhanced,breakable,colback=BookPaleAmber,colframe=BookAmber,coltitle=white,fonttitle=\bfseries,title=#1,boxrule=0.7pt,arc=2pt,left=10pt,right=10pt,top=8pt,bottom=8pt,before skip=7pt,after skip=7pt}
+\newtcolorbox{bookthreat}[1][Threat]{enhanced,breakable,colback=BookPaleRed,colframe=BookRed,coltitle=white,fonttitle=\bfseries,title=#1,boxrule=0.7pt,arc=2pt,left=10pt,right=10pt,top=8pt,bottom=8pt,before skip=7pt,after skip=7pt}
+\newtcolorbox{bookquote}{enhanced,breakable,colback=BookLight,colframe=BookSlate,leftrule=3pt,rightrule=0pt,toprule=0pt,bottomrule=0pt,arc=0pt,left=10pt,right=8pt,top=7pt,bottom=7pt,before skip=7pt,after skip=7pt,fontupper=\itshape\color{BookNavyTwo}}
+
+% Lists.
+\setlist[itemize]{leftmargin=1.45em,itemsep=2pt,topsep=3pt,parsep=0pt,label=\textcolor{BookBlue}{\small\textbullet}}
+\setlist[enumerate]{leftmargin=1.75em,itemsep=2pt,topsep=3pt,parsep=0pt,label=\textcolor{BookBlue}{\bfseries\arabic*.}}
+
+% Figures and captions.
+\captionsetup{font=small,labelfont={bf,color=BookNavy},textfont={it,color=BookSlate},justification=centering,singlelinecheck=false,skip=4pt}
+\setlength{\floatsep}{12pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{13pt plus 2pt minus 3pt}
+\newcommand{\BookDiagram}[3]{%
+  \begin{figure}[htbp]\centering
+  \includegraphics[width=\linewidth,height=0.76\textheight,keepaspectratio]{#1}%
+  \caption{#2}\label{fig:#3}
+  \end{figure}}
+\newcommand{\BookFigureCaption}[1]{\begin{center}\color{BookSlate}\fontsize{8.5}{10.5}\selectfont\itshape #1\end{center}}
+
+% Tables.
+\newcolumntype{Y}[1]{>{\RaggedRight\arraybackslash\hspace{0pt}}p{#1}}
+\setlength{\tabcolsep}{4pt}
+\setlength{\arrayrulewidth}{0.35pt}
+\arrayrulecolor{BookRule}
+\newcommand{\BookTableStart}{\par\vspace{4pt}\begingroup\small\setlength{\LTpre}{2pt}\setlength{\LTpost}{5pt}}
+\newcommand{\BookTableEnd}{\endgroup\par\vspace{2pt}}
+
+% Code. All colors are readable against CodeBackground.
+\lstdefinestyle{bookcode}{
+  basicstyle=\ttfamily\fontsize{7.4}{9.2}\selectfont\color{BookInk},
+  keywordstyle=\bfseries\color{BookBlue},
+  stringstyle=\color{CodeString},
+  commentstyle=\itshape\color{CodeComment},
+  numberstyle=\ttfamily\fontsize{6.6}{8}\selectfont\color{CodeNumber},
+  numbers=left,numbersep=8pt,stepnumber=1,
+  backgroundcolor=\color{CodeBackground},
+  rulecolor=\color{BookRule},frame=single,framerule=0.45pt,
+  breaklines=true,breakatwhitespace=false,postbreak=\mbox{\textcolor{BookSlate}{$\hookrightarrow$}\space},
+  columns=fullflexible,keepspaces=true,showstringspaces=false,
+  tabsize=2,upquote=true,captionpos=t,
+  literate={✓}{\mbox{\ensuremath{\checkmark}}}1,
+  aboveskip=7pt,belowskip=7pt,xleftmargin=2.0em,framexleftmargin=1.7em
+}
+\lstdefinelanguage{bookjson}{morestring=[b]",morecomment=[l]{//},morekeywords={true,false,null},sensitive=true}
+\lstdefinelanguage{bookyaml}{morecomment=[l]{\#},morestring=[b]",morestring=[b]',sensitive=true}
+\lstdefinelanguage{bookbash}{morecomment=[l]{\#},morestring=[b]",morestring=[b]',morekeywords={if,then,else,fi,for,do,done,case,esac,function,export,cd,echo,python3},sensitive=true}
+\lstdefinestyle{bookinline}{basicstyle=\ttfamily\fontsize{8.6}{10.2}\selectfont\color{BookNavyTwo},breaklines=true,columns=fullflexible}
+
+\newcommand{\BookReferenceTarget}[1]{\hypertarget{ref-#1}{}}
+\newcommand{\BookCitation}[1]{\hyperlink{ref-#1}{\textcolor{BookBlue}{\textbf{[#1]}}}}
+
+% Native table of contents.
+\renewcommand{\contentsname}{Contents}
+\makeatletter
+\renewcommand*\l@part[2]{\addpenalty{-\@highpenalty}\vskip 0.8em plus 1pt\setlength\@tempdima{2.2em}\begingroup\parindent\z@\rightskip\@pnumwidth\parfillskip-\@pnumwidth{\leavevmode\color{BookNavy}\large\bfseries #1\hfil\hb@xt@\@pnumwidth{\hss #2}}\par\endgroup}
+\makeatother
+
+% Print safety: colors stay enabled, but every pale panel has dark text.
+\AtBeginDocument{\color{BookInk}}

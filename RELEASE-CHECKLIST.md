@@ -18,6 +18,8 @@
 ## Build and visual QA
 
 - [ ] Run `make clean build validate`.
+- [ ] Run `make pdf` and confirm the log reports zero errors and zero undefined references.
+- [ ] Confirm the DOCX and XeLaTeX editions agree on structure: Part dividers standalone, every chapter/appendix starting a new page, all 18 diagrams present.
 - [ ] Run deterministic build twice and confirm equal hashes.
 - [ ] Run `make qa-pdf` and inspect cover, title, TOC, every Part, representative chapter starts, tables, code, callouts, diagrams, appendices, and references.
 - [ ] Confirm every Part/chapter/appendix starts on a new page.
@@ -31,6 +33,7 @@
 - [ ] Extract the ZIP into a clean directory.
 - [ ] Run `make validate` using only extracted contents.
 - [ ] Confirm the final DOCX and Markdown hashes match the manifest.
+- [ ] Tag the release so CI attaches the compiled PDF, DOCX, and Markdown to the GitHub Release.
 
 ## Notion
 

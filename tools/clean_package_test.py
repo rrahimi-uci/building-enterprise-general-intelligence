@@ -12,7 +12,7 @@ def main():
     roots=[p for p in td.iterdir() if p.is_dir()]
     if len(roots)!=1: raise SystemExit('ZIP must contain exactly one top-level directory')
     root=roots[0]
-    commands=[[sys.executable,'tools/assemble_manuscript.py','--root','.'],[sys.executable,'tools/build_book.py','--root','.'],[sys.executable,'tools/check_references.py','--root','.'],[sys.executable,'tools/validate_book.py','--root','.'],[sys.executable,'tools/deterministic_build_check.py','--root','.']]
+    commands=[[sys.executable,'tools/assemble_manuscript.py','--root','.'],[sys.executable,'tools/build_book.py','--root','.'],[sys.executable,'tools/build_latex.py','--root','.'],[sys.executable,'tools/check_references.py','--root','.'],[sys.executable,'tools/validate_book.py','--root','.'],[sys.executable,'tools/validate_latex.py','--root','.'],[sys.executable,'tools/deterministic_build_check.py','--root','.']]
     for cmd in commands: subprocess.run(cmd,cwd=root,check=True)
     result={'zip':str(z),'extracted_root':str(root),'commands':commands,'pass':True}
     print(json.dumps(result,indent=2))

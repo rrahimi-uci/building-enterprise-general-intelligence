@@ -6,7 +6,12 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 COLORS={'external':'EEF4FA','control':'FFF4DF','runtime':'E8F7F7','data':'EAF3FB'}
 def font(size,bold=False):
-    paths=['/usr/share/fonts/msttcorefonts/Arial_Bold.ttf' if bold else '/usr/share/fonts/msttcorefonts/Arial.ttf','/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf' if bold else '/usr/share/fonts/truetype/msttcorefonts/Arial.ttf']
+    # Prefer the Liberation Sans bundled in latex/fonts/ so diagram rendering is
+    # identical on every host; fall back to system Arial only if it is missing.
+    name='LiberationSans-Bold.ttf' if bold else 'LiberationSans-Regular.ttf'
+    paths=[str(Path(__file__).resolve().parents[1]/'latex/fonts'/name),
+           '/usr/share/fonts/msttcorefonts/Arial_Bold.ttf' if bold else '/usr/share/fonts/msttcorefonts/Arial.ttf',
+           '/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf' if bold else '/usr/share/fonts/truetype/msttcorefonts/Arial.ttf']
     for p in paths:
         try:return ImageFont.truetype(p,size)
         except:pass

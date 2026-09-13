@@ -2,6 +2,34 @@
 
 All notable changes follow semantic versioning and are recorded here.
 
+## [Unreleased]
+
+### Repository structure
+
+- Consolidated the two parallel copies of the v1.0.0 package into a single tree. The repository previously held the Development Package at the root and a complete-with-LaTeX duplicate in `book-latex/`; the LaTeX edition is now the only tree, and `book-latex/` is gone.
+- Archived the stray v3.0 Markdown and DOCX exports as `source/original/Enterprise-Agentic-AI-Guide-v3.0-source.*`, completing the v3.0 → v3.1 → v1.0.0 provenance lineage.
+- Gitignored `latex/build/` and `dist/*.pdf`. The compiled PDF is published as a CI artifact and attached to GitHub Releases on tag, rather than committed.
+
+### Build and tooling
+
+- Added `tools/bootstrap_tex.sh`, which installs the TeX packages a minimal distribution omits into the user texmf tree without `sudo`, and documents the style-file-to-package mapping.
+- Documented four previously unrecorded transitive TeX dependencies pulled in by `tcolorbox[most]`: `environ`, `trimspaces`, `tikzfill`, and `pdfcol`.
+- Added `make setup`, `make draft`, `make pdf`, `make help`, and `make distclean`. `make` now defaults to `help`, and every target prefers `.venv/bin/python` when a project virtualenv exists.
+- Taught `latex/compile.sh` to find a macOS TeX installation at `/Library/TeX/texbin` and to fail with an actionable message when no engine is present.
+- Fixed `tools/package_release.py`, which walked every file under the root and would have packaged `.git/`, `.venv/`, and `latex/build/` now that the package lives in a git repository.
+
+### Continuous integration
+
+- Removed the duplicated source-validation job; the LaTeX workflow now regenerates the LaTeX source, fails the build if the committed generated files are stale, and passes the regenerated source to the compile job.
+- Added release publishing: pushing a tag attaches the compiled PDF, DOCX, and Markdown to the GitHub Release.
+- Added `workflow_dispatch` and `concurrency` cancellation to both workflows.
+
+### Documentation
+
+- Added `.github/pull_request_template.md` covering goal, approach, architectural decisions, manuscript impact, testing evidence, risks, and deployment implications.
+- Rewrote the README repository map around the authored-versus-generated boundary, and added an authoring-loop section, a requirements matrix, and TeX troubleshooting entries.
+- Corrected `latex/README.md`, which stated that the package had been built without a TeX engine and that only a DOCX reference PDF existed.
+
 ## [1.0.0] — 2026-09-13
 
 ### Publication foundation

@@ -1,0 +1,66 @@
+{
+  "release": "1.0.0",
+  "engine": "XeLaTeX",
+  "canonical_markdown": "book/manuscript.md",
+  "canonical_markdown_sha256": "a7bcceec87ab5bdc25a272de8abd68d5572f11ffc5983a75da150419d3b0b913",
+  "main_tex": "latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.tex",
+  "main_tex_sha256": "b0cf956a577c461b7ab8b0ee1451324e544d31bb63b731c9dcb43ec7b839d3b9",
+  "content_tex": "latex/content/book-content.tex",
+  "content_tex_sha256": "ea494b2dbb5c2ba970758e5a7d279d9b2cb841ae5b457a2f62a4c926f1dd2ec1",
+  "style": "latex/bookstyle.sty",
+  "fonts": [
+    {
+      "file": "latex/fonts/LiberationSans-Regular.ttf",
+      "sha256": "836e31f422015e15da61ae6d6d6a67db09ce3a177755041e8d5a8e8d1dd50c74",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "file": "latex/fonts/LiberationSans-Bold.ttf",
+      "sha256": "655b4c9d5e35d0703d508e6eead3054483b4c7aa2c293c7fd4284cce45c77b20",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "file": "latex/fonts/LiberationSans-Italic.ttf",
+      "sha256": "5728424cc19f797203cc250bf989c39626e42cfb4f0bbb74d291a294c2f036c9",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "file": "latex/fonts/LiberationSans-BoldItalic.ttf",
+      "sha256": "d2150f96ace866ac45472abd4096ba0d719377798fa2674ce423dd1b6b24e0e2",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "file": "latex/fonts/LiberationMono-Regular.ttf",
+      "sha256": "cf53b5df9ae02bd04ecad89214740ad3dcd97872536e6071f5a530a2fcac618e",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "file": "latex/fonts/LiberationMono-Bold.ttf",
+      "sha256": "944c588e8ece98efdeafc3b590b05bae0636ff651d29485cdadbd8617a7a813d",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "file": "latex/fonts/LiberationMono-Italic.ttf",
+      "sha256": "2c35ac207080ed0a6c39e348aad6266c32e94e9107e646dd0853cff4590859f3",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "file": "latex/fonts/LiberationMono-BoldItalic.ttf",
+      "sha256": "97749f62bbbda706cba282a1e1cf25176898de598d6d3af99559f1eda3eb29cc",
+      "license": "SIL Open Font License 1.1"
+    }
+  ],
+  "statistics": {
+    "parts": 12,
+    "appendix_dividers": 1,
+    "chapters": 31,
+    "appendices": 15,
+    "diagrams": 18,
+    "code_blocks": 43,
+    "tables": 260,
+    "callouts": 67,
+    "citations": 94
+  },
+  "source_bytes": 616748,
+  "compile_command": "latex/compile.sh"
+}

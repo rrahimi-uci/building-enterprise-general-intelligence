@@ -1,0 +1,261 @@
+{
+  "release": "1.0.0",
+  "validated_on": "2026-09-13",
+  "format": "XeLaTeX",
+  "measurements": {
+    "main_tex_sha256": "b0cf956a577c461b7ab8b0ee1451324e544d31bb63b731c9dcb43ec7b839d3b9",
+    "content_tex_sha256": "ea494b2dbb5c2ba970758e5a7d279d9b2cb841ae5b457a2f62a4c926f1dd2ec1",
+    "style_sha256": "009e3a5c9950cb52c5b481bfd81b804600e754b867bc2c0d10b23f30c118ce49",
+    "narrative_parts": 12,
+    "appendix_dividers": 1,
+    "chapters": 31,
+    "appendices": 15,
+    "diagrams": 18,
+    "code_blocks": 43,
+    "longtables": 193,
+    "callout_tables": 67,
+    "citation_occurrences": 94,
+    "reference_targets": 43,
+    "unique_citation_ids": 43,
+    "image_quality": [
+      {
+        "file": "assets/cover/cover-v1.0.0.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "assets/diagrams/book-map.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/reference-architecture.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/request-sequence.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/developer-platform.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/portability.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/developer-lifecycle.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/dx-golden-path.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/test-pyramid.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/pattern-decision-tree.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/anti-before-after.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/gateway-position.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/model-routing.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/security-depth.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/security-boundaries.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/guardrail-sequence.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/learning-loop.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/runtime-offline.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/governance-model.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      }
+    ],
+    "bundled_fonts": 8,
+    "font_coverage": {
+      "sans_missing_after_tex_mappings": [],
+      "mono_missing_after_listings_mappings": [],
+      "mapped_codepoints": [
+        "U+2713 CHECK MARK"
+      ]
+    },
+    "contrast_tests": [
+      {
+        "foreground": "BookInk",
+        "background": "White",
+        "ratio": 15.7
+      },
+      {
+        "foreground": "BookNavy",
+        "background": "White",
+        "ratio": 14.41
+      },
+      {
+        "foreground": "BookBlue",
+        "background": "White",
+        "ratio": 7.76
+      },
+      {
+        "foreground": "BookTeal",
+        "background": "White",
+        "ratio": 6.08
+      },
+      {
+        "foreground": "BookSlate",
+        "background": "White",
+        "ratio": 6.49
+      },
+      {
+        "foreground": "White",
+        "background": "BookNavy",
+        "ratio": 14.41
+      },
+      {
+        "foreground": "White",
+        "background": "BookBlue",
+        "ratio": 7.76
+      },
+      {
+        "foreground": "White",
+        "background": "BookAmber",
+        "ratio": 6.16
+      },
+      {
+        "foreground": "White",
+        "background": "BookRed",
+        "ratio": 6.96
+      },
+      {
+        "foreground": "BookCyan",
+        "background": "BookNavy",
+        "ratio": 6.11
+      },
+      {
+        "foreground": "BookInk",
+        "background": "BookPaleBlue",
+        "ratio": 13.99
+      },
+      {
+        "foreground": "BookInk",
+        "background": "BookPaleAmber",
+        "ratio": 14.39
+      },
+      {
+        "foreground": "BookInk",
+        "background": "BookPaleRed",
+        "ratio": 13.71
+      }
+    ],
+    "cross_format_reference_pdf_pages": 213,
+    "cross_format_reference_page_size": [
+      612.0,
+      792.0
+    ],
+    "xelatex_available": true
+  },
+  "errors": [],
+  "warnings": [],
+  "source_validation_pass": true,
+  "compiled_in_current_environment": true,
+  "pass": true
+}
