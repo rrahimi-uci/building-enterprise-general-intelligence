@@ -2,11 +2,11 @@
   "release": "1.0.0",
   "engine": "XeLaTeX",
   "canonical_markdown": "book/manuscript.md",
-  "canonical_markdown_sha256": "a7bcceec87ab5bdc25a272de8abd68d5572f11ffc5983a75da150419d3b0b913",
+  "canonical_markdown_sha256": "d5da64506843b69148b655cffa34317b1dbe30a0568a8398f8c770580b05cd11",
   "main_tex": "latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.tex",
   "main_tex_sha256": "b0cf956a577c461b7ab8b0ee1451324e544d31bb63b731c9dcb43ec7b839d3b9",
   "content_tex": "latex/content/book-content.tex",
-  "content_tex_sha256": "ea494b2dbb5c2ba970758e5a7d279d9b2cb841ae5b457a2f62a4c926f1dd2ec1",
+  "content_tex_sha256": "1f1b955e32b5ce427ada34259c8a2b14b2ef65e781ff9ac2e9e350b148186f90",
   "style": "latex/bookstyle.sty",
   "fonts": [
     {
@@ -61,6 +61,6 @@
     "callouts": 67,
     "citations": 94
   },
-  "source_bytes": 616748,
+  "source_bytes": 623111,
   "compile_command": "latex/compile.sh"
 }

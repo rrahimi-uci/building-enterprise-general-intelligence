@@ -16,12 +16,13 @@
     "source/parts/12-part-xii.md",
     "source/parts/13-appendices.md"
   ],
-  "bytes": 499052,
-  "sha256": "a7bcceec87ab5bdc25a272de8abd68d5572f11ffc5983a75da150419d3b0b913",
+  "bytes": 499489,
+  "sha256": "d5da64506843b69148b655cffa34317b1dbe30a0568a8398f8c770580b05cd11",
   "parts": 12,
   "chapters": 31,
   "appendices": 15,
   "citation_occurrences": 94,
+  "expanded_examples": 1,
   "cited_reference_ids": [
     "R01",
     "R02",

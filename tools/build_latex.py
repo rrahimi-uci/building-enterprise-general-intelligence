@@ -253,7 +253,11 @@ def render_table(rows: list[list[str]]) -> str:
     width = 0.94 / columns
     specification = "@{}" + "".join("Y{" + format(width, ".4f") + r"\linewidth}" for _ in range(columns)) + "@{}"
     font_command = r"\small" if columns <= 3 else r"\fontsize{7.2}{9}\selectfont"
-    output = [r"\BookTableStart", font_command, r"\begin{longtable}{" + specification + "}"]
+    # A longtable header alone at the foot of a page reads as a defect. Reserve
+    # the header plus a few body rows so the table starts where it can breathe;
+    # anything longer still breaks naturally, with the header repeated.
+    output = [r"\needspace{5\baselineskip}", r"\BookTableStart", font_command,
+              r"\begin{longtable}{" + specification + "}"]
     output.extend([r"\rowcolor{BookNavy}", table_header(rows[0], columns), r"\endfirsthead", r"\rowcolor{BookNavy}", table_header(rows[0], columns), r"\endhead"])
     for index, row in enumerate(rows[1:], 1):
         padded = row + [""] * (columns - len(row))
@@ -264,6 +268,27 @@ def render_table(rows: list[list[str]]) -> str:
     return "\n".join(output)
 
 
+# Code is set at 7.4/9.2pt (see bookcode in bookstyle.sty). A listing that fits
+# on one page should never be split, so reserve its height up front: needspace
+# ejects the page when too little room is left, moving the whole listing over.
+CODE_BASELINE_PT = 9.2
+CODE_FRAME_PT = 20.0
+# \textheight is 698.85pt, so ~73 code lines is the most that can ever sit on
+# one page. Above that a listing must break however much space is reserved, and
+# reserving would only strand a half-empty page in front of it. Listings that
+# large are editorial debt: use the example region markers to show the part that
+# teaches instead of the whole file.
+CODE_MAX_RESERVE_PT = 643.0
+
+
+def code_reservation(code: str) -> str:
+    """The \needspace guard that keeps a page-sized listing intact."""
+    height = len(code.splitlines()) * CODE_BASELINE_PT + CODE_FRAME_PT
+    if height > CODE_MAX_RESERVE_PT:
+        return ""
+    return r"\needspace{" + format(height, ".1f") + "pt}"
+
+
 def render_code(language: str, code: str) -> str:
     if "\\end{lstlisting}" in code:
         raise ValueError("Code block contains a reserved lstlisting terminator")
@@ -272,7 +297,12 @@ def render_code(language: str, code: str) -> str:
     options = ["style=bookcode", "title={" + escape_plain(language.upper() or "TEXT") + "}"]
     if mapped:
         options.append("language=" + mapped)
-    return "\n".join([r"\begin{lstlisting}[" + ",".join(options) + "]", code, r"\end{lstlisting}"])
+    lines = []
+    reservation = code_reservation(code)
+    if reservation:
+        lines.append(reservation)
+    lines += [r"\begin{lstlisting}[" + ",".join(options) + "]", code, r"\end{lstlisting}"]
+    return "\n".join(lines)
 
 
 def reference_target(text: str) -> str:

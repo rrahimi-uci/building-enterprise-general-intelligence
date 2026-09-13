@@ -4,6 +4,21 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Runnable, CI-verified code examples
+
+- Added `examples/`: code listings are now real files that CI executes, not prose. `config/examples.json` registers each one, and `tools/assemble_manuscript.py` expands `[[EXAMPLE:id]]` markers at assembly time so the Markdown, DOCX, and XeLaTeX editions all carry identical code and no listing can drift from the file under test.
+- Added `examples/_harness/scripted_model.py`, which implements the OpenAI Agents SDK `Model` interface and replays a fixed script. Agent examples therefore exercise real tool dispatch, structured output parsing, and the run loop with no network and no API key. It must subclass `Model`: the runner resolves `RunConfig.model` with an `isinstance` check, so a duck-typed double is silently ignored and the run reaches the real provider.
+- Added `tools/check_examples.py`, wired into `make validate`: every `[[EXAMPLE:id]]` resolves, every registered example is cited, every excerpt region closes, and `--run` executes the suite.
+- Pinned `openai-agents==0.22.2`, `mlflow==3.15.2`, `pydantic==2.13.5` in `examples/requirements.txt`, deliberately separate from the book's own dependencies so the manuscript still builds without them.
+- Migrated chapter 26's MLflow listing to the new mechanism as the reference case. Verified the chapter's existing API claims hold against the pinned MLflow: `mlflow.genai.judges.make_judge`, `ToolCallCorrectness`, `ToolCallEfficiency`, and `mlflow.openai.autolog` all exist.
+- Recorded two MLflow 3.15 behaviours the examples must respect: the filesystem tracking store is in maintenance mode for traces, so a database backend is required; and trace export is asynchronous by default, so assertions must force synchronous export or flush.
+
+### LaTeX page composition
+
+- Code listings that fit on a page are no longer split across one. `render_code` reserves the listing's height with `\needspace`, capped at 643pt because `\textheight` is 698.85pt and a longer listing must break however much space is reserved. Splits fell from 20 to 10; the remaining ones are listings of 82–153 lines, which are editorial debt to be trimmed with example region markers.
+- Long tables no longer strand a header at the foot of a page: `render_table` reserves the header plus several body rows. Stranded headers fell from 17 to 6.
+- Page count moved from 235 to 242, and mean page fill *improved* from 95.0% to 95.6%.
+
 ### Repository structure
 
 - Consolidated the two parallel copies of the v1.0.0 package into a single tree. The repository previously held the Development Package at the root and a complete-with-LaTeX duplicate in `book-latex/`; the LaTeX edition is now the only tree, and `book-latex/` is gone.

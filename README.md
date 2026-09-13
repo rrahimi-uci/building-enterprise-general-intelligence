@@ -46,6 +46,26 @@ builds it on every push.
 The release ZIP is written next to the repository root by default. All commands
 derive paths from their script location and do not depend on `/data`.
 
+## Runnable code examples
+
+Every code listing in the book is the exact text of a file under `examples/`,
+and CI executes it. Chapters cite an example by marker:
+
+```markdown
+[[EXAMPLE:mlflow-trace-configuration]]
+```
+
+`tools/assemble_manuscript.py` expands the marker at assembly time, so the
+Markdown, DOCX, and XeLaTeX editions all carry identical, verified code and no
+listing can drift from the file that CI runs. Agent examples execute offline
+against a scripted model that implements the Agents SDK `Model` interface, so
+they need no API key. See [examples/README.md](examples/README.md).
+
+```bash
+make examples        # validate the registry and every [[EXAMPLE:id]] marker
+make examples-run    # execute the example test suite against the pinned SDKs
+```
+
 ## Authoring loop
 
 The fast inner loop while writing:
@@ -78,12 +98,18 @@ make pdf        # three-pass XeLaTeX -> dist/*-LaTeX.pdf
 ├── .latexmkrc                    # latexmk defaults for the XeLaTeX edition
 ├── requirements.txt
 │
+├── examples/                     # runnable, CI-verified code listings
+│   ├── _harness/                 # offline scripted model for Agents SDK runs
+│   ├── tests/                    # behavioural assertions per example
+│   └── requirements.txt          # pinned SDKs, kept out of the book build
+│
 ├── source/                       # ← THE ONLY PLACE YOU EDIT PROSE
 │   ├── parts/                    # canonical editable Markdown sources
 │   └── original/                 # immutable v3.0/v3.1 provenance
 ├── config/                       # ← AND THE ONLY PLACE YOU EDIT METADATA
 │   ├── book.json                 # metadata, layout, typography, colors
 │   ├── diagrams.json             # diagram registry
+│   ├── examples.json             # code-example registry
 │   ├── references.json           # source-of-truth citation registry
 │   └── style-tokens.json         # portable design tokens
 ├── assets/

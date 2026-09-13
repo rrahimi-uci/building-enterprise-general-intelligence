@@ -24,6 +24,7 @@ The accompanying Book v1.0.0 development package contains this canonical Markdow
 
 This guide is organized as one architecture story rather than a collection of independent topics. Read the executive map, then follow the lane that matches the decision. Every major chapter moves from problem and boundaries to architecture, implementation, failure modes, metrics, trade-offs, and review questions.\par
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -233,6 +234,7 @@ Explain why an agentic application is a distributed system and assign every auth
 
 \BookFigureCaption{Figure 1. From an LLM Call to a Production System.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -252,6 +254,7 @@ A language model maps input tokens to output tokens. A tool-using model can prop
 
 This distinction prevents a common category error. Better prompting can improve a reasoning step; it cannot provide transactional integrity, credential isolation, deterministic replay, tenant boundaries, or a provable audit trail. Those are properties of the surrounding system.\par
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -298,6 +301,7 @@ An enterprise agent must translate an ambiguous goal into actions across systems
 
 \subsection{Core problem matrix}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -327,6 +331,7 @@ Compliance & Decisions cannot be reproduced or explained & Immutable audit packa
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -348,6 +353,7 @@ Evidence anchors: NIST-GAI; REACT. Full URLs, authority, version, and scope appe
 
 PYTHON · implementation excerpt\par
 
+\needspace{378.8pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 from datetime import datetime
@@ -426,6 +432,7 @@ class AgentStepResult(BaseModel):
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -467,6 +474,7 @@ Turn model output into typed proposals and place validation, authorization, effe
 
 \BookFigureCaption{Figure 2. Tools, Structured Outputs, and the Deterministic Shell.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -522,6 +530,7 @@ Scale tool work by workload and risk class, not with one global queue. Read-only
 
 \section{Where distributed systems must remain authoritative}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
@@ -561,6 +570,7 @@ Tests/rules engine & Deterministic invariants and objective acceptance & Generat
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -600,6 +610,7 @@ The model proposes ToolIntent; the Tool Gateway validates the exact tool version
 
 \end{enumerate}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -615,6 +626,7 @@ Use whenever the agent must read external truth or request an external effect. &
 
 \subsection{Trade-offs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -632,6 +644,7 @@ Dynamic discovery & Smaller prompts and flexible catalogs; requires deterministi
 
 \subsection{Failures and controls}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -672,6 +685,7 @@ Oversized or malicious output & Connector limits, content scanning, classificati
 
 PYTHON · implementation excerpt\par
 
+\needspace{562.8pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 from dataclasses import dataclass
@@ -770,6 +784,7 @@ class ToolGateway:
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -823,6 +838,7 @@ Use OpenAI Agents SDK 0.22.2 as a bounded, replaceable runtime adapter rather th
 
 \BookFigureCaption{Figure 3. Agent Runtime and OpenAI Agents SDK.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -842,6 +858,7 @@ This edition pins openai-agents==0.22.2 and openai>=2.25.0 as an implementation 
 
 Northstar uses those primitives for \textbf{one bounded agent activity}. A durable workflow calls a platform-owned AgentRuntime; the OpenAI adapter builds the eligible agent and tool set, invokes Runner, and translates the result back into provider-neutral contracts. This makes the SDK valuable without making it the owner of long-lived business truth.\par
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -880,6 +897,7 @@ Keep public Run APIs and workflow history independent of SDK types. A platform-o
 
 TEXT · implementation excerpt\par
 
+\needspace{29.2pt}
 \begin{lstlisting}[style=bookcode,title={TEXT}]
 AgentRuntime.execute(AgentStepRequest) -> AgentStepResult
 \end{lstlisting}
@@ -1014,6 +1032,7 @@ Adopt the SDK only after proving that tools cannot bypass gateways, every invoca
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -1038,6 +1057,7 @@ Evidence anchors: OAI-RELEASE; OAI-TOOLS; OAI-RUNSTATE; OAI-HITL. Full URLs, aut
 
 PYTHON · implementation excerpt\par
 
+\needspace{572.0pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 """OpenAI Agents SDK 0.22.2 adapter.
 
@@ -1137,6 +1157,7 @@ async def approve_in_memory_and_resume(result:Any,interruption_index:int=0):
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -1186,6 +1207,7 @@ The enterprise architecture places probabilistic reasoning inside explicit exper
 
 \BookDiagram{assets/diagrams/reference-architecture.png}{Figure 4-1 — Enterprise agentic AI layered reference architecture}{reference-architecture}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
@@ -1234,6 +1256,7 @@ Evaluation and operations & Tracing, evaluation, SLOs, incidents, release, capac
 
 \section{Systems of record}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
@@ -1288,6 +1311,7 @@ Translate principles into planes, services, contracts, stores, consistency bound
 
 \BookFigureCaption{Figure 20. Enterprise Platform Architecture, APIs, and Data Models.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -1317,6 +1341,7 @@ Scale stateless APIs horizontally, partition state by tenant and run, shard work
 
 \subsection{Architecture layers}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -1347,6 +1372,7 @@ Operations and improvement & OTel collector, trace store, metrics, eval service,
 
 \subsection{Trust boundaries}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -1375,6 +1401,7 @@ Result → destination & Reports, emails, records, deployments & Output classifi
 
 \subsection{Run API}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -1403,6 +1430,7 @@ GET /v1/runs/\{id\}/audit & Return evidence manifest to authorized compliance/in
 
 JSON · implementation excerpt\par
 
+\needspace{194.8pt}
 \begin{lstlisting}[style=bookcode,title={JSON},language=bookjson]
 {
   "run_id": "run_...",
@@ -1437,6 +1465,7 @@ A mutating tool returns a structured receipt: logical effect ID, idempotency key
 
 JSON · implementation excerpt\par
 
+\needspace{158.0pt}
 \begin{lstlisting}[style=bookcode,title={JSON},language=bookjson]
 {
   "specversion": "1.0",
@@ -1457,6 +1486,7 @@ JSON · implementation excerpt\par
 
 \section{Storage architecture}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -1486,6 +1516,7 @@ A vector database is an index, not the source of truth; an agent transcript is n
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -1582,6 +1613,7 @@ class CandidatePlan(BaseModel):
 
 PYTHON · implementation excerpt\par
 
+\needspace{415.6pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 
@@ -1664,6 +1696,7 @@ def deduplication_key(event: CloudEvent) -> tuple[str, str]:
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -1703,6 +1736,7 @@ The developer platform is a reusable paved road that lets teams build differenti
 
 \BookDiagram{assets/diagrams/developer-platform.png}{Figure 6-1 — Agentic developer platform and SDK capability stack}{developer-platform}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -1755,6 +1789,7 @@ Create from an approved template; attach tools, Skills, context, and memory; con
 
 PYTHON · implementation excerpt\par
 
+\needspace{130.4pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 agent = platform.agent(
     spec="supplier_onboarding@3.2.0",
@@ -1784,6 +1819,7 @@ Developer experience should compress setup and diagnosis time while making autho
 
 \BookDiagram{assets/diagrams/dx-golden-path.png}{Figure 7-1 — Developer golden path from scaffold to operated release}{dx-golden-path}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
@@ -1818,6 +1854,7 @@ Deterministic units verify schemas, policy helpers, acceptance, routes, reducers
 
 BASH · implementation excerpt\par
 
+\needspace{93.6pt}
 \begin{lstlisting}[style=bookcode,title={BASH},language=bookbash]
 agentctl init supplier-onboarding --template regulated-workflow --risk high
 agentctl dev --scenario late-sanctions-response --trace
@@ -1857,6 +1894,7 @@ Define Skills as governed packages of instructions, tools, knowledge, policy, wo
 
 \BookFigureCaption{Figure 10. Skills as Versioned Capabilities.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -1900,6 +1938,7 @@ The registry scales as a read-heavy control-plane service with immutable manifes
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -2113,6 +2152,7 @@ class SkillRegistry:
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -2154,6 +2194,7 @@ Compose compatible Skills into certified, distributable domain capability releas
 
 \BookFigureCaption{Figure 11. Skill Packs and Domain Platforms.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -2193,6 +2234,7 @@ Packs move through signed releases and aliases such as development, staging, and
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -2214,6 +2256,7 @@ Evidence anchors: SLSA; OWASP-CHEAT. Full URLs, authority, version, and scope ap
 
 PYTHON · implementation excerpt\par
 
+\needspace{231.6pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 import hashlib
@@ -2276,6 +2319,7 @@ class SkillPackManifest(BaseModel):
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -2325,6 +2369,7 @@ Implement ReAct with external budgets, governed tools, no-progress detection, an
 
 \BookFigureCaption{Figure 4. ReAct: Bounded Reason–Act–Observe Loops.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -2384,6 +2429,7 @@ A bounded controller alternates model decision and governed tool invocation. The
 
 \end{enumerate}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -2399,6 +2445,7 @@ Use for exploratory retrieval, diagnosis, or research with a small eligible tool
 
 \subsection{Trade-offs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -2416,6 +2463,7 @@ Intermediate observations & Improves grounding; increases attack surface and con
 
 \subsection{Failures and controls}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -2579,6 +2627,7 @@ class ReActEngine:
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -2620,6 +2669,7 @@ Distinguish route selection from ownership transfer and design confidence, fallb
 
 \BookFigureCaption{Figure 5. Routing, Triage, and Handoffs.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -2689,6 +2739,7 @@ A classifier proposes a route from a precomputed eligible catalog. A determinist
 
 \end{enumerate}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -2704,6 +2755,7 @@ Use when candidate paths have materially different capabilities, owners, SLOs, c
 
 \subsection{Trade-offs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -2721,6 +2773,7 @@ Learned classification & Handles semantic ambiguity; requires fallback and monit
 
 \subsection{Failures and controls}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -2779,6 +2832,7 @@ The current owner creates a typed transfer containing state references, unresolv
 
 \end{enumerate}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -2794,6 +2848,7 @@ Use for explicit responsibility transfer across specialist, trust, organizationa
 
 \subsection{Trade-offs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -2811,6 +2866,7 @@ Independent interaction & Reduces supervisor bottlenecks; complicates cancellati
 
 \subsection{Failures and controls}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -2851,6 +2907,7 @@ Context loss & Typed artifact and obligation references instead of transcript co
 
 PYTHON · implementation excerpt\par
 
+\needspace{231.6pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 import hashlib
@@ -2913,6 +2970,7 @@ class DeterministicRouter:
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -2960,6 +3018,7 @@ Compile model-proposed plans into authorized, resource-feasible, replayable exec
 
 \BookFigureCaption{Figure 6. Planning and Plan–Execute.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -2985,6 +3044,7 @@ New evidence can invalidate future work. Replanning starts from an explicit set 
 
 \section{Planning, dynamic execution, and deterministic boundaries}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3009,6 +3069,7 @@ Enterprise example & An incident agent may choose which diagnostic queries to ru
 
 \subsection{What should be agentic?}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -3043,6 +3104,7 @@ Acceptance tests and reconciliation & Code/tests; model judge only as a suppleme
 
 JSON · implementation excerpt\par
 
+\needspace{194.8pt}
 \begin{lstlisting}[style=bookcode,title={JSON},language=bookjson]
 {
   "plan_id": "plan_...",
@@ -3071,6 +3133,7 @@ A deterministic compiler rejects cycles unless explicitly permitted, missing sch
 
 \subsection{Component boundaries}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3095,6 +3158,7 @@ Acceptance Engine & Run deterministic checks and policy-approved model graders b
 
 \subsection{High-level APIs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3119,6 +3183,7 @@ POST /v1/nodes/\{node\_execution\_id\}:accept & Apply acceptance checks to outpu
 
 \subsection{Core data model}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3231,6 +3296,7 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 
 \end{enumerate}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3246,6 +3312,7 @@ Use for heterogeneous, dependency-rich tasks where semantic decomposition provid
 
 \subsection{Trade-offs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3263,6 +3330,7 @@ Parallel execution & Lower latency; higher resource use and conflict risk. \\
 
 \subsection{Failures and controls}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3443,6 +3511,7 @@ def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, objec
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3484,6 +3553,7 @@ Use critique and evaluation to improve outputs without self-certification, unbou
 
 \BookFigureCaption{Figure 7. Reflection and Evaluator–Optimizer.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -3539,6 +3609,7 @@ A reflector reviews a candidate against explicit evidence and rubric, emits stru
 
 \end{enumerate}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3554,6 +3625,7 @@ Use when measured offline results show critique improves a specific quality dime
 
 \subsection{Trade-offs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3571,6 +3643,7 @@ Structured critique & More debuggable; requires defect taxonomy and evaluation. 
 
 \subsection{Failures and controls}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3629,6 +3702,7 @@ A generator creates candidates; deterministic scorers and calibrated evaluators 
 
 \end{enumerate}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3644,6 +3718,7 @@ Use for documents, plans, code, or analyses where iterative quality gain is meas
 
 \subsection{Trade-offs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3661,6 +3736,7 @@ Explicit rubric & Improves governance; can overfit to benchmark or judge prefere
 
 \subsection{Failures and controls}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3701,6 +3777,7 @@ Endless revision & Maximum revisions, cost, time, and no-progress stop. \\
 
 PYTHON · implementation excerpt\par
 
+\needspace{286.8pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 import hashlib
@@ -3769,6 +3846,7 @@ class EvaluatorOptimizer:
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3816,6 +3894,7 @@ Bind approval and intervention to immutable proposals and durable state transiti
 
 \BookFigureCaption{Figure 8. Human-in-the-Loop.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -3839,6 +3918,7 @@ Human capacity is finite. Queue age, dwell, abandonment, reassignment, disagreem
 
 \section{Human-in-the-loop and operational control}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3887,6 +3967,7 @@ An ApprovalRequest contains: proposal/artifact hash, exact action and resource, 
 
 \subsection{Component boundaries}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3911,6 +3992,7 @@ Override Journal & Append operator actions and linked incident/change records to
 
 \subsection{High-level APIs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -3937,6 +4019,7 @@ POST /v1/runs/\{run\_id\}:operatorAction & Pause, cancel, safe-retry, patch plan
 
 \subsection{Core data model}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -4003,6 +4086,7 @@ A decision is valid only when the presented proposal hash equals the current pro
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -4042,6 +4126,7 @@ The workflow persists a proposal-bound ApprovalRequest or InterventionTask, paus
 
 \end{enumerate}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -4057,6 +4142,7 @@ Use for high-risk, irreversible, regulated, ambiguous, or policy-exception decis
 
 \subsection{Trade-offs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -4074,6 +4160,7 @@ Human judgment & Handles ambiguity; can be inconsistent and needs calibration. \
 
 \subsection{Failures and controls}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -4114,6 +4201,7 @@ Queue abandonment & SLA, escalation, reassignment, cancellation, and safe timeou
 
 PYTHON · implementation excerpt\par
 
+\needspace{332.8pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 
@@ -4282,6 +4370,7 @@ def verify_approval(
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -4329,6 +4418,7 @@ Preserve weeks-long work across waits, failures, deployments, retries, cancellat
 
 \BookFigureCaption{Figure 9. Long-Running and Durable Agents.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -4384,6 +4474,7 @@ A run reaches Succeeded only through executable acceptance. A canceled run with 
 
 \section{Long-running agents and event-driven execution}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -4442,6 +4533,7 @@ The Run API persists intent and returns quickly; the durable workflow owns lifec
 
 \subsection{High-level APIs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -4469,6 +4561,7 @@ GET /v1/runs/\{run\_id\}/history?cursor=... & Paginated, role-redacted event his
 
 \subsection{Core data model}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -4531,6 +4624,7 @@ WorkflowMigration & from/to build, applicable state/schema, deterministic transf
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -4570,6 +4664,7 @@ A durable workflow records deterministic decisions and schedules bounded activit
 
 \end{enumerate}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -4585,6 +4680,7 @@ Use for work with waits, multiple systems, protected effects, independent failur
 
 \subsection{Trade-offs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -4602,6 +4698,7 @@ Long waits & Preserves state; creates lifecycle, retention, and migration obliga
 
 \subsection{Failures and controls}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -4765,6 +4862,7 @@ def replay(history: list[WorkflowEvent]) -> RunState:
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -5412,6 +5510,7 @@ Give each task one owner, narrow authority on delegation, and make fan-out, fan-
 
 \BookFigureCaption{Figure 12. Supervisor/Worker and Multi-Agent Collaboration.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -5435,6 +5534,7 @@ Nested delegation multiplies cost and risk. Northstar caps depth, children, conc
 
 \section{Agent topology, orchestration, delegation, and termination}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -5459,6 +5559,7 @@ Enterprise example & A mortgage-underwriting coordinator delegates document extr
 
 \subsection{Topology decision table}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
@@ -5507,6 +5608,7 @@ Peer swarm / group chat & Research exploration where diversity is worth the cost
 
 \subsection{Component boundaries}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -5530,6 +5632,7 @@ Join/Aggregation Service & Readiness, quorum, schema validation, conflict policy
 
 \subsection{High-level APIs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -5559,6 +5662,7 @@ Example child-task request:\par
 
 JSON · implementation excerpt\par
 
+\needspace{130.4pt}
 \begin{lstlisting}[style=bookcode,title={JSON},language=bookjson]
 {
   "idempotency_key": "run_42:screen-supplier:1",
@@ -5576,6 +5680,7 @@ JSON · implementation excerpt\par
 
 \subsection{Core data model}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -5622,6 +5727,7 @@ JoinPolicy & join node, required predecessors, all/quorum/first-valid strategy, 
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -5661,6 +5767,7 @@ The supervisor creates typed child tasks with narrower grants and acceptance cri
 
 \end{enumerate}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -5676,6 +5783,7 @@ Use when specialists differ in tools, data, trust, cost, SLO, ownership, or depl
 
 \subsection{Trade-offs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -5693,6 +5801,7 @@ One parent owner & Clear accountability; can become a bottleneck. \\
 
 \subsection{Failures and controls}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -5751,6 +5860,7 @@ Collaboration uses durable TaskEnvelope, message, status, artifact, cancellation
 
 \end{enumerate}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -5766,6 +5876,7 @@ Use across teams, regions, vendors, trust domains, or independently recoverable 
 
 \subsection{Trade-offs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -5783,6 +5894,7 @@ Independent ownership & Improves isolation; complicates global optimization and 
 
 \subsection{Failures and controls}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -5823,6 +5935,7 @@ Remote task never completes & Deadline, heartbeat, cancellation, fallback, and i
 
 PYTHON · implementation excerpt\par
 
+\needspace{167.2pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 from datetime import datetime
@@ -5846,6 +5959,7 @@ class TaskEnvelope(BaseModel):
 
 PYTHON · implementation excerpt\par
 
+\needspace{618.0pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 
@@ -5950,6 +6064,7 @@ def derive_child(
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -5997,6 +6112,7 @@ Federate tools and agents through locally governed gateways, registries, task pr
 
 \BookFigureCaption{Figure 13. MCP, A2A, and External Integration.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -6026,6 +6142,7 @@ MLflow 3.15.0 introduced experimental MCP Registry capabilities for registering 
 
 \section{Agent-to-agent communication and task ownership}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -6050,6 +6167,7 @@ Enterprise example & A procurement platform delegates sanctions screening to a s
 
 \subsection{Protocol roles}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -6075,6 +6193,7 @@ A2A’s task/message/artifact model and async operations are useful at remote-ag
 
 \subsection{Required TaskEnvelope}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -6125,6 +6244,7 @@ The Agent Directory stores validated cards and endpoint metadata; the Peer Trust
 
 \subsection{High-level APIs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -6154,6 +6274,7 @@ At an open boundary, expose the standard A2A agent-card and task/message operati
 
 \subsection{Core data model}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -6178,6 +6299,7 @@ PeerObservation & latency, availability, schema violations, security findings, c
 
 \subsection{State mapping and ownership}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -6224,6 +6346,7 @@ Failed/Expired/InterventionRequired & Terminal or ambiguous remote outcome & App
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -6248,6 +6371,7 @@ Evidence anchors: MCP-2026; MCP-AUTH; A2A-101. Full URLs, authority, version, an
 
 PYTHON · implementation excerpt\par
 
+\needspace{222.4pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 
@@ -6277,6 +6401,7 @@ class A2ATaskEnvelope(BaseModel):
 
 PYTHON · implementation excerpt\par
 
+\needspace{277.6pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 import os
@@ -6344,6 +6469,7 @@ def resolve_production_mcp_server():
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -6389,6 +6515,7 @@ The LLM Gateway is the controlled boundary between enterprise workloads and mode
 
 \BookDiagram{assets/diagrams/gateway-position.png}{Figure 20-1 — LLM Gateway position relative to adjacent gateways}{gateway-position}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
@@ -6410,6 +6537,7 @@ Orchestration layer & Run → tasks/activities & State, deadlines, retries, join
 
 \section{Required capabilities}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -6470,6 +6598,7 @@ Agentic systems combine untrusted language, privileged tools, dynamic context, d
 
 \BookDiagram{assets/diagrams/security-depth.png}{Figure 21-1 — Defense-in-depth guardrails architecture}{security-depth}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -6757,6 +6886,7 @@ Assemble authorized context from distinct state and knowledge domains and govern
 
 \BookFigureCaption{Figure 14. Context Engineering, Memory, and State.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -6780,6 +6910,7 @@ Memory is not a bag of embeddings. Long-term memory creation is a protected data
 
 \section{Context, workflow state, memory, and enterprise knowledge}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -6804,6 +6935,7 @@ Enterprise example & In claims handling, the chat transcript supports interactio
 
 \subsection{State taxonomy and storage}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
@@ -6858,6 +6990,7 @@ The Conversation Service owns turns; the Workflow Projection Service owns canoni
 
 \subsection{High-level APIs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -6885,6 +7018,7 @@ POST /v1/context:compact & Produce a source-linked summary/checkpoint under a ta
 
 \subsection{Core data model}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -6911,6 +7045,7 @@ Example context-manifest shape:\par
 
 JSON · implementation excerpt\par
 
+\needspace{167.2pt}
 \begin{lstlisting}[style=bookcode,title={JSON},language=bookjson]
 {
   "context_id": "ctx_...",
@@ -6966,6 +7101,7 @@ JSON · implementation excerpt\par
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -7005,6 +7141,7 @@ Working memory is run-scoped; long-term memory is a governed write with subject,
 
 \end{enumerate}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7020,6 +7157,7 @@ Use for stable preferences, repeated domain facts, or learned operational hints 
 
 \subsection{Trade-offs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7037,6 +7175,7 @@ Reduced context cost & May lose nuance or introduce summary drift. \\
 
 \subsection{Failures and controls}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7077,6 +7216,7 @@ Deletion gaps & Lineage graph, tombstones, cache invalidation, and rebuild. \\
 
 PYTHON · implementation excerpt\par
 
+\needspace{240.8pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 
@@ -7108,6 +7248,7 @@ class ContextManifest(BaseModel):
 
 PYTHON · implementation excerpt\par
 
+\needspace{388.0pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 
@@ -7187,6 +7328,7 @@ def authorize_artifact_adoption(
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7234,6 +7376,7 @@ Carry subject and actor identity end to end and prove that every delegated grant
 
 \BookFigureCaption{Figure 15. Identity, RBAC/ABAC, and Delegated Authorization.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -7257,6 +7400,7 @@ Authorization caches must fail safely. Keys include tenant, subject, actor, reso
 
 \section{Enterprise data access, identity, and delegated authorization}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7311,6 +7455,7 @@ The effective permission is the intersection—not the union—of all applicable
 
 \subsection{Component boundaries}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7335,6 +7480,7 @@ Data Access Broker & Run policy-filtered search/query against sources and return
 
 \subsection{High-level APIs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7363,6 +7509,7 @@ Representative authorization response:\par
 
 JSON · implementation excerpt\par
 
+\needspace{102.8pt}
 \begin{lstlisting}[style=bookcode,title={JSON},language=bookjson]
 {
   "decision_id": "dec_...",
@@ -7377,6 +7524,7 @@ JSON · implementation excerpt\par
 
 \subsection{Core data model}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7433,6 +7581,7 @@ AccessEvent & decision, connector, downstream request/audit ID, bytes/records, r
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -7454,6 +7603,7 @@ Evidence anchors: RFC8693; RFC8707. Full URLs, authority, version, and scope app
 
 PYTHON · implementation excerpt\par
 
+\needspace{618.0pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 
@@ -7558,6 +7708,7 @@ def derive_child(
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7599,6 +7750,7 @@ Make external writes replay-safe through manifests, exact authorization, logical
 
 \BookFigureCaption{Figure 16. Tool Security, Effects, Idempotency, and Approval.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -7622,6 +7774,7 @@ Approval and effect control are complementary. Approval proves a person authoriz
 
 \section{Tool and capability management}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7646,6 +7799,7 @@ Enterprise example & An HR assistant sees a read-only employee lookup tool by de
 
 \subsection{Required ToolManifest fields}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7670,6 +7824,7 @@ Operations & SLO, health endpoint, trace semantics, cost unit, deprecation date,
 
 \subsection{Risk classes}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -7695,6 +7850,7 @@ Use MCP as an interoperability surface for tools and resources, not as the autho
 
 \subsection{Component boundaries}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7721,6 +7877,7 @@ Health/Quota Service & Track provider limits, latency, error state, breaker stat
 
 \subsection{High-level APIs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7760,6 +7917,7 @@ Invocation behavior:\par
 
 \subsection{Core data model}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7810,6 +7968,7 @@ A unique constraint on (tenant\_id, tool\_id, idempotency\_key) protects logical
 
 \section{Reliability and failure handling}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7834,6 +7993,7 @@ Enterprise example & An invoice agent creates a payment proposal with an idempot
 
 \subsection{Failure policy matrix}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -7889,6 +8049,7 @@ The workflow engine owns retry timing and saga order; the Effect Service owns id
 
 \subsection{High-level APIs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7916,6 +8077,7 @@ POST /v1/dlq/\{message\_id\}:redrive & Redrive only after schema/policy/version 
 
 \subsection{Core data model}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -7980,6 +8142,7 @@ QuarantineRecord & original message/ref/hash, error history, schema/policy versi
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -8001,6 +8164,7 @@ Evidence anchors: OUTBOX; CLOUDEVENTS. Full URLs, authority, version, and scope 
 
 PYTHON · implementation excerpt\par
 
+\needspace{498.4pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 
@@ -8092,6 +8256,7 @@ class InMemoryEffectLedger:
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -8139,6 +8304,7 @@ Contain a manipulated model with capability, credential, execution, network, sup
 
 \BookFigureCaption{Figure 17. Sandboxing, Egress, Data Security, and Governance.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -8182,6 +8348,7 @@ A governance record should name business purpose, autonomy, data, tools, externa
 
 \section{Security and safety}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -8206,6 +8373,7 @@ Enterprise example & A legal-research agent reads opposing-party documents in a 
 
 \subsection{Threats and required controls}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -8244,6 +8412,7 @@ The Content Security Gateway scans/classifies inbound and retrieved content; pol
 
 \subsection{High-level APIs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -8271,6 +8440,7 @@ POST /v1/security/incidents/\{id\}:contain & Revoke grants, stop dispatch, isola
 
 \subsection{Core data model}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -8336,6 +8506,7 @@ SupplyChainAttestation & artifact/image/tool digest, builder/source, SBOM/proven
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -8359,6 +8530,7 @@ Evidence anchors: OWASP-AGENT; NIST-IR; NIST-RMF; ISO42001; EU-AI-ACT. Full URLs
 
 PYTHON · implementation excerpt\par
 
+\needspace{250.0pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 
@@ -8391,6 +8563,7 @@ def authorize_url(raw_url: str, allowed_hosts: frozenset[str]) -> tuple[str, tup
 
 PYTHON · implementation excerpt\par
 
+\needspace{342.0pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 
@@ -8465,6 +8638,7 @@ class RecoveryObjectives(BaseModel):
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -8528,6 +8702,7 @@ Connect workflow, agent, model, retrieval, policy, tool, approval, effect, and h
 
 \BookFigureCaption{Figure 18. Observability and Tracing with MLflow.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -8557,6 +8732,7 @@ Start with the violated outcome or SLO, identify the critical path, then find th
 
 \section{Observability, debugging, testing, and evaluation}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -8583,6 +8759,7 @@ Enterprise example & A support platform traces intent routing, knowledge citatio
 
 Adopt OpenTelemetry-compatible context and GenAI semantic conventions, with organization-specific attributes where standards are still evolving. A run is the root span; workflow nodes, model calls, retrievals, policy checks, tool/A2A calls, approvals, checkpoints, and compensation are child spans or linked asynchronous traces.\par
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -8611,6 +8788,7 @@ Do not treat hidden chain-of-thought as required observability. Record concise d
 
 \subsection{Production scorecard}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -8673,6 +8851,7 @@ Operations & SLO attainment, trace completeness, rollback time, mean time to dia
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -8692,30 +8871,36 @@ Evidence anchors: OTEL-GENAI; MLFLOW-TRACE. Full URLs, authority, version, and s
 
 \subsection{MLflow tracing integration}
 
-PYTHON · implementation excerpt\par
+PYTHON · Configuring MLflow tracing around a governed agent step\par
 
+\needspace{277.6pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
-from __future__ import annotations
-import os
-from typing import Literal
-import mlflow
-from mlflow.entities import Feedback, SpanType, Trace
-from mlflow.genai import scorer
-from mlflow.genai.judges import make_judge
-from mlflow.genai.scorers import Correctness, Guidelines, ToolCallCorrectness, ToolCallEfficiency
+def configure_observability(experiment: str = "northstar-supplier-onboarding") -> None:
+    """Point MLflow at the tracking backend and capture provider calls.
 
-def configure_observability() -> None:
-    mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "http://localhost:5000"))
-    mlflow.set_experiment("northstar-supplier-onboarding")
-    # Captures OpenAI calls; add explicit spans around platform-owned workflow,
-    # policy, approval, and effect boundaries.
+    MLflow 3.15 placed the filesystem store into maintenance mode for traces, so
+    a database-backed URI is required; `sqlite:///` is fine for a laptop and a
+    server URI for shared environments.
+    """
+    mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db"))
+    mlflow.set_experiment(experiment)
+    # Captures OpenAI calls; the explicit spans below cover the platform-owned
+    # workflow, policy, approval, and effect boundaries that autolog cannot see.
     mlflow.openai.autolog()
 
+
 def traced_step(run_id: str, supplier_id: str) -> dict[str, str]:
+    """One governed step, instrumented so a later investigation can replay it."""
+    # Trace-level tags are the join key between a trace and the run, tenant, and
+    # risk class recorded in the system of record.
     mlflow.update_current_trace(tags={"run_id": run_id, "risk_class": "R2"})
-    with mlflow.start_span(name="load_authorized_context", span_type=SpanType.RETRIEVER) as span:
+    with mlflow.start_span(
+        name="load_authorized_context", span_type=SpanType.RETRIEVER
+    ) as span:
         span.set_inputs({"supplier_id": supplier_id})
         context_manifest_id = f"ctx:{run_id}:1"
+        # Recording the manifest id, not the context body, keeps the trace
+        # useful without turning it into a second copy of sensitive data.
         span.set_outputs({"context_manifest_id": context_manifest_id})
     return {"status": "ready_for_approval", "context_manifest_id": context_manifest_id}
 \end{lstlisting}
@@ -8756,6 +8941,7 @@ def traced_step(run_id: str, supplier_id: str) -> dict[str, str]:
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -8803,6 +8989,7 @@ Evaluate outcomes and trajectories using immutable datasets, executable scorers,
 
 \BookFigureCaption{Figure 19. Evaluation, Testing, and Debugging with MLflow.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -8846,6 +9033,7 @@ Use executable scorers wherever the expected property is computable. Calibrate m
 
 \subsection{Testing and evaluation pyramid}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -8877,6 +9065,7 @@ Use deterministic validators as the gold standard where possible. LLM-as-judge i
 
 \subsection{Component boundaries}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -8903,6 +9092,7 @@ Failure Mining Service & Cluster traces/incidents and propose curated regression
 
 \subsection{High-level APIs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -8929,6 +9119,7 @@ POST /v1/regression-cases:propose & Submit a production failure/cluster for de-i
 
 \subsection{Core data model}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -8956,6 +9147,7 @@ ProductionSample & run/trace, sampling reason/weight, consent/privacy handling, 
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -8979,6 +9171,7 @@ Evidence anchors: MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Full URLs, authority, vers
 
 PYTHON · implementation excerpt\par
 
+\needspace{323.6pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 import os
@@ -9051,6 +9244,7 @@ def evaluate_agent(predict_fn, dataset: list[dict[str, object]]):
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -9084,6 +9278,7 @@ Continuous improvement joins production evidence to versioned change and release
 
 \BookDiagram{assets/diagrams/learning-loop.png}{Figure 28-1 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn}{learning-loop}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -9119,6 +9314,7 @@ Runtime adaptation selects only pre-approved routes/fallbacks, reduces optional 
 
 \section{Improvement matrix}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
@@ -9177,6 +9373,7 @@ Governance makes decisions explicit, proportional, evidence-based, and reversibl
 
 \BookDiagram{assets/diagrams/governance-model.png}{Figure 29-1 — Federated governance with centralized control services}{governance-model}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -9204,6 +9401,7 @@ Exception & Named risk authority & Scope, rationale, compensating controls, expi
 
 \section{Risk tiers}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -9261,6 +9459,7 @@ Ship immutable release bundles through compatibility checks, canaries, workflow-
 
 \BookFigureCaption{Figure 21. Deployment, Versioning, CI/CD, and Recovery.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -9314,6 +9513,7 @@ Regional recovery fences the old writer, restores durable state with a compatibl
 
 \subsection{Suggested baseline stack—not a mandate}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -9343,6 +9543,7 @@ Telemetry/evals & OpenTelemetry + trace/metric backend + evaluation service & Po
 
 \section{Versioning, lifecycle, governance, and compliance}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -9367,6 +9568,7 @@ Enterprise example & A regulated underwriting run stores the exact decision-serv
 
 \subsection{Versioned objects}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -9421,6 +9623,7 @@ Artifact & Content hash + schema + creator run/version & Classification, destina
 
 \subsection{Component boundaries}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -9447,6 +9650,7 @@ Emergency Control & Kill switch, deny policy, credential revocation, and safe ro
 
 \subsection{High-level APIs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -9474,6 +9678,7 @@ GET /v1/governance/inventory & Query deployed agents/use cases by owner, risk, a
 
 \subsection{Core data model}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -9539,6 +9744,7 @@ DriftFinding & subject/version, baseline/window, metric/slice, magnitude/confide
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -9560,6 +9766,7 @@ Evidence anchors: SLSA; CISA-SBOM. Full URLs, authority, version, and scope appe
 
 PYTHON · implementation excerpt\par
 
+\needspace{250.0pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 
@@ -9592,6 +9799,7 @@ def compatible(run: ReleaseManifest, worker: ReleaseManifest) -> bool:
 
 PYTHON · implementation excerpt\par
 
+\needspace{332.8pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 
@@ -9665,6 +9873,7 @@ def verify_release_artifact(
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -9712,6 +9921,7 @@ Optimize verified outcome quality, latency, cost, and capacity without weakening
 
 \BookFigureCaption{Figure 22. Cost, Latency, Capacity, and Reliability Optimization.}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
@@ -9743,6 +9953,7 @@ Under pressure, Northstar can defer nonurgent work, produce a draft rather than 
 
 \section{Scalability, performance, and cost}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -9821,6 +10032,7 @@ The Admission Controller predicts resource/risk and accepts, defers, or rejects 
 
 \subsection{High-level APIs}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -9848,6 +10060,7 @@ GET /v1/runs/\{run\_id\}/cost & Return reserved/actual/forecast cost by node, ag
 
 \subsection{Core data model}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -9917,6 +10130,7 @@ CostAllocation & aggregated period/scope, committed/estimated cost, successful-o
 
 \subsection{Illustrative starting guardrails}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
@@ -9940,6 +10154,7 @@ These are policy shapes, not universal numbers. Determine actual limits from tas
 
 \section{Grounding, corrections, and evidence boundary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -9961,6 +10176,7 @@ Evidence anchors: QUEUEING; MLFLOW-TRACE. Full URLs, authority, version, and sco
 
 PYTHON · implementation excerpt\par
 
+\needspace{259.2pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 
@@ -10026,6 +10242,7 @@ def admit(requested: CapacityPermit, available: CapacityPermit) -> CapacityPermi
 
 \section{Technical review questions}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -10079,6 +10296,7 @@ The architecture narrative is complete. The appendices provide decision aids, ru
 
 \section{Catalog index}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
@@ -10111,6 +10329,7 @@ Architecture & P-12 portable contracts/adapters & AP-15 provider swap as config 
 
 \BookAppendix{B}{Failure triage and operator runbooks}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -10158,6 +10377,7 @@ Unsafe remote artifact & Peer, grant, schema/hash/classification/scan & Reject a
 
 \BookAppendix{C}{Platform contracts quick reference}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -10194,6 +10414,7 @@ ReleaseManifest & Release Registry & agents, Skills, SDK, workflow, models, tool
 
 \end{bookquote}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
@@ -10224,6 +10445,7 @@ MLflow 3.15.x & OpenTelemetry-compatible GenAI tracing, evaluation, scorers, fee
 \textbf{FRAMEWORKS SOLVE DIFFERENT LAYERS. AN AGENT SDK IS NOT AUTOMATICALLY A DURABLE W}  Frameworks solve different layers. An agent SDK is not automatically a durable workflow engine; a protocol is not an authorization system; a trace product is not an audit ledger; and a managed agent runtime does not remove the enterprise’s responsibility for data, policy, and outcome risk.
 \end{bookcallout}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
@@ -10283,6 +10505,7 @@ Choose the smallest harness that expresses the agent behavior, the strongest dur
 
 \section{Research and benchmark implications}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -10341,6 +10564,7 @@ The common lesson is not that “more agents” is state of the art. It is that 
 
 \section{Enterprise adoption roadmap}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -10392,6 +10616,7 @@ Before an agent can mutate an enterprise system, require all of the following:\p
 
 \BookAppendix{H}{Glossary}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
@@ -10454,6 +10679,7 @@ MLflow 3.15.0 introduced the MCP Registry and multimodal trace judges; 3.15.2 ad
 
 BASH · implementation excerpt\par
 
+\needspace{29.2pt}
 \begin{lstlisting}[style=bookcode,title={BASH},language=bookbash]
 python -m unittest discover -s tests -v
 \end{lstlisting}
@@ -10462,6 +10688,7 @@ python -m unittest discover -s tests -v
 
 BASH · implementation excerpt\par
 
+\needspace{29.2pt}
 \begin{lstlisting}[style=bookcode,title={BASH},language=bookbash]
 python -m northstar.demo
 \end{lstlisting}
@@ -10540,6 +10767,7 @@ The framework adapters are syntax-checked here but require their pinned optional
 
 BASH · implementation excerpt\par
 
+\needspace{47.6pt}
 \begin{lstlisting}[style=bookcode,title={BASH},language=bookbash]
 python -m compileall -q northstar tests
 python -m unittest discover -s tests -v
@@ -10650,6 +10878,7 @@ For each major problem use this exact structure:\par
 
 TXT · implementation excerpt\par
 
+\needspace{424.8pt}
 \begin{lstlisting}[style=bookcode,title={TEXT}]
 /docs
   /architecture.md
@@ -10939,6 +11168,7 @@ References are numbered by stable registry identifier. Each citation supports on
 
 This closure log records the review findings resolved in the final edition. Version assumptions, validation boundaries, and architectural recommendations remain explicit so future upgrades can be assessed without reopening settled design gaps.\par
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -11000,6 +11230,7 @@ Medium & Capacity guidance needed an executable sizing method & Add arrival-rate
 
 This matrix defines exactly what each citation is permitted to support. It prevents a source from being stretched beyond its evidence. Book-authored patterns, metrics, formulas, examples, and architecture recommendations remain design guidance unless a source explicitly covers them.\par
 
+\needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
@@ -11080,6 +11311,7 @@ R43 & research & Primary source for Little’s Law; book sizing equations remain
 
 The controls below are part of the final architecture and acceptance model. They are no longer review gaps; each has an owning boundary, required evidence, and a deployment validation path.\par
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -11147,6 +11379,7 @@ Create a control-to-obligation matrix per use case, role, geography, sector, and
 
 \section{Quantitative sizing method}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
@@ -11170,6 +11403,7 @@ Verified-success cost & total model + tool + compute + human-review cost / accep
 
 \section{Production acceptance evidence}
 
+\needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}

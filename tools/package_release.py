@@ -13,9 +13,10 @@ def sha(p):
 
 # Directories that never belong in a release: version control, local virtual
 # environments, editor/tool caches, and the regenerable XeLaTeX build directory.
-SKIP_DIRS={'.git','.github/workflows/__pycache__','.venv','venv','env','__pycache__',
-           'node_modules','.pytest_cache','.mypy_cache','.ruff_cache','.idea','.vscode',
-           '.DS_Store'}
+SKIP_DIRS={'.git','venv','env','__pycache__','node_modules','.pytest_cache',
+           '.mypy_cache','.ruff_cache','.idea','.vscode','.DS_Store','.tox','htmlcov'}
+# Any virtualenv, however it is named: .venv, .venv-examples, .venv-anything.
+SKIP_DIR_PREFIXES=('.venv',)
 # Regenerable or environment-specific outputs.
 SKIP_PATH_PREFIXES=('latex/build/',)
 SKIP_NAMES={'release-package.json'}
@@ -26,6 +27,7 @@ def excluded(rel):
     """True when a repo-relative path must stay out of the manifest and ZIP."""
     posix=rel.as_posix()
     if any(part in SKIP_DIRS for part in rel.parts): return True
+    if any(part.startswith(SKIP_DIR_PREFIXES) for part in rel.parts): return True
     if posix.startswith(SKIP_PATH_PREFIXES): return True
     if rel.name in SKIP_NAMES: return True
     if rel.suffix in SKIP_SUFFIXES: return True

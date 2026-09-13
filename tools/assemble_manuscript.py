@@ -3,7 +3,9 @@
 
 Canonical editable sources live in source/parts. This assembler also renders
 Appendix K and Appendix M from config/references.json so citation metadata has
-one machine-readable source of truth.
+one machine-readable source of truth, and expands [[EXAMPLE:id]] markers from
+config/examples.json so every code listing in the book is the exact text of a
+file that CI executes.
 """
 from __future__ import annotations
 import argparse, hashlib, json, re
@@ -60,6 +62,49 @@ def render_reference_sections(text: str, references: list[dict]) -> str:
     return text
 
 
+EXAMPLE_MARKER = re.compile(r"^\[\[EXAMPLE:([a-z0-9][a-z0-9-]*)\]\]$", re.M)
+
+
+def expand_examples(text: str, root: Path) -> tuple[str, int]:
+    """Replace each [[EXAMPLE:id]] with the live source of that example.
+
+    Expanding at assembly time, rather than in each renderer, is what keeps the
+    Markdown, DOCX, and LaTeX editions byte-consistent: they all consume the one
+    manuscript that already has the real code in it. It also means a listing in
+    the book cannot drift from the file CI runs -- there is only one copy.
+    """
+    registry = json.loads((root / "config" / "examples.json").read_text(encoding="utf-8"))
+    start = registry["region_markers"]["start"]
+    end = registry["region_markers"]["end"]
+    by_id = {e["id"]: e for e in registry["examples"]}
+    count = 0
+
+    def render(match: re.Match[str]) -> str:
+        nonlocal count
+        entry = by_id.get(match.group(1))
+        if entry is None:
+            raise SystemExit(f"[[EXAMPLE:{match.group(1)}]] is not in config/examples.json")
+        path = root / entry["path"]
+        if not path.exists():
+            raise SystemExit(f"Example {entry['id']} points at missing file {entry['path']}")
+        body = path.read_text(encoding="utf-8")
+        if start in body:
+            if end not in body:
+                raise SystemExit(f"Example {entry['id']}: region start without a matching end")
+            body = body.split(start, 1)[1].split(end, 1)[0]
+        lines = [line.rstrip() for line in body.splitlines()]
+        while lines and not lines[0].strip():
+            lines.pop(0)
+        while lines and not lines[-1].strip():
+            lines.pop()
+        language = entry.get("language", "python")
+        count += 1
+        caption = f"{language.upper()} · {entry['title']}"
+        return "\n".join([caption, "", "```" + language, *lines, "```"])
+
+    return EXAMPLE_MARKER.sub(render, text), count
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", default=str(Path(__file__).resolve().parents[1]))
@@ -77,6 +122,7 @@ def main() -> int:
     refs_doc = json.loads((root / "config" / "references.json").read_text(encoding="utf-8"))
     refs = refs_doc["references"]
     manuscript = render_reference_sections(manuscript, refs)
+    manuscript, example_count = expand_examples(manuscript, root)
 
     canonical = root / "book" / "manuscript.md"
     distribution = root / "dist" / "Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.md"
@@ -95,6 +141,7 @@ def main() -> int:
         "chapters": len(re.findall(r"^# \d{2} — ", manuscript, re.M)),
         "appendices": len(re.findall(r"^# Appendix ", manuscript, re.M)),
         "citation_occurrences": len(re.findall(r"\[R\d{2}\]", manuscript)),
+        "expanded_examples": example_count,
         "cited_reference_ids": ids,
     }
     (root / "reports" / "assembly-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

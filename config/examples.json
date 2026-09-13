@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0.0",
+  "region_markers": {
+    "start": "# --8<-- example:start",
+    "end": "# --8<-- example:end"
+  },
+  "verification_modes": {
+    "test": "Executed by pytest in CI with assertions on behaviour.",
+    "import": "Imported in CI against the pinned SDK, proving every symbol exists, but not executed."
+  },
+  "examples": [
+    {
+      "id": "agent-tool-loop",
+      "path": "examples/foundations/agent_tool_loop.py",
+      "language": "python",
+      "title": "Bounded agent loop with a typed tool",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_agent_tool_loop.py"
+      ],
+      "libraries": [
+        "openai-agents==0.22.2",
+        "pydantic==2.13.5"
+      ]
+    },
+    {
+      "id": "effect-idempotency",
+      "path": "examples/foundations/effect_idempotency.py",
+      "language": "python",
+      "title": "Effect-level idempotency ledger",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_effect_idempotency.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "mlflow-tracing",
+      "path": "examples/observability/mlflow_tracing.py",
+      "language": "python",
+      "title": "Tracing an agent run with MLflow",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_mlflow_tracing.py"
+      ],
+      "libraries": [
+        "mlflow==3.15.2"
+      ]
+    },
+    {
+      "id": "mlflow-trace-configuration",
+      "path": "examples/observability/mlflow_trace_configuration.py",
+      "language": "python",
+      "title": "Configuring MLflow tracing around a governed agent step",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_mlflow_trace_configuration.py"
+      ],
+      "libraries": [
+        "mlflow==3.15.2"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "examples": 4,
+  "cited": 1,
+  "uncited": [
+    "agent-tool-loop",
+    "effect-idempotency",
+    "mlflow-tracing"
+  ],
+  "rendered_lines": {
+    "agent-tool-loop": 44,
+    "effect-idempotency": 25,
+    "mlflow-tracing": 19,
+    "mlflow-trace-configuration": 28
+  },
+  "tests_executed": true,
+  "tests_passed": true,
+  "errors": [],
+  "warnings": [
+    "agent-tool-loop: registered but never cited from source/parts",
+    "effect-idempotency: registered but never cited from source/parts",
+    "mlflow-tracing: registered but never cited from source/parts"
+  ],
+  "pass": true
+}
