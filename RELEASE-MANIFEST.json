@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 160,
+  "file_count": 170,
   "files": [
     {
       "path": ".gitattributes",
@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 12049,
-      "sha256": "72ebcb59220705b0353d6deae396817c0a9d7210ddd0293c963b2ec1f0505784"
+      "bytes": 13602,
+      "sha256": "c05da80eb815a2b27c4ccf477a85a3ddd372697c79dad8606b00a08fb2617fbb"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -186,8 +186,8 @@
     },
     {
       "path": "book/manuscript.md",
-      "bytes": 492416,
-      "sha256": "c17683af943c7720ffff9b33c93a8659672bd3a00a4162c947edfe20550b2f20"
+      "bytes": 504649,
+      "sha256": "4765f1446b25dd42d4119d1cb0ba0b04a976b25542b5547b211113e08fc57b63"
     },
     {
       "path": "config/book.json",
@@ -201,8 +201,8 @@
     },
     {
       "path": "config/examples.json",
-      "bytes": 1759,
-      "sha256": "98d8de643a93e20ed009cdc160d62fc8f078d4ff435eb7f778a0c17bad82d97e"
+      "bytes": 3493,
+      "sha256": "1fe329befb35bbd26b0cbff68b92d52479a2802f00bf5fcbe4be466223d11f79"
     },
     {
       "path": "config/reference-verification.json",
@@ -221,13 +221,13 @@
     },
     {
       "path": "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.docx",
-      "bytes": 6479503,
-      "sha256": "4e3aafb1c4ec051bbff2d136204acec4d6fa6f269c9c0c182cad7e42590d5eb6"
+      "bytes": 6496320,
+      "sha256": "6043dcdccc775e41725cd271dd76235cd888d161cee006fdd1b1d959269343d4"
     },
     {
       "path": "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.md",
-      "bytes": 492416,
-      "sha256": "c17683af943c7720ffff9b33c93a8659672bd3a00a4162c947edfe20550b2f20"
+      "bytes": 504649,
+      "sha256": "4765f1446b25dd42d4119d1cb0ba0b04a976b25542b5547b211113e08fc57b63"
     },
     {
       "path": "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.tex",
@@ -236,8 +236,8 @@
     },
     {
       "path": "examples/README.md",
-      "bytes": 3237,
-      "sha256": "17bb10bb9acdea945851047ed7c923dbdb52441e34aeb785c1dedc073385f224"
+      "bytes": 4024,
+      "sha256": "29e56583bb2eda1ea4f95e5ec0b3aeb3b37c23da6591a4f852231c44fb5d6d86"
     },
     {
       "path": "examples/__init__.py",
@@ -280,6 +280,11 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
+      "path": "examples/observability/mlflow_evaluation.py",
+      "bytes": 2329,
+      "sha256": "a0fab155284257e0ef6849c2155cf29ff9551a731c7477b29277d52fd91a0bb6"
+    },
+    {
       "path": "examples/observability/mlflow_trace_configuration.py",
       "bytes": 2057,
       "sha256": "d7e04843f8438cff36e0e514ecf71a8716d3ad7dba8cc76555d92b6cfeeb5b36"
@@ -290,9 +295,29 @@
       "sha256": "34f083815c1dcfed40367f959f620e089f38ee0aeaf821778dc06df1438a09ef"
     },
     {
+      "path": "examples/patterns/approval_gate.py",
+      "bytes": 2398,
+      "sha256": "90b580d1887da985be963d2e65d15fe256ef9d0beaf27725ecc6271c8b1177de"
+    },
+    {
+      "path": "examples/patterns/bounded_react_loop.py",
+      "bytes": 2327,
+      "sha256": "6edf565fddb371528b990195ab09e47b89dab06927396550557d19b8f2fb8638"
+    },
+    {
+      "path": "examples/patterns/routing_handoff.py",
+      "bytes": 1554,
+      "sha256": "b2c86a27f1acb0479789ba700c6dedf8a63ded3dd81f53551a346f5590d3c0fd"
+    },
+    {
       "path": "examples/requirements.txt",
       "bytes": 249,
       "sha256": "5b400f1d07876f74b306713e04f86b968f9d937d74768c90f741b646e3783249"
+    },
+    {
+      "path": "examples/security/input_guardrail.py",
+      "bytes": 2355,
+      "sha256": "dbe24a43ae79b35932ddb5ec86f5be8e70da96a05534135d2b3a7becc647ba6d"
     },
     {
       "path": "examples/tests/__init__.py",
@@ -301,13 +326,33 @@
     },
     {
       "path": "examples/tests/test_agent_tool_loop.py",
-      "bytes": 1296,
-      "sha256": "71e0c8314ee9a6b5529e51d6904660fe97b5921ac3338b735617cbddd93f6c0f"
+      "bytes": 1239,
+      "sha256": "05e5abcb154c0cf00ec139d19be4388caa958ac67426dab12f8f1328cc83d3f6"
+    },
+    {
+      "path": "examples/tests/test_approval_gate.py",
+      "bytes": 1625,
+      "sha256": "00df98fb5ff946cb83da095b0183aa645ee39771da96cedf70b29e42e60fcc48"
+    },
+    {
+      "path": "examples/tests/test_bounded_react_loop.py",
+      "bytes": 1241,
+      "sha256": "120139bb3c5511455f2b0b2baa77cff6c4dabc83ad9ec5270c0eac03a70c5e68"
     },
     {
       "path": "examples/tests/test_effect_idempotency.py",
       "bytes": 1000,
       "sha256": "ee407305746555d6426c188c58e76228ab21bd5c5a598c5587292890eca1bb35"
+    },
+    {
+      "path": "examples/tests/test_input_guardrail.py",
+      "bytes": 1108,
+      "sha256": "2ca247c233c69f2c6d5306ee13b18be173989400bb0f2db81e30483e572cd358"
+    },
+    {
+      "path": "examples/tests/test_mlflow_evaluation.py",
+      "bytes": 912,
+      "sha256": "11d91e2986b942cb6391e4b32b2242eb7f0a92ef06cf69bf893906a0aba42a66"
     },
     {
       "path": "examples/tests/test_mlflow_trace_configuration.py",
@@ -318,6 +363,11 @@
       "path": "examples/tests/test_mlflow_tracing.py",
       "bytes": 648,
       "sha256": "2a4edb8f5bf91cf71d0f84e23c9f7ded63582c8998941b22e2e6c1646610e9fe"
+    },
+    {
+      "path": "examples/tests/test_routing_handoff.py",
+      "bytes": 1023,
+      "sha256": "37e529cc558ccd208dc5398b037ec09fd3b273fdb3e7af5c3d0d9bd47f58396d"
     },
     {
       "path": "latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.tex",
@@ -341,8 +391,8 @@
     },
     {
       "path": "latex/content/book-content.tex",
-      "bytes": 612352,
-      "sha256": "0c3c69e62d8b9e7469280ad4a9c967932567141961aeaa4b68d7b233016b406e"
+      "bytes": 625336,
+      "sha256": "9727277572225e6bf3bd5a49398abd1dcf3574055e3d426ee2dbdaf0acd1054c"
     },
     {
       "path": "latex/fonts/LICENSE-SIL-OFL-1.1.txt",
@@ -426,13 +476,13 @@
     },
     {
       "path": "pyproject.toml",
-      "bytes": 424,
-      "sha256": "f956bde99336f0f997ec93921954ddfcc8b53a8560cc4e05666ef238e487e258"
+      "bytes": 660,
+      "sha256": "373d290f09fffecee41734012bb38264152f0847ca73bc75d796f6a3fbd881b5"
     },
     {
       "path": "qa/build-report.json",
       "bytes": 336,
-      "sha256": "dfb85f2e790fad238087ec5c2a38bb4e10d0c17b1bbc5a5cd3b82afe02e62c6c"
+      "sha256": "2a3c45039ce6f9c3e5be7e69113d5a36bc0aaeedca6dc519490b1d39a5979f97"
     },
     {
       "path": "qa/determinism/build-a.docx",
@@ -451,8 +501,8 @@
     },
     {
       "path": "qa/latex-validation-report.json",
-      "bytes": 6841,
-      "sha256": "b5d24310aec07cac3a6ec23b23d2cb750cabd1fb86adc49fb1ec88dc49526160"
+      "bytes": 6873,
+      "sha256": "91e4ffab24d034bef286f7c5fef28c615e2fb9c5de9f7cd74a29c7a44d0c90ed"
     },
     {
       "path": "qa/pagination-report.json",
@@ -462,12 +512,12 @@
     {
       "path": "qa/validation-report.json",
       "bytes": 841,
-      "sha256": "62cb4c49807a0bb282abccb16ea6c33d7f5a0830b4e7231994d0d7670070cc0a"
+      "sha256": "ecfab32739b68528b0bf962e29a5f38d6364c2c3ba3067055c7abc4ca3be8029"
     },
     {
       "path": "reports/assembly-report.json",
       "bytes": 1132,
-      "sha256": "467a27f6ea654e2ff841aaacab94b6e81e08cdd1f218c94f17eb08d83c0db82a"
+      "sha256": "f1486101f8fd3ee6153bd0b3b17959ca0c0e62a07aa4e1b7066ea579caca391d"
     },
     {
       "path": "reports/assembly.stdout.json",
@@ -521,18 +571,18 @@
     },
     {
       "path": "reports/examples-report.json",
-      "bytes": 583,
-      "sha256": "34aaf4e5c47eec4de6d1ca5194c1e076e50a458c251254735d37ad225c40febc"
+      "bytes": 437,
+      "sha256": "f2ae0ef5013ad1c35fe6dee18803666a50a21462ad3547bd64a3f0b027688c7b"
     },
     {
       "path": "reports/latex-build-report.json",
       "bytes": 2430,
-      "sha256": "f18161f0b7d091053ce8ecf19b4f883865f81e346c17db447fe21c95291b4ad9"
+      "sha256": "5216f61071ee817993cb82464f6c50432681eb3d73dd2537ca58d68050dcbce7"
     },
     {
       "path": "reports/latex-validation.md",
       "bytes": 694,
-      "sha256": "496491fc6166acee2f8a248fc99584433b404726d872cda6697c4d18da2f5c48"
+      "sha256": "6f0ef5e0141a9c9661799c4ba29c396af84ef0f8d21355a682fc14da8141e5ea"
     },
     {
       "path": "reports/package.stdout.json",
@@ -562,7 +612,7 @@
     {
       "path": "reports/validation-summary.md",
       "bytes": 829,
-      "sha256": "66cb741fa30333fa86d72d6663431b08ffaba4ef7e634e3eb060e91f719d77b0"
+      "sha256": "90a68ef0c35253b5f10fb6a086b8835e68f937267b2346946f0b2b1b39bee775"
     },
     {
       "path": "reports/validation.stdout.json",
@@ -631,8 +681,8 @@
     },
     {
       "path": "source/parts/01-part-i.md",
-      "bytes": 45970,
-      "sha256": "3e4e50933b6c59f499bab99a1a9a57df2764896da7e91d11a16e29227a25ca06"
+      "bytes": 45999,
+      "sha256": "13b2189ef683f93a8d4e8455fb7d083ca9ae33db703cc26bf93a89052f047863"
     },
     {
       "path": "source/parts/02-part-ii.md",
@@ -646,8 +696,8 @@
     },
     {
       "path": "source/parts/04-part-iv.md",
-      "bytes": 110302,
-      "sha256": "d227c9d95471d7012e2c27671d471027ebbcb5cd9d126654f1080f2af0b1c964"
+      "bytes": 110390,
+      "sha256": "e8e2697f9d09cb02aff83f968706d03bd7273ed9b4ec973085b3f6b8883dc158"
     },
     {
       "path": "source/parts/05-part-v.md",
@@ -656,13 +706,13 @@
     },
     {
       "path": "source/parts/06-part-vi.md",
-      "bytes": 95922,
-      "sha256": "e9e7cf3eeeab290ed4e60d0cef6d0308ee1989296161fa44f7feadc17098b8d4"
+      "bytes": 96012,
+      "sha256": "3fa87a9408df58ac6d7cfb44c224665cfb485a795056ea42952a86ab65506851"
     },
     {
       "path": "source/parts/07-part-vii.md",
-      "bytes": 33350,
-      "sha256": "cc521e198201a6cd8f459e3690e81ba44b4172812ee79059812128f1d27ad33f"
+      "bytes": 33409,
+      "sha256": "e5f6978a7df1d543eec6c042188a8f0004212ccb046afce7a9cb231c1a5dfb17"
     },
     {
       "path": "source/parts/08-part-viii.md",
@@ -806,13 +856,13 @@
     },
     {
       "path": "tools/validate_book.py",
-      "bytes": 12087,
-      "sha256": "12114ae137ceb5d19a12ab64cef2b320f13b35c9649f6bc792aa4871a97f19b3"
+      "bytes": 12738,
+      "sha256": "f924556c0788e2289c279a13bc333261cbdc22ff31ce5d7f8fda659ec3ee4800"
     },
     {
       "path": "tools/validate_latex.py",
-      "bytes": 14495,
-      "sha256": "967433b96c0a0394fed47ea2cab6e6d30508b9ebed7f7fa2099e1974e0014948"
+      "bytes": 14972,
+      "sha256": "112f33b4e5254b751c8c66eb1fe423deaddc0f5ae35c9049f4946852a882815d"
     }
   ]
 }

@@ -95,7 +95,21 @@ def main() -> int:
     if chapter_nums!=list(range(1,28)): errors.append(f"Chapter sequence is invalid: {chapter_nums}")
     appendix_ids=re.findall(r'^# Appendix ([A-Z]) — ',text,re.M)
     if appendix_ids!=[chr(ord('A')+i) for i in range(12)]: errors.append(f"Appendix sequence is invalid: {appendix_ids}")
-    headings=[(len(m.group(1)),m.group(2),text.count('\n',0,m.start())+1) for m in re.finditer(r'^(#{1,4})\s+(.+)$',text,re.M)]
+    # Fenced code must be masked before scanning for headings: a Python comment
+    # like "# Captures OpenAI calls" is indistinguishable from an H1 otherwise,
+    # and the book's examples are full of them. Replacing each fenced block with
+    # blank lines of equal length keeps reported line numbers accurate.
+    def _mask_code(source):
+        out, in_code = [], False
+        for line in source.split('\n'):
+            if line.startswith('```'):
+                in_code = not in_code
+                out.append('')
+            else:
+                out.append('' if in_code else line)
+        return '\n'.join(out)
+    prose=_mask_code(text)
+    headings=[(len(m.group(1)),m.group(2),prose.count('\n',0,m.start())+1) for m in re.finditer(r'^(#{1,4})\s+(.+)$',prose,re.M)]
     prev=1
     for level,title,line in headings:
         if level>prev+1: errors.append(f"Heading level skips from H{prev} to H{level} at line {line}: {title}")

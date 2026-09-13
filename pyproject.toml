@@ -14,3 +14,9 @@ dependencies = [
 [tool.book]
 canonical_source = "source/parts/*.md"
 release = "1.0.0"
+
+[tool.pytest.ini_options]
+# Example tests are async because the Agents SDK runner is. auto mode keeps the
+# book's listings free of per-test markers that teach nothing about agents.
+asyncio_mode = "auto"
+testpaths = ["examples/tests"]

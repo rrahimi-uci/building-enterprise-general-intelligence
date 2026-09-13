@@ -109,7 +109,6 @@ def main() -> int:
         "chapters": 27,
         "appendices": 12,
         "diagrams": 18,
-        "code_blocks": 43,
         "citation_occurrences": 94,
     }
     for key, value in expected.items():
@@ -146,6 +145,14 @@ def main() -> int:
         else:
             in_block = False
     measurements["markdown_tables"] = markdown_tables
+    # Code listings are derived too: the manuscript's fenced blocks must all reach
+    # the PDF. Hard-coding the count would break every time an example is added.
+    fenced = manuscript_text.count("\n```") // 2
+    measurements["markdown_code_blocks"] = fenced
+    if measurements["code_blocks"] != fenced:
+        errors.append(
+            f"Code blocks not fully converted: {fenced} fenced blocks in the manuscript, "
+            f"{measurements['code_blocks']} lstlisting environments in the TeX")
     converted = measurements["longtables"] + measurements["callout_tables"]
     if converted != markdown_tables:
         errors.append(

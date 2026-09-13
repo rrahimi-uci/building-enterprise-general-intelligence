@@ -4,6 +4,18 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [2.0.0] — 2026-09-13
 
+### Verified examples across the book
+
+- Nine runnable, CI-executed examples now appear in nine chapters, covering the OpenAI Agents SDK and MLflow: a bounded agent loop with a typed tool (ch 02), a ReAct loop with an explicit run budget (ch 08), routing by handoff (ch 09), a human approval gate that survives the wait (ch 12), an input guardrail that trips before any tool runs (ch 18), an effect-idempotency ledger (ch 21), MLflow trace configuration and tracing (ch 23), and dataset evaluation with scorers (ch 24).
+- Agent examples run offline against the scripted-model harness, so CI executes the real SDK control flow with no API key. The guardrail test asserts the model was never consulted at all — the property the architecture actually claims.
+- Code listings rose from 43 to 51, and split listings fell from 20 to 9.
+- Added `asyncio_mode = "auto"` so the book's async listings carry no per-test markers that teach nothing about agents.
+
+### Validator fixes found while wiring the examples
+
+- **`validate_book.py` read Python comments as Markdown headings.** The heading-level check scanned the raw manuscript, so a line like `# Captures OpenAI calls` inside a fenced block counted as an H1 and produced spurious "skips from H1 to H3" errors. Fenced code is now masked before the scan, with line numbers preserved.
+- **The code-block count is now derived from the manuscript**, like the table count, instead of asserting a fixed 43. Both checks exist to prove every block reached the PDF; a literal only proved the book had not changed.
+
 ### Topology: 12 Parts / 31 chapters / 15 appendices → 8 / 27 / 12
 
 - Dissolved the four Parts that held a single thin chapter each. Part V (anti-patterns) joins Part IV as *Patterns and Anti-Patterns*; Part VII (LLM Gateway) joins integration; Part X (continuous learning) joins observability and evaluation; Part XI (governance) joins production operations. A full-page navy divider for a 471-word chapter was structure the content did not earn.

@@ -59,6 +59,69 @@
       "libraries": [
         "mlflow==3.15.2"
       ]
+    },
+    {
+      "id": "bounded-react-loop",
+      "path": "examples/patterns/bounded_react_loop.py",
+      "language": "python",
+      "title": "Bounded ReAct loop with an explicit run budget",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_bounded_react_loop.py"
+      ],
+      "libraries": [
+        "openai-agents==0.22.2"
+      ]
+    },
+    {
+      "id": "routing-handoff",
+      "path": "examples/patterns/routing_handoff.py",
+      "language": "python",
+      "title": "Routing by handoff: transferring ownership, not context",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_routing_handoff.py"
+      ],
+      "libraries": [
+        "openai-agents==0.22.2"
+      ]
+    },
+    {
+      "id": "approval-gate",
+      "path": "examples/patterns/approval_gate.py",
+      "language": "python",
+      "title": "A human approval gate that survives the wait",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_approval_gate.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "input-guardrail",
+      "path": "examples/security/input_guardrail.py",
+      "language": "python",
+      "title": "An input guardrail that trips before any tool runs",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_input_guardrail.py"
+      ],
+      "libraries": [
+        "openai-agents==0.22.2"
+      ]
+    },
+    {
+      "id": "mlflow-evaluation",
+      "path": "examples/observability/mlflow_evaluation.py",
+      "language": "python",
+      "title": "Scoring an agent against a dataset with MLflow",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_mlflow_evaluation.py"
+      ],
+      "libraries": [
+        "mlflow==3.15.2"
+      ]
     }
   ]
 }

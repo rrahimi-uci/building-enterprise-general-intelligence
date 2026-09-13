@@ -105,6 +105,8 @@ A bounded controller alternates model decision and governed tool invocation. The
 ## Implementation reference
 
 
+[[EXAMPLE:bounded-react-loop]]
+
 ### Bounded ReAct controller
 
 PYTHON · implementation excerpt
@@ -369,6 +371,8 @@ The current owner creates a typed transfer containing state references, unresolv
 
 ## Implementation reference
 
+
+[[EXAMPLE:routing-handoff]]
 
 ### Deterministic route validation
 
@@ -1182,6 +1186,8 @@ The workflow persists a proposal-bound ApprovalRequest or InterventionTask, paus
 
 ## Implementation reference
 
+
+[[EXAMPLE:approval-gate]]
 
 ### Proposal-bound approval contract
 

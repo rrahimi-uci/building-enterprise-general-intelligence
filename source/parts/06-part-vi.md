@@ -264,6 +264,10 @@ Authenticate subject/workload; classify/minimize input; build authorized labeled
 
 **Recovery strategy.** Revoke artifact/key, halt/rollback, scope releases, rotate secrets, disclose.
 
+## Implementation reference
+
+[[EXAMPLE:input-guardrail]]
+
 ## Incident response
 
 Use Detect → Contain → Revoke → Reconcile → Eradicate → Recover → Learn. Containment can pause a tool, MCP server, model route, Skill, memory namespace, tenant, or agent. Revoke credentials, capabilities, approvals, artifacts, signing keys, and trust. Reconcile which effects actually occurred; never infer from the model's final message. Restore a known release and authoritative state, then create privacy-reviewed regression cases.
@@ -1081,6 +1085,8 @@ Evidence anchors: OUTBOX; CLOUDEVENTS. Full URLs, authority, version, and scope 
 
 ## Implementation reference
 
+
+[[EXAMPLE:effect-idempotency]]
 
 ### Effect-state ledger
 

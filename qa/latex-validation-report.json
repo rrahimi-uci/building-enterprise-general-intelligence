@@ -4,20 +4,21 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "4e62b8ae7374647da3ab403054acc360c078f693c35c4adbb8a04802b0722cce",
-    "content_tex_sha256": "0c3c69e62d8b9e7469280ad4a9c967932567141961aeaa4b68d7b233016b406e",
+    "content_tex_sha256": "9727277572225e6bf3bd5a49398abd1dcf3574055e3d426ee2dbdaf0acd1054c",
     "style_sha256": "2a418b355302ee1bdb56d2912414036310ea71592bc0cdc9b9aa778bd0e83228",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 27,
     "appendices": 12,
     "diagrams": 18,
-    "code_blocks": 43,
+    "code_blocks": 51,
     "longtables": 191,
     "callout_tables": 89,
     "citation_occurrences": 94,
     "reference_targets": 43,
     "unique_citation_ids": 43,
     "markdown_tables": 280,
+    "markdown_code_blocks": 51,
     "image_quality": [
       {
         "file": "assets/cover/cover-v2.0.0.png",

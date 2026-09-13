@@ -1,13 +1,10 @@
 """The agent example must dispatch the tool and return typed output, offline."""
 from __future__ import annotations
 
-import pytest
-
 from examples._harness.scripted_model import ScriptedModel, Say, ToolCall
 from examples.foundations.agent_tool_loop import SupplierStatus, run
 
 
-@pytest.mark.asyncio
 async def test_agent_calls_the_tool_before_answering():
     model = ScriptedModel([
         ToolCall("lookup_supplier", {"supplier_id": "S-1001"}),
@@ -22,7 +19,6 @@ async def test_agent_calls_the_tool_before_answering():
     assert model.calls[0].name == "lookup_supplier"
 
 
-@pytest.mark.asyncio
 async def test_unknown_supplier_is_reported_as_data_not_an_exception():
     model = ScriptedModel([
         ToolCall("lookup_supplier", {"supplier_id": "S-9999"}),

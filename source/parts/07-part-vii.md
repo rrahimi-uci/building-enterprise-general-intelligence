@@ -120,6 +120,8 @@ Evidence anchors: OTEL-GENAI; MLFLOW-TRACE. Full URLs, authority, version, and s
 ## Implementation reference
 
 
+[[EXAMPLE:mlflow-tracing]]
+
 ### MLflow tracing integration
 
 [[EXAMPLE:mlflow-trace-configuration]]
@@ -332,6 +334,8 @@ Evidence anchors: MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Full URLs, authority, vers
 
 ## Implementation reference
 
+
+[[EXAMPLE:mlflow-evaluation]]
 
 ### MLflow trajectory evaluation
 

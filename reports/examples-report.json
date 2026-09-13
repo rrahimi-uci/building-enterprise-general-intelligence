@@ -1,24 +1,21 @@
 {
-  "examples": 4,
-  "cited": 1,
-  "uncited": [
-    "agent-tool-loop",
-    "effect-idempotency",
-    "mlflow-tracing"
-  ],
+  "examples": 9,
+  "cited": 9,
+  "uncited": [],
   "rendered_lines": {
     "agent-tool-loop": 44,
     "effect-idempotency": 25,
     "mlflow-tracing": 19,
-    "mlflow-trace-configuration": 28
+    "mlflow-trace-configuration": 28,
+    "bounded-react-loop": 49,
+    "routing-handoff": 31,
+    "approval-gate": 48,
+    "input-guardrail": 44,
+    "mlflow-evaluation": 42
   },
   "tests_executed": false,
   "tests_passed": null,
   "errors": [],
-  "warnings": [
-    "agent-tool-loop: registered but never cited from source/parts",
-    "effect-idempotency: registered but never cited from source/parts",
-    "mlflow-tracing: registered but never cited from source/parts"
-  ],
+  "warnings": [],
   "pass": true
 }

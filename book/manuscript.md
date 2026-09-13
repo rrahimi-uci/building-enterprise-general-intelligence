@@ -424,6 +424,55 @@ The model proposes ToolIntent; the Tool Gateway validates the exact tool version
 ## Implementation reference
 
 
+PYTHON · Bounded agent loop with a typed tool
+
+```python
+class SupplierStatus(BaseModel):
+    """The structured answer the agent must produce."""
+
+    supplier_id: str
+    active: bool
+    summary: str
+
+
+# A tool is a normal, testable function. Its type hints become the schema the
+# model is allowed to call, so an out-of-contract proposal fails before dispatch.
+@function_tool
+def lookup_supplier(supplier_id: str) -> str:
+    """Return the onboarding status of one supplier record."""
+    records = {"S-1001": "active", "S-2002": "suspended"}
+    status = records.get(supplier_id)
+    if status is None:
+        # Returning an error *as data* keeps the loop bounded: the model can
+        # react to it, but it cannot escalate its own privileges by retrying.
+        return f"no supplier record for {supplier_id}"
+    return f"supplier {supplier_id} is {status}"
+
+
+def build_agent() -> Agent:
+    return Agent(
+        name="Supplier onboarding",
+        instructions=(
+            "Answer questions about supplier onboarding. "
+            "Always call lookup_supplier before making a claim about a record."
+        ),
+        tools=[lookup_supplier],
+        # max_turns on the run, plus a declared output type, are what make this
+        # a bounded loop rather than an open-ended conversation.
+        output_type=SupplierStatus,
+    )
+
+
+async def run(question: str, *, model=None) -> SupplierStatus:
+    result = await Runner.run(
+        build_agent(),
+        question,
+        max_turns=4,
+        run_config=RunConfig(model=model, tracing_disabled=True),
+    )
+    return result.final_output
+```
+
 ### Governed Tool Gateway
 
 PYTHON · implementation excerpt
@@ -1802,6 +1851,60 @@ A bounded controller alternates model decision and governed tool invocation. The
 ## Implementation reference
 
 
+PYTHON · Bounded ReAct loop with an explicit run budget
+
+```python
+@dataclass
+class RunBudget:
+    """Budget for one run. The model cannot see or change it."""
+
+    max_tool_calls: int = 3
+    tool_calls: int = 0
+    exhausted_at: str | None = None
+
+    def consume(self, tool: str) -> bool:
+        if self.tool_calls >= self.max_tool_calls:
+            self.exhausted_at = tool
+            return False
+        self.tool_calls += 1
+        return True
+
+
+@function_tool
+def search_records(context: RunContextWrapper[RunBudget], query: str) -> str:
+    """Search supplier records. Refuses once the run budget is spent."""
+    if not context.context.consume("search_records"):
+        # Refusing *as data* keeps the loop bounded without raising: the model can
+        # read this, stop, and explain itself rather than retrying blindly.
+        return "budget exhausted: no further searches permitted in this run"
+    hits = {"sanctions": "no sanctions match", "tax": "tax id verified"}
+    return hits.get(query, f"no records for {query!r}")
+
+
+def build_agent() -> Agent[RunBudget]:
+    return Agent[RunBudget](
+        name="Supplier research",
+        instructions=(
+            "Research the supplier using search_records. "
+            "If the budget is exhausted, summarize what you found and stop."
+        ),
+        tools=[search_records],
+    )
+
+
+async def run(question: str, *, budget: RunBudget, model=None) -> str:
+    result = await Runner.run(
+        build_agent(),
+        question,
+        context=budget,
+        # max_turns is the runner's own stop; the budget is the domain's. Both
+        # matter: one bounds the loop, the other bounds what the loop may spend.
+        max_turns=8,
+        run_config=RunConfig(model=model, tracing_disabled=True),
+    )
+    return result.final_output
+```
+
 ### Bounded ReAct controller
 
 PYTHON · implementation excerpt
@@ -2066,6 +2169,42 @@ The current owner creates a typed transfer containing state references, unresolv
 
 ## Implementation reference
 
+
+PYTHON · Routing by handoff: transferring ownership, not context
+
+```python
+refunds = Agent(
+    name="Refunds specialist",
+    handoff_description="Handles refund eligibility and processing.",
+    instructions="Decide refund eligibility. State the policy rule you applied.",
+)
+
+sanctions = Agent(
+    name="Sanctions specialist",
+    handoff_description="Handles sanctions and restricted-party screening.",
+    instructions="Screen the named party. Never assert a clear result without a check.",
+)
+
+# The triage agent owns routing only. It deliberately has no domain tools, so it
+# cannot quietly answer a question it should have handed off.
+triage = Agent(
+    name="Triage",
+    instructions=(
+        "Route the request to the specialist that owns it. "
+        "Do not answer domain questions yourself."
+    ),
+    handoffs=[refunds, sanctions],
+)
+
+
+async def run(request: str, *, model=None):
+    result = await Runner.run(
+        triage, request, max_turns=5,
+        run_config=RunConfig(model=model, tracing_disabled=True),
+    )
+    # last_agent is the audit answer to "who actually decided this?"
+    return result.final_output, result.last_agent.name
+```
 
 ### Deterministic route validation
 
@@ -2879,6 +3018,59 @@ The workflow persists a proposal-bound ApprovalRequest or InterventionTask, paus
 
 ## Implementation reference
 
+
+PYTHON · A human approval gate that survives the wait
+
+```python
+def proposal_hash(action: str, arguments: dict) -> str:
+    """Bind a grant to one exact proposal, not to an intent."""
+    payload = json.dumps({"action": action, "arguments": arguments}, sort_keys=True)
+    return hashlib.sha256(payload.encode()).hexdigest()
+
+
+@dataclass(frozen=True)
+class ApprovalGrant:
+    proposal_hash: str
+    approver_id: str
+    expires_at: datetime
+
+
+class ApprovalExpired(Exception):
+    """The grant lapsed before the effect committed."""
+
+
+class ProposalMismatch(Exception):
+    """The proposal changed after it was approved."""
+
+
+@dataclass
+class PendingApprovals:
+    """Persisted pauses. A real system stores these in the workflow database."""
+
+    pending: dict[str, dict] = field(default_factory=dict)
+
+    def pause(self, run_id: str, action: str, arguments: dict, ttl: timedelta) -> str:
+        digest = proposal_hash(action, arguments)
+        self.pending[run_id] = {
+            "digest": digest,
+            "action": action,
+            "arguments": arguments,
+            # The context is stored with the pause. Reconstructing it later from
+            # a transcript is exactly what fails after a deploy.
+            "expires_at": datetime.now(timezone.utc) + ttl,
+        }
+        return digest
+
+    def commit(self, run_id: str, grant: ApprovalGrant, now: datetime | None = None) -> str:
+        record = self.pending[run_id]
+        now = now or datetime.now(timezone.utc)
+        if grant.proposal_hash != record["digest"]:
+            raise ProposalMismatch("the approved proposal is not the one being committed")
+        if now >= grant.expires_at or now >= record["expires_at"]:
+            raise ApprovalExpired("approval lapsed; re-request rather than assume consent")
+        del self.pending[run_id]
+        return f"committed {record['action']} approved by {grant.approver_id}"
+```
 
 ### Proposal-bound approval contract
 
@@ -4922,6 +5114,57 @@ Authenticate subject/workload; classify/minimize input; build authorized labeled
 
 **Recovery strategy.** Revoke artifact/key, halt/rollback, scope releases, rotate secrets, disclose.
 
+## Implementation reference
+
+PYTHON · An input guardrail that trips before any tool runs
+
+```python
+# Phrases that attempt to re-authorize the agent from inside the content. A real
+# deployment classifies rather than matches strings; the architecture is the
+# point, not the detector.
+OVERRIDE_MARKERS = ("ignore previous instructions", "you are now", "disregard the policy")
+
+
+@input_guardrail
+async def no_instruction_override(
+    context: RunContextWrapper[None], agent: Agent, user_input
+) -> GuardrailFunctionOutput:
+    text = user_input if isinstance(user_input, str) else str(user_input)
+    hit = next((m for m in OVERRIDE_MARKERS if m in text.lower()), None)
+    return GuardrailFunctionOutput(
+        output_info={"marker": hit},
+        # Tripping raises before the model is asked to act, so nothing downstream
+        # sees the request at all.
+        tripwire_triggered=hit is not None,
+    )
+
+
+@function_tool
+def issue_refund(order_id: str, amount_usd: float) -> str:
+    """Issue a refund. Guarded: this is a real, irreversible effect."""
+    return f"refunded {amount_usd:.2f} for {order_id}"
+
+
+agent = Agent(
+    name="Refunds",
+    instructions="Process refunds that policy allows.",
+    tools=[issue_refund],
+    input_guardrails=[no_instruction_override],
+)
+
+
+async def run(request: str, *, model=None) -> tuple[bool, str]:
+    """Return (allowed, result). A blocked run never reaches a tool."""
+    try:
+        result = await Runner.run(
+            agent, request, max_turns=4,
+            run_config=RunConfig(model=model, tracing_disabled=True),
+        )
+        return True, result.final_output
+    except InputGuardrailTripwireTriggered:
+        return False, "blocked: the request tried to override the agent's instructions"
+```
+
 ## Incident response
 
 Use Detect → Contain → Revoke → Reconcile → Eradicate → Recover → Learn. Containment can pause a tool, MCP server, model route, Skill, memory namespace, tenant, or agent. Revoke credentials, capabilities, approvals, artifacts, signing keys, and trust. Reconcile which effects actually occurred; never infer from the model's final message. Restore a known release and authoritative state, then create privacy-reviewed regression cases.
@@ -5740,6 +5983,36 @@ Evidence anchors: OUTBOX; CLOUDEVENTS. Full URLs, authority, version, and scope 
 ## Implementation reference
 
 
+PYTHON · Effect-level idempotency ledger
+
+```python
+class EffectOutcomeUnknown(Exception):
+    """Raised when a dispatch timed out and the outcome cannot be proven."""
+
+
+@dataclass
+class EffectLedger:
+    """Records the outcome of each logical effect exactly once."""
+
+    _committed: dict[str, str] = field(default_factory=dict)
+    _in_flight: set[str] = field(default_factory=set)
+
+    def commit(self, effect_key: str, apply) -> str:
+        # A replayed key returns the original receipt. The caller cannot tell
+        # whether it won the race, and does not need to.
+        if effect_key in self._committed:
+            return self._committed[effect_key]
+        if effect_key in self._in_flight:
+            raise EffectOutcomeUnknown(f"{effect_key} is still in flight")
+        self._in_flight.add(effect_key)
+        try:
+            receipt = apply()
+        finally:
+            self._in_flight.discard(effect_key)
+        self._committed[effect_key] = receipt
+        return receipt
+```
+
 ### Effect-state ledger
 
 PYTHON · implementation excerpt
@@ -6221,6 +6494,30 @@ Evidence anchors: OTEL-GENAI; MLFLOW-TRACE. Full URLs, authority, version, and s
 ## Implementation reference
 
 
+PYTHON · Tracing an agent run with MLflow
+
+```python
+@mlflow.trace(span_type="TOOL")
+def lookup_supplier(supplier_id: str) -> dict[str, str]:
+    """Tool spans record the arguments and the result, not just the latency."""
+    records = {"S-1001": "active", "S-2002": "suspended"}
+    return {"supplier_id": supplier_id, "status": records.get(supplier_id, "unknown")}
+
+
+@mlflow.trace(span_type="AGENT")
+def handle_request(supplier_id: str) -> str:
+    """The parent span ties every child call into one causally-ordered run."""
+    record = lookup_supplier(supplier_id)
+    # Attributes carry the decision inputs. Recording *why* a branch was taken
+    # is what makes a trace answer questions later, instead of only timing them.
+    span = mlflow.get_current_active_span()
+    if span is not None:
+        span.set_attributes({"supplier.status": record["status"]})
+    if record["status"] == "unknown":
+        return f"No authorized record for {supplier_id}; escalating to a human."
+    return f"Supplier {supplier_id} is {record['status']}."
+```
+
 ### MLflow tracing integration
 
 PYTHON · Configuring MLflow tracing around a governed agent step
@@ -6464,6 +6761,53 @@ Evidence anchors: MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Full URLs, authority, vers
 
 ## Implementation reference
 
+
+PYTHON · Scoring an agent against a dataset with MLflow
+
+```python
+# Each case is an incident that actually happened, not an imagined one.
+DATASET = [
+    {"inputs": {"supplier_id": "S-1001"}, "expectations": {"status": "active"}},
+    {"inputs": {"supplier_id": "S-2002"}, "expectations": {"status": "suspended"}},
+    {"inputs": {"supplier_id": "S-9999"}, "expectations": {"status": "unknown"}},
+]
+
+
+@scorer
+def status_is_correct(outputs: dict, expectations: dict) -> bool:
+    """A deterministic check. Prefer one wherever the answer is checkable."""
+    return outputs.get("status") == expectations.get("status")
+
+
+@scorer
+def escalates_when_unknown(outputs: dict, expectations: dict) -> bool:
+    """Unknown records must escalate rather than guess -- the failure that matters."""
+    if expectations.get("status") != "unknown":
+        return True
+    return bool(outputs.get("escalated"))
+
+
+def predict(supplier_id: str) -> dict:
+    """The system under evaluation."""
+    records = {"S-1001": "active", "S-2002": "suspended"}
+    status = records.get(supplier_id, "unknown")
+    return {"status": status, "escalated": status == "unknown"}
+
+
+def evaluate() -> dict[str, float]:
+    """Score every case and return the pass rate per scorer."""
+    results: dict[str, list[bool]] = {"status_is_correct": [], "escalates_when_unknown": []}
+    for case in DATASET:
+        with mlflow.start_span(name="evaluation_case") as span:
+            span.set_inputs(case["inputs"])
+            outputs = predict(**case["inputs"])
+            span.set_outputs(outputs)
+            results["status_is_correct"].append(
+                outputs.get("status") == case["expectations"]["status"])
+            results["escalates_when_unknown"].append(
+                case["expectations"]["status"] != "unknown" or bool(outputs.get("escalated")))
+    return {name: sum(values) / len(values) for name, values in results.items()}
+```
 
 ### MLflow trajectory evaluation
 

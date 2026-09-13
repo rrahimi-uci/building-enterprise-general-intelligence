@@ -302,6 +302,8 @@ The model proposes ToolIntent; the Tool Gateway validates the exact tool version
 ## Implementation reference
 
 
+[[EXAMPLE:agent-tool-loop]]
+
 ### Governed Tool Gateway
 
 PYTHON · implementation excerpt

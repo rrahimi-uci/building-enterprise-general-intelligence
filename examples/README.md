@@ -55,6 +55,20 @@ resolves `RunConfig.model` with an `isinstance` check, so a structurally
 compatible class that does not inherit from it is silently ignored and the run
 falls through to the real OpenAI provider.
 
+## What is here
+
+| Example | Chapter | Exercises |
+|---|---|---|
+| `foundations/agent_tool_loop.py` | 02 | Typed tool, structured output, bounded run |
+| `foundations/effect_idempotency.py` | 21 | Logical effect keys, replay safety |
+| `patterns/bounded_react_loop.py` | 08 | Run budget enforced outside the model |
+| `patterns/routing_handoff.py` | 09 | Handoff as an ownership transfer |
+| `patterns/approval_gate.py` | 12 | Proposal binding, grant expiry |
+| `security/input_guardrail.py` | 18 | Tripwire before the model is consulted |
+| `observability/mlflow_tracing.py` | 23 | Agent and tool spans |
+| `observability/mlflow_trace_configuration.py` | 23 | Autolog plus platform-owned spans |
+| `observability/mlflow_evaluation.py` | 24 | Dataset scoring and regression detection |
+
 ## Adding an example
 
 1. Write the file under a topic directory, with region markers.
