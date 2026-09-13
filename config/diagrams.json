@@ -1,0 +1,95 @@
+{
+  "schema_version": "1.0",
+  "diagrams": [
+    {
+      "id": "anti-before-after",
+      "file": "assets/diagrams/anti-before-after.png",
+      "sha256": "ececad176fb98661edd824bc824f60a7e2ff4dd9f403b9e7b28672974161c4d8"
+    },
+    {
+      "id": "book-map",
+      "file": "assets/diagrams/book-map.png",
+      "sha256": "6df8d80057a0bbefbda3c8363fb69bcfb944ef99c9a8b1b66d911d1f1ba87c75"
+    },
+    {
+      "id": "developer-lifecycle",
+      "file": "assets/diagrams/developer-lifecycle.png",
+      "sha256": "23ab7896c780e637d53e99deaf1977453415a9dc636af3158d8726121bf396c9"
+    },
+    {
+      "id": "developer-platform",
+      "file": "assets/diagrams/developer-platform.png",
+      "sha256": "b4d205365f963394d0135ac73e247ceee0f7bc0d646092a50eac0e2599f1e023"
+    },
+    {
+      "id": "dx-golden-path",
+      "file": "assets/diagrams/dx-golden-path.png",
+      "sha256": "510f3a858768bb261bcd383142d2d2a48bb3e51c5fe3c754d2e078300236a7d1"
+    },
+    {
+      "id": "gateway-position",
+      "file": "assets/diagrams/gateway-position.png",
+      "sha256": "53e521d761bd7d3cbfa2e26a7cf78bb87acc9950f07c3485318593db1e394a70"
+    },
+    {
+      "id": "governance-model",
+      "file": "assets/diagrams/governance-model.png",
+      "sha256": "bdee72d6a2004cda5e525f106f78d98dd2554b2b9d5e6649226ca256f0653489"
+    },
+    {
+      "id": "guardrail-sequence",
+      "file": "assets/diagrams/guardrail-sequence.png",
+      "sha256": "cc05e2b3315e4210205feb3b2e994effa6a5496945da89fbf970fccad50ae077"
+    },
+    {
+      "id": "learning-loop",
+      "file": "assets/diagrams/learning-loop.png",
+      "sha256": "cd17949d9caee0662caf417c1c3bfaee4eee05f360f991de8ac5bab313ecde86"
+    },
+    {
+      "id": "model-routing",
+      "file": "assets/diagrams/model-routing.png",
+      "sha256": "e5de1387392122a7b7e4946c1e212dc5f6805a744dee8af2b41cb99cb132bedb"
+    },
+    {
+      "id": "pattern-decision-tree",
+      "file": "assets/diagrams/pattern-decision-tree.png",
+      "sha256": "07b059e1aa8731c35f2c5f9d432dfee78d0c7816b0d6fc1fb67fce049a27bc04"
+    },
+    {
+      "id": "portability",
+      "file": "assets/diagrams/portability.png",
+      "sha256": "9f0075fbc80bdf217b644dd0bfea1dfed49886bc16870e326e96130d67492a04"
+    },
+    {
+      "id": "reference-architecture",
+      "file": "assets/diagrams/reference-architecture.png",
+      "sha256": "d4f49c6b023a74b9cab1d0ed8794c96aeaa6c29d30402c4b442ff1e08c4c8495"
+    },
+    {
+      "id": "request-sequence",
+      "file": "assets/diagrams/request-sequence.png",
+      "sha256": "af8115a556777f8c6c0b383124657d37c78358cfc11c04a9f1e868586817450a"
+    },
+    {
+      "id": "runtime-offline",
+      "file": "assets/diagrams/runtime-offline.png",
+      "sha256": "26959491fc1e265bbb999b976e4042867c10043eee03c0b7c608fec8ed625f1f"
+    },
+    {
+      "id": "security-boundaries",
+      "file": "assets/diagrams/security-boundaries.png",
+      "sha256": "6d889f1f24b75765064431f079defde3f34d89b4a44b4ac6f5ef2fb2c2a6a2ad"
+    },
+    {
+      "id": "security-depth",
+      "file": "assets/diagrams/security-depth.png",
+      "sha256": "765dc464827e56676df132894a90357bb5098915148724cb838b171b5f4357d7"
+    },
+    {
+      "id": "test-pyramid",
+      "file": "assets/diagrams/test-pyramid.png",
+      "sha256": "1aa3c43742201d5f000d518fac8a1e2f32c995a6d1abe8e0515311b2eb547c74"
+    }
+  ]
+}

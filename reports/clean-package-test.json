@@ -1,0 +1,188 @@
+{
+  "canonical_source": "source/parts/*.md",
+  "ordered_parts": [
+    "source/parts/00-front-matter.md",
+    "source/parts/01-part-i.md",
+    "source/parts/02-part-ii.md",
+    "source/parts/03-part-iii.md",
+    "source/parts/04-part-iv.md",
+    "source/parts/05-part-v.md",
+    "source/parts/06-part-vi.md",
+    "source/parts/07-part-vii.md",
+    "source/parts/08-part-viii.md",
+    "source/parts/09-part-ix.md",
+    "source/parts/10-part-x.md",
+    "source/parts/11-part-xi.md",
+    "source/parts/12-part-xii.md",
+    "source/parts/13-appendices.md"
+  ],
+  "bytes": 499052,
+  "sha256": "a7bcceec87ab5bdc25a272de8abd68d5572f11ffc5983a75da150419d3b0b913",
+  "parts": 12,
+  "chapters": 31,
+  "appendices": 15,
+  "citation_occurrences": 94,
+  "cited_reference_ids": [
+    "R01",
+    "R02",
+    "R03",
+    "R04",
+    "R05",
+    "R06",
+    "R07",
+    "R08",
+    "R09",
+    "R10",
+    "R11",
+    "R12",
+    "R13",
+    "R14",
+    "R15",
+    "R16",
+    "R17",
+    "R18",
+    "R19",
+    "R20",
+    "R21",
+    "R22",
+    "R23",
+    "R24",
+    "R25",
+    "R26",
+    "R27",
+    "R28",
+    "R29",
+    "R30",
+    "R31",
+    "R32",
+    "R33",
+    "R34",
+    "R35",
+    "R36",
+    "R37",
+    "R38",
+    "R39",
+    "R40",
+    "R41",
+    "R42",
+    "R43"
+  ]
+}
+{
+  "output": "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.docx",
+  "sha256": "4e1020b71d76b4bc1f21f5b31a8dc065f81331a4223de4b18f1ce82cbd885c9f",
+  "bytes": 6527520,
+  "template_only": false,
+  "paragraphs": 2668,
+  "tables": 316,
+  "inline_images": 19,
+  "chapter_headings": 31,
+  "appendix_headings": 15
+}
+{
+  "references": 43,
+  "citation_occurrences": 94,
+  "unknown_ids": [],
+  "uncited_ids": [],
+  "errors": [],
+  "warnings": [],
+  "pass": true
+}
+{
+  "release": "1.0.0",
+  "validated_on": "2026-09-13",
+  "checks": {
+    "canonical_markdown_sha256": "a7bcceec87ab5bdc25a272de8abd68d5572f11ffc5983a75da150419d3b0b913",
+    "canonical_markdown_bytes": 499052,
+    "parts": 12,
+    "chapters": 31,
+    "appendices": 15,
+    "code_blocks": 43,
+    "reference_count": 43,
+    "citation_occurrences": 94,
+    "cited_reference_ids": 43,
+    "diagram_markers": 18,
+    "registered_diagrams": 18,
+    "cover_dimensions": [
+      2550,
+      3300
+    ],
+    "docx_sha256": "4e1020b71d76b4bc1f21f5b31a8dc065f81331a4223de4b18f1ce82cbd885c9f",
+    "docx_bytes": 6527520,
+    "docx_paragraphs": 2668,
+    "docx_tables": 316,
+    "docx_inline_images": 19,
+    "docx_chapters": 31,
+    "docx_appendices": 15,
+    "pdf_pages": 213,
+    "blank_pdf_pages": []
+  },
+  "errors": [],
+  "warnings": [],
+  "pass": true
+}
+{
+  "output": "qa/determinism/build-a.docx",
+  "sha256": "4e1020b71d76b4bc1f21f5b31a8dc065f81331a4223de4b18f1ce82cbd885c9f",
+  "bytes": 6527520,
+  "template_only": false,
+  "paragraphs": 2668,
+  "tables": 316,
+  "inline_images": 19,
+  "chapter_headings": 31,
+  "appendix_headings": 15
+}
+{
+  "output": "qa/determinism/build-b.docx",
+  "sha256": "4e1020b71d76b4bc1f21f5b31a8dc065f81331a4223de4b18f1ce82cbd885c9f",
+  "bytes": 6527520,
+  "template_only": false,
+  "paragraphs": 2668,
+  "tables": 316,
+  "inline_images": 19,
+  "chapter_headings": 31,
+  "appendix_headings": 15
+}
+{
+  "build_a_sha256": "4e1020b71d76b4bc1f21f5b31a8dc065f81331a4223de4b18f1ce82cbd885c9f",
+  "build_b_sha256": "4e1020b71d76b4bc1f21f5b31a8dc065f81331a4223de4b18f1ce82cbd885c9f",
+  "byte_identical": true,
+  "bytes": 6527520
+}
+{
+  "zip": "/vercel/sandbox/data/Enterprise-Agentic-AI-Book-v1.0.0-Development-Package.zip",
+  "extracted_root": "/vercel/sandbox/data/Book-v1.0.0-clean-test/Book-v1.0.0",
+  "commands": [
+    [
+      "/usr/local/bin/python3",
+      "tools/assemble_manuscript.py",
+      "--root",
+      "."
+    ],
+    [
+      "/usr/local/bin/python3",
+      "tools/build_book.py",
+      "--root",
+      "."
+    ],
+    [
+      "/usr/local/bin/python3",
+      "tools/check_references.py",
+      "--root",
+      "."
+    ],
+    [
+      "/usr/local/bin/python3",
+      "tools/validate_book.py",
+      "--root",
+      "."
+    ],
+    [
+      "/usr/local/bin/python3",
+      "tools/deterministic_build_check.py",
+      "--root",
+      "."
+    ]
+  ],
+  "pass": true
+}

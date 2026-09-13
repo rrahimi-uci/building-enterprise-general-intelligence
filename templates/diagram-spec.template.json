@@ -1,0 +1,17 @@
+{
+  "id": "chapter-topic-flow",
+  "title": "Architecture title",
+  "caption": "Figure NN.N — The architectural lesson expressed by the visual.",
+  "width": 1800,
+  "height": 1000,
+  "nodes": [
+    {"id": "source", "label": "Input", "x": 80, "y": 380, "w": 300, "h": 140, "kind": "external"},
+    {"id": "policy", "label": "Policy boundary", "x": 520, "y": 300, "w": 360, "h": 300, "kind": "control"},
+    {"id": "runtime", "label": "Agent runtime", "x": 1020, "y": 380, "w": 340, "h": 140, "kind": "runtime"}
+  ],
+  "edges": [
+    {"from": "source", "to": "policy", "label": "request"},
+    {"from": "policy", "to": "runtime", "label": "authorized action"}
+  ],
+  "notes": ["Use labels, not color alone, to encode meaning."]
+}

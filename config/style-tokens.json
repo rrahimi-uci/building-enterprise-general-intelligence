@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "page": {
+    "size": "Letter",
+    "orientation": "portrait",
+    "margins_inches": {"top": 0.68, "bottom": 0.65, "left": 0.72, "right": 0.72},
+    "header_distance_inches": 0.25,
+    "footer_distance_inches": 0.28,
+    "diagram_width_inches": 6.85
+  },
+  "fonts": {"sans": "Arial", "mono": "Courier New"},
+  "font_sizes_pt": {
+    "title": 30,
+    "subtitle": 14,
+    "part": 28,
+    "h1": 24,
+    "h2": 16,
+    "h3": 12,
+    "h4": 10,
+    "body": 9.6,
+    "caption": 8.5,
+    "inline_code": 8.7,
+    "code": 7.25,
+    "header": 7.2,
+    "footer": 7.5
+  },
+  "colors": {
+    "navy": "102A4C",
+    "navy2": "173E68",
+    "blue": "1769D2",
+    "cyan": "20B8D8",
+    "teal": "118A84",
+    "amber": "E09A32",
+    "red": "C94A4A",
+    "light": "EEF4FA",
+    "white": "FFFFFF",
+    "ink": "12233F",
+    "slate": "4A6078"
+  },
+  "component_sequences": {
+    "pattern": ["Problem", "Anti-Pattern", "Why It Fails", "Recommended Pattern", "Architecture", "Enterprise Example", "Detection Metrics", "Trade-offs"],
+    "continuous_learning": ["Observe", "Measure", "Detect", "Diagnose", "Recommend", "Validate", "Approve", "Deploy", "Monitor", "Learn"]
+  }
+}

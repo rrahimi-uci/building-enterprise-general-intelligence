@@ -1,0 +1,198 @@
+# Book Design System — v1.0.0
+
+This document is the visual and editorial contract for every representation of the book. `config/book.json`, `config/style-tokens.json`, and `tools/build_book.py` are the executable counterparts.
+
+## 1. Publication hierarchy
+
+| Level | Markdown | DOCX style | Pagination rule | Purpose |
+|---|---|---|---|---|
+| Cover | `[[COVER]]` | full-page image | page 1 | identity, title, author, edition |
+| Title/front matter | H1/H2 as authored | Title, Subtitle, headings | follows cover | scope, audience, reading map, TOC |
+| Part | `# Part <Roman> — <Title>` | Book Part | standalone page | conceptual phase and orientation |
+| Chapter | `# Chapter NN — <Title>` | Heading 1 | new page | primary learning unit |
+| Appendix | `# Appendix X — <Title>` | Heading 1 | new page | reference/operational material |
+| Section | `##` | Heading 2 | keep with next | major chapter argument |
+| Subsection | `###` | Heading 3 | keep with next | decomposed concept |
+| Local topic | `####` | Heading 4 | keep with next | limited local hierarchy |
+
+Do not skip heading levels. Do not start body content with a duplicate H1 title. Every Part page states what the reader will decide or build and how the Part connects to the previous and next layers.
+
+## 2. Narrative component model
+
+A chapter should normally contain:
+
+1. Opening promise and prerequisites.
+2. Problem/system context.
+3. Definitions, boundaries, and invariants.
+4. Architecture and control/data-flow explanation.
+5. Patterns, anti-patterns, threats, or decisions.
+6. Enterprise example and implementation guidance.
+7. Detection/operational metrics and trade-offs.
+8. Evidence notes for sourced claims.
+9. Concise synthesis and transition to the next chapter.
+
+Pattern and anti-pattern material uses this sequence when applicable:
+
+**Problem → Anti-Pattern → Why It Fails → Recommended Pattern → Architecture → Enterprise Example → Detection Metrics → Trade-offs**
+
+Continuous learning uses:
+
+**Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn**
+
+Always distinguish runtime adaptation from governed offline improvement, and automated changes from approval-required changes.
+
+## 3. Typography
+
+Primary font: Arial. Monospace font: Courier New. If unavailable, use a metric-compatible substitute and rerun pagination QA.
+
+| Element | Size | Weight/color | Spacing |
+|---|---:|---|---|
+| Title | 30 pt | bold, Navy | 14 pt before / 7 pt after |
+| Subtitle | 14 pt | Teal | 8 / 5 pt |
+| Part title | 28 pt | bold, White | centered on Navy field |
+| H1 | 24 pt | bold, Navy | 14 / 7 pt |
+| H2 | 16 pt | bold, Blue | 9 / 5 pt |
+| H3 | 12 pt | bold, Navy 2 | 7 / 4 pt |
+| H4 | 10 pt | bold, Teal | 5 / 3 pt |
+| Body | 9.6 pt | Ink | 5 pt after, 1.06 line spacing |
+| Caption | 8.5 pt | italic, slate | 2 / 6 pt |
+| Inline code | 8.7 pt | Courier New, slate | inline |
+| Code | 7.25 pt | Courier New | line-numbered panel |
+| Header | 7.2 pt | bold, slate | book title |
+| Footer | 7.5 pt | slate | version and page number |
+
+Avoid manual direct formatting when a named style exists. Style changes belong in configuration and the builder, then require full visual regression review.
+
+## 4. Color tokens
+
+| Token | Hex | Use |
+|---|---|---|
+| Navy | `#102A4C` | major headings, dividers, authority |
+| Navy 2 | `#173E68` | secondary hierarchy |
+| Blue | `#1769D2` | H2, links, active architecture |
+| Cyan | `#20B8D8` | accents, Part identifiers |
+| Teal | `#118A84` | H4, balanced positive guidance |
+| Amber | `#E09A32` | cautions and decisions |
+| Red | `#C94A4A` | threats, failure, prohibited paths |
+| Light | `#EEF4FA` | neutral panels/table shading |
+| Ink | `#12233F` | body text |
+| White | `#FFFFFF` | reversed text |
+
+Never encode meaning by color alone. Pair color with titles, labels, icons, line styles, or explicit status text.
+
+## 5. Page geometry and navigation
+
+- Page size: US Letter, portrait.
+- Margins: top 0.68 in, bottom 0.65 in, left 0.72 in, right 0.72 in.
+- Header distance: 0.25 in; footer distance: 0.28 in.
+- First page uses different header/footer.
+- Part and appendix-divider pages are standalone.
+- Each chapter/appendix begins on a fresh page near the top margin.
+- Header names the book; footer shows `BOOK v<version> | PAGE <field>`.
+- TOC uses the canonical H1 order. The Markdown TOC is source-authored; DOCX heading styles permit native navigation/update.
+- Avoid orphan headings: headings keep with their following paragraph/table.
+
+## 6. Markdown conventions
+
+- UTF-8, LF line endings, one trailing newline.
+- ATX headings only (`#` through `####`).
+- One blank line between blocks.
+- Fenced code blocks with an explicit language whenever known.
+- GFM tables; escape literal `|` as `\|`.
+- Bullets use `-`; ordered lists use `1.` unless a stable number is semantically required.
+- Citation markers are stable `[Rxx]` identifiers.
+- Diagram markers occupy their own line: `[[DIAGRAM:id|caption]]`.
+- Cover marker: `[[COVER]]` once in front matter.
+- External links use `[label](https://…)`; never use raw private/session URLs.
+- Do not use layout-only HTML in canonical Markdown.
+
+## 7. Tables
+
+Tables must answer a decision, comparison, contract, or traceability question—not merely compress prose.
+
+- Use a concise header row and consistent column count.
+- Header cells: Navy background, white bold text.
+- Body rows: alternating white/light fill when legibility benefits.
+- Font size: 7.4–8.3 pt depending on column count; never below 7 pt without redesign.
+- Avoid more than six dense columns on Letter portrait pages; split or rotate the information model instead.
+- Keep units in headers and define acronyms nearby.
+- For long evidence matrices, repeat headers in Word when supported and keep each cell atomic.
+- Callout tables use one cell and a semantic label such as `Design decision`, `Evidence caveat`, or `North-star rule`.
+
+## 8. Code
+
+- Every code block declares language unless intentionally plain text.
+- Examples must state whether they are complete, illustrative, pseudocode, or production-ready.
+- Never include live credentials, private endpoints, or undeclared external dependencies.
+- Keep lines short enough for 6.85-inch text width; prefer 88 characters.
+- DOCX panels use a dark/light controlled palette, line numbers, Courier New, and lightweight deterministic token color.
+- Validate extractable Python/JSON/YAML where feasible; explain intentionally partial fragments.
+
+## 9. Diagrams and images
+
+- Every visual must teach an architectural concept or, on the cover only, establish identity.
+- Publication width: 6.85 in maximum.
+- Prefer source dimensions that render crisply at 300 dpi.
+- Put `[[DIAGRAM:id|caption]]` on its own line; the ID must exist in `config/diagrams.json`.
+- Caption immediately follows the image in DOCX and is embedded in the marker for Markdown portability.
+- Labels use the book font/color system, remain legible in grayscale, and avoid text smaller than 9 pt at final size.
+- Show trust boundaries, data/control flows, and policy enforcement explicitly when relevant.
+- Do not use decorative AI images inside technical chapters.
+- Replacement assets require registry, checksum, PDF, and contact-sheet review.
+
+## 10. Callouts and learning sections
+
+Use callouts sparingly and semantically:
+
+- **North-star rule:** a durable design principle.
+- **Design decision:** a choice with explicit consequences.
+- **Evidence note:** what a source supports and does not support.
+- **Caution:** a failure mode, maturity issue, or operational hazard.
+- **Implementation note:** concrete guidance that would interrupt the main flow.
+
+Callouts are not substitutes for argument. Keep them short, use one theme, and follow with implementation or evidence when needed.
+
+## 11. Pattern, anti-pattern, and threat cards
+
+Use the templates in `templates/`.
+
+- Pattern IDs should remain stable when language changes.
+- Anti-patterns must state the mechanism of failure, not only a negative label.
+- Detection metrics must be observable and specify numerator/denominator or event definition where possible.
+- Trade-offs include complexity, cost, latency, control, portability, and organizational burden.
+- Threat cards identify asset, trust boundary, adversary/precondition, attack path, control, residual risk, evidence, and incident signal.
+
+## 12. References
+
+- Registry: `config/references.json`.
+- In-text form: `[Rxx]` at the claim it supports.
+- Appendix K: generated bibliography.
+- Appendix M: generated claim-scope traceability matrix.
+- Prefer primary standards, official documentation, peer-reviewed research, and binding legal texts.
+- Living documentation uses `n.d.` and an access date.
+- Versions/pins are recorded separately from publication year.
+- A source never automatically validates book-authored recommendations, benchmarks, or estimates.
+
+## 13. Accessibility and inclusive design
+
+- Use descriptive headings and captions.
+- Avoid directional references that depend only on page position.
+- Pair color with explicit labels.
+- Use sufficient contrast and readable minimum type sizes.
+- Explain all diagrams in surrounding prose.
+- Expand uncommon abbreviations on first use.
+- Use gender-neutral language when pronouns are not known.
+
+## 14. Change control
+
+A design-system change requires:
+
+1. Updated design documentation and tokens.
+2. Updated builder/template.
+3. Rebuild of Markdown/DOCX.
+4. Deterministic hash check.
+5. PDF visual regression on representative pages.
+6. Changelog entry and migration note.
+7. Clean-package rebuild.
+
+No undocumented manual adjustment is part of the release process.
