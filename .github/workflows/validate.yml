@@ -13,6 +13,19 @@ jobs:
         with:
           python-version: '3.13'
           cache: pip
+      - name: Install Arial-metric-compatible fonts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-liberation
+          # tools/generate_cover.py and tools/generate_diagram.py look for Arial at
+          # fixed msttcorefonts paths, or Liberation Sans at the Fedora-style
+          # /usr/share/fonts/liberation-sans/. Ubuntu ships it under
+          # truetype/liberation/, so expose it where the tools expect to find it.
+          sudo mkdir -p /usr/share/fonts/liberation-sans
+          sudo ln -sf /usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf \
+                      /usr/share/fonts/liberation-sans/LiberationSans-Regular.ttf
+          sudo ln -sf /usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf \
+                      /usr/share/fonts/liberation-sans/LiberationSans-Bold.ttf
       - run: pip install -r requirements.txt
       - run: make build references validate deterministic
       - uses: actions/upload-artifact@v4
