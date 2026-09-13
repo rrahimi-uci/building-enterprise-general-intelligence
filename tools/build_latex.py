@@ -15,6 +15,16 @@ from pathlib import Path
 
 import callouts
 
+
+def book_release(root: Path) -> str:
+    """The single source of the release identifier.
+
+    Hard-coding it meant a generated report could claim 1.0.0 while every other
+    artifact said 2.0.0 -- the evidence disagreeing with the thing it certifies.
+    """
+    return json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]["version"]
+
+
 BOOK_TITLE = "Enterprise Agentic AI Architecture & Developer Platform Guide"
 BASENAME = "Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0"
 
@@ -496,7 +506,7 @@ def main() -> int:
         shutil.copy2(reference_pdf, reference_dir / "DOCX-layout-reference-v1.0.0.pdf")
 
     report = {
-        "release": "1.0.0",
+        "release": book_release(root),
         "engine": "XeLaTeX",
         "canonical_markdown": markdown_path.relative_to(root).as_posix(),
         "canonical_markdown_sha256": sha256(markdown_path),

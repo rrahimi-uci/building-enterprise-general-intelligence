@@ -39,3 +39,13 @@ def test_expired_grant_is_a_refusal_not_a_warning():
     with pytest.raises(ApprovalExpired):
         store.commit("r1", _grant(digest), now=late)
     assert "r1" in store.pending, "a lapsed approval leaves the run paused, not committed"
+
+
+def test_mutating_the_caller_dict_after_pausing_cannot_change_the_record():
+    store = PendingApprovals()
+    arguments = {"order": "A-1", "usd": 20}
+    digest = store.pause("r1", "issue_refund", arguments, timedelta(days=2))
+    arguments["usd"] = 5000          # the caller mutates its own dict afterwards
+    assert store.pending["r1"]["arguments"]["usd"] == 20
+    # And the approved digest still commits, because nothing actually changed.
+    assert store.commit("r1", _grant(digest), now=NOW).startswith("committed")

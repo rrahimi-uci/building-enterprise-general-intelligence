@@ -41,18 +41,24 @@ def predict(supplier_id: str) -> dict:
     return {"status": status, "escalated": status == "unknown"}
 
 
+# The scorers are the thing under test as much as the system is. Invoking them
+# here -- rather than re-implementing their predicates inline -- is what makes a
+# regression in a scorer visible. A scorer nobody has seen fail is not evidence.
+SCORERS = (status_is_correct, escalates_when_unknown)
+
+
 def evaluate() -> dict[str, float]:
-    """Score every case and return the pass rate per scorer."""
-    results: dict[str, list[bool]] = {"status_is_correct": [], "escalates_when_unknown": []}
+    """Score every case with the registered scorers and return each pass rate."""
+    results: dict[str, list[bool]] = {s.name: [] for s in SCORERS}
     for case in DATASET:
         with mlflow.start_span(name="evaluation_case") as span:
             span.set_inputs(case["inputs"])
             outputs = predict(**case["inputs"])
             span.set_outputs(outputs)
-            results["status_is_correct"].append(
-                outputs.get("status") == case["expectations"]["status"])
-            results["escalates_when_unknown"].append(
-                case["expectations"]["status"] != "unknown" or bool(outputs.get("escalated")))
+            for scorer_fn in SCORERS:
+                results[scorer_fn.name].append(
+                    bool(scorer_fn(outputs=outputs, expectations=case["expectations"]))
+                )
     return {name: sum(values) / len(values) for name, values in results.items()}
 
 

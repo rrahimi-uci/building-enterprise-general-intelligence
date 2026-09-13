@@ -2,8 +2,19 @@
 """Validate citation registry, in-text markers, scopes, and verification records."""
 from __future__ import annotations
 import argparse, json, re, sys
+import json
 from pathlib import Path
 from urllib.request import Request, urlopen
+
+
+def book_release(root: Path) -> str:
+    """The single source of the release identifier.
+
+    Hard-coding it meant a generated report could claim 1.0.0 while every other
+    artifact said 2.0.0 -- the evidence disagreeing with the thing it certifies.
+    """
+    return json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]["version"]
+
 
 REQUIRED = {"id","type","author_or_organization","year","title","publication_or_version","url","supports","verification"}
 
@@ -55,7 +66,7 @@ def main() -> int:
                 online.append({"id":r["id"],"ok":False,"error":str(exc)})
                 warnings.append(f"{r['id']}: online check unavailable: {exc}")
     report={
-        "release":"1.0.0","checked":"2026-09-13","references":len(refs),
+        "release":book_release(root),"checked":"2026-09-13","references":len(refs),
         "citation_occurrences":len(markers),"cited_ids":marker_ids,
         "unknown_ids":unknown,"uncited_ids":uncited,"errors":errors,"warnings":warnings,
         "online_check":online,"verification_records":list(verification.values()),

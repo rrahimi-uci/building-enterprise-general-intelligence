@@ -10,7 +10,7 @@ This Part applies defense in depth to untrusted content, identity, delegated aut
 
 Agentic systems combine untrusted language, privileged tools, dynamic context, durable memory, third-party protocols, and autonomous timing. Security cannot be one prompt or classifier. It constrains what enters, which capabilities become eligible, what may leave, which effects commit, and how the enterprise detects and recovers.
 
-[[DIAGRAM:security-depth|Figure 21-1 — Defense-in-depth guardrails architecture]]
+[[DIAGRAM:security-depth|Figure 18-1 — Defense-in-depth guardrails architecture]]
 
 | **Layer** | **Controls** | **Evidence** |
 | --- | --- | --- |
@@ -26,11 +26,11 @@ Agentic systems combine untrusted language, privileged tools, dynamic context, d
 
 ## Trust boundaries and runtime sequence
 
-[[DIAGRAM:security-boundaries|Figure 21-2 — Agentic security trust boundaries]]
+[[DIAGRAM:security-boundaries|Figure 18-2 — Agentic security trust boundaries]]
 
 Trust is not inherited through a chain. User authentication does not authorize the agent; discovery does not authorize a tool; retrieved text is not instruction; an agent message does not prove peer identity; HTTP success does not prove business acceptance.
 
-[[DIAGRAM:guardrail-sequence|Figure 21-3 — Runtime guardrail and protected-effect sequence]]
+[[DIAGRAM:guardrail-sequence|Figure 18-3 — Runtime guardrail and protected-effect sequence]]
 
 Authenticate subject/workload; classify/minimize input; build authorized labeled context; choose eligible model; validate structured output; authorize eligible tool and exact arguments; obtain proposal-bound approval when required; execute through sandbox/gateway with scoped credentials and DLP; reconcile effects and run deterministic acceptance; monitor, audit, contain, revoke, recover, and learn.
 

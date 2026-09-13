@@ -517,7 +517,7 @@ At an open boundary, expose the standard A2A agent-card and task/message operati
 
 The LLM Gateway is the controlled boundary between enterprise workloads and model providers or self-hosted inference. It normalizes model access and enforces model-specific routing, policy, privacy, economics, observability, and release governance. It does not own business workflow, tool effects, agent delegation, or the external API perimeter.
 
-[[DIAGRAM:gateway-position|Figure 20-1 — LLM Gateway position relative to adjacent gateways]]
+[[DIAGRAM:gateway-position|Figure 17-1 — LLM Gateway position relative to adjacent gateways]]
 
 | **Component** | **Primary boundary** | **Owns** | **Does not own** |
 | --- | --- | --- | --- |
@@ -545,7 +545,7 @@ The LLM Gateway is the controlled boundary between enterprise workloads and mode
 
 ## Policy-first routing
 
-[[DIAGRAM:model-routing|Figure 20-2 — Policy-first model-routing decision tree]]
+[[DIAGRAM:model-routing|Figure 17-2 — Policy-first model-routing decision tree]]
 
 Filter by tenant, purpose, data class, residency, risk, required capabilities, context length, tool/JSON behavior, and approved version. Only then optimize expected accepted-outcome quality under latency and cost budgets. Health and quota further constrain selection. Fallbacks obey the same invariants; “any available model” is not a safe fallback.
 

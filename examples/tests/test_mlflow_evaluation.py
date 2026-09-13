@@ -15,6 +15,23 @@ def test_unknown_supplier_escalates_rather_than_guessing():
     assert out["escalated"] is True
 
 
+def test_the_scorers_are_the_ones_actually_invoked():
+    # The predicates used to be re-implemented inside evaluate(), so a broken
+    # scorer scored perfectly. Replacing a scorer must move the reported number.
+    import examples.observability.mlflow_evaluation as m
+
+    class AlwaysFails:
+        name = "status_is_correct"
+        def __call__(self, **kwargs): return False
+
+    original = m.SCORERS
+    m.SCORERS = (AlwaysFails(), original[1])
+    try:
+        assert m.evaluate()["status_is_correct"] == 0.0
+    finally:
+        m.SCORERS = original
+
+
 def test_a_regression_is_actually_detected():
     # Guard the guard: if predict stopped escalating, the suite must fail.
     import examples.observability.mlflow_evaluation as m

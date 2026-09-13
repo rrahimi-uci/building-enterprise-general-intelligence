@@ -2,9 +2,20 @@
 """Render DOCX with LibreOffice, inspect pagination, and create a contact sheet."""
 from __future__ import annotations
 import argparse, json, re, shutil, subprocess, sys, tempfile
+import json
 from pathlib import Path
 import pymupdf
 from PIL import Image, ImageDraw, ImageFont
+
+
+def book_release(root: Path) -> str:
+    """The single source of the release identifier.
+
+    Hard-coding it meant a generated report could claim 1.0.0 while every other
+    artifact said 2.0.0 -- the evidence disagreeing with the thing it certifies.
+    """
+    return json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]["version"]
+
 
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--root',default=str(Path(__file__).resolve().parents[1])); args=ap.parse_args(); root=Path(args.root).resolve()
@@ -40,7 +51,9 @@ def main():
     appendix_a=next((x['page'] for x in found if x['title'].startswith('Appendix A —')),page_count+1)
     appendix_dividers=[i+1 for i,txt in enumerate(normalized) if 'APPENDICES' in txt.upper() and i+1<appendix_a and len(txt)<1000]
     divider_pages=sorted(set(part_pages+appendix_dividers[-1:]))
-    report={'release':'1.0.0','pdf':pdf.relative_to(root).as_posix(),'pages':page_count,'page_size_points':sizes[0] if sizes else None,'headings_expected':len(headings),'headings_found':len(found),'unique_heading_start_pages':unique_starts,'maximum_heading_text_offset':max_offset,'standalone_divider_pages':divider_pages,'blank_pages':blank,'pass':page_count>0 and len(found)==len(headings) and unique_starts==len(headings) and max_offset is not None and max_offset<200 and len(divider_pages)==13 and not blank}
+    # 8 narrative Part dividers plus the appendices divider. v1.0.0 had 13.
+    expected_dividers=len(re.findall(r'^# PART ', (root/'book/manuscript.md').read_text(encoding='utf-8'), re.M))
+    report={'release':book_release(root),'pdf':pdf.relative_to(root).as_posix(),'pages':page_count,'page_size_points':sizes[0] if sizes else None,'headings_expected':len(headings),'headings_found':len(found),'unique_heading_start_pages':unique_starts,'maximum_heading_text_offset':max_offset,'standalone_divider_pages':divider_pages,'blank_pages':blank,'pass':page_count>0 and len(found)==len(headings) and unique_starts==len(headings) and max_offset is not None and max_offset<200 and len(divider_pages)==expected_dividers and not blank}
     (root/'qa/pagination-report.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     sample=[1,2,3,4]+divider_pages+([x['page'] for x in found[::5]])
     sample=[] if not d else list(dict.fromkeys(p for p in sample if 1<=p<=page_count))[:28]

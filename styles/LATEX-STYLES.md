@@ -67,7 +67,7 @@ Every semantic color is paired with a text label, heading, border, or structure.
 
 ## 6. Tables
 
-- All 260 source tables must be represented: 193 as long tables and 67 as semantic callouts in v2.0.0.
+- Every Markdown table must be represented, as either a long table or a semantic callout. `tools/validate_latex.py` derives the expected total from the manuscript rather than asserting a fixed number, so the check survives editing.
 - Headers repeat across page breaks.
 - Header row uses white bold text on Book Navy.
 - Body uses Book Ink on white/Book Light; color does not encode meaning.
@@ -102,9 +102,9 @@ Every semantic color is paired with a text label, heading, border, or structure.
 
 A LaTeX release must prove:
 
-1. 12 narrative Parts plus one appendices divider.
+1. 8 narrative Parts plus one appendices divider.
 2. 27 chapters and 12 appendices.
-3. 18 diagrams, 43 code blocks, 260 tables/callouts, and 94 citation occurrences.
+3. 18 diagrams and 94 citation occurrences. Code-block and table totals are derived from the manuscript by the validator, not fixed here.
 4. Balanced braces/environments outside verbatim code.
 5. Every image and bundled font exists and passes minimum resolution/file-integrity gates.
 6. Designated color pairs meet 4.5:1.

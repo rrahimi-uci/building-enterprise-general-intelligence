@@ -272,7 +272,7 @@ Use deterministic validators as the gold standard where possible. LLM-as-judge i
 
 Continuous improvement joins production evidence to versioned change and release. It does not let an agent rewrite its prompt, memory policy, permissions, evaluator, or code and then certify itself.
 
-[[DIAGRAM:learning-loop|Figure 28-1 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn]]
+[[DIAGRAM:learning-loop|Figure 24-1 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn]]
 
 | **Stage** | **Work and durable output** | **Automation boundary** |
 | --- | --- | --- |
@@ -289,7 +289,7 @@ Continuous improvement joins production evidence to versioned change and release
 
 ## Runtime adaptation versus controlled offline improvement
 
-[[DIAGRAM:runtime-offline|Figure 28-2 — Runtime adaptation and offline improvement boundary]]
+[[DIAGRAM:runtime-offline|Figure 24-2 — Runtime adaptation and offline improvement boundary]]
 
 Runtime adaptation selects only pre-approved routes/fallbacks, reduces optional context, sheds load, stops a loop, asks for input, escalates, or rolls back inside a fixed envelope. It cannot expand permissions, purpose, data access, spend, tools, or model allowlists. Offline improvement creates a new immutable release and may change prompts, context/RAG, memory, tools, skills, model selection, routing, deterministic code, agent topology, workflows, and system architecture after evaluation and approval.
 

@@ -1339,7 +1339,7 @@ The core patterns are now defined; Chapter 14 compares them across uncertainty, 
 
 Choose by hidden obligation, uncertainty, and risk—not fashionable terminology. Every card uses one review sequence so teams can compare alternatives consistently.
 
-[[DIAGRAM:pattern-decision-tree|Figure 16-1 — Pattern selection decision tree]]
+[[DIAGRAM:pattern-decision-tree|Figure 14-1 — Pattern selection decision tree]]
 
 ## Reasoning
 
@@ -1591,7 +1591,7 @@ Pattern selection is easier when failure shapes are visible; Chapter 15 recasts 
 
 Anti-patterns are recurring system shapes. Diagnose the failed responsibility boundary, not only the symptom. Each card supplies the same replacement sequence.
 
-[[DIAGRAM:anti-before-after|Figure 17-1 — Autonomous monolith versus governed agentic architecture]]
+[[DIAGRAM:anti-before-after|Figure 15-1 — Autonomous monolith versus governed agentic architecture]]
 
 ## Reasoning
 

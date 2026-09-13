@@ -1221,7 +1221,7 @@ This Part turns the reference architecture into a paved road for delivery teams.
 
 The developer platform is a reusable paved road that lets teams build differentiated agents without repeatedly rebuilding identity, policy, tool safety, tracing, evaluation, durable execution, and delivery infrastructure. It is not a mandatory monolith: applications use platform-owned contracts and replaceable adapters.
 
-[[DIAGRAM:developer-platform|Figure 6-1 — Agentic developer platform and SDK capability stack]]
+[[DIAGRAM:developer-platform|Figure 5-1 — Agentic developer platform and SDK capability stack]]
 
 | **Capability** | **Reusable platform responsibility** | **Application-specific responsibility** |
 | --- | --- | --- |
@@ -1244,13 +1244,13 @@ The developer platform is a reusable paved road that lets teams build differenti
 
 ## Portable contracts and multi-framework support
 
-[[DIAGRAM:portability|Figure 6-2 — Platform contracts with replaceable framework and provider adapters]]
+[[DIAGRAM:portability|Figure 5-2 — Platform contracts with replaceable framework and provider adapters]]
 
 Use AgentSpec, RunContext, TaskEnvelope, ToolSpec/ToolCall, ContextManifest, MemoryRecord, EvaluationResult, and ReleaseManifest as stable contracts. Compile them into framework/provider adapters. Standardized contracts, MCP, APIs, events, agent-to-agent protocols, gateways, and shared platform services provide interoperability without leaking vendor-native message objects into applications. Compatibility suites verify cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.
 
 ## Developer lifecycle
 
-[[DIAGRAM:developer-lifecycle|Figure 6-3 — Local-to-production agent lifecycle]]
+[[DIAGRAM:developer-lifecycle|Figure 5-3 — Local-to-production agent lifecycle]]
 
 Create from an approved template; attach tools, Skills, context, and memory; configure model policy, permissions, budgets, and review; test deterministic logic, contracts, simulations, adversarial cases, and failures; evaluate quality, safety, latency, and cost; package immutable artifacts with locks, SBOM, signature, provenance, and ReleaseManifest; promote through policy gates; observe correlated production traces; improve through controlled ChangeBundles.
 
@@ -1279,7 +1279,7 @@ The fluent API is convenience. The compiled contracts, policy decisions, tool/ef
 
 Developer experience should compress setup and diagnosis time while making authority, versions, risk, evidence, and cost visible. A convenient SDK that hides those concerns transfers complexity to production incidents.
 
-[[DIAGRAM:dx-golden-path|Figure 7-1 — Developer golden path from scaffold to operated release]]
+[[DIAGRAM:dx-golden-path|Figure 5-4 — Developer golden path from scaffold to operated release]]
 
 | **Stage** | **Developer action** | **Platform assistance** | **Evidence** |
 | --- | --- | --- | --- |
@@ -1294,7 +1294,7 @@ Developer experience should compress setup and diagnosis time while making autho
 
 ## Testing and simulation pyramid
 
-[[DIAGRAM:test-pyramid|Figure 7-2 — Testing and simulation pyramid]]
+[[DIAGRAM:test-pyramid|Figure 5-5 — Testing and simulation pyramid]]
 
 Deterministic units verify schemas, policy helpers, acceptance, routes, reducers, calculations, and state transitions. Contract tests verify identity, idempotency, timeout/unknown-effect semantics, protocol capability, errors, and telemetry. Component evaluations measure retrieval, tools, arguments, structured output, safety, and memory. Trajectory simulation tests planning, handoffs, loops, deadlines, cancellation, duplicates, dependency degradation, and human delay. End-to-end staging uses exact model, identity, gateway, data, and integration versions. Canary and shadow evaluation use explicit stop and rollback conditions.
 
@@ -2850,7 +2850,10 @@ class PendingApprovals:
         self.pending[run_id] = {
             "digest": digest,
             "action": action,
-            "arguments": arguments,
+            # Copy: the caller keeps a reference to this dict, and mutating it
+            # after the pause would leave the stored record disagreeing with the
+            # digest that was approved.
+            "arguments": dict(arguments),
             # The context is stored with the pause. Reconstructing it later from
             # a transcript is exactly what fails after a deploy.
             "expires_at": datetime.now(timezone.utc) + ttl,
@@ -3317,7 +3320,7 @@ The core patterns are now defined; Chapter 14 compares them across uncertainty, 
 
 Choose by hidden obligation, uncertainty, and risk—not fashionable terminology. Every card uses one review sequence so teams can compare alternatives consistently.
 
-[[DIAGRAM:pattern-decision-tree|Figure 16-1 — Pattern selection decision tree]]
+[[DIAGRAM:pattern-decision-tree|Figure 14-1 — Pattern selection decision tree]]
 
 ## Reasoning
 
@@ -3569,7 +3572,7 @@ Pattern selection is easier when failure shapes are visible; Chapter 15 recasts 
 
 Anti-patterns are recurring system shapes. Diagnose the failed responsibility boundary, not only the symptom. Each card supplies the same replacement sequence.
 
-[[DIAGRAM:anti-before-after|Figure 17-1 — Autonomous monolith versus governed agentic architecture]]
+[[DIAGRAM:anti-before-after|Figure 15-1 — Autonomous monolith versus governed agentic architecture]]
 
 ## Reasoning
 
@@ -4414,7 +4417,7 @@ At an open boundary, expose the standard A2A agent-card and task/message operati
 
 The LLM Gateway is the controlled boundary between enterprise workloads and model providers or self-hosted inference. It normalizes model access and enforces model-specific routing, policy, privacy, economics, observability, and release governance. It does not own business workflow, tool effects, agent delegation, or the external API perimeter.
 
-[[DIAGRAM:gateway-position|Figure 20-1 — LLM Gateway position relative to adjacent gateways]]
+[[DIAGRAM:gateway-position|Figure 17-1 — LLM Gateway position relative to adjacent gateways]]
 
 | **Component** | **Primary boundary** | **Owns** | **Does not own** |
 | --- | --- | --- | --- |
@@ -4442,7 +4445,7 @@ The LLM Gateway is the controlled boundary between enterprise workloads and mode
 
 ## Policy-first routing
 
-[[DIAGRAM:model-routing|Figure 20-2 — Policy-first model-routing decision tree]]
+[[DIAGRAM:model-routing|Figure 17-2 — Policy-first model-routing decision tree]]
 
 Filter by tenant, purpose, data class, residency, risk, required capabilities, context length, tool/JSON behavior, and approved version. Only then optimize expected accepted-outcome quality under latency and cost budgets. Health and quota further constrain selection. Fallbacks obey the same invariants; “any available model” is not a safe fallback.
 
@@ -4590,7 +4593,7 @@ This Part applies defense in depth to untrusted content, identity, delegated aut
 
 Agentic systems combine untrusted language, privileged tools, dynamic context, durable memory, third-party protocols, and autonomous timing. Security cannot be one prompt or classifier. It constrains what enters, which capabilities become eligible, what may leave, which effects commit, and how the enterprise detects and recovers.
 
-[[DIAGRAM:security-depth|Figure 21-1 — Defense-in-depth guardrails architecture]]
+[[DIAGRAM:security-depth|Figure 18-1 — Defense-in-depth guardrails architecture]]
 
 | **Layer** | **Controls** | **Evidence** |
 | --- | --- | --- |
@@ -4606,11 +4609,11 @@ Agentic systems combine untrusted language, privileged tools, dynamic context, d
 
 ## Trust boundaries and runtime sequence
 
-[[DIAGRAM:security-boundaries|Figure 21-2 — Agentic security trust boundaries]]
+[[DIAGRAM:security-boundaries|Figure 18-2 — Agentic security trust boundaries]]
 
 Trust is not inherited through a chain. User authentication does not authorize the agent; discovery does not authorize a tool; retrieved text is not instruction; an agent message does not prove peer identity; HTTP success does not prove business acceptance.
 
-[[DIAGRAM:guardrail-sequence|Figure 21-3 — Runtime guardrail and protected-effect sequence]]
+[[DIAGRAM:guardrail-sequence|Figure 18-3 — Runtime guardrail and protected-effect sequence]]
 
 Authenticate subject/workload; classify/minimize input; build authorized labeled context; choose eligible model; validate structured output; authorize eligible tool and exact arguments; obtain proposal-bound approval when required; execute through sandbox/gateway with scoped credentials and DLP; reconcile effects and run deterministic acceptance; monitor, audit, contain, revoke, recover, and learn.
 
@@ -6429,7 +6432,7 @@ Use deterministic validators as the gold standard where possible. LLM-as-judge i
 
 Continuous improvement joins production evidence to versioned change and release. It does not let an agent rewrite its prompt, memory policy, permissions, evaluator, or code and then certify itself.
 
-[[DIAGRAM:learning-loop|Figure 28-1 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn]]
+[[DIAGRAM:learning-loop|Figure 24-1 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn]]
 
 | **Stage** | **Work and durable output** | **Automation boundary** |
 | --- | --- | --- |
@@ -6446,7 +6449,7 @@ Continuous improvement joins production evidence to versioned change and release
 
 ## Runtime adaptation versus controlled offline improvement
 
-[[DIAGRAM:runtime-offline|Figure 28-2 — Runtime adaptation and offline improvement boundary]]
+[[DIAGRAM:runtime-offline|Figure 24-2 — Runtime adaptation and offline improvement boundary]]
 
 Runtime adaptation selects only pre-approved routes/fallbacks, reduces optional context, sheds load, stops a loop, asks for input, escalates, or rolls back inside a fixed envelope. It cannot expand permissions, purpose, data access, spend, tools, or model allowlists. Offline improvement creates a new immutable release and may change prompts, context/RAG, memory, tools, skills, model selection, routing, deterministic code, agent topology, workflows, and system architecture after evaluation and approval.
 
@@ -6524,18 +6527,24 @@ def predict(supplier_id: str) -> dict:
     return {"status": status, "escalated": status == "unknown"}
 
 
+# The scorers are the thing under test as much as the system is. Invoking them
+# here -- rather than re-implementing their predicates inline -- is what makes a
+# regression in a scorer visible. A scorer nobody has seen fail is not evidence.
+SCORERS = (status_is_correct, escalates_when_unknown)
+
+
 def evaluate() -> dict[str, float]:
-    """Score every case and return the pass rate per scorer."""
-    results: dict[str, list[bool]] = {"status_is_correct": [], "escalates_when_unknown": []}
+    """Score every case with the registered scorers and return each pass rate."""
+    results: dict[str, list[bool]] = {s.name: [] for s in SCORERS}
     for case in DATASET:
         with mlflow.start_span(name="evaluation_case") as span:
             span.set_inputs(case["inputs"])
             outputs = predict(**case["inputs"])
             span.set_outputs(outputs)
-            results["status_is_correct"].append(
-                outputs.get("status") == case["expectations"]["status"])
-            results["escalates_when_unknown"].append(
-                case["expectations"]["status"] != "unknown" or bool(outputs.get("escalated")))
+            for scorer_fn in SCORERS:
+                results[scorer_fn.name].append(
+                    bool(scorer_fn(outputs=outputs, expectations=case["expectations"]))
+                )
     return {name: sum(values) / len(values) for name, values in results.items()}
 ```
 
@@ -6628,7 +6637,7 @@ This Part is about running the system for years rather than shipping it once. It
 
 Governance makes decisions explicit, proportional, evidence-based, and reversible. It accelerates safe delivery with reusable risk tiers, policy, review paths, and evidence rather than sending every prompt edit to one committee.
 
-[[DIAGRAM:governance-model|Figure 29-1 — Federated governance with centralized control services]]
+[[DIAGRAM:governance-model|Figure 25-1 — Federated governance with centralized control services]]
 
 | **Decision** | **Accountable owner** | **Evidence** |
 | --- | --- | --- |

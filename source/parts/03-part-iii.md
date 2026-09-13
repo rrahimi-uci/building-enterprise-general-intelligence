@@ -10,7 +10,7 @@ This Part turns the reference architecture into a paved road for delivery teams.
 
 The developer platform is a reusable paved road that lets teams build differentiated agents without repeatedly rebuilding identity, policy, tool safety, tracing, evaluation, durable execution, and delivery infrastructure. It is not a mandatory monolith: applications use platform-owned contracts and replaceable adapters.
 
-[[DIAGRAM:developer-platform|Figure 6-1 — Agentic developer platform and SDK capability stack]]
+[[DIAGRAM:developer-platform|Figure 5-1 — Agentic developer platform and SDK capability stack]]
 
 | **Capability** | **Reusable platform responsibility** | **Application-specific responsibility** |
 | --- | --- | --- |
@@ -33,13 +33,13 @@ The developer platform is a reusable paved road that lets teams build differenti
 
 ## Portable contracts and multi-framework support
 
-[[DIAGRAM:portability|Figure 6-2 — Platform contracts with replaceable framework and provider adapters]]
+[[DIAGRAM:portability|Figure 5-2 — Platform contracts with replaceable framework and provider adapters]]
 
 Use AgentSpec, RunContext, TaskEnvelope, ToolSpec/ToolCall, ContextManifest, MemoryRecord, EvaluationResult, and ReleaseManifest as stable contracts. Compile them into framework/provider adapters. Standardized contracts, MCP, APIs, events, agent-to-agent protocols, gateways, and shared platform services provide interoperability without leaking vendor-native message objects into applications. Compatibility suites verify cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.
 
 ## Developer lifecycle
 
-[[DIAGRAM:developer-lifecycle|Figure 6-3 — Local-to-production agent lifecycle]]
+[[DIAGRAM:developer-lifecycle|Figure 5-3 — Local-to-production agent lifecycle]]
 
 Create from an approved template; attach tools, Skills, context, and memory; configure model policy, permissions, budgets, and review; test deterministic logic, contracts, simulations, adversarial cases, and failures; evaluate quality, safety, latency, and cost; package immutable artifacts with locks, SBOM, signature, provenance, and ReleaseManifest; promote through policy gates; observe correlated production traces; improve through controlled ChangeBundles.
 
@@ -68,7 +68,7 @@ The fluent API is convenience. The compiled contracts, policy decisions, tool/ef
 
 Developer experience should compress setup and diagnosis time while making authority, versions, risk, evidence, and cost visible. A convenient SDK that hides those concerns transfers complexity to production incidents.
 
-[[DIAGRAM:dx-golden-path|Figure 7-1 — Developer golden path from scaffold to operated release]]
+[[DIAGRAM:dx-golden-path|Figure 5-4 — Developer golden path from scaffold to operated release]]
 
 | **Stage** | **Developer action** | **Platform assistance** | **Evidence** |
 | --- | --- | --- | --- |
@@ -83,7 +83,7 @@ Developer experience should compress setup and diagnosis time while making autho
 
 ## Testing and simulation pyramid
 
-[[DIAGRAM:test-pyramid|Figure 7-2 — Testing and simulation pyramid]]
+[[DIAGRAM:test-pyramid|Figure 5-5 — Testing and simulation pyramid]]
 
 Deterministic units verify schemas, policy helpers, acceptance, routes, reducers, calculations, and state transitions. Contract tests verify identity, idempotency, timeout/unknown-effect semantics, protocol capability, errors, and telemetry. Component evaluations measure retrieval, tools, arguments, structured output, safety, and memory. Trajectory simulation tests planning, handoffs, loops, deadlines, cancellation, duplicates, dependency degradation, and human delay. End-to-end staging uses exact model, identity, gateway, data, and integration versions. Canary and shadow evaluation use explicit stop and rollback conditions.
 

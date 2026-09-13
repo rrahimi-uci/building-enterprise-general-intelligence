@@ -47,7 +47,10 @@ class PendingApprovals:
         self.pending[run_id] = {
             "digest": digest,
             "action": action,
-            "arguments": arguments,
+            # Copy: the caller keeps a reference to this dict, and mutating it
+            # after the pause would leave the stored record disagreeing with the
+            # digest that was approved.
+            "arguments": dict(arguments),
             # The context is stored with the pause. Reconstructing it later from
             # a transcript is exactly what fails after a deploy.
             "expires_at": datetime.now(timezone.utc) + ttl,

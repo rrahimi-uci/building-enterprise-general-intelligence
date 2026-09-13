@@ -10,7 +10,7 @@ This Part is about running the system for years rather than shipping it once. It
 
 Governance makes decisions explicit, proportional, evidence-based, and reversible. It accelerates safe delivery with reusable risk tiers, policy, review paths, and evidence rather than sending every prompt edit to one committee.
 
-[[DIAGRAM:governance-model|Figure 29-1 — Federated governance with centralized control services]]
+[[DIAGRAM:governance-model|Figure 25-1 — Federated governance with centralized control services]]
 
 | **Decision** | **Accountable owner** | **Evidence** |
 | --- | --- | --- |

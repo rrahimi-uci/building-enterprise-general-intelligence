@@ -2,7 +2,18 @@
 """Create deterministic manifest, checksums, and self-contained release ZIP."""
 from __future__ import annotations
 import argparse, hashlib, json, os, sys, zipfile
+import json
 from pathlib import Path
+
+
+def book_release(root: Path) -> str:
+    """The single source of the release identifier.
+
+    Hard-coding it meant a generated report could claim 1.0.0 while every other
+    artifact said 2.0.0 -- the evidence disagreeing with the thing it certifies.
+    """
+    return json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]["version"]
+
 FIXED=(2026,9,13,0,0,0)
 
 def sha(p):
@@ -50,7 +61,7 @@ def main():
     inventory=[]
     for p in files(root):
         inventory.append({'path':p.relative_to(root).as_posix(),'bytes':p.stat().st_size,'sha256':sha(p)})
-    manifest={'schema_version':'1.0.0','release':'1.0.0','title':'Enterprise Agentic AI Architecture & Developer Platform Guide','author':'Reza Rahimi, PhD','release_date':'2026-09-13','canonical_source':'source/parts/*.md','representations':{'markdown':'final','docx':'final','latex_source':'source-validated','latex_pdf':'compile with included XeLaTeX workflow','notion':'synchronized release metadata'},'file_count':len(inventory),'files':inventory}
+    manifest={'schema_version':'1.0.0','release':book_release(root),'title':'Enterprise Agentic AI Architecture & Developer Platform Guide','author':'Reza Rahimi, PhD','release_date':'2026-09-13','canonical_source':'source/parts/*.md','representations':{'markdown':'final','docx':'final','latex_source':'source-validated','latex_pdf':'compile with included XeLaTeX workflow','notion':'synchronized release metadata'},'file_count':len(inventory),'files':inventory}
     (root/'RELEASE-MANIFEST.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
     checksum_files=list(files(root)); checksum_lines=[f"{sha(p)}  {p.relative_to(root).as_posix()}" for p in checksum_files if p.name!='CHECKSUMS.sha256']
     (root/'CHECKSUMS.sha256').write_text('\n'.join(checksum_lines)+'\n',encoding='utf-8')

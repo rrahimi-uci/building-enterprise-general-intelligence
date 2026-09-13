@@ -1701,7 +1701,7 @@ The reference architecture is now concrete enough to productize; Chapter 5 defin
 
 The developer platform is a reusable paved road that lets teams build differentiated agents without repeatedly rebuilding identity, policy, tool safety, tracing, evaluation, durable execution, and delivery infrastructure. It is not a mandatory monolith: applications use platform-owned contracts and replaceable adapters.\par
 
-\BookDiagram{assets/diagrams/developer-platform.png}{Figure 6-1 — Agentic developer platform and SDK capability stack}{developer-platform}
+\BookDiagram{assets/diagrams/developer-platform.png}{Figure 5-1 — Agentic developer platform and SDK capability stack}{developer-platform}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -1742,13 +1742,13 @@ Deployment \& Versioning & Packaging, manifests, environments, gates, canary, ro
 
 \section{Portable contracts and multi-framework support}
 
-\BookDiagram{assets/diagrams/portability.png}{Figure 6-2 — Platform contracts with replaceable framework and provider adapters}{portability}
+\BookDiagram{assets/diagrams/portability.png}{Figure 5-2 — Platform contracts with replaceable framework and provider adapters}{portability}
 
 Use AgentSpec, RunContext, TaskEnvelope, ToolSpec/ToolCall, ContextManifest, MemoryRecord, EvaluationResult, and ReleaseManifest as stable contracts. Compile them into framework/provider adapters. Standardized contracts, MCP, APIs, events, agent-to-agent protocols, gateways, and shared platform services provide interoperability without leaking vendor-native message objects into applications. Compatibility suites verify cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.\par
 
 \section{Developer lifecycle}
 
-\BookDiagram{assets/diagrams/developer-lifecycle.png}{Figure 6-3 — Local-to-production agent lifecycle}{developer-lifecycle}
+\BookDiagram{assets/diagrams/developer-lifecycle.png}{Figure 5-3 — Local-to-production agent lifecycle}{developer-lifecycle}
 
 Create from an approved template; attach tools, Skills, context, and memory; configure model policy, permissions, budgets, and review; test deterministic logic, contracts, simulations, adversarial cases, and failures; evaluate quality, safety, latency, and cost; package immutable artifacts with locks, SBOM, signature, provenance, and ReleaseManifest; promote through policy gates; observe correlated production traces; improve through controlled ChangeBundles.\par
 
@@ -1778,7 +1778,7 @@ The fluent API is convenience. The compiled contracts, policy decisions, tool/ef
 
 Developer experience should compress setup and diagnosis time while making authority, versions, risk, evidence, and cost visible. A convenient SDK that hides those concerns transfers complexity to production incidents.\par
 
-\BookDiagram{assets/diagrams/dx-golden-path.png}{Figure 7-1 — Developer golden path from scaffold to operated release}{dx-golden-path}
+\BookDiagram{assets/diagrams/dx-golden-path.png}{Figure 5-4 — Developer golden path from scaffold to operated release}{dx-golden-path}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -1807,7 +1807,7 @@ Improve & Build ChangeBundle from evidence & Trace mining, dataset curation, exp
 
 \section{Testing and simulation pyramid}
 
-\BookDiagram{assets/diagrams/test-pyramid.png}{Figure 7-2 — Testing and simulation pyramid}{test-pyramid}
+\BookDiagram{assets/diagrams/test-pyramid.png}{Figure 5-5 — Testing and simulation pyramid}{test-pyramid}
 
 Deterministic units verify schemas, policy helpers, acceptance, routes, reducers, calculations, and state transitions. Contract tests verify identity, idempotency, timeout/unknown-effect semantics, protocol capability, errors, and telemetry. Component evaluations measure retrieval, tools, arguments, structured output, safety, and memory. Trajectory simulation tests planning, handoffs, loops, deadlines, cancellation, duplicates, dependency degradation, and human delay. End-to-end staging uses exact model, identity, gateway, data, and integration versions. Canary and shadow evaluation use explicit stop and rollback conditions.\par
 
@@ -4119,7 +4119,7 @@ Queue abandonment & SLA, escalation, reassignment, cancellation, and safe timeou
 
 PYTHON · A human approval gate that survives the wait\par
 
-\needspace{461.6pt}
+\needspace{489.2pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 def proposal_hash(action: str, arguments: dict) -> str:
     """Bind a grant to one exact proposal, not to an intent."""
@@ -4153,7 +4153,10 @@ class PendingApprovals:
         self.pending[run_id] = {
             "digest": digest,
             "action": action,
-            "arguments": arguments,
+            # Copy: the caller keeps a reference to this dict, and mutating it
+            # after the pause would leave the stored record disagreeing with the
+            # digest that was approved.
+            "arguments": dict(arguments),
             # The context is stored with the pause. Reconstructing it later from
             # a transcript is exactly what fails after a deploy.
             "expires_at": datetime.now(timezone.utc) + ttl,
@@ -4822,7 +4825,7 @@ The core patterns are now defined; Chapter 14 compares them across uncertainty, 
 
 Choose by hidden obligation, uncertainty, and risk—not fashionable terminology. Every card uses one review sequence so teams can compare alternatives consistently.\par
 
-\BookDiagram{assets/diagrams/pattern-decision-tree.png}{Figure 16-1 — Pattern selection decision tree}{pattern-decision-tree}
+\BookDiagram{assets/diagrams/pattern-decision-tree.png}{Figure 14-1 — Pattern selection decision tree}{pattern-decision-tree}
 
 \section{Reasoning}
 
@@ -5074,7 +5077,7 @@ Pattern selection is easier when failure shapes are visible; Chapter 15 recasts 
 
 Anti-patterns are recurring system shapes. Diagnose the failed responsibility boundary, not only the symptom. Each card supplies the same replacement sequence.\par
 
-\BookDiagram{assets/diagrams/anti-before-after.png}{Figure 17-1 — Autonomous monolith versus governed agentic architecture}{anti-before-after}
+\BookDiagram{assets/diagrams/anti-before-after.png}{Figure 15-1 — Autonomous monolith versus governed agentic architecture}{anti-before-after}
 
 \section{Reasoning}
 
@@ -6264,7 +6267,7 @@ Failed/Expired/InterventionRequired & Terminal or ambiguous remote outcome & App
 
 The LLM Gateway is the controlled boundary between enterprise workloads and model providers or self-hosted inference. It normalizes model access and enforces model-specific routing, policy, privacy, economics, observability, and release governance. It does not own business workflow, tool effects, agent delegation, or the external API perimeter.\par
 
-\BookDiagram{assets/diagrams/gateway-position.png}{Figure 20-1 — LLM Gateway position relative to adjacent gateways}{gateway-position}
+\BookDiagram{assets/diagrams/gateway-position.png}{Figure 17-1 — LLM Gateway position relative to adjacent gateways}{gateway-position}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -6319,7 +6322,7 @@ Logging, tracing, evaluation hooks & Normalized spans, route, usage, policy, cac
 
 \section{Policy-first routing}
 
-\BookDiagram{assets/diagrams/model-routing.png}{Figure 20-2 — Policy-first model-routing decision tree}{model-routing}
+\BookDiagram{assets/diagrams/model-routing.png}{Figure 17-2 — Policy-first model-routing decision tree}{model-routing}
 
 Filter by tenant, purpose, data class, residency, risk, required capabilities, context length, tool/JSON behavior, and approved version. Only then optimize expected accepted-outcome quality under latency and cost budgets. Health and quota further constrain selection. Fallbacks obey the same invariants; “any available model” is not a safe fallback.\par
 
@@ -6504,7 +6507,7 @@ The gateway controls model access, but not the entire attack surface; Chapter 18
 
 Agentic systems combine untrusted language, privileged tools, dynamic context, durable memory, third-party protocols, and autonomous timing. Security cannot be one prompt or classifier. It constrains what enters, which capabilities become eligible, what may leave, which effects commit, and how the enterprise detects and recovers.\par
 
-\BookDiagram{assets/diagrams/security-depth.png}{Figure 21-1 — Defense-in-depth guardrails architecture}{security-depth}
+\BookDiagram{assets/diagrams/security-depth.png}{Figure 18-1 — Defense-in-depth guardrails architecture}{security-depth}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -6534,11 +6537,11 @@ Detection/response & Monitoring, auditing, containment, revocation, incident res
 
 \section{Trust boundaries and runtime sequence}
 
-\BookDiagram{assets/diagrams/security-boundaries.png}{Figure 21-2 — Agentic security trust boundaries}{security-boundaries}
+\BookDiagram{assets/diagrams/security-boundaries.png}{Figure 18-2 — Agentic security trust boundaries}{security-boundaries}
 
 Trust is not inherited through a chain. User authentication does not authorize the agent; discovery does not authorize a tool; retrieved text is not instruction; an agent message does not prove peer identity; HTTP success does not prove business acceptance.\par
 
-\BookDiagram{assets/diagrams/guardrail-sequence.png}{Figure 21-3 — Runtime guardrail and protected-effect sequence}{guardrail-sequence}
+\BookDiagram{assets/diagrams/guardrail-sequence.png}{Figure 18-3 — Runtime guardrail and protected-effect sequence}{guardrail-sequence}
 
 Authenticate subject/workload; classify/minimize input; build authorized labeled context; choose eligible model; validate structured output; authorize eligible tool and exact arguments; obtain proposal-bound approval when required; execute through sandbox/gateway with scoped credentials and DLP; reconcile effects and run deterministic acceptance; monitor, audit, contain, revoke, recover, and learn.\par
 
@@ -9197,7 +9200,7 @@ Build the evaluation set from production failures, not from imagined ones. Every
 
 Continuous improvement joins production evidence to versioned change and release. It does not let an agent rewrite its prompt, memory policy, permissions, evaluator, or code and then certify itself.\par
 
-\BookDiagram{assets/diagrams/learning-loop.png}{Figure 28-1 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn}{learning-loop}
+\BookDiagram{assets/diagrams/learning-loop.png}{Figure 24-1 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn}{learning-loop}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -9229,7 +9232,7 @@ Learn & Record causal result, curate regressions, update taxonomy/runbook into L
 
 \section{Runtime adaptation versus controlled offline improvement}
 
-\BookDiagram{assets/diagrams/runtime-offline.png}{Figure 28-2 — Runtime adaptation and offline improvement boundary}{runtime-offline}
+\BookDiagram{assets/diagrams/runtime-offline.png}{Figure 24-2 — Runtime adaptation and offline improvement boundary}{runtime-offline}
 
 Runtime adaptation selects only pre-approved routes/fallbacks, reduces optional context, sheds load, stops a loop, asks for input, escalates, or rolls back inside a fixed envelope. It cannot expand permissions, purpose, data access, spend, tools, or model allowlists. Offline improvement creates a new immutable release and may change prompts, context/RAG, memory, tools, skills, model selection, routing, deterministic code, agent topology, workflows, and system architecture after evaluation and approval.\par
 
@@ -9302,7 +9305,7 @@ Trusting an LLM judge you have not calibrated against human labels. A judge is a
 
 PYTHON · Scoring an agent against a dataset with MLflow\par
 
-\needspace{406.4pt}
+\needspace{461.6pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 # Each case is an incident that actually happened, not an imagined one.
 DATASET = [
@@ -9333,18 +9336,24 @@ def predict(supplier_id: str) -> dict:
     return {"status": status, "escalated": status == "unknown"}
 
 
+# The scorers are the thing under test as much as the system is. Invoking them
+# here -- rather than re-implementing their predicates inline -- is what makes a
+# regression in a scorer visible. A scorer nobody has seen fail is not evidence.
+SCORERS = (status_is_correct, escalates_when_unknown)
+
+
 def evaluate() -> dict[str, float]:
-    """Score every case and return the pass rate per scorer."""
-    results: dict[str, list[bool]] = {"status_is_correct": [], "escalates_when_unknown": []}
+    """Score every case with the registered scorers and return each pass rate."""
+    results: dict[str, list[bool]] = {s.name: [] for s in SCORERS}
     for case in DATASET:
         with mlflow.start_span(name="evaluation_case") as span:
             span.set_inputs(case["inputs"])
             outputs = predict(**case["inputs"])
             span.set_outputs(outputs)
-            results["status_is_correct"].append(
-                outputs.get("status") == case["expectations"]["status"])
-            results["escalates_when_unknown"].append(
-                case["expectations"]["status"] != "unknown" or bool(outputs.get("escalated")))
+            for scorer_fn in SCORERS:
+                results[scorer_fn.name].append(
+                    bool(scorer_fn(outputs=outputs, expectations=case["expectations"]))
+                )
     return {name: sum(values) / len(values) for name, values in results.items()}
 \end{lstlisting}
 
@@ -9463,7 +9472,7 @@ The improvement loop proposes and validates change; Chapter 25 assigns decision 
 
 Governance makes decisions explicit, proportional, evidence-based, and reversible. It accelerates safe delivery with reusable risk tiers, policy, review paths, and evidence rather than sending every prompt edit to one committee.\par
 
-\BookDiagram{assets/diagrams/governance-model.png}{Figure 29-1 — Federated governance with centralized control services}{governance-model}
+\BookDiagram{assets/diagrams/governance-model.png}{Figure 25-1 — Federated governance with centralized control services}{governance-model}
 
 \needspace{5\baselineskip}
 \BookTableStart

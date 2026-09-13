@@ -2,10 +2,21 @@
 """Offline structural, semantic, asset, and DOCX validation for Book v2.0.0."""
 from __future__ import annotations
 import argparse, hashlib, json, re, sys, zipfile
+import json
 from pathlib import Path
 from collections import Counter
 from docx import Document
 from PIL import Image
+
+
+def book_release(root: Path) -> str:
+    """The single source of the release identifier.
+
+    Hard-coding it meant a generated report could claim 1.0.0 while every other
+    artifact said 2.0.0 -- the evidence disagreeing with the thing it certifies.
+    """
+    return json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]["version"]
+
 
 
 def sha(path: Path) -> str:
@@ -184,7 +195,7 @@ def main() -> int:
             if blank: errors.append(f"Unintended blank PDF pages: {blank}")
             d.close()
         except Exception as exc: warnings.append(f"PDF QA inspection unavailable: {exc}")
-    report={'release':'1.0.0','validated_on':'2026-09-13','checks':checks,'errors':errors,'warnings':warnings,'pass':not errors}
+    report={'release':book_release(root),'validated_on':'2026-09-13','checks':checks,'errors':errors,'warnings':warnings,'pass':not errors}
     (root/'qa').mkdir(exist_ok=True); (root/'reports').mkdir(exist_ok=True)
     (root/'qa/validation-report.json').write_text(json.dumps(report,indent=2)+"\n",encoding='utf-8')
     summary=["# Validation Summary — Book v2.0.0","",f"**Result:** {'PASS' if not errors else 'FAIL'}","", "## Measurements","",* [f"- **{k}:** `{v}`" for k,v in checks.items()],"","## Errors","",*([f"- {x}" for x in errors] or ["- None."]),"","## Warnings","",*([f"- {x}" for x in warnings] or ["- None."])]

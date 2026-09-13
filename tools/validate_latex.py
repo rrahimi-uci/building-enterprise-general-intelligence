@@ -14,6 +14,16 @@ from collections import Counter
 from PIL import Image
 from fontTools.ttLib import TTFont
 
+
+def book_release(root: Path) -> str:
+    """The single source of the release identifier.
+
+    Hard-coding it meant a generated report could claim 1.0.0 while every other
+    artifact said 2.0.0 -- the evidence disagreeing with the thing it certifies.
+    """
+    return json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]["version"]
+
+
 BASENAME = "Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0"
 
 
@@ -305,7 +315,7 @@ def main() -> int:
         warnings.append("XeLaTeX is not installed in this sandbox; source validation passed and Docker/CI compile paths are included")
 
     report = {
-        "release": "1.0.0",
+        "release": book_release(root),
         "validated_on": "2026-09-13",
         "format": "XeLaTeX",
         "measurements": measurements,
