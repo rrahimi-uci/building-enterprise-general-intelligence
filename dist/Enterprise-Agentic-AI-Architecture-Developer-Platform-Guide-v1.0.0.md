@@ -322,6 +322,10 @@ Scale tool work by workload and risk class, not with one global queue. Read-only
 9. **Bounded recursion.** Cap steps, wall-clock time, spend, tokens, tool calls, delegation depth, parallel branches, and repeated failures.
 10. **Open telemetry and portable state.** Use standard trace/event envelopes and keep the authoritative run record outside a proprietary agent runtime.
 
+|  |
+| --- |
+| **BEST PRACTICE**  Validate, authorize, and commit outside the model. A structured output is a *proposal*: parse it against a schema you own, check authority against the caller's grant, then commit through the same service path a human request would take. If a tool can be invoked without passing that gate, the gate is decorative. |
+
 ## Where distributed systems must remain authoritative
 
 | **Traditional concept** | **What it should own** | **Appropriate LLM role** | **If replaced by the LLM** |
@@ -344,6 +348,10 @@ Scale tool work by workload and risk class, not with one global queue. Read-only
 |  |
 | --- |
 | **BOUNDARY RULE: IF AN OPERATION MUST BE CORRECT EVERY TIME, SURVIVE A CRASH, ENFO**  Boundary rule: If an operation must be correct every time, survive a crash, enforce a permission, coordinate concurrent writers, or create an auditable effect, it belongs to deterministic infrastructure. The LLM may decide what to attempt; deterministic systems decide whether and how it is committed. |
+
+|  |
+| --- |
+| **COMMON PITFALL**  Treating schema validity as correctness. A response that parses cleanly can still name a stale record, a resource the caller cannot see, or an amount nobody approved. Schema validation rejects malformed proposals; it says nothing about whether the proposal should be allowed. Keep the two checks separate and run both. |
 
 ## Grounding, corrections, and evidence boundary
 
@@ -680,9 +688,17 @@ SDK guardrails are valuable for early input, tool, and output checks. They do no
 
 Assign one retry owner per failure class: the workflow owns activity retries; the Model Gateway may perform short transport retries inside one recorded attempt; the Tool Gateway follows the tool manifest and effect protocol; an unknown mutation is reconciled before any retry.
 
+|  |
+| --- |
+| **ARCHITECTURE GUIDANCE**  Let the framework own the agent loop, never the workflow truth. Run state, approvals, and effect records belong in your durable store, keyed by your identifiers. The SDK's session object is a convenience for one process; if losing it would lose the run, the boundary is in the wrong place. |
+
 ## Adoption test
 
 Adopt the SDK only after proving that tools cannot bypass gateways, every invocation is externally bounded, handoffs map to durable ownership correctly, sensitive tracing is disabled or isolated, protected commits require deterministic validation, and another runtime could replace the adapter without migrating public APIs, workflow history, effects, artifacts, approvals, or audit.
+
+|  |
+| --- |
+| **DEVELOPER GUIDELINE**  Depend on the adapter you wrote, not on the SDK's types, everywhere above the runtime boundary. One module should import the vendor package. That module is also the only thing you rewrite when a 0.x SDK changes its API, which it will. |
 
 ## Grounding, corrections, and evidence boundary
 
@@ -1739,6 +1755,10 @@ A ReAct activity can return answer, needs\_input, delegate, proposed\_action, bu
 
 Plan capacity in turns per successful outcome, not only requests per second. Track model tokens, tool calls, connector time, observation bytes, and repeated-action rate. Per-tenant permits and hard per-run limits prevent one pathological loop from consuming a worker pool.
 
+|  |
+| --- |
+| **PERFORMANCE AND COST**  A ReAct loop's cost is set by its trajectory, not its prompt. Each observation re-enters the context, so an n-step loop is roughly quadratic in tokens. Cap the step count, summarize observations before they re-enter, and measure cost per *completed task* rather than per call — a cheap call that loops eight times is not cheap. |
+
 ## Grounding, corrections, and evidence boundary
 
 |  |
@@ -1746,6 +1766,10 @@ Plan capacity in turns per successful outcome, not only requests per second. Tra
 | **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
 
 Evidence anchors: REACT; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix M.
+
+|  |
+| --- |
+| **COMMON PITFALL**  Unbounded retries disguised as reasoning. When a tool fails and the model is free to try again, the loop can burn its whole budget rediscovering the same error. Return failures as typed data the model can read, cap attempts per tool, and make the cap a run-level budget rather than a per-call one. |
 
 ## Pattern reference — ReAct
 
@@ -2288,6 +2312,10 @@ A deterministic compiler rejects cycles unless explicitly permitted, missing sch
 * Apply per-run ready-node limits and weighted fair scheduling across tenants. Planning cannot reserve unbounded future capacity; reservations expire and are reclaimed.
 * Use deterministic routing for common/high-confidence cases and invoke the planner only at entry, material uncertainty, or failure boundaries. This reduces model cost and plan churn.
 
+|  |
+| --- |
+| **ARCHITECTURE GUIDANCE**  Separate the plan from its execution. A plan is data: persist it, version it, and let it be inspected and approved before any step commits an effect. Once execution is a separate pass over a stored plan, replay, partial resume, and human amendment all become ordinary operations instead of special cases. |
+
 ## Grounding, corrections, and evidence boundary
 
 |  |
@@ -2814,6 +2842,10 @@ A decision is valid only when the presented proposal hash equals the current pro
 * Replicate redacted queue projections for availability, but keep the authoritative decision write in the run’s home/legal region. After failover, fence the prior writer before accepting decisions.
 * Cache immutable evidence by hash and render role-specific views on demand; large source material remains in governed artifact storage.
 
+|  |
+| --- |
+| **PRODUCTION CONSIDERATION**  Design the wait, not just the prompt. A run paused for approval may sit for days across deploys, token expiry, and staff changes. Persist the full decision context with the pause, expire it explicitly, and define what happens when it lapses — an approval request with no expiry becomes an approval nobody can safely grant. |
+
 ## Grounding, corrections, and evidence boundary
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
@@ -3177,6 +3209,10 @@ The Run API persists intent and returns quickly; the durable workflow owns lifec
 * Separate task queues by workflow build compatibility. Keep old workers available for in-flight runs or migrate explicitly; never replay old history against untested new code.
 * Rate-limit external signals per tenant/source and coalesce superseding updates where domain semantics allow. Preserve individual inbox receipts even when only the latest value wakes the workflow.
 
+|  |
+| --- |
+| **PRODUCTION CONSIDERATION**  Assume at-least-once delivery and make effects idempotent. Exactly-once is not available end to end; a dispatch that times out leaves the outcome genuinely unknown. Give every logical effect a stable key, record its receipt, and reconcile rather than retrying blind. |
+
 ## Grounding, corrections, and evidence boundary
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
@@ -3184,6 +3220,10 @@ The Run API persists intent and returns quickly; the durable workflow owns lifec
 | Recovery objective | Durability is incomplete without measured RTO/RPO, compatible worker availability, backup restoration, region failover, and explicit treatment of pending approvals and unknown effects during disaster recovery. | TEMPORAL; CLOUDEVENTS |
 
 Evidence anchors: TEMPORAL; CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix M.
+
+|  |
+| --- |
+| **COMMON PITFALL**  Storing conversation history and calling it durable state. Transcripts record what was said, not what was decided or committed. Persist decisions, approvals, and effect receipts as first-class records; a run must be resumable from them even if every message is discarded. |
 
 ## Pattern reference — Long-Running Agents
 
@@ -4694,6 +4734,10 @@ Trust is not inherited through a chain. User authentication does not authorize t
 
 Authenticate subject/workload; classify/minimize input; build authorized labeled context; choose eligible model; validate structured output; authorize eligible tool and exact arguments; obtain proposal-bound approval when required; execute through sandbox/gateway with scoped credentials and DLP; reconcile effects and run deterministic acceptance; monitor, audit, contain, revoke, recover, and learn.
 
+|  |
+| --- |
+| **SECURITY AND GOVERNANCE**  Treat every retrieved document, tool result, and page as untrusted input. Injected instructions arrive as ordinary content, so guardrails placed only around the user's prompt miss them entirely. Enforce at the effect boundary, where intent becomes action, not at the point of text entry. |
+
 ## Threat catalog
 
 ### T-01 — Direct prompt injection
@@ -5068,6 +5112,10 @@ JSON · implementation excerpt
 * Compact long conversations asynchronously and incrementally. Keep recent turns plus source-linked summaries; rebuild summaries when covered inputs change.
 * Enforce deletion SLOs across primary metadata, vector/search indexes, caches, and derived summaries. Tombstones must outlive the longest replica/cache lag to prevent resurrection.
 
+|  |
+| --- |
+| **PERFORMANCE AND COST**  Retrieve less, and cite what you retrieved. Context is the dominant cost in most agentic systems and the dominant cause of distraction. Record a context manifest identifier rather than the context body, and measure answer quality against context size — most systems are past the point where more retrieval helps. |
+
 ## Grounding, corrections, and evidence boundary
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
@@ -5374,6 +5422,10 @@ JSON · implementation excerpt
 * Use independent encryption keys and audit streams for high-risk tenants. A shared physical service is acceptable only when tenant binding is enforced at every API, data partition, cache key, trace, and credential exchange.
 * Model a regional IdP/STS outage explicitly: existing low-risk read grants may follow a documented grace policy, while new or mutating grants fail closed and runs checkpoint for later resume.
 
+|  |
+| --- |
+| **SECURITY AND GOVERNANCE**  Delegation must narrow monotonically. A sub-agent may act for a different actor, but never for a broader subject, resource set, or action set than its parent held. Prove the narrowing in code at each handoff; a chain that can widen anywhere can widen everywhere. |
+
 ## Grounding, corrections, and evidence boundary
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
@@ -5624,6 +5676,10 @@ A unique constraint on (tenant\_id, tool\_id, idempotency\_key) protects logical
 * Publish health changes as events so planners avoid unavailable tools before dispatch. Do not allow a model to bypass a breaker by selecting a semantically identical unapproved endpoint.
 * Separate gateway availability from connector availability: if a connector is degraded, queue within bounded age or return capacity status so the workflow can wait, degrade, or escalate.
 
+|  |
+| --- |
+| **DEVELOPER GUIDELINE**  Give every tool a versioned manifest: interface, risk class, whether it mutates, whether it needs approval, and its timeout. Resolve the manifest at dispatch, not at import. A tool whose risk class lives only in a reviewer's memory cannot be enforced, audited, or safely changed. |
+
 ## Reliability and failure handling
 
 | **Required analysis** | **Design conclusion** |
@@ -5713,6 +5769,10 @@ The workflow engine owns retry timing and saga order; the Effect Service owns id
 * Separate quarantine storage from live queues. Redrive in controlled batches with canaries; compare schema/policy/tool versions and regenerate credentials.
 * Replicate effect metadata for DR but preserve one writer for a logical key. After regional failover, reconcile all Executing/Unknown effects before releasing dependent mutations.
 * Use append-only receipts and state-transition records for audit, plus compact current projections for fast lookup. Archive old evidence by retention class without deleting required idempotency tombstones.
+
+|  |
+| --- |
+| **SECURITY AND GOVERNANCE**  Authorize at invocation, against the end user's grant — never against the agent's own identity. A service account broad enough for every tool is a confused deputy waiting for a prompt injection. Narrow the grant per run, pass it explicitly, and re-check it at the tool boundary rather than at the start of the conversation. |
 
 ## Grounding, corrections, and evidence boundary
 
@@ -6189,6 +6249,10 @@ Do not treat hidden chain-of-thought as required observability. Record concise d
 * Preserve sampling weights and selection reasons for online estimates. Compare by task/risk/data/source/model slices so improvements in average score cannot hide a critical regression.
 * Monitor the observability system itself: collector drop rate, redaction failure, trace completeness, broken links, ingest lag, hot-store cost, evaluator disagreement, and dataset leakage.
 
+|  |
+| --- |
+| **OBSERVABILITY TIP**  Trace the decision, not only the call. Latency and token counts tell you a run was slow; they never tell you why it was wrong. Record which context manifest was authorized, which policy applied, and which branch was taken — those attributes are what let a trace answer a question weeks later. |
+
 ## Grounding, corrections, and evidence boundary
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
@@ -6196,6 +6260,10 @@ Do not treat hidden chain-of-thought as required observability. Record concise d
 | Telemetry maturity | OTLP and the general span model are mature, but the dedicated OpenTelemetry GenAI semantic conventions are still Development. Version the mapping and retain a stable internal event schema. | OTEL-GENAI |
 
 Evidence anchors: OTEL-GENAI; MLFLOW-TRACE. Full URLs, authority, version, and scope appear in Appendix M.
+
+|  |
+| --- |
+| **OBSERVABILITY TIP**  Tag every trace with the identifiers your system of record uses — run, tenant, risk class. A trace that cannot be joined to the business record it affected is a performance artifact, not an audit trail. |
 
 ## Implementation reference
 
@@ -6374,6 +6442,10 @@ Use deterministic validators as the gold standard where possible. LLM-as-judge i
 | ReleaseGateDecision | candidate, risk tier, thresholds, slice results, decision, waiver, approvers, evidence refs; immutable |
 | ProductionSample | run/trace, sampling reason/weight, consent/privacy handling, evaluation status, incident/failure cluster |
 
+|  |
+| --- |
+| **BEST PRACTICE**  Build the evaluation set from production failures, not from imagined ones. Every incident should end by contributing a case. A suite assembled up front measures what you expected to be hard; a suite grown from incidents measures what actually is. |
+
 ## Grounding, corrections, and evidence boundary
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
@@ -6382,6 +6454,10 @@ Use deterministic validators as the gold standard where possible. LLM-as-judge i
 | Evaluation limit | A passing model judge is probabilistic evidence, not proof. Security, authorization, schema, budget, effect, and acceptance invariants remain deterministic release blockers. Protect against benchmark leakage and tune judges with human feedback. | MLFLOW-EVAL; NIST-GAI |
 
 Evidence anchors: MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix M.
+
+|  |
+| --- |
+| **COMMON PITFALL**  Trusting an LLM judge you have not calibrated against human labels. A judge is a model with its own failure modes and its own drift. Measure its agreement with human raters on a held-out set, re-measure when you change the judge's model, and report the agreement alongside any score it produces. |
 
 ## Implementation reference
 
@@ -6748,6 +6824,10 @@ Regional recovery fences the old writer, restores durable state with a compatibl
 * Keep release metadata, signatures, policies, and governance evidence replicated with tested backup/restore. Separate normal promotion permissions from emergency deny/rollback authority.
 * Archive old artifacts only after all active-run, replay, audit, legal-hold, and rollback dependencies expire. Retain digest tombstones permanently enough to prevent ambiguous reuse.
 
+|  |
+| --- |
+| **PRODUCTION CONSIDERATION**  Version the prompt, the model pin, the tool manifests, and the policy as one release artifact. Rolling back an agent means restoring all four together; a deployment that can change the model without changing the recorded version has no rollback, only a guess. |
+
 ## Grounding, corrections, and evidence boundary
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
@@ -7015,6 +7095,10 @@ The Admission Controller predicts resource/risk and accepts, defers, or rejects 
 
 These are policy shapes, not universal numbers. Determine actual limits from task value, provider quotas, benchmark distributions, risk appetite, and SLO/error budgets.
 
+|  |
+| --- |
+| **PERFORMANCE AND COST**  Route on policy first, then on price. Model choice is a governance decision before it is an economic one: data residency, retention, and approved use constrain the candidate set, and only then does cost per verified outcome pick from what remains. |
+
 ## Grounding, corrections, and evidence boundary
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
@@ -7022,6 +7106,10 @@ These are policy shapes, not universal numbers. Determine actual limits from tas
 | Sizing method | Size from measured arrival rates and service-time distributions. Include fan-out, retry amplification, model/tool quotas, approval dwell time, tenant fairness, and headroom. Cost per verified success is more useful than token cost alone. | QUEUEING; MLFLOW-TRACE |
 
 Evidence anchors: QUEUEING; MLFLOW-TRACE. Full URLs, authority, version, and scope appear in Appendix M.
+
+|  |
+| --- |
+| **BEST PRACTICE**  Measure cost per verified successful outcome, not per token or per request. Tokens are an input; the business pays for completed work. A change that halves token spend while pushing five percent more runs into human review has almost certainly cost money. |
 
 ## Implementation reference
 

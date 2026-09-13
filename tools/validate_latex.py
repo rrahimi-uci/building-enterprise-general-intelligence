@@ -195,6 +195,12 @@ def main() -> int:
         ("White", "BookBlue"), ("White", "BookAmber"), ("White", "BookRed"),
         ("BookCyan", "BookNavy"), ("BookInk", "BookPaleBlue"),
         ("BookInk", "BookPaleAmber"), ("BookInk", "BookPaleRed"),
+        # Guidance boxes: white title on the frame, body ink on the pale ground.
+        ("White", "BookTeal"), ("White", "BookNavyTwo"), ("White", "BookPlum"),
+        ("White", "BookOlive"), ("White", "BookDeepCyan"),
+        ("BookInk", "BookPaleTeal"), ("BookInk", "BookPaleIndigo"),
+        ("BookInk", "BookPalePlum"), ("BookInk", "BookPaleOlive"),
+        ("BookInk", "BookPaleCyan"),
     ]
     contrast_results = []
     for foreground, background in pairs:

@@ -32,6 +32,46 @@ def check_table_shapes(text: str) -> list[str]:
     return errors
 
 
+def docx_callout_contrast(docx_path):
+    """Every shaded callout cell must carry readable body text.
+
+    v1.0.0 shaded NORTHSTAR/DESIGN DECISION callouts navy while the paragraph
+    style inherited Normal's dark ink -- 44 callouts at 1.09:1. The LaTeX
+    contrast gate never saw it because it only reads the LaTeX palette, so the
+    DOCX edition needs its own check.
+    """
+    from docx import Document
+    from docx.oxml.ns import qn
+
+    def luminance(value):
+        channels = [int(value[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+        linear = [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in channels]
+        return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+    def ratio(a, b):
+        la, lb = luminance(a), luminance(b)
+        return (max(la, lb) + 0.05) / (min(la, lb) + 0.05)
+
+    document = Document(str(docx_path))
+    failures = []
+    for table in document.tables:
+        if len(table.columns) != 1 or len(table.rows) != 1:
+            continue
+        cell = table.cell(0, 0)
+        paragraph = cell.paragraphs[0]
+        if paragraph.style.name != 'Book Callout':
+            continue
+        properties = cell._tc.tcPr
+        shading = properties.find(qn('w:shd')) if properties is not None else None
+        fill = shading.get(qn('w:fill')) if shading is not None else 'FFFFFF'
+        # 'Book Callout' inherits Normal, so the body ink is the book ink.
+        measured = ratio('12233F', fill)
+        if measured < 4.5:
+            failures.append({'fill': fill, 'ratio': round(measured, 2),
+                             'text': cell.text.strip()[:60]})
+    return failures
+
+
 def main() -> int:
     ap=argparse.ArgumentParser(); ap.add_argument('--root',default=str(Path(__file__).resolve().parents[1])); args=ap.parse_args()
     root=Path(args.root).resolve(); errors=[]; warnings=[]; checks={}
@@ -105,6 +145,10 @@ def main() -> int:
             checks['docx_chapters']=doc_chapters; checks['docx_appendices']=doc_appendices
             if doc_chapters!=31 or doc_appendices!=15: errors.append(f"DOCX heading counts differ: chapters={doc_chapters}, appendices={doc_appendices}")
             if len(doc.inline_shapes)!=19: errors.append(f"Expected 19 DOCX images, found {len(doc.inline_shapes)}")
+            callout_failures=docx_callout_contrast(docx_path)
+            checks['docx_callout_contrast_failures']=len(callout_failures)
+            for failure in callout_failures:
+                errors.append(f"DOCX callout is unreadable: ink on #{failure['fill']} = {failure['ratio']}:1 — {failure['text']}")
             cp=doc.core_properties
             if cp.title!='Enterprise Agentic AI Architecture & Developer Platform Guide — Book v1.0.0': errors.append(f"Unexpected DOCX title metadata: {cp.title}")
             if cp.author!='Reza Rahimi, PhD': errors.append(f"Unexpected DOCX author metadata: {cp.author}")

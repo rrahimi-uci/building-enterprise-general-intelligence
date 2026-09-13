@@ -171,6 +171,10 @@ Regional recovery fences the old writer, restores durable state with a compatibl
 * Keep release metadata, signatures, policies, and governance evidence replicated with tested backup/restore. Separate normal promotion permissions from emergency deny/rollback authority.
 * Archive old artifacts only after all active-run, replay, audit, legal-hold, and rollback dependencies expire. Retain digest tombstones permanently enough to prevent ambiguous reuse.
 
+|  |
+| --- |
+| **PRODUCTION CONSIDERATION**  Version the prompt, the model pin, the tool manifests, and the policy as one release artifact. Rolling back an agent means restoring all four together; a deployment that can change the model without changing the recorded version has no rollback, only a guess. |
+
 ## Grounding, corrections, and evidence boundary
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
@@ -438,6 +442,10 @@ The Admission Controller predicts resource/risk and accepts, defers, or rejects 
 
 These are policy shapes, not universal numbers. Determine actual limits from task value, provider quotas, benchmark distributions, risk appetite, and SLO/error budgets.
 
+|  |
+| --- |
+| **PERFORMANCE AND COST**  Route on policy first, then on price. Model choice is a governance decision before it is an economic one: data residency, retention, and approved use constrain the candidate set, and only then does cost per verified outcome pick from what remains. |
+
 ## Grounding, corrections, and evidence boundary
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
@@ -445,6 +453,10 @@ These are policy shapes, not universal numbers. Determine actual limits from tas
 | Sizing method | Size from measured arrival rates and service-time distributions. Include fan-out, retry amplification, model/tool quotas, approval dwell time, tenant fairness, and headroom. Cost per verified success is more useful than token cost alone. | QUEUEING; MLFLOW-TRACE |
 
 Evidence anchors: QUEUEING; MLFLOW-TRACE. Full URLs, authority, version, and scope appear in Appendix M.
+
+|  |
+| --- |
+| **BEST PRACTICE**  Measure cost per verified successful outcome, not per token or per request. Tokens are an input; the business pays for completed work. A change that halves token spend while pushing five percent more runs into human review has almost certainly cost money. |
 
 ## Implementation reference
 

@@ -4,8 +4,8 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "b0cf956a577c461b7ab8b0ee1451324e544d31bb63b731c9dcb43ec7b839d3b9",
-    "content_tex_sha256": "1f1b955e32b5ce427ada34259c8a2b14b2ef65e781ff9ac2e9e350b148186f90",
-    "style_sha256": "009e3a5c9950cb52c5b481bfd81b804600e754b867bc2c0d10b23f30c118ce49",
+    "content_tex_sha256": "1fe6366ad074fc61635f05e74f28cf1d2a7cdb567ec1c75df812eb5db33e8784",
+    "style_sha256": "483ed0c47c8e20fbe170c4ac62a0e1e193e6725cb6264ebab7e1665942bbf6ff",
     "narrative_parts": 12,
     "appendix_dividers": 1,
     "chapters": 31,
@@ -244,6 +244,56 @@
         "foreground": "BookInk",
         "background": "BookPaleRed",
         "ratio": 13.71
+      },
+      {
+        "foreground": "White",
+        "background": "BookTeal",
+        "ratio": 6.08
+      },
+      {
+        "foreground": "White",
+        "background": "BookNavyTwo",
+        "ratio": 10.91
+      },
+      {
+        "foreground": "White",
+        "background": "BookPlum",
+        "ratio": 9.42
+      },
+      {
+        "foreground": "White",
+        "background": "BookOlive",
+        "ratio": 7.22
+      },
+      {
+        "foreground": "White",
+        "background": "BookDeepCyan",
+        "ratio": 7.12
+      },
+      {
+        "foreground": "BookInk",
+        "background": "BookPaleTeal",
+        "ratio": 14.02
+      },
+      {
+        "foreground": "BookInk",
+        "background": "BookPaleIndigo",
+        "ratio": 14.07
+      },
+      {
+        "foreground": "BookInk",
+        "background": "BookPalePlum",
+        "ratio": 13.68
+      },
+      {
+        "foreground": "BookInk",
+        "background": "BookPaleOlive",
+        "ratio": 14.27
+      },
+      {
+        "foreground": "BookInk",
+        "background": "BookPaleCyan",
+        "ratio": 14.05
       }
     ],
     "cross_format_reference_pdf_pages": 213,

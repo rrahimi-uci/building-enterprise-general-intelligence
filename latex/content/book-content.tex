@@ -218,12 +218,12 @@ A. Pattern Selection Decision Tree and Catalog Index B–O. Runbooks, contracts,
 
 \BookChapter{01}{From an LLM Call to a Production System}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  Northstar Components wants to shorten supplier onboarding from twelve days to two. A prototype can summarize a supplier file, but production must also retrieve authorized records, request missing evidence, pause for people, screen sanctions, create auditable decisions, and survive days of inactivity.
+\begin{bookcallout}[Northstar at this point]
+Northstar Components wants to shorten supplier onboarding from twelve days to two. A prototype can summarize a supplier file, but production must also retrieve authorized records, request missing evidence, pause for people, screen sanctions, create auditable decisions, and survive days of inactivity.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Start Northstar as a governed distributed application with one bounded reasoning component, not as an autonomous chatbot.
+\begin{bookcallout}[Design decision]
+Start Northstar as a governed distributed application with one bounded reasoning component, not as an autonomous chatbot.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -458,12 +458,12 @@ With the system boundary established, Chapter 2 converts model intent into typed
 
 \BookChapter{02}{Tools, Structured Outputs, and the Deterministic Shell}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  The prototype now proposes a call to create a supplier record. The JSON is valid and the rationale sounds convincing, yet the record may be stale, the user may lack write authority, and a retry could create a duplicate. Northstar introduces a deterministic shell around every model proposal.
+\begin{bookcallout}[Northstar at this point]
+The prototype now proposes a call to create a supplier record. The JSON is valid and the rationale sounds convincing, yet the record may be stale, the user may lack write authority, and a retry could create a duplicate. Northstar introduces a deterministic shell around every model proposal.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Treat every model output as a typed proposal; validate, authorize, commit, verify, and accept outside the model.
+\begin{bookcallout}[Design decision]
+Treat every model output as a typed proposal; validate, authorize, commit, verify, and accept outside the model.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -528,6 +528,10 @@ Scale tool work by workload and risk class, not with one global queue. Read-only
 
 \end{enumerate}
 
+\begin{bookbestpractice}[Best practice]
+Validate, authorize, and commit outside the model. A structured output is a \emph{proposal}: parse it against a schema you own, check authority against the caller's grant, then commit through the same service path a human request would take. If a tool can be invoked without passing that gate, the gate is decorative.
+\end{bookbestpractice}
+
 \section{Where distributed systems must remain authoritative}
 
 \needspace{5\baselineskip}
@@ -568,6 +572,10 @@ Tests/rules engine & Deterministic invariants and objective acceptance & Generat
 \textbf{BOUNDARY RULE: IF AN OPERATION MUST BE CORRECT EVERY TIME, SURVIVE A CRASH, ENFO}  Boundary rule: If an operation must be correct every time, survive a crash, enforce a permission, coordinate concurrent writers, or create an auditable effect, it belongs to deterministic infrastructure. The LLM may decide what to attempt; deterministic systems decide whether and how it is committed.
 \end{bookcallout}
 
+\begin{bookantipattern}[Common pitfall]
+Treating schema validity as correctness. A response that parses cleanly can still name a stale record, a resource the caller cannot see, or an amount nobody approved. Schema validation rejects malformed proposals; it says nothing about whether the proposal should be allowed. Keep the two checks separate and run both.
+\end{bookantipattern}
+
 \section{Grounding, corrections, and evidence boundary}
 
 \needspace{5\baselineskip}
@@ -589,7 +597,7 @@ Evidence anchors: CLOUDEVENTS; OUTBOX. Full URLs, authority, version, and scope 
 \section{Pattern reference — Tool Use}
 
 \begin{bookcallout}[Architecture note]
-\textbf{PROBLEM}  The model can identify an action or information need, but enterprise execution requires typed interfaces, current authorization, credentials, idempotency, and evidence.
+The model can identify an action or information need, but enterprise execution requires typed interfaces, current authorization, credentials, idempotency, and evidence.
 \end{bookcallout}
 
 \subsection{Architecture and flow}
@@ -822,12 +830,12 @@ This chapter uses the OpenAI Agents SDK as a concrete adapter. Enterprise applic
 
 \end{bookquote}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  Northstar adopts OpenAI Agents SDK for its compact agent loop, tools, handoffs, structured outputs, tracing, sessions, and human-interruption surfaces. The architecture team refuses to let SDK state become workflow truth or to expose raw enterprise credentials to the agent process.
+\begin{bookcallout}[Northstar at this point]
+Northstar adopts OpenAI Agents SDK for its compact agent loop, tools, handoffs, structured outputs, tracing, sessions, and human-interruption surfaces. The architecture team refuses to let SDK state become workflow truth or to expose raw enterprise credentials to the agent process.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Place the OpenAI Agents SDK behind AgentRuntime; pin 0.22.2 and keep workflow, authority, credentials, effects, and audit platform-owned.
+\begin{bookcallout}[Design decision]
+Place the OpenAI Agents SDK behind AgentRuntime; pin 0.22.2 and keep workflow, authority, credentials, effects, and audit platform-owned.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -1026,9 +1034,17 @@ SDK guardrails are valuable for early input, tool, and output checks. They do no
 
 Assign one retry owner per failure class: the workflow owns activity retries; the Model Gateway may perform short transport retries inside one recorded attempt; the Tool Gateway follows the tool manifest and effect protocol; an unknown mutation is reconciled before any retry.\par
 
+\begin{bookarchitecture}[Architecture guidance]
+Let the framework own the agent loop, never the workflow truth. Run state, approvals, and effect records belong in your durable store, keyed by your identifiers. The SDK's session object is a convenience for one process; if losing it would lose the run, the boundary is in the wrong place.
+\end{bookarchitecture}
+
 \section{Adoption test}
 
 Adopt the SDK only after proving that tools cannot bypass gateways, every invocation is externally bounded, handoffs map to durable ownership correctly, sensitive tracing is disabled or isolated, protected commits require deterministic validation, and another runtime could replace the adapter without migrating public APIs, workflow history, effects, artifacts, approvals, or audit.\par
+
+\begin{bookdeveloper}[Developer guideline]
+Depend on the adapter you wrote, not on the SDK's types, everywhere above the runtime boundary. One module should import the vendor package. That module is also the only thing you rewrite when a 0.x SDK changes its API, which it will.
+\end{bookdeveloper}
 
 \section{Grounding, corrections, and evidence boundary}
 
@@ -1178,7 +1194,7 @@ How do you keep the SDK replaceable? & Store platform contracts, workflow histor
 \BookTableEnd
 
 \begin{bookcallout}[Architecture note]
-\textbf{PART II}  \textbf{AGENTIC DESIGN PATTERNS}  Choose and implement the smallest pattern that resolves the real uncertainty: ReAct, routing, planning, reflection, human control, and durable execution.
+\textbf{AGENTIC DESIGN PATTERNS}  Choose and implement the smallest pattern that resolves the real uncertainty: ReAct, routing, planning, reflection, human control, and durable execution.
 \end{bookcallout}
 
 04 ReAct: Bounded Reason–Act–Observe Loops\par
@@ -1295,12 +1311,12 @@ The planes are visible; Chapter 5 turns their responsibilities into APIs, record
 
 \end{bookquote}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  The design now spans edge APIs, definitions, workflows, workers, model routing, tools, knowledge, trust, and operations. Northstar turns diagrams into explicit contracts, stores, ownership, partitions, and failure domains.
+\begin{bookcallout}[Northstar at this point]
+The design now spans edge APIs, definitions, workflows, workers, model routing, tools, knowledge, trust, and operations. Northstar turns diagrams into explicit contracts, stores, ownership, partitions, and failure domains.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Deploy global definitions and governance into regional execution cells connected through stable provider-neutral contracts.
+\begin{bookcallout}[Design decision]
+Deploy global definitions and governance into regional execution cells connected through stable provider-neutral contracts.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -1878,12 +1894,12 @@ The delivery path is established; Chapter 8 packages repeatable behavior as vers
 
 \BookChapter{08}{Skills as Versioned Capabilities}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  Teams begin copying prompts and tool wrappers between agents. Results diverge, fixes do not propagate, and no owner can prove which behavior reached production. Northstar introduces a Skill as the unit of reusable capability.
+\begin{bookcallout}[Northstar at this point]
+Teams begin copying prompts and tool wrappers between agents. Results diverge, fixes do not propagate, and no owner can prove which behavior reached production. Northstar introduces a Skill as the unit of reusable capability.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Make the Skill manifest the versioned capability contract and resolve exact releases through policy and evaluation evidence.
+\begin{bookcallout}[Design decision]
+Make the Skill manifest the versioned capability contract and resolve exact releases through policy and evaluation evidence.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -2178,12 +2194,12 @@ Individual Skills are governable; Chapter 9 composes them into domain packs with
 
 \BookChapter{09}{Skill Packs and Domain Platforms}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  Procurement needs a complete domain experience, not isolated Skills. Evidence retrieval, document validation, sanctions screening, policy explanation, and approval preparation must ship as a compatible, evaluated pack.
+\begin{bookcallout}[Northstar at this point]
+Procurement needs a complete domain experience, not isolated Skills. Evidence retrieval, document validation, sanctions screening, policy explanation, and approval preparation must ship as a compatible, evaluated pack.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Ship domain behavior as immutable Skill Packs with compatibility, policy, evaluation, and promotion metadata.
+\begin{bookcallout}[Design decision]
+Ship domain behavior as immutable Skill Packs with compatibility, policy, evaluation, and promotion metadata.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -2353,12 +2369,12 @@ The platform and capability model are complete; Chapter 10 begins the pattern se
 
 \end{bookquote}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  An analyst asks why a supplier is blocked. One retrieval is insufficient: the system may need the profile, a screening artifact, and a policy explanation. A bounded ReAct loop is appropriate because the next information need depends on the previous observation.
+\begin{bookcallout}[Northstar at this point]
+An analyst asks why a supplier is blocked. One retrieval is insufficient: the system may need the profile, a screening artifact, and a policy explanation. A bounded ReAct loop is appropriate because the next information need depends on the previous observation.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Use ReAct only for information-dependent next steps and impose external turn, tool, time, cost, and no-progress limits.
+\begin{bookcallout}[Design decision]
+Use ReAct only for information-dependent next steps and impose external turn, tool, time, cost, and no-progress limits.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -2397,18 +2413,26 @@ A ReAct activity can return answer, needs\_input, delegate, proposed\_action, bu
 
 Plan capacity in turns per successful outcome, not only requests per second. Track model tokens, tool calls, connector time, observation bytes, and repeated-action rate. Per-tenant permits and hard per-run limits prevent one pathological loop from consuming a worker pool.\par
 
+\begin{bookcost}[Performance and cost]
+A ReAct loop's cost is set by its trajectory, not its prompt. Each observation re-enters the context, so an n-step loop is roughly quadratic in tokens. Cap the step count, summarize observations before they re-enter, and measure cost per \emph{completed task} rather than per call — a cheap call that loops eight times is not cheap.
+\end{bookcost}
+
 \section{Grounding, corrections, and evidence boundary}
 
-\begin{bookthreat}[Architecture note]
-\textbf{EVIDENCE BOUNDARY}  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
+\begin{bookthreat}[Threat]
+This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
 \end{bookthreat}
 
 Evidence anchors: REACT; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix M.\par
 
+\begin{bookantipattern}[Common pitfall]
+Unbounded retries disguised as reasoning. When a tool fails and the model is free to try again, the loop can burn its whole budget rediscovering the same error. Return failures as typed data the model can read, cap attempts per tool, and make the cap a run-level budget rather than a per-call one.
+\end{bookantipattern}
+
 \section{Pattern reference — ReAct}
 
 \begin{bookcallout}[Architecture note]
-\textbf{PROBLEM}  The system cannot know every information-gathering step in advance because the next action depends on the previous observation.
+The system cannot know every information-gathering step in advance because the next action depends on the previous observation.
 \end{bookcallout}
 
 \subsection{Architecture and flow}
@@ -2653,12 +2677,12 @@ A bounded reason–act loop handles local uncertainty; Chapter 11 adds routing a
 
 \BookChapter{11}{Routing, Triage, and Handoffs}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  Some requests are policy questions, others are document defects, screening disputes, or protected onboarding actions. Northstar needs routing, but it also needs to know when responsibility actually transfers and who owns cancellation, deadlines, and the final response.
+\begin{bookcallout}[Northstar at this point]
+Some requests are policy questions, others are document defects, screening disputes, or protected onboarding actions. Northstar needs routing, but it also needs to know when responsibility actually transfers and who owns cancellation, deadlines, and the final response.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Use deterministic route eligibility and fallback; record handoff as an explicit ownership transition.
+\begin{bookcallout}[Design decision]
+Use deterministic route eligibility and fallback; record handoff as an explicit ownership transition.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -2709,8 +2733,8 @@ Confidence is calibrated on a versioned domain dataset. Below a threshold, the r
 
 \section{Grounding, corrections, and evidence boundary}
 
-\begin{bookthreat}[Architecture note]
-\textbf{EVIDENCE BOUNDARY}  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
+\begin{bookthreat}[Threat]
+This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
 \end{bookthreat}
 
 Evidence anchors: OAI-TOOLS; A2A-101. Full URLs, authority, version, and scope appear in Appendix M.\par
@@ -2718,7 +2742,7 @@ Evidence anchors: OAI-TOOLS; A2A-101. Full URLs, authority, version, and scope a
 \section{Pattern reference — Routing}
 
 \begin{bookcallout}[Architecture note]
-\textbf{PROBLEM}  Different requests need different workflows, models, Skills, agents, risk controls, or human queues.
+Different requests need different workflows, models, Skills, agents, risk controls, or human queues.
 \end{bookcallout}
 
 \subsection{Architecture and flow}
@@ -2811,7 +2835,7 @@ Privileged route selection & Eligibility before classification and exact authori
 \section{Pattern reference — Handoffs}
 
 \begin{bookcallout}[Architecture note]
-\textbf{PROBLEM}  Another agent or human must become the current interaction or task owner rather than merely provide an answer to the original controller.
+Another agent or human must become the current interaction or task owner rather than merely provide an answer to the original controller.
 \end{bookcallout}
 
 \subsection{Architecture and flow}
@@ -3002,12 +3026,12 @@ Routing selects among known capabilities; Chapter 12 addresses tasks whose decom
 
 \end{bookquote}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  A supplier with four subsidiaries, missing tax evidence, and two regional checks requires adaptive sequencing. Northstar lets a planner propose a graph but compiles that graph before any node becomes schedulable.
+\begin{bookcallout}[Northstar at this point]
+A supplier with four subsidiaries, missing tax evidence, and two regional checks requires adaptive sequencing. Northstar lets a planner propose a graph but compiles that graph before any node becomes schedulable.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Use a typed Plan IR and deterministic compiler; freeze committed past work across plan revisions.
+\begin{bookcallout}[Design decision]
+Use a typed Plan IR and deterministic compiler; freeze committed past work across plan revisions.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -3264,10 +3288,14 @@ NodeExecution & logical node, plan revision, workflow/activity/task ID, attempt,
 
 \end{itemize}
 
+\begin{bookarchitecture}[Architecture guidance]
+Separate the plan from its execution. A plan is data: persist it, version it, and let it be inspected and approved before any step commits an effect. Once execution is a separate pass over a stored plan, replay, partial resume, and human amendment all become ordinary operations instead of special cases.
+\end{bookarchitecture}
+
 \section{Grounding, corrections, and evidence boundary}
 
-\begin{bookthreat}[Architecture note]
-\textbf{EVIDENCE BOUNDARY}  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
+\begin{bookthreat}[Threat]
+This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
 \end{bookthreat}
 
 Evidence anchors: TEMPORAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix M.\par
@@ -3275,7 +3303,7 @@ Evidence anchors: TEMPORAL; NIST-GAI. Full URLs, authority, version, and scope a
 \section{Pattern reference — Planning}
 
 \begin{bookcallout}[Architecture note]
-\textbf{PROBLEM}  The task requires adaptive decomposition or dependency ordering that cannot be fully encoded upfront.
+The task requires adaptive decomposition or dependency ordering that cannot be fully encoded upfront.
 \end{bookcallout}
 
 \subsection{Architecture and flow}
@@ -3537,12 +3565,12 @@ Planning creates an executable structure; Chapter 13 adds independent evaluation
 
 \BookChapter{13}{Reflection and Evaluator–Optimizer}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  The first recommendation is coherent but omits a contradictory address and overstates confidence. Northstar adds bounded reflection for revision and an independently defined evaluator for acceptance.
+\begin{bookcallout}[Northstar at this point]
+The first recommendation is coherent but omits a contradictory address and overstates confidence. Northstar adds bounded reflection for revision and an independently defined evaluator for acceptance.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Use reflection for targeted revision and independent, calibrated acceptance for protected outcomes.
+\begin{bookcallout}[Design decision]
+Use reflection for targeted revision and independent, calibrated acceptance for protected outcomes.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -3579,8 +3607,8 @@ Each revision targets structured feedback and carries a diff. The loop stops on 
 
 \section{Grounding, corrections, and evidence boundary}
 
-\begin{bookthreat}[Architecture note]
-\textbf{EVIDENCE BOUNDARY}  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
+\begin{bookthreat}[Threat]
+This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
 \end{bookthreat}
 
 Evidence anchors: MLFLOW-EVAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix M.\par
@@ -3588,7 +3616,7 @@ Evidence anchors: MLFLOW-EVAL; NIST-GAI. Full URLs, authority, version, and scop
 \section{Pattern reference — Reflection}
 
 \begin{bookcallout}[Architecture note]
-\textbf{PROBLEM}  A first candidate may contain omissions, contradictions, or weak reasoning that targeted critique can expose.
+A first candidate may contain omissions, contradictions, or weak reasoning that targeted critique can expose.
 \end{bookcallout}
 
 \subsection{Architecture and flow}
@@ -3681,7 +3709,7 @@ Evidence invention & Require evidence references and reject unsupported addition
 \section{Pattern reference — Evaluator–Optimizer}
 
 \begin{bookcallout}[Architecture note]
-\textbf{PROBLEM}  A generated artifact must reach a quality threshold that mixes executable and semantic criteria.
+A generated artifact must reach a quality threshold that mixes executable and semantic criteria.
 \end{bookcallout}
 
 \subsection{Architecture and flow}
@@ -3878,12 +3906,12 @@ Automated evaluation can improve candidates; Chapter 14 identifies decisions tha
 
 \end{bookquote}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  A protected supplier activation requires approval. An approver must see the exact action, destination, evidence, expected resource version, and risk—not a vague request to “approve the agent.”
+\begin{bookcallout}[Northstar at this point]
+A protected supplier activation requires approval. An approver must see the exact action, destination, evidence, expected resource version, and risk—not a vague request to “approve the agent.”
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Persist proposal-bound approvals as durable workflow events and reauthorize immediately before commit.
+\begin{bookcallout}[Design decision]
+Persist proposal-bound approvals as durable workflow events and reauthorize immediately before commit.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -4084,6 +4112,10 @@ A decision is valid only when the presented proposal hash equals the current pro
 
 \end{itemize}
 
+\begin{bookproduction}[Production consideration]
+Design the wait, not just the prompt. A run paused for approval may sit for days across deploys, token expiry, and staff changes. Persist the full decision context with the pause, expire it explicitly, and define what happens when it lapses — an approval request with no expiry becomes an approval nobody can safely grant.
+\end{bookproduction}
+
 \section{Grounding, corrections, and evidence boundary}
 
 \needspace{5\baselineskip}
@@ -4105,7 +4137,7 @@ Evidence anchors: OAI-HITL; OWASP-AGENT; WCAG22. Full URLs, authority, version, 
 \section{Pattern reference — Human-in-the-Loop}
 
 \begin{bookcallout}[Architecture note]
-\textbf{PROBLEM}  A person must authorize, correct, or resolve work whose risk or ambiguity exceeds autonomous authority.
+A person must authorize, correct, or resolve work whose risk or ambiguity exceeds autonomous authority.
 \end{bookcallout}
 
 \subsection{Architecture and flow}
@@ -4402,12 +4434,12 @@ Human control introduces waits and resumptions; Chapter 15 makes those waits dur
 
 \end{bookquote}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  The supplier waits nine days to upload a certificate. During the wait, workers deploy twice, policy changes, a user loses a role, and one earlier external request timed out. The run must resume safely rather than restart from a prompt transcript.
+\begin{bookcallout}[Northstar at this point]
+The supplier waits nine days to upload a certificate. During the wait, workers deploy twice, policy changes, a user loses a role, and one earlier external request timed out. The run must resume safely rather than restart from a prompt transcript.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Represent long-running work as replay-safe workflow history plus bounded activities, durable waits, and reconciliation.
+\begin{bookcallout}[Design decision]
+Represent long-running work as replay-safe workflow history plus bounded activities, durable waits, and reconciliation.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -4622,6 +4654,10 @@ WorkflowMigration & from/to build, applicable state/schema, deterministic transf
 
 \end{itemize}
 
+\begin{bookproduction}[Production consideration]
+Assume at-least-once delivery and make effects idempotent. Exactly-once is not available end to end; a dispatch that times out leaves the outcome genuinely unknown. Give every logical effect a stable key, record its receipt, and reconcile rather than retrying blind.
+\end{bookproduction}
+
 \section{Grounding, corrections, and evidence boundary}
 
 \needspace{5\baselineskip}
@@ -4640,10 +4676,14 @@ Recovery objective & Durability is incomplete without measured RTO/RPO, compatib
 
 Evidence anchors: TEMPORAL; CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix M.\par
 
+\begin{bookantipattern}[Common pitfall]
+Storing conversation history and calling it durable state. Transcripts record what was said, not what was decided or committed. Persist decisions, approvals, and effect receipts as first-class records; a run must be resumable from them even if every message is discarded.
+\end{bookantipattern}
+
 \section{Pattern reference — Long-Running Agents}
 
 \begin{bookcallout}[Architecture note]
-\textbf{PROBLEM}  Business work lasts longer than a process lifetime and must survive waits, worker loss, retries, deployments, and partial external failures.
+Business work lasts longer than a process lifetime and must survive waits, worker loss, retries, deployments, and partial external failures.
 \end{bookcallout}
 
 \subsection{Architecture and flow}
@@ -4883,7 +4923,7 @@ How do you deploy new workflow code safely? & Preserve compatible workers, use e
 \BookTableEnd
 
 \begin{bookcallout}[Architecture note]
-\textbf{PART III}  \textbf{SKILLS AND COLLABORATION}  Package capabilities as versioned Skills and Skill Packs, coordinate specialist agents, and govern MCP and A2A boundaries.
+\textbf{SKILLS AND COLLABORATION}  Package capabilities as versioned Skills and Skill Packs, coordinate specialist agents, and govern MCP and A2A boundaries.
 \end{bookcallout}
 
 10 Skills as Versioned Capabilities\par
@@ -5494,12 +5534,12 @@ After removing unsafe local architectures, Chapter 18 considers when multiple ag
 
 \end{bookquote}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  Screening, tax, security, and procurement specialists can run concurrently, but a plausible multi-agent conversation is not a coordination protocol. Northstar defines durable tasks, one owner per task, narrowed authority, explicit joins, and artifact contracts.
+\begin{bookcallout}[Northstar at this point]
+Screening, tax, security, and procurement specialists can run concurrently, but a plausible multi-agent conversation is not a coordination protocol. Northstar defines durable tasks, one owner per task, narrowed authority, explicit joins, and artifact contracts.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Give one component ownership of each task, derive narrower child authority, and define explicit join and cancellation semantics.
+\begin{bookcallout}[Design decision]
+Give one component ownership of each task, derive narrower child authority, and define explicit join and cancellation semantics.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -5746,7 +5786,7 @@ Evidence anchors: MULTIAGENT; A2A-101. Full URLs, authority, version, and scope 
 \section{Pattern reference — Supervisor/Worker}
 
 \begin{bookcallout}[Architecture note]
-\textbf{PROBLEM}  One outcome requires specialist work that benefits from parallelism or separate capability boundaries while a single component retains overall ownership.
+One outcome requires specialist work that benefits from parallelism or separate capability boundaries while a single component retains overall ownership.
 \end{bookcallout}
 
 \subsection{Architecture and flow}
@@ -5839,7 +5879,7 @@ Child leakage & Narrow grant, data, context, and egress boundaries. \\
 \section{Pattern reference — Multi-Agent Collaboration}
 
 \begin{bookcallout}[Architecture note]
-\textbf{PROBLEM}  Several autonomous or semi-autonomous components must exchange tasks and artifacts while preserving ownership, authority, evidence, and recovery.
+Several autonomous or semi-autonomous components must exchange tasks and artifacts while preserving ownership, authority, evidence, and recovery.
 \end{bookcallout}
 
 \subsection{Architecture and flow}
@@ -6096,12 +6136,12 @@ Multi-agent collaboration inside one platform is only part of the problem; Chapt
 
 \end{bookquote}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  Northstar consumes a third-party screening MCP server and delegates regional verification to a partner agent through A2A. Protocol conformance makes messages interoperable; it does not make the endpoint trusted or the artifact safe to adopt.
+\begin{bookcallout}[Northstar at this point]
+Northstar consumes a third-party screening MCP server and delegates regional verification to a partner agent through A2A. Protocol conformance makes messages interoperable; it does not make the endpoint trusted or the artifact safe to adopt.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Terminate MCP and A2A at governed local gateways; verify endpoints, artifacts, authority, quotas, and effect semantics locally.
+\begin{bookcallout}[Design decision]
+Terminate MCP and A2A at governed local gateways; verify endpoints, artifacts, authority, quotas, and effect semantics locally.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -6490,7 +6530,7 @@ How do you version external capabilities? & Pin registry entry, endpoint, protoc
 \BookTableEnd
 
 \begin{bookcallout}[Architecture note]
-\textbf{PART IV}  \textbf{ENTERPRISE CONTROL}  Control context, state, identity, authorization, effects, security, and governance outside the model.
+\textbf{ENTERPRISE CONTROL}  Control context, state, identity, authorization, effects, security, and governance outside the model.
 \end{bookcallout}
 
 14 Context Engineering, Memory, and State\par
@@ -6633,6 +6673,10 @@ Trust is not inherited through a chain. User authentication does not authorize t
 \BookDiagram{assets/diagrams/guardrail-sequence.png}{Figure 21-3 — Runtime guardrail and protected-effect sequence}{guardrail-sequence}
 
 Authenticate subject/workload; classify/minimize input; build authorized labeled context; choose eligible model; validate structured output; authorize eligible tool and exact arguments; obtain proposal-bound approval when required; execute through sandbox/gateway with scoped credentials and DLP; reconcile effects and run deterministic acceptance; monitor, audit, contain, revoke, recover, and learn.\par
+
+\begin{booksecurity}[Security and governance]
+Treat every retrieved document, tool result, and page as untrusted input. Injected instructions arrive as ordinary content, so guardrails placed only around the user's prompt miss them entirely. Enforce at the effect boundary, where intent becomes action, not at the point of text entry.
+\end{booksecurity}
 
 \section{Threat catalog}
 
@@ -6870,12 +6914,12 @@ The threat model is established; Chapter 22 applies it to context, retrieval, me
 
 \BookChapter{22}{Context Engineering, RAG, Memory, and State}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  As runs grow, prompts become a mixture of chat, workflow state, retrieved documents, summaries, and learned preferences. Northstar separates these domains and records exactly which authorized projection reached each model call.
+\begin{bookcallout}[Northstar at this point]
+As runs grow, prompts become a mixture of chat, workflow state, retrieved documents, summaries, and learned preferences. Northstar separates these domains and records exactly which authorized projection reached each model call.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Treat prompts as disposable authorized projections; keep canonical state, knowledge, artifacts, and memory in distinct stores.
+\begin{bookcallout}[Design decision]
+Treat prompts as disposable authorized projections; keep canonical state, knowledge, artifacts, and memory in distinct stores.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -7099,6 +7143,10 @@ JSON · implementation excerpt\par
 
 \end{itemize}
 
+\begin{bookcost}[Performance and cost]
+Retrieve less, and cite what you retrieved. Context is the dominant cost in most agentic systems and the dominant cause of distraction. Record a context manifest identifier rather than the context body, and measure answer quality against context size — most systems are past the point where more retrieval helps.
+\end{bookcost}
+
 \section{Grounding, corrections, and evidence boundary}
 
 \needspace{5\baselineskip}
@@ -7120,7 +7168,7 @@ Evidence anchors: NIST-GAI; GDPR. Full URLs, authority, version, and scope appea
 \section{Pattern reference — Memory}
 
 \begin{bookcallout}[Architecture note]
-\textbf{PROBLEM}  The system should reuse useful information across turns or runs without confusing stale summaries with canonical truth or retaining data indefinitely.
+The system should reuse useful information across turns or runs without confusing stale summaries with canonical truth or retaining data indefinitely.
 \end{bookcallout}
 
 \subsection{Architecture and flow}
@@ -7360,12 +7408,12 @@ Context and state are bounded; Chapter 23 determines whose authority may flow th
 
 \end{bookquote}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  A procurement user starts the run, a platform agent reasons, a connector calls an ERP, and a specialist agent receives a child task. Northstar must preserve both initiating subject and acting workload without turning a broad user token into ambient authority.
+\begin{bookcallout}[Northstar at this point]
+A procurement user starts the run, a platform agent reasons, a connector calls an ERP, and a specialist agent receives a child task. Northstar must preserve both initiating subject and acting workload without turning a broad user token into ambient authority.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Carry subject plus actor identity; exchange for short-lived last-hop credentials only after exact resource authorization.
+\begin{bookcallout}[Design decision]
+Carry subject plus actor identity; exchange for short-lived last-hop credentials only after exact resource authorization.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -7579,6 +7627,10 @@ AccessEvent & decision, connector, downstream request/audit ID, bytes/records, r
 
 \end{itemize}
 
+\begin{booksecurity}[Security and governance]
+Delegation must narrow monotonically. A sub-agent may act for a different actor, but never for a broader subject, resource set, or action set than its parent held. Prove the narrowing in code at each handoff; a chain that can widen anywhere can widen everywhere.
+\end{booksecurity}
+
 \section{Grounding, corrections, and evidence boundary}
 
 \needspace{5\baselineskip}
@@ -7734,12 +7786,12 @@ Identity and delegated authority answer who may ask; Chapter 24 proves whether a
 
 \BookChapter{24}{Tool Security, Effects, Idempotency, and Approval}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  The ERP times out after Northstar requests supplier creation. Retrying might duplicate the supplier; treating the call as failed might cause conflicting remediation. The platform records an unknown effect and reconciles before continuing.
+\begin{bookcallout}[Northstar at this point]
+The ERP times out after Northstar requests supplier creation. Retrying might duplicate the supplier; treating the call as failed might cause conflicting remediation. The platform records an unknown effect and reconciles before continuing.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Use one logical effect key, intent hash, expected version, downstream request ID, receipt, and reconciliation state per mutation.
+\begin{bookcallout}[Design decision]
+Use one logical effect key, intent hash, expected version, downstream request ID, receipt, and reconciliation state per mutation.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -7966,6 +8018,10 @@ A unique constraint on (tenant\_id, tool\_id, idempotency\_key) protects logical
 
 \end{itemize}
 
+\begin{bookdeveloper}[Developer guideline]
+Give every tool a versioned manifest: interface, risk class, whether it mutates, whether it needs approval, and its timeout. Resolve the manifest at dispatch, not at import. A tool whose risk class lives only in a reviewer's memory cannot be enforced, audited, or safely changed.
+\end{bookdeveloper}
+
 \section{Reliability and failure handling}
 
 \needspace{5\baselineskip}
@@ -8140,6 +8196,10 @@ QuarantineRecord & original message/ref/hash, error history, schema/policy versi
 
 \end{itemize}
 
+\begin{booksecurity}[Security and governance]
+Authorize at invocation, against the end user's grant — never against the agent's own identity. A service account broad enough for every tool is a confused deputy waiting for a prompt injection. Narrow the grant per run, pass it explicitly, and re-check it at the tool boundary rather than at the start of the conversation.
+\end{booksecurity}
+
 \section{Grounding, corrections, and evidence boundary}
 
 \needspace{5\baselineskip}
@@ -8288,12 +8348,12 @@ Protected effects are governed; Chapter 25 contains the remaining execution, egr
 
 \end{bookquote}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  A supplier document contains a hidden instruction to upload contracts to an external site. Northstar assumes the model may obey it and relies on sandbox, egress, capability, credential, DLP, and approval controls to prevent harm.
+\begin{bookcallout}[Northstar at this point]
+A supplier document contains a hidden instruction to upload contracts to an external site. Northstar assumes the model may obey it and relies on sandbox, egress, capability, credential, DLP, and approval controls to prevent harm.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Design so prompt injection may manipulate reasoning but cannot reach unauthorized data, credentials, network destinations, or effects.
+\begin{bookcallout}[Design decision]
+Design so prompt injection may manipulate reasoning but cannot reach unauthorized data, credentials, network destinations, or effects.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -8659,7 +8719,7 @@ What makes a useful kill-switch design? & Narrow scopes, emergency-deny preceden
 \BookTableEnd
 
 \begin{bookcallout}[Architecture note]
-\textbf{PART V}  \textbf{PRODUCTION ENGINEERING}  Trace and evaluate complete trajectories, deploy a scalable platform, recover safely, and optimize verified outcomes.
+\textbf{PRODUCTION ENGINEERING}  Trace and evaluate complete trajectories, deploy a scalable platform, recover safely, and optimize verified outcomes.
 \end{bookcallout}
 
 18 Observability and Tracing with MLflow\par
@@ -8686,12 +8746,12 @@ Security controls now produce events and evidence; Chapter 26 turns those signal
 
 \end{bookquote}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  A run completes slowly and expensively. Operators can see a final answer but cannot tell whether the delay came from queues, retrieval, policy, model turns, retries, human dwell, or a slow connector. Northstar links the entire trajectory.
+\begin{bookcallout}[Northstar at this point]
+A run completes slowly and expensively. Operators can see a final answer but cannot tell whether the delay came from queues, retrieval, policy, model turns, retries, human dwell, or a slow connector. Northstar links the entire trajectory.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Adopt OpenTelemetry-compatible causal traces and MLflow 3.15.x for diagnostics; retain complete protected audit evidence separately.
+\begin{bookcallout}[Design decision]
+Adopt OpenTelemetry-compatible causal traces and MLflow 3.15.x for diagnostics; retain complete protected audit evidence separately.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -8849,6 +8909,10 @@ Operations & SLO attainment, trace completeness, rollback time, mean time to dia
 
 \end{itemize}
 
+\begin{bookobservability}[Observability tip]
+Trace the decision, not only the call. Latency and token counts tell you a run was slow; they never tell you why it was wrong. Record which context manifest was authorized, which policy applied, and which branch was taken — those attributes are what let a trace answer a question weeks later.
+\end{bookobservability}
+
 \section{Grounding, corrections, and evidence boundary}
 
 \needspace{5\baselineskip}
@@ -8866,6 +8930,10 @@ Telemetry maturity & OTLP and the general span model are mature, but the dedicat
 \BookTableEnd
 
 Evidence anchors: OTEL-GENAI; MLFLOW-TRACE. Full URLs, authority, version, and scope appear in Appendix M.\par
+
+\begin{bookobservability}[Observability tip]
+Tag every trace with the identifiers your system of record uses — run, tenant, risk class. A trace that cannot be joined to the business record it affected is a performance artifact, not an audit trail.
+\end{bookobservability}
 
 \section{Implementation reference}
 
@@ -8973,12 +9041,12 @@ Tracing explains what happened; Chapter 27 determines whether the trajectory and
 
 \end{bookquote}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  A prompt change improves average answer quality but introduces one unauthorized tool trajectory in a low-volume region. Aggregate accuracy hides the regression; slice-aware trajectory evaluation blocks the release.
+\begin{bookcallout}[Northstar at this point]
+A prompt change improves average answer quality but introduces one unauthorized tool trajectory in a low-volume region. Aggregate accuracy hides the regression; slice-aware trajectory evaluation blocks the release.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Gate releases on immutable datasets, executable trajectory checks, calibrated judges, slices, failures, and baseline comparisons.
+\begin{bookcallout}[Design decision]
+Gate releases on immutable datasets, executable trajectory checks, calibrated judges, slices, failures, and baseline comparisons.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -9145,6 +9213,10 @@ ProductionSample & run/trace, sampling reason/weight, consent/privacy handling, 
 \end{longtable}
 \BookTableEnd
 
+\begin{bookbestpractice}[Best practice]
+Build the evaluation set from production failures, not from imagined ones. Every incident should end by contributing a case. A suite assembled up front measures what you expected to be hard; a suite grown from incidents measures what actually is.
+\end{bookbestpractice}
+
 \section{Grounding, corrections, and evidence boundary}
 
 \needspace{5\baselineskip}
@@ -9164,6 +9236,10 @@ Evaluation limit & A passing model judge is probabilistic evidence, not proof. S
 \BookTableEnd
 
 Evidence anchors: MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix M.\par
+
+\begin{bookantipattern}[Common pitfall]
+Trusting an LLM judge you have not calibrated against human labels. A judge is a model with its own failure modes and its own drift. Measure its agreement with human raters on a held-out set, re-measure when you change the judge's model, and report the agreement alongside any score it produces.
+\end{bookantipattern}
 
 \section{Implementation reference}
 
@@ -9443,12 +9519,12 @@ Governance defines who may release change; Chapter 30 makes releases immutable, 
 
 \end{bookquote}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  A new release changes a tool schema and workflow decision. Active runs still contain the old event history. Northstar deploys compatible workers, pins release manifests, canaries new starts, and rolls back assignment without rewriting history.
+\begin{bookcallout}[Northstar at this point]
+A new release changes a tool schema and workflow decision. Active runs still contain the old event history. Northstar deploys compatible workers, pins release manifests, canaries new starts, and rolls back assignment without rewriting history.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Release immutable bundles with compatibility evidence; roll back new assignment while active runs remain pinned to compatible code.
+\begin{bookcallout}[Design decision]
+Release immutable bundles with compatibility evidence; roll back new assignment while active runs remain pinned to compatible code.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -9742,6 +9818,10 @@ DriftFinding & subject/version, baseline/window, metric/slice, magnitude/confide
 
 \end{itemize}
 
+\begin{bookproduction}[Production consideration]
+Version the prompt, the model pin, the tool manifests, and the policy as one release artifact. Rolling back an agent means restoring all four together; a deployment that can change the model without changing the recorded version has no rollback, only a guess.
+\end{bookproduction}
+
 \section{Grounding, corrections, and evidence boundary}
 
 \needspace{5\baselineskip}
@@ -9905,12 +9985,12 @@ The release lifecycle is controlled; Chapter 31 sizes the system and optimizes c
 
 \end{bookquote}
 
-\begin{bookcallout}[Northstar At This Point]
-\textbf{NORTHSTAR AT THIS POINT}  Demand triples at quarter end. Northstar must protect deadlines and tenant fairness while controlling tokens, tool calls, queue depth, and human load. Optimization is judged by verified business outcomes, not by token price alone.
+\begin{bookcallout}[Northstar at this point]
+Demand triples at quarter end. Northstar must protect deadlines and tenant fairness while controlling tokens, tool calls, queue depth, and human load. Optimization is judged by verified business outcomes, not by token price alone.
 \end{bookcallout}
 
-\begin{bookcallout}[Design Decision]
-\textbf{DESIGN DECISION}  Optimize cost per verified success through shorter trajectories, selective context, deliberate routing, bounded concurrency, and safe degradation.
+\begin{bookcallout}[Design decision]
+Optimize cost per verified success through shorter trajectories, selective context, deliberate routing, bounded concurrency, and safe degradation.
 \end{bookcallout}
 
 \section{What this chapter delivers}
@@ -10152,6 +10232,10 @@ Spend/time & Reserve expected + bounded contingency & Hard stop before effect if
 
 These are policy shapes, not universal numbers. Determine actual limits from task value, provider quotas, benchmark distributions, risk appetite, and SLO/error budgets.\par
 
+\begin{bookcost}[Performance and cost]
+Route on policy first, then on price. Model choice is a governance decision before it is an economic one: data residency, retention, and approved use constrain the candidate set, and only then does cost per verified outcome pick from what remains.
+\end{bookcost}
+
 \section{Grounding, corrections, and evidence boundary}
 
 \needspace{5\baselineskip}
@@ -10169,6 +10253,10 @@ Sizing method & Size from measured arrival rates and service-time distributions.
 \BookTableEnd
 
 Evidence anchors: QUEUEING; MLFLOW-TRACE. Full URLs, authority, version, and scope appear in Appendix M.\par
+
+\begin{bookbestpractice}[Best practice]
+Measure cost per verified successful outcome, not per token or per request. Tokens are an input; the business pays for completed work. A change that halves token spend while pushing five percent more runs into human review has almost certainly cost money.
+\end{bookbestpractice}
 
 \section{Implementation reference}
 
@@ -11431,7 +11519,7 @@ Human factors & Accessible approval test, preview fidelity, reviewer calibration
 \BookFrontChapter{Closing perspective}
 
 \begin{bookcallout}[Architecture note]
-\textbf{THE PRODUCTION STANDARD}  An enterprise-grade system produces a verified outcome within explicit authority, time, cost, data, and risk boundaries; survives partial failure and change; and preserves evidence sufficient for users, operators, reviewers, and auditors.
+An enterprise-grade system produces a verified outcome within explicit authority, time, cost, data, and risk boundaries; survives partial failure and change; and preserves evidence sufficient for users, operators, reviewers, and auditors.
 \end{bookcallout}
 
 Northstar began with one model call. It ends as explicit contracts and control loops: a deterministic shell around bounded intelligence, reusable Skills, durable tasks, governed protocols, narrow authority, verified effects, causal traces, executable evaluation, compatible releases, and measured optimization.\par

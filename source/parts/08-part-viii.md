@@ -34,6 +34,10 @@ Trust is not inherited through a chain. User authentication does not authorize t
 
 Authenticate subject/workload; classify/minimize input; build authorized labeled context; choose eligible model; validate structured output; authorize eligible tool and exact arguments; obtain proposal-bound approval when required; execute through sandbox/gateway with scoped credentials and DLP; reconcile effects and run deterministic acceptance; monitor, audit, contain, revoke, recover, and learn.
 
+|  |
+| --- |
+| **SECURITY AND GOVERNANCE**  Treat every retrieved document, tool result, and page as untrusted input. Injected instructions arrive as ordinary content, so guardrails placed only around the user's prompt miss them entirely. Enforce at the effect boundary, where intent becomes action, not at the point of text entry. |
+
 ## Threat catalog
 
 ### T-01 — Direct prompt injection
@@ -408,6 +412,10 @@ JSON · implementation excerpt
 * Compact long conversations asynchronously and incrementally. Keep recent turns plus source-linked summaries; rebuild summaries when covered inputs change.
 * Enforce deletion SLOs across primary metadata, vector/search indexes, caches, and derived summaries. Tombstones must outlive the longest replica/cache lag to prevent resurrection.
 
+|  |
+| --- |
+| **PERFORMANCE AND COST**  Retrieve less, and cite what you retrieved. Context is the dominant cost in most agentic systems and the dominant cause of distraction. Record a context manifest identifier rather than the context body, and measure answer quality against context size — most systems are past the point where more retrieval helps. |
+
 ## Grounding, corrections, and evidence boundary
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
@@ -714,6 +722,10 @@ JSON · implementation excerpt
 * Use independent encryption keys and audit streams for high-risk tenants. A shared physical service is acceptable only when tenant binding is enforced at every API, data partition, cache key, trace, and credential exchange.
 * Model a regional IdP/STS outage explicitly: existing low-risk read grants may follow a documented grace policy, while new or mutating grants fail closed and runs checkpoint for later resume.
 
+|  |
+| --- |
+| **SECURITY AND GOVERNANCE**  Delegation must narrow monotonically. A sub-agent may act for a different actor, but never for a broader subject, resource set, or action set than its parent held. Prove the narrowing in code at each handoff; a chain that can widen anywhere can widen everywhere. |
+
 ## Grounding, corrections, and evidence boundary
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
@@ -964,6 +976,10 @@ A unique constraint on (tenant\_id, tool\_id, idempotency\_key) protects logical
 * Publish health changes as events so planners avoid unavailable tools before dispatch. Do not allow a model to bypass a breaker by selecting a semantically identical unapproved endpoint.
 * Separate gateway availability from connector availability: if a connector is degraded, queue within bounded age or return capacity status so the workflow can wait, degrade, or escalate.
 
+|  |
+| --- |
+| **DEVELOPER GUIDELINE**  Give every tool a versioned manifest: interface, risk class, whether it mutates, whether it needs approval, and its timeout. Resolve the manifest at dispatch, not at import. A tool whose risk class lives only in a reviewer's memory cannot be enforced, audited, or safely changed. |
+
 ## Reliability and failure handling
 
 | **Required analysis** | **Design conclusion** |
@@ -1053,6 +1069,10 @@ The workflow engine owns retry timing and saga order; the Effect Service owns id
 * Separate quarantine storage from live queues. Redrive in controlled batches with canaries; compare schema/policy/tool versions and regenerate credentials.
 * Replicate effect metadata for DR but preserve one writer for a logical key. After regional failover, reconcile all Executing/Unknown effects before releasing dependent mutations.
 * Use append-only receipts and state-transition records for audit, plus compact current projections for fast lookup. Archive old evidence by retention class without deleting required idempotency tombstones.
+
+|  |
+| --- |
+| **SECURITY AND GOVERNANCE**  Authorize at invocation, against the end user's grant — never against the agent's own identity. A service account broad enough for every tool is a confused deputy waiting for a prompt injection. Narrow the grant per run, pass it explicitly, and re-check it at the tool boundary rather than at the start of the conversation. |
 
 ## Grounding, corrections, and evidence boundary
 

@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 187,
+  "file_count": 188,
   "files": [
     {
       "path": ".gitattributes",
@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 7852,
-      "sha256": "df04828be3d44337b8b8b987d81633d08e89de2ed55e450e6d6549d9166226e0"
+      "bytes": 9188,
+      "sha256": "d264fe80ce46c78019d2115300ced5cc649c84db54e84934712597a3fe967340"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -186,8 +186,8 @@
     },
     {
       "path": "book/manuscript.md",
-      "bytes": 499489,
-      "sha256": "d5da64506843b69148b655cffa34317b1dbe30a0568a8398f8c770580b05cd11"
+      "bytes": 506660,
+      "sha256": "773bf4084014e3a8ace85d230b39bf41d7c9a898deac572d4c1f69b010bf347b"
     },
     {
       "path": "config/book.json",
@@ -216,18 +216,18 @@
     },
     {
       "path": "config/style-tokens.json",
-      "bytes": 1182,
-      "sha256": "2191da68f5653a98df99b840d11189e37f1145fb5cf47eb65a06244d80944ab0"
+      "bytes": 2675,
+      "sha256": "094ea6b17a8c02ecae0dca136ea1f950ae64a5094db9acc297f2283e02958efe"
     },
     {
       "path": "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.docx",
-      "bytes": 6528133,
-      "sha256": "c26d62b4130293d28451611a66f12ea3c0b117be6c88ca93f7265e1f0a41cf99"
+      "bytes": 6532445,
+      "sha256": "cb8403946f3a01acba5722e64d7b82997027df669a84543f6d9ff912132df852"
     },
     {
       "path": "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.md",
-      "bytes": 499489,
-      "sha256": "d5da64506843b69148b655cffa34317b1dbe30a0568a8398f8c770580b05cd11"
+      "bytes": 506660,
+      "sha256": "773bf4084014e3a8ace85d230b39bf41d7c9a898deac572d4c1f69b010bf347b"
     },
     {
       "path": "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.tex",
@@ -331,8 +331,8 @@
     },
     {
       "path": "latex/bookstyle.sty",
-      "bytes": 10836,
-      "sha256": "009e3a5c9950cb52c5b481bfd81b804600e754b867bc2c0d10b23f30c118ce49"
+      "bytes": 13035,
+      "sha256": "483ed0c47c8e20fbe170c4ac62a0e1e193e6725cb6264ebab7e1665942bbf6ff"
     },
     {
       "path": "latex/compile.sh",
@@ -341,8 +341,8 @@
     },
     {
       "path": "latex/content/book-content.tex",
-      "bytes": 622519,
-      "sha256": "1f1b955e32b5ce427ada34259c8a2b14b2ef65e781ff9ac2e9e350b148186f90"
+      "bytes": 628396,
+      "sha256": "1fe6366ad074fc61635f05e74f28cf1d2a7cdb567ec1c75df812eb5db33e8784"
     },
     {
       "path": "latex/fonts/LICENSE-SIL-OFL-1.1.txt",
@@ -432,7 +432,7 @@
     {
       "path": "qa/build-report.json",
       "bytes": 336,
-      "sha256": "aac5a4f485715d962928d8e4bdbf4601c2ad9d300335f72fac629f136e4940e9"
+      "sha256": "e15ef5300702130d81841cff2beecc11f35ed82217f13a4252be682a52859776"
     },
     {
       "path": "qa/determinism/build-a.docx",
@@ -451,8 +451,8 @@
     },
     {
       "path": "qa/latex-validation-report.json",
-      "bytes": 5727,
-      "sha256": "775d9ed2aa598f1d0de738a244fc77704278f547af60aa4b71aee75dd16be3e1"
+      "bytes": 6814,
+      "sha256": "0912805cc73de006ca9327a253ca9eeaddb0ec715e3ef1dffd3fc8c3a54b5e8c"
     },
     {
       "path": "qa/pagination-report.json",
@@ -586,13 +586,13 @@
     },
     {
       "path": "qa/validation-report.json",
-      "bytes": 850,
-      "sha256": "872f96a6d766aed2772377f913e412c49072cdb0bf63bb244b98889a345db81d"
+      "bytes": 891,
+      "sha256": "a6b19578557e9e00fb0e2aa65692d68b575cd9faa0058232630287f108031c33"
     },
     {
       "path": "reports/assembly-report.json",
       "bytes": 1269,
-      "sha256": "73e62dcda0b3f0c1eb161155a9cb9a68d8d30269aa06fbd36254d97cd4fc6fc1"
+      "sha256": "a72ae81e831acc4cee176310906105d533decc4c7676cfe4ce95fbfeda59eb46"
     },
     {
       "path": "reports/assembly.stdout.json",
@@ -652,7 +652,7 @@
     {
       "path": "reports/latex-build-report.json",
       "bytes": 2431,
-      "sha256": "4c1d647596985cc9d30c8ee2107e00c0bd747ffc1eadbf9f9b6780eb036627ee"
+      "sha256": "5639ffc5a26fb45c2eb6d9c6978ddb08e6d3b9cfe829e8cd837190857e447dcd"
     },
     {
       "path": "reports/latex-validation.md",
@@ -681,8 +681,8 @@
     },
     {
       "path": "reports/validation-summary.md",
-      "bytes": 839,
-      "sha256": "1fb32b5c1e38124f89e02ab378c205a9876f766fae32b2e3532dc8ae21ed7c5c"
+      "bytes": 881,
+      "sha256": "0c91db79a1128ceac5670bd8773d5f3b26e7b3c8186f4891527bdea46b6e260b"
     },
     {
       "path": "reports/validation.stdout.json",
@@ -751,8 +751,8 @@
     },
     {
       "path": "source/parts/01-part-i.md",
-      "bytes": 44653,
-      "sha256": "7652e4563bcbb68440a339a16f2de26cc18ac75cc244df63b2c3449ee6ef5227"
+      "bytes": 45973,
+      "sha256": "19e676a49f4d55e37a732fcd897fba9b60636be49c580e8fef6f7b870fc9fa2f"
     },
     {
       "path": "source/parts/02-part-ii.md",
@@ -766,8 +766,8 @@
     },
     {
       "path": "source/parts/04-part-iv.md",
-      "bytes": 97545,
-      "sha256": "4644932458383e379a64c5d4f35d10dc0d5a5f93750e911fe90b48edb5591c82"
+      "bytes": 99603,
+      "sha256": "66d83169cbdc444d23717ecc6acd1238e68e966e4e85172d90eeaf24c048d099"
     },
     {
       "path": "source/parts/05-part-v.md",
@@ -786,13 +786,13 @@
     },
     {
       "path": "source/parts/08-part-viii.md",
-      "bytes": 94219,
-      "sha256": "2dd57388a06bb7859ccc52cff91eb90e24df89b7ec9ae3f30c5860dfcf9b7896"
+      "bytes": 95919,
+      "sha256": "2a07287dd743add160bea31ffa47c5f251dd3adfa5c00e3fde7a91c11501e7b8"
     },
     {
       "path": "source/parts/09-part-ix.md",
-      "bytes": 25408,
-      "sha256": "b272d083794dd971ea22175d1b06f76d72f44fd721d62e2b61cf9781392008e6"
+      "bytes": 26608,
+      "sha256": "783300f16765ff07f87a7fe7a3fb3ded33b2e8adf922e6ef419a9b3de0eb95e9"
     },
     {
       "path": "source/parts/10-part-x.md",
@@ -806,8 +806,8 @@
     },
     {
       "path": "source/parts/12-part-xii.md",
-      "bytes": 39688,
-      "sha256": "27e51d18f754f40632ff99ba266564b4120815baba8b11b17797e41accf3cee7"
+      "bytes": 40581,
+      "sha256": "bd306fe4a2d060f66a7a944c2e008c2ec78e23d6bcbb6a9e52af806df40f48a2"
     },
     {
       "path": "source/parts/13-appendices.md",
@@ -816,13 +816,13 @@
     },
     {
       "path": "styles/CROSS-FORMAT-CONTRACT.md",
-      "bytes": 4550,
-      "sha256": "31581efcf3f4be6c300d802a52720a32bc62574542549875784f0823f36db11a"
+      "bytes": 4926,
+      "sha256": "754b597f33bd9a9df1df826df5c723f1729ffac68003f41b2b39c47ac776061d"
     },
     {
       "path": "styles/DESIGN-SYSTEM.md",
-      "bytes": 9667,
-      "sha256": "a1a50f0a4d8fe162d95d69b69dcc4af66395e4ef70a8ab9d2ea03cdab3f44cac"
+      "bytes": 11260,
+      "sha256": "73f5e5adeb57d87d7fd44e33d5a4df7f1f8db960c6bb8a777788490545b8e411"
     },
     {
       "path": "styles/DOCX-STYLES.md",
@@ -881,13 +881,18 @@
     },
     {
       "path": "tools/build_book.py",
-      "bytes": 21412,
-      "sha256": "723d8aed410cd9e565fc7bcbbb07cd2146b8c233352e9755962860cf9716877d"
+      "bytes": 21816,
+      "sha256": "2bb46d517020d4fd7d1d795d3cf44816251ec17a038b6e08401de6fa71df8bda"
     },
     {
       "path": "tools/build_latex.py",
-      "bytes": 22427,
-      "sha256": "b361c72989b8afe8c2e62bf4b7658f20bc164b83f380cb83fc133fe2c635ad01"
+      "bytes": 21842,
+      "sha256": "c8e165d9d8060ef9098a09beefb85020c8c38a794483f7f8a1ebf6dfecba32ae"
+    },
+    {
+      "path": "tools/callouts.py",
+      "bytes": 3328,
+      "sha256": "2d592bd35107a330881619b8b318442997aa93e4e9467467b7e2db3b4a3b5fa6"
     },
     {
       "path": "tools/check_examples.py",
@@ -941,13 +946,13 @@
     },
     {
       "path": "tools/validate_book.py",
-      "bytes": 9845,
-      "sha256": "793365b291c448c3ae5fd51ae8aa89a3e119dd4500d040e4a46615c43bc22d62"
+      "bytes": 11809,
+      "sha256": "96cf4a17794db3a1f3ded065d60bce69aab5f839f6a0b1e402474ebeb4fe6c8e"
     },
     {
       "path": "tools/validate_latex.py",
-      "bytes": 12746,
-      "sha256": "b8690a637eff9300d8e53c8295cd1ae02dc4bc48fc9eb6c5a5d97c2fb16e3bf5"
+      "bytes": 13138,
+      "sha256": "65d548d142bdc1834883cca563eb5401a639f92f408b163b34cb464ac0e24895"
     }
   ]
 }

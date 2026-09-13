@@ -3,12 +3,20 @@
   "page": {
     "size": "Letter",
     "orientation": "portrait",
-    "margins_inches": {"top": 0.68, "bottom": 0.65, "left": 0.72, "right": 0.72},
+    "margins_inches": {
+      "top": 0.68,
+      "bottom": 0.65,
+      "left": 0.72,
+      "right": 0.72
+    },
     "header_distance_inches": 0.25,
     "footer_distance_inches": 0.28,
     "diagram_width_inches": 6.85
   },
-  "fonts": {"sans": "Arial", "mono": "Courier New"},
+  "fonts": {
+    "sans": "Arial",
+    "mono": "Courier New"
+  },
   "font_sizes_pt": {
     "title": 30,
     "subtitle": 14,
@@ -35,10 +43,78 @@
     "light": "EEF4FA",
     "white": "FFFFFF",
     "ink": "12233F",
-    "slate": "4A6078"
+    "slate": "4A6078",
+    "plum": "6A2E6E",
+    "olive": "5A5A16",
+    "deep_cyan": "0B6076",
+    "pale_blue": "EAF3FB",
+    "pale_teal": "E7F5F3",
+    "pale_indigo": "EDF3FC",
+    "pale_plum": "F7ECF8",
+    "pale_amber": "FFF4DF",
+    "pale_red": "FCECEC",
+    "pale_olive": "F6F5E3",
+    "pale_cyan": "E6F5F9"
   },
   "component_sequences": {
-    "pattern": ["Problem", "Anti-Pattern", "Why It Fails", "Recommended Pattern", "Architecture", "Enterprise Example", "Detection Metrics", "Trade-offs"],
-    "continuous_learning": ["Observe", "Measure", "Detect", "Diagnose", "Recommend", "Validate", "Approve", "Deploy", "Monitor", "Learn"]
+    "pattern": [
+      "Problem",
+      "Anti-Pattern",
+      "Why It Fails",
+      "Recommended Pattern",
+      "Architecture",
+      "Enterprise Example",
+      "Detection Metrics",
+      "Trade-offs"
+    ],
+    "continuous_learning": [
+      "Observe",
+      "Measure",
+      "Detect",
+      "Diagnose",
+      "Recommend",
+      "Validate",
+      "Approve",
+      "Deploy",
+      "Monitor",
+      "Learn"
+    ]
+  },
+  "callouts": {
+    "contract": "Frame carries white title text; pale ground carries body ink. Every pair is contrast-tested at 4.5:1 or better in tools/validate_latex.py, and the DOCX shading is gated in tools/validate_book.py.",
+    "kinds": {
+      "Best practice": {
+        "frame": "teal",
+        "ground": "pale_teal"
+      },
+      "Architecture guidance": {
+        "frame": "navy2",
+        "ground": "pale_blue"
+      },
+      "Developer guideline": {
+        "frame": "blue",
+        "ground": "pale_indigo"
+      },
+      "Production consideration": {
+        "frame": "plum",
+        "ground": "pale_plum"
+      },
+      "Security and governance": {
+        "frame": "red",
+        "ground": "pale_red"
+      },
+      "Common pitfall / Anti-pattern": {
+        "frame": "amber",
+        "ground": "pale_amber"
+      },
+      "Performance and cost": {
+        "frame": "olive",
+        "ground": "pale_olive"
+      },
+      "Observability tip": {
+        "frame": "deep_cyan",
+        "ground": "pale_cyan"
+      }
+    }
   }
 }

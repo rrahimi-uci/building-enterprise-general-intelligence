@@ -4,6 +4,14 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Callout taxonomy and a DOCX accessibility fix
+
+- Added eight guidance-box kinds — best practice, architecture guidance, developer guideline, production consideration, security and governance, common pitfall/anti-pattern, performance and cost, and observability tip — and used all eight across fourteen chapters.
+- Moved the taxonomy into `tools/callouts.py`, which both renderers import. A duplicated mapping in two renderers drifts the first time a kind is added to one, and the cross-format contract forbids that.
+- **Fixed a shipped accessibility defect in the DOCX edition.** All 44 `NORTHSTAR AT THIS POINT` and `DESIGN DECISION` callouts were shaded navy `#102A4C` while `Book Callout` inherits Normal's ink `#12233F` — a contrast ratio of **1.09:1** against the 4.5:1 requirement, making them effectively invisible. They now use the pale ground at 13.99:1. The LaTeX contrast gate never caught it because it only reads the LaTeX palette.
+- Added `docx_callout_contrast()` to `tools/validate_book.py` so every shaded callout cell is gated in the DOCX edition too, and added ten pairs to the LaTeX contrast gate. 23 pairs are now tested; the lowest is 6.08:1.
+- Documented the taxonomy in `styles/DESIGN-SYSTEM.md` with the test for whether a box earns its place, and recorded the palette in `config/style-tokens.json`.
+
 ### Runnable, CI-verified code examples
 
 - Added `examples/`: code listings are now real files that CI executes, not prose. `config/examples.json` registers each one, and `tools/assemble_manuscript.py` expands `[[EXAMPLE:id]]` markers at assembly time so the Markdown, DOCX, and XeLaTeX editions all carry identical code and no listing can drift from the file under test.

@@ -13,6 +13,8 @@ import re
 import shutil
 from pathlib import Path
 
+import callouts
+
 BOOK_TITLE = "Enterprise Agentic AI Architecture & Developer Platform Guide"
 BASENAME = "Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0"
 
@@ -216,27 +218,13 @@ def inline(text: str) -> str:
     return "".join(output)
 
 
-def title_case_label(text: str, fallback: str) -> str:
-    plain = re.sub(r"[*_`]", "", text).strip()
-    for marker in ["NORTHSTAR AT THIS POINT", "DESIGN DECISION", "SOURCE DISCIPLINE", "EVIDENCE CAVEAT", "CAUTION", "IMPLEMENTATION NOTE", "NORTH-STAR RULE"]:
-        if marker in plain.upper():
-            return marker.title().replace("North-Star", "North-star")
-    return fallback
-
-
 def render_callout(rows: list[list[str]]) -> str:
     content = " ".join(row[0] for row in rows[1:] if row and row[0].strip()).strip()
-    upper = re.sub(r"[*_`]", "", content).upper()
-    label = title_case_label(content, "Architecture note")
-    if "THREAT" in upper:
-        environment = "bookthreat"
-    elif "CAUTION" in upper or "EVIDENCE CAVEAT" in upper:
-        environment = "bookcaution"
-    else:
-        environment = "bookcallout"
+    environment, _fill, title = callouts.classify(content)
+    body = callouts.strip_marker(content)
     return "\n".join([
-        r"\begin{" + environment + "}[" + escape_plain(label) + "]",
-        inline(content),
+        r"\begin{" + environment + "}[" + escape_plain(title) + "]",
+        inline(body),
         r"\end{" + environment + "}",
     ])
 
