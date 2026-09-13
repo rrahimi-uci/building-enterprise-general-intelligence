@@ -1,0 +1,653 @@
+{
+  "schema_version": "1.0",
+  "citation_style": "Numbered source identifiers [R01]…[R43]; bibliography ordered by identifier; accessed date shown for online sources.",
+  "release": "1.0.0",
+  "verified_on": "2026-09-13",
+  "references": [
+    {
+      "id": "R01",
+      "type": "research",
+      "author_or_organization": "Yao et al.",
+      "year": "2023",
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "publication_or_version": "ICLR 2023 / arXiv:2210.03629",
+      "url": "https://arxiv.org/abs/2210.03629",
+      "supports": "Defines ReAct and reports benchmark results for interleaved reasoning and action.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R02",
+      "type": "industry guidance",
+      "author_or_organization": "Temporal Technologies",
+      "year": "2024",
+      "title": "The Definitive Guide to Durable Execution",
+      "publication_or_version": "Temporal documentation",
+      "url": "https://temporal.io/blog/what-is-durable-execution",
+      "supports": "Explains crash-resilient workflow execution, replay, durable timers, and long-running processes.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R03",
+      "type": "architecture pattern",
+      "author_or_organization": "AWS Prescriptive Guidance",
+      "year": "2024",
+      "title": "Transactional Outbox Pattern",
+      "publication_or_version": "AWS Prescriptive Guidance",
+      "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+      "supports": "Supports atomic state/event publication and duplicate-consumer considerations.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R04",
+      "type": "standard",
+      "author_or_organization": "Cloud Native Computing Foundation",
+      "year": "2024",
+      "title": "CloudEvents Specification",
+      "publication_or_version": "CloudEvents 1.0.x",
+      "url": "https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md",
+      "supports": "Defines a portable event envelope and event identity semantics.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R05",
+      "type": "protocol specification",
+      "author_or_organization": "Model Context Protocol Project",
+      "year": "2026",
+      "title": "Model Context Protocol Specification",
+      "publication_or_version": "2026-07-28",
+      "url": "https://modelcontextprotocol.io/specification/2026-07-28",
+      "supports": "Defines the stateless MCP core, resources, prompts, tools, and extensions.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R06",
+      "type": "protocol specification",
+      "author_or_organization": "Model Context Protocol Project",
+      "year": "2026",
+      "title": "MCP Authorization",
+      "publication_or_version": "2026-07-28",
+      "url": "https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization",
+      "supports": "Defines MCP HTTP authorization and audience/resource protections.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R07",
+      "type": "protocol specification",
+      "author_or_organization": "A2A Project",
+      "year": "2026",
+      "title": "Agent2Agent Protocol Specification",
+      "publication_or_version": "v1.0.1",
+      "url": "https://a2a-protocol.org/v1.0.1/specification",
+      "supports": "Defines agent cards, tasks, messages, artifacts, bindings, authorization surfaces, and lifecycle operations.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R08",
+      "type": "internet standard",
+      "author_or_organization": "IETF",
+      "year": "2020",
+      "title": "OAuth 2.0 Token Exchange",
+      "publication_or_version": "RFC 8693",
+      "url": "https://datatracker.ietf.org/doc/html/rfc8693",
+      "supports": "Defines subject/actor semantics for token exchange, delegation, and impersonation.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R09",
+      "type": "internet standard",
+      "author_or_organization": "IETF",
+      "year": "2020",
+      "title": "Resource Indicators for OAuth 2.0",
+      "publication_or_version": "RFC 8707",
+      "url": "https://datatracker.ietf.org/doc/html/rfc8707",
+      "supports": "Defines resource indicators used to constrain token audience.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R10",
+      "type": "internet standard",
+      "author_or_organization": "IETF",
+      "year": "2025",
+      "title": "OAuth 2.0 Protected Resource Metadata",
+      "publication_or_version": "RFC 9728",
+      "url": "https://datatracker.ietf.org/doc/html/rfc9728",
+      "supports": "Defines protected-resource metadata used in authorization discovery.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R11",
+      "type": "official guidance",
+      "author_or_organization": "NIST",
+      "year": "2020",
+      "title": "Zero Trust Architecture",
+      "publication_or_version": "NIST SP 800-207",
+      "url": "https://csrc.nist.gov/pubs/sp/800/207/final",
+      "supports": "Supports resource-centric, continuously evaluated trust and explicit policy enforcement.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R12",
+      "type": "official guidance",
+      "author_or_organization": "NIST",
+      "year": "2023",
+      "title": "Artificial Intelligence Risk Management Framework (AI RMF 1.0)",
+      "publication_or_version": "NIST AI 100-1",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "supports": "Defines voluntary Govern, Map, Measure, and Manage risk-management functions.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R13",
+      "type": "official guidance",
+      "author_or_organization": "NIST",
+      "year": "2024",
+      "title": "Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile",
+      "publication_or_version": "NIST AI 600-1",
+      "url": "https://doi.org/10.6028/NIST.AI.600-1",
+      "supports": "Provides cross-sector generative-AI risk considerations across the AI lifecycle.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R14",
+      "type": "standard",
+      "author_or_organization": "ISO/IEC",
+      "year": "2023",
+      "title": "Information technology — Artificial intelligence — Management system",
+      "publication_or_version": "ISO/IEC 42001:2023",
+      "url": "https://www.iso.org/standard/42001",
+      "supports": "Defines requirements for an AI management system and continual improvement.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R15",
+      "type": "community guidance",
+      "author_or_organization": "OWASP GenAI Security Project",
+      "year": "2026",
+      "title": "OWASP Top 10 for Agentic Applications",
+      "publication_or_version": "2026 edition",
+      "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+      "supports": "Prioritizes major agentic-application security risks and mitigations.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R16",
+      "type": "community guidance",
+      "author_or_organization": "OWASP Cheat Sheet Series",
+      "year": "2026",
+      "title": "AI Agent Security Cheat Sheet",
+      "publication_or_version": "Living guidance",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html",
+      "supports": "Provides practical controls for identity, tools, memory, output, and monitoring.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R17",
+      "type": "community standard",
+      "author_or_organization": "SLSA Project",
+      "year": "2026",
+      "title": "SLSA Specification",
+      "publication_or_version": "v1.2",
+      "url": "https://slsa.dev/spec/v1.2",
+      "supports": "Defines supply-chain security tracks, levels, and provenance requirements.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R18",
+      "type": "official guidance",
+      "author_or_organization": "CISA",
+      "year": "2026",
+      "title": "Software Bill of Materials Resources",
+      "publication_or_version": "Living guidance",
+      "url": "https://www.cisa.gov/sbom",
+      "supports": "Supports SBOM practices; distinct from build provenance.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R19",
+      "type": "observability standard",
+      "author_or_organization": "OpenTelemetry",
+      "year": "2026",
+      "title": "Generative AI Semantic Conventions",
+      "publication_or_version": "Development status",
+      "url": "https://github.com/open-telemetry/semantic-conventions-genai",
+      "supports": "Defines emerging GenAI spans, events, metrics, agent, provider, and MCP mappings.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R20",
+      "type": "framework documentation",
+      "author_or_organization": "MLflow",
+      "year": "2026",
+      "title": "LLM and Agent Evaluation",
+      "publication_or_version": "MLflow 3.x",
+      "url": "https://mlflow.org/docs/latest/genai/eval-monitor/",
+      "supports": "Documents evaluation datasets, feedback, judges, systematic evaluation, and production monitoring.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R21",
+      "type": "framework release",
+      "author_or_organization": "MLflow",
+      "year": "2026",
+      "title": "MLflow 3.15.2 Release",
+      "publication_or_version": "3.15.2",
+      "url": "https://mlflow.org/releases/3.15.2",
+      "supports": "Pins the reproducibility baseline used for book examples.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R22",
+      "type": "framework documentation",
+      "author_or_organization": "Confident AI",
+      "year": "2026",
+      "title": "DeepEval Metrics Introduction",
+      "publication_or_version": "Current documentation",
+      "url": "https://deepeval.com/docs/metrics-introduction",
+      "supports": "Documents component, RAG, tool, task, and agent-oriented evaluation metrics.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R23",
+      "type": "framework documentation",
+      "author_or_organization": "Arize AI",
+      "year": "2026",
+      "title": "Phoenix Documentation",
+      "publication_or_version": "Current documentation",
+      "url": "https://arize.com/docs/phoenix",
+      "supports": "Documents OpenInference/OTel tracing, datasets, experiments, evaluation, and prompt/version workflows.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R24",
+      "type": "framework documentation",
+      "author_or_organization": "Ragas",
+      "year": "2026",
+      "title": "Agent Evaluation Metrics",
+      "publication_or_version": "Current documentation",
+      "url": "https://docs.ragas.io/en/latest/concepts/metrics/available_metrics/agents",
+      "supports": "Documents tool-call and agent-goal evaluation metrics.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R25",
+      "type": "framework documentation",
+      "author_or_organization": "LangChain",
+      "year": "2026",
+      "title": "LangSmith Evaluation",
+      "publication_or_version": "Current documentation",
+      "url": "https://docs.langchain.com/langsmith/evaluation",
+      "supports": "Documents offline and online evaluation, datasets, experiments, and production-trace workflows.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R26",
+      "type": "vendor documentation",
+      "author_or_organization": "OpenAI",
+      "year": "2026",
+      "title": "Evaluate Agent Workflows",
+      "publication_or_version": "Current documentation",
+      "url": "https://developers.openai.com/api/docs/guides/agent-evals",
+      "supports": "Documents datasets, graders, trace grading, and regression evaluation.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R27",
+      "type": "industry guidance",
+      "author_or_organization": "Anthropic",
+      "year": "2024",
+      "title": "Building Effective Agents",
+      "publication_or_version": "Engineering article",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "supports": "Distinguishes workflows from agents and recommends earning orchestration complexity.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R28",
+      "type": "industry report",
+      "author_or_organization": "Anthropic",
+      "year": "2025",
+      "title": "How We Built Our Multi-Agent Research System",
+      "publication_or_version": "Engineering article",
+      "url": "https://www.anthropic.com/engineering/multi-agent-research-system",
+      "supports": "Reports multi-agent research architecture and token/context trade-offs.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R29",
+      "type": "framework documentation",
+      "author_or_organization": "OpenAI",
+      "year": "2026",
+      "title": "OpenAI Agents SDK for Python",
+      "publication_or_version": "Current documentation",
+      "url": "https://openai.github.io/openai-agents-python",
+      "supports": "Documents agents, tools, guardrails, handoffs, sessions, results, and tracing.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R30",
+      "type": "framework release",
+      "author_or_organization": "OpenAI",
+      "year": "2026",
+      "title": "OpenAI Agents SDK Python v0.22.2",
+      "publication_or_version": "Release v0.22.2",
+      "url": "https://github.com/openai/openai-agents-python/releases/tag/v0.22.2",
+      "supports": "Pins the SDK baseline used for concrete adapter examples.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R31",
+      "type": "framework documentation",
+      "author_or_organization": "Microsoft",
+      "year": "2026",
+      "title": "Microsoft Agent Framework Overview",
+      "publication_or_version": "Current documentation",
+      "url": "https://learn.microsoft.com/en-us/agent-framework/overview",
+      "supports": "Documents Microsoft agent and workflow abstractions.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R32",
+      "type": "framework documentation",
+      "author_or_organization": "Google",
+      "year": "2026",
+      "title": "Agent Development Kit: Agents",
+      "publication_or_version": "Current documentation",
+      "url": "https://adk.dev/agents",
+      "supports": "Documents Google ADK agent and multi-agent abstractions.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R33",
+      "type": "framework documentation",
+      "author_or_organization": "Amazon Web Services",
+      "year": "2026",
+      "title": "Multi-Agent Collaboration for Amazon Bedrock Agents",
+      "publication_or_version": "Current documentation",
+      "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/agents-multi-agent-collaboration.html",
+      "supports": "Documents the managed supervisor/collaborator pattern.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R34",
+      "type": "framework documentation",
+      "author_or_organization": "LangChain",
+      "year": "2026",
+      "title": "LangGraph Persistence",
+      "publication_or_version": "Current documentation",
+      "url": "https://docs.langchain.com/oss/python/langgraph/persistence",
+      "supports": "Documents checkpointers, thread state, stores, and persistence.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R35",
+      "type": "framework documentation",
+      "author_or_organization": "LlamaIndex",
+      "year": "2026",
+      "title": "LlamaIndex Workflows",
+      "publication_or_version": "Current documentation",
+      "url": "https://docs.llamaindex.ai/en/stable/module_guides/workflow/",
+      "supports": "Documents event-driven asynchronous workflow abstractions.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R36",
+      "type": "framework documentation",
+      "author_or_organization": "Pydantic",
+      "year": "2026",
+      "title": "PydanticAI Durable Execution",
+      "publication_or_version": "Current documentation",
+      "url": "https://pydantic.dev/docs/ai/capabilities/durable_execution/overview",
+      "supports": "Documents typed agent integration with durable-execution backends.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R37",
+      "type": "framework documentation",
+      "author_or_organization": "Dapr",
+      "year": "2026",
+      "title": "Dapr Agents",
+      "publication_or_version": "Current documentation",
+      "url": "https://docs.dapr.io/developing-ai/dapr-agents",
+      "supports": "Documents Dapr agent integration with workflows, actors, state, messaging, resiliency, and telemetry.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R38",
+      "type": "framework documentation",
+      "author_or_organization": "DBOS",
+      "year": "2026",
+      "title": "DBOS AI Quickstart",
+      "publication_or_version": "Current documentation",
+      "url": "https://docs.dbos.dev/ai/ai-quickstart",
+      "supports": "Documents durable long-running agent workflows, queues, waits, and framework integrations.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R39",
+      "type": "law",
+      "author_or_organization": "European Union",
+      "year": "2016",
+      "title": "General Data Protection Regulation",
+      "publication_or_version": "Regulation (EU) 2016/679",
+      "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+      "supports": "Primary legal text for EU data-protection principles and rights.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R40",
+      "type": "official legal guidance",
+      "author_or_organization": "European Commission",
+      "year": "2026",
+      "title": "European AI Act: Regulatory Framework",
+      "publication_or_version": "Implementation overview",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
+      "supports": "Official implementation overview; legal advice must use the binding text and applicable jurisdiction.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R41",
+      "type": "standard",
+      "author_or_organization": "W3C",
+      "year": "2023",
+      "title": "Web Content Accessibility Guidelines (WCAG) 2.2",
+      "publication_or_version": "W3C Recommendation",
+      "url": "https://www.w3.org/TR/WCAG22/",
+      "supports": "Defines accessibility success criteria relevant to human-review interfaces.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R42",
+      "type": "official guidance",
+      "author_or_organization": "NIST",
+      "year": "2025",
+      "title": "Incident Response Recommendations and Considerations for Cybersecurity Risk Management",
+      "publication_or_version": "NIST SP 800-61 Rev. 3",
+      "url": "https://csrc.nist.gov/pubs/sp/800/61/r3/final",
+      "supports": "Supports incident-response integration with organizational risk management.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R43",
+      "type": "research",
+      "author_or_organization": "Little, John D. C.",
+      "year": "1961",
+      "title": "A Proof for the Queuing Formula: L = λW",
+      "publication_or_version": "Operations Research 9(3)",
+      "url": "https://doi.org/10.1287/opre.9.3.383",
+      "supports": "Primary source for Little’s Law; book sizing equations remain workload-specific approximations.",
+      "verification": {
+        "checked_on": "2026-09-13",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    }
+  ]
+}

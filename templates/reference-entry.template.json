@@ -1,0 +1,15 @@
+{
+  "id": "R44",
+  "type": "standard | research | official guidance | framework documentation | law",
+  "author_or_organization": "Organization or author",
+  "year": "YYYY or n.d.",
+  "title": "Exact source title",
+  "publication_or_version": "Version, standard number, venue, or Current documentation",
+  "url": "https://primary-source.example",
+  "supports": "One narrow sentence describing exactly what this source is allowed to support.",
+  "verification": {
+    "checked_on": "YYYY-MM-DD",
+    "status": "verified-primary-or-authoritative-source",
+    "scope_note": "This citation supports only the stated scope; it does not validate book-authored recommendations."
+  }
+}

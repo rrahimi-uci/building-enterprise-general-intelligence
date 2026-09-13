@@ -1,0 +1,686 @@
+{
+  "schema_version": "1.0.0",
+  "release": "1.0.0",
+  "title": "Enterprise Agentic AI Architecture & Developer Platform Guide",
+  "author": "Reza Rahimi, PhD",
+  "release_date": "2026-09-13",
+  "canonical_source": "source/parts/*.md",
+  "file_count": 135,
+  "files": [
+    {
+      "path": ".github/workflows/validate.yml",
+      "bytes": 614,
+      "sha256": "5626520172c305c80d77baa1798d8aa6624647979e87a73ff0c2f7c53fdc40a7"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 4595,
+      "sha256": "532bed9f9576a4ff760b36f8070617ca96f576f37022538fb7fba9ce1f41a06b"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 2974,
+      "sha256": "e12c20c7fad2d62a4d35ac17f9eef245230899b462a9f618e479b6a460addc54"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "bytes": 1589,
+      "sha256": "acd2bb3398f67f45c89bc03c68babdece5f5b3cdf2e17dc8c87fa6b0c7a47c48"
+    },
+    {
+      "path": "Makefile",
+      "bytes": 1071,
+      "sha256": "012c8c3dffd64d4624d8d37b9c22b912b59ac749e05518ce2064cb9563cd56d4"
+    },
+    {
+      "path": "README.md",
+      "bytes": 8324,
+      "sha256": "c57d21b90c53f1b0c3ba99563892ddaa5ea8a90f1cf28d97832c7c41a53d07a8"
+    },
+    {
+      "path": "RELEASE-CHECKLIST.md",
+      "bytes": 1979,
+      "sha256": "3b7723f7f181bf208ce5aef17e2c65d7707154abaa1433f8e7b5238ff96c525c"
+    },
+    {
+      "path": "assets/cover/agent-architecture-art-source.jpeg",
+      "bytes": 517600,
+      "sha256": "6418189550ae0cd22dbbfe12bb74529094594cd80718a088871c0663baa1ad2a"
+    },
+    {
+      "path": "assets/cover/cover-v1.0.0.png",
+      "bytes": 5242067,
+      "sha256": "1eef420b7dba41e5340923293b0dc2509891892620c24ae7c14fdf3d048909fd"
+    },
+    {
+      "path": "assets/diagrams/anti-before-after.png",
+      "bytes": 58120,
+      "sha256": "ececad176fb98661edd824bc824f60a7e2ff4dd9f403b9e7b28672974161c4d8"
+    },
+    {
+      "path": "assets/diagrams/book-map.png",
+      "bytes": 53587,
+      "sha256": "6df8d80057a0bbefbda3c8363fb69bcfb944ef99c9a8b1b66d911d1f1ba87c75"
+    },
+    {
+      "path": "assets/diagrams/developer-lifecycle.png",
+      "bytes": 55239,
+      "sha256": "23ab7896c780e637d53e99deaf1977453415a9dc636af3158d8726121bf396c9"
+    },
+    {
+      "path": "assets/diagrams/developer-platform.png",
+      "bytes": 64275,
+      "sha256": "b4d205365f963394d0135ac73e247ceee0f7bc0d646092a50eac0e2599f1e023"
+    },
+    {
+      "path": "assets/diagrams/dx-golden-path.png",
+      "bytes": 36100,
+      "sha256": "510f3a858768bb261bcd383142d2d2a48bb3e51c5fe3c754d2e078300236a7d1"
+    },
+    {
+      "path": "assets/diagrams/gateway-position.png",
+      "bytes": 64371,
+      "sha256": "53e521d761bd7d3cbfa2e26a7cf78bb87acc9950f07c3485318593db1e394a70"
+    },
+    {
+      "path": "assets/diagrams/governance-model.png",
+      "bytes": 75301,
+      "sha256": "bdee72d6a2004cda5e525f106f78d98dd2554b2b9d5e6649226ca256f0653489"
+    },
+    {
+      "path": "assets/diagrams/guardrail-sequence.png",
+      "bytes": 46523,
+      "sha256": "cc05e2b3315e4210205feb3b2e994effa6a5496945da89fbf970fccad50ae077"
+    },
+    {
+      "path": "assets/diagrams/learning-loop.png",
+      "bytes": 57405,
+      "sha256": "cd17949d9caee0662caf417c1c3bfaee4eee05f360f991de8ac5bab313ecde86"
+    },
+    {
+      "path": "assets/diagrams/model-routing.png",
+      "bytes": 42599,
+      "sha256": "e5de1387392122a7b7e4946c1e212dc5f6805a744dee8af2b41cb99cb132bedb"
+    },
+    {
+      "path": "assets/diagrams/pattern-decision-tree.png",
+      "bytes": 54860,
+      "sha256": "07b059e1aa8731c35f2c5f9d432dfee78d0c7816b0d6fc1fb67fce049a27bc04"
+    },
+    {
+      "path": "assets/diagrams/portability.png",
+      "bytes": 65657,
+      "sha256": "9f0075fbc80bdf217b644dd0bfea1dfed49886bc16870e326e96130d67492a04"
+    },
+    {
+      "path": "assets/diagrams/reference-architecture.png",
+      "bytes": 99585,
+      "sha256": "d4f49c6b023a74b9cab1d0ed8794c96aeaa6c29d30402c4b442ff1e08c4c8495"
+    },
+    {
+      "path": "assets/diagrams/request-sequence.png",
+      "bytes": 48911,
+      "sha256": "af8115a556777f8c6c0b383124657d37c78358cfc11c04a9f1e868586817450a"
+    },
+    {
+      "path": "assets/diagrams/runtime-offline.png",
+      "bytes": 63237,
+      "sha256": "26959491fc1e265bbb999b976e4042867c10043eee03c0b7c608fec8ed625f1f"
+    },
+    {
+      "path": "assets/diagrams/security-boundaries.png",
+      "bytes": 41448,
+      "sha256": "6d889f1f24b75765064431f079defde3f34d89b4a44b4ac6f5ef2fb2c2a6a2ad"
+    },
+    {
+      "path": "assets/diagrams/security-depth.png",
+      "bytes": 96225,
+      "sha256": "765dc464827e56676df132894a90357bb5098915148724cb838b171b5f4357d7"
+    },
+    {
+      "path": "assets/diagrams/test-pyramid.png",
+      "bytes": 54413,
+      "sha256": "1aa3c43742201d5f000d518fac8a1e2f32c995a6d1abe8e0515311b2eb547c74"
+    },
+    {
+      "path": "book/manuscript.md",
+      "bytes": 499052,
+      "sha256": "a7bcceec87ab5bdc25a272de8abd68d5572f11ffc5983a75da150419d3b0b913"
+    },
+    {
+      "path": "config/book.json",
+      "bytes": 5281,
+      "sha256": "f8d9efacb398140d909a9e3bd9f1545b656bdbde1799b4df97fda4a07f95584b"
+    },
+    {
+      "path": "config/diagrams.json",
+      "bytes": 3314,
+      "sha256": "5d8ed9af64528bb9d7e73e068c9563c9ad2463212d47c4fe674bb7977b9da7cf"
+    },
+    {
+      "path": "config/reference-verification.json",
+      "bytes": 10144,
+      "sha256": "7ca8308fb9e8c0fe4de0bba8176793ba2e6058c4bc3e8957a7a1f3890f51a09a"
+    },
+    {
+      "path": "config/references.json",
+      "bytes": 29362,
+      "sha256": "4621d7830469f3cdbb0c96bfb2ab62c6c7b3c454ed2c9f21f0c337aad720e68b"
+    },
+    {
+      "path": "config/style-tokens.json",
+      "bytes": 1182,
+      "sha256": "2191da68f5653a98df99b840d11189e37f1145fb5cf47eb65a06244d80944ab0"
+    },
+    {
+      "path": "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.docx",
+      "bytes": 6527520,
+      "sha256": "4e1020b71d76b4bc1f21f5b31a8dc065f81331a4223de4b18f1ce82cbd885c9f"
+    },
+    {
+      "path": "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.md",
+      "bytes": 499052,
+      "sha256": "a7bcceec87ab5bdc25a272de8abd68d5572f11ffc5983a75da150419d3b0b913"
+    },
+    {
+      "path": "provenance/legacy-tools/build_final_book.py",
+      "bytes": 18203,
+      "sha256": "daf47778ebd72acaf7d3c9b266ba9444268e9c8115a863f36a6f14e00ba3bce8"
+    },
+    {
+      "path": "provenance/legacy-tools/build_v3_book.py",
+      "bytes": 28211,
+      "sha256": "62ff3f701450e50e9011f930a46cb99e874b87418e0cf97708d55a3df1d6344e"
+    },
+    {
+      "path": "provenance/legacy-tools/enhance_book_v21.py",
+      "bytes": 21640,
+      "sha256": "08c2162cc938aff081be508d3437e405e18001c07c04c0b15904b554424129a0"
+    },
+    {
+      "path": "provenance/legacy-tools/generate_v3_diagrams.py",
+      "bytes": 14302,
+      "sha256": "2b81956f0cb37b6685d2600be636485a2cdb336808d99e5e74c4139bf2b8b5ea"
+    },
+    {
+      "path": "provenance/legacy-tools/generate_v3_sources.py",
+      "bytes": 95297,
+      "sha256": "0eaeed7abf3947a029797b1d27f10331b2c952c4bafb667b46babeadaeb6c9a7"
+    },
+    {
+      "path": "provenance/legacy-tools/update_author_pagination.py",
+      "bytes": 8111,
+      "sha256": "17dde9248d9b5fbd6c56aa8e2e73f960d1c96593925cdc69a236354c39a8d45c"
+    },
+    {
+      "path": "pyproject.toml",
+      "bytes": 401,
+      "sha256": "d33d2dda86653825994a220c7e7b7f69cb76f24342f645a010942735ba7e0bc2"
+    },
+    {
+      "path": "qa/build-report.json",
+      "bytes": 287,
+      "sha256": "46f44b2ed2c5ba04d5cd87e418ffc1f91a6c84d8f5eb033275dc60f1e519d701"
+    },
+    {
+      "path": "qa/determinism/build-a.docx",
+      "bytes": 6527520,
+      "sha256": "4e1020b71d76b4bc1f21f5b31a8dc065f81331a4223de4b18f1ce82cbd885c9f"
+    },
+    {
+      "path": "qa/determinism/build-b.docx",
+      "bytes": 6527520,
+      "sha256": "4e1020b71d76b4bc1f21f5b31a8dc065f81331a4223de4b18f1ce82cbd885c9f"
+    },
+    {
+      "path": "qa/determinism/determinism-report.json",
+      "bytes": 225,
+      "sha256": "e702b7b3dc76d54996d474b440441bc758f00e1bb008ae3f47e1f4f06a462b14"
+    },
+    {
+      "path": "qa/pagination-report.json",
+      "bytes": 491,
+      "sha256": "4b1c3f70afc1ba1d74f576558943e3d2ae2da736c62c54467fc041b93160735b"
+    },
+    {
+      "path": "qa/render/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.pdf",
+      "bytes": 6954693,
+      "sha256": "44ead28b866b949652c02618e8dbf95113233126915de69a768071731cf550e4"
+    },
+    {
+      "path": "qa/render/book.txt",
+      "bytes": 719110,
+      "sha256": "8edc7e557267d843720c2891c13f6f463296443f50accde451c0600b93228f69"
+    },
+    {
+      "path": "qa/render/page-001.png",
+      "bytes": 696804,
+      "sha256": "afffff697c0c51bee06baf2742edba4d3eb304ed00e5188b5a41a7a3dc19a9e1"
+    },
+    {
+      "path": "qa/render/page-002.png",
+      "bytes": 46024,
+      "sha256": "f209a8600514a8173a2a63fcbc4f130fdcd81533d1ef5aa4e41a0f9e9820bd28"
+    },
+    {
+      "path": "qa/render/page-003.png",
+      "bytes": 142122,
+      "sha256": "fab503173d9051f760c83cfa30060f00c05cec492cee158f302930d6e30fbef1"
+    },
+    {
+      "path": "qa/render/page-006.png",
+      "bytes": 159313,
+      "sha256": "3eb2b674563d3a076ece9a2a01c6df539683119904ecf4b6c77f4301d3aa73b5"
+    },
+    {
+      "path": "qa/render/page-008.png",
+      "bytes": 42023,
+      "sha256": "b25f24da837afa42abbc74ad336f41c0711d7db4c8f94321cf6b6ed9c2c3f813"
+    },
+    {
+      "path": "qa/render/page-009.png",
+      "bytes": 188581,
+      "sha256": "7e3572ce230b9c37b024e435243f0cf0f515d72b653ec9f2e666e1cb77700cd9"
+    },
+    {
+      "path": "qa/render/page-035.png",
+      "bytes": 45335,
+      "sha256": "acc6eb319be8185d0a61d92b20fb30bdb53c33c837f9d554d4d05fc78c3657ab"
+    },
+    {
+      "path": "qa/render/page-036.png",
+      "bytes": 169875,
+      "sha256": "5d2ee4a3ba22e57154cd412c395f063f1f78dce5d18ff9694c91a313690db44c"
+    },
+    {
+      "path": "qa/render/page-089.png",
+      "bytes": 33222,
+      "sha256": "6dd9ec31e7d5ac8ba5c1324565442c860f591ad453614e0030342547b78c9351"
+    },
+    {
+      "path": "qa/render/page-090.png",
+      "bytes": 152464,
+      "sha256": "05c62581d1feefde191bc5d4cd9d92112a097f12a20c6d0e90812d14ddffa6bf"
+    },
+    {
+      "path": "qa/render/page-095.png",
+      "bytes": 41237,
+      "sha256": "cf5e3a539e99b4146b1b274a06d9956ab8d1f4115d4f00600c3113e98b9cda64"
+    },
+    {
+      "path": "qa/render/page-096.png",
+      "bytes": 187914,
+      "sha256": "a9b7bd48267214fa0fc890b36f2a20bc31ea7b25dfbc2eb8eb0c96747218a590"
+    },
+    {
+      "path": "qa/render/page-111.png",
+      "bytes": 37687,
+      "sha256": "a960b301b1c9cb60e7e740880f3ed90f68ba67b4525356862c44e5267a031000"
+    },
+    {
+      "path": "qa/render/page-112.png",
+      "bytes": 145738,
+      "sha256": "1dc00fa6d3be79cc9bd67faf677483dddf553d61b02fe3eb7c51e0715222e599"
+    },
+    {
+      "path": "qa/render/page-115.png",
+      "bytes": 41627,
+      "sha256": "40a449018b916235525c9e54989e8e4bfd133aa9e5b79b259ca34f2853a5ae45"
+    },
+    {
+      "path": "qa/render/page-116.png",
+      "bytes": 174725,
+      "sha256": "2ef9f8facbc16db2d95b7aa47a593604fe7cd48e4b9e777377b5900af0db91c6"
+    },
+    {
+      "path": "qa/render/page-162.png",
+      "bytes": 41113,
+      "sha256": "0f563fc8821b8cbc7f7ec88ec58b2dd36aa507ad14639ebf7a0a8894d7977a18"
+    },
+    {
+      "path": "qa/render/page-163.png",
+      "bytes": 144109,
+      "sha256": "76e475e1e9a0d7d9b1f59c0645cd0fb62fe89d3ed5783bbc19f5ea63afcfc919"
+    },
+    {
+      "path": "qa/render/page-184.png",
+      "bytes": 26511,
+      "sha256": "6fbbbb62142fe05ef758e804b6596f14fd83c354f8e30f423ec7a8a462eb6b57"
+    },
+    {
+      "path": "qa/render/page-198.png",
+      "bytes": 223553,
+      "sha256": "7fbed3102314daa88056e4589580a18564ccac364d26635e64c8b5847d74cfdf"
+    },
+    {
+      "path": "qa/render/page-204.png",
+      "bytes": 141414,
+      "sha256": "d595ca2bc907c1a0ea37b8e8df8597aea2aa7aa841d9561936e6d283a3538803"
+    },
+    {
+      "path": "qa/render/soffice.log",
+      "bytes": 274,
+      "sha256": "da7ad17b3ce416f313ab5fc611f96a0b3b854653f7d9973e1c59c6681c4541ee"
+    },
+    {
+      "path": "qa/render/visual-contact-sheet.png",
+      "bytes": 456309,
+      "sha256": "944fd5b2d12126ccb0807cdcbb72383739e0a485afac9170830ed067d55d820d"
+    },
+    {
+      "path": "qa/validation-report.json",
+      "bytes": 850,
+      "sha256": "c4759c1858b5737bbcd45a5efc37bcac8162e1d77197dcbd293c97f4f90720a6"
+    },
+    {
+      "path": "reports/assembly-report.json",
+      "bytes": 1243,
+      "sha256": "448857fe34455b79dd6d246c8424ceb8c498e38ca3d9d2ab90306ca64ef96ffd"
+    },
+    {
+      "path": "reports/assembly.stdout.json",
+      "bytes": 1243,
+      "sha256": "448857fe34455b79dd6d246c8424ceb8c498e38ca3d9d2ab90306ca64ef96ffd"
+    },
+    {
+      "path": "reports/build.stdout.json",
+      "bytes": 336,
+      "sha256": "f5281d3e3f1e403b86d2fae17f9a458ba211b75711b1837a45db6616dd0be633"
+    },
+    {
+      "path": "reports/citation-audit.md",
+      "bytes": 6592,
+      "sha256": "cea6704d476d37762085af49f2ecea2dcf71dd3fce0935d87f7255ca0b35a9ed"
+    },
+    {
+      "path": "reports/citation-check.stdout.json",
+      "bytes": 145,
+      "sha256": "6e85f45772cc068d7e710976b7709b7b743a263df8ef97aaaf0b5b7c135257dd"
+    },
+    {
+      "path": "reports/citation-verification.json",
+      "bytes": 11626,
+      "sha256": "8f5a3e999838b64400f65f5c1b2cb7be372c9bdbe04e50495a8303ec79bcd2fc"
+    },
+    {
+      "path": "reports/clean-package-test.json",
+      "bytes": 4115,
+      "sha256": "693e60437dcc335f3b9ed4dc4840df43d09032c0e5cf9f540cc65d618a6ce91d"
+    },
+    {
+      "path": "reports/cover.stdout.json",
+      "bytes": 162,
+      "sha256": "10f3ca65e396e9427be03a34c2f8fa7f512f148081a08970be36efd118e8fc5b"
+    },
+    {
+      "path": "reports/editorial-audit.md",
+      "bytes": 2806,
+      "sha256": "f49b80f05ce1392cb4f2f0aa9b112be72510dfec21645f38f29d33f02b66de96"
+    },
+    {
+      "path": "reports/editorial-transformation.json",
+      "bytes": 1024,
+      "sha256": "a57268bbb9e1166c6e1fa233cdc7fecfc360d27a5ee4884cc167c14c09e34bcd"
+    },
+    {
+      "path": "reports/editorial-transformation.stdout.json",
+      "bytes": 1024,
+      "sha256": "a57268bbb9e1166c6e1fa233cdc7fecfc360d27a5ee4884cc167c14c09e34bcd"
+    },
+    {
+      "path": "reports/package.stdout.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "reports/release-notes.md",
+      "bytes": 1078,
+      "sha256": "bbfe63e3b7afa4f1a3d70c997b200a1f2bcc450846a6219f80b3d3aeb495947f"
+    },
+    {
+      "path": "reports/release-package.json",
+      "bytes": 238,
+      "sha256": "03d52b91c5ae81f4485c23308148fc459fcc522d56fe3fb0fc17d5d23535abb5"
+    },
+    {
+      "path": "reports/technical-validation.md",
+      "bytes": 1662,
+      "sha256": "2a7c36745fe307a0c3f44553b7a8bd1f52a2b5816a869fa6b9f38217b4617714"
+    },
+    {
+      "path": "reports/template-build.stdout.json",
+      "bytes": 176,
+      "sha256": "95e55cfeaabc1034943c1b1305583370eafb70218ac659d5b5d5b058b33fbd11"
+    },
+    {
+      "path": "reports/validation-summary.md",
+      "bytes": 839,
+      "sha256": "06d4a673836debc016691973da6176196d95b2b147f763bec6febc15dc0fd473"
+    },
+    {
+      "path": "reports/validation.stdout.json",
+      "bytes": 850,
+      "sha256": "c4759c1858b5737bbcd45a5efc37bcac8162e1d77197dcbd293c97f4f90720a6"
+    },
+    {
+      "path": "requirements.txt",
+      "bytes": 70,
+      "sha256": "a68f444d4d86e5f11c85fcf284fe69cfb991adbd905663cbde46e81e500463be"
+    },
+    {
+      "path": "skills/book-maintainer/SKILL.md",
+      "bytes": 1785,
+      "sha256": "f86867e0be69d4fd0e749b7563663326887c58a9d690854d0479ced0b834d5c7"
+    },
+    {
+      "path": "skills/citation-verifier/SKILL.md",
+      "bytes": 2076,
+      "sha256": "c72904a0d428ae1c906fea89431e2ed39cae1b206407703ed6170ef9fbbb420c"
+    },
+    {
+      "path": "skills/diagram-maintainer/SKILL.md",
+      "bytes": 1627,
+      "sha256": "d96d44e172f52796eb7059f4e0715680d202b788fa24057b7cdec2c8f82a497a"
+    },
+    {
+      "path": "skills/editorial-reviewer/SKILL.md",
+      "bytes": 2015,
+      "sha256": "be8d049ef88747ccc07034a6ba702873945a2fd354513b727e3dacf0f31be615"
+    },
+    {
+      "path": "source/original/Enterprise-Agentic-AI-Guide-v3.1-source.docx",
+      "bytes": 6544305,
+      "sha256": "0d350e3fa5334cff336b73f0c0484d8758df1c9947de00a79fcb8581e89e33d8"
+    },
+    {
+      "path": "source/original/Enterprise-Agentic-AI-Guide-v3.1-source.md",
+      "bytes": 479684,
+      "sha256": "3d36569d9de02c30acee7f1f724938c7d4c4e22593c8274424c7edcde5a1f082"
+    },
+    {
+      "path": "source/original/cover-v3.1.png",
+      "bytes": 5457154,
+      "sha256": "840757e796fd3ca3e4a3a2805927f2c31689cc89ba118a47a5f969e82d7f7727"
+    },
+    {
+      "path": "source/parts/00-front-matter.md",
+      "bytes": 6534,
+      "sha256": "26323eb0184fc6610b3e74c2206bb126ad716371d79632dda6c32ee0f84cc0f3"
+    },
+    {
+      "path": "source/parts/01-part-i.md",
+      "bytes": 44653,
+      "sha256": "7652e4563bcbb68440a339a16f2de26cc18ac75cc244df63b2c3449ee6ef5227"
+    },
+    {
+      "path": "source/parts/02-part-ii.md",
+      "bytes": 21213,
+      "sha256": "4208142719ce00956ed289b3d2c70ba9699c9897ed1b9cec216abe8e5e0a5bda"
+    },
+    {
+      "path": "source/parts/03-part-iii.md",
+      "bytes": 25868,
+      "sha256": "46ea4696b32456d87f46eed15f9db3ce9be553be4aba542c4dac6d3eaba84a86"
+    },
+    {
+      "path": "source/parts/04-part-iv.md",
+      "bytes": 97545,
+      "sha256": "4644932458383e379a64c5d4f35d10dc0d5a5f93750e911fe90b48edb5591c82"
+    },
+    {
+      "path": "source/parts/05-part-v.md",
+      "bytes": 10976,
+      "sha256": "700412003ef7274d256e19a409defc5afa45139d92691950d3ce3c4c721c94a8"
+    },
+    {
+      "path": "source/parts/06-part-vi.md",
+      "bytes": 40284,
+      "sha256": "0e7496d7a8a8b71d421186cf23dd2e44365a7a1c19d5d547e287d95deeb03795"
+    },
+    {
+      "path": "source/parts/07-part-vii.md",
+      "bytes": 4812,
+      "sha256": "e86e014c734c7efdad94407ef68100b1f0d6888d4f3bbc5e3c6498583942a96f"
+    },
+    {
+      "path": "source/parts/08-part-viii.md",
+      "bytes": 94219,
+      "sha256": "2dd57388a06bb7859ccc52cff91eb90e24df89b7ec9ae3f30c5860dfcf9b7896"
+    },
+    {
+      "path": "source/parts/09-part-ix.md",
+      "bytes": 26579,
+      "sha256": "929538904260b886c779bedfe22921873d2ca707bd2c68dcd9eaebe20e16dfda"
+    },
+    {
+      "path": "source/parts/10-part-x.md",
+      "bytes": 7240,
+      "sha256": "20ef4b32666da0364eeaa8638cbe8f021e28eac317b8ef9aeca140395de17ac7"
+    },
+    {
+      "path": "source/parts/11-part-xi.md",
+      "bytes": 4039,
+      "sha256": "332a7c649b52907fe478ed8670709a38c3c1ce53119c5c932ff2c5e6e77505de"
+    },
+    {
+      "path": "source/parts/12-part-xii.md",
+      "bytes": 39688,
+      "sha256": "27e51d18f754f40632ff99ba266564b4120815baba8b11b17797e41accf3cee7"
+    },
+    {
+      "path": "source/parts/13-appendices.md",
+      "bytes": 75389,
+      "sha256": "aac484283895ea7fcdd7969f8ef7bd816701af22f30d49df20a4b688cf909fbd"
+    },
+    {
+      "path": "styles/CROSS-FORMAT-CONTRACT.md",
+      "bytes": 3822,
+      "sha256": "07e40af7c56a724d9a58b5e25a428e938527fa815f3d0325e32480f0b70c32bd"
+    },
+    {
+      "path": "styles/DESIGN-SYSTEM.md",
+      "bytes": 9667,
+      "sha256": "a1a50f0a4d8fe162d95d69b69dcc4af66395e4ef70a8ab9d2ea03cdab3f44cac"
+    },
+    {
+      "path": "styles/DOCX-STYLES.md",
+      "bytes": 1274,
+      "sha256": "f3b3a6e73da2c9de7b0fbcb7cb4b56a0cdf08347c888ac876cd85358f4c99d4b"
+    },
+    {
+      "path": "templates/book-style-template.docx",
+      "bytes": 40404,
+      "sha256": "6521ab963d31c9b5fe71a4201d629acbf9a1594b01a0ef237c6862f729890b2c"
+    },
+    {
+      "path": "templates/chapter.template.md",
+      "bytes": 1349,
+      "sha256": "e61fc3221a42dca6d2da6d09758e90373c875d96ed752c8fd65699080d2f84de"
+    },
+    {
+      "path": "templates/diagram-spec.template.json",
+      "bytes": 729,
+      "sha256": "b5d0559e5c3405c39cb969f8ad4628ce4eece8054547fafd668e92df0d111ce4"
+    },
+    {
+      "path": "templates/part.template.md",
+      "bytes": 374,
+      "sha256": "f3f6cb4ce2fa2b1fed235aae80e34dc09cd4d1fb7c9e37bec228b48780833afd"
+    },
+    {
+      "path": "templates/pattern-card.template.md",
+      "bytes": 1001,
+      "sha256": "512cc6b7bc55bd8cfce1088aea5aebf814098c2e5e51eaae15671dec2eb6a894"
+    },
+    {
+      "path": "templates/reference-entry.template.json",
+      "bytes": 677,
+      "sha256": "842df228a44cc87805686ac61c96904399be4ab9c452bbc79126ffdc654b1919"
+    },
+    {
+      "path": "templates/threat-card.template.md",
+      "bytes": 848,
+      "sha256": "ae41ddbcb6f8a4742eebf832009c596886fbccec773cca9e89c3986acdb3d161"
+    },
+    {
+      "path": "tools/assemble_manuscript.py",
+      "bytes": 6076,
+      "sha256": "38766a3c0a8192ee02979e59ae0b6f9a8affed02c10c300671756544bb418b29"
+    },
+    {
+      "path": "tools/build_book.py",
+      "bytes": 21412,
+      "sha256": "723d8aed410cd9e565fc7bcbbb07cd2146b8c233352e9755962860cf9716877d"
+    },
+    {
+      "path": "tools/check_references.py",
+      "bytes": 5626,
+      "sha256": "fa882a68eec2f5e7effdd601a0e5a5d24d42090be61eea0fb3847319114e0b29"
+    },
+    {
+      "path": "tools/clean_package_test.py",
+      "bytes": 1412,
+      "sha256": "abf72a7fcc91b8949a117fec220510961750ea4e94133c17d07a395be92dbcf6"
+    },
+    {
+      "path": "tools/create_reference_registry.py",
+      "bytes": 11467,
+      "sha256": "45553de08d0124a8119188653103a63095cc6bf93e0f3b10137267c84100c8e6"
+    },
+    {
+      "path": "tools/deterministic_build_check.py",
+      "bytes": 1108,
+      "sha256": "a1b2806bd8d3a3e8f6584b22a610750d4438838bc8aced04dada5e7a30078e0c"
+    },
+    {
+      "path": "tools/generate_cover.py",
+      "bytes": 3285,
+      "sha256": "a6e9e8255598c2598d7fb1b4d46f6b25dda386aaa9a9d262014f239659de6255"
+    },
+    {
+      "path": "tools/generate_diagram.py",
+      "bytes": 1963,
+      "sha256": "6316f39f66ddd9e49bfccba37e87ed68cd10a95d4c42c1b1f2b8684f4e026157"
+    },
+    {
+      "path": "tools/package_release.py",
+      "bytes": 2629,
+      "sha256": "9e08633de9600736e3183638729f4bd7cc1d92ac9d0db95a855620bb35403fa9"
+    },
+    {
+      "path": "tools/prepare_manuscript.py",
+      "bytes": 28695,
+      "sha256": "20a0b4840e1be8f22528595b9e4e4f5f3a26aa58cb3c9233c830d55e36e50a07"
+    },
+    {
+      "path": "tools/render_pdf_qa.py",
+      "bytes": 4192,
+      "sha256": "26a822b8c2f481472e280fa7940e2bed8109ac8fc1b7b497df45977e929f3a1b"
+    },
+    {
+      "path": "tools/validate_book.py",
+      "bytes": 9845,
+      "sha256": "793365b291c448c3ae5fd51ae8aa89a3e119dd4500d040e4a46615c43bc22d62"
+    }
+  ]
+}

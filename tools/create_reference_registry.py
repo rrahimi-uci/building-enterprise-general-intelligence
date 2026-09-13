@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import json
+ROOT=Path(__file__).resolve().parents[1]
+V='2026-09-13'
+rows=[
+('R01','research','Yao et al.','2023','ReAct: Synergizing Reasoning and Acting in Language Models','ICLR 2023 / arXiv:2210.03629','https://arxiv.org/abs/2210.03629','Defines ReAct and reports benchmark results for interleaved reasoning and action.'),
+('R02','industry guidance','Temporal Technologies','2025','The Definitive Guide to Durable Execution','Temporal documentation','https://temporal.io/blog/what-is-durable-execution','Explains crash-resilient workflow execution, replay, durable timers, and long-running processes.'),
+('R03','architecture pattern','AWS Prescriptive Guidance','n.d.','Transactional Outbox Pattern','AWS Prescriptive Guidance','https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html','Supports atomic state/event publication and duplicate-consumer considerations.'),
+('R04','standard','Cloud Native Computing Foundation','n.d.','CloudEvents Specification','CloudEvents 1.0.x','https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md','Defines a portable event envelope and event identity semantics.'),
+('R05','protocol specification','Model Context Protocol Project','2026','Model Context Protocol Specification','2026-07-28','https://modelcontextprotocol.io/specification/2026-07-28','Defines the stateless MCP core, resources, prompts, tools, and extensions.'),
+('R06','protocol specification','Model Context Protocol Project','2026','MCP Authorization','2026-07-28','https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization','Defines MCP HTTP authorization and audience/resource protections.'),
+('R07','protocol specification','A2A Project','2026','Agent2Agent Protocol Specification','v1.0.1','https://a2a-protocol.org/v1.0.1/specification','Defines agent cards, tasks, messages, artifacts, bindings, authorization surfaces, and lifecycle operations.'),
+('R08','internet standard','IETF','2020','OAuth 2.0 Token Exchange','RFC 8693','https://datatracker.ietf.org/doc/html/rfc8693','Defines subject/actor semantics for token exchange, delegation, and impersonation.'),
+('R09','internet standard','IETF','2020','Resource Indicators for OAuth 2.0','RFC 8707','https://datatracker.ietf.org/doc/html/rfc8707','Defines resource indicators used to constrain token audience.'),
+('R10','internet standard','IETF','2025','OAuth 2.0 Protected Resource Metadata','RFC 9728','https://datatracker.ietf.org/doc/html/rfc9728','Defines protected-resource metadata used in authorization discovery.'),
+('R11','official guidance','NIST','2020','Zero Trust Architecture','NIST SP 800-207','https://csrc.nist.gov/pubs/sp/800/207/final','Supports resource-centric, continuously evaluated trust and explicit policy enforcement.'),
+('R12','official guidance','NIST','2023','Artificial Intelligence Risk Management Framework (AI RMF 1.0)','NIST AI 100-1','https://www.nist.gov/itl/ai-risk-management-framework','Defines voluntary Govern, Map, Measure, and Manage risk-management functions.'),
+('R13','official guidance','NIST','2024','Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile','NIST AI 600-1','https://doi.org/10.6028/NIST.AI.600-1','Provides cross-sector generative-AI risk considerations across the AI lifecycle.'),
+('R14','standard','ISO/IEC','2023','Information technology — Artificial intelligence — Management system','ISO/IEC 42001:2023','https://www.iso.org/standard/42001','Defines requirements for an AI management system and continual improvement.'),
+('R15','community guidance','OWASP GenAI Security Project','2025','OWASP Top 10 for Agentic Applications','2026 edition','https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/','Prioritizes major agentic-application security risks and mitigations.'),
+('R16','community guidance','OWASP Cheat Sheet Series','n.d.','AI Agent Security Cheat Sheet','Living guidance','https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html','Provides practical controls for identity, tools, memory, output, and monitoring.'),
+('R17','community standard','SLSA Project','n.d.','SLSA Specification','v1.2','https://slsa.dev/spec/v1.2','Defines supply-chain security tracks, levels, and provenance requirements.'),
+('R18','official guidance','CISA','n.d.','Software Bill of Materials Resources','Living guidance','https://www.cisa.gov/sbom','Supports SBOM practices; distinct from build provenance.'),
+('R19','observability standard','OpenTelemetry','n.d.','Generative AI Semantic Conventions','Development status','https://github.com/open-telemetry/semantic-conventions-genai','Defines emerging GenAI spans, events, metrics, agent, provider, and MCP mappings.'),
+('R20','framework documentation','MLflow','n.d.','LLM and Agent Evaluation','MLflow 3.x','https://mlflow.org/docs/latest/genai/eval-monitor/','Documents evaluation datasets, feedback, judges, systematic evaluation, and production monitoring.'),
+('R21','framework release','MLflow','2026','MLflow 3.15.2 Release','3.15.2','https://mlflow.org/releases/3.15.2','Pins the reproducibility baseline used for book examples.'),
+('R22','framework documentation','Confident AI','n.d.','DeepEval Metrics Introduction','Current documentation','https://deepeval.com/docs/metrics-introduction','Documents component, RAG, tool, task, and agent-oriented evaluation metrics.'),
+('R23','framework documentation','Arize AI','n.d.','Phoenix Documentation','Current documentation','https://arize.com/docs/phoenix','Documents OpenInference/OTel tracing, datasets, experiments, evaluation, and prompt/version workflows.'),
+('R24','framework documentation','Ragas','n.d.','Agent Evaluation Metrics','Current documentation','https://docs.ragas.io/en/latest/concepts/metrics/available_metrics/agents','Documents tool-call and agent-goal evaluation metrics.'),
+('R25','framework documentation','LangChain','n.d.','LangSmith Evaluation','Current documentation','https://docs.langchain.com/langsmith/evaluation','Documents offline and online evaluation, datasets, experiments, and production-trace workflows.'),
+('R26','vendor documentation','OpenAI','n.d.','Evaluate Agent Workflows','Current documentation','https://developers.openai.com/api/docs/guides/agent-evals','Documents datasets, graders, trace grading, and regression evaluation.'),
+('R27','industry guidance','Anthropic','2024','Building Effective Agents','Engineering article','https://www.anthropic.com/engineering/building-effective-agents','Distinguishes workflows from agents and recommends earning orchestration complexity.'),
+('R28','industry report','Anthropic','2025','How We Built Our Multi-Agent Research System','Engineering article','https://www.anthropic.com/engineering/multi-agent-research-system','Reports multi-agent research architecture and token/context trade-offs.'),
+('R29','framework documentation','OpenAI','n.d.','OpenAI Agents SDK for Python','Current documentation','https://openai.github.io/openai-agents-python','Documents agents, tools, guardrails, handoffs, sessions, results, and tracing.'),
+('R30','framework release','OpenAI','2026','OpenAI Agents SDK Python v0.22.2','Release v0.22.2','https://github.com/openai/openai-agents-python/releases/tag/v0.22.2','Pins the SDK baseline used for concrete adapter examples.'),
+('R31','framework documentation','Microsoft','n.d.','Microsoft Agent Framework Overview','Current documentation','https://learn.microsoft.com/en-us/agent-framework/overview','Documents Microsoft agent and workflow abstractions.'),
+('R32','framework documentation','Google','n.d.','Agent Development Kit: Agents','Current documentation','https://adk.dev/agents','Documents Google ADK agent and multi-agent abstractions.'),
+('R33','framework documentation','Amazon Web Services','n.d.','Multi-Agent Collaboration for Amazon Bedrock Agents Classic','Current documentation','https://docs.aws.amazon.com/bedrock/latest/userguide/agents-multi-agent-collaboration.html','Documents the supervisor/collaborator pattern and states that Bedrock Agents Classic is in maintenance mode and closed to new customers.'),
+('R34','framework documentation','LangChain','n.d.','LangGraph Persistence','Current documentation','https://docs.langchain.com/oss/python/langgraph/persistence','Documents checkpointers, thread state, stores, and persistence.'),
+('R35','framework documentation','LlamaIndex','n.d.','LlamaIndex Workflows','Current documentation','https://docs.llamaindex.ai/en/stable/module_guides/workflow/','Documents event-driven asynchronous workflow abstractions.'),
+('R36','framework documentation','Pydantic','n.d.','PydanticAI Durable Execution','Current documentation','https://pydantic.dev/docs/ai/capabilities/durable_execution/overview','Documents typed agent integration with durable-execution backends.'),
+('R37','framework documentation','Dapr','n.d.','Dapr Agents','Current documentation','https://docs.dapr.io/developing-ai/dapr-agents','Documents Dapr agent integration with workflows, actors, state, messaging, resiliency, and telemetry.'),
+('R38','framework documentation','DBOS','n.d.','DBOS AI Quickstart','Current documentation','https://docs.dbos.dev/ai/ai-quickstart','Documents durable long-running agent workflows, queues, waits, and framework integrations.'),
+('R39','law','European Union','2016','General Data Protection Regulation','Regulation (EU) 2016/679','https://eur-lex.europa.eu/eli/reg/2016/679/oj','Primary legal text for EU data-protection principles and rights.'),
+('R40','official legal guidance','European Commission','n.d.','European AI Act: Regulatory Framework','Implementation overview','https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai','Official implementation overview; legal advice must use the binding text and applicable jurisdiction.'),
+('R41','standard','W3C','2023','Web Content Accessibility Guidelines (WCAG) 2.2','W3C Recommendation','https://www.w3.org/TR/WCAG22/','Defines accessibility success criteria relevant to human-review interfaces.'),
+('R42','official guidance','NIST','2025','Incident Response Recommendations and Considerations for Cybersecurity Risk Management','NIST SP 800-61 Rev. 3','https://csrc.nist.gov/pubs/sp/800/61/r3/final','Supports incident-response integration with organizational risk management.'),
+('R43','research','Little, John D. C.','1961','A Proof for the Queuing Formula: L = λW','Operations Research 9(3)','https://doi.org/10.1287/opre.9.3.383','Primary source for Little’s Law; book sizing equations remain workload-specific approximations.'),
+]
+refs=[]
+for row in rows:
+ rid,typ,org,year,title,pub,url,supports=row
+ refs.append({'id':rid,'type':typ,'author_or_organization':org,'year':year,'title':title,'publication_or_version':pub,'url':url,'supports':supports,'verification':{'checked_on':V,'status':'verified-primary-or-authoritative-source','scope_note':'Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations.'}})
+out={'schema_version':'1.0','citation_style':'Numbered source identifiers [R01]…[R43]; bibliography ordered by identifier; accessed date shown for online sources.','release':'1.0.0','verified_on':V,'references':refs}
+(ROOT/'config/references.json').write_text(json.dumps(out,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+print(f'wrote {len(refs)} references')

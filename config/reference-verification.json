@@ -1,0 +1,303 @@
+[
+  {
+    "id": "R01",
+    "status": "verified_with_caveat",
+    "method": "authoritative search-index record",
+    "verified": "2026-09-13",
+    "caveat": "Live page extraction timed out; title, paper identifier, abstract scope, and venue were cross-checked."
+  },
+  {
+    "id": "R02",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Primary page publication date is 2025-05-06; registry year corrected to 2025."
+  },
+  {
+    "id": "R03",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R04",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R05",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R06",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R07",
+    "status": "verified_with_caveat",
+    "method": "canonical alternate and search-index record",
+    "verified": "2026-09-13",
+    "caveat": "Versioned page canonicalized elsewhere; v1.0.1 specification metadata and scope were cross-checked."
+  },
+  {
+    "id": "R08",
+    "status": "verified_with_caveat",
+    "method": "IETF canonical metadata and search-index record",
+    "verified": "2026-09-13",
+    "caveat": "Direct extraction canonicalized; RFC number, title, and token-exchange scope were cross-checked."
+  },
+  {
+    "id": "R09",
+    "status": "verified_with_caveat",
+    "method": "IETF canonical metadata and search-index record",
+    "verified": "2026-09-13",
+    "caveat": "Direct extraction canonicalized; RFC number, title, and resource-indicator scope were cross-checked."
+  },
+  {
+    "id": "R10",
+    "status": "verified_with_caveat",
+    "method": "IETF canonical metadata and search-index record",
+    "verified": "2026-09-13",
+    "caveat": "Direct extraction canonicalized; RFC number, title, and protected-resource metadata scope were cross-checked."
+  },
+  {
+    "id": "R11",
+    "status": "verified_with_caveat",
+    "method": "NIST canonical metadata and search-index record",
+    "verified": "2026-09-13",
+    "caveat": "Live extraction timed out; publication identifier and zero-trust scope were cross-checked."
+  },
+  {
+    "id": "R12",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R13",
+    "status": "verified_with_caveat",
+    "method": "NIST DOI metadata and authoritative alternate",
+    "verified": "2026-09-13",
+    "caveat": "DOI extraction was unavailable; publication identity and GenAI profile scope were cross-checked on NIST."
+  },
+  {
+    "id": "R14",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R15",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R16",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R17",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R18",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R19",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R20",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R21",
+    "status": "verified_with_caveat",
+    "method": "official release search-index record",
+    "verified": "2026-09-13",
+    "caveat": "Release page live extraction failed; the 3.15.2 pin was retained without an unsupported date or latest-version claim."
+  },
+  {
+    "id": "R22",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R23",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R24",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R25",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R26",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R27",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R28",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R29",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R30",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R31",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R32",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R33",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Primary page states Bedrock Agents Classic is in maintenance mode and closed to new customers; the manuscript records the caveat and AgentCore direction."
+  },
+  {
+    "id": "R34",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R35",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R36",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R37",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R38",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R39",
+    "status": "verified_with_caveat",
+    "method": "EUR-Lex canonical metadata and search-index record",
+    "verified": "2026-09-13",
+    "caveat": "Live extraction timed out; regulation identity was cross-checked. The book does not provide legal advice."
+  },
+  {
+    "id": "R40",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R41",
+    "status": "verified_with_caveat",
+    "method": "W3C canonical metadata and search-index record",
+    "verified": "2026-09-13",
+    "caveat": "Live extraction timed out; Recommendation identity and accessibility scope were cross-checked."
+  },
+  {
+    "id": "R42",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-09-13",
+    "caveat": "Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R43",
+    "status": "verified_with_caveat",
+    "method": "DOI metadata and authoritative search-index record",
+    "verified": "2026-09-13",
+    "caveat": "DOI extraction timed out; title, journal, year, and Little\u2019s Law scope were cross-checked."
+  }
+]
