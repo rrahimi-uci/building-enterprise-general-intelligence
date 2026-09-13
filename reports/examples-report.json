@@ -10,7 +10,7 @@
     "mlflow-trace-configuration": 28,
     "bounded-react-loop": 49,
     "routing-handoff": 31,
-    "approval-gate": 51,
+    "approval-gate": 86,
     "input-guardrail": 44,
     "mlflow-evaluation": 48,
     "skills-registry": 167,

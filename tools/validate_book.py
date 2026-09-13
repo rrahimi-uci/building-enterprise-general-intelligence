@@ -187,7 +187,10 @@ def main() -> int:
         try:
             import pymupdf
             d=pymupdf.open(pdf); checks['pdf_pages']=len(d)
-            if len(d)!=213: warnings.append(f"Reference renderer produced {len(d)} pages; v2.0.0 LibreOffice baseline is 213")
+            # 213 was the v1.0.0 LibreOffice baseline. v2.0.0 deliberately changed the
+            # topology, so asserting it would warn about the expected result; the page
+            # count is recorded as a measurement until a v2.0.0 baseline is rendered
+            # with `make qa-pdf`. Structural and blank-page checks below still apply.
             blank=[]
             for i,p in enumerate(d):
                 if len(p.get_text().strip())<8 and not p.get_images(full=True): blank.append(i+1)

@@ -5,47 +5,87 @@ from datetime import datetime, timedelta, timezone
 import pytest
 
 from examples.patterns.approval_gate import (
-    ApprovalExpired, ApprovalGrant, PendingApprovals, ProposalMismatch, proposal_hash,
+    ApprovalExpired, ApprovalGrant, ApprovalService, GrantNotAuthentic,
+    PendingApprovals, ProposalMismatch, proposal_hash,
 )
 
 NOW = datetime(2026, 9, 13, 12, 0, tzinfo=timezone.utc)
 
 
-def _grant(digest, **kw):
-    return ApprovalGrant(proposal_hash=digest, approver_id="u-7",
-                         expires_at=kw.get("expires_at", NOW + timedelta(hours=1)))
+def service() -> ApprovalService:
+    return ApprovalService(secret=b"approval-service-key")
+
+
+def store() -> PendingApprovals:
+    return PendingApprovals(service=service())
+
+
+def grant(svc: ApprovalService, digest: str, *, approver="u-7", expires=None) -> ApprovalGrant:
+    return svc.issue(digest, approver, expires or NOW + timedelta(hours=1))
 
 
 def test_approved_proposal_commits_once():
-    store = PendingApprovals()
-    digest = store.pause("r1", "issue_refund", {"order": "A-1", "usd": 20}, timedelta(days=2))
-    assert store.commit("r1", _grant(digest), now=NOW).startswith("committed issue_refund")
-    assert "r1" not in store.pending, "a committed pause must not remain pending"
+    s = store()
+    digest = s.pause("r1", "issue_refund", {"order": "A-1", "usd": 20}, timedelta(days=2))
+    result = s.commit("r1", grant(s.service, digest), now=NOW)
+    assert result.startswith("committed issue_refund")
+    assert "r1" not in s.pending, "a committed pause must not remain pending"
 
 
 def test_amount_changed_after_approval_is_refused():
-    store = PendingApprovals()
-    store.pause("r1", "issue_refund", {"order": "A-1", "usd": 20}, timedelta(days=2))
+    s = store()
+    s.pause("r1", "issue_refund", {"order": "A-1", "usd": 20}, timedelta(days=2))
     # An approver who agreed to $20 has not agreed to $5000.
     tampered = proposal_hash("issue_refund", {"order": "A-1", "usd": 5000})
     with pytest.raises(ProposalMismatch):
-        store.commit("r1", _grant(tampered), now=NOW)
+        s.commit("r1", grant(s.service, tampered), now=NOW)
 
 
 def test_expired_grant_is_a_refusal_not_a_warning():
-    store = PendingApprovals()
-    digest = store.pause("r1", "issue_refund", {"order": "A-1", "usd": 20}, timedelta(days=2))
-    late = NOW + timedelta(hours=2)
+    s = store()
+    digest = s.pause("r1", "issue_refund", {"order": "A-1", "usd": 20}, timedelta(days=2))
     with pytest.raises(ApprovalExpired):
-        store.commit("r1", _grant(digest), now=late)
-    assert "r1" in store.pending, "a lapsed approval leaves the run paused, not committed"
+        s.commit("r1", grant(s.service, digest), now=NOW + timedelta(hours=2))
+    assert "r1" in s.pending, "a lapsed approval leaves the run paused, not committed"
+
+
+def test_a_fabricated_grant_cannot_authorize_anything():
+    s = store()
+    digest = s.pause("r1", "issue_refund", {"order": "A-1", "usd": 5000}, timedelta(days=2))
+    # The code that wants the effect mints its own permission for it.
+    forged = ApprovalGrant(proposal_hash=digest, approver_id="cfo",
+                           expires_at=NOW + timedelta(hours=1), signature="0" * 64)
+    with pytest.raises(GrantNotAuthentic):
+        s.commit("r1", forged, now=NOW)
+    assert "r1" in s.pending
+
+
+def test_a_grant_from_a_different_service_is_refused():
+    s = store()
+    digest = s.pause("r1", "issue_refund", {"order": "A-1", "usd": 20}, timedelta(days=2))
+    other = ApprovalService(secret=b"some-other-key")
+    with pytest.raises(GrantNotAuthentic):
+        s.commit("r1", grant(other, digest), now=NOW)
 
 
 def test_mutating_the_caller_dict_after_pausing_cannot_change_the_record():
-    store = PendingApprovals()
-    arguments = {"order": "A-1", "usd": 20}
-    digest = store.pause("r1", "issue_refund", arguments, timedelta(days=2))
-    arguments["usd"] = 5000          # the caller mutates its own dict afterwards
-    assert store.pending["r1"]["arguments"]["usd"] == 20
-    # And the approved digest still commits, because nothing actually changed.
-    assert store.commit("r1", _grant(digest), now=NOW).startswith("committed")
+    s = store()
+    arguments = {"order": "A-1", "usd": 20, "meta": {"note": "ok"}}
+    digest = s.pause("r1", "issue_refund", arguments, timedelta(days=2))
+    arguments["usd"] = 5000            # the caller mutates its own dict afterwards
+    arguments["meta"]["note"] = "urgent"   # including a nested value
+    assert s.pending["r1"]["arguments"]["usd"] == 20
+    assert s.pending["r1"]["arguments"]["meta"]["note"] == "ok"
+    assert s.commit("r1", grant(s.service, digest), now=NOW).startswith("committed")
+
+
+def test_tampering_with_the_pending_record_is_caught_at_commit():
+    s = store()
+    digest = s.pause("r1", "issue_refund", {"order": "A-1", "usd": 20}, timedelta(days=2))
+    g = grant(s.service, digest)
+    # Commit recomputes from the stored proposal, so editing the record -- and
+    # even its cached digest -- does not make the effect authorized.
+    s.pending["r1"]["arguments"]["usd"] = 5000
+    s.pending["r1"]["digest"] = proposal_hash("issue_refund", {"order": "A-1", "usd": 5000})
+    with pytest.raises(ProposalMismatch):
+        s.commit("r1", g, now=NOW)

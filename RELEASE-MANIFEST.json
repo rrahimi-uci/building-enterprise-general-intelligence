@@ -186,8 +186,8 @@
     },
     {
       "path": "book/manuscript.md",
-      "bytes": 497588,
-      "sha256": "917ff420455f94ae3ed330da9463f5542fc01b0d1fbb08f52d200769ae29ba5b"
+      "bytes": 499273,
+      "sha256": "46d85117839397a4e892e55da6c5933f0b835dcf8b1f660aaab30dcab6beca99"
     },
     {
       "path": "config/book.json",
@@ -221,13 +221,13 @@
     },
     {
       "path": "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.docx",
-      "bytes": 6487267,
-      "sha256": "61df488bc7afc800334207288580e4f2926ba36c79826d3e8a4c4500685ad003"
+      "bytes": 6489037,
+      "sha256": "55ba7173a7982e07ec5bffd64d150116ea5292063d277e463cc11e3c5ee09727"
     },
     {
       "path": "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.md",
-      "bytes": 497588,
-      "sha256": "917ff420455f94ae3ed330da9463f5542fc01b0d1fbb08f52d200769ae29ba5b"
+      "bytes": 499273,
+      "sha256": "46d85117839397a4e892e55da6c5933f0b835dcf8b1f660aaab30dcab6beca99"
     },
     {
       "path": "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.tex",
@@ -301,8 +301,8 @@
     },
     {
       "path": "examples/patterns/approval_gate.py",
-      "bytes": 2604,
-      "sha256": "d50b88a293afdd44ff47674b9fa1b6b286b002695914dec52f53dd52dc72333f"
+      "bytes": 4552,
+      "sha256": "78605f70fa70bb1df3b03b96ca2cd7e31b0d851ab8fb2b9331afb022eecdd727"
     },
     {
       "path": "examples/patterns/approval_verification.py",
@@ -376,8 +376,8 @@
     },
     {
       "path": "examples/tests/test_approval_gate.py",
-      "bytes": 2152,
-      "sha256": "ab38376fd68726432e9de8d6af037a03e5bf180404eda4f70ab69e01fc63fa80"
+      "bytes": 3777,
+      "sha256": "1b51111501d93ae2cdc2b1e52d1768d41cabe5fad5c6f03bfe0487d848ae9deb"
     },
     {
       "path": "examples/tests/test_approval_verification.py",
@@ -471,8 +471,8 @@
     },
     {
       "path": "latex/content/book-content.tex",
-      "bytes": 618341,
-      "sha256": "f7c3aaf00ddde4f2fa6846d5cc5686a1b22c81eca01ae8058a13d381a291933f"
+      "bytes": 620006,
+      "sha256": "f58b7d084b3597a15d891b68016888650ef63a2488d6c6cc9c64ea0a3fceb29a"
     },
     {
       "path": "latex/fonts/LICENSE-SIL-OFL-1.1.txt",
@@ -567,7 +567,7 @@
     {
       "path": "qa/build-report.json",
       "bytes": 336,
-      "sha256": "cf3b1c687b77f0d850fc53aa6acb1c47f97f52041a0f66ef6898a73aeb7792f7"
+      "sha256": "99730c80d33569f008423bcdb077db9e8da72a60350197e9c346e7cea4b958a8"
     },
     {
       "path": "qa/determinism/build-a.docx",
@@ -587,7 +587,7 @@
     {
       "path": "qa/latex-validation-report.json",
       "bytes": 6911,
-      "sha256": "88db5113e42d0735ea5f397ac9cfc30f3deb90d26c5716a123bb8468d8560f76"
+      "sha256": "3320e0858cd98501da368cb9cca1be0db44cf1817b1b07fc0fd97b4253fcd4f3"
     },
     {
       "path": "qa/pagination-report.json",
@@ -597,12 +597,12 @@
     {
       "path": "qa/validation-report.json",
       "bytes": 841,
-      "sha256": "f4dafc7ced0dfc9d2c72c1b6999cf56db0a87d39fc9b4fab70246fbcdb8f7f62"
+      "sha256": "08782b72840024b34eec89a3dc520888620137f3945c2485c6bf61f0a6220079"
     },
     {
       "path": "reports/assembly-report.json",
       "bytes": 1133,
-      "sha256": "42538358e009491887491004d89bdff215084c4b127bfed4a9229db14b511b6c"
+      "sha256": "62a6b1ed8d1ecea210b43bae69831d3a330b5530f65d9aae7b2b4cc746c3c606"
     },
     {
       "path": "reports/assembly.stdout.json",
@@ -657,12 +657,12 @@
     {
       "path": "reports/examples-report.json",
       "bytes": 679,
-      "sha256": "3320e1cf41062bc7f97f536ec128e525f6201e59385dc5d4168c03ecb411f1fd"
+      "sha256": "8f4ef2ac1f78d982ffcccc0cb3dcdf1e06e920ebe03d397066504d3e6aba6502"
     },
     {
       "path": "reports/latex-build-report.json",
       "bytes": 2430,
-      "sha256": "e382796ddd91564bfcfafb62acebfe8e1fe836c192cd39a145ffaa913ef3dbf4"
+      "sha256": "095ebeff8b43a13c8892ea9c53c15d85e4264f6a484c39869940e1427f70651c"
     },
     {
       "path": "reports/latex-validation.md",
@@ -697,7 +697,7 @@
     {
       "path": "reports/validation-summary.md",
       "bytes": 829,
-      "sha256": "0137bb2c7596f0745b8640e6041c4c27dabbd3096b44dedc012660c6f0b0ed62"
+      "sha256": "f2d465718dd28f3abff2b5794ca14bbf974424d6614a31e8de91f4719d70be92"
     },
     {
       "path": "reports/validation.stdout.json",
@@ -941,8 +941,8 @@
     },
     {
       "path": "tools/validate_book.py",
-      "bytes": 13125,
-      "sha256": "c930e7709cbf4b34fb6c23b06f35f2d934a20411681d7c719e83fb0c3dc6f784"
+      "bytes": 13343,
+      "sha256": "103958d158111c6b92e74182b499750c6f764a1c7f423d4066540cd53653116f"
     },
     {
       "path": "tools/validate_latex.py",
