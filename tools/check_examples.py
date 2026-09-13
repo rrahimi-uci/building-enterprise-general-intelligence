@@ -122,6 +122,7 @@ def main() -> int:
             warnings.append(f"{entry['id']}: registered but never cited from source/parts")
 
     tests_passed = None
+    imports_passed = None
     if args.run and not errors:
         cmd = [args.python, "-m", "pytest", "examples/tests", "-q"]
         proc = subprocess.run(cmd, cwd=root, capture_output=True, text=True)
@@ -130,6 +131,25 @@ def main() -> int:
         if not tests_passed:
             errors.append("example test suite failed")
 
+        # `import` mode is only meaningful if something actually imports the
+        # module. Without this, an import-mode entry passed metadata validation
+        # while its code was never loaded at all -- the mode was a claim, not a
+        # check. pytest covers `test` mode; this covers the rest.
+        import_entries = [e for e in entries if e.get("verify") == "import"]
+        imports_passed = True
+        for entry in import_entries:
+            module = entry["path"].replace("/", ".").removesuffix(".py")
+            check = subprocess.run(
+                [args.python, "-c", f"import {module}"],
+                cwd=root, capture_output=True, text=True,
+            )
+            if check.returncode != 0:
+                imports_passed = False
+                errors.append(
+                    f"{entry['id']}: verify=import but the module failed to import: "
+                    + check.stderr.strip().splitlines()[-1][:160]
+                )
+
     report = {
         "examples": len(entries),
         "cited": len(cited),
@@ -137,6 +157,8 @@ def main() -> int:
         "rendered_lines": rendered,
         "tests_executed": bool(args.run),
         "tests_passed": tests_passed,
+        "import_mode_entries": sum(1 for e in entries if e.get("verify") == "import"),
+        "imports_passed": imports_passed,
         "errors": errors,
         "warnings": warnings,
         "pass": not errors,

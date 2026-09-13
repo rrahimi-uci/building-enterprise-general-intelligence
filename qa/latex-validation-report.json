@@ -4,7 +4,7 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "4e62b8ae7374647da3ab403054acc360c078f693c35c4adbb8a04802b0722cce",
-    "content_tex_sha256": "be6fdccc8ea63824b9be8b8165379a706d6e9f7c22d446f2b3672877f200202b",
+    "content_tex_sha256": "a308e28c3db7f7f221796edfa578a47b9927039f32b3825ccbbd15c2915a6f97",
     "style_sha256": "2a418b355302ee1bdb56d2912414036310ea71592bc0cdc9b9aa778bd0e83228",
     "narrative_parts": 8,
     "appendix_dividers": 1,
@@ -181,6 +181,7 @@
         "U+2713 CHECK MARK"
       ]
     },
+    "style_token_colors_checked": 19,
     "contrast_tests": [
       {
         "foreground": "BookInk",

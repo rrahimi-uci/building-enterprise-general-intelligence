@@ -71,8 +71,8 @@
     },
     {
       "path": "Makefile",
-      "bytes": 5193,
-      "sha256": "1f2721b597bc5f5b1ac4cd503de85c77e44b73a76a7a13916ae47f90367f1415"
+      "bytes": 5492,
+      "sha256": "11ab0462d06af7dbc868c1483c4dd296922a969cdd32869dd0b7e286075e1350"
     },
     {
       "path": "README.md",
@@ -216,13 +216,13 @@
     },
     {
       "path": "config/style-tokens.json",
-      "bytes": 2675,
-      "sha256": "094ea6b17a8c02ecae0dca136ea1f950ae64a5094db9acc297f2283e02958efe"
+      "bytes": 3231,
+      "sha256": "dfa6d61d271fa1dc532e5e09acaa3a44b723b128e991f53b694d5819866cd6a6"
     },
     {
       "path": "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.docx",
-      "bytes": 6486537,
-      "sha256": "9f869217817409bbcb307608532cbb9757976c07a679ae80399b0d5f79e5f99e"
+      "bytes": 6486543,
+      "sha256": "f16a265b00cc6e5e7a3d83a77313badf66ac52a36bf962c47b1d2c4fdea34da5"
     },
     {
       "path": "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.md",
@@ -471,8 +471,8 @@
     },
     {
       "path": "latex/content/book-content.tex",
-      "bytes": 617979,
-      "sha256": "be6fdccc8ea63824b9be8b8165379a706d6e9f7c22d446f2b3672877f200202b"
+      "bytes": 617925,
+      "sha256": "a308e28c3db7f7f221796edfa578a47b9927039f32b3825ccbbd15c2915a6f97"
     },
     {
       "path": "latex/fonts/LICENSE-SIL-OFL-1.1.txt",
@@ -562,7 +562,7 @@
     {
       "path": "qa/build-report.json",
       "bytes": 336,
-      "sha256": "693ef7d52ca23ed7d4524ba960609340ee44e3a19f899b13bbae598d9d4bf6ec"
+      "sha256": "dad5395cc809c11675648066cca1ab19d89380ff0f9cd0bf4c023dc812a34108"
     },
     {
       "path": "qa/determinism/build-a.docx",
@@ -581,8 +581,8 @@
     },
     {
       "path": "qa/latex-validation-report.json",
-      "bytes": 6873,
-      "sha256": "1ed229cdf01b03e4e155cac2ef7a54ca193b59ad4167ec08d374a959f2ba6df9"
+      "bytes": 6911,
+      "sha256": "79faf21e5fa5cd340a9e918e63495217a6736cb078383473c114350abe63c6b5"
     },
     {
       "path": "qa/pagination-report.json",
@@ -592,7 +592,7 @@
     {
       "path": "qa/validation-report.json",
       "bytes": 841,
-      "sha256": "1b42c4dbf49dfe2d63b1a897ba4f0742d78c343e29b632c2ba12a95d76beb080"
+      "sha256": "7cd6c960b2132c7e2bf973fe5973c829a3ec6fda8ba0009ac9a38c2ccd8a2a18"
     },
     {
       "path": "reports/assembly-report.json",
@@ -651,13 +651,13 @@
     },
     {
       "path": "reports/examples-report.json",
-      "bytes": 626,
-      "sha256": "06d45aaf8c84fea12e5eeafea62147c925289629cfffc7b19a0484e5e787e62e"
+      "bytes": 679,
+      "sha256": "e66b224716d6e50e1628508e05361f23c8bbc0636cfe6c14fe835dcc3340d684"
     },
     {
       "path": "reports/latex-build-report.json",
       "bytes": 2430,
-      "sha256": "a91a494efa12684ae5f274a696446b1d7504b7c1d71f21f9c087d841c71fd5e7"
+      "sha256": "9fbcbac4cb6440394b3b602b3093d973d17df7377844811fdfd972c67b5aded2"
     },
     {
       "path": "reports/latex-validation.md",
@@ -692,7 +692,7 @@
     {
       "path": "reports/validation-summary.md",
       "bytes": 829,
-      "sha256": "355e7e0d62187751c6356591941dc71a621fe598800507e84eddf1fd9a7e82e6"
+      "sha256": "6f8f6baee1b4cfaa1544b5979adc08910ceac7390881576e732753e951a91c62"
     },
     {
       "path": "reports/validation.stdout.json",
@@ -881,13 +881,13 @@
     },
     {
       "path": "tools/callouts.py",
-      "bytes": 3475,
-      "sha256": "41f7872a12c765e1c330d4628b0d68dc9b7fa84bf968af71c105bc98c4e7078b"
+      "bytes": 5067,
+      "sha256": "632629d6690644703a6a004e576b53a771afee6dd943ddcb6578191dbd5f9c5b"
     },
     {
       "path": "tools/check_examples.py",
-      "bytes": 5981,
-      "sha256": "e697e261e33d13a491bbbaf25179dc401f30a328d86a1c68f5736e7020122776"
+      "bytes": 7100,
+      "sha256": "c90380f6893b5f9a8d78b0741b492f92f75ed8951eedb8dfbf7f238540a3395b"
     },
     {
       "path": "tools/check_references.py",
@@ -941,8 +941,8 @@
     },
     {
       "path": "tools/validate_latex.py",
-      "bytes": 14972,
-      "sha256": "112f33b4e5254b751c8c66eb1fe423deaddc0f5ae35c9049f4946852a882815d"
+      "bytes": 16986,
+      "sha256": "cb00467679a740e6f435a6913a71f0765ab02b5553aa21ef7725b2ec75954698"
     }
   ]
 }

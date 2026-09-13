@@ -118,7 +118,11 @@ latex-pdf: latex-validate
 	@./tools/bootstrap_tex.sh --check
 	./latex/compile.sh
 
-package: validate
+## package: runs the examples for real first, so the committed
+## reports/examples-report.json is evidence of execution rather than of a
+## metadata-only check. `validate` runs the checker without --run, which would
+## otherwise overwrite the executed report with tests_executed:false.
+package: validate examples-run
 	$(PYTHON) tools/package_release.py --root "$(ROOT)" --output "$(ZIP)"
 
 release: validate deterministic qa-pdf package

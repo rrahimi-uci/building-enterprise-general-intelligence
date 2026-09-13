@@ -235,6 +235,40 @@ def main() -> int:
         ("BookInk", "BookPalePlum"), ("BookInk", "BookPaleOlive"),
         ("BookInk", "BookPaleCyan"),
     ]
+    # config/style-tokens.json is meant to be the portable description of the
+    # palette. Nothing reads it at build time, so without this check it can drift
+    # from bookstyle.sty and quietly become documentation of a palette that no
+    # longer exists. Checking it makes it a contract rather than a comment.
+    token_path = root / "config" / "style-tokens.json"
+    if token_path.exists():
+        tokens = json.loads(token_path.read_text(encoding="utf-8")).get("colors", {})
+        token_aliases = {
+            "navy": "BookNavy", "navy2": "BookNavyTwo", "blue": "BookBlue",
+            "cyan": "BookCyan", "teal": "BookTeal", "amber": "BookAmber",
+            "red": "BookRed", "ink": "BookInk", "plum": "BookPlum",
+            "olive": "BookOlive", "deep_cyan": "BookDeepCyan",
+            "pale_blue": "BookPaleBlue", "pale_teal": "BookPaleTeal",
+            "pale_indigo": "BookPaleIndigo", "pale_plum": "BookPalePlum",
+            "pale_amber": "BookPaleAmber", "pale_red": "BookPaleRed",
+            "pale_olive": "BookPaleOlive", "pale_cyan": "BookPaleCyan",
+        }
+        # Where the LaTeX frame role needs a darker value than the document
+        # palette, the override is the authority for that token.
+        document = json.loads(token_path.read_text(encoding="utf-8"))
+        overrides = document.get("color_roles", {}).get("latex_frame_overrides", {})
+        expected = {name: overrides.get(name, value) for name, value in tokens.items()}
+        drifted = [
+            f"{name}={expected[name]} but {token}={colors.get(token)}"
+            for name, token in token_aliases.items()
+            if name in expected and token in colors
+            and expected[name].upper() != colors[token].upper()
+        ]
+        measurements["style_token_colors_checked"] = sum(
+            1 for n, t in token_aliases.items() if n in tokens and t in colors
+        )
+        for entry in drifted:
+            errors.append("config/style-tokens.json has drifted from bookstyle.sty: " + entry)
+
     contrast_results = []
     for foreground, background in pairs:
         if foreground not in colors or background not in colors:

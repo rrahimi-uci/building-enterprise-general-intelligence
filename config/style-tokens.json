@@ -116,5 +116,14 @@
         "ground": "pale_cyan"
       }
     }
+  },
+  "color_roles": {
+    "note": "The base palette is the DOCX/document palette, where these colours are used as light fills behind dark text. The XeLaTeX guidance boxes put white title text ON these colours, which needs a darker value to reach 4.5:1 -- DOCX amber on white text is only 2.38:1. Same token, different role, so the LaTeX frame values are recorded separately rather than pretending one value serves both.",
+    "latex_frame_overrides": {
+      "blue": "1450A3",
+      "teal": "0D6E69",
+      "amber": "8A5600",
+      "red": "A62C2C"
+    }
   }
 }

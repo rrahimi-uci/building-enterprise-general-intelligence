@@ -559,7 +559,7 @@ Evidence anchors: CLOUDEVENTS; OUTBOX. Full URLs, authority, version, and scope 
 
 \section{Pattern reference — Tool Use}
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[The problem]
 The model can identify an action or information need, but enterprise execution requires typed interfaces, current authorization, credentials, idempotency, and evidence.
 \end{bookcallout}
 
@@ -1153,7 +1153,7 @@ How do you keep the SDK replaceable? & Store platform contracts, workflow histor
 \end{longtable}
 \BookTableEnd
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[Part Ii]
 \textbf{AGENTIC DESIGN PATTERNS}  Choose and implement the smallest pattern that resolves the real uncertainty: ReAct, routing, planning, reflection, human control, and durable execution.
 \end{bookcallout}
 
@@ -2273,9 +2273,9 @@ A ReAct loop's cost is set by its trajectory, not its prompt. Each observation r
 
 \section{Grounding, corrections, and evidence boundary}
 
-\begin{bookthreat}[Threat]
+\begin{bookcaution}[Evidence boundary]
 This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
-\end{bookthreat}
+\end{bookcaution}
 
 Evidence anchors: REACT; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.\par
 
@@ -2285,7 +2285,7 @@ Unbounded retries disguised as reasoning. When a tool fails and the model is fre
 
 \section{Pattern reference — ReAct}
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[The problem]
 The system cannot know every information-gathering step in advance because the next action depends on the previous observation.
 \end{bookcallout}
 
@@ -2623,15 +2623,15 @@ Confidence is calibrated on a versioned domain dataset. Below a threshold, the r
 
 \section{Grounding, corrections, and evidence boundary}
 
-\begin{bookthreat}[Threat]
+\begin{bookcaution}[Evidence boundary]
 This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
-\end{bookthreat}
+\end{bookcaution}
 
 Evidence anchors: OAI-TOOLS; A2A-101. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Pattern reference — Routing}
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[The problem]
 Different requests need different workflows, models, Skills, agents, risk controls, or human queues.
 \end{bookcallout}
 
@@ -2724,7 +2724,7 @@ Privileged route selection & Eligibility before classification and exact authori
 
 \section{Pattern reference — Handoffs}
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[The problem]
 Another agent or human must become the current interaction or task owner rather than merely provide an answer to the original controller.
 \end{bookcallout}
 
@@ -3221,15 +3221,15 @@ Separate the plan from its execution. A plan is data: persist it, version it, an
 
 \section{Grounding, corrections, and evidence boundary}
 
-\begin{bookthreat}[Threat]
+\begin{bookcaution}[Evidence boundary]
 This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
-\end{bookthreat}
+\end{bookcaution}
 
 Evidence anchors: TEMPORAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Pattern reference — Planning}
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[The problem]
 The task requires adaptive decomposition or dependency ordering that cannot be fully encoded upfront.
 \end{bookcallout}
 
@@ -3495,15 +3495,15 @@ Each revision targets structured feedback and carries a diff. The loop stops on 
 
 \section{Grounding, corrections, and evidence boundary}
 
-\begin{bookthreat}[Threat]
+\begin{bookcaution}[Evidence boundary]
 This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
-\end{bookthreat}
+\end{bookcaution}
 
 Evidence anchors: MLFLOW-EVAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Pattern reference — Reflection}
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[The problem]
 A first candidate may contain omissions, contradictions, or weak reasoning that targeted critique can expose.
 \end{bookcallout}
 
@@ -3596,7 +3596,7 @@ Evidence invention & Require evidence references and reject unsupported addition
 
 \section{Pattern reference — Evaluator–Optimizer}
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[The problem]
 A generated artifact must reach a quality threshold that mixes executable and semantic criteria.
 \end{bookcallout}
 
@@ -4024,7 +4024,7 @@ Evidence anchors: OAI-HITL; OWASP-AGENT; WCAG22. Full URLs, authority, version, 
 
 \section{Pattern reference — Human-in-the-Loop}
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[The problem]
 A person must authorize, correct, or resolve work whose risk or ambiguity exceeds autonomous authority.
 \end{bookcallout}
 
@@ -4584,7 +4584,7 @@ Storing conversation history and calling it durable state. Transcripts record wh
 
 \section{Pattern reference — Long-Running Agents}
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[The problem]
 Business work lasts longer than a process lifetime and must survive waits, worker loss, retries, deployments, and partial external failures.
 \end{bookcallout}
 
@@ -4800,7 +4800,7 @@ How do you deploy new workflow code safely? & Preserve compatible workers, use e
 \end{longtable}
 \BookTableEnd
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[Part Iii]
 \textbf{SKILLS AND COLLABORATION}  Package capabilities as versioned Skills and Skill Packs, coordinate specialist agents, and govern MCP and A2A boundaries.
 \end{bookcallout}
 
@@ -5661,7 +5661,7 @@ Evidence anchors: MULTIAGENT; A2A-101. Full URLs, authority, version, and scope 
 
 \section{Pattern reference — Supervisor/Worker}
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[The problem]
 One outcome requires specialist work that benefits from parallelism or separate capability boundaries while a single component retains overall ownership.
 \end{bookcallout}
 
@@ -5754,7 +5754,7 @@ Child leakage & Narrow grant, data, context, and egress boundaries. \\
 
 \section{Pattern reference — Multi-Agent Collaboration}
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[The problem]
 Several autonomous or semi-autonomous components must exchange tasks and artifacts while preserving ownership, authority, evidence, and recovery.
 \end{bookcallout}
 
@@ -6474,7 +6474,7 @@ How do you version external capabilities? & Pin registry entry, endpoint, protoc
 \end{longtable}
 \BookTableEnd
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[Part Iv]
 \textbf{ENTERPRISE CONTROL}  Control context, state, identity, authorization, effects, security, and governance outside the model.
 \end{bookcallout}
 
@@ -7087,7 +7087,7 @@ Evidence anchors: NIST-GAI; GDPR. Full URLs, authority, version, and scope appea
 
 \section{Pattern reference — Memory}
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[The problem]
 The system should reuse useful information across turns or runs without confusing stale summaries with canonical truth or retaining data indefinitely.
 \end{bookcallout}
 
@@ -8669,7 +8669,7 @@ What makes a useful kill-switch design? & Narrow scopes, emergency-deny preceden
 \end{longtable}
 \BookTableEnd
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[Part V]
 \textbf{PRODUCTION ENGINEERING}  Trace and evaluate complete trajectories, deploy a scalable platform, recover safely, and optimize verified outcomes.
 \end{bookcallout}
 
@@ -11382,7 +11382,7 @@ Human factors & Accessible approval test, preview fidelity, reviewer calibration
 
 \BookFrontChapter{Closing perspective}
 
-\begin{bookcallout}[Architecture note]
+\begin{bookcallout}[The production standard]
 An enterprise-grade system produces a verified outcome within explicit authority, time, cost, data, and risk boundaries; survives partial failure and change; and preserves evidence sufficient for users, operators, reviewers, and auditors.
 \end{bookcallout}
 

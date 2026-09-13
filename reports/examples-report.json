@@ -20,8 +20,10 @@
     "durable-state": 91,
     "react-engine": 106
   },
-  "tests_executed": false,
-  "tests_passed": null,
+  "tests_executed": true,
+  "tests_passed": true,
+  "import_mode_entries": 0,
+  "imports_passed": true,
   "errors": [],
   "warnings": [],
   "pass": true
