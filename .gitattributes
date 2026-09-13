@@ -1,0 +1,18 @@
+# Normalize text line endings
+* text=auto eol=lf
+
+# Publication binaries — never diff or merge as text
+*.docx binary
+*.pdf  binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.ico  binary
+
+# Generated release/QA artifacts: collapse in PR diffs and exclude from
+# GitHub language statistics. They stay tracked because CHECKSUMS.sha256
+# and RELEASE-MANIFEST.json record them as v1.0.0 release evidence.
+dist/**            linguist-generated=true
+qa/**              linguist-generated=true
+book/manuscript.md linguist-generated=true
+source/original/** linguist-vendored=true

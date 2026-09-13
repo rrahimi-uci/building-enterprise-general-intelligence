@@ -1,0 +1,31 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.Python
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Release packaging output (written outside the repo by `make package`,
+# but ignore any stray copies landing inside it)
+*.zip
+
+# LibreOffice / Word lock and temp files
+.~lock.*#
+~$*.docx
