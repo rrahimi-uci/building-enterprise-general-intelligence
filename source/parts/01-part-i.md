@@ -85,49 +85,7 @@ Evidence anchors: NIST-GAI; REACT. Full URLs, authority, version, and scope appe
 
 ### Provider-neutral agent-step contracts
 
-PYTHON · implementation excerpt
-
-```python
-from __future__ import annotations
-from datetime import datetime
-from typing import Any, Literal
-from pydantic import BaseModel, Field
-
-class EvidenceRef(BaseModel):
-    uri: str
-    sha256: str
-    source_revision: str
-    authorization_decision_id: str
-
-class ToolCall(BaseModel):
-    tool_id: str
-    arguments: dict[str, Any]
-    logical_effect_key: str | None = None
-
-class AgentDecision(BaseModel):
-    disposition: Literal["answer", "needs_input", "invoke_tool", "delegate"]
-    answer: str | None = None
-    tool_call: ToolCall | None = None
-    evidence: list[EvidenceRef] = Field(default_factory=list)
-    uncertainties: list[str] = Field(default_factory=list)
-
-class AgentStepRequest(BaseModel):
-    run_id: str
-    node_id: str
-    state_version: int
-    agent_version: str
-    context_manifest_id: str
-    eligible_tool_versions: tuple[str, ...]
-    max_turns: int = Field(ge=1, le=20)
-    deadline: datetime
-
-class AgentStepResult(BaseModel):
-    status: Literal["completed", "needs_input", "proposed_action", "failed"]
-    decision: AgentDecision | None = None
-    output_artifact_ids: tuple[str, ...] = ()
-    usage: dict[str, int | float] = Field(default_factory=dict)
-    error_code: str | None = None
-```
+[[EXAMPLE:contracts#step]]
 
 ## Debugging playbook
 
@@ -483,93 +441,7 @@ AgentStepRequest pins run and node identity, state version, agent and model rout
 
 ## Bounded Python adapter
 
-PYTHON · implementation excerpt
-
-```python
-import os
-from dataclasses import dataclass
-from typing import Literal, Protocol
-
-from agents import Agent, RunConfig, RunContextWrapper, Runner, ToolExecutionConfig
-from agents.decorators import tool
-from pydantic import BaseModel
-
-
-class ToolGateway(Protocol):
-    async def invoke(self, *, tenant_id: str, subject_id: str,
-                     actor_id: str, run_id: str, tool: str,
-                     arguments: dict[str, object]) -> dict[str, object]: ...
-
-
-@dataclass(frozen=True)
-class PlatformContext:
-    tenant_id: str
-    subject_id: str
-    actor_id: str
-    run_id: str
-    gateway: ToolGateway
-
-
-class StepDisposition(BaseModel):
-    status: Literal["completed", "needs_input", "proposed_action"]
-    summary: str
-    evidence_artifact_ids: list[str]
-
-
-@tool
-async def retrieve_supplier_policy(
-    ctx: RunContextWrapper[PlatformContext], country: str
-) -> dict[str, object]:
-    """Retrieve authorized policy through the enterprise Tool Gateway."""
-    return await ctx.context.gateway.invoke(
-        tenant_id=ctx.context.tenant_id,
-        subject_id=ctx.context.subject_id,
-        actor_id=ctx.context.actor_id,
-        run_id=ctx.context.run_id,
-        tool="supplier.policy.read.v2",
-        arguments={"country": country},
-    )
-
-
-agent = Agent[PlatformContext](
-    name="Supplier analyst",
-    model=os.environ["OPENAI_AGENT_MODEL"],
-    instructions=(
-        "Analyze only supplied authorized evidence. Return a structured "
-        "disposition. Never claim that an external write occurred."
-    ),
-    tools=[retrieve_supplier_policy],
-    output_type=StepDisposition,
-)
-
-
-async def execute_step(request, context: PlatformContext) -> dict[str, object]:
-    result = await Runner.run(
-        starting_agent=agent,
-        input=request.input_items,
-        context=context,
-        max_turns=request.max_turns,
-        run_config=RunConfig(
-            workflow_name="supplier-onboarding",
-            group_id=request.run_id,
-            trace_include_sensitive_data=False,
-            trace_metadata={
-                "run_id": request.run_id,
-                "agent_version": request.agent_version,
-            },
-            tool_execution=ToolExecutionConfig(
-                max_function_tool_concurrency=2,
-            ),
-        ),
-    )
-    output = StepDisposition.model_validate(result.final_output)
-    return {
-        "status": output.status,
-        "decision_summary": output.summary,
-        "output_artifacts": output.evidence_artifact_ids,
-        "usage": str(result.context_wrapper.usage),
-    }
-```
+[[EXAMPLE:step-execution#core]]
 
 The model and SDK never receive a reusable production credential. The tool façade submits identifiers and typed arguments to the gateway, which reauthorizes the exact resource, mints a short-lived last-hop credential, enforces effects and quotas, and sanitizes the result.
 

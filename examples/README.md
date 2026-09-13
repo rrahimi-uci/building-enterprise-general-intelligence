@@ -21,6 +21,20 @@ book/manuscript.md → DOCX and XeLaTeX
 Expansion happens once, at assembly, so the Markdown, DOCX, and LaTeX editions
 all carry identical code without each renderer needing to know about examples.
 
+## Named regions
+
+One file can serve two chapters at two depths:
+
+```python
+# --8<-- region:step
+...shown where [[EXAMPLE:contracts#step]] appears...
+# --8<-- endregion:step
+```
+
+`[[EXAMPLE:contracts]]` renders the whole example region; `[[EXAMPLE:contracts#step]]`
+renders just that sub-region. `tools/check_examples.py` fails the build if a cited
+region does not exist or is never closed.
+
 ## Region markers
 
 A file stays runnable end to end — imports, `__main__` guard, helpers — while
@@ -68,6 +82,13 @@ falls through to the real OpenAI provider.
 | `observability/mlflow_tracing.py` | 23 | Agent and tool spans |
 | `observability/mlflow_trace_configuration.py` | 23 | Autolog plus platform-owned spans |
 | `observability/mlflow_evaluation.py` | 24 | Dataset scoring and regression detection |
+| `contracts.py` | 01, 04 | Shared step and platform contracts (two regions) |
+| `platform/skills_registry.py` | 06 | Policy-aware resolution, SemVer precedence |
+| `patterns/react_engine.py` | 08 | Turn, tool and no-progress budgets |
+| `patterns/plan_compilation.py` | 10 | Binding a plan to its policy envelope |
+| `patterns/approval_verification.py` | 12 | Grant binding, self-approval, expiry |
+| `runtime/durable_state.py` | 13 | Run state as a replayable event fold |
+| `runtime/step_execution.py` | 03 | Platform-owned adapter around the SDK |
 
 ## Adding an example
 

@@ -207,14 +207,9 @@ Evidence anchors: NIST-GAI; REACT. Full URLs, authority, version, and scope appe
 
 ### Provider-neutral agent-step contracts
 
-PYTHON · implementation excerpt
+PYTHON · Provider-neutral agent-step and platform contracts
 
 ```python
-from __future__ import annotations
-from datetime import datetime
-from typing import Any, Literal
-from pydantic import BaseModel, Field
-
 class EvidenceRef(BaseModel):
     uri: str
     sha256: str
@@ -652,73 +647,19 @@ AgentStepRequest pins run and node identity, state version, agent and model rout
 
 ## Bounded Python adapter
 
-PYTHON · implementation excerpt
+PYTHON · One bounded agent step behind a platform-owned adapter
 
 ```python
-import os
-from dataclasses import dataclass
-from typing import Literal, Protocol
-
-from agents import Agent, RunConfig, RunContextWrapper, Runner, ToolExecutionConfig
-from agents.decorators import tool
-from pydantic import BaseModel
-
-
-class ToolGateway(Protocol):
-    async def invoke(self, *, tenant_id: str, subject_id: str,
-                     actor_id: str, run_id: str, tool: str,
-                     arguments: dict[str, object]) -> dict[str, object]: ...
-
-
-@dataclass(frozen=True)
-class PlatformContext:
-    tenant_id: str
-    subject_id: str
-    actor_id: str
-    run_id: str
-    gateway: ToolGateway
-
-
-class StepDisposition(BaseModel):
-    status: Literal["completed", "needs_input", "proposed_action"]
-    summary: str
-    evidence_artifact_ids: list[str]
-
-
-@tool
-async def retrieve_supplier_policy(
-    ctx: RunContextWrapper[PlatformContext], country: str
-) -> dict[str, object]:
-    """Retrieve authorized policy through the enterprise Tool Gateway."""
-    return await ctx.context.gateway.invoke(
-        tenant_id=ctx.context.tenant_id,
-        subject_id=ctx.context.subject_id,
-        actor_id=ctx.context.actor_id,
-        run_id=ctx.context.run_id,
-        tool="supplier.policy.read.v2",
-        arguments={"country": country},
-    )
-
-
-agent = Agent[PlatformContext](
-    name="Supplier analyst",
-    model=os.environ["OPENAI_AGENT_MODEL"],
-    instructions=(
-        "Analyze only supplied authorized evidence. Return a structured "
-        "disposition. Never claim that an external write occurred."
-    ),
-    tools=[retrieve_supplier_policy],
-    output_type=StepDisposition,
-)
-
-
-async def execute_step(request, context: PlatformContext) -> dict[str, object]:
+async def execute_step(request, context: PlatformContext, *, model=None) -> dict[str, object]:
     result = await Runner.run(
         starting_agent=agent,
         input=request.input_items,
         context=context,
         max_turns=request.max_turns,
         run_config=RunConfig(
+            # An injectable model is what lets the platform test this step without
+            # a provider. Production passes nothing and the configured model wins.
+            model=model,
             workflow_name="supplier-onboarding",
             group_id=request.run_id,
             trace_include_sensitive_data=False,
@@ -1112,9 +1053,15 @@ Evidence anchors: CLOUDEVENTS. Full URLs, authority, version, and scope appear i
 
 ### Core platform data contracts
 
-PYTHON · implementation excerpt
+PYTHON · Provider-neutral agent-step and platform contracts
 
 ```python
+"""The provider-neutral contracts every agent step and platform API shares.
+
+One file, two views. Chapter 02 needs the agent-step subset; chapter 04 needs
+the full platform set. Before v2.0.0 these were two listings that had already
+drifted apart -- the shorter one was not even a prefix of the longer.
+"""
 from __future__ import annotations
 
 from datetime import datetime
@@ -1156,6 +1103,7 @@ class AgentStepResult(BaseModel):
     output_artifact_ids: tuple[str, ...] = ()
     usage: dict[str, int | float] = Field(default_factory=dict)
     error_code: str | None = None
+
 
 class SkillRequirement(BaseModel):
     capability: str
@@ -1431,101 +1379,9 @@ Evidence anchors: SLSA; MCP-2026. Full URLs, authority, version, and scope appea
 
 ### Skill manifest and resolver
 
-PYTHON · implementation excerpt
+PYTHON · Resolving a skill version under policy and SemVer precedence
 
 ```python
-from __future__ import annotations
-
-import hashlib
-import json
-import re
-from typing import Literal
-
-from pydantic import BaseModel, Field, field_validator, model_validator
-
-from .contracts import SkillRequirement
-
-
-_SEMVER = re.compile(
-    r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
-    r"(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?"
-    r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$"
-)
-
-
-def _semver_key(version: str) -> tuple[object, ...]:
-    """Return a SemVer 2.0 precedence key; build metadata has no precedence."""
-
-    match = _SEMVER.fullmatch(version)
-    if match is None:
-        raise ValueError(f"invalid semantic version: {version}")
-    major, minor, patch = (int(match.group(i)) for i in range(1, 4))
-    prerelease = match.group(4)
-    if prerelease is None:
-        return major, minor, patch, 1, ()
-    identifiers: list[tuple[int, int | str]] = []
-    for identifier in prerelease.split("."):
-        if identifier.isdigit():
-            if len(identifier) > 1 and identifier.startswith("0"):
-                raise ValueError("numeric prerelease identifiers cannot have leading zeroes")
-            identifiers.append((0, int(identifier)))
-        else:
-            identifiers.append((1, identifier))
-    return major, minor, patch, 0, tuple(identifiers)
-
-
-class SkillManifest(BaseModel):
-    skill_id: str
-    version: str
-    description: str
-    owner: str
-    capabilities: frozenset[str]
-    tool_versions: tuple[str, ...]
-    instruction_ref: str
-    knowledge_refs: tuple[str, ...] = ()
-    workflow_ref: str | None = None
-    allowed_purposes: frozenset[str]
-    allowed_data_classes: frozenset[str]
-    allowed_regions: frozenset[str]
-    maximum_risk: int = Field(ge=0, le=4)
-    status: Literal["draft", "active", "deprecated", "revoked"] = "draft"
-    digest: str | None = None
-
-    @field_validator("version")
-    @classmethod
-    def version_is_semver(cls, value: str) -> str:
-        _semver_key(value)
-        return value
-
-    @model_validator(mode="after")
-    def validate_digest(self) -> "SkillManifest":
-        body = self.model_dump(mode="json", exclude={"digest"})
-        expected = "sha256:" + hashlib.sha256(
-            json.dumps(body, sort_keys=True, separators=(",", ":")).encode()
-        ).hexdigest()
-        if self.digest is not None and self.digest != expected:
-            raise ValueError("skill digest mismatch")
-        object.__setattr__(self, "digest", expected)
-        return self
-
-
-class SkillPackManifest(BaseModel):
-    pack_id: str
-    version: str
-    domain: str
-    owner: str
-    skill_versions: tuple[str, ...]
-    policy_bundle_ref: str
-    evaluation_suite_ref: str
-    status: Literal["draft", "active", "deprecated", "revoked"] = "draft"
-
-    @field_validator("version")
-    @classmethod
-    def version_is_semver(cls, value: str) -> str:
-        _semver_key(value)
-        return value
-
-
 class SkillRegistry:
     def __init__(self) -> None:
         self._skills: dict[str, SkillManifest] = {}
@@ -1907,29 +1763,9 @@ async def run(question: str, *, budget: RunBudget, model=None) -> str:
 
 ### Bounded ReAct controller
 
-PYTHON · implementation excerpt
+PYTHON · A ReAct controller that owns the budgets
 
 ```python
-from __future__ import annotations
-import hashlib
-import json
-from dataclasses import dataclass
-from typing import Awaitable, Callable, Protocol
-from .contracts import AgentDecision
-
-class ReActLimits:
-    maximum_turns: int = 6
-    maximum_tool_calls: int = 4
-    maximum_identical_observations: int = 2
-
-    def __post_init__(self) -> None:
-        if min(
-            self.maximum_turns,
-            self.maximum_tool_calls,
-            self.maximum_identical_observations,
-        ) < 1:
-            raise ValueError("all ReAct limits must be positive")
-
 class ReActEngine:
     """A bounded reason-act-observe loop with an external tool boundary."""
 
@@ -2493,49 +2329,9 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 
 ### Plan IR compiler
 
-PYTHON · implementation excerpt
+PYTHON · Compiling an approved plan into a budget-bounded envelope
 
 ```python
-from __future__ import annotations
-
-import hashlib
-import json
-import math
-import re
-from dataclasses import dataclass
-
-from .contracts import CandidatePlan
-
-
-_SHA256 = re.compile(r"^sha256:[0-9a-f]{64}$")
-
-
-@dataclass(frozen=True)
-class PlanEnvelope:
-    """Deterministic limits used to compile one candidate plan."""
-
-    allowed_capabilities: frozenset[str]
-    maximum_cost_usd: float
-    policy_digest: str
-    maximum_nodes: int = 100
-    maximum_risk: int = 4
-
-    def __post_init__(self) -> None:
-        if not math.isfinite(self.maximum_cost_usd) or self.maximum_cost_usd < 0:
-            raise ValueError("maximum_cost_usd must be finite and non-negative")
-        if self.maximum_nodes < 1:
-            raise ValueError("maximum_nodes must be positive")
-        if not 0 <= self.maximum_risk <= 4:
-            raise ValueError("maximum_risk must be between 0 and 4")
-        if _SHA256.fullmatch(self.policy_digest) is None:
-            raise ValueError("policy_digest must be a canonical sha256 digest")
-
-
-def _sha256(payload: object) -> str:
-    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
-    return "sha256:" + hashlib.sha256(canonical).hexdigest()
-
-
 def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, object]:
     """Validate and bind a proposed plan to the policy envelope.
 
@@ -3115,50 +2911,9 @@ def proposal_hash(action: str, destination: str,
 
 ### Executable proposal-bound approval
 
-PYTHON · implementation excerpt
+PYTHON · Verifying an approval grant against this exact proposal
 
 ```python
-from __future__ import annotations
-
-import hashlib
-import json
-from datetime import datetime
-from typing import Any
-
-from pydantic import BaseModel, Field, field_validator, model_validator
-
-
-def _require_aware(value: datetime, field_name: str) -> datetime:
-    if value.tzinfo is None or value.utcoffset() is None:
-        raise ValueError(f"{field_name} must be timezone-aware")
-    return value
-
-
-class ActionProposal(BaseModel):
-    """Exact action reviewed by an approver; immutable after presentation."""
-
-    tenant_id: str
-    run_id: str
-    actor_id: str
-    tool_version: str
-    logical_effect_key: str
-    arguments: dict[str, Any]
-    expected_resource_version: int
-    policy_digest: str
-    expires_at: datetime
-
-    @field_validator("expires_at")
-    @classmethod
-    def expiry_is_aware(cls, value: datetime) -> datetime:
-        return _require_aware(value, "expires_at")
-
-    def digest(self) -> str:
-        payload = json.dumps(
-            self.model_dump(mode="json"), sort_keys=True, separators=(",", ":")
-        ).encode()
-        return "sha256:" + hashlib.sha256(payload).hexdigest()
-
-
 class ApprovalGrant(BaseModel):
     approval_id: str
     proposal_hash: str
@@ -3445,34 +3200,9 @@ A durable workflow records deterministic decisions and schedules bounded activit
 
 ### Replay-safe workflow reducer
 
-PYTHON · implementation excerpt
+PYTHON · Durable run state as a replayable event fold
 
 ```python
-from __future__ import annotations
-
-from dataclasses import dataclass, replace
-from typing import Literal
-
-RunStatus = Literal["submitted", "running", "waiting", "needs_approval",
-                    "succeeded", "failed", "canceled", "intervention_required"]
-TERMINAL = frozenset({"succeeded", "failed", "canceled", "intervention_required"})
-
-@dataclass(frozen=True)
-class RunState:
-    status: RunStatus = "submitted"
-    state_version: int = 0
-    current_node: str | None = None
-    cancel_requested: bool = False
-    unknown_effect_ids: tuple[str, ...] = ()
-    terminal_reason: str | None = None
-
-@dataclass(frozen=True)
-class WorkflowEvent:
-    kind: str
-    data: dict[str, object]
-    expected_state_version: int | None = None
-
-
 def evolve(state: RunState, event: WorkflowEvent) -> RunState:
     if event.expected_state_version is not None and event.expected_state_version != state.state_version:
         raise ValueError("stale workflow event")

@@ -10,6 +10,22 @@
   },
   "examples": [
     {
+      "id": "contracts",
+      "path": "examples/contracts.py",
+      "language": "python",
+      "title": "Provider-neutral agent-step and platform contracts",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_contracts.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ],
+      "regions": {
+        "step": "The agent-step subset used in the foundations chapter."
+      }
+    },
+    {
       "id": "agent-tool-loop",
       "path": "examples/foundations/agent_tool_loop.py",
       "language": "python",
@@ -122,6 +138,100 @@
       "libraries": [
         "mlflow==3.15.2"
       ]
+    },
+    {
+      "id": "skills-registry",
+      "path": "examples/platform/skills_registry.py",
+      "language": "python",
+      "title": "Resolving a skill version under policy and SemVer precedence",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_skills_registry.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ],
+      "regions": {
+        "resolution": "Eligibility and resolution, without the SemVer parser."
+      }
+    },
+    {
+      "id": "plan-compilation",
+      "path": "examples/patterns/plan_compilation.py",
+      "language": "python",
+      "title": "Compiling an approved plan into a budget-bounded envelope",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_plan_compilation.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ],
+      "regions": {
+        "core": "The logic the chapter teaches, without the supporting models."
+      }
+    },
+    {
+      "id": "approval-verification",
+      "path": "examples/patterns/approval_verification.py",
+      "language": "python",
+      "title": "Verifying an approval grant against this exact proposal",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_approval_verification.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ],
+      "regions": {
+        "core": "The logic the chapter teaches, without the supporting models."
+      }
+    },
+    {
+      "id": "step-execution",
+      "path": "examples/runtime/step_execution.py",
+      "language": "python",
+      "title": "One bounded agent step behind a platform-owned adapter",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_step_execution.py"
+      ],
+      "libraries": [
+        "openai-agents==0.22.2"
+      ],
+      "regions": {
+        "core": "The logic the chapter teaches, without the supporting models."
+      }
+    },
+    {
+      "id": "durable-state",
+      "path": "examples/runtime/durable_state.py",
+      "language": "python",
+      "title": "Durable run state as a replayable event fold",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_durable_state.py"
+      ],
+      "libraries": [],
+      "regions": {
+        "core": "The logic the chapter teaches, without the supporting models."
+      }
+    },
+    {
+      "id": "react-engine",
+      "path": "examples/patterns/react_engine.py",
+      "language": "python",
+      "title": "A ReAct controller that owns the budgets",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_react_engine.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ],
+      "regions": {
+        "core": "The logic the chapter teaches, without the supporting models."
+      }
     }
   ]
 }

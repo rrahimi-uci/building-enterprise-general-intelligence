@@ -64,7 +64,36 @@ def render_reference_sections(text: str, references: list[dict]) -> str:
     return text
 
 
-EXAMPLE_MARKER = re.compile(r"^\[\[EXAMPLE:([a-z0-9][a-z0-9-]*)\]\]$", re.M)
+EXAMPLE_MARKER = re.compile(r"^\[\[EXAMPLE:([a-z0-9][a-z0-9-]*)(?:#([a-z0-9-]+))?\]\]$", re.M)
+
+
+def example_region(body: str, start: str, end: str, region: str | None) -> str:
+    """Return the whole example region, or one named sub-region within it.
+
+    Named regions let a single verified file serve two chapters at two depths --
+    the agent-step contracts a foundations chapter needs, and the full platform
+    contract set the architecture chapter needs -- without a second copy that can
+    drift. The book had exactly that duplication before v2.0.0.
+    """
+    if region:
+        open_marker = f"# --8<-- region:{region}"
+        close_marker = f"# --8<-- endregion:{region}"
+        if open_marker not in body:
+            raise SystemExit(f"Example region {region!r} not found")
+        if close_marker not in body:
+            raise SystemExit(f"Example region {region!r} is never closed")
+        body = body.split(open_marker, 1)[1].split(close_marker, 1)[0]
+    elif start in body:
+        if end not in body:
+            raise SystemExit("Example region start without a matching end")
+        body = body.split(start, 1)[1].split(end, 1)[0]
+    # Drop any nested region markers so they never reach the page.
+    lines = [l.rstrip() for l in body.splitlines() if "# --8<--" not in l]
+    while lines and not lines[0].strip():
+        lines.pop(0)
+    while lines and not lines[-1].strip():
+        lines.pop()
+    return "\n".join(lines)
 
 
 def expand_examples(text: str, root: Path) -> tuple[str, int]:
@@ -89,20 +118,13 @@ def expand_examples(text: str, root: Path) -> tuple[str, int]:
         path = root / entry["path"]
         if not path.exists():
             raise SystemExit(f"Example {entry['id']} points at missing file {entry['path']}")
-        body = path.read_text(encoding="utf-8")
-        if start in body:
-            if end not in body:
-                raise SystemExit(f"Example {entry['id']}: region start without a matching end")
-            body = body.split(start, 1)[1].split(end, 1)[0]
-        lines = [line.rstrip() for line in body.splitlines()]
-        while lines and not lines[0].strip():
-            lines.pop(0)
-        while lines and not lines[-1].strip():
-            lines.pop()
+        rendered = example_region(path.read_text(encoding="utf-8"), start, end, match.group(2))
+        if not rendered.strip():
+            raise SystemExit(f"Example {entry['id']} rendered empty")
         language = entry.get("language", "python")
         count += 1
         caption = f"{language.upper()} · {entry['title']}"
-        return "\n".join([caption, "", "```" + language, *lines, "```"])
+        return "\n".join([caption, "", "```" + language, rendered, "```"])
 
     return EXAMPLE_MARKER.sub(render, text), count
 

@@ -4,6 +4,18 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [2.0.0] — 2026-09-13
 
+### Every oversized listing promoted to a verified example
+
+- The six listings too long to fit a page (82–153 lines) are now real files under `examples/`, shown through named regions. Page splits fell from 9 to **3**, and all 51 listings are verified rather than 9.
+- Added **named regions** (`[[EXAMPLE:id#region]]`), so one verified file can serve two chapters at two depths.
+- **Removed a genuine duplication:** the agent-step contracts were defined twice, in chapters 01 and 04, and the copies had already drifted — the shorter was not even a prefix of the longer. Both now render from one tested `examples/contracts.py`: chapter 01 shows the five-type step region, chapter 04 the full eight-type platform set.
+
+### Defects found by making the listings run
+
+- **`ReActLimits` was missing its `@dataclass` decorator.** `dataclass` was imported but never applied, so `__post_init__` never ran and the "all ReAct limits must be positive" validation was dead code. The class could not be constructed with arguments either.
+- **`DecisionModel` and `ToolInvoker` were referenced but never defined.** The ReAct listing imported `Protocol`, `Awaitable`, and `Callable` to declare them, but the declarations were absent — the code as printed did not run.
+- **The step adapter read `os.environ["OPENAI_AGENT_MODEL"]` at import time**, making the module unimportable wherever that variable is unset. It now reads with a default, and takes an injectable model so a platform can test a step without a provider.
+
 ### Verified examples across the book
 
 - Nine runnable, CI-executed examples now appear in nine chapters, covering the OpenAI Agents SDK and MLflow: a bounded agent loop with a typed tool (ch 02), a ReAct loop with an explicit run budget (ch 08), routing by handoff (ch 09), a human approval gate that survives the wait (ch 12), an input guardrail that trips before any tool runs (ch 18), an effect-idempotency ledger (ch 21), MLflow trace configuration and tracing (ch 23), and dataset evaluation with scorers (ch 24).

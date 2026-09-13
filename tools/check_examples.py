@@ -21,7 +21,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-MARKER = re.compile(r"\[\[EXAMPLE:([a-z0-9][a-z0-9-]*)\]\]")
+MARKER = re.compile(r"\[\[EXAMPLE:([a-z0-9][a-z0-9-]*)(?:#([a-z0-9-]+))?\]\]")
 
 
 def load_registry(root: Path) -> dict:
@@ -49,12 +49,12 @@ def excerpt(path: Path, start: str, end: str) -> str:
     return "\n".join(lines)
 
 
-def markers_in_sources(root: Path) -> dict[str, list[str]]:
-    """Map example id -> the source files that cite it."""
-    found: dict[str, list[str]] = {}
+def markers_in_sources(root: Path) -> dict[str, list[tuple[str, str | None]]]:
+    """Map example id -> [(source file, region or None)] for every citation."""
+    found: dict[str, list[tuple[str, str | None]]] = {}
     for part in sorted((root / "source" / "parts").glob("*.md")):
         for match in MARKER.finditer(part.read_text(encoding="utf-8")):
-            found.setdefault(match.group(1), []).append(part.name)
+            found.setdefault(match.group(1), []).append((part.name, match.group(2)))
     return found
 
 
@@ -103,9 +103,20 @@ def main() -> int:
             errors.append(f"{eid}: verify=test but no tests are declared")
 
     cited = markers_in_sources(root)
-    for eid in cited:
+    by_id = {e["id"]: e for e in entries}
+    for eid, citations in cited.items():
         if eid not in seen:
             errors.append(f"[[EXAMPLE:{eid}]] has no entry in config/examples.json")
+            continue
+        # A named region must exist in the file, or the page silently loses content.
+        body = (root / by_id[eid]["path"]).read_text(encoding="utf-8")
+        for source_file, region in citations:
+            if region is None:
+                continue
+            if f"# --8<-- region:{region}" not in body:
+                errors.append(f"{source_file} cites {eid}#{region}, which the file does not define")
+            elif f"# --8<-- endregion:{region}" not in body:
+                errors.append(f"{eid}: region {region!r} is never closed")
     for entry in entries:
         if entry["id"] not in cited and not entry.get("retained_for_future_use"):
             warnings.append(f"{entry['id']}: registered but never cited from source/parts")

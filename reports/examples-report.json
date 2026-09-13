@@ -1,8 +1,9 @@
 {
-  "examples": 9,
-  "cited": 9,
+  "examples": 16,
+  "cited": 16,
   "uncited": [],
   "rendered_lines": {
+    "contracts": 69,
     "agent-tool-loop": 44,
     "effect-idempotency": 25,
     "mlflow-tracing": 19,
@@ -11,7 +12,13 @@
     "routing-handoff": 31,
     "approval-gate": 48,
     "input-guardrail": 44,
-    "mlflow-evaluation": 42
+    "mlflow-evaluation": 42,
+    "skills-registry": 167,
+    "plan-compilation": 110,
+    "approval-verification": 98,
+    "step-execution": 98,
+    "durable-state": 91,
+    "react-engine": 106
   },
   "tests_executed": false,
   "tests_passed": null,
