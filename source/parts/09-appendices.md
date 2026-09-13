@@ -1,3 +1,7 @@
+# PART REFERENCE — APPENDICES
+
+The appendices are working reference material: selection aids, runbooks, contracts, and the citation registry that the chapters draw on.
+
 # Appendix A — Pattern Selection Decision Tree and Catalog Index
 
 ## Selection sequence
@@ -211,9 +215,8 @@ Before an agent can mutate an enterprise system, require all of the following:
 | Subject | Principal whose delegated authority initiates a protected action. |
 | Unknown effect | Mutation whose outcome cannot be proven and must be reconciled. |
 
-# Appendix I — Companion implementation guide
+# Appendix I — Companion Implementation Guide: Northstar Reference
 
-# Northstar Agentic Reference Implementation
 
 Companion code for the book **Building Enterprise Agentic AI Systems**.
 
@@ -521,164 +524,7 @@ References are numbered by stable registry identifier. Each citation supports on
 * **[R37]** Dapr (2026). *Dapr Agents*. Current documentation. [Primary or authoritative source](https://docs.dapr.io/developing-ai/dapr-agents). Accessed 13 September 2026. **Supports:** Documents Dapr agent integration with workflows, actors, state, messaging, resiliency, and telemetry.
 * **[R38]** DBOS (2026). *DBOS AI Quickstart*. Current documentation. [Primary or authoritative source](https://docs.dbos.dev/ai/ai-quickstart). Accessed 13 September 2026. **Supports:** Documents durable long-running agent workflows, queues, waits, and framework integrations.
 
-# Appendix L — Release history and editorial closure
-
-## Book v1.0.0 publication release
-
-* Established semantic version 1.0.0 as the canonical publication and future-development baseline.
-* Reviewed all 31 chapters and 15 appendices as one dependency-ordered narrative; added specific Part orientations and chapter-to-chapter transitions.
-* Removed repeated package boilerplate and consolidated maintenance instructions in the development package.
-* Replaced duplicate source lists with a numbered References section and a claim-to-source traceability matrix.
-* Added scoped evidence notes for protocols, frameworks, standards, research, security guidance, governance, accessibility, incident response, and queueing claims.
-* Encoded the visual and structural system in machine-readable configuration, reusable build/validation scripts, templates, and agent Skills.
-
-
-This closure log records the review findings resolved in the final edition. Version assumptions, validation boundaries, and architectural recommendations remain explicit so future upgrades can be assessed without reopening settled design gaps.
-
-| **Severity** | **Finding** | **Final implementation** |
-| --- | --- | --- |
-| Critical | MCP baseline was stale | Resolved: the obsolete 2025-06-18 baseline was removed. The final edition uses MCP 2026-07-28 with a stateless core, per-request capability negotiation, server/discover, cacheable list results, explicit application handles, and optional Tasks/Skills extensions. |
-| High | A2A examples mixed local and normative APIs | Pin A2A 1.0.1; name normative operations separately from Northstar bridge endpoints; treat cancellation as best effort and task visibility as an authorization obligation. |
-| High | OpenAI approval sample was not executable as shown | Register the protected tool, return RunResult instead of throwing serialized state, preserve the SDK interruption, and verify the enterprise proposal hash and resource version at the gateway. |
-| High | Approval was represented as a Boolean in companion code | Add ActionProposal and ApprovalGrant contracts bound to tenant, run, tool, arguments, logical effect, policy digest, expiry, and expected resource version. |
-| High | Adapter validation scope was overstated | State explicitly that deterministic modules are executed in CI while OpenAI/MLflow adapters are syntax-checked here and require pinned dependency and endpoint integration tests. |
-| High | Delegated authority omitted purpose and spend in code | Make purpose and cost monotonic in CapabilityEnvelope and add boundary tests, including URI prefix ambiguity. |
-| High | Ambiguous connector failures could remain 'executing' | Move every post-dispatch ambiguous exception to unknown; reconcile against the authoritative downstream record before retry or compensation. |
-| Medium | Skills terminology could imply a standard | Label Skill and Skill Pack as book-defined platform packaging patterns. Distinguish them from A2A AgentSkill discovery metadata and the optional Skills-over-MCP extension. |
-| Medium | OpenTelemetry maturity was underqualified | Keep OTLP and the trace model, but label GenAI semantic conventions Development and isolate them behind a mapping layer. |
-| Medium | MLflow version status needed stronger caveats | Retain the 3.15.2 reproducibility baseline without claiming it is latest; re-verify experimental features and distinguish synchronous evaluation orchestration from an async predict function. |
-| Medium | Governance references were presented too uniformly | Separate voluntary NIST guidance, certifiable ISO management-system requirements, community OWASP guidance, and binding law. Add jurisdiction and legal-review caveats. |
-| Medium | Supply-chain assurance was thin | Add dependency locks, SBOM, signed provenance, trusted builders/signers, immutable Skill artifacts, and release attestations; distinguish SBOM contents from SLSA build provenance. |
-| Medium | Operational resilience lacked explicit objectives | Add kill-switch scopes, degraded safe mode, RTO/RPO, region-failover evidence, restoration tests, and recovery of approvals/effects. |
-| Medium | Privacy lifecycle needed a rights workflow | Add minimization, purpose limitation, retention, deletion propagation, legal hold, data residency, subject-rights handling, and model-provider data-use controls. |
-| Medium | Human factors were not a first-class safety layer | Add accessible approval UX, automation-bias controls, rationale/evidence separation, preview fidelity, fatigue metrics, and recourse/appeal. |
-| Medium | Event interoperability lacked a concrete envelope | Add CloudEvents 1.0-compatible event metadata, source-plus-ID deduplication, outbox ownership, schema versioning, and large-payload indirection. |
-| Medium | Capacity guidance needed an executable sizing method | Add arrival-rate, fan-out, retry-amplification, service-time, utilization, queue, token, and cost equations plus load-test calibration. |
-
-## Final implementations with implementation impact
-
-**✓** The OpenAI protected tool is registered; pause/resume returns RunResult; state is not thrown as exception text; approval metadata reaches the gateway.
-
-**✓** The MLflow evaluation wrapper is synchronous while still accepting async prediction functions.
-
-**✓** Capability delegation narrows purpose and cost and rejects ambiguous URI-prefix matches.
-
-**✓** Mutating tools declare idempotency and ambiguous post-dispatch exceptions become unknown.
-
-**✓** Added approval, event/outbox, artifact-policy, supply-chain, kill-switch, and recovery-objective modules with deterministic tests.
-
-**✓** MCP guidance now targets 2026-07-28; A2A guidance targets 1.0.1; local bridge APIs are not presented as protocol operations.
-
-## v1.0.0 publication architecture and developer-platform foundation
-
-✓ Chapter 17 now contains sixteen category-organized pattern-replacement cards with consistent architecture, example, metric, and trade-off fields.
-
-✓ Chapter 28 now defines the ten-stage continuous-learning architecture, runtime/offline boundary, optimization matrix, automation policy, and regression lifecycle.
-
-# Appendix M — Citation and Claim Traceability Matrix
-
-This matrix defines exactly what each citation is permitted to support. It prevents a source from being stretched beyond its evidence. Book-authored patterns, metrics, formulas, examples, and architecture recommendations remain design guidance unless a source explicitly covers them.
-
-| ID | Source class | Permitted claim scope | Verification note |
-|---|---|---|---|
-| R01 | research | Defines ReAct and reports benchmark results for interleaved reasoning and action. | Verified 2026-09-13; re-check living sources before use. |
-| R02 | industry guidance | Explains crash-resilient workflow execution, replay, durable timers, and long-running processes. | Verified 2026-09-13; re-check living sources before use. |
-| R03 | architecture pattern | Supports atomic state/event publication and duplicate-consumer considerations. | Verified 2026-09-13; re-check living sources before use. |
-| R04 | standard | Defines a portable event envelope and event identity semantics. | Verified 2026-09-13; re-check living sources before use. |
-| R05 | protocol specification | Defines the stateless MCP core, resources, prompts, tools, and extensions. | Verified 2026-09-13; re-check living sources before use. |
-| R06 | protocol specification | Defines MCP HTTP authorization and audience/resource protections. | Verified 2026-09-13; re-check living sources before use. |
-| R07 | protocol specification | Defines agent cards, tasks, messages, artifacts, bindings, authorization surfaces, and lifecycle operations. | Verified 2026-09-13; re-check living sources before use. |
-| R08 | internet standard | Defines subject/actor semantics for token exchange, delegation, and impersonation. | Verified 2026-09-13; re-check living sources before use. |
-| R09 | internet standard | Defines resource indicators used to constrain token audience. | Verified 2026-09-13; re-check living sources before use. |
-| R10 | internet standard | Defines protected-resource metadata used in authorization discovery. | Verified 2026-09-13; re-check living sources before use. |
-| R11 | official guidance | Supports resource-centric, continuously evaluated trust and explicit policy enforcement. | Verified 2026-09-13; re-check living sources before use. |
-| R12 | official guidance | Defines voluntary Govern, Map, Measure, and Manage risk-management functions. | Verified 2026-09-13; re-check living sources before use. |
-| R13 | official guidance | Provides cross-sector generative-AI risk considerations across the AI lifecycle. | Verified 2026-09-13; re-check living sources before use. |
-| R14 | standard | Defines requirements for an AI management system and continual improvement. | Verified 2026-09-13; re-check living sources before use. |
-| R15 | community guidance | Prioritizes major agentic-application security risks and mitigations. | Verified 2026-09-13; re-check living sources before use. |
-| R16 | community guidance | Provides practical controls for identity, tools, memory, output, and monitoring. | Verified 2026-09-13; re-check living sources before use. |
-| R17 | community standard | Defines supply-chain security tracks, levels, and provenance requirements. | Verified 2026-09-13; re-check living sources before use. |
-| R18 | official guidance | Supports SBOM practices; distinct from build provenance. | Verified 2026-09-13; re-check living sources before use. |
-| R19 | observability standard | Defines emerging GenAI spans, events, metrics, agent, provider, and MCP mappings. | Verified 2026-09-13; re-check living sources before use. |
-| R20 | framework documentation | Documents evaluation datasets, feedback, judges, systematic evaluation, and production monitoring. | Verified 2026-09-13; re-check living sources before use. |
-| R21 | framework release | Pins the reproducibility baseline used for book examples. | Verified 2026-09-13; re-check living sources before use. |
-| R22 | framework documentation | Documents component, RAG, tool, task, and agent-oriented evaluation metrics. | Verified 2026-09-13; re-check living sources before use. |
-| R23 | framework documentation | Documents OpenInference/OTel tracing, datasets, experiments, evaluation, and prompt/version workflows. | Verified 2026-09-13; re-check living sources before use. |
-| R24 | framework documentation | Documents tool-call and agent-goal evaluation metrics. | Verified 2026-09-13; re-check living sources before use. |
-| R25 | framework documentation | Documents offline and online evaluation, datasets, experiments, and production-trace workflows. | Verified 2026-09-13; re-check living sources before use. |
-| R26 | vendor documentation | Documents datasets, graders, trace grading, and regression evaluation. | Verified 2026-09-13; re-check living sources before use. |
-| R27 | industry guidance | Distinguishes workflows from agents and recommends earning orchestration complexity. | Verified 2026-09-13; re-check living sources before use. |
-| R28 | industry report | Reports multi-agent research architecture and token/context trade-offs. | Verified 2026-09-13; re-check living sources before use. |
-| R29 | framework documentation | Documents agents, tools, guardrails, handoffs, sessions, results, and tracing. | Verified 2026-09-13; re-check living sources before use. |
-| R30 | framework release | Pins the SDK baseline used for concrete adapter examples. | Verified 2026-09-13; re-check living sources before use. |
-| R31 | framework documentation | Documents Microsoft agent and workflow abstractions. | Verified 2026-09-13; re-check living sources before use. |
-| R32 | framework documentation | Documents Google ADK agent and multi-agent abstractions. | Verified 2026-09-13; re-check living sources before use. |
-| R33 | framework documentation | Documents the managed supervisor/collaborator pattern. | Verified 2026-09-13; re-check living sources before use. |
-| R34 | framework documentation | Documents checkpointers, thread state, stores, and persistence. | Verified 2026-09-13; re-check living sources before use. |
-| R35 | framework documentation | Documents event-driven asynchronous workflow abstractions. | Verified 2026-09-13; re-check living sources before use. |
-| R36 | framework documentation | Documents typed agent integration with durable-execution backends. | Verified 2026-09-13; re-check living sources before use. |
-| R37 | framework documentation | Documents Dapr agent integration with workflows, actors, state, messaging, resiliency, and telemetry. | Verified 2026-09-13; re-check living sources before use. |
-| R38 | framework documentation | Documents durable long-running agent workflows, queues, waits, and framework integrations. | Verified 2026-09-13; re-check living sources before use. |
-| R39 | law | Primary legal text for EU data-protection principles and rights. | Verified 2026-09-13; re-check living sources before use. |
-| R40 | official legal guidance | Official implementation overview; legal advice must use the binding text and applicable jurisdiction. | Verified 2026-09-13; re-check living sources before use. |
-| R41 | standard | Defines accessibility success criteria relevant to human-review interfaces. | Verified 2026-09-13; re-check living sources before use. |
-| R42 | official guidance | Supports incident-response integration with organizational risk management. | Verified 2026-09-13; re-check living sources before use. |
-| R43 | research | Primary source for Little’s Law; book sizing equations remain workload-specific approximations. | Verified 2026-09-13; re-check living sources before use. |
-
-# Appendix N — Integrated assurance coverage
-
-The controls below are part of the final architecture and acceptance model. They are no longer review gaps; each has an owning boundary, required evidence, and a deployment validation path.
-
-| **Assurance area** | **Required control/evidence** | **Primary chapters** |
-| --- | --- | --- |
-| Evidence and epistemics | Claim class, source revision, evidence hash, uncertainty, unsupported-claim rejection | 1, 14, 19 |
-| Data quality and freshness | Authoritative source, freshness SLO, duplicate/entity resolution, schema drift, correction path | 1, 14, 20 |
-| Privacy and records | Minimization, purpose, residency, retention, deletion, legal hold, DSAR, provider use | 14, 17, 21 |
-| Multimodal and binary input | Type sniffing, malware scan, OCR provenance, decompression limits, sandbox, active-content stripping | 2, 13, 17 |
-| Human factors | Accessible preview, evidence/rationale split, anti-automation-bias prompts, fatigue and override metrics, appeal | 8, 17, 18 |
-| Model/provider governance | Approved catalog, residency/retention, schema conformance, drift evals, fallback equivalence, exit plan | 3, 19, 21 |
-| Business continuity | RTO/RPO, degraded safe mode, region evacuation, backup restore, pending-approval and unknown-effect recovery | 9, 16, 21 |
-| Supply chain | Lockfile, SBOM, SLSA provenance, signature, trusted builder, vulnerability policy, revocation | 10, 11, 21 |
-| Protocol migration | Version negotiation, conformance tests, dual-read/write where safe, bridge ownership, deprecation deadline | 13, 21 |
-| Quantitative capacity | Arrival rate, fan-out, retry multiplier, p95 service time, utilization target, permits, queue SLO, cost | 20, 22 |
-
-## Data quality, freshness, and correction
-
-Grounding fails when an authorized source is stale, duplicated, incorrectly resolved, or semantically incompatible. Define a data contract with source authority, revision semantics, freshness SLO, schema owner, quality checks, conflict precedence, and a correction path. Entity resolution must preserve uncertainty rather than silently merging records. A retrieval score is not evidence of freshness or truth.
-
-## Privacy, records, and derived-data deletion
-
-Inventory every copy: source object, search index, cache, prompt snapshot, trace, artifact, evaluation dataset, backup, and model-provider retention surface. A deletion workflow must either delete, cryptographically render inaccessible, or record a documented legal-hold exception for each copy. Test propagation. Do not promise that deleting a memory row removes information from a model that was trained or fine-tuned on it; prevent that data use unless the governance basis explicitly allows it.
-
-## Multimodal and binary-content boundary
-
-Treat PDFs, images, office files, archives, audio, and video as hostile containers. Verify media type independently of extension; cap size, expansion ratio, pages, duration, and nested depth; scan malware; strip active content; isolate OCR and parsers; retain the original hash; record OCR/model versions; and label extracted text as untrusted. A screenshot of instructions is still prompt-injection content.
-
-## Human factors, accessibility, and recourse
-
-Approval safety depends on the interface. Present the exact action, target, before/after diff, evidence, uncertainty, reversibility, expiration, and resource version. Separate model rationale from authoritative evidence. Support keyboard and screen-reader navigation, color-independent risk cues, plain language, localization, and adequate review time. Measure approval latency, rejection, override, rubber-stamping, and post-approval incidents. Provide an appeal or correction path for consequential decisions.
-
-## Model and provider change management
-
-Maintain an approved model catalog with owner, intended use, data residency, retention/training terms, model card, context limit, structured-output behavior, tool support, deprecation date, and fallback. A model swap is a release change. Run schema, trajectory, safety, latency, cost, and degraded-mode evaluations on the exact release graph. Prove that a fallback has equivalent authorization and effect boundaries; output similarity alone is insufficient.
-
-## Incident response and business continuity
-
-Predefine severity, on-call ownership, evidence preservation, tenant notification, regulatory escalation, and post-incident evaluation updates. Kill switches should stop admission or a scoped capability without destroying workflow history. During region loss, restore workflow state, authorization references, pending approvals, timers, effect records, and audit evidence consistently. Test RTO/RPO and a safe degraded mode in which users can inspect status and resolve unknown effects while new high-risk mutations remain blocked.
-
-## Software, model, and Skill supply chain
-
-Pin and hash dependencies; generate an SBOM; produce signed build provenance; isolate builders; scan source, binaries, models, prompts, Skill packages, and MCP configuration; verify publishers; and enforce revocation. An SBOM lists components, while SLSA provenance supports trust in how an artifact was produced. Neither proves that the application is safe; evaluation, policy, and runtime controls remain necessary.
-
-## Quantitative capacity and economics
-
-Use measured distributions rather than average-only estimates. Segment by tenant, risk class, model route, tool dependency, and approval path. Model fan-out and retries explicitly, reserve headroom for correlated failures, and enforce admission before downstream saturation. Optimize cost per verified accepted outcome, not tokens per request; a cheap run that fails acceptance or creates reconciliation work is expensive.
-
-## Governance and legal applicability
-
-Create a control-to-obligation matrix per use case, role, geography, sector, and deployment date. NIST AI RMF is voluntary guidance; ISO/IEC 42001 specifies an organizational AI management system; OWASP provides community security guidance; and the EU AI Act imposes phased legal obligations. These references overlap but are not interchangeable. Obtain qualified legal and privacy review for the actual system and jurisdiction.
-
-# Appendix O — Capacity, resilience, and release acceptance
+# Appendix L — Capacity, resilience, and release acceptance
 
 ## Quantitative sizing method
 

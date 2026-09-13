@@ -1,8 +1,8 @@
-# PART IV — PATTERNS
+# PART IV — PATTERNS AND ANTI-PATTERNS
 
-This Part selects the smallest topology that resolves the uncertainty at hand. The chapters progress from bounded reason–act loops through routing, planning, evaluation, human control, durable execution, and a cross-category decision catalog.
+This Part is the working catalogue. It moves from the loop shapes that solve real problems to the architecture shapes that quietly create them, and pairs every failure with a measurable replacement.
 
-# 10 — ReAct: Bounded Reason–Act–Observe Loops
+# 08 — ReAct: Bounded Reason–Act–Observe Loops
 
 > **Evidence note.** ReAct was introduced as a prompting paradigm that interleaves reasoning and action; its reported benchmark results motivate the loop, not an assertion that unrestricted production autonomy is safe. [R01]
 
@@ -51,7 +51,7 @@ Plan capacity in turns per successful outcome, not only requests per second. Tra
 | --- |
 | **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
 
-Evidence anchors: REACT; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: REACT; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.
 
 |  |
 | --- |
@@ -227,12 +227,11 @@ class ReActEngine:
 | What should an observation contain? | A typed, sanitized result or artifact reference with provenance, version, classification, and explicit error semantics. |
 | When should ReAct not be used? | For a known workflow, a single retrieval, a protected transaction, or a task whose acceptance can be computed directly. |
 
+## Transition to Chapter 9
 
-## Transition to Chapter 11
+A bounded reason–act loop handles local uncertainty; Chapter 9 adds routing and handoff when known paths or specialists should own the work.
 
-A bounded reason–act loop handles local uncertainty; Chapter 11 adds routing and handoff when known paths or specialists should own the work.
-
-# 11 — Routing, Triage, and Handoffs
+# 09 — Routing, Triage, and Handoffs
 
 |  |
 | --- |
@@ -278,7 +277,7 @@ Confidence is calibrated on a versioned domain dataset. Below a threshold, the r
 | --- |
 | **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
 
-Evidence anchors: OAI-TOOLS; A2A-101. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: OAI-TOOLS; A2A-101. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Pattern reference — Routing
 
@@ -434,12 +433,11 @@ class DeterministicRouter:
 | How do you make routing debuggable? | Record candidates, eligibility filters, proposed route, confidence, validator decision, fallback, version, latency, and outcome. |
 | When is a static router better? | When classes are stable, risk is high, compliance requires predictability, or a simple rule already separates the work. |
 
+## Transition to Chapter 10
 
-## Transition to Chapter 12
+Routing selects among known capabilities; Chapter 10 addresses tasks whose decomposition must itself be proposed and validated.
 
-Routing selects among known capabilities; Chapter 12 addresses tasks whose decomposition must itself be proposed and validated.
-
-# 12 — Planning and Plan–Execute
+# 10 — Planning and Plan–Execute
 
 > **Evidence note.** Published engineering guidance distinguishes predefined workflows from model-directed agents and recommends adding complexity only when simpler compositions are insufficient. [R27]
 
@@ -608,7 +606,7 @@ A deterministic compiler rejects cycles unless explicitly permitted, missing sch
 | --- |
 | **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
 
-Evidence anchors: TEMPORAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: TEMPORAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Pattern reference — Planning
 
@@ -798,12 +796,11 @@ def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, objec
 | How should replanning handle completed work? | Treat committed effects and accepted artifacts as immutable facts; revise only the affected future horizon and append a new version with rationale and diff. |
 | How do you prevent plausible but endless planning? | External revision, loop, step, cost, time, delegation, and no-progress limits plus deterministic acceptance and terminal transitions. |
 
+## Transition to Chapter 11
 
-## Transition to Chapter 13
+Planning creates an executable structure; Chapter 11 adds independent evaluation and bounded revision without self-certification.
 
-Planning creates an executable structure; Chapter 13 adds independent evaluation and bounded revision without self-certification.
-
-# 13 — Reflection and Evaluator–Optimizer
+# 11 — Reflection and Evaluator–Optimizer
 
 |  |
 | --- |
@@ -842,7 +839,7 @@ Each revision targets structured feedback and carries a diff. The loop stops on 
 | --- |
 | **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
 
-Evidence anchors: MLFLOW-EVAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: MLFLOW-EVAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Pattern reference — Reflection
 
@@ -1004,12 +1001,11 @@ class EvaluatorOptimizer:
 | What should always be checked deterministically? | Schema, policy, authority, evidence presence, effect state, resource versions, arithmetic, and other computable invariants. |
 | When should you not add reflection? | When the first result already meets an executable specification, latency is critical, or critique adds no measured improvement. |
 
+## Transition to Chapter 12
 
-## Transition to Chapter 14
+Automated evaluation can improve candidates; Chapter 12 identifies decisions that require explicit human authority, correction, or recourse.
 
-Automated evaluation can improve candidates; Chapter 14 identifies decisions that require explicit human authority, correction, or recourse.
-
-# 14 — Human-in-the-Loop
+# 12 — Human-in-the-Loop
 
 > **Evidence note.** Human-review interfaces should be tested against WCAG 2.2 accessibility criteria; accessibility conformance does not by itself eliminate automation bias or establish decision fairness. [R41]
 
@@ -1138,7 +1134,7 @@ A decision is valid only when the presented proposal hash equals the current pro
 | --- | --- | --- |
 | Approval integrity | Approve the exact canonical proposal, not a natural-language summary. Revalidate policy, authority, proposal hash, expiry, destination, and resource version immediately before commit. Never transport serialized run state inside exception text or ordinary logs. | OAI-HITL; OWASP-AGENT |
 
-Evidence anchors: OAI-HITL; OWASP-AGENT; WCAG22. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: OAI-HITL; OWASP-AGENT; WCAG22. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Pattern reference — Human-in-the-Loop
 
@@ -1356,12 +1352,11 @@ def verify_approval(
 | Why are both idempotency and optimistic concurrency needed? | Idempotency prevents duplicate logical intent; expected versions prevent an otherwise valid action from overwriting newer state. |
 | What should happen when a mutating tool times out? | Mark the effect unknown, block dependent work and blind retry, reconcile using downstream identifiers or observed state, then conclude committed, absent, partial, or intervention required. |
 
+## Transition to Chapter 13
 
-## Transition to Chapter 15
+Human control introduces waits and resumptions; Chapter 13 makes those waits durable and gives long-running work explicit state and recovery.
 
-Human control introduces waits and resumptions; Chapter 15 makes those waits durable and gives long-running work explicit state and recovery.
-
-# 15 — Long-Running and Durable Agents
+# 13 — Long-Running and Durable Agents
 
 > **Evidence note.** Durable-execution systems preserve workflow progress across failures and long waits; concrete integrations and replay semantics vary by backend. [R02][R36][R38]
 
@@ -1505,7 +1500,7 @@ The Run API persists intent and returns quickly; the durable workflow owns lifec
 | --- | --- | --- |
 | Recovery objective | Durability is incomplete without measured RTO/RPO, compatible worker availability, backup restoration, region failover, and explicit treatment of pending approvals and unknown effects during disaster recovery. | TEMPORAL; CLOUDEVENTS |
 
-Evidence anchors: TEMPORAL; CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: TEMPORAL; CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix K.
 
 |  |
 | --- |
@@ -1693,12 +1688,11 @@ def replay(history: list[WorkflowEvent]) -> RunState:
 
 13 MCP, A2A, and External Integration
 
+## Transition to Chapter 14
 
-## Transition to Chapter 16
+The core patterns are now defined; Chapter 14 compares them across uncertainty, authority, latency, evidence, and operating cost.
 
-The core patterns are now defined; Chapter 16 compares them across uncertainty, authority, latency, evidence, and operating cost.
-
-# 16 — Enterprise Pattern Catalog
+# 14 — Enterprise Pattern Catalog
 
 ## How to use the cards
 
@@ -1946,7 +1940,338 @@ Choose by hidden obligation, uncertainty, and risk—not fashionable terminology
 
 **Trade-offs.** Abstraction may lag novel features; allow negotiated extensions.
 
+## Transition to Chapter 15
 
-## Transition to Chapter 17
+Pattern selection is easier when failure shapes are visible; Chapter 15 recasts recurring anti-patterns as measurable replacement decisions.
 
-Pattern selection is easier when failure shapes are visible; Chapter 17 recasts recurring anti-patterns as measurable replacement decisions.
+# 15 — Enterprise Anti-Pattern Catalog
+
+## Field-guide method
+
+Anti-patterns are recurring system shapes. Diagnose the failed responsibility boundary, not only the symptom. Each card supplies the same replacement sequence.
+
+[[DIAGRAM:anti-before-after|Figure 17-1 — Autonomous monolith versus governed agentic architecture]]
+
+## Reasoning
+
+### AP-01 — Autonomous monolith
+
+**Problem.** A prototype mixes reasoning, state, credentials, tools, retries, approval, completion.
+
+**Anti-Pattern.** One unconstrained agent owns end-to-end control.
+
+**Why It Fails.** Probabilistic behavior becomes the control plane and failures cannot be isolated.
+
+**Recommended Pattern.** Bounded runtime inside durable workflow, policy, tool/effect, acceptance services.
+
+**Architecture.** Monolith → direct tools → “done” versus workflow → semantic nodes → governed effects → acceptance.
+
+**Enterprise Example.** Onboarding restarts and repeats vendor creation.
+
+**Detection Metrics.** Direct protected calls, restart loss, false completion, mixed responsibilities.
+
+**Trade-offs.** Decompose around highest-risk effects; more services add interfaces.
+
+## Context engineering
+
+### AP-02 — Prompt as database
+
+**Problem.** Business state must survive.
+
+**Anti-Pattern.** Chat history or summary is authoritative.
+
+**Why It Fails.** Truncation, drift, concurrency, schema, and audit fail.
+
+**Recommended Pattern.** Canonical typed state plus ContextManifest projection.
+
+**Architecture.** Transcript state versus State Service → snapshot → prompt.
+
+**Enterprise Example.** Renewal forgets legal approval after summarization.
+
+**Detection Metrics.** Compaction loss, summary conflict, recovery mismatch.
+
+**Trade-offs.** Typed state needs schema evolution.
+
+## Security
+
+### AP-03 — Ambient authority
+
+**Problem.** Agents need access.
+
+**Anti-Pattern.** Workers receive reusable broad credentials.
+
+**Why It Fails.** Compromise obtains broad, long-lived authority.
+
+**Recommended Pattern.** Subject+workload identity and narrowed capability leases.
+
+**Architecture.** Broad token versus policy → scoped lease → enforcement.
+
+**Enterprise Example.** Support token can export all customers.
+
+**Detection Metrics.** Scope/age, unused privilege, expansion, cross-tenant attempts.
+
+**Trade-offs.** Fine policy adds design/latency.
+
+## Reliability
+
+### AP-04 — Retry everywhere
+
+**Problem.** Transient failures occur.
+
+**Anti-Pattern.** SDK, gateway, workflow, connector, tool each retry.
+
+**Why It Fails.** Attempts multiply, cost/load spike, mutations duplicate.
+
+**Recommended Pattern.** One retry owner per failure class and shared attempt/deadline budget.
+
+**Architecture.** Nested retries versus classified failure → one schedule → terminal.
+
+**Enterprise Example.** 3×3×2 policies create 18 registry calls.
+
+**Detection Metrics.** Attempts/logical operation, amplification, duplicates, deadline overrun.
+
+**Trade-offs.** Central policy can be conservative.
+
+## Reliability
+
+### AP-05 — Timeout means failure
+
+**Problem.** Response is lost after dispatch.
+
+**Anti-Pattern.** Mark failed and retry immediately.
+
+**Why It Fails.** First call may have committed.
+
+**Recommended Pattern.** Unknown-effect terminal and reconciliation before retry/compensate.
+
+**Architecture.** Timeout→failed→retry versus timeout→unknown→lookup→decide.
+
+**Enterprise Example.** Vendor is created twice.
+
+**Detection Metrics.** Unknown count/age, duplicate keys, post-timeout conflicts.
+
+**Trade-offs.** Unknown may delay completion.
+
+## Governance
+
+### AP-06 — Boolean or conversational approval
+
+**Problem.** Humans approve protected actions.
+
+**Anti-Pattern.** A Boolean/chat message authorizes later current arguments.
+
+**Why It Fails.** Effect, policy, actor, or version can change.
+
+**Recommended Pattern.** Immutable proposal and expiring exact ApprovalGrant.
+
+**Architecture.** approved=true versus proposal hash → grant → revalidate → commit.
+
+**Enterprise Example.** $10k approval reused for $100k.
+
+**Detection Metrics.** Hash mismatch, reuse, expiry, post-approval incident.
+
+**Trade-offs.** Benign changes may require reapproval.
+
+## Observability
+
+### AP-07 — Model says done
+
+**Problem.** Runs need completion.
+
+**Anti-Pattern.** Model assertion sets success.
+
+**Why It Fails.** Missing evidence, approval, effect, or obligation hides as success.
+
+**Recommended Pattern.** Independent executable acceptance over authoritative state.
+
+**Architecture.** Model text→success versus AcceptanceEngine→accepted/blocked/failed/unknown.
+
+**Enterprise Example.** Onboarding says complete with stale sanctions check.
+
+**Detection Metrics.** False completion, reopen rate, missing artifacts/effects.
+
+**Trade-offs.** Rules require domain maintenance.
+
+## Multi-agent collaboration
+
+### AP-08 — Multi-agent chat as workflow
+
+**Problem.** Specialists coordinate.
+
+**Anti-Pattern.** Free-form messages own state, work, deadlines, joins.
+
+**Why It Fails.** Duplicate work, cycles, lost cancellation/artifacts.
+
+**Recommended Pattern.** TaskEnvelope, owner, child tasks, artifacts, deterministic join.
+
+**Architecture.** Chat mesh versus supervisor workflow + task service.
+
+**Enterprise Example.** Finance and legal each expect the other to approve.
+
+**Detection Metrics.** Orphans, conflicts, depth, join age, late effects.
+
+**Trade-offs.** Formal tasks reduce fluidity.
+
+## Context engineering
+
+### AP-09 — Vector store as source of truth
+
+**Problem.** Relevant knowledge is needed.
+
+**Anti-Pattern.** Similarity hit is current authoritative fact.
+
+**Why It Fails.** Stale, unauthorized, poisoned, duplicated chunks drive action.
+
+**Recommended Pattern.** Governed source/snapshot; index is derived locator with ACL/freshness verification.
+
+**Architecture.** Vector hit→action versus source+ACL+snapshot→evidence→decision.
+
+**Enterprise Example.** Old policy chunk applies obsolete limit.
+
+**Detection Metrics.** Freshness, source disagreement, ACL/citation mismatch.
+
+**Trade-offs.** Authoritative lookup may be slower.
+
+## Security
+
+### AP-10 — LLM judge as security gate
+
+**Problem.** Ambiguous content needs review.
+
+**Anti-Pattern.** Model score alone authorizes protected action.
+
+**Why It Fails.** Judge is injectable, nondeterministic, biased, and drifts.
+
+**Recommended Pattern.** Deterministic policy/invariant gate; judge only triages/evidences.
+
+**Architecture.** score>threshold→execute versus policy→optional judge→human/escalation.
+
+**Enterprise Example.** Judge calls excessive payment low risk.
+
+**Detection Metrics.** Repeated-run disagreement, bypass, false negative, override.
+
+**Trade-offs.** Rules cannot express all nuance.
+
+## Reasoning
+
+### AP-11 — Unbounded loops and recursive delegation
+
+**Problem.** Complex work varies.
+
+**Anti-Pattern.** Agents iterate/spawn without global limits.
+
+**Why It Fails.** Runaway cost, cyclic delegation, queue saturation.
+
+**Recommended Pattern.** Global decreasing budgets, acyclic ownership, depth/fan-out/progress limits.
+
+**Architecture.** Recursion versus runtime-governed task graph.
+
+**Enterprise Example.** Research supervisor spawns endless fact-checkers.
+
+**Detection Metrics.** Depth, fan-out, repeated state, no progress, budget exhaustion.
+
+**Trade-offs.** Caps may truncate rare work.
+
+## Tools
+
+### AP-12 — Ungated tool discovery and catalog dumping
+
+**Problem.** Many tools exist.
+
+**Anti-Pattern.** Every discovered tool/schema enters the prompt.
+
+**Why It Fails.** Confusion, token load, malicious descriptions, excessive agency.
+
+**Recommended Pattern.** Registry → eligibility/policy → task shortlist → schema validation.
+
+**Architecture.** Full MCP catalog versus approved tool slice and lease.
+
+**Enterprise Example.** Reporting agent finds admin delete tool.
+
+**Detection Metrics.** Exposed/eligible/used, confusion, overhead, unauthorized discovery.
+
+**Trade-offs.** Narrow list can omit needed tool.
+
+## Memory
+
+### AP-13 — Memory write by default
+
+**Problem.** Personalization is desired.
+
+**Anti-Pattern.** Every interaction/summary becomes durable memory.
+
+**Why It Fails.** Secrets, errors, injections, bias, stale facts persist.
+
+**Recommended Pattern.** Purpose-bound candidate with provenance, verification, scope, TTL, deletion.
+
+**Architecture.** Transcript→memory versus candidate→gate→typed record.
+
+**Enterprise Example.** Malicious email stores fake bank account.
+
+**Detection Metrics.** Sensitive writes, stale retrieval, corrections, memory incidents.
+
+**Trade-offs.** Strict writes reduce convenience.
+
+## Observability
+
+### AP-14 — Telemetry without causal/effect lineage
+
+**Problem.** Teams instrument components.
+
+**Anti-Pattern.** Logs cannot join versions, policy, effects, acceptance, outcome.
+
+**Why It Fails.** Local optimization hides business regression.
+
+**Recommended Pattern.** Causal run graph joining release, context, decisions, effects, outcome/cost.
+
+**Architecture.** Separate dashboards versus correlated graph.
+
+**Enterprise Example.** Lower model latency hides more retries and lower completion.
+
+**Detection Metrics.** Outcome join, missing parents/versions, unattributed cost.
+
+**Trade-offs.** Correlation increases governance burden.
+
+## System architecture
+
+### AP-15 — Model/provider swap as configuration
+
+**Problem.** Teams seek cost/quality changes.
+
+**Anti-Pattern.** Alias changes without behavioral validation.
+
+**Why It Fails.** Tool, schema, refusal, safety, latency, cost behavior shifts.
+
+**Recommended Pattern.** Versioned ChangeBundle with evaluation, security, load, canary, rollback.
+
+**Architecture.** Edit alias versus immutable route policy→replay→approval→canary.
+
+**Enterprise Example.** Cheaper model drops tool args in one language.
+
+**Detection Metrics.** Schema/tool regression, refusal shift, slice drift, fallback.
+
+**Trade-offs.** Validation slows experimentation.
+
+## Operations
+
+### AP-16 — In-place change and test after release
+
+**Problem.** Fast edits are convenient.
+
+**Anti-Pattern.** Prompts/Skills/tools/policy/routes mutate production.
+
+**Why It Fails.** Runs are irreproducible; rollback/attribution fail.
+
+**Recommended Pattern.** Immutable artifacts, ReleaseManifest, pretests, signed promotion, canary, rollback.
+
+**Architecture.** Mutable console versus build→validate→approve→promote→monitor.
+
+**Enterprise Example.** Prompt fix increases leakage and cannot roll back exactly.
+
+**Detection Metrics.** Unversioned runs, out-of-band edits, rollback failure.
+
+**Trade-offs.** Immutability needs good tooling.
+
+## Transition to Chapter 16
+
+After removing unsafe local architectures, Chapter 16 considers when multiple agents add justified specialization rather than accidental complexity.

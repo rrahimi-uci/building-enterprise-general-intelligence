@@ -6,9 +6,9 @@
 
 \clearpage
 
-\BookFrontChapter{Preface to Book v1.0.0}
+\BookFrontChapter{Preface to Book v2.0.0}
 
-Book v1.0.0 is the publication baseline for this guide and the canonical starting point for all future editions. It treats an agentic application as a governed distributed system: models may propose, while deterministic services own authority, state, effects, evidence, acceptance, and release.\par
+Book v2.0.0 is the publication baseline for this guide and the canonical starting point for all future editions. It treats an agentic application as a governed distributed system: models may propose, while deterministic services own authority, state, effects, evidence, acceptance, and release.\par
 
 The narrative follows one dependency chain. Foundations establish the deterministic shell; the reference architecture assigns ownership; the developer platform makes those controls reusable; patterns and anti-patterns guide topology; gateways and security enforce boundaries; observability and evaluation produce evidence; continuous learning converts evidence into governed change; and production operations keep the resulting system reliable and economical.\par
 
@@ -18,7 +18,7 @@ External facts, protocol behavior, framework capabilities, research findings, st
 
 \section{Reproducible edition}
 
-The accompanying Book v1.0.0 development package contains this canonical Markdown, the generated DOCX, source files, cover and diagrams, a reference registry, style tokens, templates, skills, build tools, validation tools, and release evidence. Future agents should modify the canonical Markdown and registries, never hand-format the release DOCX. The build and validation workflow is documented in the package README.\par
+The accompanying Book v2.0.0 development package contains this canonical Markdown, the generated DOCX, source files, cover and diagrams, a reference registry, style tokens, templates, skills, build tools, validation tools, and release evidence. Future agents should modify the canonical Markdown and registries, never hand-format the release DOCX. The build and validation workflow is documented in the package README.\par
 
 \BookFrontChapter{How to use this guide}
 
@@ -34,15 +34,15 @@ This guide is organized as one architecture story rather than a collection of in
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Reader} & \color{white}\bfseries \textbf{Primary path} & \color{white}\bfseries \textbf{Decision supported} \\
 \endhead
-Executive and product leader & Parts II, III, VII, VIII, X, XI & Investment, operating model, risk appetite, platform scope, and outcome governance \\
+Executive and product leader & Parts II, III, VIII and Appendix G & Investment, operating model, risk appetite, platform scope, and outcome governance \\
 \rowcolor{BookLight}
-Enterprise / solution architect & Parts I–VIII, X–XII & Boundaries, contracts, topology, integration, security, and lifecycle \\
-Platform engineer & Parts II, III, VI–XII & Reusable control planes, SDKs, gateways, telemetry, release, and operations \\
+Enterprise / solution architect & Parts I–VIII & Boundaries, contracts, topology, integration, security, and lifecycle \\
+Platform engineer & Parts II, III, V–VIII & Reusable control planes, SDKs, gateways, telemetry, release, and operations \\
 \rowcolor{BookLight}
-Application developer & Parts I, III–VI, IX–X & Agent design, tools, Skills, tests, debugging, and improvement \\
-Security / risk / privacy & Parts VII, VIII, XI and Appendices F, M–O & Threat controls, evidence, approvals, exceptions, and assurance \\
+Application developer & Parts I, III, IV, VII & Agent design, tools, Skills, tests, debugging, and improvement \\
+Security / risk / privacy & Parts VI, VIII and Appendices F, K & Threat controls, evidence, approvals, exceptions, and assurance \\
 \rowcolor{BookLight}
-SRE / operations & Parts IX, X, XII and Appendices B, O & SLOs, incidents, recovery, capacity, and verified-success economics \\
+SRE / operations & Parts VII, VIII and Appendices B, L & SLOs, incidents, recovery, capacity, and verified-success economics \\
 \end{longtable}
 \BookTableEnd
 
@@ -90,9 +90,7 @@ The Markdown manuscript is the semantic source of truth. DOCX, Notion release me
 
 \begin{enumerate}
 
-\item Enterprise Agentic AI Reference Architecture
-
-\item Platform Boundaries, APIs, and Data Models
+\item Enterprise Reference Architecture, Boundaries, and Contracts
 
 \end{enumerate}
 
@@ -100,9 +98,7 @@ The Markdown manuscript is the semantic source of truth. DOCX, Notion release me
 
 \begin{enumerate}
 
-\item Agentic Developer Platform and SDK
-
-\item Developer Experience, Testing, and Delivery Lifecycle
+\item Agentic Developer Platform, SDK, and Delivery Lifecycle
 
 \item Skills as Versioned Capabilities
 
@@ -110,7 +106,7 @@ The Markdown manuscript is the semantic source of truth. DOCX, Notion release me
 
 \end{enumerate}
 
-\section{Part IV — Patterns}
+\section{Part IV — Patterns and Anti-Patterns}
 
 \begin{enumerate}
 
@@ -128,35 +124,21 @@ The Markdown manuscript is the semantic source of truth. DOCX, Notion release me
 
 \item Enterprise Pattern Catalog
 
-\end{enumerate}
-
-\section{Part V — Anti-Patterns}
-
-\begin{enumerate}
-
 \item Enterprise Anti-Pattern Catalog
 
 \end{enumerate}
 
-\section{Part VI — Multi-Agent \& Platform Integration}
+\section{Part V — Multi-Agent Systems \& External Integration}
 
 \begin{enumerate}
 
 \item Supervisor/Worker and Multi-Agent Collaboration
 
-\item MCP, A2A, and External Integration
+\item External Integration: MCP, A2A, and the Model Control Plane
 
 \end{enumerate}
 
-\section{Part VII — LLM Gateway}
-
-\begin{enumerate}
-
-\item LLM Gateway and Model Control Plane
-
-\end{enumerate}
-
-\section{Part VIII — Security \& Guardrails}
+\section{Part VI — Security, Identity \& Guardrails}
 
 \begin{enumerate}
 
@@ -172,35 +154,21 @@ The Markdown manuscript is the semantic source of truth. DOCX, Notion release me
 
 \end{enumerate}
 
-\section{Part IX — Observability \& Evaluation}
+\section{Part VII — Observability, Evaluation \& Continuous Learning}
 
 \begin{enumerate}
 
 \item Observability and Tracing with MLflow
 
-\item Evaluation, Testing, and Debugging with MLflow
+\item Evaluation, Debugging, and Continuous Improvement with MLflow
 
 \end{enumerate}
 
-\section{Part X — Continuous Learning}
-
-\begin{enumerate}
-
-\item Continuous Learning and Improvement Architecture
-
-\end{enumerate}
-
-\section{Part XI — Governance}
+\section{Part VIII — Governance \& Production Operations}
 
 \begin{enumerate}
 
 \item Governance, Risk, and Operating Model
-
-\end{enumerate}
-
-\section{Part XII — Deployment \& Production Operations}
-
-\begin{enumerate}
 
 \item Deployment, Versioning, CI/CD, and Recovery
 
@@ -210,7 +178,7 @@ The Markdown manuscript is the semantic source of truth. DOCX, Notion release me
 
 \section{Appendices}
 
-A. Pattern Selection Decision Tree and Catalog Index B–O. Runbooks, contracts, framework landscape, research, assurance, implementation, grounding, and release acceptance\par
+A. Pattern Selection Decision Tree and Catalog Index B. Failure triage and operator runbooks C. Platform contracts quick reference D. Framework landscape E. Research implications F. Known limits and enforced mitigations G. Enterprise adoption roadmap H. Glossary I. Companion implementation guide J. Coding-agent prompt and acceptance criteria K. References L. Capacity, resilience, and release acceptance\par
 
 \mainmatter
 
@@ -345,7 +313,7 @@ Grounding boundary & Separate model capability from system correctness. A benchm
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: NIST-GAI; REACT. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: NIST-GAI; REACT. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Implementation reference}
 
@@ -592,7 +560,7 @@ Exactly-once wording & The recommendation is effect-level idempotency plus recon
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: CLOUDEVENTS; OUTBOX. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: CLOUDEVENTS; OUTBOX. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Pattern reference — Tool Use}
 
@@ -1065,7 +1033,7 @@ Scope of SDK approval & An SDK approval interruption pauses a call; it does not 
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: OAI-RELEASE; OAI-TOOLS; OAI-RUNSTATE; OAI-HITL. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: OAI-RELEASE; OAI-TOOLS; OAI-RUNSTATE; OAI-HITL. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Implementation reference}
 
@@ -1215,7 +1183,29 @@ The runtime now has a stable boundary; Chapter 4 places it inside the complete e
 
 \BookPartPage{II}{ENTERPRISE REFERENCE ARCHITECTURE}{This Part converts the foundational invariants into an enterprise system of record. It assigns ownership across experience, application, runtime, knowledge, gateway, security, governance, and operations planes, then specifies the APIs and records that let those planes evolve independently.}
 
-\BookChapter{04}{Enterprise Agentic AI Reference Architecture}
+\BookChapter{04}{Enterprise Reference Architecture, Boundaries, and Contracts}
+
+\section{What this chapter delivers}
+
+Translate principles into planes, services, contracts, stores, consistency boundaries, and regional cells.\par
+
+\section{Solution blueprint}
+
+\BookFigureCaption{Figure 20. Enterprise Platform Architecture, APIs, and Data Models.}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\fontsize{7.2}{9}\selectfont
+\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
+\endhead
+Each platform service owns one authoritative record & global control plane to regional execution cell & tenant · queue · partition · cell & one service/cell & Run · Task · Tool · Artifact · Release APIs \\
+\end{longtable}
+\BookTableEnd
 
 \section{Purpose and principles}
 
@@ -1299,12 +1289,6 @@ Learning & Evaluation, dataset, release services & Recommend a candidate & Self-
 
 Centralize identity, policy, gateways, tool/effect contracts, telemetry schemas, evaluation infrastructure, release evidence, and incident controls. Federate domain prompts, accepted outcomes, tools, Skills, knowledge, datasets, and SLOs to accountable owners. Standardize interfaces and evidence—not every framework implementation.\par
 
-\section{Transition to Chapter 5}
-
-The planes are visible; Chapter 5 turns their responsibilities into APIs, records, event envelopes, and trust boundaries.\par
-
-\BookChapter{05}{Platform Boundaries, APIs, and Data Models}
-
 \begin{bookquote}
 
 \textbf{Evidence note.} CloudEvents defines the portable event envelope used here, while the transactional-outbox source supports atomic state/event publication and warns that consumers still require duplicate handling. \BookCitation{R03}\BookCitation{R04}
@@ -1318,28 +1302,6 @@ The design now spans edge APIs, definitions, workflows, workers, model routing, 
 \begin{bookcallout}[Design decision]
 Deploy global definitions and governance into regional execution cells connected through stable provider-neutral contracts.
 \end{bookcallout}
-
-\section{What this chapter delivers}
-
-Translate principles into planes, services, contracts, stores, consistency boundaries, and regional cells.\par
-
-\section{Solution blueprint}
-
-\BookFigureCaption{Figure 20. Enterprise Platform Architecture, APIs, and Data Models.}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
-Each platform service owns one authoritative record & global control plane to regional execution cell & tenant · queue · partition · cell & one service/cell & Run · Task · Tool · Artifact · Release APIs \\
-\end{longtable}
-\BookTableEnd
 
 \section{From boxes to contracts}
 
@@ -1546,7 +1508,7 @@ Event contract & Use a CloudEvents 1.0-compatible envelope for interoperability,
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Implementation reference}
 
@@ -1554,6 +1516,7 @@ Evidence anchors: CLOUDEVENTS. Full URLs, authority, version, and scope appear i
 
 PYTHON · implementation excerpt\par
 
+\needspace{572.0pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 
@@ -1562,19 +1525,16 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-
 class EvidenceRef(BaseModel):
     uri: str
     sha256: str
     source_revision: str
     authorization_decision_id: str
 
-
 class ToolCall(BaseModel):
     tool_id: str
     arguments: dict[str, Any]
     logical_effect_key: str | None = None
-
 
 class AgentDecision(BaseModel):
     disposition: Literal["answer", "needs_input", "invoke_tool", "delegate"]
@@ -1582,7 +1542,6 @@ class AgentDecision(BaseModel):
     tool_call: ToolCall | None = None
     evidence: list[EvidenceRef] = Field(default_factory=list)
     uncertainties: list[str] = Field(default_factory=list)
-
 
 class AgentStepRequest(BaseModel):
     run_id: str
@@ -1594,14 +1553,12 @@ class AgentStepRequest(BaseModel):
     max_turns: int = Field(ge=1, le=20)
     deadline: datetime
 
-
 class AgentStepResult(BaseModel):
     status: Literal["completed", "needs_input", "proposed_action", "failed"]
     decision: AgentDecision | None = None
     output_artifact_ids: tuple[str, ...] = ()
     usage: dict[str, int | float] = Field(default_factory=dict)
     error_code: str | None = None
-
 
 class SkillRequirement(BaseModel):
     capability: str
@@ -1610,7 +1567,6 @@ class SkillRequirement(BaseModel):
     required_data_classes: frozenset[str] = frozenset()
     region: str
 
-
 class PlanNode(BaseModel):
     id: str
     capability: str
@@ -1618,7 +1574,6 @@ class PlanNode(BaseModel):
     maximum_cost_usd: float = Field(ge=0)
     maximum_attempts: int = Field(ge=1, le=10)
     risk_class: int = Field(ge=0, le=4)
-
 
 class CandidatePlan(BaseModel):
     revision: int = Field(ge=1)
@@ -1629,7 +1584,7 @@ class CandidatePlan(BaseModel):
 
 PYTHON · implementation excerpt\par
 
-\needspace{415.6pt}
+\needspace{388.0pt}
 \begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
 from __future__ import annotations
 
@@ -1637,7 +1592,6 @@ from datetime import datetime
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator
-
 
 class CloudEvent(BaseModel):
     """CloudEvents 1.0-compatible application envelope."""
@@ -1661,14 +1615,12 @@ class CloudEvent(BaseModel):
             raise ValueError("source must be a URI-reference")
         return value
 
-
 class OutboxRecord(BaseModel):
     event: CloudEvent
     aggregate_id: str
     aggregate_version: int = Field(ge=0)
     state: Literal["pending", "published", "dead_letter"] = "pending"
     publish_attempts: int = Field(default=0, ge=0)
-
 
 def deduplication_key(event: CloudEvent) -> tuple[str, str]:
     """CloudEvents producers make (source, id) unique for each distinct event."""
@@ -1732,13 +1684,13 @@ How should execution behave during a control-plane outage? & Continue compatible
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 6}
+\section{Transition to Chapter 5}
 
-The reference architecture is now concrete enough to productize; Chapter 6 defines the reusable developer platform and SDK.\par
+The reference architecture is now concrete enough to productize; Chapter 5 defines the reusable developer platform and SDK.\par
 
 \BookPartPage{III}{AGENTIC DEVELOPER PLATFORM \& SDK}{This Part turns the reference architecture into a paved road for delivery teams. It separates reusable platform capabilities from domain logic, defines portable SDK contracts, and shows how Skills and domain packs move through local development, evaluation, promotion, deployment, and support.}
 
-\BookChapter{06}{Agentic Developer Platform and SDK}
+\BookChapter{05}{Agentic Developer Platform, SDK, and Delivery Lifecycle}
 
 \begin{bookquote}
 
@@ -1823,12 +1775,6 @@ platform.release(agent, require=["quality", "security", "cost", "rollback"])
 
 The fluent API is convenience. The compiled contracts, policy decisions, tool/effect evidence, traces, and release manifest are the stable interface.\par
 
-\section{Transition to Chapter 7}
-
-With platform responsibilities separated from application logic, Chapter 7 specifies the developer workflow that makes the paved road usable.\par
-
-\BookChapter{07}{Developer Experience, Testing, and Delivery Lifecycle}
-
 \section{Golden path}
 
 Developer experience should compress setup and diagnosis time while making authority, versions, risk, evidence, and cost visible. A convenient SDK that hides those concerns transfers complexity to production incidents.\par
@@ -1888,11 +1834,11 @@ Use one immutable artifact across environments; bind endpoints, identities, secr
 
 Start from accepted business outcome and walk backward through the causal run graph. Find the first divergent span: input classification, source/freshness, prompt, route, model, tool, arguments, policy, effect, approval, or acceptance. Do not “fix the prompt” until evidence locates the failing responsibility.\par
 
-\section{Transition to Chapter 8}
+\section{Transition to Chapter 6}
 
-The delivery path is established; Chapter 8 packages repeatable behavior as versioned Skills with explicit contracts and lifecycle controls.\par
+The delivery path is established; Chapter 6 packages repeatable behavior as versioned Skills with explicit contracts and lifecycle controls.\par
 
-\BookChapter{08}{Skills as Versioned Capabilities}
+\BookChapter{06}{Skills as Versioned Capabilities}
 
 \begin{bookcallout}[Northstar at this point]
 Teams begin copying prompts and tool wrappers between agents. Results diverge, fixes do not propagate, and no owner can prove which behavior reached production. Northstar introduces a Skill as the unit of reusable capability.
@@ -1968,7 +1914,7 @@ Terminology & Skill is a platform-owned package in this book. It is not an OpenA
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: SLSA; MCP-2026. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: SLSA; MCP-2026. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Implementation reference}
 
@@ -2188,11 +2134,11 @@ When should behavior remain application-specific? & When it encodes one product 
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 9}
+\section{Transition to Chapter 7}
 
-Individual Skills are governable; Chapter 9 composes them into domain packs without dissolving ownership or compatibility boundaries.\par
+Individual Skills are governable; Chapter 7 composes them into domain packs without dissolving ownership or compatibility boundaries.\par
 
-\BookChapter{09}{Skill Packs and Domain Platforms}
+\BookChapter{07}{Skill Packs and Domain Platforms}
 
 \begin{bookcallout}[Northstar at this point]
 Procurement needs a complete domain experience, not isolated Skills. Evidence retrieval, document validation, sanctions screening, policy explanation, and approval preparation must ship as a compatible, evaluated pack.
@@ -2264,7 +2210,7 @@ Distribution security & A Skill Pack is executable supply chain: pin dependencie
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: SLSA; OWASP-CHEAT. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: SLSA; OWASP-CHEAT. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Implementation reference}
 
@@ -2355,13 +2301,13 @@ What is the main pack anti-pattern? & A monolithic prompt-and-tools bundle with 
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 10}
+\section{Transition to Chapter 8}
 
-The platform and capability model are complete; Chapter 10 begins the pattern sequence with the smallest bounded reasoning loop.\par
+The platform and capability model are complete; Chapter 8 begins the pattern sequence with the smallest bounded reasoning loop.\par
 
-\BookPartPage{IV}{PATTERNS}{This Part selects the smallest topology that resolves the uncertainty at hand. The chapters progress from bounded reason–act loops through routing, planning, evaluation, human control, durable execution, and a cross-category decision catalog.}
+\BookPartPage{IV}{PATTERNS AND ANTI-PATTERNS}{This Part is the working catalogue. It moves from the loop shapes that solve real problems to the architecture shapes that quietly create them, and pairs every failure with a measurable replacement.}
 
-\BookChapter{10}{ReAct: Bounded Reason–Act–Observe Loops}
+\BookChapter{08}{ReAct: Bounded Reason–Act–Observe Loops}
 
 \begin{bookquote}
 
@@ -2423,7 +2369,7 @@ A ReAct loop's cost is set by its trajectory, not its prompt. Each observation r
 This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
 \end{bookthreat}
 
-Evidence anchors: REACT; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: REACT; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \begin{bookantipattern}[Common pitfall]
 Unbounded retries disguised as reasoning. When a tool fails and the model is free to try again, the loop can burn its whole budget rediscovering the same error. Return failures as typed data the model can read, cap attempts per tool, and make the cap a run-level budget rather than a per-call one.
@@ -2671,11 +2617,11 @@ When should ReAct not be used? & For a known workflow, a single retrieval, a pro
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 11}
+\section{Transition to Chapter 9}
 
-A bounded reason–act loop handles local uncertainty; Chapter 11 adds routing and handoff when known paths or specialists should own the work.\par
+A bounded reason–act loop handles local uncertainty; Chapter 9 adds routing and handoff when known paths or specialists should own the work.\par
 
-\BookChapter{11}{Routing, Triage, and Handoffs}
+\BookChapter{09}{Routing, Triage, and Handoffs}
 
 \begin{bookcallout}[Northstar at this point]
 Some requests are policy questions, others are document defects, screening disputes, or protected onboarding actions. Northstar needs routing, but it also needs to know when responsibility actually transfers and who owns cancellation, deadlines, and the final response.
@@ -2737,7 +2683,7 @@ Confidence is calibrated on a versioned domain dataset. Below a threshold, the r
 This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
 \end{bookthreat}
 
-Evidence anchors: OAI-TOOLS; A2A-101. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: OAI-TOOLS; A2A-101. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Pattern reference — Routing}
 
@@ -3014,11 +2960,11 @@ When is a static router better? & When classes are stable, risk is high, complia
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 12}
+\section{Transition to Chapter 10}
 
-Routing selects among known capabilities; Chapter 12 addresses tasks whose decomposition must itself be proposed and validated.\par
+Routing selects among known capabilities; Chapter 10 addresses tasks whose decomposition must itself be proposed and validated.\par
 
-\BookChapter{12}{Planning and Plan–Execute}
+\BookChapter{10}{Planning and Plan–Execute}
 
 \begin{bookquote}
 
@@ -3298,7 +3244,7 @@ Separate the plan from its execution. A plan is data: persist it, version it, an
 This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
 \end{bookthreat}
 
-Evidence anchors: TEMPORAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: TEMPORAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Pattern reference — Planning}
 
@@ -3559,11 +3505,11 @@ How do you prevent plausible but endless planning? & External revision, loop, st
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 13}
+\section{Transition to Chapter 11}
 
-Planning creates an executable structure; Chapter 13 adds independent evaluation and bounded revision without self-certification.\par
+Planning creates an executable structure; Chapter 11 adds independent evaluation and bounded revision without self-certification.\par
 
-\BookChapter{13}{Reflection and Evaluator–Optimizer}
+\BookChapter{11}{Reflection and Evaluator–Optimizer}
 
 \begin{bookcallout}[Northstar at this point]
 The first recommendation is coherent but omits a contradictory address and overstates confidence. Northstar adds bounded reflection for revision and an independently defined evaluator for acceptance.
@@ -3611,7 +3557,7 @@ Each revision targets structured feedback and carries a diff. The loop stops on 
 This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
 \end{bookthreat}
 
-Evidence anchors: MLFLOW-EVAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: MLFLOW-EVAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Pattern reference — Reflection}
 
@@ -3894,11 +3840,11 @@ When should you not add reflection? & When the first result already meets an exe
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 14}
+\section{Transition to Chapter 12}
 
-Automated evaluation can improve candidates; Chapter 14 identifies decisions that require explicit human authority, correction, or recourse.\par
+Automated evaluation can improve candidates; Chapter 12 identifies decisions that require explicit human authority, correction, or recourse.\par
 
-\BookChapter{14}{Human-in-the-Loop}
+\BookChapter{12}{Human-in-the-Loop}
 
 \begin{bookquote}
 
@@ -4132,7 +4078,7 @@ Approval integrity & Approve the exact canonical proposal, not a natural-languag
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: OAI-HITL; OWASP-AGENT; WCAG22. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: OAI-HITL; OWASP-AGENT; WCAG22. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Pattern reference — Human-in-the-Loop}
 
@@ -4422,11 +4368,11 @@ What should happen when a mutating tool times out? & Mark the effect unknown, bl
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 15}
+\section{Transition to Chapter 13}
 
-Human control introduces waits and resumptions; Chapter 15 makes those waits durable and gives long-running work explicit state and recovery.\par
+Human control introduces waits and resumptions; Chapter 13 makes those waits durable and gives long-running work explicit state and recovery.\par
 
-\BookChapter{15}{Long-Running and Durable Agents}
+\BookChapter{13}{Long-Running and Durable Agents}
 
 \begin{bookquote}
 
@@ -4674,7 +4620,7 @@ Recovery objective & Durability is incomplete without measured RTO/RPO, compatib
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: TEMPORAL; CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: TEMPORAL; CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \begin{bookantipattern}[Common pitfall]
 Storing conversation history and calling it durable state. Transcripts record what was said, not what was decided or committed. Persist decisions, approvals, and effect receipts as first-class records; a run must be resumable from them even if every message is discarded.
@@ -4934,11 +4880,11 @@ How do you deploy new workflow code safely? & Preserve compatible workers, use e
 
 13 MCP, A2A, and External Integration\par
 
-\section{Transition to Chapter 16}
+\section{Transition to Chapter 14}
 
-The core patterns are now defined; Chapter 16 compares them across uncertainty, authority, latency, evidence, and operating cost.\par
+The core patterns are now defined; Chapter 14 compares them across uncertainty, authority, latency, evidence, and operating cost.\par
 
-\BookChapter{16}{Enterprise Pattern Catalog}
+\BookChapter{14}{Enterprise Pattern Catalog}
 
 \section{How to use the cards}
 
@@ -5186,13 +5132,11 @@ Choose by hidden obligation, uncertainty, and risk—not fashionable terminology
 
 \textbf{Trade-offs.} Abstraction may lag novel features; allow negotiated extensions.\par
 
-\section{Transition to Chapter 17}
+\section{Transition to Chapter 15}
 
-Pattern selection is easier when failure shapes are visible; Chapter 17 recasts recurring anti-patterns as measurable replacement decisions.\par
+Pattern selection is easier when failure shapes are visible; Chapter 15 recasts recurring anti-patterns as measurable replacement decisions.\par
 
-\BookPartPage{V}{ANTI-PATTERNS}{This Part reverses the lens. It exposes recurring architecture shapes that hide authority, state, effects, security, reliability, or operating cost, and pairs each failure with a measurable replacement pattern.}
-
-\BookChapter{17}{Enterprise Anti-Pattern Catalog}
+\BookChapter{15}{Enterprise Anti-Pattern Catalog}
 
 \section{Field-guide method}
 
@@ -5520,13 +5464,13 @@ Anti-patterns are recurring system shapes. Diagnose the failed responsibility bo
 
 \textbf{Trade-offs.} Immutability needs good tooling.\par
 
-\section{Transition to Chapter 18}
+\section{Transition to Chapter 16}
 
-After removing unsafe local architectures, Chapter 18 considers when multiple agents add justified specialization rather than accidental complexity.\par
+After removing unsafe local architectures, Chapter 16 considers when multiple agents add justified specialization rather than accidental complexity.\par
 
-\BookPartPage{VI}{MULTI-AGENT \& PLATFORM INTEGRATION}{This Part expands beyond one runtime. It shows when specialized agents are justified and how MCP, A2A, APIs, events, and shared services can cross platform boundaries without transferring hidden authority or trust.}
+\BookPartPage{V}{MULTI-AGENT SYSTEMS \& EXTERNAL INTEGRATION}{This Part crosses the process boundary. It covers how agents divide work among themselves, how they reach systems and agents they do not own, and how model access itself becomes a governed control plane.}
 
-\BookChapter{18}{Supervisor/Worker and Multi-Agent Collaboration}
+\BookChapter{16}{Supervisor/Worker and Multi-Agent Collaboration}
 
 \begin{bookquote}
 
@@ -5781,7 +5725,7 @@ Collaboration claim & Multi-agent structure does not inherently improve quality.
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: MULTIAGENT; A2A-101. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: MULTIAGENT; A2A-101. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Pattern reference — Supervisor/Worker}
 
@@ -6124,11 +6068,11 @@ What does an A2A or MCP protocol not solve? & Business authorization, peer trust
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 19}
+\section{Transition to Chapter 17}
 
-Multi-agent collaboration inside one platform is only part of the problem; Chapter 19 governs cross-platform tools, agents, APIs, and events.\par
+Multi-agent collaboration inside one platform is only part of the problem; Chapter 17 governs cross-platform tools, agents, APIs, and events.\par
 
-\BookChapter{19}{MCP, A2A, and External Integration}
+\BookChapter{17}{External Integration: MCP, A2A, and the Model Control Plane}
 
 \begin{bookquote}
 
@@ -6384,6 +6328,75 @@ Failed/Expired/InterventionRequired & Terminal or ambiguous remote outcome & App
 
 \end{itemize}
 
+\section{Position and boundaries}
+
+The LLM Gateway is the controlled boundary between enterprise workloads and model providers or self-hosted inference. It normalizes model access and enforces model-specific routing, policy, privacy, economics, observability, and release governance. It does not own business workflow, tool effects, agent delegation, or the external API perimeter.\par
+
+\BookDiagram{assets/diagrams/gateway-position.png}{Figure 20-1 — LLM Gateway position relative to adjacent gateways}{gateway-position}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\fontsize{7.2}{9}\selectfont
+\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Component} & \color{white}\bfseries \textbf{Primary boundary} & \color{white}\bfseries \textbf{Owns} & \color{white}\bfseries \textbf{Does not own} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Component} & \color{white}\bfseries \textbf{Primary boundary} & \color{white}\bfseries \textbf{Owns} & \color{white}\bfseries \textbf{Does not own} \\
+\endhead
+API Gateway & External client → enterprise API & API auth, routing, quota, WAF, protocol termination & Agent semantics or model routing \\
+\rowcolor{BookLight}
+Agent Gateway & Agent/workload → agent platform & Workload identity, task admission, delegation, tenancy, agent audit & Provider inference controls \\
+LLM Gateway & Workload → model/inference & Provider abstraction, model routing, content/data policy, token/cost control & Durable workflow or business acceptance \\
+\rowcolor{BookLight}
+MCP Gateway & Platform → MCP server & Server trust, discovery, tool eligibility, scoped credentials, protocol audit & General model inference \\
+Orchestration layer & Run → tasks/activities & State, deadlines, retries, joins, cancellation, compensation & Provider perimeter or policy truth \\
+\end{longtable}
+\BookTableEnd
+
+\section{Required capabilities}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Capability} & \color{white}\bfseries \textbf{Behavior} & \color{white}\bfseries \textbf{Control} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Capability} & \color{white}\bfseries \textbf{Behavior} & \color{white}\bfseries \textbf{Control} \\
+\endhead
+Provider abstraction & Normalize requests, streaming, errors, usage, capabilities & Preserve provider/model/version and raw evidence references \\
+\rowcolor{BookLight}
+Model routing & Select by task, risk, region, quality, latency, cost, health & Deterministic eligibility before optimization; record reason \\
+Authentication and authorization & Authenticate workload and subject context & Audience, tenant, purpose, approved models \\
+\rowcolor{BookLight}
+Policy enforcement & Enforce use, data, region, model, output, risk rules & External policy decision; never prompt-only policy \\
+PII/secrets protection & Classify, minimize, redact/tokenize, block & Authorized reversible boundary; never log secrets \\
+\rowcolor{BookLight}
+Rate limits and budgets & Tenant/workload/user quotas, tokens, spend, concurrency, deadline & Hierarchical budgets before provider charge \\
+Caching & Reuse only policy-safe, semantically equivalent results & Key tenant, policy, model/version, prompt, context snapshot, safety \\
+\rowcolor{BookLight}
+Retries and fallbacks & Classify transient failures; use approved alternatives & One retry owner and shared deadline/budget \\
+Content filtering & Input/output safety, injection, DLP, schema, evidence checks & Filters are evidence; policy still authorizes actions \\
+\rowcolor{BookLight}
+Model/version governance & Allowlist, aliases, deprecation, eval, canary, rollback & Alias change is a versioned routing release \\
+Logging, tracing, evaluation hooks & Normalized spans, route, usage, policy, cache, scorers & Redaction, evaluator version, scope, uncertainty, override lineage \\
+\end{longtable}
+\BookTableEnd
+
+\section{Policy-first routing}
+
+\BookDiagram{assets/diagrams/model-routing.png}{Figure 20-2 — Policy-first model-routing decision tree}{model-routing}
+
+Filter by tenant, purpose, data class, residency, risk, required capabilities, context length, tool/JSON behavior, and approved version. Only then optimize expected accepted-outcome quality under latency and cost budgets. Health and quota further constrain selection. Fallbacks obey the same invariants; “any available model” is not a safe fallback.\par
+
+Record candidate routes, exclusions/reasons, selected provider/model/version/region, policy digest, budgets, fallback chain, and experiment cohort. Cache keys must include every security and semantic dependency. Never cache a protected decision that depends on current authorization or resource version without preserving that dependency.\par
+
+\section{Gateway metrics and trade-offs}
+
+Measure route distribution and eligibility, task success/quality by route, schema/tool correctness, refusal/safety, p50/p95/p99 latency, queue/retry amplification, cache hits and unsafe-key rejection, tokens/cost per accepted outcome, policy denials, PII/secrets detections, provider error/fallback, alias/version drift, and trace completeness. Centralization adds latency and blast-radius risk; deploy regionally, isolate tenants/risk classes, use bulkheads, and retain platform-owned contracts even when buying a gateway.\par
+
 \section{Grounding, corrections, and evidence boundary}
 
 \needspace{5\baselineskip}
@@ -6403,7 +6416,7 @@ A2A correction & Pin A2A 1.0.1. Normative operations include SendMessage, GetTas
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: MCP-2026; MCP-AUTH; A2A-101. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: MCP-2026; MCP-AUTH; A2A-101. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Implementation reference}
 
@@ -6541,90 +6554,13 @@ How do you version external capabilities? & Pin registry entry, endpoint, protoc
 
 17 Sandboxing, Egress, Data Security, and Governance\par
 
-\section{Transition to Chapter 20}
+\section{Transition to Chapter 18}
 
-External integrations are bounded; Chapter 20 isolates model-provider access and policy in the LLM Gateway control plane.\par
+The gateway controls model access, but not the entire attack surface; Chapter 18 introduces defense in depth across all agentic trust boundaries.\par
 
-\BookPartPage{VII}{LLM GATEWAY}{This Part isolates model-provider concerns behind a control plane for routing, authorization, policy, privacy, budgets, resilience, telemetry, and evaluation hooks. It also distinguishes the LLM Gateway from API, agent, MCP, and workflow layers.}
+\BookPartPage{VI}{SECURITY, IDENTITY \& GUARDRAILS}{This Part applies defense in depth to untrusted content, identity, delegated authority, tools, code, data, memory, multi-agent traffic, MCP servers, and the software supply chain. Each control is tied to a trust boundary, runtime decision, detection signal, and recovery path.}
 
-\BookChapter{20}{LLM Gateway and Model Control Plane}
-
-\section{Position and boundaries}
-
-The LLM Gateway is the controlled boundary between enterprise workloads and model providers or self-hosted inference. It normalizes model access and enforces model-specific routing, policy, privacy, economics, observability, and release governance. It does not own business workflow, tool effects, agent delegation, or the external API perimeter.\par
-
-\BookDiagram{assets/diagrams/gateway-position.png}{Figure 20-1 — LLM Gateway position relative to adjacent gateways}{gateway-position}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Component} & \color{white}\bfseries \textbf{Primary boundary} & \color{white}\bfseries \textbf{Owns} & \color{white}\bfseries \textbf{Does not own} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Component} & \color{white}\bfseries \textbf{Primary boundary} & \color{white}\bfseries \textbf{Owns} & \color{white}\bfseries \textbf{Does not own} \\
-\endhead
-API Gateway & External client → enterprise API & API auth, routing, quota, WAF, protocol termination & Agent semantics or model routing \\
-\rowcolor{BookLight}
-Agent Gateway & Agent/workload → agent platform & Workload identity, task admission, delegation, tenancy, agent audit & Provider inference controls \\
-LLM Gateway & Workload → model/inference & Provider abstraction, model routing, content/data policy, token/cost control & Durable workflow or business acceptance \\
-\rowcolor{BookLight}
-MCP Gateway & Platform → MCP server & Server trust, discovery, tool eligibility, scoped credentials, protocol audit & General model inference \\
-Orchestration layer & Run → tasks/activities & State, deadlines, retries, joins, cancellation, compensation & Provider perimeter or policy truth \\
-\end{longtable}
-\BookTableEnd
-
-\section{Required capabilities}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Capability} & \color{white}\bfseries \textbf{Behavior} & \color{white}\bfseries \textbf{Control} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Capability} & \color{white}\bfseries \textbf{Behavior} & \color{white}\bfseries \textbf{Control} \\
-\endhead
-Provider abstraction & Normalize requests, streaming, errors, usage, capabilities & Preserve provider/model/version and raw evidence references \\
-\rowcolor{BookLight}
-Model routing & Select by task, risk, region, quality, latency, cost, health & Deterministic eligibility before optimization; record reason \\
-Authentication and authorization & Authenticate workload and subject context & Audience, tenant, purpose, approved models \\
-\rowcolor{BookLight}
-Policy enforcement & Enforce use, data, region, model, output, risk rules & External policy decision; never prompt-only policy \\
-PII/secrets protection & Classify, minimize, redact/tokenize, block & Authorized reversible boundary; never log secrets \\
-\rowcolor{BookLight}
-Rate limits and budgets & Tenant/workload/user quotas, tokens, spend, concurrency, deadline & Hierarchical budgets before provider charge \\
-Caching & Reuse only policy-safe, semantically equivalent results & Key tenant, policy, model/version, prompt, context snapshot, safety \\
-\rowcolor{BookLight}
-Retries and fallbacks & Classify transient failures; use approved alternatives & One retry owner and shared deadline/budget \\
-Content filtering & Input/output safety, injection, DLP, schema, evidence checks & Filters are evidence; policy still authorizes actions \\
-\rowcolor{BookLight}
-Model/version governance & Allowlist, aliases, deprecation, eval, canary, rollback & Alias change is a versioned routing release \\
-Logging, tracing, evaluation hooks & Normalized spans, route, usage, policy, cache, scorers & Redaction, evaluator version, scope, uncertainty, override lineage \\
-\end{longtable}
-\BookTableEnd
-
-\section{Policy-first routing}
-
-\BookDiagram{assets/diagrams/model-routing.png}{Figure 20-2 — Policy-first model-routing decision tree}{model-routing}
-
-Filter by tenant, purpose, data class, residency, risk, required capabilities, context length, tool/JSON behavior, and approved version. Only then optimize expected accepted-outcome quality under latency and cost budgets. Health and quota further constrain selection. Fallbacks obey the same invariants; “any available model” is not a safe fallback.\par
-
-Record candidate routes, exclusions/reasons, selected provider/model/version/region, policy digest, budgets, fallback chain, and experiment cohort. Cache keys must include every security and semantic dependency. Never cache a protected decision that depends on current authorization or resource version without preserving that dependency.\par
-
-\section{Gateway metrics and trade-offs}
-
-Measure route distribution and eligibility, task success/quality by route, schema/tool correctness, refusal/safety, p50/p95/p99 latency, queue/retry amplification, cache hits and unsafe-key rejection, tokens/cost per accepted outcome, policy denials, PII/secrets detections, provider error/fallback, alias/version drift, and trace completeness. Centralization adds latency and blast-radius risk; deploy regionally, isolate tenants/risk classes, use bulkheads, and retain platform-owned contracts even when buying a gateway.\par
-
-\section{Transition to Chapter 21}
-
-The gateway controls model access, but not the entire attack surface; Chapter 21 introduces defense in depth across all agentic trust boundaries.\par
-
-\BookPartPage{VIII}{SECURITY \& GUARDRAILS}{This Part applies defense in depth to untrusted content, identity, delegated authority, tools, code, data, memory, multi-agent traffic, MCP servers, and the software supply chain. Each control is tied to a trust boundary, runtime decision, detection signal, and recovery path.}
-
-\BookChapter{21}{Agentic AI Security and Guardrails Architecture}
+\BookChapter{18}{Agentic AI Security and Guardrails Architecture}
 
 \begin{bookquote}
 
@@ -6908,11 +6844,11 @@ Treat every retrieved document, tool result, and page as untrusted input. Inject
 
 Use Detect → Contain → Revoke → Reconcile → Eradicate → Recover → Learn. Containment can pause a tool, MCP server, model route, Skill, memory namespace, tenant, or agent. Revoke credentials, capabilities, approvals, artifacts, signing keys, and trust. Reconcile which effects actually occurred; never infer from the model's final message. Restore a known release and authoritative state, then create privacy-reviewed regression cases.\par
 
-\section{Transition to Chapter 22}
+\section{Transition to Chapter 19}
 
-The threat model is established; Chapter 22 applies it to context, retrieval, memory, and state—the data surfaces most likely to carry hidden instructions.\par
+The threat model is established; Chapter 19 applies it to context, retrieval, memory, and state—the data surfaces most likely to carry hidden instructions.\par
 
-\BookChapter{22}{Context Engineering, RAG, Memory, and State}
+\BookChapter{19}{Context Engineering, RAG, Memory, and State}
 
 \begin{bookcallout}[Northstar at this point]
 As runs grow, prompts become a mixture of chat, workflow state, retrieved documents, summaries, and learned preferences. Northstar separates these domains and records exactly which authorized projection reached each model call.
@@ -7163,7 +7099,7 @@ Privacy lifecycle & Context and memory need purpose limitation, consent or other
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: NIST-GAI; GDPR. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: NIST-GAI; GDPR. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Pattern reference — Memory}
 
@@ -7396,11 +7332,11 @@ How do you delete a fact from an agentic system? & Tombstone and revoke the sour
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 23}
+\section{Transition to Chapter 20}
 
-Context and state are bounded; Chapter 23 determines whose authority may flow through the system and how that authority narrows across hops.\par
+Context and state are bounded; Chapter 20 determines whose authority may flow through the system and how that authority narrows across hops.\par
 
-\BookChapter{23}{Identity, RBAC/ABAC, and Delegated Authorization}
+\BookChapter{20}{Identity, RBAC/ABAC, and Delegated Authorization}
 
 \begin{bookquote}
 
@@ -7647,7 +7583,7 @@ Non-human identity & Workload identity proves the actor; delegation proves whose
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: RFC8693; RFC8707. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: RFC8693; RFC8707. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Implementation reference}
 
@@ -7780,11 +7716,11 @@ Where must authorization occur in retrieval? & Before content reaches the model,
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 24}
+\section{Transition to Chapter 21}
 
-Identity and delegated authority answer who may ask; Chapter 24 proves whether a specific tool effect may execute, commit, retry, or recover.\par
+Identity and delegated authority answer who may ask; Chapter 21 proves whether a specific tool effect may execute, commit, retry, or recover.\par
 
-\BookChapter{24}{Tool Security, Effects, Idempotency, and Approval}
+\BookChapter{21}{Tool Security, Effects, Idempotency, and Approval}
 
 \begin{bookcallout}[Northstar at this point]
 The ERP times out after Northstar requests supplier creation. Retrying might duplicate the supplier; treating the call as failed might cause conflicting remediation. The platform records an unknown effect and reconciles before continuing.
@@ -8216,7 +8152,7 @@ Effect correctness & Idempotency is scoped to one stable logical intent. Reusing
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: OUTBOX; CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: OUTBOX; CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Implementation reference}
 
@@ -8336,11 +8272,11 @@ Why are both idempotency and optimistic concurrency needed? & Idempotency preven
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 25}
+\section{Transition to Chapter 22}
 
-Protected effects are governed; Chapter 25 contains the remaining execution, egress, data, privacy, and supply-chain blast radius.\par
+Protected effects are governed; Chapter 22 contains the remaining execution, egress, data, privacy, and supply-chain blast radius.\par
 
-\BookChapter{25}{Sandboxing, Egress, Data Security, and Governance}
+\BookChapter{22}{Sandboxing, Egress, Data Security, and Governance}
 
 \begin{bookquote}
 
@@ -8582,7 +8518,7 @@ Incident control & Pre-wire kill switches by tenant, agent release, tool, connec
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: OWASP-AGENT; NIST-IR; NIST-RMF; ISO42001; EU-AI-ACT. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: OWASP-AGENT; NIST-IR; NIST-RMF; ISO42001; EU-AI-ACT. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Implementation reference}
 
@@ -8732,13 +8668,13 @@ What makes a useful kill-switch design? & Narrow scopes, emergency-deny preceden
 
 22 Cost, Latency, Capacity, and Reliability Optimization\par
 
-\section{Transition to Chapter 26}
+\section{Transition to Chapter 23}
 
-Security controls now produce events and evidence; Chapter 26 turns those signals into end-to-end traces that operators can reconstruct.\par
+Security controls now produce events and evidence; Chapter 23 turns those signals into end-to-end traces that operators can reconstruct.\par
 
-\BookPartPage{IX}{OBSERVABILITY \& EVALUATION}{This Part establishes the evidence plane. Traces reconstruct trajectories and effects; evaluations measure outcomes, safety, reliability, latency, cost, and human burden; debugging turns those signals into actionable diagnoses.}
+\BookPartPage{VII}{OBSERVABILITY, EVALUATION \& CONTINUOUS LEARNING}{This Part makes behaviour measurable. It covers the trace that explains a run, the evaluation that decides whether a change is an improvement, and the governed loop that turns production evidence back into a better system.}
 
-\BookChapter{26}{Observability and Tracing with MLflow}
+\BookChapter{23}{Observability and Tracing with MLflow}
 
 \begin{bookquote}
 
@@ -8929,7 +8865,7 @@ Telemetry maturity & OTLP and the general span model are mature, but the dedicat
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: OTEL-GENAI; MLFLOW-TRACE. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: OTEL-GENAI; MLFLOW-TRACE. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \begin{bookobservability}[Observability tip]
 Tag every trace with the identifiers your system of record uses — run, tenant, risk class. A trace that cannot be joined to the business record it affected is a performance artifact, not an audit trail.
@@ -9029,11 +8965,11 @@ Why keep audit separate? & Audit has stronger completeness, integrity, access, a
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 27}
+\section{Transition to Chapter 24}
 
-Tracing explains what happened; Chapter 27 determines whether the trajectory and outcome were acceptable and whether a change is safe to ship.\par
+Tracing explains what happened; Chapter 24 determines whether the trajectory and outcome were acceptable and whether a change is safe to ship.\par
 
-\BookChapter{27}{Evaluation, Testing, and Debugging with MLflow}
+\BookChapter{24}{Evaluation, Debugging, and Continuous Improvement with MLflow}
 
 \begin{bookquote}
 
@@ -9217,6 +9153,87 @@ ProductionSample & run/trace, sampling reason/weight, consent/privacy handling, 
 Build the evaluation set from production failures, not from imagined ones. Every incident should end by contributing a case. A suite assembled up front measures what you expected to be hard; a suite grown from incidents measures what actually is.
 \end{bookbestpractice}
 
+\section{Closed-loop capability}
+
+Continuous improvement joins production evidence to versioned change and release. It does not let an agent rewrite its prompt, memory policy, permissions, evaluator, or code and then certify itself.\par
+
+\BookDiagram{assets/diagrams/learning-loop.png}{Figure 28-1 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn}{learning-loop}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Stage} & \color{white}\bfseries \textbf{Work and durable output} & \color{white}\bfseries \textbf{Automation boundary} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Stage} & \color{white}\bfseries \textbf{Work and durable output} & \color{white}\bfseries \textbf{Automation boundary} \\
+\endhead
+Observe & Join traces, context, tools/effects, feedback, corrections, incidents, cost, latency, outcome into ObservationRecord & Capture/redact/sample automatically; approve sensitive purpose/access \\
+\rowcolor{BookLight}
+Measure & Run deterministic invariants and quality, safety, retrieval, tool, trajectory, SLO, economics metrics into EvaluationResult & Approved scorers automate; humans define truth/threshold/calibration \\
+Detect & Rules, anomaly, drift, slice regression, recurring corrections into DetectionEvent & Alert/contain within approved envelope \\
+\rowcolor{BookLight}
+Diagnose & Compare successful/failed traces, first divergence, structural/semantic clusters into causal hypothesis & Tools rank; accountable owner confirms cause/business meaning \\
+Recommend & Smallest candidate, predicted benefit, risk, affected contracts, rollback into ChangeBundle draft & Generate drafts; never self-approve/mutate production \\
+\rowcolor{BookLight}
+Validate & Replay, simulation, unit/contract/security/privacy/adversarial/load/cost/compatibility tests into ValidationReport & CI automates; owners approve datasets, exceptions, residual risk \\
+Approve & Risk class and domain/security/privacy/operations decision into PromotionDecision & Only pre-approved low-risk changes auto-approve \\
+\rowcolor{BookLight}
+Deploy & Immutable build, bindings, shadow/canary, rollback into ReleaseManifest/deployment & Progressive delivery within approved policy \\
+Monitor & Compare canary/production to baseline across quality, safety, reliability, cost, business & Auto-halt/rollback on tested stop condition \\
+\rowcolor{BookLight}
+Learn & Record causal result, curate regressions, update taxonomy/runbook into LearningRecord & Metadata may automate; data/policy/architecture changes require governance \\
+\end{longtable}
+\BookTableEnd
+
+\section{Runtime adaptation versus controlled offline improvement}
+
+\BookDiagram{assets/diagrams/runtime-offline.png}{Figure 28-2 — Runtime adaptation and offline improvement boundary}{runtime-offline}
+
+Runtime adaptation selects only pre-approved routes/fallbacks, reduces optional context, sheds load, stops a loop, asks for input, escalates, or rolls back inside a fixed envelope. It cannot expand permissions, purpose, data access, spend, tools, or model allowlists. Offline improvement creates a new immutable release and may change prompts, context/RAG, memory, tools, skills, model selection, routing, deterministic code, agent topology, workflows, and system architecture after evaluation and approval.\par
+
+\section{Improvement matrix}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\fontsize{7.2}{9}\selectfont
+\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Layer} & \color{white}\bfseries \textbf{Evidence} & \color{white}\bfseries \textbf{Candidate} & \color{white}\bfseries \textbf{Validation / approval} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Layer} & \color{white}\bfseries \textbf{Evidence} & \color{white}\bfseries \textbf{Candidate} & \color{white}\bfseries \textbf{Validation / approval} \\
+\endhead
+Prompts & Omissions, conflicts, unsupported claims & Clarify responsibility, examples, evidence, stop rules & Golden/adversarial replay; behavior/policy review \\
+\rowcolor{BookLight}
+Context/RAG & Recall/precision, stale/poisoned source, injection correlation & ACL/freshness/ranking/dedup/token/source changes & Retrieval/faithfulness/security tests; data-owner approval \\
+Memory & Correction, leakage, stale/poisoned retrieval & Eligibility, purpose, scope, TTL, verification, deletion & Privacy/security/longitudinal replay \\
+\rowcolor{BookLight}
+Tools & Wrong choice/args, timeout/retry/unknown effect & Narrow schema/catalog, preconditions, idempotency/reconcile & Contract/failure/load/security; effect/permission approval \\
+Skills & Version-specific or inconsistent behavior & New immutable Skill/dependencies/examples/acceptance & Skill certification and domain owner \\
+\rowcolor{BookLight}
+Model selection & Quality/cost/latency/refusal/schema drift & Eligibility, threshold, cascade, fallback, context window & Full route evaluation, privacy/residency, canary \\
+Routing & Misroute/escalation/capacity imbalance & Calibrate, deterministic pre-router, fallback/escalation & Shadow/counterfactual; authority/ownership review \\
+\rowcolor{BookLight}
+Deterministic code & Repeated stable low-entropy model decision & Extract rule, lookup, calculation, parser, transform & Unit/property/exception tests and domain approval \\
+Agent topology & Duplicate work, fan-out/handoff, unclear owner & Merge agents, supervisor/task service, specialization change & Simulation, ownership/authority, migration review \\
+\rowcolor{BookLight}
+Workflows & Loops, stuck joins, weak recovery & State, deadline, join, stop, compensation, degraded mode & Replay/concurrency/recovery/RTO-RPO and operations \\
+System architecture & Failure recurs across apps/controls & Platform service, contract, gateway, boundary, policy redesign & Architecture/security/privacy and migration evidence \\
+\end{longtable}
+\BookTableEnd
+
+\section{Evaluation ecosystem and metrics}
+
+OpenTelemetry/OpenInference traces provide portable telemetry. DeepEval and Ragas cover trajectory, component, tool, RAG, faithfulness, and goal metrics. MLflow supports datasets, evaluators, human/programmatic feedback, experiments, and monitoring. Phoenix supports traces, annotations, datasets, prompt experiments, and replay. LangSmith supports offline/online evaluation and production-trace-to-dataset workflows. Normalize all into platform-owned EvaluationResult; no framework score is release authority.\par
+
+Measure task success and deterministic acceptance, correctness, faithfulness, hallucination/unsupported-claim rate, tool-selection precision/recall/F1, argument correctness, retrieval relevance/precision/recall/freshness/evidence coverage, plan quality/adherence, step efficiency, p50/p95/p99 latency by component, tokens, cost per request/accepted outcome, retry amplification, failure/unknown effect, human correction/override/escalation/fatigue, user satisfaction, and business outcome.\par
+
+\section{Regression and safe automation}
+
+Every material failure/correction becomes a candidate case after privacy/security/purpose review. Reduce to smallest reproducible cause, define expected outcome/invariants/trajectory/cost/latency, version dataset/evaluator, and run in CI, staging, shadow, and canary. Automate capture, approved redaction/scoring, anomaly detection, clustering, draft recommendations, tests, sandbox/canary, halt, and rollback within envelope. Require human governance for permission/policy/data/memory purpose/protected effects/model allowlist/topology/architecture/evaluator truth/training data/exceptions/wider promotion. Prohibit expanding authority, disabling controls, editing audit evidence, changing approval requirements, or promoting self-authored behavior.\par
+
 \section{Grounding, corrections, and evidence boundary}
 
 \needspace{5\baselineskip}
@@ -9235,7 +9252,7 @@ Evaluation limit & A passing model judge is probabilistic evidence, not proof. S
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \begin{bookantipattern}[Common pitfall]
 Trusting an LLM judge you have not calibrated against human labels. A judge is a model with its own failure modes and its own drift. Measure its agreement with human raters on a held-out set, re-measure when you change the judge's model, and report the agreement alongside any score it produces.
@@ -9340,102 +9357,13 @@ How do you roll back without breaking active runs? & Stop new assignment, restor
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 28}
+\section{Transition to Chapter 25}
 
-Evaluation supplies comparable evidence; Chapter 28 turns that evidence into a governed learning and improvement lifecycle.\par
+The improvement loop proposes and validates change; Chapter 25 assigns decision rights, risk tiers, approvals, exceptions, and accountability.\par
 
-\BookPartPage{X}{CONTINUOUS LEARNING}{This Part closes the evidence-to-change loop. It separates bounded runtime adaptation from governed offline improvement and defines who may recommend, validate, approve, deploy, monitor, and reverse changes to prompts, models, tools, memory, routing, workflows, and architecture.}
+\BookPartPage{VIII}{GOVERNANCE \& PRODUCTION OPERATIONS}{This Part is about running the system for years rather than shipping it once. It covers the operating model that assigns accountability, the release machinery that makes change reversible, and the economics that decide whether the system survives its own success.}
 
-\BookChapter{28}{Continuous Learning and Improvement Architecture}
-
-\section{Closed-loop capability}
-
-Continuous improvement joins production evidence to versioned change and release. It does not let an agent rewrite its prompt, memory policy, permissions, evaluator, or code and then certify itself.\par
-
-\BookDiagram{assets/diagrams/learning-loop.png}{Figure 28-1 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn}{learning-loop}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Stage} & \color{white}\bfseries \textbf{Work and durable output} & \color{white}\bfseries \textbf{Automation boundary} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Stage} & \color{white}\bfseries \textbf{Work and durable output} & \color{white}\bfseries \textbf{Automation boundary} \\
-\endhead
-Observe & Join traces, context, tools/effects, feedback, corrections, incidents, cost, latency, outcome into ObservationRecord & Capture/redact/sample automatically; approve sensitive purpose/access \\
-\rowcolor{BookLight}
-Measure & Run deterministic invariants and quality, safety, retrieval, tool, trajectory, SLO, economics metrics into EvaluationResult & Approved scorers automate; humans define truth/threshold/calibration \\
-Detect & Rules, anomaly, drift, slice regression, recurring corrections into DetectionEvent & Alert/contain within approved envelope \\
-\rowcolor{BookLight}
-Diagnose & Compare successful/failed traces, first divergence, structural/semantic clusters into causal hypothesis & Tools rank; accountable owner confirms cause/business meaning \\
-Recommend & Smallest candidate, predicted benefit, risk, affected contracts, rollback into ChangeBundle draft & Generate drafts; never self-approve/mutate production \\
-\rowcolor{BookLight}
-Validate & Replay, simulation, unit/contract/security/privacy/adversarial/load/cost/compatibility tests into ValidationReport & CI automates; owners approve datasets, exceptions, residual risk \\
-Approve & Risk class and domain/security/privacy/operations decision into PromotionDecision & Only pre-approved low-risk changes auto-approve \\
-\rowcolor{BookLight}
-Deploy & Immutable build, bindings, shadow/canary, rollback into ReleaseManifest/deployment & Progressive delivery within approved policy \\
-Monitor & Compare canary/production to baseline across quality, safety, reliability, cost, business & Auto-halt/rollback on tested stop condition \\
-\rowcolor{BookLight}
-Learn & Record causal result, curate regressions, update taxonomy/runbook into LearningRecord & Metadata may automate; data/policy/architecture changes require governance \\
-\end{longtable}
-\BookTableEnd
-
-\section{Runtime adaptation versus controlled offline improvement}
-
-\BookDiagram{assets/diagrams/runtime-offline.png}{Figure 28-2 — Runtime adaptation and offline improvement boundary}{runtime-offline}
-
-Runtime adaptation selects only pre-approved routes/fallbacks, reduces optional context, sheds load, stops a loop, asks for input, escalates, or rolls back inside a fixed envelope. It cannot expand permissions, purpose, data access, spend, tools, or model allowlists. Offline improvement creates a new immutable release and may change prompts, context/RAG, memory, tools, skills, model selection, routing, deterministic code, agent topology, workflows, and system architecture after evaluation and approval.\par
-
-\section{Improvement matrix}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Layer} & \color{white}\bfseries \textbf{Evidence} & \color{white}\bfseries \textbf{Candidate} & \color{white}\bfseries \textbf{Validation / approval} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Layer} & \color{white}\bfseries \textbf{Evidence} & \color{white}\bfseries \textbf{Candidate} & \color{white}\bfseries \textbf{Validation / approval} \\
-\endhead
-Prompts & Omissions, conflicts, unsupported claims & Clarify responsibility, examples, evidence, stop rules & Golden/adversarial replay; behavior/policy review \\
-\rowcolor{BookLight}
-Context/RAG & Recall/precision, stale/poisoned source, injection correlation & ACL/freshness/ranking/dedup/token/source changes & Retrieval/faithfulness/security tests; data-owner approval \\
-Memory & Correction, leakage, stale/poisoned retrieval & Eligibility, purpose, scope, TTL, verification, deletion & Privacy/security/longitudinal replay \\
-\rowcolor{BookLight}
-Tools & Wrong choice/args, timeout/retry/unknown effect & Narrow schema/catalog, preconditions, idempotency/reconcile & Contract/failure/load/security; effect/permission approval \\
-Skills & Version-specific or inconsistent behavior & New immutable Skill/dependencies/examples/acceptance & Skill certification and domain owner \\
-\rowcolor{BookLight}
-Model selection & Quality/cost/latency/refusal/schema drift & Eligibility, threshold, cascade, fallback, context window & Full route evaluation, privacy/residency, canary \\
-Routing & Misroute/escalation/capacity imbalance & Calibrate, deterministic pre-router, fallback/escalation & Shadow/counterfactual; authority/ownership review \\
-\rowcolor{BookLight}
-Deterministic code & Repeated stable low-entropy model decision & Extract rule, lookup, calculation, parser, transform & Unit/property/exception tests and domain approval \\
-Agent topology & Duplicate work, fan-out/handoff, unclear owner & Merge agents, supervisor/task service, specialization change & Simulation, ownership/authority, migration review \\
-\rowcolor{BookLight}
-Workflows & Loops, stuck joins, weak recovery & State, deadline, join, stop, compensation, degraded mode & Replay/concurrency/recovery/RTO-RPO and operations \\
-System architecture & Failure recurs across apps/controls & Platform service, contract, gateway, boundary, policy redesign & Architecture/security/privacy and migration evidence \\
-\end{longtable}
-\BookTableEnd
-
-\section{Evaluation ecosystem and metrics}
-
-OpenTelemetry/OpenInference traces provide portable telemetry. DeepEval and Ragas cover trajectory, component, tool, RAG, faithfulness, and goal metrics. MLflow supports datasets, evaluators, human/programmatic feedback, experiments, and monitoring. Phoenix supports traces, annotations, datasets, prompt experiments, and replay. LangSmith supports offline/online evaluation and production-trace-to-dataset workflows. Normalize all into platform-owned EvaluationResult; no framework score is release authority.\par
-
-Measure task success and deterministic acceptance, correctness, faithfulness, hallucination/unsupported-claim rate, tool-selection precision/recall/F1, argument correctness, retrieval relevance/precision/recall/freshness/evidence coverage, plan quality/adherence, step efficiency, p50/p95/p99 latency by component, tokens, cost per request/accepted outcome, retry amplification, failure/unknown effect, human correction/override/escalation/fatigue, user satisfaction, and business outcome.\par
-
-\section{Regression and safe automation}
-
-Every material failure/correction becomes a candidate case after privacy/security/purpose review. Reduce to smallest reproducible cause, define expected outcome/invariants/trajectory/cost/latency, version dataset/evaluator, and run in CI, staging, shadow, and canary. Automate capture, approved redaction/scoring, anomaly detection, clustering, draft recommendations, tests, sandbox/canary, halt, and rollback within envelope. Require human governance for permission/policy/data/memory purpose/protected effects/model allowlist/topology/architecture/evaluator truth/training data/exceptions/wider promotion. Prohibit expanding authority, disabling controls, editing audit evidence, changing approval requirements, or promoting self-authored behavior.\par
-
-\section{Transition to Chapter 29}
-
-The improvement loop proposes and validates change; Chapter 29 assigns decision rights, risk tiers, approvals, exceptions, and accountability.\par
-
-\BookPartPage{XI}{GOVERNANCE}{This Part defines decision rights, risk tiers, evidence requirements, exceptions, accountability, and lifecycle oversight. It connects technical release controls to an operating model rather than treating governance as a review gate at the end.}
-
-\BookChapter{29}{Governance, Risk, and Operating Model}
+\BookChapter{25}{Governance, Risk, and Operating Model}
 
 \begin{bookquote}
 
@@ -9505,13 +9433,11 @@ Principles define non-negotiable outcomes; standards define reusable contracts; 
 
 Operate per run (admission/policy/effects/acceptance), daily/weekly (SLO, quality, safety, cost, incidents, evaluator health), per release (classification, regression, security/privacy, compatibility, canary/rollback), quarterly (portfolio value/risk and platform roadmap), and annually/material change (policy, law, threat, recovery, independent assurance).\par
 
-\section{Transition to Chapter 30}
+\section{Transition to Chapter 26}
 
-Governance defines who may release change; Chapter 30 makes releases immutable, promotable, observable, reversible, and recoverable.\par
+Governance defines who may release change; Chapter 26 makes releases immutable, promotable, observable, reversible, and recoverable.\par
 
-\BookPartPage{XII}{DEPLOYMENT \& PRODUCTION OPERATIONS}{This Part operationalizes the complete architecture. It covers immutable releases, promotion, rollback, disaster recovery, capacity, queueing, cost, latency, reliability, and the economics of verified—not merely generated—outcomes.}
-
-\BookChapter{30}{Deployment, Versioning, CI/CD, and Recovery}
+\BookChapter{26}{Deployment, Versioning, CI/CD, and Recovery}
 
 \begin{bookquote}
 
@@ -9838,7 +9764,7 @@ Supply chain & An SBOM describes components; SLSA provenance describes where and
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: SLSA; CISA-SBOM. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: SLSA; CISA-SBOM. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \section{Implementation reference}
 
@@ -9973,11 +9899,11 @@ Describe safe regional failover during an external write. & Stop admission, fenc
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 31}
+\section{Transition to Chapter 27}
 
-The release lifecycle is controlled; Chapter 31 sizes the system and optimizes cost, latency, capacity, and reliability around verified outcomes.\par
+The release lifecycle is controlled; Chapter 27 sizes the system and optimizes cost, latency, capacity, and reliability around verified outcomes.\par
 
-\BookChapter{31}{Cost, Latency, Capacity, and Reliability Optimization}
+\BookChapter{27}{Cost, Latency, Capacity, and Reliability Optimization}
 
 \begin{bookquote}
 
@@ -10252,7 +10178,7 @@ Sizing method & Size from measured arrival rates and service-time distributions.
 \end{longtable}
 \BookTableEnd
 
-Evidence anchors: QUEUEING; MLFLOW-TRACE. Full URLs, authority, version, and scope appear in Appendix M.\par
+Evidence anchors: QUEUEING; MLFLOW-TRACE. Full URLs, authority, version, and scope appear in Appendix K.\par
 
 \begin{bookbestpractice}[Best practice]
 Measure cost per verified successful outcome, not per token or per request. Tokens are an input; the business pays for completed work. A change that halves token spend while pushing five percent more runs into human review has almost certainly cost money.
@@ -10354,7 +10280,7 @@ Why can the cheapest model be more expensive? & Lower reliability may cause more
 
 The architecture narrative is complete. The appendices provide decision aids, runbooks, contracts, framework evidence, references, maintenance criteria, and production acceptance checks for implementation and future editions.\par
 
-\BookPartPage{REFERENCE}{APPENDICES}{Decision aids, runbooks, contracts, framework landscape, assurance evidence, and release acceptance.}
+\BookPartPage{REFERENCE}{APPENDICES}{The appendices are working reference material: selection aids, runbooks, contracts, and the citation registry that the chapters draw on.}
 
 \clearpage
 
@@ -10739,9 +10665,7 @@ Unknown effect & Mutation whose outcome cannot be proven and must be reconciled.
 \end{longtable}
 \BookTableEnd
 
-\BookAppendix{I}{Companion implementation guide}
-
-\BookFrontChapter{Northstar Agentic Reference Implementation}
+\BookAppendix{I}{Companion Implementation Guide: Northstar Reference}
 
 Companion code for the book \textbf{Building Enterprise Agentic AI Systems}.\par
 
@@ -11234,87 +11158,7 @@ References are numbered by stable registry identifier. Each citation supports on
 
 \end{itemize}
 
-\BookAppendix{L}{Release history and editorial closure}
-
-\section{Book v1.0.0 publication release}
-
-\begin{itemize}
-
-\item Established semantic version 1.0.0 as the canonical publication and future-development baseline.
-
-\item Reviewed all 31 chapters and 15 appendices as one dependency-ordered narrative; added specific Part orientations and chapter-to-chapter transitions.
-
-\item Removed repeated package boilerplate and consolidated maintenance instructions in the development package.
-
-\item Replaced duplicate source lists with a numbered References section and a claim-to-source traceability matrix.
-
-\item Added scoped evidence notes for protocols, frameworks, standards, research, security guidance, governance, accessibility, incident response, and queueing claims.
-
-\item Encoded the visual and structural system in machine-readable configuration, reusable build/validation scripts, templates, and agent Skills.
-
-\end{itemize}
-
-This closure log records the review findings resolved in the final edition. Version assumptions, validation boundaries, and architectural recommendations remain explicit so future upgrades can be assessed without reopening settled design gaps.\par
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Severity} & \color{white}\bfseries \textbf{Finding} & \color{white}\bfseries \textbf{Final implementation} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Severity} & \color{white}\bfseries \textbf{Finding} & \color{white}\bfseries \textbf{Final implementation} \\
-\endhead
-Critical & MCP baseline was stale & Resolved: the obsolete 2025-06-18 baseline was removed. The final edition uses MCP 2026-07-28 with a stateless core, per-request capability negotiation, server/discover, cacheable list results, explicit application handles, and optional Tasks/Skills extensions. \\
-\rowcolor{BookLight}
-High & A2A examples mixed local and normative APIs & Pin A2A 1.0.1; name normative operations separately from Northstar bridge endpoints; treat cancellation as best effort and task visibility as an authorization obligation. \\
-High & OpenAI approval sample was not executable as shown & Register the protected tool, return RunResult instead of throwing serialized state, preserve the SDK interruption, and verify the enterprise proposal hash and resource version at the gateway. \\
-\rowcolor{BookLight}
-High & Approval was represented as a Boolean in companion code & Add ActionProposal and ApprovalGrant contracts bound to tenant, run, tool, arguments, logical effect, policy digest, expiry, and expected resource version. \\
-High & Adapter validation scope was overstated & State explicitly that deterministic modules are executed in CI while OpenAI/MLflow adapters are syntax-checked here and require pinned dependency and endpoint integration tests. \\
-\rowcolor{BookLight}
-High & Delegated authority omitted purpose and spend in code & Make purpose and cost monotonic in CapabilityEnvelope and add boundary tests, including URI prefix ambiguity. \\
-High & Ambiguous connector failures could remain 'executing' & Move every post-dispatch ambiguous exception to unknown; reconcile against the authoritative downstream record before retry or compensation. \\
-\rowcolor{BookLight}
-Medium & Skills terminology could imply a standard & Label Skill and Skill Pack as book-defined platform packaging patterns. Distinguish them from A2A AgentSkill discovery metadata and the optional Skills-over-MCP extension. \\
-Medium & OpenTelemetry maturity was underqualified & Keep OTLP and the trace model, but label GenAI semantic conventions Development and isolate them behind a mapping layer. \\
-\rowcolor{BookLight}
-Medium & MLflow version status needed stronger caveats & Retain the 3.15.2 reproducibility baseline without claiming it is latest; re-verify experimental features and distinguish synchronous evaluation orchestration from an async predict function. \\
-Medium & Governance references were presented too uniformly & Separate voluntary NIST guidance, certifiable ISO management-system requirements, community OWASP guidance, and binding law. Add jurisdiction and legal-review caveats. \\
-\rowcolor{BookLight}
-Medium & Supply-chain assurance was thin & Add dependency locks, SBOM, signed provenance, trusted builders/signers, immutable Skill artifacts, and release attestations; distinguish SBOM contents from SLSA build provenance. \\
-Medium & Operational resilience lacked explicit objectives & Add kill-switch scopes, degraded safe mode, RTO/RPO, region-failover evidence, restoration tests, and recovery of approvals/effects. \\
-\rowcolor{BookLight}
-Medium & Privacy lifecycle needed a rights workflow & Add minimization, purpose limitation, retention, deletion propagation, legal hold, data residency, subject-rights handling, and model-provider data-use controls. \\
-Medium & Human factors were not a first-class safety layer & Add accessible approval UX, automation-bias controls, rationale/evidence separation, preview fidelity, fatigue metrics, and recourse/appeal. \\
-\rowcolor{BookLight}
-Medium & Event interoperability lacked a concrete envelope & Add CloudEvents 1.0-compatible event metadata, source-plus-ID deduplication, outbox ownership, schema versioning, and large-payload indirection. \\
-Medium & Capacity guidance needed an executable sizing method & Add arrival-rate, fan-out, retry-amplification, service-time, utilization, queue, token, and cost equations plus load-test calibration. \\
-\end{longtable}
-\BookTableEnd
-
-\section{Final implementations with implementation impact}
-
-\textbf{\ensuremath{\checkmark}} The OpenAI protected tool is registered; pause/resume returns RunResult; state is not thrown as exception text; approval metadata reaches the gateway.\par
-
-\textbf{\ensuremath{\checkmark}} The MLflow evaluation wrapper is synchronous while still accepting async prediction functions.\par
-
-\textbf{\ensuremath{\checkmark}} Capability delegation narrows purpose and cost and rejects ambiguous URI-prefix matches.\par
-
-\textbf{\ensuremath{\checkmark}} Mutating tools declare idempotency and ambiguous post-dispatch exceptions become unknown.\par
-
-\textbf{\ensuremath{\checkmark}} Added approval, event/outbox, artifact-policy, supply-chain, kill-switch, and recovery-objective modules with deterministic tests.\par
-
-\textbf{\ensuremath{\checkmark}} MCP guidance now targets 2026-07-28; A2A guidance targets 1.0.1; local bridge APIs are not presented as protocol operations.\par
-
-\section{v1.0.0 publication architecture and developer-platform foundation}
-
-\ensuremath{\checkmark} Chapter 17 now contains sixteen category-organized pattern-replacement cards with consistent architecture, example, metric, and trade-off fields.\par
-
-\ensuremath{\checkmark} Chapter 28 now defines the ten-stage continuous-learning architecture, runtime/offline boundary, optimization matrix, automation policy, and regression lifecycle.\par
-
-\BookAppendix{M}{Citation and Claim Traceability Matrix}
+\section{Claim traceability matrix}
 
 This matrix defines exactly what each citation is permitted to support. It prevents a source from being stretched beyond its evidence. Book-authored patterns, metrics, formulas, examples, and architecture recommendations remain design guidance unless a source explicitly covers them.\par
 
@@ -11395,75 +11239,7 @@ R43 & research & Primary source for Little’s Law; book sizing equations remain
 \end{longtable}
 \BookTableEnd
 
-\BookAppendix{N}{Integrated assurance coverage}
-
-The controls below are part of the final architecture and acceptance model. They are no longer review gaps; each has an owning boundary, required evidence, and a deployment validation path.\par
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Assurance area} & \color{white}\bfseries \textbf{Required control/evidence} & \color{white}\bfseries \textbf{Primary chapters} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Assurance area} & \color{white}\bfseries \textbf{Required control/evidence} & \color{white}\bfseries \textbf{Primary chapters} \\
-\endhead
-Evidence and epistemics & Claim class, source revision, evidence hash, uncertainty, unsupported-claim rejection & 1, 14, 19 \\
-\rowcolor{BookLight}
-Data quality and freshness & Authoritative source, freshness SLO, duplicate/entity resolution, schema drift, correction path & 1, 14, 20 \\
-Privacy and records & Minimization, purpose, residency, retention, deletion, legal hold, DSAR, provider use & 14, 17, 21 \\
-\rowcolor{BookLight}
-Multimodal and binary input & Type sniffing, malware scan, OCR provenance, decompression limits, sandbox, active-content stripping & 2, 13, 17 \\
-Human factors & Accessible preview, evidence/rationale split, anti-automation-bias prompts, fatigue and override metrics, appeal & 8, 17, 18 \\
-\rowcolor{BookLight}
-Model/provider governance & Approved catalog, residency/retention, schema conformance, drift evals, fallback equivalence, exit plan & 3, 19, 21 \\
-Business continuity & RTO/RPO, degraded safe mode, region evacuation, backup restore, pending-approval and unknown-effect recovery & 9, 16, 21 \\
-\rowcolor{BookLight}
-Supply chain & Lockfile, SBOM, SLSA provenance, signature, trusted builder, vulnerability policy, revocation & 10, 11, 21 \\
-Protocol migration & Version negotiation, conformance tests, dual-read/write where safe, bridge ownership, deprecation deadline & 13, 21 \\
-\rowcolor{BookLight}
-Quantitative capacity & Arrival rate, fan-out, retry multiplier, p95 service time, utilization target, permits, queue SLO, cost & 20, 22 \\
-\end{longtable}
-\BookTableEnd
-
-\section{Data quality, freshness, and correction}
-
-Grounding fails when an authorized source is stale, duplicated, incorrectly resolved, or semantically incompatible. Define a data contract with source authority, revision semantics, freshness SLO, schema owner, quality checks, conflict precedence, and a correction path. Entity resolution must preserve uncertainty rather than silently merging records. A retrieval score is not evidence of freshness or truth.\par
-
-\section{Privacy, records, and derived-data deletion}
-
-Inventory every copy: source object, search index, cache, prompt snapshot, trace, artifact, evaluation dataset, backup, and model-provider retention surface. A deletion workflow must either delete, cryptographically render inaccessible, or record a documented legal-hold exception for each copy. Test propagation. Do not promise that deleting a memory row removes information from a model that was trained or fine-tuned on it; prevent that data use unless the governance basis explicitly allows it.\par
-
-\section{Multimodal and binary-content boundary}
-
-Treat PDFs, images, office files, archives, audio, and video as hostile containers. Verify media type independently of extension; cap size, expansion ratio, pages, duration, and nested depth; scan malware; strip active content; isolate OCR and parsers; retain the original hash; record OCR/model versions; and label extracted text as untrusted. A screenshot of instructions is still prompt-injection content.\par
-
-\section{Human factors, accessibility, and recourse}
-
-Approval safety depends on the interface. Present the exact action, target, before/after diff, evidence, uncertainty, reversibility, expiration, and resource version. Separate model rationale from authoritative evidence. Support keyboard and screen-reader navigation, color-independent risk cues, plain language, localization, and adequate review time. Measure approval latency, rejection, override, rubber-stamping, and post-approval incidents. Provide an appeal or correction path for consequential decisions.\par
-
-\section{Model and provider change management}
-
-Maintain an approved model catalog with owner, intended use, data residency, retention/training terms, model card, context limit, structured-output behavior, tool support, deprecation date, and fallback. A model swap is a release change. Run schema, trajectory, safety, latency, cost, and degraded-mode evaluations on the exact release graph. Prove that a fallback has equivalent authorization and effect boundaries; output similarity alone is insufficient.\par
-
-\section{Incident response and business continuity}
-
-Predefine severity, on-call ownership, evidence preservation, tenant notification, regulatory escalation, and post-incident evaluation updates. Kill switches should stop admission or a scoped capability without destroying workflow history. During region loss, restore workflow state, authorization references, pending approvals, timers, effect records, and audit evidence consistently. Test RTO/RPO and a safe degraded mode in which users can inspect status and resolve unknown effects while new high-risk mutations remain blocked.\par
-
-\section{Software, model, and Skill supply chain}
-
-Pin and hash dependencies; generate an SBOM; produce signed build provenance; isolate builders; scan source, binaries, models, prompts, Skill packages, and MCP configuration; verify publishers; and enforce revocation. An SBOM lists components, while SLSA provenance supports trust in how an artifact was produced. Neither proves that the application is safe; evaluation, policy, and runtime controls remain necessary.\par
-
-\section{Quantitative capacity and economics}
-
-Use measured distributions rather than average-only estimates. Segment by tenant, risk class, model route, tool dependency, and approval path. Model fan-out and retries explicitly, reserve headroom for correlated failures, and enforce admission before downstream saturation. Optimize cost per verified accepted outcome, not tokens per request; a cheap run that fails acceptance or creates reconciliation work is expensive.\par
-
-\section{Governance and legal applicability}
-
-Create a control-to-obligation matrix per use case, role, geography, sector, and deployment date. NIST AI RMF is voluntary guidance; ISO/IEC 42001 specifies an organizational AI management system; OWASP provides community security guidance; and the EU AI Act imposes phased legal obligations. These references overlap but are not interchangeable. Obtain qualified legal and privacy review for the actual system and jurisdiction.\par
-
-\BookAppendix{O}{Capacity, resilience, and release acceptance}
+\BookAppendix{L}{Capacity, resilience, and release acceptance}
 
 \section{Quantitative sizing method}
 

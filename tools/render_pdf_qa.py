@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--root',default=str(Path(__file__).resolve().parents[1])); args=ap.parse_args(); root=Path(args.root).resolve()
-    docx=root/'dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.docx'; out=root/'qa/render'; out.mkdir(parents=True,exist_ok=True)
+    docx=root/'dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.docx'; out=root/'qa/render'; out.mkdir(parents=True,exist_ok=True)
     if not shutil.which('soffice'): raise SystemExit('LibreOffice soffice is required for PDF QA')
     pdf=out/(docx.stem+'.pdf');
     if pdf.exists(): pdf.unlink()

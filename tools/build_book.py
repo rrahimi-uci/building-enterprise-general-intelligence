@@ -257,7 +257,7 @@ def build(root:Path,out:Path,template_only=False):
         add_paragraph(doc,'Normal paragraph with **bold**, *italic*, `inline code`, [R01], and a [link](https://example.com).',cfg)
         add_table(doc,[['Column A','Column B'],['Value','Value']],cfg); add_code(doc,'python','def example():\n    return True',cfg)
     else:
-        cover=root/'assets/cover/cover-v1.0.0.png'
+        cover=root/'assets/cover/cover-v2.0.0.png'
         if not cover.exists(): subprocess.run([sys.executable,str(root/'tools/generate_cover.py'),'--root',str(root)],check=True)
         md=(root/cfg['source']['canonical_markdown']).read_text(encoding='utf-8')
         after_part=False; title_seen=False; blocks=0
@@ -286,7 +286,7 @@ def build(root:Path,out:Path,template_only=False):
                 style='Book Evidence' if b[1].startswith('**Evidence note.') else 'Book Callout'; p=add_paragraph(doc,b[1],cfg,style); p.paragraph_format.left_indent=Inches(.22); p.paragraph_format.right_indent=Inches(.12); p.paragraph_format.space_before=Pt(5); p.paragraph_format.space_after=Pt(7); continue
             if kind=='para':
                 txt=b[1]
-                if txt.startswith('Book v1.0.0') or txt=='**'+cfg['book']['author']+'**': p=add_paragraph(doc,txt,cfg,'Subtitle',WD_ALIGN_PARAGRAPH.CENTER)
+                if txt.startswith('Book v2.0.0') or txt=='**'+cfg['book']['author']+'**': p=add_paragraph(doc,txt,cfg,'Subtitle',WD_ALIGN_PARAGRAPH.CENTER)
                 elif txt.startswith('A structured enterprise reference') and title_seen: p=add_paragraph(doc,txt,cfg,'Normal',WD_ALIGN_PARAGRAPH.CENTER)
                 else:
                     style='Book Reference' if txt.startswith('* **[R') else 'Normal'; p=add_paragraph(doc,txt,cfg,style)
@@ -300,4 +300,4 @@ def build(root:Path,out:Path,template_only=False):
     print(json.dumps(report,indent=2)); return report
 
 if __name__=='__main__':
-    ap=argparse.ArgumentParser(); ap.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[1]); ap.add_argument('--output',type=Path); ap.add_argument('--template-only',action='store_true'); a=ap.parse_args(); root=a.root.resolve(); default=root/('templates/book-style-template.docx' if a.template_only else 'dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.docx'); build(root,(a.output or default).resolve(),a.template_only)
+    ap=argparse.ArgumentParser(); ap.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[1]); ap.add_argument('--output',type=Path); ap.add_argument('--template-only',action='store_true'); a=ap.parse_args(); root=a.root.resolve(); default=root/('templates/book-style-template.docx' if a.template_only else 'dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.docx'); build(root,(a.output or default).resolve(),a.template_only)

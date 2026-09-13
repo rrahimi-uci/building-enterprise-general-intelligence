@@ -1,4 +1,4 @@
-# XeLaTeX Publication Project — Book v1.0.0
+# XeLaTeX Publication Project — Book v2.0.0
 
 This directory is the maintainable LaTeX representation of *Enterprise Agentic AI Architecture & Developer Platform Guide* by **Reza Rahimi, PhD**.
 
@@ -14,7 +14,7 @@ make pdf          # validates the LaTeX source first, then compiles
 The script prefers `latexmk -xelatex` and otherwise runs XeLaTeX three times to resolve the table of contents, bookmarks, references, and page count. The output is copied to:
 
 ```text
-dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0-LaTeX.pdf
+dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0-LaTeX.pdf
 ```
 
 ### Container build
@@ -22,7 +22,7 @@ dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0-LaTeX.pd
 ```bash
 docker build -f Dockerfile.latex -t enterprise-agentic-ai-book .
 docker create --name book-build enterprise-agentic-ai-book
-docker cp book-build:/book/dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0-LaTeX.pdf .
+docker cp book-build:/book/dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0-LaTeX.pdf .
 docker rm book-build
 ```
 
@@ -30,11 +30,11 @@ A GitHub Actions workflow is also provided at `.github/workflows/latex.yml`.
 
 ## Project map
 
-- `Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.tex` — publication entry point.
+- `Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.tex` — publication entry point.
 - `bookstyle.sty` — page geometry, embedded fonts, palette, headings, Part/chapter pages, tables, code, callouts, figures, headers, footers, links, and PDF metadata.
 - `content/book-content.tex` — generated semantic content. Do **not** hand-edit.
 - `fonts/` — bundled Liberation Sans and Liberation Mono files plus license.
-- `reference/DOCX-layout-reference.pdf` — the approved 213-page cross-format visual baseline, generated from DOCX. It is clearly a reference and is not represented as a XeLaTeX compilation.
+- `reference/DOCX-layout-reference-v1.0.0.pdf` — the v1.0.0 cross-format visual baseline, rendered from DOCX. Kept for comparison; v2.0.0 changed the topology, so it no longer matches the current page count. Regenerate with `make qa-pdf` where LibreOffice is available.
 - `compile.sh` — deterministic local build entry point.
 
 ## Regeneration
@@ -101,7 +101,7 @@ There are two PDFs in this project and they must never be confused:
 
 | File | What it is |
 |---|---|
-| `latex/reference/DOCX-layout-reference.pdf` | The approved 213-page **cross-format visual baseline, rendered from DOCX**. Tracked in git. Not a XeLaTeX build, and must never be renamed as one. |
+| `latex/reference/DOCX-layout-reference-v1.0.0.pdf` | The **v1.0.0 cross-format visual baseline, rendered from DOCX**. Tracked in git. Never a XeLaTeX build, and must never be renamed as one. v2.0.0 changed the topology, so it is a historical comparison point, not a current gate. |
 | `dist/…-LaTeX.pdf` | The genuine **XeLaTeX compilation**. Gitignored and regenerated on demand by `make pdf`, `Dockerfile.latex`, or CI. |
 
 The XeLaTeX edition compiles cleanly with zero errors and zero undefined

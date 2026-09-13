@@ -43,7 +43,7 @@ def files(root):
             yield p
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument('--root',default=str(Path(__file__).resolve().parents[1])); ap.add_argument('--output'); args=ap.parse_args(); root=Path(args.root).resolve(); out=Path(args.output).resolve() if args.output else root.parent/'Enterprise-Agentic-AI-Book-v1.0.0-Complete-Package-with-LaTeX.zip'
+    ap=argparse.ArgumentParser(); ap.add_argument('--root',default=str(Path(__file__).resolve().parents[1])); ap.add_argument('--output'); args=ap.parse_args(); root=Path(args.root).resolve(); out=Path(args.output).resolve() if args.output else root.parent/'Enterprise-Agentic-AI-Book-v2.0.0-Complete-Package-with-LaTeX.zip'
     for name in ('RELEASE-MANIFEST.json','CHECKSUMS.sha256'):
         p=root/name
         if p.exists(): p.unlink()

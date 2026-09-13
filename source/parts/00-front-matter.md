@@ -2,15 +2,15 @@
 
 # Enterprise Agentic AI Architecture & Developer Platform Guide
 
-Book v1.0.0 · Publication Release · September 2026
+Book v2.0.0 · Publication Release · September 2026
 
 **Reza Rahimi, PhD**
 
 A structured enterprise reference for executives, architects, platform teams, security leaders, SREs, and senior engineers.
 
-# Preface to Book v1.0.0
+# Preface to Book v2.0.0
 
-Book v1.0.0 is the publication baseline for this guide and the canonical starting point for all future editions. It treats an agentic application as a governed distributed system: models may propose, while deterministic services own authority, state, effects, evidence, acceptance, and release.
+Book v2.0.0 is the publication baseline for this guide and the canonical starting point for all future editions. It treats an agentic application as a governed distributed system: models may propose, while deterministic services own authority, state, effects, evidence, acceptance, and release.
 
 The narrative follows one dependency chain. Foundations establish the deterministic shell; the reference architecture assigns ownership; the developer platform makes those controls reusable; patterns and anti-patterns guide topology; gateways and security enforce boundaries; observability and evaluation produce evidence; continuous learning converts evidence into governed change; and production operations keep the resulting system reliable and economical.
 
@@ -20,7 +20,7 @@ External facts, protocol behavior, framework capabilities, research findings, st
 
 ## Reproducible edition
 
-The accompanying Book v1.0.0 development package contains this canonical Markdown, the generated DOCX, source files, cover and diagrams, a reference registry, style tokens, templates, skills, build tools, validation tools, and release evidence. Future agents should modify the canonical Markdown and registries, never hand-format the release DOCX. The build and validation workflow is documented in the package README.
+The accompanying Book v2.0.0 development package contains this canonical Markdown, the generated DOCX, source files, cover and diagrams, a reference registry, style tokens, templates, skills, build tools, validation tools, and release evidence. Future agents should modify the canonical Markdown and registries, never hand-format the release DOCX. The build and validation workflow is documented in the package README.
 
 # How to use this guide
 
@@ -28,12 +28,12 @@ This guide is organized as one architecture story rather than a collection of in
 
 | **Reader** | **Primary path** | **Decision supported** |
 | --- | --- | --- |
-| Executive and product leader | Parts II, III, VII, VIII, X, XI | Investment, operating model, risk appetite, platform scope, and outcome governance |
-| Enterprise / solution architect | Parts I–VIII, X–XII | Boundaries, contracts, topology, integration, security, and lifecycle |
-| Platform engineer | Parts II, III, VI–XII | Reusable control planes, SDKs, gateways, telemetry, release, and operations |
-| Application developer | Parts I, III–VI, IX–X | Agent design, tools, Skills, tests, debugging, and improvement |
-| Security / risk / privacy | Parts VII, VIII, XI and Appendices F, M–O | Threat controls, evidence, approvals, exceptions, and assurance |
-| SRE / operations | Parts IX, X, XII and Appendices B, O | SLOs, incidents, recovery, capacity, and verified-success economics |
+| Executive and product leader | Parts II, III, VIII and Appendix G | Investment, operating model, risk appetite, platform scope, and outcome governance |
+| Enterprise / solution architect | Parts I–VIII | Boundaries, contracts, topology, integration, security, and lifecycle |
+| Platform engineer | Parts II, III, V–VIII | Reusable control planes, SDKs, gateways, telemetry, release, and operations |
+| Application developer | Parts I, III, IV, VII | Agent design, tools, Skills, tests, debugging, and improvement |
+| Security / risk / privacy | Parts VI, VIII and Appendices F, K | Threat controls, evidence, approvals, exceptions, and assurance |
+| SRE / operations | Parts VII, VIII and Appendices B, L | SLOs, incidents, recovery, capacity, and verified-success economics |
 
 ## Architecture at a glance
 
@@ -55,50 +55,67 @@ The Markdown manuscript is the semantic source of truth. DOCX, Notion release me
 # Hierarchical Table of Contents
 
 ## Part I — Foundations
+
 01. From an LLM Call to a Production System
 02. Tools, Structured Outputs, and the Deterministic Shell
 03. Agent Runtime and Framework Abstraction
+
 ## Part II — Enterprise Reference Architecture
-04. Enterprise Agentic AI Reference Architecture
-05. Platform Boundaries, APIs, and Data Models
+
+04. Enterprise Reference Architecture, Boundaries, and Contracts
+
 ## Part III — Agentic Developer Platform & SDK
-06. Agentic Developer Platform and SDK
-07. Developer Experience, Testing, and Delivery Lifecycle
-08. Skills as Versioned Capabilities
-09. Skill Packs and Domain Platforms
-## Part IV — Patterns
-10. ReAct: Bounded Reason–Act–Observe Loops
-11. Routing, Triage, and Handoffs
-12. Planning and Plan–Execute
-13. Reflection and Evaluator–Optimizer
-14. Human-in-the-Loop
-15. Long-Running and Durable Agents
-16. Enterprise Pattern Catalog
-## Part V — Anti-Patterns
-17. Enterprise Anti-Pattern Catalog
-## Part VI — Multi-Agent & Platform Integration
-18. Supervisor/Worker and Multi-Agent Collaboration
-19. MCP, A2A, and External Integration
-## Part VII — LLM Gateway
-20. LLM Gateway and Model Control Plane
-## Part VIII — Security & Guardrails
-21. Agentic AI Security and Guardrails Architecture
-22. Context Engineering, RAG, Memory, and State
-23. Identity, RBAC/ABAC, and Delegated Authorization
-24. Tool Security, Effects, Idempotency, and Approval
-25. Sandboxing, Egress, Data Security, and Governance
-## Part IX — Observability & Evaluation
-26. Observability and Tracing with MLflow
-27. Evaluation, Testing, and Debugging with MLflow
-## Part X — Continuous Learning
-28. Continuous Learning and Improvement Architecture
-## Part XI — Governance
-29. Governance, Risk, and Operating Model
-## Part XII — Deployment & Production Operations
-30. Deployment, Versioning, CI/CD, and Recovery
-31. Cost, Latency, Capacity, and Reliability Optimization
+
+05. Agentic Developer Platform, SDK, and Delivery Lifecycle
+06. Skills as Versioned Capabilities
+07. Skill Packs and Domain Platforms
+
+## Part IV — Patterns and Anti-Patterns
+
+08. ReAct: Bounded Reason–Act–Observe Loops
+09. Routing, Triage, and Handoffs
+10. Planning and Plan–Execute
+11. Reflection and Evaluator–Optimizer
+12. Human-in-the-Loop
+13. Long-Running and Durable Agents
+14. Enterprise Pattern Catalog
+15. Enterprise Anti-Pattern Catalog
+
+## Part V — Multi-Agent Systems & External Integration
+
+16. Supervisor/Worker and Multi-Agent Collaboration
+17. External Integration: MCP, A2A, and the Model Control Plane
+
+## Part VI — Security, Identity & Guardrails
+
+18. Agentic AI Security and Guardrails Architecture
+19. Context Engineering, RAG, Memory, and State
+20. Identity, RBAC/ABAC, and Delegated Authorization
+21. Tool Security, Effects, Idempotency, and Approval
+22. Sandboxing, Egress, Data Security, and Governance
+
+## Part VII — Observability, Evaluation & Continuous Learning
+
+23. Observability and Tracing with MLflow
+24. Evaluation, Debugging, and Continuous Improvement with MLflow
+
+## Part VIII — Governance & Production Operations
+
+25. Governance, Risk, and Operating Model
+26. Deployment, Versioning, CI/CD, and Recovery
+27. Cost, Latency, Capacity, and Reliability Optimization
 
 ## Appendices
 
 A. Pattern Selection Decision Tree and Catalog Index
-B–O. Runbooks, contracts, framework landscape, research, assurance, implementation, grounding, and release acceptance
+B. Failure triage and operator runbooks
+C. Platform contracts quick reference
+D. Framework landscape
+E. Research implications
+F. Known limits and enforced mitigations
+G. Enterprise adoption roadmap
+H. Glossary
+I. Companion implementation guide
+J. Coding-agent prompt and acceptance criteria
+K. References
+L. Capacity, resilience, and release acceptance

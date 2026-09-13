@@ -1,4 +1,4 @@
-# Book Design System — v1.0.0
+# Book Design System — v2.0.0
 
 This document is the visual and editorial contract for every representation of the book. `config/book.json`, `config/style-tokens.json`, and `tools/build_book.py` are the executable counterparts.
 

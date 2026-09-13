@@ -2,7 +2,25 @@
 
 All notable changes follow semantic versioning and are recorded here.
 
-## [Unreleased]
+## [2.0.0] — 2026-09-13
+
+### Topology: 12 Parts / 31 chapters / 15 appendices → 8 / 27 / 12
+
+- Dissolved the four Parts that held a single thin chapter each. Part V (anti-patterns) joins Part IV as *Patterns and Anti-Patterns*; Part VII (LLM Gateway) joins integration; Part X (continuous learning) joins observability and evaluation; Part XI (governance) joins production operations. A full-page navy divider for a 471-word chapter was structure the content did not earn.
+- Merged four chapter pairs where one member was too thin to stand alone: 04+05 → *Enterprise Reference Architecture, Boundaries, and Contracts*; 06+07 → *Agentic Developer Platform, SDK, and Delivery Lifecycle*; 19+20 → *External Integration: MCP, A2A, and the Model Control Plane*; 27+28 → *Evaluation, Debugging, and Continuous Improvement with MLflow*. Chapter sizes now range 1,064–3,393 words instead of 471–3,393.
+- All 27 chapter-to-chapter transitions are preserved and retargeted. Only the four inner transitions of merged pairs were dropped, because they pointed at a chapter the reader is now already inside.
+- Cut Appendix L (release history) and Appendix N (assurance coverage): both recorded build process rather than reader-facing material. Folded the former Appendix M (claim traceability matrix) into Appendix K as a section, next to the entries it scopes — the 23 chapter references to "Appendix M" now point at Appendix K, which actually contains the matrix.
+- Refilled Appendix I. It was a seven-word stub followed by a stray H1 that broke the appendix's own heading hierarchy; the Northstar reference-implementation content is now the appendix body where it belonged.
+- Rebuilt the table of contents and the reader map from the real structure rather than maintaining them by hand.
+- Every cross-reference remapped: 62 chapter references, 12 Part references, 37 appendix references.
+
+### Build and validation
+
+- Version bumped to 2.0.0 across metadata, artifact filenames, page furniture, and PDF metadata. The v1.0.0 cross-format baseline PDF is retained and relabelled `DOCX-layout-reference-v1.0.0.pdf`; it is no longer asserted against the current page count, because the topology deliberately changed.
+- The LaTeX validator now derives the expected table count from the manuscript instead of asserting a magic 260. The check exists to prove every Markdown table reached the PDF; a fixed number only proved the book had not changed.
+- Tightened the stale-release-label guard, which matched the real `v2.0.0` string against the legacy `v2.0` pattern.
+- 232 pages, down from 244, with 0 errors and 0 undefined references.
+- Removed `qa/render/` — 20 page images and a contact sheet rendered from the v1.0.0 pagination. They document a layout the book no longer has. Regenerate with `make qa-pdf` on a machine with LibreOffice before cutting the v2.0.0 release.
 
 ### Callout taxonomy and a DOCX accessibility fix
 

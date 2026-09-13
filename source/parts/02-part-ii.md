@@ -2,7 +2,19 @@
 
 This Part converts the foundational invariants into an enterprise system of record. It assigns ownership across experience, application, runtime, knowledge, gateway, security, governance, and operations planes, then specifies the APIs and records that let those planes evolve independently.
 
-# 04 — Enterprise Agentic AI Reference Architecture
+# 04 — Enterprise Reference Architecture, Boundaries, and Contracts
+
+## What this chapter delivers
+
+Translate principles into planes, services, contracts, stores, consistency boundaries, and regional cells.
+
+## Solution blueprint
+
+Figure 20. Enterprise Platform Architecture, APIs, and Data Models.
+
+| **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
+| --- | --- | --- | --- | --- |
+| Each platform service owns one authoritative record | global control plane to regional execution cell | tenant · queue · partition · cell | one service/cell | Run · Task · Tool · Artifact · Release APIs |
 
 ## Purpose and principles
 
@@ -49,13 +61,6 @@ The enterprise architecture places probabilistic reasoning inside explicit exper
 
 Centralize identity, policy, gateways, tool/effect contracts, telemetry schemas, evaluation infrastructure, release evidence, and incident controls. Federate domain prompts, accepted outcomes, tools, Skills, knowledge, datasets, and SLOs to accountable owners. Standardize interfaces and evidence—not every framework implementation.
 
-
-## Transition to Chapter 5
-
-The planes are visible; Chapter 5 turns their responsibilities into APIs, records, event envelopes, and trust boundaries.
-
-# 05 — Platform Boundaries, APIs, and Data Models
-
 > **Evidence note.** CloudEvents defines the portable event envelope used here, while the transactional-outbox source supports atomic state/event publication and warns that consumers still require duplicate handling. [R03][R04]
 
 |  |
@@ -65,19 +70,6 @@ The planes are visible; Chapter 5 turns their responsibilities into APIs, record
 |  |
 | --- |
 | **DESIGN DECISION**  Deploy global definitions and governance into regional execution cells connected through stable provider-neutral contracts. |
-
-## What this chapter delivers
-
-Translate principles into planes, services, contracts, stores, consistency boundaries, and regional cells.
-
-## Solution blueprint
-
-
-Figure 20. Enterprise Platform Architecture, APIs, and Data Models.
-
-| **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
-| --- | --- | --- | --- | --- |
-| Each platform service owns one authoritative record | global control plane to regional execution cell | tenant · queue · partition · cell | one service/cell | Run · Task · Tool · Artifact · Release APIs |
 
 ## From boxes to contracts
 
@@ -215,10 +207,9 @@ A vector database is an index, not the source of truth; an agent transcript is n
 | --- | --- | --- |
 | Event contract | Use a CloudEvents 1.0-compatible envelope for interoperability, but keep domain semantics and delivery guarantees in versioned event contracts. Source plus ID supports deduplication; large or sensitive artifacts should be referenced rather than embedded. | CLOUDEVENTS |
 
-Evidence anchors: CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Implementation reference
-
 
 ### Core platform data contracts
 
@@ -232,19 +223,16 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-
 class EvidenceRef(BaseModel):
     uri: str
     sha256: str
     source_revision: str
     authorization_decision_id: str
 
-
 class ToolCall(BaseModel):
     tool_id: str
     arguments: dict[str, Any]
     logical_effect_key: str | None = None
-
 
 class AgentDecision(BaseModel):
     disposition: Literal["answer", "needs_input", "invoke_tool", "delegate"]
@@ -252,7 +240,6 @@ class AgentDecision(BaseModel):
     tool_call: ToolCall | None = None
     evidence: list[EvidenceRef] = Field(default_factory=list)
     uncertainties: list[str] = Field(default_factory=list)
-
 
 class AgentStepRequest(BaseModel):
     run_id: str
@@ -264,14 +251,12 @@ class AgentStepRequest(BaseModel):
     max_turns: int = Field(ge=1, le=20)
     deadline: datetime
 
-
 class AgentStepResult(BaseModel):
     status: Literal["completed", "needs_input", "proposed_action", "failed"]
     decision: AgentDecision | None = None
     output_artifact_ids: tuple[str, ...] = ()
     usage: dict[str, int | float] = Field(default_factory=dict)
     error_code: str | None = None
-
 
 class SkillRequirement(BaseModel):
     capability: str
@@ -280,7 +265,6 @@ class SkillRequirement(BaseModel):
     required_data_classes: frozenset[str] = frozenset()
     region: str
 
-
 class PlanNode(BaseModel):
     id: str
     capability: str
@@ -288,7 +272,6 @@ class PlanNode(BaseModel):
     maximum_cost_usd: float = Field(ge=0)
     maximum_attempts: int = Field(ge=1, le=10)
     risk_class: int = Field(ge=0, le=4)
-
 
 class CandidatePlan(BaseModel):
     revision: int = Field(ge=1)
@@ -306,7 +289,6 @@ from datetime import datetime
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator
-
 
 class CloudEvent(BaseModel):
     """CloudEvents 1.0-compatible application envelope."""
@@ -330,14 +312,12 @@ class CloudEvent(BaseModel):
             raise ValueError("source must be a URI-reference")
         return value
 
-
 class OutboxRecord(BaseModel):
     event: CloudEvent
     aggregate_id: str
     aggregate_version: int = Field(ge=0)
     state: Literal["pending", "published", "dead_letter"] = "pending"
     publish_attempts: int = Field(default=0, ge=0)
-
 
 def deduplication_key(event: CloudEvent) -> tuple[str, str]:
     """CloudEvents producers make (source, id) unique for each distinct event."""
@@ -378,7 +358,6 @@ def deduplication_key(event: CloudEvent) -> tuple[str, str]:
 | Why use cell-based deployment? | Additive scale, tenant placement, residency, bounded blast radius, independent canaries, and predictable stateful-service limits. |
 | How should execution behave during a control-plane outage? | Continue compatible in-flight work on pinned last-known-good bundles, apply local denies and kill switches, and restrict high-risk admission when freshness cannot be established. |
 
+## Transition to Chapter 5
 
-## Transition to Chapter 6
-
-The reference architecture is now concrete enough to productize; Chapter 6 defines the reusable developer platform and SDK.
+The reference architecture is now concrete enough to productize; Chapter 5 defines the reusable developer platform and SDK.

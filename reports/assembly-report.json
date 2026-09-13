@@ -10,17 +10,13 @@
     "source/parts/06-part-vi.md",
     "source/parts/07-part-vii.md",
     "source/parts/08-part-viii.md",
-    "source/parts/09-part-ix.md",
-    "source/parts/10-part-x.md",
-    "source/parts/11-part-xi.md",
-    "source/parts/12-part-xii.md",
-    "source/parts/13-appendices.md"
+    "source/parts/09-appendices.md"
   ],
-  "bytes": 506660,
-  "sha256": "773bf4084014e3a8ace85d230b39bf41d7c9a898deac572d4c1f69b010bf347b",
-  "parts": 12,
-  "chapters": 31,
-  "appendices": 15,
+  "bytes": 492416,
+  "sha256": "c17683af943c7720ffff9b33c93a8659672bd3a00a4162c947edfe20550b2f20",
+  "parts": 8,
+  "chapters": 27,
+  "appendices": 12,
   "citation_occurrences": 94,
   "expanded_examples": 1,
   "cited_reference_ids": [

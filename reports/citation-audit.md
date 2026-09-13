@@ -1,4 +1,4 @@
-# Citation Audit — Book v1.0.0
+# Citation Audit — Book v2.0.0
 
 **Result:** PASS
 **References:** 43

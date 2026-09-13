@@ -2,8 +2,9 @@
 """Assemble the canonical Markdown book from ordered part files.
 
 Canonical editable sources live in source/parts. This assembler also renders
-Appendix K and Appendix M from config/references.json so citation metadata has
-one machine-readable source of truth, and expands [[EXAMPLE:id]] markers from
+Appendix K -- the reference list and the claim traceability matrix it scopes --
+from config/references.json so citation metadata has one machine-readable source
+of truth, and expands [[EXAMPLE:id]] markers from
 config/examples.json so every code listing in the book is the exact text of a
 file that CI executes.
 """
@@ -48,17 +49,18 @@ def render_reference_sections(text: str, references: list[dict]) -> str:
     for r in references:
         if r["id"] not in seen:
             ref_lines.append(f"* **[{r['id']}]** {r['author_or_organization']} ({r['year']}). *{r['title']}*. {r['publication_or_version']}. [Source]({r['url']}). Accessed 13 September 2026. **Supports:** {r['supports']}")
-    text = replace_between(text, "# Appendix K — References", "# Appendix L —", "\n".join(ref_lines))
-
-    trace_lines = [
-        "# Appendix M — Citation and Claim Traceability Matrix", "",
+    # v2.0.0 folds the former Appendix M into Appendix K. The matrix only ever
+    # made sense next to the entries it scopes, and splitting them meant a reader
+    # checking a citation had to hold two appendix letters in their head.
+    ref_lines += [
+        "## Claim traceability matrix", "",
         "This matrix defines exactly what each citation is permitted to support. It prevents a source from being stretched beyond its evidence. Book-authored patterns, metrics, formulas, examples, and architecture recommendations remain design guidance unless a source explicitly covers them.", "",
         "| ID | Source class | Permitted claim scope | Verification note |", "|---|---|---|---|",
     ]
     for r in references:
         scope = str(r["supports"]).replace("|", "\\|")
-        trace_lines.append(f"| {r['id']} | {r['type']} | {scope} | Verified {r['verification']['checked_on']}; re-check living sources before use. |")
-    text = replace_between(text, "# Appendix M — Citation and Claim Traceability Matrix", "# Appendix N —", "\n".join(trace_lines))
+        ref_lines.append(f"| {r['id']} | {r['type']} | {scope} | Verified {r['verification']['checked_on']}; re-check living sources before use. |")
+    text = replace_between(text, "# Appendix K — References", "# Appendix L —", "\n".join(ref_lines))
     return text
 
 
@@ -114,9 +116,9 @@ def main() -> int:
     parts = sorted(parts_dir.glob("*.md"))
     if not parts:
         raise SystemExit(f"No Markdown sources found in {parts_dir}")
-    expected_prefixes = ["00-"] + [f"{i:02d}-" for i in range(1, 14)]
-    if len(parts) != 14 or any(not p.name.startswith(prefix) for p, prefix in zip(parts, expected_prefixes)):
-        raise SystemExit("Expected ordered files 00-* through 13-*; update this guard intentionally when book topology changes.")
+    expected_prefixes = ["00-"] + [f"{i:02d}-" for i in range(1, 10)]
+    if len(parts) != 10 or any(not p.name.startswith(prefix) for p, prefix in zip(parts, expected_prefixes)):
+        raise SystemExit("Expected ordered files 00-* through 09-*; update this guard intentionally when book topology changes.")
 
     manuscript = "\n\n".join(p.read_text(encoding="utf-8").strip() for p in parts) + "\n"
     refs_doc = json.loads((root / "config" / "references.json").read_text(encoding="utf-8"))
@@ -125,7 +127,7 @@ def main() -> int:
     manuscript, example_count = expand_examples(manuscript, root)
 
     canonical = root / "book" / "manuscript.md"
-    distribution = root / "dist" / "Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.md"
+    distribution = root / "dist" / "Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.md"
     canonical.parent.mkdir(parents=True, exist_ok=True)
     distribution.parent.mkdir(parents=True, exist_ok=True)
     canonical.write_text(manuscript, encoding="utf-8", newline="\n")

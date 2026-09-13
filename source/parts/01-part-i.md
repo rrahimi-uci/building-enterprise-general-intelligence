@@ -78,7 +78,7 @@ An enterprise agent must translate an ambiguous goal into actions across systems
 | --- | --- | --- |
 | Grounding boundary | Separate model capability from system correctness. A benchmark or demo does not establish authorization, durability, privacy, or business acceptance. Every material output should carry evidence references and uncertainty. | NIST-GAI; REACT |
 
-Evidence anchors: NIST-GAI; REACT. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: NIST-GAI; REACT. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Implementation reference
 
@@ -161,7 +161,6 @@ class AgentStepResult(BaseModel):
 | How would you choose an autonomy level for a new use case? | Start with measurable value and risk; decompose autonomy; grant the minimum tools, data, time, spend, delegation, and effect authority needed. |
 | Which records must remain authoritative outside the model and prompt? | Run and workflow state, identity, policy decisions, budgets, approvals, business records, effect receipts, release versions, and audit evidence. |
 | What would you require before calling an agent production-ready? | Evaluated outcomes and trajectories, bounded limits, delegated authorization, idempotent effects, recovery paths, observability, audit, release pinning, and operational controls. |
-
 
 ## Transition to Chapter 2
 
@@ -254,7 +253,7 @@ Scale tool work by workload and risk class, not with one global queue. Read-only
 | --- | --- | --- |
 | Exactly-once wording | The recommendation is effect-level idempotency plus reconciliation under at-least-once delivery—not an end-to-end exactly-once guarantee. Timeout after dispatch is unknown until proved otherwise. | CLOUDEVENTS; OUTBOX |
 
-Evidence anchors: CLOUDEVENTS; OUTBOX. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: CLOUDEVENTS; OUTBOX. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Pattern reference — Tool Use
 
@@ -401,7 +400,6 @@ class ToolGateway:
 | Why is structured model output necessary but insufficient? | It reduces parsing ambiguity but does not prove truth, authorization, freshness, business validity, idempotency, or safety. |
 | Where should completion be decided? | In an acceptance engine or workflow guard using required artifacts, effect states, policy obligations, and domain invariants—not from a model’s “done” message. |
 | What is the trade-off of a stronger deterministic shell? | More contracts and platform complexity, but improved safety, replayability, testing, provider portability, incident recovery, and auditability. |
-
 
 ## Transition to Chapter 3
 
@@ -603,7 +601,7 @@ Adopt the SDK only after proving that tools cannot bypass gateways, every invoca
 | Pause/resume boundary | RunState is the SDK pause/resume object. Custom context serialization is conservative; rebuild live gateways and secrets rather than serializing them blindly. Independently restored states must not resume concurrently against one session history. | OAI-RUNSTATE |
 | Scope of SDK approval | An SDK approval interruption pauses a call; it does not by itself prove enterprise authorization, separation of duties, resource freshness, or idempotent effect semantics. The gateway must verify those controls. | OAI-HITL |
 
-Evidence anchors: OAI-RELEASE; OAI-TOOLS; OAI-RUNSTATE; OAI-HITL. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: OAI-RELEASE; OAI-TOOLS; OAI-RUNSTATE; OAI-HITL. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Implementation reference
 
@@ -723,7 +721,6 @@ async def approve_in_memory_and_resume(result:Any,interruption_index:int=0):
 08 Human-in-the-Loop
 
 09 Long-Running and Durable Agents
-
 
 ## Transition to Chapter 4
 

@@ -1,11 +1,11 @@
 {
-  "output": "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.docx",
-  "sha256": "cb8403946f3a01acba5722e64d7b82997027df669a84543f6d9ff912132df852",
-  "bytes": 6532445,
+  "output": "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.docx",
+  "sha256": "4e3aafb1c4ec051bbff2d136204acec4d6fa6f269c9c0c182cad7e42590d5eb6",
+  "bytes": 6479503,
   "template_only": false,
-  "paragraphs": 2690,
-  "tables": 338,
+  "paragraphs": 2620,
+  "tables": 332,
   "inline_images": 19,
-  "chapter_headings": 31,
-  "appendix_headings": 15
+  "chapter_headings": 27,
+  "appendix_headings": 12
 }

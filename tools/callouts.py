@@ -52,6 +52,9 @@ DEFAULT = ("bookcallout", "EAF3FB", "Architecture note")
 # adoption per chapter.
 GUIDANCE_MARKERS = [k[0] for k in CALLOUT_KINDS[:9]]
 
+# Every environment the LaTeX renderer can emit, for the validators to count.
+ENVIRONMENTS = sorted({k[1] for k in CALLOUT_KINDS} | {DEFAULT[0]})
+
 _MARKER_PREFIX = re.compile(r"^\s*\*\*[A-Za-z0-9 &/,'-]+\*\*[\s:.—-]*")
 
 

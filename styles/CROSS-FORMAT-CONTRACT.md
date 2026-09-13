@@ -1,6 +1,6 @@
 # Cross-Format Synchronization Contract
 
-Book v1.0.0 exists as synchronized Markdown, DOCX, XeLaTeX, and Notion representations. They share content and structure but may use representation-specific affordances.
+Book v2.0.0 exists as synchronized Markdown, DOCX, XeLaTeX, and Notion representations. They share content and structure but may use representation-specific affordances.
 
 ## Authority order
 

@@ -23,7 +23,7 @@ def font_path(bold=False,root:Path|None=None):
 def generate(root:Path)->Path:
     cfg=json.loads((root/'config/book.json').read_text())['book']
     src=root/'assets/cover/agent-architecture-art-source.jpeg'
-    out=root/'assets/cover/cover-v1.0.0.png'
+    out=root/'assets/cover/cover-v2.0.0.png'
     art=Image.open(src).convert('RGB'); W,H=2550,3300
     scale=max(W/art.width,H/art.height)
     art=art.resize((int(art.width*scale),int(art.height*scale)),Image.Resampling.LANCZOS)

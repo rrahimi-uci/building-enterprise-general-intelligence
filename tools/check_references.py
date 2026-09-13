@@ -41,7 +41,8 @@ def main() -> int:
     if unknown: errors.append(f"Unknown citation markers: {unknown}")
     if uncited: errors.append(f"Uncited registry entries: {uncited}")
     if manuscript.count("# Appendix K — References")!=1: errors.append("Appendix K References heading must occur exactly once")
-    if manuscript.count("# Appendix M — Citation and Claim Traceability Matrix")!=1: errors.append("Appendix M traceability heading must occur exactly once")
+    # v2.0.0 folded the traceability matrix into Appendix K, next to the entries it scopes.
+    if manuscript.count("## Claim traceability matrix")!=1: errors.append("Claim traceability matrix must occur exactly once inside Appendix K")
     online=[]
     if args.online:
         for r in refs:
@@ -63,7 +64,7 @@ def main() -> int:
     }
     (root/"reports").mkdir(exist_ok=True)
     (root/"reports/citation-verification.json").write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
-    lines=["# Citation Audit — Book v1.0.0","",f"**Result:** {'PASS' if not errors else 'FAIL'}",f"**References:** {len(refs)}",f"**Citation occurrences:** {len(markers)}",f"**Verified:** 2026-09-13","","All sources were checked against their recorded claim scope. The audit validates attribution, not the book's independently authored architecture recommendations.","","## Source-by-source status", "", "| ID | Status | Method | Caveat |", "|---|---|---|---|"]
+    lines=["# Citation Audit — Book v2.0.0","",f"**Result:** {'PASS' if not errors else 'FAIL'}",f"**References:** {len(refs)}",f"**Citation occurrences:** {len(markers)}",f"**Verified:** 2026-09-13","","All sources were checked against their recorded claim scope. The audit validates attribution, not the book's independently authored architecture recommendations.","","## Source-by-source status", "", "| ID | Status | Method | Caveat |", "|---|---|---|---|"]
     for r in refs:
         rec=verification.get(r["id"],{})
         caveat=str(rec.get("caveat","")).replace("|","\\|")

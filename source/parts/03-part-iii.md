@@ -2,7 +2,7 @@
 
 This Part turns the reference architecture into a paved road for delivery teams. It separates reusable platform capabilities from domain logic, defines portable SDK contracts, and shows how Skills and domain packs move through local development, evaluation, promotion, deployment, and support.
 
-# 06 — Agentic Developer Platform and SDK
+# 05 — Agentic Developer Platform, SDK, and Delivery Lifecycle
 
 > **Evidence note.** The portability layer is informed by current public agent abstractions from OpenAI, Microsoft, and Google; capability parity is not assumed and must be proven by adapter conformance tests. [R29][R31][R32]
 
@@ -64,13 +64,6 @@ platform.release(agent, require=["quality", "security", "cost", "rollback"])
 
 The fluent API is convenience. The compiled contracts, policy decisions, tool/effect evidence, traces, and release manifest are the stable interface.
 
-
-## Transition to Chapter 7
-
-With platform responsibilities separated from application logic, Chapter 7 specifies the developer workflow that makes the paved road usable.
-
-# 07 — Developer Experience, Testing, and Delivery Lifecycle
-
 ## Golden path
 
 Developer experience should compress setup and diagnosis time while making authority, versions, risk, evidence, and cost visible. A convenient SDK that hides those concerns transfers complexity to production incidents.
@@ -115,12 +108,11 @@ Use one immutable artifact across environments; bind endpoints, identities, secr
 
 Start from accepted business outcome and walk backward through the causal run graph. Find the first divergent span: input classification, source/freshness, prompt, route, model, tool, arguments, policy, effect, approval, or acceptance. Do not “fix the prompt” until evidence locates the failing responsibility.
 
+## Transition to Chapter 6
 
-## Transition to Chapter 8
+The delivery path is established; Chapter 6 packages repeatable behavior as versioned Skills with explicit contracts and lifecycle controls.
 
-The delivery path is established; Chapter 8 packages repeatable behavior as versioned Skills with explicit contracts and lifecycle controls.
-
-# 08 — Skills as Versioned Capabilities
+# 06 — Skills as Versioned Capabilities
 
 |  |
 | --- |
@@ -169,7 +161,7 @@ The registry scales as a read-heavy control-plane service with immutable manifes
 | --- | --- | --- |
 | Terminology | Skill is a platform-owned package in this book. It is not an OpenAI Agents SDK primitive and is not identical to A2A AgentSkill metadata or Skills over MCP. Interchange requires an explicit adapter and loss analysis. | A2A-101; MCP-2026 |
 
-Evidence anchors: SLSA; MCP-2026. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: SLSA; MCP-2026. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Implementation reference
 
@@ -367,12 +359,11 @@ class SkillRegistry:
 | How should a Skill be tested? | Contract, deterministic unit, simulation, trajectory, threat, data-boundary, failure-injection, regression, load, and canary tests. |
 | When should behavior remain application-specific? | When it encodes one product transaction, unstable workflow, private data boundary, or ownership model that should not be generalized. |
 
+## Transition to Chapter 7
 
-## Transition to Chapter 9
+Individual Skills are governable; Chapter 7 composes them into domain packs without dissolving ownership or compatibility boundaries.
 
-Individual Skills are governable; Chapter 9 composes them into domain packs without dissolving ownership or compatibility boundaries.
-
-# 09 — Skill Packs and Domain Platforms
+# 07 — Skill Packs and Domain Platforms
 
 |  |
 | --- |
@@ -418,7 +409,7 @@ Packs move through signed releases and aliases such as development, staging, and
 | --- | --- | --- |
 | Distribution security | A Skill Pack is executable supply chain: pin dependencies and tool schemas, produce SBOM and signed provenance, scan transitive content and binaries, enforce publisher trust, and support revocation without rewriting historical runs. | SLSA; OWASP-CHEAT |
 
-Evidence anchors: SLSA; OWASP-CHEAT. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: SLSA; OWASP-CHEAT. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Implementation reference
 
@@ -486,7 +477,6 @@ class SkillPackManifest(BaseModel):
 | How should packs be promoted? | As signed immutable releases through dev, staging, shadow, canary, production, and rollback aliases backed by evaluation evidence. |
 | What is the main pack anti-pattern? | A monolithic prompt-and-tools bundle with hidden dependencies, no owner, no tests, and no independent versioning. |
 
+## Transition to Chapter 8
 
-## Transition to Chapter 10
-
-The platform and capability model are complete; Chapter 10 begins the pattern sequence with the smallest bounded reasoning loop.
+The platform and capability model are complete; Chapter 8 begins the pattern sequence with the smallest bounded reasoning loop.

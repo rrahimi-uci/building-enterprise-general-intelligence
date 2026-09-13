@@ -1,18 +1,18 @@
-# LaTeX Validation — Book v1.0.0
+# LaTeX Validation — Book v2.0.0
 
 **Source result:** PASS
 **Target engine:** XeLaTeX
 
 ## Structural measurements
 
-- **narrative_parts:** `12`
+- **narrative_parts:** `8`
 - **appendix_dividers:** `1`
-- **chapters:** `31`
-- **appendices:** `15`
+- **chapters:** `27`
+- **appendices:** `12`
 - **diagrams:** `18`
 - **code_blocks:** `43`
-- **longtables:** `193`
-- **callout_tables:** `67`
+- **longtables:** `191`
+- **callout_tables:** `89`
 - **citation_occurrences:** `94`
 - **bundled_fonts:** `8`
 
