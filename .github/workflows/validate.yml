@@ -2,8 +2,15 @@ name: Validate book
 on:
   push:
   pull_request:
+  workflow_dispatch:
+
 permissions:
   contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,21 +20,24 @@ jobs:
         with:
           python-version: '3.13'
           cache: pip
-      - name: Install Arial-metric-compatible fonts
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq fonts-liberation
-          # tools/generate_cover.py and tools/generate_diagram.py look for Arial at
-          # fixed msttcorefonts paths, or Liberation Sans at the Fedora-style
-          # /usr/share/fonts/liberation-sans/. Ubuntu ships it under
-          # truetype/liberation/, so expose it where the tools expect to find it.
-          sudo mkdir -p /usr/share/fonts/liberation-sans
-          sudo ln -sf /usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf \
-                      /usr/share/fonts/liberation-sans/LiberationSans-Regular.ttf
-          sudo ln -sf /usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf \
-                      /usr/share/fonts/liberation-sans/LiberationSans-Bold.ttf
+      # No system font installation needed: tools/generate_cover.py and
+      # tools/generate_diagram.py now use the Liberation Sans bundled in
+      # latex/fonts/, which makes asset rendering identical on every host and
+      # supersedes the runner-specific symlink workaround this job used to do.
       - run: pip install -r requirements.txt
       - run: make build references validate deterministic
+      - name: Fail if generated publication artifacts are stale
+        run: |
+          # Only the publication artifacts are gated. qa/ and reports/ are
+          # deliberately excluded: they record whichever build ran last, so
+          # `make validate` and `make deterministic` legitimately leave
+          # different values there.
+          PUBLICATION='book/manuscript.md dist/ latex/content/ assets/cover/'
+          if ! git diff --quiet -- $PUBLICATION; then
+            echo "::error::Publication artifacts are out of date. Run 'make build latex' and commit the result."
+            git diff --stat -- $PUBLICATION
+            exit 1
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: book-v1.0.0-validation

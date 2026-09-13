@@ -8,15 +8,54 @@
 - Keep examples vendor-neutral unless a named implementation is the subject.
 - Treat accessibility, security, governance, reliability, and operability as architecture—not append-on topics.
 
+## Setup
+
+```bash
+make setup   # .venv + Python dependencies + any missing TeX packages
+make help    # every target, grouped by purpose
+```
+
+Re-running `make setup` is safe. TeX packages install into your user tree, so it
+never needs `sudo`.
+
 ## Workflow
 
-1. Edit `source/parts/*.md` and configuration registries only.
-2. Follow templates in `templates/` and rules in `styles/`.
-3. Run `make assemble`, inspect the diff, and run `make build validate`.
-4. Add or update tests when changing a tool.
-5. For structural or visual changes, run `make qa-pdf` and inspect the contact sheet.
-6. Update `CHANGELOG.md` under an Unreleased heading or the target version.
-7. Include the reason, affected chapters, citation impact, diagram impact, and backward-compatibility considerations in the change review.
+Every change goes through a pull request against `main`. Never commit directly
+to `main`.
+
+1. Branch from `main`.
+2. Edit `source/parts/*.md` and the configuration registries **only**. Never
+   hand-edit `book/manuscript.md`, `dist/*`, or `latex/content/book-content.tex`.
+3. Follow templates in `templates/` and rules in `styles/`.
+4. Run `make assemble`, inspect the Markdown diff, then `make build latex` to
+   regenerate DOCX and LaTeX from the same source.
+5. Run `make validate`. Use `make draft` for a fast visual check while writing
+   and `make pdf` before asking for review.
+6. Add or update tests when changing a tool.
+7. For structural or visual changes, run `make qa-pdf` and inspect the contact
+   sheet.
+8. Commit the regenerated artifacts along with the source change — CI fails a PR
+   whose generated files are stale.
+9. Update `CHANGELOG.md` under an Unreleased heading or the target version.
+10. Fill in the pull request template. Record the reason, affected chapters,
+    citation impact, diagram impact, backward compatibility, and the real result
+    of every check you ran.
+
+## What is generated and what is authored
+
+| Authored by hand | Generated — never hand-edit |
+|---|---|
+| `source/parts/*.md` | `book/manuscript.md` |
+| `config/*.json` | `dist/*.md`, `dist/*.docx`, `dist/*.tex` |
+| `assets/**` | `latex/content/book-content.tex` |
+| `latex/bookstyle.sty`, `styles/**` | `assets/cover/cover-v*.png`, `qa/**`, manifests, checksums |
+
+Presentation changes belong in `latex/bookstyle.sty` (PDF), `config/book.json`
+(DOCX), and `styles/` (the contract both must honor) — never in generated
+content.
+
+The compiled PDF (`dist/*-LaTeX.pdf`) is gitignored. It is rebuilt on demand and
+published by CI, so a rebuild never churns a 7 MB binary through history.
 
 ## Versioning
 
