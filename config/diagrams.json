@@ -44,6 +44,13 @@
       "vector": "assets/diagrams/gateway-position.pdf"
     },
     {
+      "id": "gateway-roles",
+      "file": "assets/diagrams/gateway-roles.png",
+      "source": "assets/diagrams/src/gateway-roles.gv",
+      "vector": "assets/diagrams/gateway-roles.pdf",
+      "sha256": "3ad9b99845c9670a732fb70f4262ce64168c11206900adeef5d8fe59d8fd651c"
+    },
+    {
       "id": "governance-model",
       "file": "assets/diagrams/governance-model.png",
       "sha256": "f6610ba8bda791e0c2c520c507af352a9d4c850f6e471e510da57847dc4cee51",
@@ -133,6 +140,13 @@
       "sha256": "82e0ca96cd7be9e0bdbce41573d63ef8c67c8f7a130ecef61f21f489f3650da3",
       "source": "assets/diagrams/src/security-depth.gv",
       "vector": "assets/diagrams/security-depth.pdf"
+    },
+    {
+      "id": "system-overview",
+      "file": "assets/diagrams/system-overview.png",
+      "source": "assets/diagrams/src/system-overview.gv",
+      "vector": "assets/diagrams/system-overview.pdf",
+      "sha256": "0fb3ef3549c462ba75e4ab588a10e43a94fd7cdfea1effa64b58cd19509d71a1"
     },
     {
       "id": "test-pyramid",

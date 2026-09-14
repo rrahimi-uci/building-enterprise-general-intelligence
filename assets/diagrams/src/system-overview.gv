@@ -1,0 +1,48 @@
+// Figure 1-2 — The whole system on one page.
+// Message: this is the destination. Every later Part details one band of this
+// picture, and the Roman numerals say which. Read downward as authority narrows.
+digraph system_overview {
+  rankdir = TB
+  graph [ranksep=0.13]
+  node [shape=plaintext, style="", margin=0]
+  edge [style=invis]
+
+  ch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#4A6078" BGCOLOR="#EEF4FA">
+    <TR><TD WIDTH="62" BGCOLOR="#4A6078" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>I</B></FONT></TD>
+        <TD WIDTH="145" ALIGN="LEFT"><B>Channels</B></TD>
+        <TD WIDTH="280" ALIGN="LEFT"><FONT POINT-SIZE="11">who asks for work, and who sees the result</FONT></TD></TR></TABLE>>]
+  rt [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#0D6E69" BGCOLOR="#E7F5F3">
+    <TR><TD WIDTH="62" BGCOLOR="#0D6E69" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>I · IV</B></FONT></TD>
+        <TD WIDTH="145" ALIGN="LEFT"><B>Agent runtime</B></TD>
+        <TD WIDTH="280" ALIGN="LEFT"><FONT POINT-SIZE="11">bounded reasoning, patterns, durable run state</FONT></TD></TR></TABLE>>]
+  ma [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#6A2E6E" BGCOLOR="#F7ECF8">
+    <TR><TD WIDTH="62" BGCOLOR="#6A2E6E" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>V</B></FONT></TD>
+        <TD WIDTH="145" ALIGN="LEFT"><B>Collaboration</B></TD>
+        <TD WIDTH="280" ALIGN="LEFT"><FONT POINT-SIZE="11">specialists, peer agents, external protocols</FONT></TD></TR></TABLE>>]
+  kn [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#0B6076" BGCOLOR="#E6F5F9">
+    <TR><TD WIDTH="62" BGCOLOR="#0B6076" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>II</B></FONT></TD>
+        <TD WIDTH="145" ALIGN="LEFT"><B>Knowledge</B></TD>
+        <TD WIDTH="280" ALIGN="LEFT"><FONT POINT-SIZE="11">governed knowledge, rules, catalogs, per-run context</FONT></TD></TR></TABLE>>]
+  gw [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#1450A3" BGCOLOR="#EAF3FB">
+    <TR><TD WIDTH="62" BGCOLOR="#1450A3" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>V</B></FONT></TD>
+        <TD WIDTH="145" ALIGN="LEFT"><B>Control points</B></TD>
+        <TD WIDTH="280" ALIGN="LEFT"><FONT POINT-SIZE="11">LLM Gateway for inference, Tool Gateway for effects</FONT></TD></TR></TABLE>>]
+  sec [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#A62C2C" BGCOLOR="#FCECEC">
+    <TR><TD WIDTH="62" BGCOLOR="#A62C2C" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>VI</B></FONT></TD>
+        <TD WIDTH="145" ALIGN="LEFT"><B>Security</B></TD>
+        <TD WIDTH="280" ALIGN="LEFT"><FONT POINT-SIZE="11">identity, guardrails, approvals — spans every band</FONT></TD></TR></TABLE>>]
+  sor [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#1450A3" BGCOLOR="#EDF3FC">
+    <TR><TD WIDTH="62" BGCOLOR="#1450A3" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>—</B></FONT></TD>
+        <TD WIDTH="145" ALIGN="LEFT"><B>Systems of record</B></TD>
+        <TD WIDTH="280" ALIGN="LEFT"><FONT POINT-SIZE="11">where effects commit and stay authoritative</FONT></TD></TR></TABLE>>]
+  obs [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#8A5600" BGCOLOR="#FFF4DF">
+    <TR><TD WIDTH="62" BGCOLOR="#8A5600" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>VII</B></FONT></TD>
+        <TD WIDTH="145" ALIGN="LEFT"><B>Evidence</B></TD>
+        <TD WIDTH="280" ALIGN="LEFT"><FONT POINT-SIZE="11">traces, evaluation, the loop into the next release</FONT></TD></TR></TABLE>>]
+  ops [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#4A6078" BGCOLOR="#EEF4FA">
+    <TR><TD WIDTH="62" BGCOLOR="#4A6078" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>III · VIII</B></FONT></TD>
+        <TD WIDTH="145" ALIGN="LEFT"><B>Platform and operations</B></TD>
+        <TD WIDTH="280" ALIGN="LEFT"><FONT POINT-SIZE="11">the paved road that builds, releases and runs it</FONT></TD></TR></TABLE>>]
+
+  ch -> rt -> ma -> kn -> gw -> sec -> sor -> obs -> ops
+}

@@ -2,6 +2,20 @@
 
 All notable changes follow semantic versioning and are recorded here.
 
+## [Unreleased]
+
+### A whole-system view before the details
+
+- Chapter 01 gains **"The system in one view"**: one diagram of the complete architecture, annotated with the Part that details each band, plus a table mapping band to Part. A reader now has somewhere to put every later chapter before any of it is justified.
+- Two properties are stated up front because they govern everything after: authority narrows downward — the agent proposes, the platform authorizes, and only the bottom bands commit — and security spans every band rather than being one of them.
+
+### Tool Gateway and MCP Gateway are different components
+
+- The book used both names without ever saying how they relate, and the gateway comparison table that distinguishes API, Agent, LLM and MCP gateways **omitted the Tool Gateway entirely** — the book's most-referenced control point. That omission is why the relationship was unclear.
+- Chapter 01 gains **"Four control points, four different questions"**, naming what each gateway decides and what it does not: API admits the caller, LLM chooses the model, Tool authorizes the effect, MCP establishes server trust.
+- The Tool Gateway is deliberately protocol-agnostic. Effects arrive over REST, gRPC, a database transaction, a queue and MCP, and the control must be identical for all of them. A tool invoked over MCP still passes the Tool Gateway, because MCP describes how a tool is discovered and called — not who may call it, whether the effect is idempotent, or what evidence is recorded.
+- The Tool Gateway row is added to the gateway comparison table in chapter 19.
+
 ## [2.1.0] — 2026-09-14
 
 ### Every diagram redesigned, from editable sources

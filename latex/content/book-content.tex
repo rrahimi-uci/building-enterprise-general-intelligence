@@ -299,6 +299,75 @@ Compliance & Decisions cannot be reproduced or explained & Immutable audit packa
 \end{longtable}
 \BookTableEnd
 
+\section{The system in one view}
+
+Everything the rest of this book builds is one picture. Read it once now, before any of it is justified, so that each Part has somewhere to land.\par
+
+\BookDiagram{assets/diagrams/system-overview.pdf}{Figure 1-2 — The whole system, and the Part that details each band}{system-overview}
+
+The Roman numerals are the reading map. Each band is one Part's subject, and the book descends through them in order: the shape first, then the layers, then the implementation inside each layer.\par
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries Band & \color{white}\bfseries What it owns & \color{white}\bfseries Detailed in \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries Band & \color{white}\bfseries What it owns & \color{white}\bfseries Detailed in \\
+\endhead
+Channels & The request, the reviewer, and the returned result & Part I \\
+\rowcolor{BookLight}
+Agent runtime & Bounded reasoning, loop patterns, durable run state & Parts I and IV \\
+Collaboration & Specialist agents, peer agents, external protocols & Part V \\
+\rowcolor{BookLight}
+Knowledge & Governed knowledge, rules, catalogs, per-run context & Part II \\
+Control points & Which model may answer, and which effect may commit & Part V \\
+\rowcolor{BookLight}
+Security & Identity, guardrails, approvals, containment & Part VI \\
+Systems of record & Where effects actually commit and stay true & Throughout \\
+\rowcolor{BookLight}
+Evidence & Traces, evaluation, and the loop into the next release & Part VII \\
+Platform and operations & The paved road that builds, releases and runs it & Parts III and VIII \\
+\end{longtable}
+\BookTableEnd
+
+Two properties of this picture matter more than any component in it. Authority narrows downward: the agent proposes, the platform authorizes, and only the bottom bands commit anything. And security is not a band you pass through once — it spans every one of them, which is why it gets a Part of its own rather than a box in a diagram.\par
+
+\section{Four control points, four different questions}
+
+The architecture has several gateways, and they are routinely confused because the word is the same. They are not alternatives, and none replaces another.\par
+
+\BookDiagram{assets/diagrams/gateway-roles.pdf}{Figure 1-3 — The control points, and the question each one answers}{gateway-roles}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries Control point & \color{white}\bfseries The question it answers & \color{white}\bfseries What it does not decide \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries Control point & \color{white}\bfseries The question it answers & \color{white}\bfseries What it does not decide \\
+\endhead
+API Gateway & Is this caller admitted to the platform at all? & Anything about agents or models \\
+\rowcolor{BookLight}
+LLM Gateway & Which model may answer, under which data policy? & Whether an effect may happen \\
+Tool Gateway & May this effect happen, for this subject, exactly once? & Which model produced the proposal \\
+\rowcolor{BookLight}
+MCP Gateway & Is this external server and tool trusted and eligible? & Whether the resulting effect is authorized \\
+\end{longtable}
+\BookTableEnd
+
+The \textbf{Tool Gateway} is the enterprise's control point for \emph{effects}. It validates the tool version and schema, re-authorizes the action and resource against the caller's grant, mints a last-hop credential, enforces idempotency, and records the receipt. It is deliberately protocol-agnostic, because effects arrive over REST, gRPC, a database transaction, a queue, and MCP, and the control must be the same for all of them.\par
+
+The \textbf{MCP Gateway} terminates one protocol. It decides whether an external MCP server is trusted, which of its tools are eligible, and what scoped credentials it may use. That is a real and necessary job, and it is a different job.\par
+
+\begin{bookarchitecture}[Architecture guidance]
+Do not rename the Tool Gateway after a protocol. A tool invoked over MCP still passes the Tool Gateway, because MCP describes how a tool is discovered and called — not who may call it, whether the effect is idempotent, or what evidence is recorded. Naming a control boundary after today's protocol is how the boundary disappears when the protocol is replaced.
+\end{bookarchitecture}
+
 \section{Grounding, corrections, and evidence boundary}
 
 \needspace{5\baselineskip}
@@ -7526,7 +7595,9 @@ API Gateway & External client → enterprise API & API auth, routing, quota, WAF
 Agent Gateway & Agent/workload → agent platform & Workload identity, task admission, delegation, tenancy, agent audit & Provider inference controls \\
 LLM Gateway & Workload → model/inference & Provider abstraction, model routing, content/data policy, token/cost control & Durable workflow or business acceptance \\
 \rowcolor{BookLight}
+Tool Gateway & Agent → enterprise effect & Tool version and schema, re-authorization per subject, idempotency, effect receipts & Which model produced the proposal \\
 MCP Gateway & Platform → MCP server & Server trust, discovery, tool eligibility, scoped credentials, protocol audit & General model inference \\
+\rowcolor{BookLight}
 Orchestration layer & Run → tasks/activities & State, deadlines, retries, joins, cancellation, compensation & Provider perimeter or policy truth \\
 \end{longtable}
 \BookTableEnd

@@ -4,20 +4,20 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "33fa699204f2d583715cdd617ecabe63bef29b9f6e9decd07e8442894d9fcd3d",
-    "content_tex_sha256": "ba0ae407dc1abfd81f5da4bd1fb367af1c4d84772d6c876922a0dc40212f4058",
+    "content_tex_sha256": "1c606f3653cf8d468f7342165162070ec8425f9ad804fa27a00deaa81027ea34",
     "style_sha256": "84d6c5fb54308c0f75fdcd1d799dee51a522637e4759fe6bc2877185baf40d66",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "appendices": 12,
-    "diagrams": 20,
+    "diagrams": 22,
     "code_blocks": 57,
-    "longtables": 200,
-    "callout_tables": 95,
+    "longtables": 202,
+    "callout_tables": 96,
     "citation_occurrences": 104,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 295,
+    "markdown_tables": 298,
     "markdown_code_blocks": 57,
     "image_quality": [
       {
@@ -35,6 +35,22 @@
           1855
         ],
         "effective_dpi": 321.0
+      },
+      {
+        "file": "assets/diagrams/system-overview.png",
+        "pixels": [
+          2345,
+          1860
+        ],
+        "effective_dpi": 332.2
+      },
+      {
+        "file": "assets/diagrams/gateway-roles.png",
+        "pixels": [
+          3912,
+          839
+        ],
+        "effective_dpi": 554.1
       },
       {
         "file": "assets/diagrams/reference-architecture.png",

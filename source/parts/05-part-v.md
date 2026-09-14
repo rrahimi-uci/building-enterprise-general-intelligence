@@ -524,6 +524,7 @@ The LLM Gateway is the controlled boundary between enterprise workloads and mode
 | API Gateway | External client → enterprise API | API auth, routing, quota, WAF, protocol termination | Agent semantics or model routing |
 | Agent Gateway | Agent/workload → agent platform | Workload identity, task admission, delegation, tenancy, agent audit | Provider inference controls |
 | LLM Gateway | Workload → model/inference | Provider abstraction, model routing, content/data policy, token/cost control | Durable workflow or business acceptance |
+| Tool Gateway | Agent → enterprise effect | Tool version and schema, re-authorization per subject, idempotency, effect receipts | Which model produced the proposal |
 | MCP Gateway | Platform → MCP server | Server trust, discovery, tool eligibility, scoped credentials, protocol audit | General model inference |
 | Orchestration layer | Run → tasks/activities | State, deadlines, retries, joins, cancellation, compensation | Provider perimeter or policy truth |
 

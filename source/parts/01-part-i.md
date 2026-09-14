@@ -72,6 +72,65 @@ An enterprise agent must translate an ambiguous goal into actions across systems
 | Operability | Logs show text but not causal execution | Distributed traces, structured events, replay, cost and policy telemetry |
 | Compliance | Decisions cannot be reproduced or explained | Immutable audit package, evidence chain, approvals, retention and legal holds |
 
+## The system in one view
+
+Everything the rest of this book builds is one picture. Read it once now, before
+any of it is justified, so that each Part has somewhere to land.
+
+[[DIAGRAM:system-overview|Figure 1-2 — The whole system, and the Part that details each band]]
+
+The Roman numerals are the reading map. Each band is one Part's subject, and the
+book descends through them in order: the shape first, then the layers, then the
+implementation inside each layer.
+
+| Band | What it owns | Detailed in |
+| --- | --- | --- |
+| Channels | The request, the reviewer, and the returned result | Part I |
+| Agent runtime | Bounded reasoning, loop patterns, durable run state | Parts I and IV |
+| Collaboration | Specialist agents, peer agents, external protocols | Part V |
+| Knowledge | Governed knowledge, rules, catalogs, per-run context | Part II |
+| Control points | Which model may answer, and which effect may commit | Part V |
+| Security | Identity, guardrails, approvals, containment | Part VI |
+| Systems of record | Where effects actually commit and stay true | Throughout |
+| Evidence | Traces, evaluation, and the loop into the next release | Part VII |
+| Platform and operations | The paved road that builds, releases and runs it | Parts III and VIII |
+
+Two properties of this picture matter more than any component in it. Authority
+narrows downward: the agent proposes, the platform authorizes, and only the
+bottom bands commit anything. And security is not a band you pass through once —
+it spans every one of them, which is why it gets a Part of its own rather than a
+box in a diagram.
+
+## Four control points, four different questions
+
+The architecture has several gateways, and they are routinely confused because
+the word is the same. They are not alternatives, and none replaces another.
+
+[[DIAGRAM:gateway-roles|Figure 1-3 — The control points, and the question each one answers]]
+
+| Control point | The question it answers | What it does not decide |
+| --- | --- | --- |
+| API Gateway | Is this caller admitted to the platform at all? | Anything about agents or models |
+| LLM Gateway | Which model may answer, under which data policy? | Whether an effect may happen |
+| Tool Gateway | May this effect happen, for this subject, exactly once? | Which model produced the proposal |
+| MCP Gateway | Is this external server and tool trusted and eligible? | Whether the resulting effect is authorized |
+
+The **Tool Gateway** is the enterprise's control point for *effects*. It validates
+the tool version and schema, re-authorizes the action and resource against the
+caller's grant, mints a last-hop credential, enforces idempotency, and records
+the receipt. It is deliberately protocol-agnostic, because effects arrive over
+REST, gRPC, a database transaction, a queue, and MCP, and the control must be
+the same for all of them.
+
+The **MCP Gateway** terminates one protocol. It decides whether an external MCP
+server is trusted, which of its tools are eligible, and what scoped credentials
+it may use. That is a real and necessary job, and it is a different job.
+
+|  |
+| --- |
+| **ARCHITECTURE GUIDANCE**  Do not rename the Tool Gateway after a protocol. A tool invoked over MCP still passes the Tool Gateway, because MCP describes how a tool is discovered and called — not who may call it, whether the effect is idempotent, or what evidence is recorded. Naming a control boundary after today's protocol is how the boundary disappears when the protocol is replaced. |
+
+
 ## Grounding, corrections, and evidence boundary
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |

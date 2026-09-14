@@ -1,6 +1,6 @@
 {
-  "diagrams": 20,
-  "with_vector": 20,
+  "diagrams": 22,
+  "with_vector": 22,
   "records": [
     {
       "id": "anti-before-after",
@@ -67,6 +67,17 @@
       "effective_dpi": 349,
       "vector": true,
       "sha256": "9abc8f1a3c4a1c4c8f2d16ef95a01150ef73e65b2a30579155fbe3a78b75ade3"
+    },
+    {
+      "id": "gateway-roles",
+      "source": "gateway-roles.gv",
+      "pixels": [
+        3912,
+        839
+      ],
+      "effective_dpi": 571,
+      "vector": true,
+      "sha256": "3ad9b99845c9670a732fb70f4262ce64168c11206900adeef5d8fe59d8fd651c"
     },
     {
       "id": "governance-model",
@@ -210,6 +221,17 @@
       "effective_dpi": 333,
       "vector": true,
       "sha256": "82e0ca96cd7be9e0bdbce41573d63ef8c67c8f7a130ecef61f21f489f3650da3"
+    },
+    {
+      "id": "system-overview",
+      "source": "system-overview.gv",
+      "pixels": [
+        2345,
+        1860
+      ],
+      "effective_dpi": 342,
+      "vector": true,
+      "sha256": "0fb3ef3549c462ba75e4ab588a10e43a94fd7cdfea1effa64b58cd19509d71a1"
     },
     {
       "id": "test-pyramid",
