@@ -141,6 +141,54 @@
       "vector": "assets/diagrams/pattern-decision-tree.pdf"
     },
     {
+      "id": "pattern-durable",
+      "file": "assets/diagrams/pattern-durable.png",
+      "source": "assets/diagrams/src/pattern-durable.gv",
+      "vector": "assets/diagrams/pattern-durable.pdf",
+      "description": "Durable execution: checkpoints, process death, replay, and effect adoption",
+      "sha256": "7a84f8e7e81ff4420268e59273727ebb6e483aecd57fd90616e629e6aae2a238"
+    },
+    {
+      "id": "pattern-hitl",
+      "file": "assets/diagrams/pattern-hitl.png",
+      "source": "assets/diagrams/src/pattern-hitl.gv",
+      "vector": "assets/diagrams/pattern-hitl.pdf",
+      "description": "The two human controls: proposal-bound approval versus operational intervention",
+      "sha256": "f757ce7ef70d0a8680b34391726f0f274ea9c1a0db9063d2e55a4c684545c3de"
+    },
+    {
+      "id": "pattern-planning",
+      "file": "assets/diagrams/pattern-planning.png",
+      "source": "assets/diagrams/src/pattern-planning.gv",
+      "vector": "assets/diagrams/pattern-planning.pdf",
+      "description": "Plan-execute: a candidate plan compiled to typed IR and validated before any step runs",
+      "sha256": "bff68b554b5b13b6fc8757ad25496cc6b9a867fb6c8c9bbf381d943ff7611004"
+    },
+    {
+      "id": "pattern-react",
+      "file": "assets/diagrams/pattern-react.png",
+      "source": "assets/diagrams/src/pattern-react.gv",
+      "vector": "assets/diagrams/pattern-react.pdf",
+      "description": "Bounded ReAct: the reason-act-observe loop with the controller and limits outside it",
+      "sha256": "eb6e2c982093a01d2c71fca8ea3af8af234f25a41d68111b7418c04412571702"
+    },
+    {
+      "id": "pattern-reflection",
+      "file": "assets/diagrams/pattern-reflection.png",
+      "source": "assets/diagrams/src/pattern-reflection.gv",
+      "vector": "assets/diagrams/pattern-reflection.pdf",
+      "description": "Reflection: a bounded produce-evaluate-revise loop whose verdict cannot self-promote",
+      "sha256": "2fa54b8552445e3bf91962bfe07fe0a4ed172d1d5905f7b03442e26995cf6c79"
+    },
+    {
+      "id": "pattern-routing",
+      "file": "assets/diagrams/pattern-routing.png",
+      "source": "assets/diagrams/src/pattern-routing.gv",
+      "vector": "assets/diagrams/pattern-routing.pdf",
+      "description": "Routing: classification selects a specialist; policy decides whether it is permitted",
+      "sha256": "ed6c696fecc9216bced059a168a7737d62d7ac41799fbd15b5433812f6ece4d3"
+    },
+    {
       "id": "policy-to-guardrail",
       "file": "assets/diagrams/policy-to-guardrail.png",
       "sha256": "5d1cb1313d1705c377a62c1243880f2a5d49a839820edc8a9faebeef2cb17a97",

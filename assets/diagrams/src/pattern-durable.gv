@@ -1,0 +1,27 @@
+// Figure 15-1 — Durable execution. The run outlives the process.
+// Message: state lives in the event history, not in memory, so a process death
+// is an ordinary event. Recovery replays to the last checkpoint; effects
+// already committed are adopted from the ledger rather than repeated.
+digraph pattern_durable {
+  rankdir = TB
+  graph [ranksep=0.34, nodesep=0.24]
+  node [shape=box, style="filled,rounded", penwidth=1.4, fontsize=10.5,
+        margin="0.12,0.07", height=0.40, width=1.65]
+  edge [arrowsize=0.65, penwidth=1.5, color="#0D6E69"]
+
+  st  [label="Step executes", fillcolor="#E7F5F3", color="#0D6E69"]
+  ck  [label="Checkpoint\nappended", shape=cylinder, style=filled,
+       fillcolor="#EDF3FC", color="#1450A3", width=1.7]
+  wt  [label="Wait\ntimer · signal · human", fillcolor="#FFF4DF", color="#8A5600", width=2.0]
+  die [label="Process dies", fillcolor="#FCECEC", color="#A62C2C", width=1.5]
+  rec [label="Replay to last\ncheckpoint", fillcolor="#EAF3FB", color="#1450A3", width=1.9]
+  led [label="Effect ledger\nadopt, do not repeat", shape=cylinder, style=filled,
+       fillcolor="#F7ECF8", color="#6A2E6E", width=2.2]
+
+  st -> ck -> wt
+  wt -> st [label=" resume", fontsize=9, fontcolor="#4A6078"]
+  wt -> die [color="#A62C2C", style=dashed, arrowsize=0.55]
+  die -> rec [color="#1450A3"]
+  rec -> led [color="#6A2E6E", style=dashed, arrowsize=0.55]
+  rec -> st  [color="#1450A3", constraint=false, label=" continue", fontsize=9, fontcolor="#1450A3"]
+}

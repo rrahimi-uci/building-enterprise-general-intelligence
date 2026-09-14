@@ -1,6 +1,6 @@
 {
-  "diagrams": 29,
-  "with_vector": 29,
+  "diagrams": 35,
+  "with_vector": 35,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -210,6 +210,72 @@
       "effective_dpi": 345,
       "vector": true,
       "sha256": "602b3dcef2c3298f48c91073a8c9125fc217a380e7da9c444a50b028079b27b5"
+    },
+    {
+      "id": "pattern-durable",
+      "source": "pattern-durable.gv",
+      "pixels": [
+        2501,
+        3441
+      ],
+      "effective_dpi": 365,
+      "vector": true,
+      "sha256": "7a84f8e7e81ff4420268e59273727ebb6e483aecd57fd90616e629e6aae2a238"
+    },
+    {
+      "id": "pattern-hitl",
+      "source": "pattern-hitl.gv",
+      "pixels": [
+        2377,
+        1879
+      ],
+      "effective_dpi": 347,
+      "vector": true,
+      "sha256": "f757ce7ef70d0a8680b34391726f0f274ea9c1a0db9063d2e55a4c684545c3de"
+    },
+    {
+      "id": "pattern-planning",
+      "source": "pattern-planning.gv",
+      "pixels": [
+        2340,
+        2022
+      ],
+      "effective_dpi": 342,
+      "vector": true,
+      "sha256": "bff68b554b5b13b6fc8757ad25496cc6b9a867fb6c8c9bbf381d943ff7611004"
+    },
+    {
+      "id": "pattern-react",
+      "source": "pattern-react.gv",
+      "pixels": [
+        2376,
+        2121
+      ],
+      "effective_dpi": 347,
+      "vector": true,
+      "sha256": "eb6e2c982093a01d2c71fca8ea3af8af234f25a41d68111b7418c04412571702"
+    },
+    {
+      "id": "pattern-reflection",
+      "source": "pattern-reflection.gv",
+      "pixels": [
+        3050,
+        817
+      ],
+      "effective_dpi": 445,
+      "vector": true,
+      "sha256": "2fa54b8552445e3bf91962bfe07fe0a4ed172d1d5905f7b03442e26995cf6c79"
+    },
+    {
+      "id": "pattern-routing",
+      "source": "pattern-routing.gv",
+      "pixels": [
+        2293,
+        1434
+      ],
+      "effective_dpi": 335,
+      "vector": true,
+      "sha256": "ed6c696fecc9216bced059a168a7737d62d7ac41799fbd15b5433812f6ece4d3"
     },
     {
       "id": "policy-to-guardrail",

@@ -29,6 +29,10 @@ Figure 4. ReAct: Bounded Reason–Act–Observe Loops.
 
 ## Why ReAct is useful—and expensive
 
+[[DIAGRAM:pattern-react|Figure 10-1 — Bounded ReAct: the loop is inside, the limits are outside]]
+
+Read the figure for what is *not* in the loop. The controller admits each turn and owns the budgets; a mutation leaves as a proposal rather than executing inline; and the decision to stop belongs to the acceptance engine, not to the model's wording.
+
 ReAct interleaves reasoning, action, and observation. Its value is conditional adaptivity: after reading the supplier profile, the agent may decide that a regional registry lookup is unnecessary, or that a contradictory address requires another source. The pattern becomes harmful when it substitutes an unconstrained loop for a known process.
 
 Northstar stores only typed decisions, tool intents, observations, evidence references, and stop reasons—not private chain-of-thought. The external controller maintains counters and normalized signatures. If an agent repeats the same tool and canonical arguments against the same source revision, or if accepted evidence does not change across turns, the controller records no progress and terminates or escalates.
@@ -172,6 +176,8 @@ Figure 5. Routing, Triage, and Handoffs.
 | Route service and workflow ownership record | classifier to privileged route; owner transfer | route class · specialist queue | one route or handoff | RouteDecision · Handoff · CapabilityEnvelope |
 
 ## Selection is not authority
+
+[[DIAGRAM:pattern-routing|Figure 11-1 — Routing selects a specialist; policy decides whether it may act]]
 
 A router reduces heterogeneity by selecting an implementation: policy explanation, document validation, sanctions review, or human triage. The model may classify semantic intent, but the eligible set is assembled first from purpose, authority, risk, data region, release status, service health, and capacity. A route cannot grant a capability that was absent from the run envelope.
 
@@ -382,6 +388,8 @@ Figure 6. Planning and Plan–Execute.
 | Plan Service and durable workflow | planner proposal to deterministic compiler | plan node · workload queue | one node and one plan revision | CandidatePlan · CompiledPlan · PlanRevision |
 
 ## Planning is compilation, not permission
+
+[[DIAGRAM:pattern-planning|Figure 12-1 — A candidate plan becomes typed IR and is validated before any step runs]]
 
 The planner describes desired work; the compiler determines whether that work is legal and executable. Northstar Plan IR nodes name capability requirements rather than concrete credentials. Compilation binds each requirement to an eligible Skill and tool release, verifies input/output schemas, calculates critical path and maximum cost, checks graph and terminal properties, and emits a signed immutable plan revision.
 
@@ -640,6 +648,8 @@ Figure 7. Reflection and Evaluator–Optimizer.
 
 ## Improvement without self-certification
 
+[[DIAGRAM:pattern-reflection|Figure 13-1 — A bounded revise loop whose verdict is advisory; promotion happens outside it]]
+
 Reflection asks, “What is missing or inconsistent?” Evaluation asks, “Does this candidate meet an acceptance rubric?” Combining them can improve complex artifacts, but only if the roles are explicit and bounded. Northstar runs executable checks before any model judge: schema, evidence presence, policy, effect state, resource version, arithmetic, and deterministic domain rules.
 
 Qualitative criteria—clarity, completeness, grounded synthesis, or policy-explanation quality—may use calibrated judges. Judge prompt, model route, examples, sampling parameters, and rubric are versioned. Northstar measures variance, human agreement, and failure slices. A model score is evidence for a release or review decision; it is not permission to access data or commit a transaction.
@@ -846,6 +856,8 @@ Figure 8. Human-in-the-Loop.
 | Workflow plus Approval Service | machine proposal to human authority | approval queue · risk class · tenant | one immutable proposal | ApprovalRequest · ApprovalDecision · EffectReceipt |
 
 ## Two distinct human controls
+
+[[DIAGRAM:pattern-hitl|Figure 14-1 — Approval and intervention: different triggers, different authority, different evidence]]
 
 **Approval** authorizes one proposed effect. **Intervention** asks a person to diagnose, correct, supply information, or choose among unresolved alternatives. Combining them creates audit ambiguity. Northstar uses separate queues, roles, forms, SLOs, and terminal semantics.
 
@@ -1108,6 +1120,8 @@ Figure 9. Long-Running and Durable Agents.
 | Durable workflow engine | workflow activity to external I/O | history shard · activity queue · timer | one workflow execution | WorkflowEvent · Checkpoint · WaitRegistration |
 
 ## Durable state is more than chat history
+
+[[DIAGRAM:pattern-durable|Figure 15-1 — The run outlives the process: checkpoint, die, replay, adopt]]
 
 Chat history cannot reliably encode timers, retries, child ownership, approval waits, cancellation intent, resource versions, effect receipts, or deployment compatibility. Northstar uses event history to rebuild a canonical RunState; model and tool calls are bounded activities whose inputs and outputs are recorded by reference.
 

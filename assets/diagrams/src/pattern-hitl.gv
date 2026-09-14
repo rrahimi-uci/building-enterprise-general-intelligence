@@ -1,0 +1,34 @@
+// Figure 14-1 — The two human controls, which are routinely conflated.
+// Message: approval authorizes one specific effect before it happens.
+// Intervention changes a run already in flight. They have different triggers,
+// different authority, and different evidence -- one queue cannot serve both.
+digraph pattern_hitl {
+  rankdir = TB
+  graph [ranksep=0.28, nodesep=0.30]
+  node [shape=box, style="filled,rounded", penwidth=1.4, fontsize=10.5,
+        margin="0.12,0.07", height=0.42, width=2.05]
+  edge [arrowsize=0.65, penwidth=1.5]
+
+  ha [label=<<B><FONT POINT-SIZE="11" COLOR="#6A2E6E">APPROVAL</FONT></B>>, shape=plaintext, style=""]
+  hb [label=<<B><FONT POINT-SIZE="11" COLOR="#1450A3">INTERVENTION</FONT></B>>, shape=plaintext, style=""]
+
+  a1 [label="Run reaches a\nprotected effect", fillcolor="#F7ECF8", color="#6A2E6E"]
+  a2 [label="Immutable proposal\n+ digest", shape=note, style=filled,
+      fillcolor="#F7ECF8", color="#6A2E6E"]
+  a3 [label="Approver decides\nbefore it happens", fillcolor="#F7ECF8", color="#6A2E6E"]
+  a4 [label="Grant bound to\nthat digest", fillcolor="#F7ECF8", color="#6A2E6E"]
+
+  b1 [label="Operator observes\na run in flight", fillcolor="#EAF3FB", color="#1450A3"]
+  b2 [label="Pause · cancel ·\nredirect · adjust budget", fillcolor="#EAF3FB", color="#1450A3"]
+  b3 [label="Workflow signal,\nnot a message", fillcolor="#EAF3FB", color="#1450A3"]
+  b4 [label="Recorded as an\noperational event", fillcolor="#EAF3FB", color="#1450A3"]
+
+  ha -> a1 -> a2 -> a3 -> a4 [color="#6A2E6E"]
+  hb -> b1 -> b2 -> b3 -> b4 [color="#1450A3"]
+
+  { rank=same; ha -> hb [style=invis] }
+  { rank=same; a1 -> b1 [style=invis] }
+  { rank=same; a2 -> b2 [style=invis] }
+  { rank=same; a3 -> b3 [style=invis] }
+  { rank=same; a4 -> b4 [style=invis] }
+}
