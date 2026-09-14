@@ -1061,8 +1061,8 @@
     },
     {
       "path": "tools/prepare_part_visuals.py",
-      "bytes": 4153,
-      "sha256": "a253152a42d77b7c8fad55c75660c516ad16bfb45240d45e2b93dce6d2fcd3ae"
+      "bytes": 4669,
+      "sha256": "9faadf88548b7c5b03e2ea6a1a9417c1dcce342581eefcf6d84c3b5accd89605"
     },
     {
       "path": "tools/render_pdf_qa.py",

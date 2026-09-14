@@ -12,8 +12,9 @@ panel -- the illustration and its four numbered component labels -- and lets the
 renderers draw the Part identity from the canonical Markdown, where it is
 correct by construction.
 
-Deterministic: the same source and crop box always produce the same bytes, and
-the digests are recorded in config/part-visuals.json.
+Idempotent by pixels, not by bytes: PNG compression differs between Pillow/zlib
+builds, so an already-correct panel is left untouched rather than rewritten with
+a different encoding. Digests are recorded in config/part-visuals.json.
 """
 from __future__ import annotations
 
@@ -72,16 +73,23 @@ def main() -> int:
             )
         if not args.check:
             target.parent.mkdir(parents=True, exist_ok=True)
-            # optimize=True keeps the output stable for a given Pillow build and
-            # holds the eight panels to a few megabytes in total.
-            cropped.save(target, format="PNG", optimize=True)
+            # PNG bytes are only reproducible for a fixed Pillow/zlib build: the
+            # same pixels compress differently elsewhere, so rewriting on every
+            # build would change the recorded digest on nothing but a host
+            # difference -- which is exactly what broke CI the first time. Compare
+            # pixels and leave an already-correct panel untouched.
+            unchanged = False
+            if target.exists():
+                with Image.open(target) as existing:
+                    unchanged = existing.convert("RGB").tobytes() == cropped.tobytes()
+            if not unchanged:
+                cropped.save(target, format="PNG", optimize=True)
         if not target.exists():
             errors.append(f"Part {entry['part']}: missing generated asset {entry['file']}")
             continue
         digest = sha256(target)
         if entry.get("sha256") and entry["sha256"] != digest:
-            message = f"Part {entry['part']}: digest changed for {entry['file']}"
-            (errors.append(message) if args.check else records)
+            errors.append(f"Part {entry['part']}: digest changed for {entry['file']}")
         records.append({
             "part": entry["part"], "file": entry["file"], "source": entry["source"],
             "pixels": [cropped.width, cropped.height],
