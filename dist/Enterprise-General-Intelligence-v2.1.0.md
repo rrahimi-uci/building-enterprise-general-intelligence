@@ -2772,11 +2772,89 @@ Figure 10. Skills as Versioned Capabilities.
 
 A Skill is the smallest independently owned and versioned package that lets an agent perform a meaningful capability. Its manifest names interface schemas, instructions, eligible tools, knowledge sources, optional workflow template, policy constraints, side-effect class, observability fields, evaluation suite, owner, lifecycle, and immutable digest.
 
-Skills separate reuse from copy-and-paste. An application requests a capability such as supplier.evidence.read; it does not embed a specific prompt and connector. Discovery searches a catalog. Resolution then filters by tenant, purpose, subject and actor grants, data class, region, risk, compatibility, release stage, health, and cost before pinning one exact version.
+That list is abstract until you see one. A manifest is a declaration, not code:
+
+YAML · a Skill manifest, abridged
+
+```yaml
+skill: supplier.evidence.read
+version: 2.4.1
+digest: sha256:9f3c...            # immutable; the version alias may move, this cannot
+owner: supplier-platform-team
+side_effect_class: read_only      # governs which policy gates apply at resolution
+
+interface:
+  input:  SupplierEvidenceRequest@3
+  output: SupplierEvidenceBundle@3
+
+requires:
+  tools:     [registry.lookup@2, document.fetch@1]
+  knowledge: [supplier-policy@approved-latest]
+  runtime:   {max_turns: 6, deadline_s: 45}
+
+policy:
+  data_classes: [supplier_pii]
+  regions:      [eu]             # resolution fails outside these, it does not warn
+  min_risk_tier: 1
+
+evaluation:
+  suite: supplier-evidence-regression@12
+  gates: {accuracy: 0.94, cross_tenant_leak: 0}
+lifecycle: active
+```
+
+Three things in that file are doing more work than they appear to. The
+`digest` is what a run actually pins, so an alias moving under you cannot
+change behaviour mid-flight. The `requires` block is exhaustive — a Skill that
+reaches for a tool not listed there fails, which is what makes the manifest a
+contract rather than documentation. And `evaluation.gates` means promotion is
+decided by evidence, not by a reviewer's judgement on the day.
+
+Skills separate reuse from copy-and-paste. An application requests a capability such as supplier.evidence.read; it does not embed a specific prompt and connector.
+
+### Discovery is not resolution
+
+This is the distinction the chapter turns on, and conflating the two is how
+governed capability quietly becomes ungoverned.
+
+[[DIAGRAM:skill-resolution|Figure 8-1 — Discovery proposes candidates; resolution pins exactly one version, or fails]]
+
+**Discovery** is semantic and permissive. It searches a catalog for Skills that
+might satisfy a stated need, and it may legitimately return several. It answers
+*what exists*.
+
+**Resolution** is deterministic and restrictive. Given one requirement and the
+run's envelope, it filters by tenant, purpose, subject and actor grants, data
+class, region, risk, compatibility, release stage, health, and cost — then pins
+exactly one version by digest. It answers *what this run may use, right now*.
+
+| | Discovery | Resolution |
+| --- | --- | --- |
+| Input | A capability need in natural terms | A requirement plus the run envelope |
+| Method | Semantic search over the catalog | Deterministic policy evaluation |
+| Output | Zero or more candidates | Exactly one pinned digest, or a failure |
+| May a model influence it? | Yes — it can describe the need | **No** |
+| Failure mode | Returns nothing useful | Fails closed, with the rule that refused |
+
+The asymmetry matters. Discovery may be fuzzy because nothing it returns is yet
+permitted. Resolution may not, because its output is what will actually run.
+A system that lets a model pick from discovery results has skipped the gate and
+is back to ungoverned capability with a registry in front of it.
 
 ### Skill lifecycle
 
-Draft → Certified → Staged → Active → Deprecated → Revoked is evidence-driven. Certification includes contract, unit, simulation, trajectory, threat, failure-injection, load, and operator-readiness checks. Deprecation retains a compatibility window for active runs. Revocation removes the Skill from new resolution immediately and may trigger workflow pause or migration by risk class.
+Draft → Certified → Staged → Active → Deprecated → Revoked is evidence-driven. Each transition requires an artifact rather than an approval conversation.
+
+| State | Means | What moves it forward |
+| --- | --- | --- |
+| **Draft** | Authored, not trusted | Passing the certification suite |
+| **Certified** | Evidence exists; not yet deployed | A staging release decision |
+| **Staged** | Running against non-production traffic | Canary evidence within gates |
+| **Active** | Resolvable by production runs | — |
+| **Deprecated** | Still resolvable for runs already using it | The compatibility window expiring |
+| **Revoked** | Not resolvable by anything new | — |
+
+Certification includes contract, unit, simulation, trajectory, threat, failure-injection, load, and operator-readiness checks. Deprecation retains a compatibility window for active runs — a long-running supplier onboarding started three weeks ago must finish on the version it pinned. Revocation removes the Skill from new resolution immediately and may trigger workflow pause or migration by risk class; it is the one transition that can affect a run already in flight, which is why it is reserved for a defect serious enough to justify that.
 
 ### Skill contract surface
 
@@ -2932,6 +3010,31 @@ Figure 11. Skill Packs and Domain Platforms.
 A Skill Pack composes a coherent domain experience. Northstar’s supplier-onboarding pack pins evidence retrieval, document validation, sanctions screening, policy explanation, approval preparation, and supplier-record creation Skills. It also pins shared policy, taxonomy, knowledge strategy, workflow templates, evaluation datasets, dashboards, and runbooks.
 
 A pack is not a directory of prompts. The pack manifest declares dependency constraints, schema compatibility, required runtime capabilities, data and region policy, risk ceiling, evaluation gates, release aliases, owner, and support window. A pack can expose a smaller capability surface to each agent even though the complete domain distribution contains more Skills.
+
+### Installing a pack grants nothing
+
+The most important property of a pack is the one it does *not* have. Installing
+a Skill Pack makes its capabilities **resolvable**; it does not make them
+**permitted**, and it grants no access to the data or tools those Skills use.
+
+This is worth stating plainly because the intuition from package managers points
+the other way. Installing a library gives you its code and, transitively, its
+capabilities. Installing a pack gives you a catalog entry. Every Skill in it
+still resolves through the same policy evaluation as any other, against the
+installing tenant's own grants.
+
+| Installing a pack does | Installing a pack does not |
+| --- | --- |
+| Add its Skills to the discovery catalog | Grant access to any data source |
+| Publish its manifests, schemas and digests | Grant any tool permission |
+| Make its evaluation suites available | Bypass region or data-class policy |
+| Declare its dependency and risk ceiling | Change the installing tenant's grants |
+
+A business unit that installs the supplier-onboarding pack and has no entitlement
+to the sanctions registry gets a pack whose screening Skill will not resolve for
+its runs. That is the correct outcome, and it is why sharing a pack across
+business units is a policy and data-boundary review rather than a package
+install.
 
 ### Pack governance and sharing
 
