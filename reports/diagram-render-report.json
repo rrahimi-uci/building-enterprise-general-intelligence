@@ -1,6 +1,6 @@
 {
-  "diagrams": 25,
-  "with_vector": 25,
+  "diagrams": 26,
+  "with_vector": 26,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -56,6 +56,17 @@
       "effective_dpi": 331,
       "vector": true,
       "sha256": "f9134866904054ee4ed21d163aed27e6f06ac112c16e7bab23fee61c53aef1c2"
+    },
+    {
+      "id": "capability-ladder",
+      "source": "capability-ladder.gv",
+      "pixels": [
+        2261,
+        1331
+      ],
+      "effective_dpi": 330,
+      "vector": true,
+      "sha256": "adb374580defa4632e86c5ea65a64cbc51d1e4ca6aad831f55d3ab03b7b0a9f1"
     },
     {
       "id": "developer-lifecycle",

@@ -40,6 +40,14 @@
       "vector": "assets/diagrams/book-map.pdf"
     },
     {
+      "id": "capability-ladder",
+      "file": "assets/diagrams/capability-ladder.png",
+      "source": "assets/diagrams/src/capability-ladder.gv",
+      "vector": "assets/diagrams/capability-ladder.pdf",
+      "description": "The four rungs from a model to an enterprise agentic system, with what each adds and the failure class it introduces",
+      "sha256": "adb374580defa4632e86c5ea65a64cbc51d1e4ca6aad831f55d3ab03b7b0a9f1"
+    },
+    {
       "id": "developer-lifecycle",
       "file": "assets/diagrams/developer-lifecycle.png",
       "sha256": "54dfe08451ffa40cb3dfbb39f2554d7f317c4b7f1688813192d23b5241f4c7b2",
