@@ -87,6 +87,35 @@ Scale stateless APIs horizontally, partition state by tenant and run, shard work
 
 ## Recommended reference architecture
 
+### Seven planes, eleven layers — which is which
+
+This chapter presents two decompositions, and they are easy to mistake for a
+contradiction. They are not: they answer different questions.
+
+The **plane** table above is the conceptual model. It answers *who owns which
+decision*, and it is what you reason with when deciding where a responsibility
+belongs. Seven planes is the smallest set that keeps every authoritative record
+in exactly one place.
+
+The **layer** table below is the deployable decomposition. It answers *what you
+build, run, and page someone about*. Planes split into layers wherever two parts
+of one responsibility have different scaling, failure, or trust properties.
+
+| Plane | Splits into layers | Why it splits |
+| --- | --- | --- |
+| Experience and channels | Experience · Edge and admission | Admission is a security surface with its own scaling and failure profile |
+| Agent applications | Agent control plane | Defining and releasing capability is separate from running it |
+| Runtime and workflow | Run control plane · Durable execution | Deciding a transition and durably surviving it are different problems |
+| Gateways and integration | Model plane · Capability plane · Execution plane | Inference, effects, and sandboxed code have unrelated blast radii |
+| Context, RAG, memory, Skills | Data and knowledge | — |
+| Security and governance | Trust and governance | — |
+| Evaluation and operations | Operations and improvement | — |
+
+Use planes when you are arguing about ownership and boundaries. Use layers when
+you are drawing a deployment diagram or assigning an on-call rota. If the two
+ever disagree about who owns a record, the plane model wins — the layer exists
+to serve it.
+
 ### Architecture layers
 
 | **Layer** | **Major components** | **Primary responsibility** |
@@ -564,11 +593,55 @@ Figure 14. Context Engineering, Memory, and State.
 
 ## The context build pipeline
 
-Northstar assembles context in stages: parse the request, calculate source candidates, enforce tenant and resource authorization, fetch immutable versions, classify and sanitize content, deduplicate, rank, allocate tokens, produce ordered references, and record a ContextManifest. Only the final authorized boundary materializes bytes into the model request.
+Everything the model sees on a given step is produced by a pipeline, and the
+order of its stages is a security property rather than an implementation
+detail. Northstar assembles context in ten stages.
 
-Instructions have a trust hierarchy. System and application instructions are code-like release artifacts. Skill instructions are pinned capability artifacts. User requests express intent within authority. Retrieved documents and tool outputs are untrusted evidence. Content cannot promote itself to a higher trust role by saying “ignore previous instructions.”
+[[DIAGRAM:context-pipeline|Figure 6-1 — The context build pipeline: authorization precedes retrieval, and bytes materialize last]]
 
-Memory is not a bag of embeddings. Long-term memory creation is a protected data write with owner, scope, provenance, confidence, policy basis, TTL, correction, and deletion. Canonical business state always wins over a memory summary.
+| Stage | What it does | What it prevents |
+| --- | --- | --- |
+| 1 · Parse request | Extract intent, entities, and the declared purpose | Retrieval driven by raw user text |
+| 2 · Candidate sources | Choose which governed sources *could* be relevant | Searching corpora the purpose does not justify |
+| 3 · Authorize | Filter by tenant, subject, and resource ACL | The classic RAG leak: retrieving what the caller may not read |
+| 4 · Fetch pinned versions | Read immutable snapshots, not live documents | A run that cannot be replayed because sources moved |
+| 5 · Classify and sanitize | Label trust tier, strip active content | Instructions embedded in retrieved documents |
+| 6 · Deduplicate | Collapse near-identical chunks | One loud document crowding out the rest of the evidence |
+| 7 · Rank | Order by relevance, freshness, and source authority | Similarity alone deciding what the model believes |
+| 8 · Allocate tokens | Budget per section against the window | Silent truncation dropping the constraint that mattered |
+| 9 · Ordered references | Emit references, not content | Oversized payloads and unattributable claims |
+| 10 · ContextManifest | Record exactly what was assembled and why | An answer nobody can audit |
+
+Two ordering decisions carry most of the safety. **Authorization is stage three,
+before any content is fetched** — filtering results after retrieval means the
+unauthorized bytes already existed in a process that could log or cache them.
+And **only the final boundary materializes bytes** into the model request;
+everything upstream moves references, which is what keeps the manifest an
+accurate record of what the model actually saw.
+
+### The trust hierarchy of instructions
+
+The model receives text from several origins in one window, and it has no
+inherent way to rank them. The platform must, because the ranking is what stops
+a document from behaving like an instruction.
+
+| Tier | Origin | Trust | Can it direct behaviour? |
+| --- | --- | --- | --- |
+| 1 | System and application instructions | Release artifact, code-reviewed | Yes — this is the definition of the agent |
+| 2 | Skill instructions | Pinned, versioned capability artifact | Yes, within the capability's declared scope |
+| 3 | User request | Authenticated intent, bounded by the caller's authority | It states a goal; it cannot grant itself authority |
+| 4 | Retrieved documents and tool output | Untrusted evidence, whatever its source | **No.** It is data to reason over, never direction |
+
+Content cannot promote itself between tiers. A retrieved document that contains
+"ignore previous instructions" is a tier-four artifact containing a string; it
+does not become tier one by asserting that it should. This is why tool
+eligibility is decided by policy before the step runs and never by what the
+model has just read — the one rule that makes indirect prompt injection a
+containable problem rather than an open one.
+
+### Memory is not a bag of embeddings
+
+One store in this pipeline behaves differently from the rest. Retrieval reads; memory *writes*, and a write that outlives the run is a protected data effect rather than a caching convenience. Creating long-term memory therefore carries the same obligations as any other durable write: an owner, a scope, provenance, a confidence, the policy basis that permitted it, a TTL, and a correction and deletion path. And when a remembered summary disagrees with canonical business state, canonical state wins — always, and without the model being asked to adjudicate. Chapter 17 catalogs the alternative as AP-13.
 
 ## Context, workflow state, memory, and enterprise knowledge
 

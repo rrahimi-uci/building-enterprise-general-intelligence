@@ -4,20 +4,20 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "33fa699204f2d583715cdd617ecabe63bef29b9f6e9decd07e8442894d9fcd3d",
-    "content_tex_sha256": "c4bfb8ed426b131ea19216156f4ce0dd49d856b2452e9becde481ab81adaf48e",
+    "content_tex_sha256": "93de3d85b179f0379070d82d2b8a92f6d42d171ec1e9c3ba5208311401bf7e08",
     "style_sha256": "f2f56a95c6d5382add095f9df3e90ee3a6f508577ec5413768159c668f1e7da3",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "appendices": 12,
-    "diagrams": 27,
+    "diagrams": 28,
     "code_blocks": 68,
-    "longtables": 216,
+    "longtables": 219,
     "callout_tables": 99,
     "citation_occurrences": 104,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 315,
+    "markdown_tables": 318,
     "markdown_code_blocks": 68,
     "image_quality": [
       {
@@ -99,6 +99,14 @@
           2798
         ],
         "effective_dpi": 328.9
+      },
+      {
+        "file": "assets/diagrams/context-pipeline.png",
+        "pixels": [
+          2364,
+          2915
+        ],
+        "effective_dpi": 334.8
       },
       {
         "file": "assets/diagrams/developer-platform.png",
