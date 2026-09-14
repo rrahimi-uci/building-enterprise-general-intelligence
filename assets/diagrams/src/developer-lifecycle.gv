@@ -1,0 +1,24 @@
+// Figure 7-3 — Local-to-production agent lifecycle.
+// Message: one artifact moves through every stage; what changes is the evidence
+// required to pass each gate, not the thing being promoted.
+digraph developer_lifecycle {
+  rankdir = TB
+  graph [ranksep=0.28, nodesep=0.45]
+  node [width=2.1]
+
+  local  [label="Local · scaffold and run", fillcolor="#E7F5F3", color="#0D6E69"]
+  test   [label="Test · unit and contract", fillcolor="#E7F5F3", color="#0D6E69"]
+  eval   [label="Evaluate · dataset and scorers", fillcolor="#EAF3FB", color="#1450A3", style=filled]
+  gate   [label="Policy gate", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=2.0, height=0.95]
+  stage  [label="Stage · shadow traffic", fillcolor="#EAF3FB", color="#1450A3", style=filled]
+  canary [label="Canary · bounded blast radius", fillcolor="#EAF3FB", color="#1450A3", style=filled]
+  prod   [label="Production · operated release", fillcolor="#F7ECF8", color="#6A2E6E"]
+  back   [label="Rollback to the\npinned prior version", fillcolor="#FCECEC", color="#A62C2C"]
+
+  local -> test -> eval -> gate
+  gate -> stage [label="  pass  ", color="#0D6E69", fontcolor="#0D6E69"]
+  gate -> local [label="  fail  ", color="#A62C2C", fontcolor="#A62C2C", constraint=false, style=dashed]
+  stage -> canary -> prod
+  prod -> back [label="  SLO breach  ", color="#A62C2C", fontcolor="#A62C2C", style=dashed, constraint=false]
+  { rank=same; prod; back }
+}

@@ -4,102 +4,157 @@
     {
       "id": "anti-before-after",
       "file": "assets/diagrams/anti-before-after.png",
-      "sha256": "ececad176fb98661edd824bc824f60a7e2ff4dd9f403b9e7b28672974161c4d8"
+      "sha256": "2a2d53351d1ed6a067d53086380c5543b98c24a08d51bfbbc6343edaba559a3f",
+      "source": "assets/diagrams/src/anti-before-after.gv",
+      "vector": "assets/diagrams/anti-before-after.pdf"
     },
     {
       "id": "book-map",
       "file": "assets/diagrams/book-map.png",
-      "sha256": "6df8d80057a0bbefbda3c8363fb69bcfb944ef99c9a8b1b66d911d1f1ba87c75"
+      "sha256": "f9134866904054ee4ed21d163aed27e6f06ac112c16e7bab23fee61c53aef1c2",
+      "source": "assets/diagrams/src/book-map.gv",
+      "vector": "assets/diagrams/book-map.pdf"
     },
     {
       "id": "developer-lifecycle",
       "file": "assets/diagrams/developer-lifecycle.png",
-      "sha256": "23ab7896c780e637d53e99deaf1977453415a9dc636af3158d8726121bf396c9"
+      "sha256": "54dfe08451ffa40cb3dfbb39f2554d7f317c4b7f1688813192d23b5241f4c7b2",
+      "source": "assets/diagrams/src/developer-lifecycle.gv",
+      "vector": "assets/diagrams/developer-lifecycle.pdf"
     },
     {
       "id": "developer-platform",
       "file": "assets/diagrams/developer-platform.png",
-      "sha256": "b4d205365f963394d0135ac73e247ceee0f7bc0d646092a50eac0e2599f1e023"
+      "sha256": "52e83d88265e751d3aa34690786de86bf17851ac00dbdf0c956f3e6a9ed0cf3f",
+      "source": "assets/diagrams/src/developer-platform.gv",
+      "vector": "assets/diagrams/developer-platform.pdf"
     },
     {
       "id": "dx-golden-path",
       "file": "assets/diagrams/dx-golden-path.png",
-      "sha256": "510f3a858768bb261bcd383142d2d2a48bb3e51c5fe3c754d2e078300236a7d1"
+      "sha256": "604e272b394b0341cddb37cb170b3c493aee757e2dfdfc38fbfa486c33aa77a0",
+      "source": "assets/diagrams/src/dx-golden-path.gv",
+      "vector": "assets/diagrams/dx-golden-path.pdf"
     },
     {
       "id": "gateway-position",
       "file": "assets/diagrams/gateway-position.png",
-      "sha256": "53e521d761bd7d3cbfa2e26a7cf78bb87acc9950f07c3485318593db1e394a70"
+      "sha256": "9abc8f1a3c4a1c4c8f2d16ef95a01150ef73e65b2a30579155fbe3a78b75ade3",
+      "source": "assets/diagrams/src/gateway-position.gv",
+      "vector": "assets/diagrams/gateway-position.pdf"
+    },
+    {
+      "id": "gateway-roles",
+      "file": "assets/diagrams/gateway-roles.png",
+      "source": "assets/diagrams/src/gateway-roles.gv",
+      "vector": "assets/diagrams/gateway-roles.pdf",
+      "sha256": "3ad9b99845c9670a732fb70f4262ce64168c11206900adeef5d8fe59d8fd651c"
     },
     {
       "id": "governance-model",
       "file": "assets/diagrams/governance-model.png",
-      "sha256": "bdee72d6a2004cda5e525f106f78d98dd2554b2b9d5e6649226ca256f0653489"
+      "sha256": "f6610ba8bda791e0c2c520c507af352a9d4c850f6e471e510da57847dc4cee51",
+      "source": "assets/diagrams/src/governance-model.gv",
+      "vector": "assets/diagrams/governance-model.pdf"
     },
     {
       "id": "guardrail-sequence",
       "file": "assets/diagrams/guardrail-sequence.png",
-      "sha256": "cc05e2b3315e4210205feb3b2e994effa6a5496945da89fbf970fccad50ae077"
+      "sha256": "f5e08560369cbd8b629423e7b1e7b67a10bb6c89b5e35d9a3be86092fe874bff",
+      "source": "assets/diagrams/src/guardrail-sequence.mmd",
+      "vector": "assets/diagrams/guardrail-sequence.pdf"
     },
     {
       "id": "knowledge-fabric",
       "file": "assets/diagrams/knowledge-fabric.png",
-      "sha256": "1a2b9db925dcb58ac07010e730f016ae83382750889e0616a4677df3b5d6fec9"
+      "sha256": "e3594f380182974c59c2a947190a04cebe564d8fe244d6aa839d2b073818b976",
+      "source": "assets/diagrams/src/knowledge-fabric.gv",
+      "vector": "assets/diagrams/knowledge-fabric.pdf"
     },
     {
       "id": "learning-loop",
       "file": "assets/diagrams/learning-loop.png",
-      "sha256": "cd17949d9caee0662caf417c1c3bfaee4eee05f360f991de8ac5bab313ecde86"
+      "sha256": "f6e857a053e678656a09ee673ce19dacf53b7dcc57a956517bead09efed47baa",
+      "source": "assets/diagrams/src/learning-loop.gv",
+      "vector": "assets/diagrams/learning-loop.pdf"
     },
     {
       "id": "model-routing",
       "file": "assets/diagrams/model-routing.png",
-      "sha256": "e5de1387392122a7b7e4946c1e212dc5f6805a744dee8af2b41cb99cb132bedb"
+      "sha256": "e03260926709c1a7ca9d6e71a3f86c5195e5ad512893a6e7de4b819bcc289cf9",
+      "source": "assets/diagrams/src/model-routing.gv",
+      "vector": "assets/diagrams/model-routing.pdf"
     },
     {
       "id": "pattern-decision-tree",
       "file": "assets/diagrams/pattern-decision-tree.png",
-      "sha256": "07b059e1aa8731c35f2c5f9d432dfee78d0c7816b0d6fc1fb67fce049a27bc04"
+      "sha256": "602b3dcef2c3298f48c91073a8c9125fc217a380e7da9c444a50b028079b27b5",
+      "source": "assets/diagrams/src/pattern-decision-tree.gv",
+      "vector": "assets/diagrams/pattern-decision-tree.pdf"
     },
     {
       "id": "policy-to-guardrail",
       "file": "assets/diagrams/policy-to-guardrail.png",
-      "sha256": "eec22a0573e7e0918bffc1aadb2024bba7e95193e188157892459bfc2ca415ae"
+      "sha256": "5d1cb1313d1705c377a62c1243880f2a5d49a839820edc8a9faebeef2cb17a97",
+      "source": "assets/diagrams/src/policy-to-guardrail.gv",
+      "vector": "assets/diagrams/policy-to-guardrail.pdf"
     },
     {
       "id": "portability",
       "file": "assets/diagrams/portability.png",
-      "sha256": "9f0075fbc80bdf217b644dd0bfea1dfed49886bc16870e326e96130d67492a04"
+      "sha256": "a99b915091e238d4e4ee7512ea57f8db4a0b907d0ffd047bc28e640d44c67502",
+      "source": "assets/diagrams/src/portability.gv",
+      "vector": "assets/diagrams/portability.pdf"
     },
     {
       "id": "reference-architecture",
       "file": "assets/diagrams/reference-architecture.png",
-      "sha256": "d4f49c6b023a74b9cab1d0ed8794c96aeaa6c29d30402c4b442ff1e08c4c8495"
+      "sha256": "421783b903113a333e813554ee7e645a3c56bfe1e8f48737328c239294c17c45",
+      "source": "assets/diagrams/src/reference-architecture.gv",
+      "vector": "assets/diagrams/reference-architecture.pdf"
     },
     {
       "id": "request-sequence",
       "file": "assets/diagrams/request-sequence.png",
-      "sha256": "af8115a556777f8c6c0b383124657d37c78358cfc11c04a9f1e868586817450a"
+      "sha256": "9a3b07d4bf51c402d678f77c2eef298fc1d3f72ae26069a61adde8ea0e7f38f5",
+      "source": "assets/diagrams/src/request-sequence.mmd",
+      "vector": "assets/diagrams/request-sequence.pdf"
     },
     {
       "id": "runtime-offline",
       "file": "assets/diagrams/runtime-offline.png",
-      "sha256": "26959491fc1e265bbb999b976e4042867c10043eee03c0b7c608fec8ed625f1f"
+      "sha256": "ae9175f77e46e1dfcc28f99be1c08d9c4dbe9c9ff44a15287a9deb49d1271e95",
+      "source": "assets/diagrams/src/runtime-offline.gv",
+      "vector": "assets/diagrams/runtime-offline.pdf"
     },
     {
       "id": "security-boundaries",
       "file": "assets/diagrams/security-boundaries.png",
-      "sha256": "6d889f1f24b75765064431f079defde3f34d89b4a44b4ac6f5ef2fb2c2a6a2ad"
+      "sha256": "037876894c555047b1c60db042b68fac30ae72e2c05a58a1c0a53834cdeca260",
+      "source": "assets/diagrams/src/security-boundaries.gv",
+      "vector": "assets/diagrams/security-boundaries.pdf"
     },
     {
       "id": "security-depth",
       "file": "assets/diagrams/security-depth.png",
-      "sha256": "765dc464827e56676df132894a90357bb5098915148724cb838b171b5f4357d7"
+      "sha256": "82e0ca96cd7be9e0bdbce41573d63ef8c67c8f7a130ecef61f21f489f3650da3",
+      "source": "assets/diagrams/src/security-depth.gv",
+      "vector": "assets/diagrams/security-depth.pdf"
+    },
+    {
+      "id": "system-overview",
+      "file": "assets/diagrams/system-overview.png",
+      "source": "assets/diagrams/src/system-overview.gv",
+      "vector": "assets/diagrams/system-overview.pdf",
+      "sha256": "0fb3ef3549c462ba75e4ab588a10e43a94fd7cdfea1effa64b58cd19509d71a1"
     },
     {
       "id": "test-pyramid",
       "file": "assets/diagrams/test-pyramid.png",
-      "sha256": "1aa3c43742201d5f000d518fac8a1e2f32c995a6d1abe8e0515311b2eb547c74"
+      "sha256": "e176177bb73ca1e5c3ef2744da7ce558894f1c530fd122b016e95bb4542f48dc",
+      "source": "assets/diagrams/src/test-pyramid.gv",
+      "vector": "assets/diagrams/test-pyramid.pdf"
     }
-  ]
+  ],
+  "note": "Diagrams are generated from the editable sources in assets/diagrams/src/ by tools/render_diagrams.py. Each source renders to a vector PDF, which XeLaTeX embeds, and a raster PNG for the DOCX edition. Never hand-edit a render."
 }

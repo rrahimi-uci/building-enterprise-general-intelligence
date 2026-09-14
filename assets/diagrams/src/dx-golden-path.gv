@@ -1,0 +1,26 @@
+// Figure 7-4 — Developer golden path from scaffold to operated release.
+// Message: one supported route, with the platform supplying identity, versions
+// and evidence at each step so a team never assembles them by hand.
+digraph dx_golden_path {
+  rankdir = TB
+  graph [ranksep=0.32, nodesep=0.22]
+  node [width=1.15, fontsize=12]
+
+  subgraph cluster_path {
+    label="  Golden path"; labeljust="l"; fontsize=12; fontcolor="#4A6078"
+    color="#B9C8D8"; style="rounded"; margin=14
+    s1 [label="scaffold", fillcolor="#E7F5F3", color="#0D6E69"]
+    s2 [label="run\nlocally", fillcolor="#E7F5F3", color="#0D6E69"]
+    s3 [label="add\ntools", fillcolor="#E7F5F3", color="#0D6E69"]
+    s4 [label="evaluate", fillcolor="#E7F5F3", color="#0D6E69"]
+    s5 [label="promote", fillcolor="#E7F5F3", color="#0D6E69"]
+    s6 [label="operate", fillcolor="#E7F5F3", color="#0D6E69"]
+    s1 -> s2 -> s3 -> s4 -> s5 -> s6
+  }
+
+  supplied [label="Supplied by the platform, never assembled by hand:\nidentity · tool manifests · pinned versions · traces · evidence",
+            fillcolor="#EAF3FB", color="#1450A3", style=filled, shape=note, fontsize=12]
+  supplied -> s3 [style=dashed, color="#1450A3", constraint=false]
+  supplied -> s4 [style=dashed, color="#1450A3", constraint=false]
+  supplied -> s5 [style=dashed, color="#1450A3", constraint=false]
+}

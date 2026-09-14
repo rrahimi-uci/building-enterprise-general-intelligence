@@ -4,20 +4,20 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "33fa699204f2d583715cdd617ecabe63bef29b9f6e9decd07e8442894d9fcd3d",
-    "content_tex_sha256": "cac2413de3fb65fe1d75c3b41681d7b848d7f30a4f3252067a2e705576a458b0",
-    "style_sha256": "4238edac4acfd1673ebf9d41420ebfb0b0d23a3c2c67ef8eb43d12da3eab1194",
+    "content_tex_sha256": "1c606f3653cf8d468f7342165162070ec8425f9ad804fa27a00deaa81027ea34",
+    "style_sha256": "84d6c5fb54308c0f75fdcd1d799dee51a522637e4759fe6bc2877185baf40d66",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "appendices": 12,
-    "diagrams": 20,
+    "diagrams": 22,
     "code_blocks": 57,
-    "longtables": 200,
-    "callout_tables": 95,
+    "longtables": 202,
+    "callout_tables": 96,
     "citation_occurrences": 104,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 295,
+    "markdown_tables": 298,
     "markdown_code_blocks": 57,
     "image_quality": [
       {
@@ -31,162 +31,178 @@
       {
         "file": "assets/diagrams/book-map.png",
         "pixels": [
-          1800,
-          1000
+          2266,
+          1855
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 321.0
+      },
+      {
+        "file": "assets/diagrams/system-overview.png",
+        "pixels": [
+          2345,
+          1860
+        ],
+        "effective_dpi": 332.2
+      },
+      {
+        "file": "assets/diagrams/gateway-roles.png",
+        "pixels": [
+          3912,
+          839
+        ],
+        "effective_dpi": 554.1
       },
       {
         "file": "assets/diagrams/reference-architecture.png",
         "pixels": [
-          1800,
-          1000
+          2269,
+          2223
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 321.4
       },
       {
         "file": "assets/diagrams/request-sequence.png",
         "pixels": [
-          1800,
-          1000
+          2055,
+          1365
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 291.1
       },
       {
         "file": "assets/diagrams/knowledge-fabric.png",
         "pixels": [
-          1800,
-          1000
+          2271,
+          1524
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 321.7
       },
       {
         "file": "assets/diagrams/policy-to-guardrail.png",
         "pixels": [
-          1800,
-          1000
+          2322,
+          2798
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 328.9
       },
       {
         "file": "assets/diagrams/developer-platform.png",
         "pixels": [
-          1800,
-          1000
+          2271,
+          1471
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 321.7
       },
       {
         "file": "assets/diagrams/portability.png",
         "pixels": [
-          1800,
-          1000
+          2271,
+          999
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 321.7
       },
       {
         "file": "assets/diagrams/developer-lifecycle.png",
         "pixels": [
-          1800,
-          1000
+          2279,
+          2183
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 322.8
       },
       {
         "file": "assets/diagrams/dx-golden-path.png",
         "pixels": [
-          1800,
-          1000
+          2270,
+          1982
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 321.5
       },
       {
         "file": "assets/diagrams/test-pyramid.png",
         "pixels": [
-          1800,
-          1000
+          2269,
+          1020
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 321.4
       },
       {
         "file": "assets/diagrams/pattern-decision-tree.png",
         "pixels": [
-          1800,
-          1000
+          2366,
+          1946
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 335.1
       },
       {
         "file": "assets/diagrams/anti-before-after.png",
         "pixels": [
-          1800,
-          1000
+          2343,
+          1729
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 331.9
       },
       {
         "file": "assets/diagrams/gateway-position.png",
         "pixels": [
-          1800,
-          1000
+          2389,
+          2164
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 338.4
       },
       {
         "file": "assets/diagrams/model-routing.png",
         "pixels": [
-          1800,
-          1000
+          2295,
+          2292
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 325.1
       },
       {
         "file": "assets/diagrams/security-depth.png",
         "pixels": [
-          1800,
-          1000
+          2283,
+          1459
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 323.4
       },
       {
         "file": "assets/diagrams/security-boundaries.png",
         "pixels": [
-          1800,
-          1000
+          2268,
+          1910
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 321.2
       },
       {
         "file": "assets/diagrams/guardrail-sequence.png",
         "pixels": [
-          1800,
-          1000
+          2055,
+          1376
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 291.1
       },
       {
         "file": "assets/diagrams/learning-loop.png",
         "pixels": [
-          1800,
-          1000
+          2267,
+          1983
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 321.1
       },
       {
         "file": "assets/diagrams/runtime-offline.png",
         "pixels": [
-          1800,
-          1000
+          2466,
+          4487
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 349.3
       },
       {
         "file": "assets/diagrams/governance-model.png",
         "pixels": [
-          1800,
-          1000
+          2286,
+          1560
         ],
-        "effective_dpi": 255.0
+        "effective_dpi": 323.8
       }
     ],
     "bundled_fonts": 8,

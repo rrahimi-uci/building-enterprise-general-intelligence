@@ -1,0 +1,26 @@
+// Figure 19-2 — Policy-first model routing.
+// Message: model choice is a governance decision before it is an economic one.
+// Residency, retention and approval narrow the candidate set; only then does cost choose.
+digraph model_routing {
+  rankdir = TB
+  graph [ranksep=0.30, nodesep=0.24]
+  node [width=1.9, fontsize=12]
+  edge [fontsize=10]
+
+  req [label="Request\npurpose · data class · region", fillcolor="#EEF4FA", color="#4A6078"]
+  g1 [label="Residency and retention\npermit this provider?", fillcolor="#FCECEC", color="#A62C2C", shape=diamond, style=filled, width=2.4, height=1.05]
+  g2 [label="Model approved for\nthis purpose?", fillcolor="#FCECEC", color="#A62C2C", shape=diamond, style=filled, width=2.2, height=1.05]
+  g3 [label="Capability sufficient\nfor the task?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=2.2, height=1.05]
+  refuse [label="Refuse or\nescalate", fillcolor="#FCECEC", color="#A62C2C"]
+  cheap [label="Cheapest approved model\nthat meets the bar", fillcolor="#E7F5F3", color="#0D6E69"]
+  strong [label="Higher-capability\napproved model", fillcolor="#E7F5F3", color="#0D6E69"]
+
+  req -> g1
+  g1 -> refuse [label=" no ", color="#A62C2C", fontcolor="#A62C2C"]
+  g1 -> g2 [label=" yes "]
+  g2 -> refuse [label=" no ", color="#A62C2C", fontcolor="#A62C2C"]
+  g2 -> g3 [label=" yes "]
+  g3 -> cheap [label=" yes ", color="#0D6E69", fontcolor="#0D6E69"]
+  g3 -> strong [label=" no "]
+  { rank=same; cheap; strong }
+}

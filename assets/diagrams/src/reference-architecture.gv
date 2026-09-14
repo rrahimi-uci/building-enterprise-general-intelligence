@@ -1,0 +1,47 @@
+// Figure 4-1 — Enterprise agentic AI layered reference architecture.
+// Message: probabilistic reasoning sits inside explicit planes; each plane owns
+// one named responsibility, and authority narrows as you read downward.
+digraph reference_architecture {
+  rankdir = TB
+  graph [ranksep=0.16]
+  node [shape=plaintext, style="", margin=0]
+  edge [style=invis]
+
+  layer0 [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#4A6078" BGCOLOR="#EEF4FA">
+      <TR><TD COLSPAN="4" ALIGN="LEFT" BGCOLOR="#4A6078"><FONT COLOR="white" POINT-SIZE="12"><B>  Experience and channels</B></FONT></TD></TR>
+      <TR><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">User intent</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Review surfaces</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Accessibility</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Recourse</FONT></TD></TR>
+    </TABLE>>]
+  layer1 [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#0D6E69" BGCOLOR="#E7F5F3">
+      <TR><TD COLSPAN="4" ALIGN="LEFT" BGCOLOR="#0D6E69"><FONT COLOR="white" POINT-SIZE="12"><B>  Agent applications</B></FONT></TD></TR>
+      <TR><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Domain behaviour</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Topology</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Accepted outcomes</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Escalation</FONT></TD></TR>
+    </TABLE>>]
+  layer2 [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#0D6E69" BGCOLOR="#E7F5F3">
+      <TR><TD COLSPAN="4" ALIGN="LEFT" BGCOLOR="#0D6E69"><FONT COLOR="white" POINT-SIZE="12"><B>  Runtime and orchestration</B></FONT></TD></TR>
+      <TR><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Durable state</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Budgets and retries</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Human pauses</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Effect records</FONT></TD></TR>
+    </TABLE>>]
+  layer3 [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#0B6076" BGCOLOR="#E6F5F9">
+      <TR><TD COLSPAN="4" ALIGN="LEFT" BGCOLOR="#0B6076"><FONT COLOR="white" POINT-SIZE="12"><B>  Knowledge, context and memory</B></FONT></TD></TR>
+      <TR><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Authorized evidence</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Provenance</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Memory scope</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Reusable skills</FONT></TD></TR>
+    </TABLE>>]
+  layer4 [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#1450A3" BGCOLOR="#EAF3FB">
+      <TR><TD COLSPAN="4" ALIGN="LEFT" BGCOLOR="#1450A3"><FONT COLOR="white" POINT-SIZE="12"><B>  Gateways and integration</B></FONT></TD></TR>
+      <TR><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">LLM Gateway</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Tool Gateway</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">MCP and A2A</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Enterprise APIs</FONT></TD></TR>
+    </TABLE>>]
+  layer5 [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#A62C2C" BGCOLOR="#FCECEC">
+      <TR><TD COLSPAN="4" ALIGN="LEFT" BGCOLOR="#A62C2C"><FONT COLOR="white" POINT-SIZE="12"><B>  Security and governance</B></FONT></TD></TR>
+      <TR><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Identity and policy</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Guardrails</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Approvals</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Audit and evidence</FONT></TD></TR>
+    </TABLE>>]
+  layer6 [label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#1450A3" BGCOLOR="#EDF3FC">
+      <TR><TD COLSPAN="4" ALIGN="LEFT" BGCOLOR="#1450A3"><FONT COLOR="white" POINT-SIZE="12"><B>  Evaluation and operations</B></FONT></TD></TR>
+      <TR><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Tracing</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Evaluation</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Release and SLOs</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Cost and capacity</FONT></TD></TR>
+    </TABLE>>]
+
+  layer0 -> layer1 -> layer2 -> layer3 -> layer4 -> layer5 -> layer6
+}

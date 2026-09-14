@@ -116,7 +116,8 @@ make pdf        # three-pass XeLaTeX -> dist/*-LaTeX.pdf
 │   └── style-tokens.json         # portable design tokens
 ├── assets/
 │   ├── cover/                    # source artwork and generated cover
-│   ├── diagrams/                 # publication diagrams
+│   ├── diagrams/                 # rendered diagrams: PDF for print, PNG for DOCX
+│   │   └── src/                  # ← editable diagram sources (.gv, .mmd)
 │   └── parts/                    # generated Part divider panels
 │
 ├── book/manuscript.md            # generated canonical assembly; do not hand-edit
@@ -190,6 +191,7 @@ Committed — tracked release evidence, listed in `CHECKSUMS.sha256`:
 - `latex/content/book-content.tex`
 - `assets/cover/cover-v2.1.0.png`
 - `assets/parts/part-*.png` — Part divider panels, cropped from `source/part-visuals/`
+- `assets/diagrams/*.pdf` and `*.png` — rendered from `assets/diagrams/src/` by `make diagrams`
 - `templates/book-style-template.docx`
 
 Not committed — regenerable, and gitignored so rebuilds do not churn binaries

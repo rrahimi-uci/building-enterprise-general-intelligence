@@ -1,0 +1,52 @@
+// Shared visual language for every Graphviz diagram in the book.
+//
+// tools/render_diagrams.py splices this block in immediately after the opening
+// `digraph { ... }` brace of each source, so a diagram file carries only its own
+// content and every diagram inherits one house style. Editing this file restyles
+// the whole book; editing a source restyles one figure.
+//
+// Role is carried by colour AND shape, so a component type is identifiable
+// without the legend and the figure still reads in greyscale print.
+//
+//   N_runtime    rounded box, teal     agent runtimes, reasoning components
+//   N_service    box, blue             platform services and APIs
+//   N_data       cylinder, indigo      stores, ledgers, records
+//   N_knowledge  note, cyan            knowledge, policy, evidence artifacts
+//   N_gate       diamond, amber        decisions and policy checks
+//   N_external   box, slate            systems outside the trust boundary
+//   N_effect     rounded box, plum     committed effects and outcomes
+//   N_bad        rounded box, red      anti-patterns and refusals
+//
+// Edges: solid for flow, dashed for control or policy, dotted for evidence.
+
+graph [
+  bgcolor    = "white"
+  fontname   = "Liberation Sans"
+  fontsize   = 13
+  fontcolor  = "#12233F"
+  pad        = 0.35
+  nodesep    = 0.30
+  ranksep    = 0.40
+  splines    = true
+  concentrate = false
+]
+
+node [
+  fontname  = "Liberation Sans"
+  fontsize  = 13
+  fontcolor = "#12233F"
+  shape     = box
+  style     = "filled,rounded"
+  penwidth  = 1.5
+  margin    = "0.18,0.10"
+  height    = 0.5
+]
+
+edge [
+  fontname  = "Liberation Sans"
+  fontsize  = 10.5
+  fontcolor = "#4A6078"
+  color     = "#1450A3"
+  penwidth  = 1.4
+  arrowsize = 0.75
+]
