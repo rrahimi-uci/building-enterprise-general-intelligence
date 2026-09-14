@@ -4,21 +4,21 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "33fa699204f2d583715cdd617ecabe63bef29b9f6e9decd07e8442894d9fcd3d",
-    "content_tex_sha256": "057575dec2991c22054936f6cac1daf98074638ffb9cb3690eba0004ad08ece5",
+    "content_tex_sha256": "ccbeb8aecbed48db897d94914e60e98b5d515463e40b2ac54c38d8f368aff1e3",
     "style_sha256": "f2f56a95c6d5382add095f9df3e90ee3a6f508577ec5413768159c668f1e7da3",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "appendices": 12,
-    "diagrams": 25,
-    "code_blocks": 63,
-    "longtables": 212,
-    "callout_tables": 97,
+    "diagrams": 26,
+    "code_blocks": 67,
+    "longtables": 214,
+    "callout_tables": 98,
     "citation_occurrences": 104,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 309,
-    "markdown_code_blocks": 63,
+    "markdown_tables": 312,
+    "markdown_code_blocks": 67,
     "image_quality": [
       {
         "file": "assets/cover/cover-v2.1.0.png",
@@ -35,6 +35,14 @@
           1855
         ],
         "effective_dpi": 321.0
+      },
+      {
+        "file": "assets/diagrams/capability-ladder.png",
+        "pixels": [
+          2261,
+          1331
+        ],
+        "effective_dpi": 320.3
       },
       {
         "file": "assets/diagrams/system-overview.png",
