@@ -6,6 +6,18 @@ This Part is about running the system for years rather than shipping it once. It
 
 > **Evidence note.** NIST AI RMF and its Generative AI Profile are voluntary risk guidance; ISO/IEC 42001 specifies an AI management system; the EU AI Act source provides official implementation context. Applicability and legal obligations require qualified jurisdiction-specific review. [R12][R13][R14][R40]
 
+## What this chapter delivers
+
+Make governance decisions explicit, proportional, owned, and reversible, so that risk control accelerates delivery instead of queueing it behind a committee.
+
+## Solution blueprint
+
+Figure 25. Governance, Risk, and Operating Model.
+
+| **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
+| --- | --- | --- | --- | --- |
+| A named accountable owner per decision class; a named risk authority owns exceptions | delegated domain autonomy to enterprise risk appetite | risk tier · domain · release | one decision, one exception, one release | risk classification · PolicyDecision · ValidationReport · exception record |
+
 ## Federated operating model
 
 Governance makes decisions explicit, proportional, evidence-based, and reversible. It accelerates safe delivery with reusable risk tiers, policy, review paths, and evidence rather than sending every prompt edit to one committee.
@@ -41,6 +53,50 @@ Assess incorrect-outcome impact, sensitive data, protected effects, legal releva
 Principles define non-negotiable outcomes; standards define reusable contracts; policy-as-code decides eligible models, data, tools, actions, budgets, and approvals; application configuration selects within the envelope; exceptions are scoped, monitored, owned, and expiring. Review outcome/acceptance, deterministic boundary, state/effect ownership, identity/delegation, context/memory, tool/MCP/A2A trust, threats, evaluation truth, observability/privacy, recovery, release, capacity/cost, human oversight, and portability.
 
 Operate per run (admission/policy/effects/acceptance), daily/weekly (SLO, quality, safety, cost, incidents, evaluator health), per release (classification, regression, security/privacy, compatibility, canary/rollback), quarterly (portfolio value/risk and platform roadmap), and annually/material change (policy, law, threat, recovery, independent assurance).
+
+## Grounding, corrections, and evidence boundary
+
+| **Claim or correction** | **Grounded statement** | **Source IDs** |
+| --- | --- | --- |
+| Regulatory applicability | NIST AI RMF and its Generative AI Profile are voluntary guidance; ISO/IEC 42001 specifies a management system; the EU AI Act creates binding obligations that vary by risk category and by whether the enterprise acts as provider or deployer. Mapping a control in this book to a clause is engineering evidence, not legal advice, and qualified jurisdiction-specific review remains required. | R12; R13; R14; R40 |
+
+Evidence anchors: R12; R13; R14; R40. Full URLs, authority, version, and scope appear in Appendix K.
+
+## Debugging playbook
+
+Governance fails as queues and exceptions rather than as stack traces. Diagnose it the same way.
+
+1. When a release is blocked, find which single decision lacks a named owner instead of escalating the whole release.
+2. When the same exception recurs, treat it as a missing standard rather than a repeated approval.
+3. When risk tier and control effort disagree, re-score impact, reversibility, and human detectability before changing the tier.
+4. When review takes longer than delivery, check whether evidence is produced by the pipeline or assembled by hand. Hand-assembled evidence is the usual cause.
+
+## Production checklist
+
+**✓** Every decision class in the accountability table has one named owner and one required evidence artifact.
+
+**✓** Risk tier is derived from impact, protected effects, autonomy, exposure, scale, reversibility, and human detectability — not from the model name.
+
+**✓** Exceptions are scoped, compensated, monitored, owned, and expiring. An exception without an expiry is a silent policy change.
+
+**✓** Policy-as-code decides eligible models, data, tools, actions, budgets, and approvals; application configuration only selects within that envelope.
+
+**✓** Each cadence — per run, daily or weekly, per release, quarterly, annually — has a named owner and a defined input.
+
+## Exercises
+
+1. Classify three current use cases into risk tiers and list the minimum governance each one triggers. Where two people disagree, the tier definition is the defect.
+2. Take one standing exception and write either its expiry date or the standard that would retire it permanently.
+
+## Technical review questions
+
+| **Question** | **Strong answer** |
+| --- | --- |
+| Why federate governance rather than centralize it? | Central review of every prompt edit becomes the bottleneck and is abandoned. Centralize reusable control services, risk tiers, policy, and evidence; federate domain acceptance, tools, knowledge, and SLOs to accountable owners. |
+| What makes a risk tier defensible? | It is derived from consequence and reversibility — incorrect-outcome impact, sensitive data, protected effects, autonomy, exposure, scale, and human detectability — rather than from the model or framework in use. |
+| Why must every exception expire? | An exception that never expires is an undocumented policy change with no owner and no review. Expiry forces either the standard to change or the compensating control to be retired deliberately. |
+| What separates principles, standards, policy-as-code, and configuration? | Principles state non-negotiable outcomes; standards define reusable contracts; policy-as-code decides what is eligible at runtime; configuration selects within that envelope. Only the first two are argued; the last two are executed. |
+| How do you know governance is accelerating delivery? | Time from evidence-complete to approved is falling, exceptions are trending down as standards absorb them, and the same evidence serves engineering review, risk review, and audit without rework. |
 
 ## Transition to Chapter 27
 

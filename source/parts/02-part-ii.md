@@ -297,9 +297,9 @@ def deduplication_key(event: CloudEvent) -> tuple[str, str]:
 | Why use cell-based deployment? | Additive scale, tenant placement, residency, bounded blast radius, independent canaries, and predictable stateful-service limits. |
 | How should execution behave during a control-plane outage? | Continue compatible in-flight work on pinned last-known-good bundles, apply local denies and kill switches, and restrict high-risk admission when freshness cannot be established. |
 
-## Transition to Chapter 7
+## Transition to Chapter 5
 
-The reference architecture names a knowledge plane but does not say what fills it; Chapter 7 defines the governed knowledge layer agents retrieve, reason over, are constrained by, and act through.
+The reference architecture names a knowledge plane but does not say what fills it; Chapter 5 defines the governed knowledge layer agents retrieve, reason over, are constrained by, and act through.
 
 # 05 — Enterprise Knowledge Management for Agents
 
@@ -848,6 +848,6 @@ def authorize_artifact_adoption(
 | How should retrieved instructions be handled? | As untrusted data with provenance and taint; they cannot alter system instructions, tool eligibility, policy, credentials, or destination grants. |
 | How do you delete a fact from an agentic system? | Tombstone and revoke the source, remove derived indexes, invalidate caches, rebuild summaries and contexts, clean governed memory and affected artifacts, and preserve permitted audit evidence. |
 
-## Transition to Chapter 9
+## Transition to Chapter 7
 
-Context assembly completes the knowledge Part. Chapter 9 turns from what agents know to how teams build with it, defining the reusable developer platform and SDK.
+Context assembly completes the knowledge Part. Chapter 7 turns from what agents know to how teams build with it, defining the reusable developer platform and SDK.

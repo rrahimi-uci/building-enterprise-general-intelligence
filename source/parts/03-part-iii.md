@@ -6,6 +6,18 @@ This Part turns the reference architecture into a paved road for delivery teams.
 
 > **Evidence note.** The portability layer is informed by current public agent abstractions from OpenAI, Microsoft, and Google; capability parity is not assumed and must be proven by adapter conformance tests. [R29][R31][R32]
 
+## What this chapter delivers
+
+Define the reusable paved road — contracts, adapters, and a delivery lifecycle — that lets teams ship differentiated agents without rebuilding identity, policy, tool safety, tracing, evaluation, durable execution, and release infrastructure.
+
+## Solution blueprint
+
+Figure 23. Agentic Developer Platform, SDK, and Delivery Lifecycle.
+
+| **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
+| --- | --- | --- | --- | --- |
+| Platform services own contracts and evidence; applications own domain behaviour | application code to platform-owned control planes | template · adapter · release artifact | one application release | AgentSpec · RunContext · ToolSpec · ReleaseManifest |
+
 ## Platform promise
 
 The developer platform is a reusable paved road that lets teams build differentiated agents without repeatedly rebuilding identity, policy, tool safety, tracing, evaluation, durable execution, and delivery infrastructure. It is not a mandatory monolith: applications use platform-owned contracts and replaceable adapters.
@@ -104,9 +116,47 @@ agentctl rollback supplier-onboarding@3.2.0 --to 3.1.4
 
 Use one immutable artifact across environments; bind endpoints, identities, secrets, sources, quotas, regions, and review queues at deployment. Pin SDKs, adapters, model aliases, tool schemas, Skills, MCP servers, policy bundles, evaluators, and knowledge snapshots. A model/provider swap is a behavior change—not harmless configuration.
 
-## Troubleshooting
+## Grounding, corrections, and evidence boundary
 
-Start from accepted business outcome and walk backward through the causal run graph. Find the first divergent span: input classification, source/freshness, prompt, route, model, tool, arguments, policy, effect, approval, or acceptance. Do not “fix the prompt” until evidence locates the failing responsibility.
+| **Claim or correction** | **Grounded statement** | **Source IDs** |
+| --- | --- | --- |
+| Framework portability | Public agent SDKs differ in cancellation, streaming, tool, approval, and error semantics. A shared contract does not make them interchangeable; only adapter conformance tests demonstrate parity, and any gap must be recorded as a known limitation rather than assumed away. | R29; R31; R32 |
+
+Evidence anchors: R29; R31; R32. Full URLs, authority, version, and scope appear in Appendix K.
+
+## Debugging playbook
+
+1. Start from the accepted business outcome and walk backward through the causal run graph.
+2. Find the first divergent span: input classification, source or freshness, prompt, route, model, tool, arguments, policy, effect, approval, or acceptance.
+3. Diff the failing run against the nearest accepted run — prompt, context manifest, and every pinned version — before changing anything.
+4. Do not edit the prompt until the evidence locates the failing responsibility. A prompt change that hides a policy or contract defect removes the signal without removing the fault.
+
+## Production checklist
+
+**✓** One immutable artifact crosses every environment; endpoints, identities, secrets, sources, quotas, regions, and review queues bind at deployment.
+
+**✓** SDKs, adapters, model aliases, tool schemas, Skills, MCP servers, policy bundles, evaluators, and knowledge snapshots are pinned in the release manifest.
+
+**✓** A model or provider swap ships as a behaviour change with evaluation, canary, and rollback — never as configuration.
+
+**✓** Adapter conformance suites cover cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behaviour.
+
+**✓** Every golden-path stage emits its evidence artifact; a stage that produces no evidence is not complete.
+
+## Exercises
+
+1. Take one existing agent and list which of the sixteen platform capabilities it reimplements locally. Estimate the cost of removing each.
+2. Write an adapter conformance test that fails when a framework silently drops cancellation mid-run.
+
+## Technical review questions
+
+| **Question** | **Strong answer** |
+| --- | --- |
+| Why should platform contracts, not framework objects, be the stable interface? | Vendor message objects change between releases and differ in semantics. Contracts such as AgentSpec, ToolSpec, and ReleaseManifest keep applications, evidence, and audits stable while adapters absorb the change. |
+| What makes a paved road adopted rather than mandated? | It removes work the team would otherwise do — identity, policy, tracing, durable execution, release — while leaving domain behaviour, topology, and acceptance to the team. A road that constrains domain decisions gets bypassed. |
+| Why is a model or provider swap not configuration? | Behaviour, cost, latency, and failure modes all change without application code changing, so it requires the same evaluation, canary, and rollback evidence as a code release. |
+| What does the golden path make visible that a convenient SDK hides? | Authority, versions, risk, evidence, and cost. An SDK that hides them does not remove the complexity; it relocates it to production incidents. |
+| When is framework portability proven? | Only when adapter conformance tests pass across cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behaviour. Parity is never inferred from documentation. |
 
 ## Transition to Chapter 8
 
