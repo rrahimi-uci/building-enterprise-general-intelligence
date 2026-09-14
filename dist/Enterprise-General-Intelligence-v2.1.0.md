@@ -4622,329 +4622,485 @@ Pattern selection is easier when failure shapes are visible; Chapter 17 recasts 
 
 ## Field-guide method
 
-Anti-patterns are recurring system shapes. Diagnose the failed responsibility boundary, not only the symptom. Each card supplies the same replacement sequence.
+Anti-patterns are recurring system shapes, not isolated defects. Almost every card below is one mistake wearing different clothes: a probabilistic component was handed a job that belongs to deterministic infrastructure. Diagnose the failed responsibility boundary rather than the symptom, because fixing the symptom — a better prompt, one more retry, a stricter classifier — leaves the boundary intact and the failure returns under a new name.
 
 [[DIAGRAM:anti-before-after|Figure 17-1 — Autonomous monolith versus governed agentic architecture]]
 
-## Reasoning
+Cards are grouped by the boundary they violate rather than by the technology involved, so that two candidates competing for the same fix sit next to each other. Every card carries the same eight fields, which makes them comparable without re-reading prose.
+
+### Catalog index
+
+| **ID** | **Anti-pattern** | **First symptom you will see** | **Boundary it violates** |
+| --- | --- | --- | --- |
+| AP-01 | Autonomous monolith | Work is lost on restart and repeated on retry | Reasoning versus execution |
+| AP-11 | Unbounded loops and recursive delegation | Cost and step count have a long tail with no ceiling | Reasoning versus budget |
+| AP-02 | Prompt as database | Behaviour changes after a long conversation is summarized | Context versus state |
+| AP-09 | Vector store as source of truth | Confident answers cite superseded documents | Retrieval versus authority |
+| AP-13 | Memory write by default | A wrong fact persists across sessions and spreads | Convenience versus provenance |
+| AP-03 | Ambient authority | One credential can reach far more than the task needs | Identity versus authorization |
+| AP-10 | LLM judge as security gate | The same input is allowed on one run and blocked on the next | Evaluation versus enforcement |
+| AP-12 | Ungated tool discovery and catalog dumping | Token cost rises and the agent selects irrelevant tools | Discovery versus eligibility |
+| AP-04 | Retry everywhere | One logical operation produces many downstream calls | Failure handling versus ownership |
+| AP-05 | Timeout means failure | Duplicate records appear after a slow dependency | Transport versus effect |
+| AP-06 | Boolean or conversational approval | An approval authorizes something nobody reviewed | Consent versus grant |
+| AP-07 | Model says done | Runs close successfully with obligations outstanding | Narration versus acceptance |
+| AP-08 | Multi-agent chat as workflow | Agents wait on each other and nobody owns completion | Conversation versus coordination |
+| AP-14 | Telemetry without causal or effect lineage | Component metrics improve while outcomes get worse | Monitoring versus attribution |
+| AP-15 | Model or provider swap as configuration | Behaviour shifts with no code change and no release record | Configuration versus behaviour |
+| AP-16 | In-place change and test after release | A failing run cannot be reproduced or rolled back exactly | Convenience versus immutability |
+
+### How to read a card
+
+**Problem** states what the team was legitimately trying to achieve — no card here describes carelessness. **Anti-Pattern** is the shape that gets built. **Why It Fails** gives the mechanism, which is what you need in order to recognise the same failure in an unfamiliar system. **Enterprise Example** is a concrete instance from the Northstar supplier-onboarding scenario used throughout this book. **Recommended Pattern**, **Architecture**, **Detection Metrics** and **Trade-offs** then give the fix, its shape, the signals that tell you whether you still have the problem, and the honest cost of the correction.
+
+The trade-off field matters. Every correction in this catalog costs something — latency, flexibility, or engineering time — and applying all sixteen to a read-only internal assistant would be malpractice. Correct in order of the blast radius of the effects involved.
+
+## Reasoning and control flow
+
+These two failures share a root cause: the model is allowed to decide when to stop. Once stopping is a model decision, termination, budget, and blast radius all become probabilistic properties of a text generator, and no amount of prompt tuning makes them deterministic again. The correction in both cases is to move the stopping decision into code that the model cannot reach.
 
 ### AP-01 — Autonomous monolith
 
-**Problem.** A prototype mixes reasoning, state, credentials, tools, retries, approval, completion.
+**Problem.** A prototype that worked convincingly in a notebook is promoted toward production. It mixes reasoning, run state, credentials, tool invocation, retries, approval, and its own completion signal in a single process, because nothing in the prototype phase forced those concerns apart.
 
-**Anti-Pattern.** One unconstrained agent owns end-to-end control.
+**Anti-Pattern.** One unconstrained agent owns end-to-end control. The loop decides what to do, does it, and then declares the outcome.
 
-**Why It Fails.** Probabilistic behavior becomes the control plane and failures cannot be isolated.
+**Why It Fails.** Probabilistic behaviour becomes the control plane. There is no boundary at which a failure can be isolated, so a flawed reasoning step and a failed database write are indistinguishable from outside the process. Run state lives in memory, so a restart loses work that has already had external effects. Nothing can be replayed, because nothing durable was recorded — the transcript is a narrative, not a ledger.
 
-**Recommended Pattern.** Bounded runtime inside durable workflow, policy, tool/effect, acceptance services.
+**Enterprise Example.** Supplier onboarding restarts after a routine deploy and creates the vendor a second time, because the only record that the vendor already existed was the agent's own conversation history.
 
-**Architecture.** Monolith → direct tools → “done” versus workflow → semantic nodes → governed effects → acceptance.
+**Recommended Pattern.** A bounded runtime inside a durable workflow, with policy, tool and effect, and acceptance services each owning their decision.
 
-**Enterprise Example.** Onboarding restarts and repeats vendor creation.
+**Architecture.** Monolith → direct tools → "done" becomes workflow → semantic nodes → governed effects → acceptance.
 
-**Detection Metrics.** Direct protected calls, restart loss, false completion, mixed responsibilities.
+**Detection Metrics.** Protected calls that bypass the gateway, work lost per restart, false-completion rate, and the number of distinct responsibilities living in one process.
 
-**Trade-offs.** Decompose around highest-risk effects; more services add interfaces.
+**Trade-offs.** Decomposition adds interfaces, deployment surface, and latency. Decompose around the highest-risk effects first; a read-only assistant does not need the full split.
 
-## Context engineering
+### AP-11 — Unbounded loops and recursive delegation
+
+**Problem.** Work varies in complexity, and a fixed step count either truncates hard cases or wastes budget on easy ones, so the team lets the agent iterate and delegate as needed.
+
+**Anti-Pattern.** Agents iterate and spawn children with per-call limits but no global ceiling. Each individual decision looks reasonable.
+
+**Why It Fails.** Local limits do not compose. A depth limit of five with a fan-out of five is 3,125 leaf tasks, and each child inherits a fresh budget rather than a share of the parent's. Delegation graphs become cyclic when two specialists can each call the other, and no participant can detect the cycle from inside it. Queue saturation then degrades unrelated tenants, which is how one runaway research task becomes a platform incident.
+
+**Enterprise Example.** A research supervisor spawns fact-checkers that themselves spawn fact-checkers; the run consumes a day of tenant quota before a human notices, and every individual agent behaved exactly as instructed.
+
+**Recommended Pattern.** Global budgets that decrease monotonically across delegation, an acyclic ownership graph, and explicit depth, fan-out, and no-progress limits enforced by the runtime rather than by instructions.
+
+**Architecture.** Recursion becomes a runtime-governed task graph.
+
+PYTHON · anti-pattern and correction
+
+```python
+# Anti-pattern: every child starts fresh, so the ceiling is depth x fan-out.
+async def delegate(task):
+    child = Budget(tokens=20_000, usd=1.00, depth=3)   # reset on every hop
+    return await worker.run(task, budget=child)
+
+# Correction: the parent's remaining budget is the source, and delegation is
+# a withdrawal from it. A child can never be granted more than its parent
+# still holds, so the whole subtree is bounded by the root's admission.
+async def delegate(task, parent: Budget):
+    if parent.depth <= 0:
+        raise DelegationDepthExceeded(task.id)
+    share = parent.reserve(tokens=task.estimate, fraction=0.4)
+    child = share.narrowed(depth=parent.depth - 1)
+    if task.owner in parent.ancestors:         # acyclic ownership
+        raise DelegationCycle(task.owner)
+    return await worker.run(task, budget=child)
+```
+
+**Detection Metrics.** Delegation depth and fan-out distributions, repeated state signatures, no-progress step count, and budget-exhaustion rate by tenant.
+
+**Trade-offs.** Caps truncate genuinely hard work. Set them from observed distributions rather than intuition, and make exhaustion a visible, escalatable terminal rather than a silent stop.
+
+## Context, knowledge and memory
+
+Everything an agent believes arrives through one of these three channels, and all three fail the same way: a convenient representation is mistaken for an authoritative one. A transcript is convenient. A similarity hit is convenient. A remembered fact is convenient. None of them is a system of record, and treating any of them as one moves business truth into a store with no owner, no schema, and no audit.
 
 ### AP-02 — Prompt as database
 
-**Problem.** Business state must survive.
+**Problem.** Business state has to survive across turns, restarts, and handoffs, and the conversation already contains it.
 
-**Anti-Pattern.** Chat history or summary is authoritative.
+**Anti-Pattern.** Chat history, or a rolling summary of it, is treated as the authoritative record of what has happened.
 
-**Why It Fails.** Truncation, drift, concurrency, schema, and audit fail.
+**Why It Fails.** Every mechanism that keeps a context window viable is lossy. Truncation drops the oldest facts, which are often the decisions; summarization paraphrases, and a paraphrase of "legal approved with conditions" is not a legal approval. There is no concurrency control, so two turns that both update a value silently diverge. There is no schema, so nothing detects that a field went missing. And there is no audit trail an investigator can read.
 
-**Recommended Pattern.** Canonical typed state plus ContextManifest projection.
+**Enterprise Example.** A contract renewal forgets that legal approved with conditions, because the approval was three summarization rounds ago and the summary kept the outcome but dropped the conditions.
 
-**Architecture.** Transcript state versus State Service → snapshot → prompt.
+**Recommended Pattern.** Canonical typed state in a service that owns it, with the prompt receiving a ContextManifest projection built fresh from that state on every step.
 
-**Enterprise Example.** Renewal forgets legal approval after summarization.
+**Architecture.** Transcript-as-state becomes State Service → snapshot → prompt.
 
-**Detection Metrics.** Compaction loss, summary conflict, recovery mismatch.
+PYTHON · anti-pattern and correction
 
-**Trade-offs.** Typed state needs schema evolution.
+```python
+# Anti-pattern: the transcript is the record, so whatever survives
+# compaction is what the system believes.
+messages.append({"role": "assistant", "content": "Legal approved with conditions."})
+context = summarize(messages, max_tokens=4_000)
 
-## Security
+# Correction: state is written to a typed store and the prompt is a
+# projection of it. Compaction can lose the sentence without losing the fact,
+# and the approval remains queryable, auditable, and concurrency-safe.
+await state.record(ApprovalEvent(
+    run_id=run.id, authority="legal", disposition="approved_with_conditions",
+    conditions=["indemnity_cap_2m", "termination_notice_90d"],
+    version=state.version,                     # optimistic concurrency
+))
+context = ContextManifest.project(await state.snapshot(run.id), budget=4_000)
+```
+
+**Detection Metrics.** Facts lost across compaction boundaries, disagreement between summary and store, and state mismatches discovered on recovery.
+
+**Trade-offs.** Typed state requires schema design and migration discipline. The cost lands early and visibly, which is precisely why it gets deferred.
+
+### AP-09 — Vector store as source of truth
+
+**Problem.** Relevant knowledge has to be found across a corpus too large to pass into a prompt.
+
+**Anti-Pattern.** A similarity hit is treated as a current, authorized, authoritative fact.
+
+**Why It Fails.** Similarity measures resemblance, not currency, authority, or permission. An index contains what was ingested, including superseded policies, duplicated drafts, documents the caller may not read, and anything an attacker managed to insert. Nothing in a cosine score distinguishes the approved policy from its withdrawn predecessor, and a confident citation of the wrong document is more damaging than no citation at all.
+
+**Enterprise Example.** An obsolete policy chunk applies a superseded spending limit, and the answer cites the document by name, which is what makes the reviewer believe it.
+
+**Recommended Pattern.** Governed sources and snapshots hold authority; the index is a derived locator whose hits are verified for ACL, freshness, and supersession before the content reaches the model.
+
+**Architecture.** Vector hit → action becomes source + ACL + snapshot → evidence → decision.
+
+**Detection Metrics.** Evidence age at decision time, source disagreement rate, ACL mismatches at retrieval, and citations pointing at superseded revisions.
+
+**Trade-offs.** Authoritative lookup adds latency to every retrieval. Apply it in proportion to what the answer will be used for; drafting assistance and payment authorization do not need the same guarantee.
+
+### AP-13 — Memory write by default
+
+**Problem.** Personalization is genuinely valuable, and the cheapest way to get it is to remember everything.
+
+**Anti-Pattern.** Every interaction, or a summary of it, becomes a durable memory record.
+
+**Why It Fails.** Writing by default means writing without provenance, purpose, or verification. Secrets get persisted. Model errors get persisted and then retrieved as established fact, which is how one hallucination becomes a standing belief. Injected instructions from a document become durable instructions. And because nothing recorded why a memory was written, nothing can decide when it should expire or who may delete it — which turns a retention obligation into an archaeology project.
+
+**Enterprise Example.** A malicious email is processed, and the bank account it contains is stored as the supplier's preferred payment detail. Every subsequent run retrieves it as a remembered fact about a known supplier.
+
+**Recommended Pattern.** Memory writes are candidates, not side effects: purpose-bound, carrying provenance, verified before promotion, scoped to a tenant and subject, with a TTL and a deletion path.
+
+**Architecture.** Transcript → memory becomes candidate → gate → typed record.
+
+PYTHON · anti-pattern and correction
+
+```python
+# Anti-pattern: the model decides what is worth remembering, and the write
+# path has no provenance, no purpose, and no way to expire.
+memory.write(user_id, summarize(conversation))
+
+# Correction: a write is a proposal that must survive a gate. Untrusted
+# provenance cannot become durable memory, and every record carries the
+# purpose that justifies its retention.
+candidate = MemoryCandidate(
+    subject=user_id, tenant=run.tenant, purpose="supplier_payment_preference",
+    claim=extracted.claim, provenance=extracted.source,   # which document, which ACL
+    confidence=extracted.confidence, ttl_days=180,
+)
+if gate.admits(candidate):        # source trust, purpose match, no secrets, corroboration
+    memory.write(candidate.as_record())
+else:
+    audit.rejected(candidate, reason=gate.reason)
+```
+
+**Detection Metrics.** Sensitive-data writes caught by DLP, retrieval of stale records, correction and deletion rates, and incidents traceable to a single memory record.
+
+**Trade-offs.** A strict write path reduces the perceived magic of personalization and requires someone to own purpose definitions. The alternative is an unowned database of unverified claims about your customers.
+
+## Security and delegated authority
+
+The three cards here are the difference between *can* and *may*. An agent that can reach a resource, can see a tool, or can produce a plausible safety score has demonstrated capability, not permission. Each card is a case where capability was allowed to stand in for a policy decision, and in each the correction is the same: make the authorization decision explicitly, in code, at the moment of use.
+
+[[DIAGRAM:anti-ambient-authority|Figure 17-2 — Ambient authority versus a narrowed, short-lived capability lease]]
 
 ### AP-03 — Ambient authority
 
-**Problem.** Agents need access.
+**Problem.** Agents need access to enterprise systems, and provisioning narrow credentials for every task and tenant is laborious.
 
-**Anti-Pattern.** Workers receive reusable broad credentials.
+**Anti-Pattern.** Workers receive broad, long-lived, reusable credentials — often a service account that predates the agent and was already over-scoped.
 
-**Why It Fails.** Compromise obtains broad, long-lived authority.
+**Why It Fails.** The credential's scope, not the task's need, defines the blast radius. Any compromise — prompt injection, a malicious tool, a leaked log — yields durable authority over everything the credential can reach. Because the same credential serves every run, nothing in the audit trail distinguishes which subject's work caused which effect, so attribution fails exactly when it is needed. And a credential that never expires cannot be revoked faster than someone notices.
 
-**Recommended Pattern.** Subject+workload identity and narrowed capability leases.
+**Enterprise Example.** The support agent's token can export the full customer table. Nothing in the onboarding task requires it; the token was reused because it already existed.
 
-**Architecture.** Broad token versus policy → scoped lease → enforcement.
+**Recommended Pattern.** Preserve both subject and workload identity, derive a capability envelope by intersection, and mint a short-lived, audience-bound credential lease at the moment of use.
 
-**Enterprise Example.** Support token can export all customers.
+**Architecture.** Broad token becomes policy → scoped lease → enforcement at the resource.
 
-**Detection Metrics.** Scope/age, unused privilege, expansion, cross-tenant attempts.
+**Detection Metrics.** Credential scope and age distributions, granted-but-unused privilege, scope-expansion attempts, and cross-tenant access denials.
 
-**Trade-offs.** Fine policy adds design/latency.
+**Trade-offs.** Fine-grained policy adds design effort and a policy-decision hop per call. The hop is cacheable; the design effort is not, and it is the part teams underestimate.
 
-## Reliability
+### AP-10 — LLM judge as security gate
+
+**Problem.** Some content is genuinely ambiguous, and a model is better than a regular expression at recognising nuance.
+
+**Anti-Pattern.** A model-produced score alone authorizes a protected action — `if risk_score < 0.3: execute()`.
+
+**Why It Fails.** A judge is an injectable, nondeterministic component being asked to make a binding decision. The same input can score differently across runs, so the gate is not reproducible and an incident cannot be explained. The content being judged can address the judge directly, which makes the attacker a participant in their own authorization. And judge behaviour drifts with model updates, silently moving the threshold without any release event.
+
+**Enterprise Example.** The judge classifies an unusually large payment as low risk because the request text explains, persuasively, why it is routine.
+
+**Recommended Pattern.** A deterministic policy and invariant gate makes the decision. The judge triages, prioritizes, and supplies evidence for a human — it never holds the authorization.
+
+**Architecture.** `score > threshold → execute` becomes policy → optional judge → human escalation.
+
+**Detection Metrics.** Disagreement rate across repeated runs of identical input, gate bypass attempts, false negatives found downstream, and human override frequency.
+
+**Trade-offs.** Deterministic rules genuinely cannot express every nuance, and some legitimate work will be escalated unnecessarily. That is the correct direction to fail.
+
+### AP-12 — Ungated tool discovery and catalog dumping
+
+**Problem.** A mature platform has many tools, and the agent cannot use what it cannot see.
+
+**Anti-Pattern.** Every discovered tool and its full schema is placed into the prompt, often straight from an MCP server's advertised catalog.
+
+**Why It Fails.** Discovery is being used as authorization. Selection accuracy falls as the catalog grows, because the model is choosing among near-neighbours it has no basis to distinguish. Schemas consume context that evidence should occupy. Worse, tool descriptions are untrusted text from a third party, so a malicious server can write a description engineered to attract calls — the agent is reading attacker-controlled instructions and treating them as a menu.
+
+**Enterprise Example.** A reporting agent discovers an administrative delete tool, because the catalog was filtered by connectivity rather than by the caller's authority.
+
+**Recommended Pattern.** Registry → eligibility and policy evaluation → task-specific shortlist → schema validation at call time. Eligibility is computed from the subject, purpose, tenant, and risk tier, never from what the server happens to advertise.
+
+**Architecture.** Full MCP catalog becomes an approved tool slice bound to a lease.
+
+**Detection Metrics.** Tools exposed versus eligible versus actually used, selection-confusion rate, schema token overhead per run, and unauthorized discovery attempts.
+
+**Trade-offs.** A narrow shortlist will sometimes omit a tool that would have helped. Make the omission observable so the shortlist can be improved deliberately, rather than widening it by default.
+
+## Effects, retries and recovery
+
+These two cards are the most expensive in the catalog, because they produce duplicate real-world effects — duplicate payments, duplicate vendors, duplicate emails to customers. Both stem from confusing the transport layer with the effect layer: a failed call is not a failed effect, and an unacknowledged call is not an absent one.
+
+[[DIAGRAM:anti-retry-storm|Figure 17-3 — Layered retries and timeout-as-failure versus one retry owner with an unknown-effect terminal]]
 
 ### AP-04 — Retry everywhere
 
-**Problem.** Transient failures occur.
+**Problem.** Transient failures are real and common, and every layer in the stack offers a retry setting that looks like diligence.
 
-**Anti-Pattern.** SDK, gateway, workflow, connector, tool each retry.
+**Anti-Pattern.** The SDK, the gateway, the workflow engine, the connector, and the tool each retry independently.
 
-**Why It Fails.** Attempts multiply, cost/load spike, mutations duplicate.
+**Why It Fails.** Retries compose multiplicatively, not additively. Three layers at 3, 3, and 2 attempts produce eighteen calls for one logical operation, and each layer believes it made a modest choice. The amplification arrives precisely when a dependency is already degraded, converting a slow dependency into an outage. If any layer retries a non-idempotent call, the duplicates are permanent.
 
-**Recommended Pattern.** One retry owner per failure class and shared attempt/deadline budget.
+**Enterprise Example.** A single supplier screening produces eighteen calls to the sanctions registry, and the vendor rate-limits the enterprise for the rest of the day.
 
-**Architecture.** Nested retries versus classified failure → one schedule → terminal.
+**Recommended Pattern.** One retry owner per failure class, with a shared attempt and deadline budget that every layer reads and no layer resets.
 
-**Enterprise Example.** 3×3×2 policies create 18 registry calls.
+**Architecture.** Nested retries become classified failure → one schedule → terminal.
 
-**Detection Metrics.** Attempts/logical operation, amplification, duplicates, deadline overrun.
+PYTHON · anti-pattern and correction
 
-**Trade-offs.** Central policy can be conservative.
+```python
+# Anti-pattern: each layer is independently "resilient". 3 x 3 x 2 = 18.
+client = HttpClient(retries=3)
+gateway = ToolGateway(client, retries=3)
+workflow.call(gateway, retry_policy=RetryPolicy(max_attempts=2))
 
-## Reliability
+# Correction: exactly one owner retries, chosen by failure class, and the
+# budget travels with the run so no layer can restart the count.
+client  = HttpClient(retries=0)                 # transport never retries
+gateway = ToolGateway(client, retries=0)        # gateway never retries
+workflow.call(gateway, retry_policy=RetryPolicy(
+    owner="workflow",
+    classify=classify_failure,                  # transient | permanent | unknown
+    retry_on={"transient"},                     # permanent fails fast, unknown reconciles
+    budget=run.attempt_budget,                  # shared, decreasing, deadline-aware
+))
+```
+
+**Detection Metrics.** Attempts per logical operation, amplification factor against dependencies, duplicate effect keys, and deadline overruns caused by retry time.
+
+**Trade-offs.** A single central policy is necessarily more conservative than a hand-tuned one per call site. Express the variation as failure classes rather than as per-layer settings.
 
 ### AP-05 — Timeout means failure
 
-**Problem.** Response is lost after dispatch.
+**Problem.** A response is lost after a request was dispatched, and the run has to decide what to do next.
 
-**Anti-Pattern.** Mark failed and retry immediately.
+**Anti-Pattern.** The call is marked failed and retried immediately.
 
-**Why It Fails.** First call may have committed.
+**Why It Fails.** A timeout describes the response, not the effect. The first call may have committed, may be committing, or may never have arrived, and the caller cannot distinguish these from the outside. Treating that state as failure asserts knowledge the system does not have, and the retry then creates the duplicate that the timeout only made possible.
 
-**Recommended Pattern.** Unknown-effect terminal and reconciliation before retry/compensate.
+**Enterprise Example.** The vendor is created twice: the first call committed just after the client gave up waiting.
 
-**Architecture.** Timeout→failed→retry versus timeout→unknown→lookup→decide.
+**Recommended Pattern.** An explicit unknown-effect terminal that blocks retry until reconciliation resolves it against the downstream system of record.
 
-**Enterprise Example.** Vendor is created twice.
+**Architecture.** timeout → failed → retry becomes timeout → unknown → lookup → decide.
 
-**Detection Metrics.** Unknown count/age, duplicate keys, post-timeout conflicts.
+PYTHON · anti-pattern and correction
 
-**Trade-offs.** Unknown may delay completion.
+```python
+# Anti-pattern: timeout is treated as proof that nothing happened.
+try:
+    return await vendors.create(payload)
+except TimeoutError:
+    return await vendors.create(payload)        # may now exist twice
 
-## Governance
+# Correction: unknown is a first-class terminal. Nothing retries a mutation
+# until the downstream record has been consulted about what actually landed.
+try:
+    return await vendors.create(payload, idempotency_key=effect.key)
+except TimeoutError:
+    effect.mark(EffectState.UNKNOWN)            # durable, visible, blocks retry
+    actual = await vendors.lookup(idempotency_key=effect.key)
+    if actual is not None:
+        return effect.resolve(committed=actual)  # it did land; adopt it
+    return effect.resolve(committed=None)        # genuinely absent; now safe to retry
+```
+
+**Detection Metrics.** Count and age of unresolved unknown effects, duplicate idempotency keys observed downstream, and conflicts discovered after a timeout.
+
+**Trade-offs.** Unknown terminals delay completion and need somewhere to go when reconciliation cannot resolve them. That queue is the price of not creating duplicate financial records.
+
+## Approval, acceptance and governance
+
+Both cards here concern the moment a system decides that something is allowed, or that something is finished. In each, a cheap signal — a Boolean, a sentence of model output — was allowed to carry a decision that the enterprise will later be asked to defend. The correction is to make the decision an artifact: something with a hash, an owner, an expiry, and an independent check.
+
+[[DIAGRAM:anti-approval-binding|Figure 17-4 — Boolean consent versus a proposal-bound, expiring approval grant]]
 
 ### AP-06 — Boolean or conversational approval
 
-**Problem.** Humans approve protected actions.
+**Problem.** Humans must approve protected actions, and a chat interface makes approval feel natural.
 
-**Anti-Pattern.** A Boolean/chat message authorizes later current arguments.
+**Anti-Pattern.** A Boolean flag or a chat message — "yes, go ahead" — authorizes whatever the arguments happen to be at execution time.
 
-**Why It Fails.** Effect, policy, actor, or version can change.
+**Why It Fails.** Approval is being bound to a conversation rather than to an effect. Between consent and commit, the amount, the recipient, the policy version, the acting workload, or the underlying record can all change, and nothing detects it. The approver reviewed a description; the system executes a payload. A Boolean also cannot express scope or expiry, so a single "yes" silently authorizes later, larger, and unrelated actions.
 
-**Recommended Pattern.** Immutable proposal and expiring exact ApprovalGrant.
+**Enterprise Example.** An approval given for a $10,000 payment is reused, entirely within policy as implemented, for a $100,000 one.
 
-**Architecture.** approved=true versus proposal hash → grant → revalidate → commit.
+**Recommended Pattern.** An immutable proposal, hashed over the exact effect, with an ApprovalGrant bound to that hash, scoped to one action, and carrying an expiry. Revalidate immediately before commit.
 
-**Enterprise Example.** $10k approval reused for $100k.
+**Architecture.** `approved=true` becomes proposal hash → grant → revalidate → commit.
 
-**Detection Metrics.** Hash mismatch, reuse, expiry, post-approval incident.
+PYTHON · anti-pattern and correction
 
-**Trade-offs.** Benign changes may require reapproval.
+```python
+# Anti-pattern: consent is a flag on the run, detached from what executes.
+if run.approved:
+    await payments.send(vendor=current.vendor, amount=current.amount)
 
-## Observability
+# Correction: the grant is bound to a hash of the exact proposal and cannot
+# authorize a payload the approver never saw.
+proposal = Proposal(action="payments.send", args=args, policy_version=policy.version)
+grant = await approvals.await_grant(proposal.digest(), ttl_s=900)
+
+if grant.digest != proposal.digest():      # arguments moved since approval
+    raise ApprovalMismatch(proposal.digest(), grant.digest)
+if grant.expired(now()):                   # consent has a shelf life
+    raise ApprovalExpired(grant.id)
+await payments.send(**proposal.args, idempotency_key=proposal.digest())
+```
+
+**Detection Metrics.** Proposal-hash mismatches at commit, grant reuse attempts, expiry rate, and incidents occurring after a recorded approval.
+
+**Trade-offs.** Benign changes force reapproval, which approvers experience as friction. Tune by making the diff visible — showing what changed is cheaper than widening the grant.
 
 ### AP-07 — Model says done
 
-**Problem.** Runs need completion.
+**Problem.** A run needs a completion signal, and the model produces a confident, well-formed one for free.
 
-**Anti-Pattern.** Model assertion sets success.
+**Anti-Pattern.** The model's assertion sets the run to success.
 
-**Why It Fails.** Missing evidence, approval, effect, or obligation hides as success.
+**Why It Fails.** The model is reporting on its own work using the same faculty that produced it. A missing evidence artifact, a skipped approval, an uncommitted effect, or an unmet obligation all present as success, because none of them changes what the model believes it did. Failures therefore surface downstream — in reconciliation, in audit, or in a customer complaint — long after the trace has aged out.
 
-**Recommended Pattern.** Independent executable acceptance over authoritative state.
+**Enterprise Example.** Onboarding reports complete while the sanctions screening is stale, because the model saw a screening result in context and did not evaluate its freshness.
 
-**Architecture.** Model text→success versus AcceptanceEngine→accepted/blocked/failed/unknown.
+**Recommended Pattern.** An independent, executable acceptance check evaluated over authoritative state, returning accepted, blocked, needs-input, failed, or unknown-effect. The model may propose completion; it may not declare it.
 
-**Enterprise Example.** Onboarding says complete with stale sanctions check.
+**Architecture.** Model text → success becomes AcceptanceEngine → typed terminal.
 
-**Detection Metrics.** False completion, reopen rate, missing artifacts/effects.
+**Detection Metrics.** False-completion rate found by audit, reopen rate, and runs closed with missing artifacts or uncommitted effects.
 
-**Trade-offs.** Rules require domain maintenance.
+**Trade-offs.** Executable acceptance criteria need domain ownership and maintenance. Without them the completion signal has no author, which is worse and merely less visible.
 
 ## Multi-agent collaboration
 
 ### AP-08 — Multi-agent chat as workflow
 
-**Problem.** Specialists coordinate.
+**Problem.** Specialists need to coordinate, and a shared conversation is the fastest coordination mechanism to build.
 
-**Anti-Pattern.** Free-form messages own state, work, deadlines, joins.
+**Anti-Pattern.** Free-form messages between agents own state, work assignment, deadlines, and completion.
 
-**Why It Fails.** Duplicate work, cycles, lost cancellation/artifacts.
+**Why It Fails.** A conversation has no notion of ownership, so two agents can both believe the other is acting — or both act. It has no join semantics, so nothing knows when parallel work has finished. Cancellation cannot propagate, because there is no structure to propagate through, and artifacts produced mid-conversation are lost when the window compacts. The system behaves like a meeting with no chair and no minutes.
 
-**Recommended Pattern.** TaskEnvelope, owner, child tasks, artifacts, deterministic join.
+**Enterprise Example.** Finance and legal each wait for the other to approve. The run sits open for three days and neither agent is wrong.
 
-**Architecture.** Chat mesh versus supervisor workflow + task service.
+**Recommended Pattern.** A typed TaskEnvelope with exactly one accountable owner, explicit child tasks, artifacts stored by reference, and a deterministic join evaluated by the coordinator rather than inferred from messages.
 
-**Enterprise Example.** Finance and legal each expect the other to approve.
+**Architecture.** Chat mesh becomes supervisor workflow plus task service.
 
-**Detection Metrics.** Orphans, conflicts, depth, join age, late effects.
+**Detection Metrics.** Orphaned tasks, conflicting concurrent effects, delegation depth, join wait age, and effects landing after a run was considered complete.
 
-**Trade-offs.** Formal tasks reduce fluidity.
+**Trade-offs.** Formal task envelopes reduce the fluidity that makes agent conversations appealing to demonstrate. The fluidity is what fails in production.
 
-## Context engineering
+## Observability and evidence
 
-### AP-09 — Vector store as source of truth
+### AP-14 — Telemetry without causal or effect lineage
 
-**Problem.** Relevant knowledge is needed.
+**Problem.** Teams instrument what they own, and each component's dashboard looks healthy.
 
-**Anti-Pattern.** Similarity hit is current authoritative fact.
+**Anti-Pattern.** Logs, metrics, and traces cannot be joined to versions, policy decisions, effects, acceptance, or business outcome.
 
-**Why It Fails.** Stale, unauthorized, poisoned, duplicated chunks drive action.
+**Why It Fails.** Without a join key, every measurement is local. A component can improve on its own metric while degrading the outcome, and nothing in the telemetry can express the relationship. Cost cannot be attributed to a tenant, a release, or a decision, so optimization targets whatever is easiest to measure. When an incident happens, the investigation has to reconstruct causality by hand from timestamps.
 
-**Recommended Pattern.** Governed source/snapshot; index is derived locator with ACL/freshness verification.
+**Enterprise Example.** A model swap lowers median latency by 15%, which the dashboard celebrates, while retries rise and task completion falls. Both facts are true and neither dashboard contains both.
 
-**Architecture.** Vector hit→action versus source+ACL+snapshot→evidence→decision.
+**Recommended Pattern.** One causal run graph joining release version, context manifest, model and policy decisions, tool effects, acceptance terminal, business outcome, and cost.
 
-**Enterprise Example.** Old policy chunk applies obsolete limit.
+**Architecture.** Separate dashboards become one correlated graph.
 
-**Detection Metrics.** Freshness, source disagreement, ACL/citation mismatch.
+**Detection Metrics.** Percentage of runs joinable to a business outcome, spans missing parent or version identifiers, and unattributed spend.
 
-**Trade-offs.** Authoritative lookup may be slower.
+**Trade-offs.** Correlation requires disciplined identifier propagation across every component and raises the governance burden on telemetry, including redaction. Retrofitting it after an incident costs considerably more.
 
-## Security
+## Platform, release and operations
 
-### AP-10 — LLM judge as security gate
+Both cards describe the same instinct — change should be fast — applied where it removes the ability to explain, reproduce, or undo what happened. Speed is not the problem; unversioned speed is.
 
-**Problem.** Ambiguous content needs review.
+### AP-15 — Model or provider swap as configuration
 
-**Anti-Pattern.** Model score alone authorizes protected action.
+**Problem.** Teams want better cost or quality, and the routing layer makes the change a one-line edit.
 
-**Why It Fails.** Judge is injectable, nondeterministic, biased, and drifts.
+**Anti-Pattern.** A model alias is repointed without behavioural validation, because no application code changed.
 
-**Recommended Pattern.** Deterministic policy/invariant gate; judge only triages/evidences.
+**Why It Fails.** The model is the behaviour. Tool-calling reliability, schema adherence, refusal boundaries, safety posture, latency distribution, and cost per task all shift together, and they shift unevenly across slices — a change that is neutral in aggregate can be severe for one language, one document type, or one tenant. Because no release event was recorded, the resulting regression has no obvious cause and cannot be rolled back precisely.
 
-**Architecture.** score>threshold→execute versus policy→optional judge→human/escalation.
+**Enterprise Example.** A cheaper model drops tool arguments for one language only. Aggregate evaluation stays green; that market's completion rate halves.
 
-**Enterprise Example.** Judge calls excessive payment low risk.
+**Recommended Pattern.** A versioned ChangeBundle carrying evaluation across slices, security testing, load testing, canary exposure, and a named rollback target.
 
-**Detection Metrics.** Repeated-run disagreement, bypass, false negative, override.
+**Architecture.** Edit alias becomes immutable route policy → replay → approval → canary.
 
-**Trade-offs.** Rules cannot express all nuance.
+**Detection Metrics.** Schema and tool-call regression rate, refusal-rate shift, per-slice quality drift, and fallback-route activation.
 
-## Reasoning
-
-### AP-11 — Unbounded loops and recursive delegation
-
-**Problem.** Complex work varies.
-
-**Anti-Pattern.** Agents iterate/spawn without global limits.
-
-**Why It Fails.** Runaway cost, cyclic delegation, queue saturation.
-
-**Recommended Pattern.** Global decreasing budgets, acyclic ownership, depth/fan-out/progress limits.
-
-**Architecture.** Recursion versus runtime-governed task graph.
-
-**Enterprise Example.** Research supervisor spawns endless fact-checkers.
-
-**Detection Metrics.** Depth, fan-out, repeated state, no progress, budget exhaustion.
-
-**Trade-offs.** Caps may truncate rare work.
-
-## Tools
-
-### AP-12 — Ungated tool discovery and catalog dumping
-
-**Problem.** Many tools exist.
-
-**Anti-Pattern.** Every discovered tool/schema enters the prompt.
-
-**Why It Fails.** Confusion, token load, malicious descriptions, excessive agency.
-
-**Recommended Pattern.** Registry → eligibility/policy → task shortlist → schema validation.
-
-**Architecture.** Full MCP catalog versus approved tool slice and lease.
-
-**Enterprise Example.** Reporting agent finds admin delete tool.
-
-**Detection Metrics.** Exposed/eligible/used, confusion, overhead, unauthorized discovery.
-
-**Trade-offs.** Narrow list can omit needed tool.
-
-## Memory
-
-### AP-13 — Memory write by default
-
-**Problem.** Personalization is desired.
-
-**Anti-Pattern.** Every interaction/summary becomes durable memory.
-
-**Why It Fails.** Secrets, errors, injections, bias, stale facts persist.
-
-**Recommended Pattern.** Purpose-bound candidate with provenance, verification, scope, TTL, deletion.
-
-**Architecture.** Transcript→memory versus candidate→gate→typed record.
-
-**Enterprise Example.** Malicious email stores fake bank account.
-
-**Detection Metrics.** Sensitive writes, stale retrieval, corrections, memory incidents.
-
-**Trade-offs.** Strict writes reduce convenience.
-
-## Observability
-
-### AP-14 — Telemetry without causal/effect lineage
-
-**Problem.** Teams instrument components.
-
-**Anti-Pattern.** Logs cannot join versions, policy, effects, acceptance, outcome.
-
-**Why It Fails.** Local optimization hides business regression.
-
-**Recommended Pattern.** Causal run graph joining release, context, decisions, effects, outcome/cost.
-
-**Architecture.** Separate dashboards versus correlated graph.
-
-**Enterprise Example.** Lower model latency hides more retries and lower completion.
-
-**Detection Metrics.** Outcome join, missing parents/versions, unattributed cost.
-
-**Trade-offs.** Correlation increases governance burden.
-
-## System architecture
-
-### AP-15 — Model/provider swap as configuration
-
-**Problem.** Teams seek cost/quality changes.
-
-**Anti-Pattern.** Alias changes without behavioral validation.
-
-**Why It Fails.** Tool, schema, refusal, safety, latency, cost behavior shifts.
-
-**Recommended Pattern.** Versioned ChangeBundle with evaluation, security, load, canary, rollback.
-
-**Architecture.** Edit alias versus immutable route policy→replay→approval→canary.
-
-**Enterprise Example.** Cheaper model drops tool args in one language.
-
-**Detection Metrics.** Schema/tool regression, refusal shift, slice drift, fallback.
-
-**Trade-offs.** Validation slows experimentation.
-
-## Operations
+**Trade-offs.** Validation slows experimentation, so make the fast path cheap: pre-built replay sets and automated slice reports, rather than an approval meeting.
 
 ### AP-16 — In-place change and test after release
 
-**Problem.** Fast edits are convenient.
+**Problem.** A production issue needs a fix now, and the console offers an edit box.
 
-**Anti-Pattern.** Prompts/Skills/tools/policy/routes mutate production.
+**Anti-Pattern.** Prompts, Skills, tool definitions, policy, and routes are mutated directly in production.
 
-**Why It Fails.** Runs are irreproducible; rollback/attribution fail.
+**Why It Fails.** A run can no longer be reproduced, because the artifacts it used no longer exist in the form it used them. Attribution fails, since two runs a minute apart may have used different behaviour with no record of the boundary. Rollback becomes guesswork about what the previous state was. And the edit itself is untested by construction — the test is the production traffic.
 
-**Recommended Pattern.** Immutable artifacts, ReleaseManifest, pretests, signed promotion, canary, rollback.
+**Enterprise Example.** A prompt edit intended to reduce verbosity increases data leakage. Neither the previous prompt nor the exact leak conditions can be reconstructed.
 
-**Architecture.** Mutable console versus build→validate→approve→promote→monitor.
+**Recommended Pattern.** Immutable artifacts, a ReleaseManifest that pins everything a run resolves, pre-promotion tests, signed promotion, canary exposure, and a rollback target that is verified rather than assumed.
 
-**Enterprise Example.** Prompt fix increases leakage and cannot roll back exactly.
+**Architecture.** Mutable console becomes build → validate → approve → promote → monitor.
 
-**Detection Metrics.** Unversioned runs, out-of-band edits, rollback failure.
+**Detection Metrics.** Runs executing unversioned artifacts, out-of-band edit events, and rollback rehearsal failures.
 
-**Trade-offs.** Immutability needs good tooling.
+**Trade-offs.** Immutability needs genuinely good tooling, or people will route around it under pressure. If the emergency path is slower than the console, the console wins — so make the fast path immutable rather than making immutability optional.
+
+|  |
+| --- |
+| **COMMON PITFALL**  The most expensive anti-patterns in this catalog are not the exotic ones. AP-04, AP-05, and AP-06 produce duplicate payments, duplicate records, and unauthorized effects, and all three look like ordinary engineering diligence while they are being built. Audit those three first. |
 
 ## Transition to Chapter 18
 

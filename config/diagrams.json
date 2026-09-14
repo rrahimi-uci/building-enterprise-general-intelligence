@@ -2,11 +2,35 @@
   "schema_version": "1.0",
   "diagrams": [
     {
+      "id": "anti-ambient-authority",
+      "file": "assets/diagrams/anti-ambient-authority.png",
+      "source": "assets/diagrams/src/anti-ambient-authority.gv",
+      "vector": "assets/diagrams/anti-ambient-authority.pdf",
+      "description": "AP-03 ambient authority versus a narrowed capability lease",
+      "sha256": "4edf74b9fc8d685d13d3d4e07ccd17e965dd4e2f0f157a84155f2e9091f73262"
+    },
+    {
+      "id": "anti-approval-binding",
+      "file": "assets/diagrams/anti-approval-binding.png",
+      "source": "assets/diagrams/src/anti-approval-binding.gv",
+      "vector": "assets/diagrams/anti-approval-binding.pdf",
+      "description": "AP-06 Boolean consent versus a proposal-bound approval grant",
+      "sha256": "bfdf5d555fb9b935a47e35c05d86f69e450055d9e3fae17d3bf6c89d55b9d7cb"
+    },
+    {
       "id": "anti-before-after",
       "file": "assets/diagrams/anti-before-after.png",
       "sha256": "2a2d53351d1ed6a067d53086380c5543b98c24a08d51bfbbc6343edaba559a3f",
       "source": "assets/diagrams/src/anti-before-after.gv",
       "vector": "assets/diagrams/anti-before-after.pdf"
+    },
+    {
+      "id": "anti-retry-storm",
+      "file": "assets/diagrams/anti-retry-storm.png",
+      "source": "assets/diagrams/src/anti-retry-storm.gv",
+      "vector": "assets/diagrams/anti-retry-storm.pdf",
+      "description": "AP-04/AP-05 layered retries and timeout-as-failure versus one retry owner",
+      "sha256": "573cd2635b7026e2585a57024c759295fd056c6204b9f644140220509d14bca4"
     },
     {
       "id": "book-map",

@@ -1,7 +1,29 @@
 {
-  "diagrams": 22,
-  "with_vector": 22,
+  "diagrams": 25,
+  "with_vector": 25,
   "records": [
+    {
+      "id": "anti-ambient-authority",
+      "source": "anti-ambient-authority.gv",
+      "pixels": [
+        2364,
+        1876
+      ],
+      "effective_dpi": 345,
+      "vector": true,
+      "sha256": "4edf74b9fc8d685d13d3d4e07ccd17e965dd4e2f0f157a84155f2e9091f73262"
+    },
+    {
+      "id": "anti-approval-binding",
+      "source": "anti-approval-binding.gv",
+      "pixels": [
+        2439,
+        2370
+      ],
+      "effective_dpi": 356,
+      "vector": true,
+      "sha256": "bfdf5d555fb9b935a47e35c05d86f69e450055d9e3fae17d3bf6c89d55b9d7cb"
+    },
     {
       "id": "anti-before-after",
       "source": "anti-before-after.gv",
@@ -12,6 +34,17 @@
       "effective_dpi": 342,
       "vector": true,
       "sha256": "2a2d53351d1ed6a067d53086380c5543b98c24a08d51bfbbc6343edaba559a3f"
+    },
+    {
+      "id": "anti-retry-storm",
+      "source": "anti-retry-storm.gv",
+      "pixels": [
+        2389,
+        2296
+      ],
+      "effective_dpi": 349,
+      "vector": true,
+      "sha256": "573cd2635b7026e2585a57024c759295fd056c6204b9f644140220509d14bca4"
     },
     {
       "id": "book-map",
