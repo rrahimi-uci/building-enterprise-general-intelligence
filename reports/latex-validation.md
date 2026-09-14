@@ -9,7 +9,7 @@
 - **appendix_dividers:** `1`
 - **chapters:** `28`
 - **appendices:** `12`
-- **diagrams:** `29`
+- **diagrams:** `35`
 - **code_blocks:** `69`
 - **longtables:** `222`
 - **callout_tables:** `99`

@@ -4,13 +4,13 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "33fa699204f2d583715cdd617ecabe63bef29b9f6e9decd07e8442894d9fcd3d",
-    "content_tex_sha256": "1d2428deaa7e48b5549694b7d7bd0569d5f400e8f7ff0713310f0ca04a0e2bf0",
+    "content_tex_sha256": "1fe3e8283ac02ab0cd7bb62128714dfda5089ed67b5ce45a9a7cbfcd23e08303",
     "style_sha256": "f2f56a95c6d5382add095f9df3e90ee3a6f508577ec5413768159c668f1e7da3",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "appendices": 12,
-    "diagrams": 29,
+    "diagrams": 35,
     "code_blocks": 69,
     "longtables": 222,
     "callout_tables": 99,
@@ -155,6 +155,54 @@
           1294
         ],
         "effective_dpi": 373.4
+      },
+      {
+        "file": "assets/diagrams/pattern-react.png",
+        "pixels": [
+          2376,
+          2121
+        ],
+        "effective_dpi": 336.5
+      },
+      {
+        "file": "assets/diagrams/pattern-routing.png",
+        "pixels": [
+          2293,
+          1434
+        ],
+        "effective_dpi": 324.8
+      },
+      {
+        "file": "assets/diagrams/pattern-planning.png",
+        "pixels": [
+          2340,
+          2022
+        ],
+        "effective_dpi": 331.4
+      },
+      {
+        "file": "assets/diagrams/pattern-reflection.png",
+        "pixels": [
+          3050,
+          817
+        ],
+        "effective_dpi": 432.0
+      },
+      {
+        "file": "assets/diagrams/pattern-hitl.png",
+        "pixels": [
+          2377,
+          1879
+        ],
+        "effective_dpi": 336.7
+      },
+      {
+        "file": "assets/diagrams/pattern-durable.png",
+        "pixels": [
+          2501,
+          3441
+        ],
+        "effective_dpi": 354.2
       },
       {
         "file": "assets/diagrams/pattern-decision-tree.png",
