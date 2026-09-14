@@ -17,13 +17,14 @@
       2550,
       3300
     ],
-    "docx_sha256": "55ba7173a7982e07ec5bffd64d150116ea5292063d277e463cc11e3c5ee09727",
-    "docx_bytes": 6489037,
+    "docx_sha256": "484dcdccfe716f686232a4a3bc5193b98d9c4ea93d79c3374940610763ca74a3",
+    "docx_bytes": 14890402,
     "docx_paragraphs": 2637,
     "docx_tables": 340,
-    "docx_inline_images": 19,
+    "docx_inline_images": 27,
     "docx_chapters": 27,
     "docx_appendices": 12,
+    "expected_docx_images": 27,
     "docx_callout_contrast_failures": 0
   },
   "errors": [],

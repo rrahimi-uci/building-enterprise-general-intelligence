@@ -182,7 +182,7 @@ A. Pattern Selection Decision Tree and Catalog Index B. Failure triage and opera
 
 \mainmatter
 
-\BookPartPage{I}{FOUNDATIONS}{This Part defines the vocabulary and invariants used everywhere else. It begins with the progression from model call to production system, then turns model outputs into typed tool proposals, and finally places bounded reasoning behind a framework-neutral runtime contract. Read it before selecting orchestration patterns or products.}
+\BookPartPage{I}{FOUNDATIONS}{This Part defines the vocabulary and invariants used everywhere else. It begins with the progression from model call to production system, then turns model outputs into typed tool proposals, and finally places bounded reasoning behind a framework-neutral runtime contract. Read it before selecting orchestration patterns or products.}{assets/parts/part-i.png}
 
 \BookChapter{01}{From an LLM Call to a Production System}
 
@@ -1173,7 +1173,7 @@ How do you keep the SDK replaceable? & Store platform contracts, workflow histor
 
 The runtime now has a stable boundary; Chapter 4 places it inside the complete enterprise reference architecture.\par
 
-\BookPartPage{II}{ENTERPRISE REFERENCE ARCHITECTURE}{This Part converts the foundational invariants into an enterprise system of record. It assigns ownership across experience, application, runtime, knowledge, gateway, security, governance, and operations planes, then specifies the APIs and records that let those planes evolve independently.}
+\BookPartPage{II}{ENTERPRISE REFERENCE ARCHITECTURE}{This Part converts the foundational invariants into an enterprise system of record. It assigns ownership across experience, application, runtime, knowledge, gateway, security, governance, and operations planes, then specifies the APIs and records that let those planes evolve independently.}{assets/parts/part-ii.png}
 
 \BookChapter{04}{Enterprise Reference Architecture, Boundaries, and Contracts}
 
@@ -1687,7 +1687,7 @@ How should execution behave during a control-plane outage? & Continue compatible
 
 The reference architecture is now concrete enough to productize; Chapter 5 defines the reusable developer platform and SDK.\par
 
-\BookPartPage{III}{AGENTIC DEVELOPER PLATFORM \& SDK}{This Part turns the reference architecture into a paved road for delivery teams. It separates reusable platform capabilities from domain logic, defines portable SDK contracts, and shows how Skills and domain packs move through local development, evaluation, promotion, deployment, and support.}
+\BookPartPage{III}{AGENTIC DEVELOPER PLATFORM \& SDK}{This Part turns the reference architecture into a paved road for delivery teams. It separates reusable platform capabilities from domain logic, defines portable SDK contracts, and shows how Skills and domain packs move through local development, evaluation, promotion, deployment, and support.}{assets/parts/part-iii.png}
 
 \BookChapter{05}{Agentic Developer Platform, SDK, and Delivery Lifecycle}
 
@@ -2213,7 +2213,7 @@ What is the main pack anti-pattern? & A monolithic prompt-and-tools bundle with 
 
 The platform and capability model are complete; Chapter 8 begins the pattern sequence with the smallest bounded reasoning loop.\par
 
-\BookPartPage{IV}{PATTERNS AND ANTI-PATTERNS}{This Part is the working catalogue. It moves from the loop shapes that solve real problems to the architecture shapes that quietly create them, and pairs every failure with a measurable replacement.}
+\BookPartPage{IV}{PATTERNS AND ANTI-PATTERNS}{This Part is the working catalogue. It moves from the loop shapes that solve real problems to the architecture shapes that quietly create them, and pairs every failure with a measurable replacement.}{assets/parts/part-iv.png}
 
 \BookChapter{08}{ReAct: Bounded Reason–Act–Observe Loops}
 
@@ -5437,7 +5437,7 @@ Anti-patterns are recurring system shapes. Diagnose the failed responsibility bo
 
 After removing unsafe local architectures, Chapter 16 considers when multiple agents add justified specialization rather than accidental complexity.\par
 
-\BookPartPage{V}{MULTI-AGENT SYSTEMS \& EXTERNAL INTEGRATION}{This Part crosses the process boundary. It covers how agents divide work among themselves, how they reach systems and agents they do not own, and how model access itself becomes a governed control plane.}
+\BookPartPage{V}{MULTI-AGENT SYSTEMS \& EXTERNAL INTEGRATION}{This Part crosses the process boundary. It covers how agents divide work among themselves, how they reach systems and agents they do not own, and how model access itself becomes a governed control plane.}{assets/parts/part-v.png}
 
 \BookChapter{16}{Supervisor/Worker and Multi-Agent Collaboration}
 
@@ -6527,7 +6527,7 @@ How do you version external capabilities? & Pin registry entry, endpoint, protoc
 
 The gateway controls model access, but not the entire attack surface; Chapter 18 introduces defense in depth across all agentic trust boundaries.\par
 
-\BookPartPage{VI}{SECURITY, IDENTITY \& GUARDRAILS}{This Part applies defense in depth to untrusted content, identity, delegated authority, tools, code, data, memory, multi-agent traffic, MCP servers, and the software supply chain. Each control is tied to a trust boundary, runtime decision, detection signal, and recovery path.}
+\BookPartPage{VI}{SECURITY, IDENTITY \& GUARDRAILS}{This Part applies defense in depth to untrusted content, identity, delegated authority, tools, code, data, memory, multi-agent traffic, MCP servers, and the software supply chain. Each control is tied to a trust boundary, runtime decision, detection signal, and recovery path.}{assets/parts/part-vi.png}
 
 \BookChapter{18}{Agentic AI Security and Guardrails Architecture}
 
@@ -8724,7 +8724,7 @@ What makes a useful kill-switch design? & Narrow scopes, emergency-deny preceden
 
 Security controls now produce events and evidence; Chapter 23 turns those signals into end-to-end traces that operators can reconstruct.\par
 
-\BookPartPage{VII}{OBSERVABILITY, EVALUATION \& CONTINUOUS LEARNING}{This Part makes behaviour measurable. It covers the trace that explains a run, the evaluation that decides whether a change is an improvement, and the governed loop that turns production evidence back into a better system.}
+\BookPartPage{VII}{OBSERVABILITY, EVALUATION \& CONTINUOUS LEARNING}{This Part makes behaviour measurable. It covers the trace that explains a run, the evaluation that decides whether a change is an improvement, and the governed loop that turns production evidence back into a better system.}{assets/parts/part-vii.png}
 
 \BookChapter{23}{Observability and Tracing with MLflow}
 
@@ -9492,7 +9492,7 @@ How do you roll back without breaking active runs? & Stop new assignment, restor
 
 The improvement loop proposes and validates change; Chapter 25 assigns decision rights, risk tiers, approvals, exceptions, and accountability.\par
 
-\BookPartPage{VIII}{GOVERNANCE \& PRODUCTION OPERATIONS}{This Part is about running the system for years rather than shipping it once. It covers the operating model that assigns accountability, the release machinery that makes change reversible, and the economics that decide whether the system survives its own success.}
+\BookPartPage{VIII}{GOVERNANCE \& PRODUCTION OPERATIONS}{This Part is about running the system for years rather than shipping it once. It covers the operating model that assigns accountability, the release machinery that makes change reversible, and the economics that decide whether the system survives its own success.}{assets/parts/part-viii.png}
 
 \BookChapter{25}{Governance, Risk, and Operating Model}
 
@@ -10411,7 +10411,7 @@ Why can the cheapest model be more expensive? & Lower reliability may cause more
 
 The architecture narrative is complete. The appendices provide decision aids, runbooks, contracts, framework evidence, references, maintenance criteria, and production acceptance checks for implementation and future editions.\par
 
-\BookPartPage{REFERENCE}{APPENDICES}{The appendices are working reference material: selection aids, runbooks, contracts, and the citation registry that the chapters draw on.}
+\BookPartPage{REFERENCE}{APPENDICES}{The appendices are working reference material: selection aids, runbooks, contracts, and the citation registry that the chapters draw on.}{}
 
 \clearpage
 

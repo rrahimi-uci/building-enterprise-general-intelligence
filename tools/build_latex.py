@@ -16,6 +16,15 @@ from pathlib import Path
 import callouts
 
 
+def part_visuals(root: Path) -> dict[str, str]:
+    """Part roman numeral -> artwork panel path, for the divider pages."""
+    path = root / "config" / "part-visuals.json"
+    if not path.exists():
+        return {}
+    registry = json.loads(path.read_text(encoding="utf-8"))
+    return {v["part"]: v["file"] for v in registry["visuals"]}
+
+
 def book_release(root: Path) -> str:
     """The single source of the release identifier.
 
@@ -308,7 +317,7 @@ def reference_target(text: str) -> str:
     return (r"\BookReferenceTarget{" + match.group(1) + "}") if match else ""
 
 
-def render_content(blocks: list[tuple], diagram_files: dict[str, str]) -> tuple[str, dict[str, int]]:
+def render_content(blocks: list[tuple], diagram_files: dict[str, str], visuals: dict[str, str] | None = None) -> tuple[str, dict[str, int]]:
     output: list[str] = ["% Generated from book/manuscript.md. Do not hand-edit."]
     stats = {"parts": 0, "appendix_dividers": 0, "chapters": 0, "appendices": 0, "diagrams": 0, "code_blocks": 0, "tables": 0, "callouts": 0, "citations": 0}
     index = 0
@@ -320,6 +329,7 @@ def render_content(blocks: list[tuple], diagram_files: dict[str, str]) -> tuple[
         while index < len(blocks) and blocks[index][0] == "paragraph" and skipped < 3:
             index += 1
             skipped += 1
+    visuals = visuals or {}
     output.extend([r"\frontmatter", r"\tableofcontents", r"\clearpage"])
     first_part = True
     in_appendices = False
@@ -349,7 +359,11 @@ def render_content(blocks: list[tuple], diagram_files: dict[str, str]) -> tuple[
                 stats["appendix_dividers"] += 1
             else:
                 stats["parts"] += 1
-            output.append(r"\BookPartPage{" + escape_plain(block[1]) + "}{" + inline(block[2]) + "}{" + inline(block[3]) + "}")
+            visual = visuals.get(block[1], "")
+            output.append(
+                r"\BookPartPage{" + escape_plain(block[1]) + "}{" + inline(block[2])
+                + "}{" + inline(block[3]) + "}{" + visual + "}"
+            )
         elif kind == "heading":
             level, text = block[1], block[2]
             chapter = re.match(r"^(\d{2}) — (.+)$", text)
@@ -484,7 +498,7 @@ def main() -> int:
     diagram_doc = json.loads((root / "config" / "diagrams.json").read_text(encoding="utf-8"))
     diagram_files = {item["id"]: item["file"] for item in diagram_doc["diagrams"]}
     blocks = list(parse_markdown(markdown))
-    content, stats = render_content(blocks, diagram_files)
+    content, stats = render_content(blocks, diagram_files, part_visuals(root))
 
     latex_dir = root / "latex"
     content_dir = latex_dir / "content"

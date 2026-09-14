@@ -290,6 +290,32 @@ def main() -> int:
             errors.append("Insufficient text contrast: " + foreground + "/" + background + " = " + format(ratio, ".2f"))
     measurements["contrast_tests"] = contrast_results
 
+    # Part divider panels: registered, present, checksum-stable, and above the
+    # same effective-resolution bar the diagrams must clear.
+    visuals_path = root / "config" / "part-visuals.json"
+    if visuals_path.exists():
+        visuals_doc = json.loads(visuals_path.read_text(encoding="utf-8"))
+        rendered_width = visuals_doc["rendered_width_inches"]
+        measured = []
+        for visual in visuals_doc["visuals"]:
+            asset = root / visual["file"]
+            if not asset.exists():
+                errors.append("Missing Part " + visual["part"] + " panel: " + visual["file"])
+                continue
+            if visual.get("sha256") and sha256(asset) != visual["sha256"]:
+                errors.append("Part " + visual["part"] + " panel checksum mismatch")
+            with Image.open(asset) as panel:
+                dpi = panel.width / rendered_width
+            measured.append({"part": visual["part"], "effective_dpi": round(dpi, 1)})
+            if dpi < 255:
+                errors.append(
+                    "Part " + visual["part"] + " panel is " + format(dpi, ".0f")
+                    + " dpi at " + str(rendered_width) + "in, below the 255 dpi contract"
+                )
+            if visual["file"] not in content:
+                errors.append("Part " + visual["part"] + " panel is registered but never referenced in the TeX")
+        measurements["part_visuals"] = measured
+
     reference_pdf = root / "latex" / "reference" / "DOCX-layout-reference-v1.0.0.pdf"
     if reference_pdf.exists():
         try:

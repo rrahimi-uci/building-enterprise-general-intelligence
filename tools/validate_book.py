@@ -173,7 +173,17 @@ def main() -> int:
             doc_appendices=sum(1 for p in doc.paragraphs if p.style.name=='Heading 1' and p.text.startswith('Appendix '))
             checks['docx_chapters']=doc_chapters; checks['docx_appendices']=doc_appendices
             if doc_chapters!=27 or doc_appendices!=12: errors.append(f"DOCX heading counts differ: chapters={doc_chapters}, appendices={doc_appendices}")
-            if len(doc.inline_shapes)!=19: errors.append(f"Expected 19 DOCX images, found {len(doc.inline_shapes)}")
+            # Derived, not fixed: cover + registered diagrams + registered Part
+            # panels. A literal only proved the book had not gained an image.
+            pv=root/'config/part-visuals.json'
+            visuals=json.loads(pv.read_text(encoding='utf-8'))['visuals'] if pv.exists() else []
+            expected_images=1+len(diags)+len(visuals)
+            checks['expected_docx_images']=expected_images
+            if len(doc.inline_shapes)!=expected_images: errors.append(f"Expected {expected_images} DOCX images (cover + {len(diags)} diagrams + {len(visuals)} Part panels), found {len(doc.inline_shapes)}")
+            for v in visuals:
+                asset=root/v['file']
+                if not asset.exists(): errors.append(f"Missing Part {v['part']} panel {v['file']}"); continue
+                if v.get('sha256') and sha(asset)!=v['sha256']: errors.append(f"Part {v['part']} panel checksum mismatch: {v['file']}")
             callout_failures=docx_callout_contrast(docx_path)
             checks['docx_callout_contrast_failures']=len(callout_failures)
             for failure in callout_failures:
