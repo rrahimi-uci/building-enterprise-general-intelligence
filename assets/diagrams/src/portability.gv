@@ -1,0 +1,31 @@
+// Figure 7-2 — Platform contracts with replaceable framework and provider adapters.
+// Message: the contracts are the asset. Frameworks and providers sit behind
+// adapters, so replacing one is an adapter change, not a rewrite.
+digraph portability {
+  rankdir = TB
+  graph [ranksep=0.34, nodesep=0.26]
+  node [width=1.45, fontsize=11.5]
+
+  app [label="Application code", fillcolor="#F7ECF8", color="#6A2E6E", width=2.4]
+  contracts [label="Platform contracts\nAgentSpec · ToolSpec · RunContext",
+             fillcolor="#EAF3FB", color="#1450A3", style=filled, width=3.2]
+
+  subgraph cluster_frameworks {
+    label="  Framework adapters  "; labeljust="l"; fontsize=11.5; fontcolor="#0D6E69"
+    color="#0D6E69"; style="rounded,dashed"; margin=12; bgcolor="#F4FBFA"
+    f1 [label="Agents SDK", fillcolor="#E7F5F3", color="#0D6E69"]
+    f2 [label="Graph runner", fillcolor="#E7F5F3", color="#0D6E69"]
+  }
+  subgraph cluster_providers {
+    label="  Provider adapters  "; labeljust="l"; fontsize=11.5; fontcolor="#8A5600"
+    color="#8A5600"; style="rounded,dashed"; margin=12; bgcolor="#FFFCF5"
+    p1 [label="Model A", fillcolor="#FFF4DF", color="#8A5600"]
+    p2 [label="Model B", fillcolor="#FFF4DF", color="#8A5600"]
+  }
+
+  app -> contracts [label="  the only dependency  "]
+  contracts -> f1 [label="  swap  ", style=dashed]
+  contracts -> p1 [label="  swap  ", style=dashed]
+  { rank=same; f1; f2 }
+  { rank=same; p1; p2 }
+}

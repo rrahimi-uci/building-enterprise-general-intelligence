@@ -16,8 +16,8 @@
 - **diagram_markers:** `20`
 - **registered_diagrams:** `20`
 - **cover_dimensions:** `[2550, 3300]`
-- **docx_sha256:** `df7197bb10afa2d1d824cca39e4fd757ba2ca574d544bb1dcf8d55d8aec34399`
-- **docx_bytes:** `15065559`
+- **docx_sha256:** `42f6908bb15b258ff259550166d1d44e05da8accba7f3a50cd31ac0d44e229fb`
+- **docx_bytes:** `17387472`
 - **docx_paragraphs:** `2744`
 - **docx_tables:** `361`
 - **docx_inline_images:** `29`

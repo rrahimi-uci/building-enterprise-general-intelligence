@@ -497,7 +497,13 @@ def main() -> int:
     markdown_path = root / "book" / "manuscript.md"
     markdown = markdown_path.read_text(encoding="utf-8")
     diagram_doc = json.loads((root / "config" / "diagrams.json").read_text(encoding="utf-8"))
-    diagram_files = {item["id"]: item["file"] for item in diagram_doc["diagrams"]}
+    # XeLaTeX embeds the vector PDF where one exists, so a figure stays sharp at
+    # any zoom and in print; the DOCX build uses the PNG beside it because
+    # python-docx cannot embed PDF. Same source, two renders, one registry.
+    diagram_files = {}
+    for item in diagram_doc["diagrams"]:
+        vector = Path(item["file"]).with_suffix(".pdf")
+        diagram_files[item["id"]] = vector.as_posix() if (root / vector).exists() else item["file"]
     blocks = list(parse_markdown(markdown))
     content, stats = render_content(blocks, diagram_files, part_visuals(root))
 

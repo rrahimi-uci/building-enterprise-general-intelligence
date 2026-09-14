@@ -183,6 +183,44 @@ alone: the title states the kind, so the palette is a fast index, not the signal
 Callouts are not substitutes for argument. Follow them with implementation or
 evidence where the reader will need it.
 
+## 10a. Diagrams
+
+Every diagram is generated from an editable source in `assets/diagrams/src/` and
+rendered twice: a **vector PDF** that XeLaTeX embeds, and a **raster PNG** for the
+DOCX edition, which cannot embed PDF. Never hand-edit a render.
+
+Graphviz (`.gv`) is the default. Mermaid (`.mmd`) is used where a sequence
+diagram genuinely reads better than a box-and-arrow graph. The shared house
+style lives in `assets/diagrams/src/_theme.gv` and is spliced in at render time,
+so restyling the whole book is one edit.
+
+**Role is carried by colour and shape together**, so a component type is
+identifiable without a legend and the figure still reads in greyscale print:
+
+| Role | Shape | Colour |
+|---|---|---|
+| Agent runtime, reasoning | rounded box | teal |
+| Platform service, API | box | blue |
+| Store, ledger, record | cylinder | indigo |
+| Knowledge, policy, evidence | note | cyan |
+| Decision or policy check | diamond | amber |
+| Outside the trust boundary | box | slate |
+| Committed effect, outcome | rounded box | plum |
+| Anti-pattern or refusal | rounded box | red |
+
+Edges: solid for flow, dashed for control or policy, dotted for evidence.
+
+**Sizing.** A figure is placed at the full column width, so a source should lay
+out at roughly 6.5–7.5 inches wide and no more than about 8.5 inches tall. Wider
+than that and the text is scaled below body size; taller and it will not share a
+page with its caption. Long sequential flows read better vertically on a portrait
+page than horizontally.
+
+**Choose the form for the concept.** Layered models for planes and stacks,
+sequence diagrams for protocols and ordering, decision trees for selection,
+cycles for loops, side-by-side clusters for before-and-after. Forcing every idea
+into one diagram style is how diagrams stop carrying information.
+
 ## 11. Pattern, anti-pattern, and threat cards
 
 Use the templates in `templates/`.

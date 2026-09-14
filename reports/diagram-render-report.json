@@ -1,0 +1,228 @@
+{
+  "diagrams": 20,
+  "with_vector": 20,
+  "records": [
+    {
+      "id": "anti-before-after",
+      "source": "anti-before-after.gv",
+      "pixels": [
+        2343,
+        1729
+      ],
+      "effective_dpi": 342,
+      "vector": true,
+      "sha256": "2a2d53351d1ed6a067d53086380c5543b98c24a08d51bfbbc6343edaba559a3f"
+    },
+    {
+      "id": "book-map",
+      "source": "book-map.gv",
+      "pixels": [
+        2266,
+        1855
+      ],
+      "effective_dpi": 331,
+      "vector": true,
+      "sha256": "f9134866904054ee4ed21d163aed27e6f06ac112c16e7bab23fee61c53aef1c2"
+    },
+    {
+      "id": "developer-lifecycle",
+      "source": "developer-lifecycle.gv",
+      "pixels": [
+        2279,
+        2183
+      ],
+      "effective_dpi": 333,
+      "vector": true,
+      "sha256": "54dfe08451ffa40cb3dfbb39f2554d7f317c4b7f1688813192d23b5241f4c7b2"
+    },
+    {
+      "id": "developer-platform",
+      "source": "developer-platform.gv",
+      "pixels": [
+        2271,
+        1471
+      ],
+      "effective_dpi": 332,
+      "vector": true,
+      "sha256": "52e83d88265e751d3aa34690786de86bf17851ac00dbdf0c956f3e6a9ed0cf3f"
+    },
+    {
+      "id": "dx-golden-path",
+      "source": "dx-golden-path.gv",
+      "pixels": [
+        2270,
+        1982
+      ],
+      "effective_dpi": 331,
+      "vector": true,
+      "sha256": "604e272b394b0341cddb37cb170b3c493aee757e2dfdfc38fbfa486c33aa77a0"
+    },
+    {
+      "id": "gateway-position",
+      "source": "gateway-position.gv",
+      "pixels": [
+        2389,
+        2164
+      ],
+      "effective_dpi": 349,
+      "vector": true,
+      "sha256": "9abc8f1a3c4a1c4c8f2d16ef95a01150ef73e65b2a30579155fbe3a78b75ade3"
+    },
+    {
+      "id": "governance-model",
+      "source": "governance-model.gv",
+      "pixels": [
+        2286,
+        1560
+      ],
+      "effective_dpi": 334,
+      "vector": true,
+      "sha256": "f6610ba8bda791e0c2c520c507af352a9d4c850f6e471e510da57847dc4cee51"
+    },
+    {
+      "id": "guardrail-sequence",
+      "source": "guardrail-sequence.mmd",
+      "pixels": [
+        2055,
+        1376
+      ],
+      "effective_dpi": 300,
+      "vector": true,
+      "sha256": "f5e08560369cbd8b629423e7b1e7b67a10bb6c89b5e35d9a3be86092fe874bff"
+    },
+    {
+      "id": "knowledge-fabric",
+      "source": "knowledge-fabric.gv",
+      "pixels": [
+        2271,
+        1524
+      ],
+      "effective_dpi": 332,
+      "vector": true,
+      "sha256": "e3594f380182974c59c2a947190a04cebe564d8fe244d6aa839d2b073818b976"
+    },
+    {
+      "id": "learning-loop",
+      "source": "learning-loop.gv",
+      "pixels": [
+        2267,
+        1983
+      ],
+      "effective_dpi": 331,
+      "vector": true,
+      "sha256": "f6e857a053e678656a09ee673ce19dacf53b7dcc57a956517bead09efed47baa"
+    },
+    {
+      "id": "model-routing",
+      "source": "model-routing.gv",
+      "pixels": [
+        2295,
+        2292
+      ],
+      "effective_dpi": 335,
+      "vector": true,
+      "sha256": "e03260926709c1a7ca9d6e71a3f86c5195e5ad512893a6e7de4b819bcc289cf9"
+    },
+    {
+      "id": "pattern-decision-tree",
+      "source": "pattern-decision-tree.gv",
+      "pixels": [
+        2366,
+        1946
+      ],
+      "effective_dpi": 345,
+      "vector": true,
+      "sha256": "602b3dcef2c3298f48c91073a8c9125fc217a380e7da9c444a50b028079b27b5"
+    },
+    {
+      "id": "policy-to-guardrail",
+      "source": "policy-to-guardrail.gv",
+      "pixels": [
+        2322,
+        2798
+      ],
+      "effective_dpi": 339,
+      "vector": true,
+      "sha256": "5d1cb1313d1705c377a62c1243880f2a5d49a839820edc8a9faebeef2cb17a97"
+    },
+    {
+      "id": "portability",
+      "source": "portability.gv",
+      "pixels": [
+        2271,
+        999
+      ],
+      "effective_dpi": 332,
+      "vector": true,
+      "sha256": "a99b915091e238d4e4ee7512ea57f8db4a0b907d0ffd047bc28e640d44c67502"
+    },
+    {
+      "id": "reference-architecture",
+      "source": "reference-architecture.gv",
+      "pixels": [
+        2269,
+        2223
+      ],
+      "effective_dpi": 331,
+      "vector": true,
+      "sha256": "421783b903113a333e813554ee7e645a3c56bfe1e8f48737328c239294c17c45"
+    },
+    {
+      "id": "request-sequence",
+      "source": "request-sequence.mmd",
+      "pixels": [
+        2055,
+        1365
+      ],
+      "effective_dpi": 300,
+      "vector": true,
+      "sha256": "9a3b07d4bf51c402d678f77c2eef298fc1d3f72ae26069a61adde8ea0e7f38f5"
+    },
+    {
+      "id": "runtime-offline",
+      "source": "runtime-offline.gv",
+      "pixels": [
+        2466,
+        4487
+      ],
+      "effective_dpi": 360,
+      "vector": true,
+      "sha256": "ae9175f77e46e1dfcc28f99be1c08d9c4dbe9c9ff44a15287a9deb49d1271e95"
+    },
+    {
+      "id": "security-boundaries",
+      "source": "security-boundaries.gv",
+      "pixels": [
+        2268,
+        1910
+      ],
+      "effective_dpi": 331,
+      "vector": true,
+      "sha256": "037876894c555047b1c60db042b68fac30ae72e2c05a58a1c0a53834cdeca260"
+    },
+    {
+      "id": "security-depth",
+      "source": "security-depth.gv",
+      "pixels": [
+        2283,
+        1459
+      ],
+      "effective_dpi": 333,
+      "vector": true,
+      "sha256": "82e0ca96cd7be9e0bdbce41573d63ef8c67c8f7a130ecef61f21f489f3650da3"
+    },
+    {
+      "id": "test-pyramid",
+      "source": "test-pyramid.gv",
+      "pixels": [
+        2269,
+        1020
+      ],
+      "effective_dpi": 331,
+      "vector": true,
+      "sha256": "e176177bb73ca1e5c3ef2744da7ce558894f1c530fd122b016e95bb4542f48dc"
+    }
+  ],
+  "errors": [],
+  "pass": true
+}

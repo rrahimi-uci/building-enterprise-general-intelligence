@@ -20,10 +20,11 @@ jobs:
         with:
           python-version: '3.13'
           cache: pip
-      # No system font installation needed: tools/generate_cover.py and
-      # tools/generate_diagram.py now use the Liberation Sans bundled in
-      # latex/fonts/, which makes asset rendering identical on every host and
-      # supersedes the runner-specific symlink workaround this job used to do.
+      # No system font installation needed: tools/generate_cover.py uses the
+      # Liberation Sans bundled in latex/fonts/, which makes asset rendering
+      # identical on every host and supersedes the runner-specific symlink
+      # workaround this job used to do. Diagrams are rendered from source by
+      # tools/render_diagrams.py, which needs graphviz and is run separately.
       - run: pip install -r requirements.txt
       - run: make build references validate deterministic
       - name: Fail if generated publication artifacts are stale

@@ -4,6 +4,18 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [2.1.0] — 2026-09-14
 
+### Every diagram redesigned, from editable sources
+
+- All 20 diagrams are rebuilt from scratch as **editable sources** in `assets/diagrams/src/` — Graphviz `.gv` for structure and flow, Mermaid `.mmd` where a sequence diagram genuinely reads better. A contributor changes the source and runs `make diagrams`; nobody has to recreate a figure from its rendered image again.
+- Each source renders twice: a **vector PDF that XeLaTeX embeds**, so figures stay sharp at any zoom and in print, and a raster PNG for the DOCX edition, which cannot embed PDF. The book's figures were previously 1800×1000 rasters that softened when scaled.
+- A shared house style in `_theme.gv` is spliced in at render time, so restyling the book is one edit. **Role is carried by colour and shape together** — teal runtime, blue service, indigo store, cyan knowledge, amber decision, slate external, plum effect, red anti-pattern — so a figure is readable without a legend and survives greyscale print.
+- Diagram form now follows the concept rather than one template: layered models for planes, sequence diagrams for protocols, decision trees for selection, a cycle for the improvement loop, side-by-side clusters for before-and-after.
+- Raster dpi is computed per diagram from its natural width, because a narrow figure stretched to the column would otherwise fall below the resolution contract. Every render now measures 291 dpi or better.
+- `validate_latex.py` gates that each diagram keeps an editable source and a vector render, so a future figure cannot be added as an orphan image.
+- **Fixed a figure-caption defect affecting all 20 figures.** LaTeX's automatic `Figure N:` label printed in front of the book's own chapter-relative number, so every caption read "Figure 2: Figure 4-1 — …". The automatic label is suppressed; the book's numbering, which the prose cross-references, stands alone.
+- Fixed Mermaid renders being written with a transparent background, which composites as black anywhere a consumer flattens without a white ground. Caught by reviewing all twenty together on a contact sheet.
+- Removed `tools/generate_diagram.py`, superseded by `tools/render_diagrams.py`. Keeping two generators is the drift problem this release has been removing everywhere else.
+
 ### Retitled
 
 - The book is now *Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise*, replacing *Enterprise Agentic AI Architecture & Developer Platform Guide*.
