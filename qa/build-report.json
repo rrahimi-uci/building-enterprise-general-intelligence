@@ -1,5 +1,5 @@
 {
-  "output": "dist/Enterprise-General-Intelligence-v2.1.0.docx",
+  "output": "qa/determinism/build-b.docx",
   "sha256": "a733c4e2705fde8459868a2d95b10b4e75afffb6b5e2f9630d81c5f6c5636cf8",
   "bytes": 18057618,
   "template_only": false,
