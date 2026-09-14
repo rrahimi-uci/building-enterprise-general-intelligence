@@ -1,6 +1,6 @@
 {
-  "diagrams": 27,
-  "with_vector": 27,
+  "diagrams": 28,
+  "with_vector": 28,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -67,6 +67,17 @@
       "effective_dpi": 330,
       "vector": true,
       "sha256": "adb374580defa4632e86c5ea65a64cbc51d1e4ca6aad831f55d3ab03b7b0a9f1"
+    },
+    {
+      "id": "context-pipeline",
+      "source": "context-pipeline.gv",
+      "pixels": [
+        2364,
+        2915
+      ],
+      "effective_dpi": 345,
+      "vector": true,
+      "sha256": "b6eb4ec371d9c3699ebf3b81ff8aee9a21991a2d8e7e707c4813bb4d7581eb8e"
     },
     {
       "id": "deterministic-shell",

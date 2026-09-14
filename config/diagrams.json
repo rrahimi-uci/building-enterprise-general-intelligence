@@ -48,6 +48,14 @@
       "sha256": "adb374580defa4632e86c5ea65a64cbc51d1e4ca6aad831f55d3ab03b7b0a9f1"
     },
     {
+      "id": "context-pipeline",
+      "file": "assets/diagrams/context-pipeline.png",
+      "source": "assets/diagrams/src/context-pipeline.gv",
+      "vector": "assets/diagrams/context-pipeline.pdf",
+      "description": "The ten-stage context build pipeline, with authorization before retrieval and byte materialization last",
+      "sha256": "b6eb4ec371d9c3699ebf3b81ff8aee9a21991a2d8e7e707c4813bb4d7581eb8e"
+    },
+    {
       "id": "deterministic-shell",
       "file": "assets/diagrams/deterministic-shell.png",
       "source": "assets/diagrams/src/deterministic-shell.gv",
