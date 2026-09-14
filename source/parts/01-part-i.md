@@ -77,7 +77,7 @@ An enterprise agent must translate an ambiguous goal into actions across systems
 Everything the rest of this book builds is one picture. Read it once now, before
 any of it is justified, so that each Part has somewhere to land.
 
-[[DIAGRAM:system-overview|Figure 1-2 — The whole system, and the Part that details each band]]
+[[DIAGRAM:system-overview|Figure 1-2 — The whole system at a thousand feet: the bands, the descent from proposal to committed effect, and the two concerns that cross them all]]
 
 The Roman numerals are the reading map. Each band is one Part's subject, and the
 book descends through them in order: the shape first, then the layers, then the
@@ -96,10 +96,17 @@ implementation inside each layer.
 | Platform and operations | The paved road that builds, releases and runs it | Parts III and VIII |
 
 Two properties of this picture matter more than any component in it. Authority
-narrows downward: the agent proposes, the platform authorizes, and only the
-bottom bands commit anything. And security is not a band you pass through once —
-it spans every one of them, which is why it gets a Part of its own rather than a
-box in a diagram.
+narrows downward, which is what the labelled descent records: the agent
+proposes, the platform authorizes, and only the bottom bands commit anything.
+And security is not a band you pass through once — it spans every one of them,
+which is why the figure draws it as a spine beside the stack rather than a layer
+within it, and why it gets a Part of its own. The platform that builds,
+releases and runs the system is drawn the same way and for the same reason.
+
+Figure 4-1 is this same picture at higher resolution: every band there opens
+into the components it owns. The notation carries over — a solid path is the
+request, dashed is control, dotted is evidence — so nothing new has to be
+learned to read it.
 
 ## Four control points, four different questions
 
