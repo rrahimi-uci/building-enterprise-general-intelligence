@@ -1,0 +1,19 @@
+// Figure 7-5 — Testing and simulation pyramid.
+// Message: cost and fidelity rise together, so most confidence must come from
+// the cheap deterministic layers rather than from live model runs.
+digraph test_pyramid {
+  rankdir = TB
+  graph [ranksep=0.10]
+  node [shape=plaintext, style="", margin=0]
+  edge [style=invis]
+
+  l4 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#A62C2C" BGCOLOR="#FCECEC">
+      <TR><TD WIDTH="150" ALIGN="CENTER"><B>Live canary</B><BR/><FONT POINT-SIZE="10" COLOR="#4A6078">few · slow · real cost</FONT></TD></TR></TABLE>>]
+  l3 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#8A5600" BGCOLOR="#FFF4DF">
+      <TR><TD WIDTH="260" ALIGN="CENTER"><B>Scenario simulation</B><BR/><FONT POINT-SIZE="10" COLOR="#4A6078">full trajectories against a scripted model</FONT></TD></TR></TABLE>>]
+  l2 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#1450A3" BGCOLOR="#EAF3FB">
+      <TR><TD WIDTH="370" ALIGN="CENTER"><B>Evaluation sets</B><BR/><FONT POINT-SIZE="10" COLOR="#4A6078">graded cases grown from production failures</FONT></TD></TR></TABLE>>]
+  l1 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#0D6E69" BGCOLOR="#E7F5F3">
+      <TR><TD WIDTH="480" ALIGN="CENTER"><B>Contract and unit tests</B><BR/><FONT POINT-SIZE="10" COLOR="#4A6078">many · fast · deterministic · no model required</FONT></TD></TR></TABLE>>]
+  l4 -> l3 -> l2 -> l1
+}

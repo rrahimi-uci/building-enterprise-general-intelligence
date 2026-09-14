@@ -1,0 +1,19 @@
+{
+  "diagrams": 1,
+  "with_vector": 1,
+  "records": [
+    {
+      "id": "reference-architecture",
+      "source": "reference-architecture.gv",
+      "pixels": [
+        2210,
+        2165
+      ],
+      "effective_dpi": 323,
+      "vector": true,
+      "sha256": "c9d7775a0130f2e86c01a2c4d1ebb4e67316edf69856ab396fc3974b2e5a269c"
+    }
+  ],
+  "errors": [],
+  "pass": true
+}

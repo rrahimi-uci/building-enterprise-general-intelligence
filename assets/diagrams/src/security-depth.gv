@@ -1,0 +1,29 @@
+// Figure 20-1 — Defense-in-depth guardrails architecture.
+// Message: no single control is trusted. Each layer assumes the one above it
+// failed, and the last one sits at the effect boundary where it cannot be skipped.
+digraph security_depth {
+  rankdir = TB
+  graph [ranksep=0.14]
+  node [shape=plaintext, style="", margin=0]
+  edge [style=invis]
+
+  l1 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#4A6078" BGCOLOR="#EEF4FA">
+     <TR><TD WIDTH="150" BGCOLOR="#4A6078"><FONT COLOR="white"><B> 1 </B></FONT></TD>
+         <TD WIDTH="330" ALIGN="LEFT"><B>Input inspection</B> — untrusted content, injection patterns</TD></TR></TABLE>>]
+  l2 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#0B6076" BGCOLOR="#E6F5F9">
+     <TR><TD WIDTH="150" BGCOLOR="#0B6076"><FONT COLOR="white"><B> 2 </B></FONT></TD>
+         <TD WIDTH="330" ALIGN="LEFT"><B>Context authorization</B> — only evidence this subject may see</TD></TR></TABLE>>]
+  l3 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#1450A3" BGCOLOR="#EAF3FB">
+     <TR><TD WIDTH="150" BGCOLOR="#1450A3"><FONT COLOR="white"><B> 3 </B></FONT></TD>
+         <TD WIDTH="330" ALIGN="LEFT"><B>Output contract</B> — typed proposal, never free text</TD></TR></TABLE>>]
+  l4 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#8A5600" BGCOLOR="#FFF4DF">
+     <TR><TD WIDTH="150" BGCOLOR="#8A5600"><FONT COLOR="white"><B> 4 </B></FONT></TD>
+         <TD WIDTH="330" ALIGN="LEFT"><B>Policy evaluation</B> — action, subject, resource, scope</TD></TR></TABLE>>]
+  l5 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#A62C2C" BGCOLOR="#FCECEC">
+     <TR><TD WIDTH="150" BGCOLOR="#A62C2C"><FONT COLOR="white"><B> 5 </B></FONT></TD>
+         <TD WIDTH="330" ALIGN="LEFT"><B>Effect boundary</B> — the control that cannot be skipped</TD></TR></TABLE>>]
+  l6 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#6A2E6E" BGCOLOR="#F7ECF8">
+     <TR><TD WIDTH="150" BGCOLOR="#6A2E6E"><FONT COLOR="white"><B> 6 </B></FONT></TD>
+         <TD WIDTH="330" ALIGN="LEFT"><B>Evidence and audit</B> — what happened, provably</TD></TR></TABLE>>]
+  l1 -> l2 -> l3 -> l4 -> l5 -> l6
+}
