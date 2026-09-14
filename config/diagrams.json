@@ -109,7 +109,7 @@
     {
       "id": "reference-architecture",
       "file": "assets/diagrams/reference-architecture.png",
-      "sha256": "421783b903113a333e813554ee7e645a3c56bfe1e8f48737328c239294c17c45",
+      "sha256": "57ce2db42d428b7acb30753e01af7ac53458738ffbed88b1e307516da1810ab1",
       "source": "assets/diagrams/src/reference-architecture.gv",
       "vector": "assets/diagrams/reference-architecture.pdf"
     },

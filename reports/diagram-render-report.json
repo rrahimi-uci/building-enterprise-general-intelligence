@@ -171,12 +171,12 @@
       "id": "reference-architecture",
       "source": "reference-architecture.gv",
       "pixels": [
-        2269,
-        2223
+        4148,
+        2780
       ],
-      "effective_dpi": 331,
+      "effective_dpi": 606,
       "vector": true,
-      "sha256": "421783b903113a333e813554ee7e645a3c56bfe1e8f48737328c239294c17c45"
+      "sha256": "57ce2db42d428b7acb30753e01af7ac53458738ffbed88b1e307516da1810ab1"
     },
     {
       "id": "request-sequence",
