@@ -6,6 +6,18 @@ This Part applies defense in depth to untrusted content, identity, delegated aut
 
 > **Evidence note.** The threat catalog is cross-checked against OWASP agentic-security guidance, while the trust-boundary model follows zero-trust principles that require explicit policy decisions around protected resources. [R11][R15][R16]
 
+## What this chapter delivers
+
+Place guardrails at every boundary an agentic system crosses, and prove each one with a decision record rather than an instruction in a prompt.
+
+## Solution blueprint
+
+Figure 24. Agentic AI Security and Guardrails Architecture.
+
+| **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
+| --- | --- | --- | --- | --- |
+| Policy, guardrail, and gateway services own decisions; the effect boundary owns commitment | untrusted language and content to privileged capability | tenant · session · tool class · sandbox | one run, one tool, one source | PolicyDecision · ContextManifest · ApprovalGrant · EffectRecord |
+
 ## Defense in depth
 
 Agentic systems combine untrusted language, privileged tools, dynamic context, durable memory, third-party protocols, and autonomous timing. Security cannot be one prompt or classifier. It constrains what enters, which capabilities become eligible, what may leave, which effects commit, and how the enterprise detects and recovers.
@@ -264,6 +276,14 @@ Authenticate subject/workload; classify/minimize input; build authorized labeled
 
 **Recovery strategy.** Revoke artifact/key, halt/rollback, scope releases, rotate secrets, disclose.
 
+## Grounding, corrections, and evidence boundary
+
+| **Claim or correction** | **Grounded statement** | **Source IDs** |
+| --- | --- | --- |
+| Threat coverage | The catalog is cross-checked against OWASP agentic-security guidance and zero-trust boundary principles. It enumerates known classes, not all classes: each new tool, protocol, and autonomy surface introduces threats the list does not yet name. The durable control is the boundary architecture, not the completeness of the enumeration. | R11; R15; R16 |
+
+Evidence anchors: R11; R15; R16. Full URLs, authority, version, and scope appear in Appendix K.
+
 ## Implementation reference
 
 [[EXAMPLE:input-guardrail]]
@@ -272,9 +292,46 @@ Authenticate subject/workload; classify/minimize input; build authorized labeled
 
 Use Detect → Contain → Revoke → Reconcile → Eradicate → Recover → Learn. Containment can pause a tool, MCP server, model route, Skill, memory namespace, tenant, or agent. Revoke credentials, capabilities, approvals, artifacts, signing keys, and trust. Reconcile which effects actually occurred; never infer from the model's final message. Restore a known release and authoritative state, then create privacy-reviewed regression cases.
 
-## Transition to Chapter 22
+## Debugging playbook
 
-The guardrail architecture establishes defence in depth; Chapter 22 makes it enforceable per caller by binding every action to an authenticated identity and a delegated grant.
+1. Name the boundary the failure crossed — input, context or memory, model or output, agent or workflow, identity or policy, tool or effect, execution or egress, supply chain — before forming any hypothesis.
+2. Pull that boundary's decision record: classifier and version, PolicyDecision, ContextManifest, ApprovalGrant, or egress decision.
+3. Separate a detection failure from an enforcement failure. A guard that fired and was ignored is a different defect from a guard that never fired, and they have different fixes.
+4. Reconcile effects against the ledger. Never conclude from the model's final message that nothing committed.
+5. Convert the incident into a privacy-reviewed regression case pinned to the exact versions that failed.
+
+## Production checklist
+
+**✓** Every trust-boundary crossing revalidates identity, authority, content, and data policy; nothing is inherited through a chain.
+
+**✓** Retrieved text, tool results, and fetched pages are treated as data at every layer, never as instruction.
+
+**✓** Tool eligibility is decided by policy and identity, never by content the model has just read.
+
+**✓** Protected effects require a proposal-bound approval and leave an EffectRecord that reconciliation can verify independently.
+
+**✓** Containment can pause a tool, MCP server, model route, Skill, memory namespace, tenant, or agent without stopping the platform.
+
+**✓** Incident response follows Detect → Contain → Revoke → Reconcile → Eradicate → Recover → Learn, with owners named before the incident.
+
+## Exercises
+
+1. Take one threat card and trace it across the nine defence layers: which layer detects it, which contains it, and which would leave no evidence at all.
+2. Plant instructions in an authorized retrieval source and verify that tool eligibility does not change. If it does, the guardrail is reading content rather than policy.
+
+## Technical review questions
+
+| **Question** | **Strong answer** |
+| --- | --- |
+| Why can security not be a single guardrail? | The system combines untrusted language, privileged tools, dynamic context, durable memory, third-party protocols, and autonomous timing. Each is a distinct boundary with its own evidence; one classifier covers none of them completely. |
+| What operationally distinguishes direct from indirect injection? | Direct injection arrives in the user's own turn and is visible at the channel boundary. Indirect injection arrives inside authorized content, so it passes every input guard and must be contained at the effect boundary instead. |
+| Why is discovery not authorization? | A catalog entry states that a tool exists. Eligibility is a policy decision about this subject, purpose, tenant, and risk at this moment, and must be evaluated independently of what the model can see. |
+| What evidence proves an effect did or did not commit? | The effect ledger and the downstream receipt, reconciled. A successful HTTP response proves transport, and the model's final message proves nothing. |
+| Why does the threat catalog not replace the boundary architecture? | The catalog enumerates known classes and will always lag new surfaces. Boundaries that revalidate identity, authority, content, and data policy contain threats that were never enumerated. |
+
+## Transition to Chapter 21
+
+The guardrail architecture establishes defence in depth; Chapter 21 makes it enforceable per caller by binding every action to an authenticated identity and a delegated grant.
 
 # 21 — Identity, RBAC/ABAC, and Delegated Authorization
 

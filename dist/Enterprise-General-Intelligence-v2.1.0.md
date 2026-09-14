@@ -1274,9 +1274,9 @@ def deduplication_key(event: CloudEvent) -> tuple[str, str]:
 | Why use cell-based deployment? | Additive scale, tenant placement, residency, bounded blast radius, independent canaries, and predictable stateful-service limits. |
 | How should execution behave during a control-plane outage? | Continue compatible in-flight work on pinned last-known-good bundles, apply local denies and kill switches, and restrict high-risk admission when freshness cannot be established. |
 
-## Transition to Chapter 7
+## Transition to Chapter 5
 
-The reference architecture names a knowledge plane but does not say what fills it; Chapter 7 defines the governed knowledge layer agents retrieve, reason over, are constrained by, and act through.
+The reference architecture names a knowledge plane but does not say what fills it; Chapter 5 defines the governed knowledge layer agents retrieve, reason over, are constrained by, and act through.
 
 # 05 — Enterprise Knowledge Management for Agents
 
@@ -2172,9 +2172,9 @@ def authorize_artifact_adoption(
 | How should retrieved instructions be handled? | As untrusted data with provenance and taint; they cannot alter system instructions, tool eligibility, policy, credentials, or destination grants. |
 | How do you delete a fact from an agentic system? | Tombstone and revoke the source, remove derived indexes, invalidate caches, rebuild summaries and contexts, clean governed memory and affected artifacts, and preserve permitted audit evidence. |
 
-## Transition to Chapter 9
+## Transition to Chapter 7
 
-Context assembly completes the knowledge Part. Chapter 9 turns from what agents know to how teams build with it, defining the reusable developer platform and SDK.
+Context assembly completes the knowledge Part. Chapter 7 turns from what agents know to how teams build with it, defining the reusable developer platform and SDK.
 
 # PART III — AGENTIC DEVELOPER PLATFORM & SDK
 
@@ -2183,6 +2183,18 @@ This Part turns the reference architecture into a paved road for delivery teams.
 # 07 — Agentic Developer Platform, SDK, and Delivery Lifecycle
 
 > **Evidence note.** The portability layer is informed by current public agent abstractions from OpenAI, Microsoft, and Google; capability parity is not assumed and must be proven by adapter conformance tests. [R29][R31][R32]
+
+## What this chapter delivers
+
+Define the reusable paved road — contracts, adapters, and a delivery lifecycle — that lets teams ship differentiated agents without rebuilding identity, policy, tool safety, tracing, evaluation, durable execution, and release infrastructure.
+
+## Solution blueprint
+
+Figure 23. Agentic Developer Platform, SDK, and Delivery Lifecycle.
+
+| **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
+| --- | --- | --- | --- | --- |
+| Platform services own contracts and evidence; applications own domain behaviour | application code to platform-owned control planes | template · adapter · release artifact | one application release | AgentSpec · RunContext · ToolSpec · ReleaseManifest |
 
 ## Platform promise
 
@@ -2282,9 +2294,47 @@ agentctl rollback supplier-onboarding@3.2.0 --to 3.1.4
 
 Use one immutable artifact across environments; bind endpoints, identities, secrets, sources, quotas, regions, and review queues at deployment. Pin SDKs, adapters, model aliases, tool schemas, Skills, MCP servers, policy bundles, evaluators, and knowledge snapshots. A model/provider swap is a behavior change—not harmless configuration.
 
-## Troubleshooting
+## Grounding, corrections, and evidence boundary
 
-Start from accepted business outcome and walk backward through the causal run graph. Find the first divergent span: input classification, source/freshness, prompt, route, model, tool, arguments, policy, effect, approval, or acceptance. Do not “fix the prompt” until evidence locates the failing responsibility.
+| **Claim or correction** | **Grounded statement** | **Source IDs** |
+| --- | --- | --- |
+| Framework portability | Public agent SDKs differ in cancellation, streaming, tool, approval, and error semantics. A shared contract does not make them interchangeable; only adapter conformance tests demonstrate parity, and any gap must be recorded as a known limitation rather than assumed away. | R29; R31; R32 |
+
+Evidence anchors: R29; R31; R32. Full URLs, authority, version, and scope appear in Appendix K.
+
+## Debugging playbook
+
+1. Start from the accepted business outcome and walk backward through the causal run graph.
+2. Find the first divergent span: input classification, source or freshness, prompt, route, model, tool, arguments, policy, effect, approval, or acceptance.
+3. Diff the failing run against the nearest accepted run — prompt, context manifest, and every pinned version — before changing anything.
+4. Do not edit the prompt until the evidence locates the failing responsibility. A prompt change that hides a policy or contract defect removes the signal without removing the fault.
+
+## Production checklist
+
+**✓** One immutable artifact crosses every environment; endpoints, identities, secrets, sources, quotas, regions, and review queues bind at deployment.
+
+**✓** SDKs, adapters, model aliases, tool schemas, Skills, MCP servers, policy bundles, evaluators, and knowledge snapshots are pinned in the release manifest.
+
+**✓** A model or provider swap ships as a behaviour change with evaluation, canary, and rollback — never as configuration.
+
+**✓** Adapter conformance suites cover cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behaviour.
+
+**✓** Every golden-path stage emits its evidence artifact; a stage that produces no evidence is not complete.
+
+## Exercises
+
+1. Take one existing agent and list which of the sixteen platform capabilities it reimplements locally. Estimate the cost of removing each.
+2. Write an adapter conformance test that fails when a framework silently drops cancellation mid-run.
+
+## Technical review questions
+
+| **Question** | **Strong answer** |
+| --- | --- |
+| Why should platform contracts, not framework objects, be the stable interface? | Vendor message objects change between releases and differ in semantics. Contracts such as AgentSpec, ToolSpec, and ReleaseManifest keep applications, evidence, and audits stable while adapters absorb the change. |
+| What makes a paved road adopted rather than mandated? | It removes work the team would otherwise do — identity, policy, tracing, durable execution, release — while leaving domain behaviour, topology, and acceptance to the team. A road that constrains domain decisions gets bypassed. |
+| Why is a model or provider swap not configuration? | Behaviour, cost, latency, and failure modes all change without application code changing, so it requires the same evaluation, canary, and rollback evidence as a code release. |
+| What does the golden path make visible that a convenient SDK hides? | Authority, versions, risk, evidence, and cost. An SDK that hides them does not remove the complexity; it relocates it to production incidents. |
+| When is framework portability proven? | Only when adapter conformance tests pass across cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behaviour. Parity is never inferred from documentation. |
 
 ## Transition to Chapter 8
 
@@ -5592,6 +5642,18 @@ This Part applies defense in depth to untrusted content, identity, delegated aut
 
 > **Evidence note.** The threat catalog is cross-checked against OWASP agentic-security guidance, while the trust-boundary model follows zero-trust principles that require explicit policy decisions around protected resources. [R11][R15][R16]
 
+## What this chapter delivers
+
+Place guardrails at every boundary an agentic system crosses, and prove each one with a decision record rather than an instruction in a prompt.
+
+## Solution blueprint
+
+Figure 24. Agentic AI Security and Guardrails Architecture.
+
+| **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
+| --- | --- | --- | --- | --- |
+| Policy, guardrail, and gateway services own decisions; the effect boundary owns commitment | untrusted language and content to privileged capability | tenant · session · tool class · sandbox | one run, one tool, one source | PolicyDecision · ContextManifest · ApprovalGrant · EffectRecord |
+
 ## Defense in depth
 
 Agentic systems combine untrusted language, privileged tools, dynamic context, durable memory, third-party protocols, and autonomous timing. Security cannot be one prompt or classifier. It constrains what enters, which capabilities become eligible, what may leave, which effects commit, and how the enterprise detects and recovers.
@@ -5850,6 +5912,14 @@ Authenticate subject/workload; classify/minimize input; build authorized labeled
 
 **Recovery strategy.** Revoke artifact/key, halt/rollback, scope releases, rotate secrets, disclose.
 
+## Grounding, corrections, and evidence boundary
+
+| **Claim or correction** | **Grounded statement** | **Source IDs** |
+| --- | --- | --- |
+| Threat coverage | The catalog is cross-checked against OWASP agentic-security guidance and zero-trust boundary principles. It enumerates known classes, not all classes: each new tool, protocol, and autonomy surface introduces threats the list does not yet name. The durable control is the boundary architecture, not the completeness of the enumeration. | R11; R15; R16 |
+
+Evidence anchors: R11; R15; R16. Full URLs, authority, version, and scope appear in Appendix K.
+
 ## Implementation reference
 
 PYTHON · An input guardrail that trips before any tool runs
@@ -5905,9 +5975,46 @@ async def run(request: str, *, model=None) -> tuple[bool, str]:
 
 Use Detect → Contain → Revoke → Reconcile → Eradicate → Recover → Learn. Containment can pause a tool, MCP server, model route, Skill, memory namespace, tenant, or agent. Revoke credentials, capabilities, approvals, artifacts, signing keys, and trust. Reconcile which effects actually occurred; never infer from the model's final message. Restore a known release and authoritative state, then create privacy-reviewed regression cases.
 
-## Transition to Chapter 22
+## Debugging playbook
 
-The guardrail architecture establishes defence in depth; Chapter 22 makes it enforceable per caller by binding every action to an authenticated identity and a delegated grant.
+1. Name the boundary the failure crossed — input, context or memory, model or output, agent or workflow, identity or policy, tool or effect, execution or egress, supply chain — before forming any hypothesis.
+2. Pull that boundary's decision record: classifier and version, PolicyDecision, ContextManifest, ApprovalGrant, or egress decision.
+3. Separate a detection failure from an enforcement failure. A guard that fired and was ignored is a different defect from a guard that never fired, and they have different fixes.
+4. Reconcile effects against the ledger. Never conclude from the model's final message that nothing committed.
+5. Convert the incident into a privacy-reviewed regression case pinned to the exact versions that failed.
+
+## Production checklist
+
+**✓** Every trust-boundary crossing revalidates identity, authority, content, and data policy; nothing is inherited through a chain.
+
+**✓** Retrieved text, tool results, and fetched pages are treated as data at every layer, never as instruction.
+
+**✓** Tool eligibility is decided by policy and identity, never by content the model has just read.
+
+**✓** Protected effects require a proposal-bound approval and leave an EffectRecord that reconciliation can verify independently.
+
+**✓** Containment can pause a tool, MCP server, model route, Skill, memory namespace, tenant, or agent without stopping the platform.
+
+**✓** Incident response follows Detect → Contain → Revoke → Reconcile → Eradicate → Recover → Learn, with owners named before the incident.
+
+## Exercises
+
+1. Take one threat card and trace it across the nine defence layers: which layer detects it, which contains it, and which would leave no evidence at all.
+2. Plant instructions in an authorized retrieval source and verify that tool eligibility does not change. If it does, the guardrail is reading content rather than policy.
+
+## Technical review questions
+
+| **Question** | **Strong answer** |
+| --- | --- |
+| Why can security not be a single guardrail? | The system combines untrusted language, privileged tools, dynamic context, durable memory, third-party protocols, and autonomous timing. Each is a distinct boundary with its own evidence; one classifier covers none of them completely. |
+| What operationally distinguishes direct from indirect injection? | Direct injection arrives in the user's own turn and is visible at the channel boundary. Indirect injection arrives inside authorized content, so it passes every input guard and must be contained at the effect boundary instead. |
+| Why is discovery not authorization? | A catalog entry states that a tool exists. Eligibility is a policy decision about this subject, purpose, tenant, and risk at this moment, and must be evaluated independently of what the model can see. |
+| What evidence proves an effect did or did not commit? | The effect ledger and the downstream receipt, reconciled. A successful HTTP response proves transport, and the model's final message proves nothing. |
+| Why does the threat catalog not replace the boundary architecture? | The catalog enumerates known classes and will always lag new surfaces. Boundaries that revalidate identity, authority, content, and data policy contain threats that were never enumerated. |
+
+## Transition to Chapter 21
+
+The guardrail architecture establishes defence in depth; Chapter 21 makes it enforceable per caller by binding every action to an authenticated identity and a delegated grant.
 
 # 21 — Identity, RBAC/ABAC, and Delegated Authorization
 
@@ -7323,6 +7430,18 @@ This Part is about running the system for years rather than shipping it once. It
 
 > **Evidence note.** NIST AI RMF and its Generative AI Profile are voluntary risk guidance; ISO/IEC 42001 specifies an AI management system; the EU AI Act source provides official implementation context. Applicability and legal obligations require qualified jurisdiction-specific review. [R12][R13][R14][R40]
 
+## What this chapter delivers
+
+Make governance decisions explicit, proportional, owned, and reversible, so that risk control accelerates delivery instead of queueing it behind a committee.
+
+## Solution blueprint
+
+Figure 25. Governance, Risk, and Operating Model.
+
+| **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
+| --- | --- | --- | --- | --- |
+| A named accountable owner per decision class; a named risk authority owns exceptions | delegated domain autonomy to enterprise risk appetite | risk tier · domain · release | one decision, one exception, one release | risk classification · PolicyDecision · ValidationReport · exception record |
+
 ## Federated operating model
 
 Governance makes decisions explicit, proportional, evidence-based, and reversible. It accelerates safe delivery with reusable risk tiers, policy, review paths, and evidence rather than sending every prompt edit to one committee.
@@ -7358,6 +7477,50 @@ Assess incorrect-outcome impact, sensitive data, protected effects, legal releva
 Principles define non-negotiable outcomes; standards define reusable contracts; policy-as-code decides eligible models, data, tools, actions, budgets, and approvals; application configuration selects within the envelope; exceptions are scoped, monitored, owned, and expiring. Review outcome/acceptance, deterministic boundary, state/effect ownership, identity/delegation, context/memory, tool/MCP/A2A trust, threats, evaluation truth, observability/privacy, recovery, release, capacity/cost, human oversight, and portability.
 
 Operate per run (admission/policy/effects/acceptance), daily/weekly (SLO, quality, safety, cost, incidents, evaluator health), per release (classification, regression, security/privacy, compatibility, canary/rollback), quarterly (portfolio value/risk and platform roadmap), and annually/material change (policy, law, threat, recovery, independent assurance).
+
+## Grounding, corrections, and evidence boundary
+
+| **Claim or correction** | **Grounded statement** | **Source IDs** |
+| --- | --- | --- |
+| Regulatory applicability | NIST AI RMF and its Generative AI Profile are voluntary guidance; ISO/IEC 42001 specifies a management system; the EU AI Act creates binding obligations that vary by risk category and by whether the enterprise acts as provider or deployer. Mapping a control in this book to a clause is engineering evidence, not legal advice, and qualified jurisdiction-specific review remains required. | R12; R13; R14; R40 |
+
+Evidence anchors: R12; R13; R14; R40. Full URLs, authority, version, and scope appear in Appendix K.
+
+## Debugging playbook
+
+Governance fails as queues and exceptions rather than as stack traces. Diagnose it the same way.
+
+1. When a release is blocked, find which single decision lacks a named owner instead of escalating the whole release.
+2. When the same exception recurs, treat it as a missing standard rather than a repeated approval.
+3. When risk tier and control effort disagree, re-score impact, reversibility, and human detectability before changing the tier.
+4. When review takes longer than delivery, check whether evidence is produced by the pipeline or assembled by hand. Hand-assembled evidence is the usual cause.
+
+## Production checklist
+
+**✓** Every decision class in the accountability table has one named owner and one required evidence artifact.
+
+**✓** Risk tier is derived from impact, protected effects, autonomy, exposure, scale, reversibility, and human detectability — not from the model name.
+
+**✓** Exceptions are scoped, compensated, monitored, owned, and expiring. An exception without an expiry is a silent policy change.
+
+**✓** Policy-as-code decides eligible models, data, tools, actions, budgets, and approvals; application configuration only selects within that envelope.
+
+**✓** Each cadence — per run, daily or weekly, per release, quarterly, annually — has a named owner and a defined input.
+
+## Exercises
+
+1. Classify three current use cases into risk tiers and list the minimum governance each one triggers. Where two people disagree, the tier definition is the defect.
+2. Take one standing exception and write either its expiry date or the standard that would retire it permanently.
+
+## Technical review questions
+
+| **Question** | **Strong answer** |
+| --- | --- |
+| Why federate governance rather than centralize it? | Central review of every prompt edit becomes the bottleneck and is abandoned. Centralize reusable control services, risk tiers, policy, and evidence; federate domain acceptance, tools, knowledge, and SLOs to accountable owners. |
+| What makes a risk tier defensible? | It is derived from consequence and reversibility — incorrect-outcome impact, sensitive data, protected effects, autonomy, exposure, scale, and human detectability — rather than from the model or framework in use. |
+| Why must every exception expire? | An exception that never expires is an undocumented policy change with no owner and no review. Expiry forces either the standard to change or the compensating control to be retired deliberately. |
+| What separates principles, standards, policy-as-code, and configuration? | Principles state non-negotiable outcomes; standards define reusable contracts; policy-as-code decides what is eligible at runtime; configuration selects within that envelope. Only the first two are argued; the last two are executed. |
+| How do you know governance is accelerating delivery? | Time from evidence-complete to approved is falling, exceptions are trending down as standards absorb them, and the same evidence serves engineering review, risk review, and audit without rework. |
 
 ## Transition to Chapter 27
 

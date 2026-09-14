@@ -11,7 +11,7 @@
 - **appendices:** `12`
 - **diagrams:** `22`
 - **code_blocks:** `57`
-- **longtables:** `202`
+- **longtables:** `211`
 - **callout_tables:** `96`
 - **citation_occurrences:** `104`
 - **bundled_fonts:** `8`
