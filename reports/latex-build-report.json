@@ -1,12 +1,12 @@
 {
-  "release": "2.0.0",
+  "release": "2.1.0",
   "engine": "XeLaTeX",
   "canonical_markdown": "book/manuscript.md",
-  "canonical_markdown_sha256": "46d85117839397a4e892e55da6c5933f0b835dcf8b1f660aaab30dcab6beca99",
-  "main_tex": "latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.tex",
-  "main_tex_sha256": "4e62b8ae7374647da3ab403054acc360c078f693c35c4adbb8a04802b0722cce",
+  "canonical_markdown_sha256": "b6da55b49fb073980626e18b58673501a4704027b29203ca3473337028f68f36",
+  "main_tex": "latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.tex",
+  "main_tex_sha256": "9992982f3e51417cdd24fca0262a4259d4ad4566a3094a523f7aee0906f9fb5d",
   "content_tex": "latex/content/book-content.tex",
-  "content_tex_sha256": "f3b138b1a1bb02f507be94a983ca9512a086adb4df383904df49ce13d43cd394",
+  "content_tex_sha256": "cac2413de3fb65fe1d75c3b41681d7b848d7f30a4f3252067a2e705576a458b0",
   "style": "latex/bookstyle.sty",
   "fonts": [
     {
@@ -53,14 +53,14 @@
   "statistics": {
     "parts": 8,
     "appendix_dividers": 1,
-    "chapters": 27,
+    "chapters": 28,
     "appendices": 12,
-    "diagrams": 18,
-    "code_blocks": 51,
-    "tables": 280,
-    "callouts": 89,
-    "citations": 94
+    "diagrams": 20,
+    "code_blocks": 57,
+    "tables": 295,
+    "callouts": 95,
+    "citations": 104
   },
-  "source_bytes": 620810,
+  "source_bytes": 661786,
   "compile_command": "latex/compile.sh"
 }

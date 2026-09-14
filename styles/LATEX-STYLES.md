@@ -1,4 +1,4 @@
-# LaTeX Publication System — Book v2.0.0
+# LaTeX Publication System — Book v2.1.0
 
 This specification extends the book design system to XeLaTeX. It is normative for `latex/bookstyle.sty`, `tools/build_latex.py`, and the compiled PDF.
 
@@ -71,7 +71,7 @@ Every semantic color is paired with a text label, heading, border, or structure.
 - Headers repeat across page breaks.
 - Header row uses white bold text on Book Navy.
 - Body uses Book Ink on white/Book Light; color does not encode meaning.
-- Width is allocated across the available line width. Up to five source columns are supported by v2.0.0.
+- Width is allocated across the available line width. Up to five source columns are supported by v2.1.0.
 - Dense four/five-column tables use 7.2 pt type. If a future table requires smaller text, split, rotate, or redesign it rather than silently shrinking.
 - URLs and inline code are wrap-safe; cells use ragged-right alignment to avoid rivers and overfull justification.
 
@@ -103,7 +103,7 @@ Every semantic color is paired with a text label, heading, border, or structure.
 A LaTeX release must prove:
 
 1. 8 narrative Parts plus one appendices divider.
-2. 27 chapters and 12 appendices.
+2. 28 chapters and 12 appendices.
 3. 18 diagrams and 94 citation occurrences. Code-block and table totals are derived from the manuscript by the validator, not fixed here.
 4. Balanced braces/environments outside verbatim code.
 5. Every image and bundled font exists and passes minimum resolution/file-integrity gates.

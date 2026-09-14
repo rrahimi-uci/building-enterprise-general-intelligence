@@ -62,16 +62,16 @@ jobs:
       - run: chmod +x latex/compile.sh && latex/compile.sh
       - name: Summarize the build
         run: |
-          LOG=latex/build/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.log
+          LOG=latex/build/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.log
           echo "### XeLaTeX build" >> "$GITHUB_STEP_SUMMARY"
           grep -o 'Output written.*([0-9]* pages)' "$LOG" | tail -1 >> "$GITHUB_STEP_SUMMARY" || true
           echo "- undefined references: $(grep -c 'undefined' "$LOG" || true)" >> "$GITHUB_STEP_SUMMARY"
           echo "- overfull boxes: $(grep -c 'Overfull' "$LOG" || true)" >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         with:
-          name: enterprise-agentic-ai-book-v2.0.0-xelatex
+          name: enterprise-agentic-ai-book-v2.1.0-xelatex
           path: |
-            dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0-LaTeX.pdf
+            dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0-LaTeX.pdf
             latex/build/*.log
             latex/build/*.toc
 
@@ -87,14 +87,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: enterprise-agentic-ai-book-v2.0.0-xelatex
+          name: enterprise-agentic-ai-book-v2.1.0-xelatex
           path: artifacts
       - name: Attach the publication PDF to the release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release upload "${GITHUB_REF_NAME}" \
-            "artifacts/dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0-LaTeX.pdf" \
-            "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.docx" \
-            "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.md" \
+            "artifacts/dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0-LaTeX.pdf" \
+            "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.docx" \
+            "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.md" \
             --clobber

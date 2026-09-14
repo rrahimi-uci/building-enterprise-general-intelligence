@@ -2,7 +2,7 @@
 
 This Part makes behaviour measurable. It covers the trace that explains a run, the evaluation that decides whether a change is an improvement, and the governed loop that turns production evidence back into a better system.
 
-# 23 — Observability and Tracing with MLflow
+# 24 — Observability and Tracing with MLflow
 
 > **Evidence note.** OpenTelemetry GenAI semantic conventions remain in Development and have moved to a dedicated repository; isolate them behind an internal mapping layer. Phoenix is one implementation option for OpenInference/OTel-based tracing and evaluation. [R19][R23]
 
@@ -159,11 +159,11 @@ Evidence anchors: OTEL-GENAI; MLFLOW-TRACE. Full URLs, authority, version, and s
 | How do traces support debugging? | They expose critical path, state transitions, versions, policy decisions, retries, cost, evidence lineage, and the first divergent step. |
 | Why keep audit separate? | Audit has stronger completeness, integrity, access, and retention obligations than sampled diagnostic telemetry. |
 
-## Transition to Chapter 24
+## Transition to Chapter 25
 
-Tracing explains what happened; Chapter 24 determines whether the trajectory and outcome were acceptable and whether a change is safe to ship.
+Tracing explains what happened; Chapter 25 determines whether the trajectory and outcome were acceptable and whether a change is safe to ship.
 
-# 24 — Evaluation, Debugging, and Continuous Improvement with MLflow
+# 25 — Evaluation, Debugging, and Continuous Improvement with MLflow
 
 > **Evidence note.** The evaluation architecture maps to current capabilities documented by MLflow, DeepEval, Ragas, LangSmith, and OpenAI. Tool names and APIs are examples; the durable contract is dataset + release graph + scorer versions + trace/effect evidence. [R20][R21][R22][R24][R25][R26]
 
@@ -272,7 +272,7 @@ Use deterministic validators as the gold standard where possible. LLM-as-judge i
 
 Continuous improvement joins production evidence to versioned change and release. It does not let an agent rewrite its prompt, memory policy, permissions, evaluator, or code and then certify itself.
 
-[[DIAGRAM:learning-loop|Figure 24-1 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn]]
+[[DIAGRAM:learning-loop|Figure 25-1 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn]]
 
 | **Stage** | **Work and durable output** | **Automation boundary** |
 | --- | --- | --- |
@@ -289,7 +289,7 @@ Continuous improvement joins production evidence to versioned change and release
 
 ## Runtime adaptation versus controlled offline improvement
 
-[[DIAGRAM:runtime-offline|Figure 24-2 — Runtime adaptation and offline improvement boundary]]
+[[DIAGRAM:runtime-offline|Figure 25-2 — Runtime adaptation and offline improvement boundary]]
 
 Runtime adaptation selects only pre-approved routes/fallbacks, reduces optional context, sheds load, stops a loop, asks for input, escalates, or rolls back inside a fixed envelope. It cannot expand permissions, purpose, data access, spend, tools, or model allowlists. Offline improvement creates a new immutable release and may change prompts, context/RAG, memory, tools, skills, model selection, routing, deterministic code, agent topology, workflows, and system architecture after evaluation and approval.
 
@@ -410,6 +410,6 @@ def evaluate_agent(predict_fn, dataset: list[dict[str, object]]):
 | What belongs in a release bundle? | Agent and prompt, runtime adapter, workflow build, model route and fallbacks, tool and policy versions, schemas, images, knowledge strategy, evaluations, rollout, and rollback policy. |
 | How do you roll back without breaking active runs? | Stop new assignment, restore the prior environment binding, keep build-compatible workers for pinned histories, reconcile side effects, and migrate only through an explicit tested plan. |
 
-## Transition to Chapter 25
+## Transition to Chapter 26
 
-The improvement loop proposes and validates change; Chapter 25 assigns decision rights, risk tiers, approvals, exceptions, and accountability.
+The improvement loop proposes and validates change; Chapter 26 assigns decision rights, risk tiers, approvals, exceptions, and accountability.

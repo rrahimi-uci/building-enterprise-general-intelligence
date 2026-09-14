@@ -2,7 +2,7 @@
 
 This Part applies defense in depth to untrusted content, identity, delegated authority, tools, code, data, memory, multi-agent traffic, MCP servers, and the software supply chain. Each control is tied to a trust boundary, runtime decision, detection signal, and recovery path.
 
-# 18 — Agentic AI Security and Guardrails Architecture
+# 20 — Agentic AI Security and Guardrails Architecture
 
 > **Evidence note.** The threat catalog is cross-checked against OWASP agentic-security guidance, while the trust-boundary model follows zero-trust principles that require explicit policy decisions around protected resources. [R11][R15][R16]
 
@@ -10,7 +10,7 @@ This Part applies defense in depth to untrusted content, identity, delegated aut
 
 Agentic systems combine untrusted language, privileged tools, dynamic context, durable memory, third-party protocols, and autonomous timing. Security cannot be one prompt or classifier. It constrains what enters, which capabilities become eligible, what may leave, which effects commit, and how the enterprise detects and recovers.
 
-[[DIAGRAM:security-depth|Figure 18-1 — Defense-in-depth guardrails architecture]]
+[[DIAGRAM:security-depth|Figure 20-1 — Defense-in-depth guardrails architecture]]
 
 | **Layer** | **Controls** | **Evidence** |
 | --- | --- | --- |
@@ -26,11 +26,11 @@ Agentic systems combine untrusted language, privileged tools, dynamic context, d
 
 ## Trust boundaries and runtime sequence
 
-[[DIAGRAM:security-boundaries|Figure 18-2 — Agentic security trust boundaries]]
+[[DIAGRAM:security-boundaries|Figure 20-2 — Agentic security trust boundaries]]
 
 Trust is not inherited through a chain. User authentication does not authorize the agent; discovery does not authorize a tool; retrieved text is not instruction; an agent message does not prove peer identity; HTTP success does not prove business acceptance.
 
-[[DIAGRAM:guardrail-sequence|Figure 18-3 — Runtime guardrail and protected-effect sequence]]
+[[DIAGRAM:guardrail-sequence|Figure 20-3 — Runtime guardrail and protected-effect sequence]]
 
 Authenticate subject/workload; classify/minimize input; build authorized labeled context; choose eligible model; validate structured output; authorize eligible tool and exact arguments; obtain proposal-bound approval when required; execute through sandbox/gateway with scoped credentials and DLP; reconcile effects and run deterministic acceptance; monitor, audit, contain, revoke, recover, and learn.
 
@@ -272,324 +272,11 @@ Authenticate subject/workload; classify/minimize input; build authorized labeled
 
 Use Detect → Contain → Revoke → Reconcile → Eradicate → Recover → Learn. Containment can pause a tool, MCP server, model route, Skill, memory namespace, tenant, or agent. Revoke credentials, capabilities, approvals, artifacts, signing keys, and trust. Reconcile which effects actually occurred; never infer from the model's final message. Restore a known release and authoritative state, then create privacy-reviewed regression cases.
 
-## Transition to Chapter 19
+## Transition to Chapter 22
 
-The threat model is established; Chapter 19 applies it to context, retrieval, memory, and state—the data surfaces most likely to carry hidden instructions.
+The guardrail architecture establishes defence in depth; Chapter 22 makes it enforceable per caller by binding every action to an authenticated identity and a delegated grant.
 
-# 19 — Context Engineering, RAG, Memory, and State
-
-|  |
-| --- |
-| **NORTHSTAR AT THIS POINT**  As runs grow, prompts become a mixture of chat, workflow state, retrieved documents, summaries, and learned preferences. Northstar separates these domains and records exactly which authorized projection reached each model call. |
-
-|  |
-| --- |
-| **DESIGN DECISION**  Treat prompts as disposable authorized projections; keep canonical state, knowledge, artifacts, and memory in distinct stores. |
-
-## What this chapter delivers
-
-Assemble authorized context from distinct state and knowledge domains and govern reusable memory as a data product.
-
-## Solution blueprint
-
-
-Figure 14. Context Engineering, Memory, and State.
-
-| **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
-| --- | --- | --- | --- | --- |
-| Context Service; workflow remains canonical | authorized sources to model prompt | tenant · source · context budget | one context projection | ContextManifest · MemoryRecord · EvidenceRef |
-
-## The context build pipeline
-
-Northstar assembles context in stages: parse the request, calculate source candidates, enforce tenant and resource authorization, fetch immutable versions, classify and sanitize content, deduplicate, rank, allocate tokens, produce ordered references, and record a ContextManifest. Only the final authorized boundary materializes bytes into the model request.
-
-Instructions have a trust hierarchy. System and application instructions are code-like release artifacts. Skill instructions are pinned capability artifacts. User requests express intent within authority. Retrieved documents and tool outputs are untrusted evidence. Content cannot promote itself to a higher trust role by saying “ignore previous instructions.”
-
-Memory is not a bag of embeddings. Long-term memory creation is a protected data write with owner, scope, provenance, confidence, policy basis, TTL, correction, and deletion. Canonical business state always wins over a memory summary.
-
-## Context, workflow state, memory, and enterprise knowledge
-
-| **Required analysis** | **Design conclusion** |
-| --- | --- |
-| Problem | “Memory” often conflates prompts, conversation history, task state, preferences, learned facts, documents, and recovery data—causing leakage, stale decisions, and unreproducible runs. |
-| Why it is difficult | Each type has different scope, consistency, privacy, retention, freshness, and retrieval semantics; models can misclassify or invent memories. |
-| Design alternatives | Full transcript replay; summarization; graph checkpoints; key/value memory; vector memory; knowledge graph; source-grounded retrieval; event-sourced state. |
-| Recommended architecture | Separate stores and APIs by semantic role. Build the model context as a policy-filtered projection of authoritative workflow state, recent conversation, relevant source-grounded knowledge, and explicitly approved memories. |
-| Trade-offs | Separation requires more schemas and retrieval logic, but enables correct ACLs, deletion, freshness, replay, and bounded context. |
-| Failure scenarios | Stale summary overwrites a current constraint; private memory leaks across tenants; model treats retrieved text as instruction; vector result lacks source ACL; deletion does not remove derived memory. |
-| Enterprise example | In claims handling, the chat transcript supports interaction, the workflow record tracks claim steps, policy documents remain in governed search, and any remembered customer preference has consent, provenance, TTL, and deletion linkage. |
-
-### State taxonomy and storage
-
-| **Information class** | **Scope and examples** | **System of record** | **Rules** |
-| --- | --- | --- | --- |
-| Conversation context | Recent messages, channel state, current clarification | Conversation service / document DB | Append-only turns; compact with source links; not authoritative business state |
-| Workflow state | Current node, variables, child tasks, budgets, approvals | Durable workflow history + relational projection | Strong transition rules; versioned; queryable; replay-safe |
-| Durable execution state | Event history, timers, activity results, checkpoint cursor | Workflow engine persistence | Engine-owned; encrypted; retention aligned to run evidence |
-| Short-term working memory | Scratch notes, candidate plan, intermediate hypotheses | Run-scoped state or object artifacts | TTL; no automatic cross-run reuse; label confidence and provenance |
-| Long-term memory | Approved preferences, reusable facts, learned procedures | Governed memory service / relational + search index | Explicit write policy, consent, provenance, TTL, ACL, correction/deletion |
-| Enterprise knowledge | Policies, contracts, code, tickets, records, catalogs | Source systems + governed search/vector/graph indexes | Source remains authoritative; ACL filter before retrieval; freshness and lineage |
-| Artifacts | Reports, patches, extracted tables, evidence packages | Versioned object store | Immutable versions, content hash, classification, owner, retention |
-| Telemetry and audit | Traces, metrics, policy decisions, effect records | Trace store + SIEM + append-only/WORM archive | Redaction; role-separated access; retention/legal hold |
-
-### Context assembly pipeline
-
-1. Start with agent instructions and policy-owned constraints from pinned versions.
-2. Load canonical workflow state and unresolved obligations—not the raw event history.
-3. Select the smallest recent conversation window needed for continuity.
-4. Retrieve enterprise knowledge only after identity/tenant/ACL filtering; attach source, timestamp, classification, and confidence metadata.
-5. Retrieve long-term memory through a separate policy gate; prefer verified facts and user-approved preferences.
-6. Remove duplicates, stale items, secrets, and content outside the task purpose; summarize only with links to originals.
-7. Label each segment as instruction, user\_input, enterprise\_data, tool\_result, or memory; the model must not promote data into instructions.
-8. Record a context-manifest hash on the model span so the call can be reconstructed without logging sensitive plaintext by default.
-
-### Detailed design — APIs, data model, and scalability
-
-### Component boundaries
-
-The Conversation Service owns turns; the Workflow Projection Service owns canonical run state; the Context Assembler creates an ephemeral model-input projection; the Retrieval Broker queries governed knowledge; the Memory Service owns approved cross-run memory; the Provenance Service tracks lineage; and the Compaction Service produces source-linked summaries. No component can silently promote a conversation statement into workflow truth or long-term memory.
-
-### High-level APIs
-
-| **API** | **Purpose and key semantics** |
-| --- | --- |
-| POST /v1/context:assemble | Build a token-bounded context from pinned instructions, run state, conversation, knowledge, and memory under a policy and data budget |
-| GET /v1/runs/{run\_id}/state | Return the canonical typed state projection and state\_version; separate from transcript/history |
-| POST /v1/conversations/{id}/turns | Append an immutable user/agent/tool turn with provenance, classification, and client idempotency key |
-| POST /v1/knowledge:search | Hybrid search with subject+actor context, source allowlist, freshness, filters, top-k, and required citations |
-| POST /v1/memories | Propose/write a governed memory with scope, provenance, confidence, consent, TTL, and deduplication key; policy may require review |
-| GET /v1/memories:search | Search only memories visible to the subject/purpose/run; returns confidence and source lineage |
-| PATCH /v1/memories/{memory\_id} | Correct via optimistic version; preserves previous version and reason |
-| DELETE /v1/memories/{memory\_id} | Create deletion tombstone and enqueue removal from indexes, caches, summaries, and derived artifacts |
-| POST /v1/context:compact | Produce a source-linked summary/checkpoint under a target token budget; never overwrites source turns |
-
-### Core data model
-
-| **Entity** | **Required fields and invariants** |
-| --- | --- |
-| ConversationTurn | conversation/turn IDs, role/type, content reference/hash, producer, created time, classification, source/trace refs; append-only |
-| RunStateProjection | run ID, schema/version, state version, variables, obligations, unresolved questions, budgets, artifact refs; derived from workflow history |
-| ContextManifest | context ID, run/node/model call, token budget/allocation, policy/version pins, ordered segment refs/hashes, redaction summary, total tokens |
-| ContextSegment | segment ID/type, source URI/revision, content hash, trust label, instruction flag, classification, ACL decision, freshness, token count |
-| MemoryRecord | memory ID, tenant, subject/team scope, type, canonical value, provenance, confidence, consent, purpose allowlist, TTL, status, supersedes |
-| KnowledgeObject | source URI/revision, object/chunk IDs, text/blob reference, embedding version, metadata, ACL pointer, ingestion cursor, deletion state |
-| SummarySnapshot | input segment hashes, summary hash/reference, model/prompt version, coverage map, unresolved facts, expiry; immutable |
-
-Example context-manifest shape:
-
-JSON · implementation excerpt
-
-```json
-{
-  "context_id": "ctx_...",
-  "run_id": "run_42",
-  "node_id": "n7",
-  "budget": {"max_tokens": 24000, "instructions": 3000, "state": 4000, "evidence": 14000, "conversation": 3000},
-  "segments": [{
-    "kind": "enterprise_data",
-    "uri": "doc://policy/91@rev17",
-    "sha256": "...",
-    "trust": "untrusted-content",
-    "acl_decision_id": "dec_...",
-    "tokens": 1840
-  }],
-  "redactions": ["pii:ssn"],
-  "manifest_sha256": "..."
-}
-```
-
-### Retrieval and memory consistency
-
-* The source system revision is authoritative. Index entries are disposable projections and must carry source revision, ACL pointer, ingestion time, and deletion state.
-* Search performs tenant/source pruning, exact ACL filtering, hybrid lexical/vector scoring, reranking, freshness filtering, and diversity/deduplication before context selection.
-* A memory write is a governed business operation: validate type, scope, consent, provenance, contradiction, retention, and sensitivity. Derived guesses default to run-scoped working memory, not long-term memory.
-* Correcting or deleting a source creates lineage events that invalidate affected memories, summaries, embeddings, model caches, and evidence packages according to retention/legal-hold policy.
-
-### Scalability and token economics
-
-* Partition conversations and memories by tenant + subject/team; partition knowledge by tenant + source + region. Use routing metadata so a query touches only eligible partitions.
-* Store content in object storage and metadata in relational/search stores. Context APIs exchange references; only the assembler materializes bytes for the authorized model call.
-* Run ingestion as an asynchronous CDC/event pipeline with separate extract, classify, ACL, chunk, embed, and index stages. Track independent cursors so failed embedding does not block ACL deletion.
-* Cache retrieval candidates by tenant, source revision, normalized query, policy scope, and embedding/reranker version; re-run exact authorization on cache hit.
-* Allocate a fixed context budget before retrieval. Use maximum marginal relevance/source diversity, per-source caps, and evidence-quality thresholds rather than filling the entire window.
-* Compact long conversations asynchronously and incrementally. Keep recent turns plus source-linked summaries; rebuild summaries when covered inputs change.
-* Enforce deletion SLOs across primary metadata, vector/search indexes, caches, and derived summaries. Tombstones must outlive the longest replica/cache lag to prevent resurrection.
-
-|  |
-| --- |
-| **PERFORMANCE AND COST**  Retrieve less, and cite what you retrieved. Context is the dominant cost in most agentic systems and the dominant cause of distraction. Record a context manifest identifier rather than the context body, and measure answer quality against context size — most systems are past the point where more retrieval helps. |
-
-## Grounding, corrections, and evidence boundary
-
-| **Claim or correction** | **Grounded statement** | **Source IDs** |
-| --- | --- | --- |
-| Privacy lifecycle | Context and memory need purpose limitation, consent or other legal basis where applicable, data-subject request handling, deletion propagation, legal-hold precedence, residency, provider retention controls, and proof that derived summaries/indexes were handled too. | NIST-GAI; GDPR |
-
-Evidence anchors: NIST-GAI; GDPR. Full URLs, authority, version, and scope appear in Appendix K.
-
-## Pattern reference — Memory
-
-|  |
-| --- |
-| **PROBLEM**  The system should reuse useful information across turns or runs without confusing stale summaries with canonical truth or retaining data indefinitely. |
-
-### Architecture and flow
-
-Working memory is run-scoped; long-term memory is a governed write with subject, scope, provenance, confidence, policy basis, TTL, correction, deletion, and retrieval authorization.
-
-1. Identify a candidate reusable fact.
-2. Validate evidence, subject, purpose, consent or policy basis, and sensitivity.
-3. Write a versioned memory record with TTL and provenance.
-4. Retrieve only after authorization and trust labeling.
-5. Correct, supersede, expire, or delete through propagation workflows.
-
-| **Use when** | **Do not use when** |
-| --- | --- |
-| Use for stable preferences, repeated domain facts, or learned operational hints with clear value and governance. | Do not persist transient chain-of-thought, secrets, unverified hypotheses, protected data without basis, or facts already authoritative elsewhere. |
-
-### Trade-offs
-
-| **Choice** | **Consequence** |
-| --- | --- |
-| Continuity | Creates privacy, staleness, correction, and deletion obligations. |
-| Reduced context cost | May lose nuance or introduce summary drift. |
-
-### Failures and controls
-
-| **Failure** | **Control** |
-| --- | --- |
-| Stale memory overrides state | Canonical state precedence and freshness checks. |
-| Cross-tenant leakage | Tenant-partitioned keys and authorization before retrieval. |
-| Deletion gaps | Lineage graph, tombstones, cache invalidation, and rebuild. |
-
-### Minimum observability
-
-* memory ID and version
-* source provenance
-* scope and tenant
-* policy basis
-* confidence and TTL
-* retrieval and deletion events
-
-## Implementation reference
-
-
-### Auditable context projection
-
-PYTHON · implementation excerpt
-
-```python
-from __future__ import annotations
-
-from datetime import datetime
-from typing import Literal
-from pydantic import BaseModel
-
-
-class ContextSegmentRef(BaseModel):
-    artifact_id: str
-    source_revision: str
-    sha256: str
-    authorization_decision_id: str
-    trust_role: Literal["instruction", "user_intent", "evidence"]
-    token_count: int
-
-
-class ContextManifest(BaseModel):
-    context_id: str
-    run_id: str
-    release_id: str
-    policy_version: str
-    segments: tuple[ContextSegmentRef, ...]
-    omitted_candidate_ids: tuple[str, ...]
-    created_at: datetime
-```
-
-### Cross-boundary artifact adoption policy
-
-PYTHON · implementation excerpt
-
-```python
-from __future__ import annotations
-
-from datetime import datetime
-from pydantic import BaseModel, Field
-
-
-class ArtifactDescriptor(BaseModel):
-    artifact_id: str
-    tenant_id: str
-    data_classes: frozenset[str]
-    region: str
-    allowed_purposes: frozenset[str]
-    provenance_digest: str
-    expires_at: datetime
-    legal_hold: bool = False
-
-
-class AdoptionPolicy(BaseModel):
-    tenant_id: str
-    allowed_data_classes: frozenset[str]
-    allowed_regions: frozenset[str]
-    purpose: str
-    trusted_provenance_digests: frozenset[str]
-
-
-def authorize_artifact_adoption(
-    artifact: ArtifactDescriptor, policy: AdoptionPolicy, *, now: datetime
-) -> None:
-    if artifact.tenant_id != policy.tenant_id:
-        raise PermissionError("cross-tenant artifact adoption denied")
-    if not artifact.data_classes <= policy.allowed_data_classes:
-        raise PermissionError("artifact classification exceeds policy")
-    if artifact.region not in policy.allowed_regions:
-        raise PermissionError("artifact region is not allowed")
-    if policy.purpose not in artifact.allowed_purposes:
-        raise PermissionError("artifact purpose is not allowed")
-    if artifact.provenance_digest not in policy.trusted_provenance_digests:
-        raise PermissionError("artifact provenance is not trusted")
-    if now > artifact.expires_at and not artifact.legal_hold:
-        raise PermissionError("artifact expired")
-```
-
-## Debugging playbook
-
-1. Reconstruct one ContextManifest without relying on logged plaintext.
-2. Compare canonical state with summaries and working memory.
-3. Trace a corrected or deleted fact through indexes, cache, memory, and artifacts.
-
-## Production checklist
-
-**✓** Conversation, workflow state, working memory, long-term memory, knowledge, artifacts, telemetry, and audit are separate domains.
-
-**✓** Authorization occurs before content materialization.
-
-**✓** Context records ordered references, hashes, trust labels, decisions, versions, redactions, and token allocation.
-
-**✓** Memory creation is a governed write with scope, provenance, confidence, lawful basis, TTL, correction, and deletion.
-
-**✓ Final implementation and deletion propagate through indexes, caches, summaries, memories, contexts, and artifacts.**
-
-## Exercises
-
-1. Design a token budget across instructions, state, evidence, memory, and reserve.
-2. Define the lifecycle of a reusable supplier preference memory.
-
-## Technical review questions
-
-| **Question** | **Strong answer** |
-| --- | --- |
-| Why call the prompt a projection rather than state? | It is a temporary, token-bounded view assembled from authoritative stores for one model call; it can be rebuilt, audited by reference, and discarded. |
-| How do conversation, knowledge, working memory, and long-term memory differ? | Interaction history; source-backed enterprise facts; run-scoped hypotheses; and approved reusable facts—each with different ownership, retention, authority, and deletion. |
-| What problem does a ContextManifest solve? | Reproducibility and diagnosis through ordered source, version, and hash references, authorization decisions, trust labels, redactions, and budget without logging all plaintext. |
-| How should retrieved instructions be handled? | As untrusted data with provenance and taint; they cannot alter system instructions, tool eligibility, policy, credentials, or destination grants. |
-| How do you delete a fact from an agentic system? | Tombstone and revoke the source, remove derived indexes, invalidate caches, rebuild summaries and contexts, clean governed memory and affected artifacts, and preserve permitted audit evidence. |
-
-## Transition to Chapter 20
-
-Context and state are bounded; Chapter 20 determines whose authority may flow through the system and how that authority narrows across hops.
-
-# 20 — Identity, RBAC/ABAC, and Delegated Authorization
+# 21 — Identity, RBAC/ABAC, and Delegated Authorization
 
 > **Evidence note.** The delegated-authority examples use OAuth token exchange, resource indicators, and protected-resource metadata as protocol building blocks; deployment still requires workload-specific issuer, audience, proof, revocation, and policy controls. [R08][R09][R10]
 
@@ -844,11 +531,11 @@ def derive_child(
 | Why reauthorize after a long wait? | User roles, ACLs, policy, resource state, risk, and credentials may have changed; original admission is not perpetual authority. |
 | Where must authorization occur in retrieval? | Before content reaches the model, with tenant and source routing, exact resource and field checks, freshness, redaction obligations, and provenance. |
 
-## Transition to Chapter 21
+## Transition to Chapter 22
 
-Identity and delegated authority answer who may ask; Chapter 21 proves whether a specific tool effect may execute, commit, retry, or recover.
+Identity and delegated authority answer who may ask; Chapter 22 proves whether a specific tool effect may execute, commit, retry, or recover.
 
-# 21 — Tool Security, Effects, Idempotency, and Approval
+# 22 — Tool Security, Effects, Idempotency, and Approval
 
 |  |
 | --- |
@@ -1180,11 +867,11 @@ class InMemoryEffectLedger:
 | How should approval be bound to an action? | Persist the exact canonical proposal, preview, destination, evidence, risk, and hash; authorize the approver; reject expiry, supersession, hash mismatch, or stale resource state. |
 | Why are both idempotency and optimistic concurrency needed? | Idempotency prevents duplicate logical intent; expected versions prevent an otherwise valid action from overwriting newer state. |
 
-## Transition to Chapter 22
+## Transition to Chapter 23
 
-Protected effects are governed; Chapter 22 contains the remaining execution, egress, data, privacy, and supply-chain blast radius.
+Protected effects are governed; Chapter 23 contains the remaining execution, egress, data, privacy, and supply-chain blast radius.
 
-# 22 — Sandboxing, Egress, Data Security, and Governance
+# 23 — Sandboxing, Egress, Data Security, and Governance
 
 > **Evidence note.** SBOM inventory and SLSA build provenance answer different supply-chain questions. Privacy obligations depend on jurisdiction; the GDPR source is cited only for EU legal context, not as universal legal advice. [R17][R18][R39]
 
@@ -1443,6 +1130,6 @@ class RecoveryObjectives(BaseModel):
 
 22 Cost, Latency, Capacity, and Reliability Optimization
 
-## Transition to Chapter 23
+## Transition to Chapter 24
 
-Security controls now produce events and evidence; Chapter 23 turns those signals into end-to-end traces that operators can reconstruct.
+Security controls now produce events and evidence; Chapter 24 turns those signals into end-to-end traces that operators can reconstruct.

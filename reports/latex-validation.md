@@ -1,4 +1,4 @@
-# LaTeX Validation — Book v2.0.0
+# LaTeX Validation — Book v2.1.0
 
 **Source result:** PASS
 **Target engine:** XeLaTeX
@@ -7,13 +7,13 @@
 
 - **narrative_parts:** `8`
 - **appendix_dividers:** `1`
-- **chapters:** `27`
+- **chapters:** `28`
 - **appendices:** `12`
-- **diagrams:** `18`
-- **code_blocks:** `51`
-- **longtables:** `191`
-- **callout_tables:** `89`
-- **citation_occurrences:** `94`
+- **diagrams:** `20`
+- **code_blocks:** `57`
+- **longtables:** `200`
+- **callout_tables:** `95`
+- **citation_occurrences:** `104`
 - **bundled_fonts:** `8`
 
 ## Quality controls

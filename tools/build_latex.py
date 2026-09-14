@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the XeLaTeX representation of Book v2.0.0.
+"""Generate the XeLaTeX representation of Book v2.1.0.
 
 The canonical Markdown remains the semantic source. This tool converts the
 restricted publication Markdown vocabulary into a styled, self-contained
@@ -35,7 +35,7 @@ def book_release(root: Path) -> str:
 
 
 BOOK_TITLE = "Enterprise Agentic AI Architecture & Developer Platform Guide"
-BASENAME = "Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0"
+BASENAME = "Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0"
 
 
 def sha256(path: Path) -> str:
@@ -419,8 +419,8 @@ def make_main() -> str:
         r"\documentclass[10pt,letterpaper,openany]{book}",
         r"\usepackage{latex/bookstyle}",
         r"\begin{document}",
-        r"\BookCover{assets/cover/cover-v2.0.0.png}",
-        r"\BookTitlePage{Enterprise Agentic AI Architecture \& Developer Platform Guide}{Book v2.0.0 · Publication Release · September 2026}{Reza Rahimi, PhD}{A structured enterprise reference for executives, architects, platform teams, security leaders, SREs, and senior engineers.}",
+        r"\BookCover{assets/cover/cover-v2.1.0.png}",
+        r"\BookTitlePage{Enterprise Agentic AI Architecture \& Developer Platform Guide}{Book v2.1.0 · Publication Release · September 2026}{Reza Rahimi, PhD}{A structured enterprise reference for executives, architects, platform teams, security leaders, SREs, and senior engineers.}",
         r"\input{latex/content/book-content.tex}",
         r"\end{document}",
         "",
@@ -433,7 +433,7 @@ def write_compile_files(root: Path) -> None:
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
-ENTRY="latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.tex"
+ENTRY="latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.tex"
 OUT="latex/build"
 mkdir -p "$OUT"
 if command -v latexmk >/dev/null 2>&1; then
@@ -444,7 +444,7 @@ else
   echo "XeLaTeX is required. Use the included Dockerfile.latex or CI workflow." >&2
   exit 2
 fi
-cp "$OUT/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.pdf" "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0-LaTeX.pdf"
+cp "$OUT/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.pdf" "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0-LaTeX.pdf"
 """
     (latex_dir / "compile.sh").write_text(compile_script, encoding="utf-8", newline="\n")
     (latex_dir / "compile.sh").chmod(0o755)

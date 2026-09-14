@@ -232,6 +232,72 @@
       "regions": {
         "core": "The logic the chapter teaches, without the supporting models."
       }
+    },
+    {
+      "id": "policy-to-rule",
+      "path": "examples/knowledge/policy_to_rule.py",
+      "language": "python",
+      "title": "A policy sentence as a typed, scoped rule with provenance",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_policy_to_rule.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "grounding-verifier",
+      "path": "examples/knowledge/grounding_verifier.py",
+      "language": "python",
+      "title": "Rebuilding a claim's evidence instead of trusting its citation",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_grounding_verifier.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "knowledge-graph",
+      "path": "examples/knowledge/knowledge_graph.py",
+      "language": "python",
+      "title": "Traversal answering a question similarity cannot",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_knowledge_graph.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "rule-as-guardrail",
+      "path": "examples/knowledge/rule_as_guardrail.py",
+      "language": "python",
+      "title": "A policy rule enforced at the effect boundary",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_rule_as_guardrail.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "set-operations",
+      "path": "examples/knowledge/set_operations.py",
+      "language": "python",
+      "title": "Union, intersection, difference and contradiction over rule sets",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_set_operations.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "capability-catalog",
+      "path": "examples/knowledge/capability_catalog.py",
+      "language": "python",
+      "title": "Discovering a capability with its effects and prerequisites",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_capability_catalog.py"
+      ],
+      "libraries": []
     }
   ]
 }

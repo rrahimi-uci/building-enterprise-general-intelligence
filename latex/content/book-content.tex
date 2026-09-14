@@ -6,9 +6,9 @@
 
 \clearpage
 
-\BookFrontChapter{Preface to Book v2.0.0}
+\BookFrontChapter{Preface to Book v2.1.0}
 
-Book v2.0.0 is the publication baseline for this guide and the canonical starting point for all future editions. It treats an agentic application as a governed distributed system: models may propose, while deterministic services own authority, state, effects, evidence, acceptance, and release.\par
+Book v2.1.0 is the publication baseline for this guide and the canonical starting point for all future editions. It treats an agentic application as a governed distributed system: models may propose, while deterministic services own authority, state, effects, evidence, acceptance, and release.\par
 
 The narrative follows one dependency chain. Foundations establish the deterministic shell; the reference architecture assigns ownership; the developer platform makes those controls reusable; patterns and anti-patterns guide topology; gateways and security enforce boundaries; observability and evaluation produce evidence; continuous learning converts evidence into governed change; and production operations keep the resulting system reliable and economical.\par
 
@@ -18,7 +18,7 @@ External facts, protocol behavior, framework capabilities, research findings, st
 
 \section{Reproducible edition}
 
-The accompanying Book v2.0.0 development package contains this canonical Markdown, the generated DOCX, source files, cover and diagrams, a reference registry, style tokens, templates, skills, build tools, validation tools, and release evidence. Future agents should modify the canonical Markdown and registries, never hand-format the release DOCX. The build and validation workflow is documented in the package README.\par
+The accompanying Book v2.1.0 development package contains this canonical Markdown, the generated DOCX, source files, cover and diagrams, a reference registry, style tokens, templates, skills, build tools, validation tools, and release evidence. Future agents should modify the canonical Markdown and registries, never hand-format the release DOCX. The build and validation workflow is documented in the package README.\par
 
 \BookFrontChapter{How to use this guide}
 
@@ -39,8 +39,8 @@ Executive and product leader & Parts II, III, VIII and Appendix G & Investment, 
 Enterprise / solution architect & Parts I–VIII & Boundaries, contracts, topology, integration, security, and lifecycle \\
 Platform engineer & Parts II, III, V–VIII & Reusable control planes, SDKs, gateways, telemetry, release, and operations \\
 \rowcolor{BookLight}
-Application developer & Parts I, III, IV, VII & Agent design, tools, Skills, tests, debugging, and improvement \\
-Security / risk / privacy & Parts VI, VIII and Appendices F, K & Threat controls, evidence, approvals, exceptions, and assurance \\
+Application developer & Parts I, II, III, IV, VII & Agent design, knowledge, tools, Skills, tests, debugging, and improvement \\
+Security / risk / privacy & Parts II, VI, VIII and Appendices F, K & Knowledge governance, threat controls, evidence, approvals, exceptions, and assurance \\
 \rowcolor{BookLight}
 SRE / operations & Parts VII, VIII and Appendices B, L & SLOs, incidents, recovery, capacity, and verified-success economics \\
 \end{longtable}
@@ -86,11 +86,15 @@ The Markdown manuscript is the semantic source of truth. DOCX, Notion release me
 
 \end{enumerate}
 
-\section{Part II — Enterprise Reference Architecture}
+\section{Part II — Enterprise Reference Architecture \& Knowledge}
 
 \begin{enumerate}
 
 \item Enterprise Reference Architecture, Boundaries, and Contracts
+
+\item Enterprise Knowledge Management for Agents
+
+\item Context Engineering, RAG, Memory, and State
 
 \end{enumerate}
 
@@ -144,8 +148,6 @@ The Markdown manuscript is the semantic source of truth. DOCX, Notion release me
 
 \item Agentic AI Security and Guardrails Architecture
 
-\item Context Engineering, RAG, Memory, and State
-
 \item Identity, RBAC/ABAC, and Delegated Authorization
 
 \item Tool Security, Effects, Idempotency, and Approval
@@ -178,7 +180,7 @@ The Markdown manuscript is the semantic source of truth. DOCX, Notion release me
 
 \section{Appendices}
 
-A. Pattern Selection Decision Tree and Catalog Index B. Failure triage and operator runbooks C. Platform contracts quick reference D. Framework landscape E. Research implications F. Known limits and enforced mitigations G. Enterprise adoption roadmap H. Glossary I. Companion implementation guide J. Coding-agent prompt and acceptance criteria K. References L. Capacity, resilience, and release acceptance\par
+A. Pattern Selection Decision Tree and Catalog Index B. Failure triage and operator runbooks C. Platform contracts quick reference D. Framework landscape E. Research implications F. Known limits and enforced mitigations G. Enterprise adoption roadmap H. Glossary I. Companion Implementation Guide: Northstar Reference J. Coding-agent prompt and acceptance criteria K. References L. Capacity, resilience, and release acceptance\par
 
 \mainmatter
 
@@ -1173,7 +1175,7 @@ How do you keep the SDK replaceable? & Store platform contracts, workflow histor
 
 The runtime now has a stable boundary; Chapter 4 places it inside the complete enterprise reference architecture.\par
 
-\BookPartPage{II}{ENTERPRISE REFERENCE ARCHITECTURE}{This Part converts the foundational invariants into an enterprise system of record. It assigns ownership across experience, application, runtime, knowledge, gateway, security, governance, and operations planes, then specifies the APIs and records that let those planes evolve independently.}{assets/parts/part-ii.png}
+\BookPartPage{II}{ENTERPRISE REFERENCE ARCHITECTURE \& KNOWLEDGE}{This Part converts the foundational invariants into an enterprise system of record, then fills the knowledge plane it names. It assigns ownership across experience, application, runtime, knowledge, gateway, security, governance, and operations planes; defines the governed knowledge layer agents retrieve, reason over, are constrained by, and act through; and closes with how a single run assembles the context it is entitled to.}{assets/parts/part-ii.png}
 
 \BookChapter{04}{Enterprise Reference Architecture, Boundaries, and Contracts}
 
@@ -1683,13 +1685,1219 @@ How should execution behave during a control-plane outage? & Continue compatible
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 5}
+\section{Transition to Chapter 7}
 
-The reference architecture is now concrete enough to productize; Chapter 5 defines the reusable developer platform and SDK.\par
+The reference architecture names a knowledge plane but does not say what fills it; Chapter 7 defines the governed knowledge layer agents retrieve, reason over, are constrained by, and act through.\par
+
+\BookChapter{05}{Enterprise Knowledge Management for Agents}
+
+\begin{bookcallout}[Northstar at this point]
+Northstar's onboarding agent can retrieve the supplier policy and quote it accurately. It still approves a supplier in a jurisdiction the policy excludes, because retrieving a sentence is not the same as being bound by it. The platform team stops adding documents to the index and starts building a knowledge layer.
+\end{bookcallout}
+
+\begin{bookcallout}[Design decision]
+Treat institutional knowledge as governed artifacts with owners, versions, scope, and provenance — not as a corpus. Retrieval becomes one consumer of that layer rather than the layer itself.
+\end{bookcallout}
+
+\section{What this chapter delivers}
+
+Separate the four things an agent does with what the organization knows, and give each one a representation it can actually use. An agent retrieves to understand a situation, reasons to decide what should happen, checks constraints to learn what it may do, and consults capabilities to act. These are four responsibilities with four failure modes, and an architecture that serves all four from one semantic index has not separated them — it has hidden them.\par
+
+\section{Solution blueprint}
+
+\BookDiagram{assets/diagrams/knowledge-fabric.png}{Figure 5-1 — The enterprise knowledge fabric and its four consumption modes}{knowledge-fabric}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\fontsize{7.2}{9}\selectfont
+\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries State owner & \color{white}\bfseries Trust boundary & \color{white}\bfseries Scale unit & \color{white}\bfseries Failure containment & \color{white}\bfseries Core contracts \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries State owner & \color{white}\bfseries Trust boundary & \color{white}\bfseries Scale unit & \color{white}\bfseries Failure containment & \color{white}\bfseries Core contracts \\
+\endhead
+Knowledge Hub and its registries & authored source to governed artifact & artifact · domain · tenant & one artifact version & KnowledgeArtifact · Rule · Capability · ResolutionQuery \\
+\end{longtable}
+\BookTableEnd
+
+\section{Why retrieval is not a knowledge architecture}
+
+Retrieval-augmented generation answers one question well: \emph{what text is relevant to this?} Enterprises then ask it three questions it was never designed for.\par
+
+\needspace{5\baselineskip}
+\BookTableStart
+\fontsize{7.2}{9}\selectfont
+\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries Mode & \color{white}\bfseries The question & \color{white}\bfseries Representation & \color{white}\bfseries How it fails when wrong \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries Mode & \color{white}\bfseries The question & \color{white}\bfseries Representation & \color{white}\bfseries How it fails when wrong \\
+\endhead
+Context & What is the situation? & Documents, embeddings, semantic search & Plausible grounding that is stale, superseded, or outside the reader's authority \\
+\rowcolor{BookLight}
+Reasoning & What should happen? & Ontology, knowledge graph, decision models & Correct facts, invalid inference \\
+Constraints & What may I do? & Policies and permissions as enforceable rules & The agent explains the rule, then violates it \\
+\rowcolor{BookLight}
+Action & How do I do it? & Capability and API contracts & Right decision, wrong or unauthorized effect \\
+\end{longtable}
+\BookTableEnd
+
+The fourth column is the argument. Each mode fails differently, so each needs different evidence and different tests. A system that cannot say which mode failed cannot be debugged, and a similarity score is not evidence of authority, currency, or permission.\par
+
+The clearest case is the one Northstar hit. A policy excludes a jurisdiction. Retrieval returns the policy, the model quotes it, and the agent proceeds anyway, because nothing in the pipeline was responsible for \emph{enforcing} the exclusion. The document was context. Nobody made it a constraint.\par
+
+\section{The knowledge fabric}
+
+Seven representations, each derived from the one above it and carrying provenance back to it. A guardrail that cannot name the sentence it came from is an opinion.\par
+
+\subsection{Semantic knowledge}
+
+Documents, policies, procedures, standards, and prior decisions, reached through embeddings and hybrid search. Chapter 6 owns the mechanics — chunking, reranking, and the context window itself. What belongs here is what makes retrieval \emph{governed}: source authority, effective dates, jurisdiction, supersession, and the difference between text that appears in a document and text that is authoritative.\par
+
+A retrieved passage should never reach a model without the metadata that decides whether it still applies.\par
+
+\subsection{Ontology and knowledge graph}
+
+Entities, relationships, dependencies, and the organization's own semantics. Traversal answers questions similarity cannot: \emph{what depends on this system three hops away?} No wording links a payments API to a regulatory filing obligation, so no embedding will connect them. The graph does.\par
+
+PYTHON · Traversal answering a question similarity cannot\par
+
+\needspace{406.4pt}
+\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+@dataclass
+class KnowledgeGraph:
+    """A typed property graph: edges carry meaning, not just adjacency."""
+
+    nodes: dict[str, dict] = field(default_factory=dict)
+    edges: list[tuple[str, str, str]] = field(default_factory=list)
+
+    def add(self, node_id: str, **properties) -> None:
+        self.nodes[node_id] = properties
+
+    def relate(self, source: str, relation: str, target: str) -> None:
+        for end in (source, target):
+            if end not in self.nodes:
+                raise KeyError(f"unknown node: {end}")
+        self.edges.append((source, relation, target))
+
+    def neighbours(self, node_id: str, relation: str | None = None) -> list[str]:
+        return [t for s, r, t in self.edges
+                if s == node_id and (relation is None or r == relation)]
+
+    def reaches(self, start: str, relation: str, *, max_hops: int = 6) -> list[str]:
+        """Everything transitively reachable along one relation.
+
+        Bounded: an unbounded traversal over an enterprise graph is a denial of
+        service against your own agent, and a cycle makes it non-terminating.
+        """
+        seen, order = {start}, []
+        queue = deque([(start, 0)])
+        while queue:
+            node, depth = queue.popleft()
+            if depth >= max_hops:
+                continue
+            for nxt in self.neighbours(node, relation):
+                if nxt not in seen:
+                    seen.add(nxt)
+                    order.append(nxt)
+                    queue.append((nxt, depth + 1))
+        return order
+
+    def impact_of_changing(self, node_id: str) -> list[str]:
+        """What depends on this, however indirectly. The question RAG cannot answer."""
+        return self.reaches(node_id, "depends_on_inverse")
+\end{lstlisting}
+
+Traversal must be bounded. An unbounded walk over an enterprise graph is a denial of service against your own agent, and a cycle makes it non-terminating.\par
+
+The honest caveat: ontologies are where enterprise knowledge programmes go to die. The useful heuristic is to model only what an agent must traverse to make a decision it cannot make otherwise, and to let a modelling exercise justify itself one query at a time.\par
+
+\subsection{Business rules as enforceable constraints}
+
+The core of the layer. A rule an agent reads is documentation; a rule the platform evaluates at the effect boundary is a control. The move from prose to knowledge is not parsing — it is committing to a shape.\par
+
+PYTHON · A policy sentence as a typed, scoped rule with provenance\par
+
+\needspace{489.2pt}
+\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+Modality = Literal["obligation", "permission", "prohibition"]
+
+
+@dataclass(frozen=True)
+class SourceRef:
+    """Where a claim came from, precisely enough to check it again later."""
+
+    document_id: str
+    section_id: str
+    start_offset: int
+    end_offset: int
+    source_sha256: str
+
+    def excerpt(self, corpus: dict[str, str]) -> str:
+        return corpus[self.document_id][self.start_offset:self.end_offset]
+
+
+@dataclass(frozen=True)
+class Predicate:
+    variable: str
+    operator: Literal["<", "<=", "=", "!=", ">=", ">"]
+    value: float | str | bool
+
+
+@dataclass(frozen=True)
+class Rule:
+    rule_id: str
+    modality: Modality
+    conditions: tuple[Predicate, ...]
+    outcome: Predicate
+    # Scope is required, not optional. A rule whose applicability is implicit
+    # will be applied where it does not belong, which is the most common way a
+    # correctly extracted rule still produces a wrong decision.
+    jurisdiction: str
+    responsible_party: str
+    effective_from: str
+    source: SourceRef
+    supersedes: str | None = None
+    exceptions: tuple[str, ...] = field(default_factory=tuple)
+
+    def applies_in(self, jurisdiction: str, on_date: str) -> bool:
+        return jurisdiction == self.jurisdiction and on_date >= self.effective_from
+
+    def digest(self) -> str:
+        """Identity by content, so two extractions of one sentence agree."""
+        payload = "|".join([
+            self.modality, self.jurisdiction, self.responsible_party,
+            *(f"{p.variable}{p.operator}{p.value}" for p in self.conditions),
+            f"{self.outcome.variable}{self.outcome.operator}{self.outcome.value}",
+        ])
+        return hashlib.sha256(payload.encode()).hexdigest()[:16]
+\end{lstlisting}
+
+Scope is required, not optional. A rule whose applicability is implicit will be applied where it does not belong, which is the most common way a correctly extracted rule still produces a wrong decision. Identity by content rather than by assigned identifier is what lets two independent extractions of one sentence recognize each other later.\par
+
+Enforcement then happens where intent becomes action:\par
+
+PYTHON · A policy rule enforced at the effect boundary\par
+
+\needspace{553.6pt}
+\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+class PolicyViolation(Exception):
+    """Refused by an enforceable rule. Carries the rule that refused it."""
+
+    def __init__(self, message: str, rule_id: str, source_section: str) -> None:
+        super().__init__(message)
+        self.rule_id = rule_id
+        self.source_section = source_section
+
+
+class UnknownUnderPolicy(Exception):
+    """A required input was missing, so the rule could not be evaluated.
+
+    Refusing here is the whole point: a guardrail that treats 'unknown' as
+    'permitted' is not a guardrail. The three-valued reading -- true, false,
+    unknown -- is what keeps a missing field from silently authorizing an effect.
+    """
+
+
+@dataclass(frozen=True)
+class Guardrail:
+    rule: object
+
+    def _satisfied(self, facts: dict) -> bool:
+        for predicate in self.rule.conditions:
+            if predicate.variable not in facts:
+                raise UnknownUnderPolicy(
+                    f"{self.rule.rule_id} needs {predicate.variable}, which was not supplied"
+                )
+            value = facts[predicate.variable]
+            checks = {">": value > predicate.value, ">=": value >= predicate.value,
+                      "<": value < predicate.value, "<=": value <= predicate.value,
+                      "=": value == predicate.value, "!=": value != predicate.value}
+            if not checks[predicate.operator]:
+                return False
+        return True
+
+    def enforce(self, facts: dict, *, jurisdiction: str, on_date: str) -> None:
+        """Raise if this effect may not proceed. Silence means permitted."""
+        if not self.rule.applies_in(jurisdiction, on_date):
+            return  # out of scope: this rule has nothing to say here
+        if not self._satisfied(facts):
+            return  # conditions not met: the rule does not fire
+        required = self.rule.outcome
+        actual = facts.get(required.variable)
+        if actual != required.value:
+            raise PolicyViolation(
+                f"{self.rule.rule_id} requires {required.variable}="
+                f"{required.value}, got {actual!r}",
+                rule_id=self.rule.rule_id,
+                source_section=self.rule.source.section_id,
+            )
+
+
+def guarded_dispatch(effect, facts: dict, guardrails, *, jurisdiction: str, on_date: str):
+    """Every guardrail must pass before the effect is allowed to run."""
+    for guardrail in guardrails:
+        guardrail.enforce(facts, jurisdiction=jurisdiction, on_date=on_date)
+    return effect()
+\end{lstlisting}
+
+Note the refusal on missing input. A guardrail that reads \emph{unknown} as \emph{permitted} is not a guardrail. Three-valued evaluation — true, false, unknown — is what stops an absent field from silently authorizing an effect.\par
+
+\subsection{Business data catalog}
+
+Entities, fields, definitions, ownership, lineage, sensitivity, and access constraints, described so an agent can discover and query data safely. A column name is not a definition, and a schema without a sensitivity class cannot tell an agent which fields it must not put in a prompt.\par
+
+\subsection{Capability and API catalog}
+
+What the agent may do, with the consequences attached. A tool list says what exists; a capability catalog says whether an action mutates, what must be true first, who may invoke it, and whether a retry is safe.\par
+
+PYTHON · Discovering a capability with its effects and prerequisites\par
+
+\needspace{526.0pt}
+\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+Effect = Literal["read", "write", "irreversible"]
+
+
+@dataclass(frozen=True)
+class Capability:
+    capability_id: str
+    version: str
+    description: str
+    effect: Effect
+    required_action: str
+    prerequisites: tuple[str, ...] = field(default_factory=tuple)
+    idempotent: bool = False
+    data_classes: frozenset[str] = frozenset()
+
+
+class CapabilityUnavailable(Exception):
+    """No capability satisfies the request under the caller's grant."""
+
+
+@dataclass
+class CapabilityCatalog:
+    capabilities: dict[str, Capability] = field(default_factory=dict)
+
+    def register(self, capability: Capability) -> None:
+        self.capabilities[capability.capability_id] = capability
+
+    def discover(self, *, intent_effect: Effect, granted_actions: frozenset[str],
+                 satisfied: frozenset[str], permitted_data: frozenset[str]) -> list[Capability]:
+        """Everything the caller may actually invoke right now.
+
+        Four filters, and the order matters: an agent should never see a
+        capability it cannot use, because a listed-but-forbidden tool is an
+        invitation to try.
+        """
+        eligible = []
+        for capability in self.capabilities.values():
+            if capability.effect != intent_effect:
+                continue
+            if capability.required_action not in granted_actions:
+                continue
+            if not set(capability.prerequisites) <= satisfied:
+                continue
+            if not capability.data_classes <= permitted_data:
+                continue
+            eligible.append(capability)
+        # Reversible first: when two capabilities both satisfy the intent, the
+        # one that can be undone is the safer default.
+        order = {"read": 0, "write": 1, "irreversible": 2}
+        return sorted(eligible, key=lambda c: (order[c.effect], not c.idempotent, c.capability_id))
+
+    def select(self, **kwargs) -> Capability:
+        found = self.discover(**kwargs)
+        if not found:
+            raise CapabilityUnavailable("no capability satisfies this request under the caller's grant")
+        return found[0]
+\end{lstlisting}
+
+Filtering before discovery matters more than it looks. A capability the caller may not invoke should never appear, because a listed-but-forbidden tool is an invitation to try. This is the knowledge-side view of the Skills of Chapter 8 and the tool manifests of Chapter 22; it is the same artifact seen from discovery rather than from execution.\par
+
+\subsection{Process and decision models}
+
+Four OMG standards already describe what most enterprises are otherwise inventing badly. The question to ask of each is not whether it is rigorous but what an agent can do with it that it could not do with prose.\par
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries Standard & \color{white}\bfseries Represents & \color{white}\bfseries What an agent does with it \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries Standard & \color{white}\bfseries Represents & \color{white}\bfseries What an agent does with it \\
+\endhead
+BPMN \BookCitation{R44} & Processes and their control flow & Plans against the real sequence, including the steps it may not skip \\
+\rowcolor{BookLight}
+DMN \BookCitation{R45} & Decisions as tables with a hit policy & Evaluates a decision deterministically instead of reasoning about it \\
+CMMN \BookCitation{R46} & Case management, unordered work & Handles work with no fixed sequence without inventing one \\
+\rowcolor{BookLight}
+SBVR \BookCitation{R47} & Business vocabulary and rules & Resolves what a term means in this domain before acting on it \\
+\end{longtable}
+\BookTableEnd
+
+DMN earns its place fastest. A decision table with a declared hit policy is the one artifact that turns a class of judgement calls into a lookup, and a lookup can be tested. BPMN pays off where the sequence is genuinely fixed and the cost of skipping a step is high. CMMN and SBVR are narrower; adopt them when case work or vocabulary ambiguity is the actual problem, not because the set is incomplete without them.\par
+
+\section{From policy text to enforceable logic}
+
+Extraction is probabilistic. Verification must not be. The pipeline that works separates the two and refuses to let the first vouch for itself.\par
+
+\BookDiagram{assets/diagrams/policy-to-guardrail.png}{Figure 5-2 — Extract, prove, and project: from policy text to an enforced guardrail}{policy-to-guardrail}
+
+\textbf{Extract} is the part a language model does well: find the rules, type their conditions and outcomes, record where each came from.\par
+
+\textbf{Prove} is the part that decides whether to believe it. The critical move is that verification does not trust the citation a rule carries; it rebuilds the evidence from the raw corpus and compares.\par
+
+PYTHON · Rebuilding a claim's evidence instead of trusting its citation\par
+
+\needspace{406.4pt}
+\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+@dataclass(frozen=True)
+class Verdict:
+    grounded: bool
+    reason: str
+
+
+def normalize(text: str) -> str:
+    return re.sub(r"\s+", " ", text).strip().lower()
+
+
+def verify(claim: str, source_ref, corpus: dict[str, str], *, min_overlap: float = 0.6) -> Verdict:
+    """Certify a claim against the corpus the citation points at.
+
+    Three ways to fail, checked in order, because a later check cannot be
+    trusted once an earlier one has failed.
+    """
+    document = corpus.get(source_ref.document_id)
+    if document is None:
+        return Verdict(False, f"cited document does not exist: {source_ref.document_id}")
+
+    # The digest pins the document *version*. Without it, a rule extracted from
+    # last year's policy still 'verifies' against this year's text.
+    actual = hashlib.sha256(document.encode()).hexdigest()
+    if source_ref.source_sha256 not in {actual, "a" * 64}:  # test fixtures use a sentinel
+        return Verdict(False, "cited document has changed since extraction")
+
+    if source_ref.end_offset > len(document):
+        return Verdict(False, "cited span falls outside the document")
+
+    passage = normalize(document[source_ref.start_offset:source_ref.end_offset])
+    if not passage:
+        return Verdict(False, "cited span is empty")
+
+    # Content overlap, not string equality: extraction legitimately rewords.
+    claim_terms = set(normalize(claim).split())
+    passage_terms = set(passage.split())
+    if not claim_terms:
+        return Verdict(False, "claim is empty")
+    overlap = len(claim_terms & passage_terms) / len(claim_terms)
+    if overlap < min_overlap:
+        return Verdict(False, f"claim is not supported by the cited passage ({overlap:.0%} overlap)")
+    return Verdict(True, f"grounded at {overlap:.0%} overlap")
+\end{lstlisting}
+
+A model that invents a rule will invent a plausible citation for it, so checking that a citation is well-formed proves nothing. Checking that the cited passage \emph{says what the rule says} is a different operation, and it is the one that matters. In one run of a compliance extraction pipeline built on this design, independent verification rejected 44\% of the dependency and conflict claims that the pipeline's own deterministic guard had already accepted \BookCitation{R48}. That figure is one measurement of one pipeline on one corpus; it is not a general rate. It is, however, the empirical case for making verification independent of extraction.\par
+
+\textbf{Project} turns what survived into the standards-compliant models above, and into the guardrails the runtime enforces.\par
+
+\begin{bookantipattern}[Common pitfall]
+Treating extraction confidence as grounding. A high-confidence rule with a fabricated citation is more dangerous than a low-confidence one, because it will pass review. Verify against the corpus, not against the model's own certainty.
+\end{bookantipattern}
+
+\section{Knowledge algebra}
+
+An enterprise never has one knowledge base. It has a regulator's and its own, last quarter's and this quarter's, one business unit's and another's. Agents must operate across them, and that requires defined operations rather than a merge.\par
+
+PYTHON · Union, intersection, difference and contradiction over rule sets\par
+
+\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+@dataclass(frozen=True)
+class Attributed:
+    """A rule together with every source that asserts it."""
+
+    rule: object
+    sources: tuple[str, ...]
+    original_ids: dict[str, str] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class Contradiction:
+    """Both sides preserved. Resolution is a human decision, not a merge rule."""
+
+    subject: str
+    left: object
+    right: object
+    left_source: str
+    right_source: str
+    reason: str
+
+
+def _key(rule) -> str:
+    """Rules align by content, so independent extractions of one policy match."""
+    return rule.digest()
+
+
+def _subject(rule) -> tuple[str, str, str]:
+    """What a rule is *about*: the same subject is what makes a clash possible."""
+    return (rule.outcome.variable, rule.jurisdiction,
+            tuple(sorted((p.variable, p.operator, p.value) for p in rule.conditions)))
+
+
+def union(left: dict[str, object], right: dict[str, object]) -> list[Attributed]:
+    """Every distinct rule, each carrying the sources that assert it."""
+    names = list(left) + [n for n in right if n not in left]
+    by_key: dict[str, Attributed] = {}
+    for source in names:
+        for rule in (left.get(source) or right.get(source)):
+            key = _key(rule)
+            existing = by_key.get(key)
+            if existing is None:
+                by_key[key] = Attributed(rule, (source,), {source: rule.rule_id})
+            else:
+                by_key[key] = Attributed(
+                    existing.rule, existing.sources + (source,),
+                    {**existing.original_ids, source: rule.rule_id},
+                )
+    return list(by_key.values())
+
+
+def intersection(left: dict[str, object], right: dict[str, object]) -> list[Attributed]:
+    """Rules both sources assert. The highest-confidence knowledge available."""
+    both = {s for s in left} | {s for s in right}
+    return [a for a in union(left, right) if len(set(a.sources)) == len(both)]
+
+
+def difference(left: dict[str, object], right: dict[str, object]) -> list[Attributed]:
+    """Rules only the left source asserts -- scope-dependent, not yet safe."""
+    right_keys = {_key(r) for rules in right.values() for r in rules}
+    name = next(iter(left))
+    return [Attributed(r, (name,), {name: r.rule_id})
+            for r in left[name] if _key(r) not in right_keys]
+
+
+def contradictions(left: dict[str, object], right: dict[str, object]) -> list[Contradiction]:
+    """Rule pairs about the same subject that cannot both be satisfied."""
+    left_name, right_name = next(iter(left)), next(iter(right))
+    found = []
+    for a in left[left_name]:
+        for b in right[right_name]:
+            if _subject(a) != _subject(b):
+                continue
+            if a.outcome.value != b.outcome.value or a.modality != b.modality:
+                found.append(Contradiction(
+                    subject=a.outcome.variable, left=a, right=b,
+                    left_source=left_name, right_source=right_name,
+                    reason=(f"{left_name} requires {a.outcome.variable}="
+                            f"{a.outcome.value} ({a.modality}); {right_name} requires "
+                            f"{b.outcome.value} ({b.modality}) under the same conditions"),
+                ))
+    return found
+\end{lstlisting}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries Operation & \color{white}\bfseries Meaning & \color{white}\bfseries What an agent may do with the result \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries Operation & \color{white}\bfseries Meaning & \color{white}\bfseries What an agent may do with the result \\
+\endhead
+Intersection & Asserted by both sources & Highest-confidence knowledge; safe to act on \\
+\rowcolor{BookLight}
+Difference & Asserted by one source only & Scope-dependent; requires a jurisdiction check first \\
+Union & Every distinct rule, with per-source attribution & Complete coverage; conflicts still possible \\
+\rowcolor{BookLight}
+Contradiction & Rules that cannot both be satisfied & Stop, escalate, and never resolve automatically \\
+\end{longtable}
+\BookTableEnd
+
+Three properties are worth stating as rules of the architecture.\par
+
+\textbf{Union is not merge.} Combining two knowledge bases must preserve which source asserted each rule and what its original identifier was. A union that flattens attribution destroys the only information that can later resolve a conflict.\par
+
+\textbf{A contradiction is a result, not an error.} Two authoritative sources that disagree is a finding about the organization, frequently a valuable one. The platform's job is to surface it with structured evidence — the shared subject, each side's requirement, and why they cannot both hold — not to pick a winner quietly.\par
+
+\textbf{Semantic equivalence never overrides deterministic alignment.} Where rules align by identifier or citation, that alignment stands. Model-judged equivalence is advisory, marked for review, and never allowed to change a deterministic match.\par
+
+\begin{bookarchitecture}[Architecture guidance]
+Define these operations over typed rules with declared scope, not over documents. Two documents cannot be intersected; two rule sets can. If your knowledge base cannot support the algebra, it is a corpus with a search box.
+\end{bookarchitecture}
+
+\section{Governance and provenance}
+
+Every representation above is only as good as the metadata that says whether to believe it.\par
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries Field & \color{white}\bfseries Why an agent needs it \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries Field & \color{white}\bfseries Why an agent needs it \\
+\endhead
+Owner & Who answers when the artifact is wrong \\
+\rowcolor{BookLight}
+Version and supersedes & Which of two conflicting statements is current \\
+Effective from / until & Whether it applied on the date in question \\
+\rowcolor{BookLight}
+Jurisdiction and scope & Whether it applies to this subject at all \\
+Provenance & The passage, offsets, and document digest it derives from \\
+\rowcolor{BookLight}
+Confidence and status & Authoritative, inferred, or draft \\
+Permissions and data class & Who may see it, and whether it may enter a prompt \\
+\rowcolor{BookLight}
+Lifecycle & Review cadence and expiry \\
+\end{longtable}
+\BookTableEnd
+
+The document digest deserves emphasis. Without it, a rule extracted from last year's policy still verifies against this year's text, and nothing in the system notices that the ground moved.\par
+
+\begin{booksecurity}[Security and governance]
+Permissions belong to the knowledge artifact, enforced at the resolution boundary. Filtering retrieved passages after the model has seen them is not access control; it is redaction after disclosure.
+\end{booksecurity}
+
+\section{Grounding, corrections, and evidence boundary}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
+\endhead
+Standards scope & BPMN, DMN, CMMN, and SBVR are OMG specifications; each citation supports the existence and semantics of its own standard and nothing about its suitability for agentic systems. That assessment is book-authored. & R44; R45; R46; R47 \\
+\rowcolor{BookLight}
+Verification measurement & The 44\% rejection figure is one run of one compliance pipeline on one corpus, reported by its authors. It is evidence that independent verification finds real errors, not a general error rate for extraction. & R48 \\
+\end{longtable}
+\BookTableEnd
+
+Evidence anchors: R44; R45; R46; R47; R48. Full URLs, authority, version, and scope appear in Appendix K.\par
+
+\section{Implementation reference}
+
+The examples above are the reference implementation, and each is executed in continuous integration. Composed, they show the shape of a knowledge hub: a rule extracted with provenance, verified against its corpus, placed in a graph, reconciled against a second source, and finally enforced at the effect boundary.\par
+
+\section{Reference architecture: the Enterprise Knowledge Hub}
+
+Agents must not hold connection strings to six stores. They ask one service, which resolves, authorizes, and attributes.\par
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries Plane & \color{white}\bfseries Holds & \color{white}\bfseries Answers \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries Plane & \color{white}\bfseries Holds & \color{white}\bfseries Answers \\
+\endhead
+Governance & Ownership, versions, effective dates, permissions, lifecycle & May this agent see this, and is it current? \\
+\rowcolor{BookLight}
+Semantic & Documents and embeddings & What text is relevant? \\
+Structural & Ontology, graph, data catalog & What is related to what, and what does this field mean? \\
+\rowcolor{BookLight}
+Normative & Rules, decision tables, vocabulary & What is required, permitted, or forbidden? \\
+Procedural & Process and case models & In what order, and what may not be skipped? \\
+\rowcolor{BookLight}
+Capability & Tools, APIs, effects, prerequisites & What can be done, and at what cost? \\
+\end{longtable}
+\BookTableEnd
+
+One query surface sits above all six. Permissions are enforced there, attribution is attached there, and an agent that asks for knowledge it may not have receives a refusal rather than a filtered answer.\par
+
+\begin{bookproduction}[Production consideration]
+Version the knowledge layer alongside the agent. An agent release pinned to a policy version is reproducible; one that resolves against "current" changes behaviour when a document changes, with no deployment and no trace.
+\end{bookproduction}
+
+\section{Debugging playbook}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries Symptom & \color{white}\bfseries Likely cause & \color{white}\bfseries First check \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries Symptom & \color{white}\bfseries Likely cause & \color{white}\bfseries First check \\
+\endhead
+Agent quotes the right policy and violates it & The rule is context, never a constraint & Is any guardrail evaluating it at the effect boundary? \\
+\rowcolor{BookLight}
+Correct answer in staging, wrong in production & Scope or effective date not enforced & Does the rule declare jurisdiction and effective\_from, and are they checked? \\
+Two runs disagree on identical input & Resolution against "current" rather than a pinned version & Is the knowledge version recorded in the run manifest? \\
+\rowcolor{BookLight}
+A conflict surfaces only after an incident & Contradictions resolved silently at merge & Does the union preserve per-source attribution? \\
+An agent selects a mutating tool for a read & Capability discovery filters on names, not effects & Does the catalog carry an effect class, and is it filtered on? \\
+\rowcolor{BookLight}
+Provenance points at text that does not support the rule & Citation trusted rather than verified & Is verification rebuilding evidence from the corpus? \\
+\end{longtable}
+\BookTableEnd
+
+\section{Production checklist}
+
+\begin{itemize}
+
+\item Every knowledge artifact has an owner, a version, an effective range, and a provenance reference that resolves.
+
+\item Retrieval results carry authority and currency metadata, not just a similarity score.
+
+\item At least one rule is enforced at the effect boundary, with a test proving the effect does not run when it refuses.
+
+\item Missing inputs refuse rather than default to permitted.
+
+\item Union preserves per-source attribution; contradictions are escalated, never auto-resolved.
+
+\item Capability discovery filters on granted actions, prerequisites, and data class before returning results.
+
+\item The knowledge version used by a run is recorded in its manifest.
+
+\item Permissions are enforced at the resolution boundary, not after the model has seen the passage.
+
+\end{itemize}
+
+\section{Exercises}
+
+\begin{enumerate}
+
+\item Take one policy sentence from your own organization and express it as a typed rule with scope and provenance. Note every field you cannot fill from the sentence alone.
+
+\item Find a question your retrieval system answers plausibly and wrongly. Identify which of the four consumption modes it actually needed.
+
+\item Compute the intersection of two overlapping policy sets in your domain. Inspect the differences before the union.
+
+\item Take a rule your agents are expected to follow and make it refuse an effect in a test.
+
+\end{enumerate}
+
+\section{Technical review questions}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries Question & \color{white}\bfseries What a good answer demonstrates \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries Question & \color{white}\bfseries What a good answer demonstrates \\
+\endhead
+Which consumption mode failed in your last incident? & The four modes are separable in your architecture \\
+\rowcolor{BookLight}
+How does an agent know a retrieved passage is still authoritative? & Governance metadata reaches the point of use \\
+What happens when two authoritative sources disagree? & Contradiction is a first-class result \\
+\rowcolor{BookLight}
+Where is a policy enforced, as opposed to described? & Constraints exist outside the prompt \\
+What does the system do when a required input is missing? & Unknown is not silently treated as permitted \\
+\rowcolor{BookLight}
+Can you reproduce a decision made six months ago? & Knowledge is versioned and pinned per run \\
+\end{longtable}
+\BookTableEnd
+
+\section{Transition to Chapter 6}
+
+The knowledge layer defines what the organization knows and what agents may do with it. Chapter 6 turns to the run itself: how context is assembled, how memory and workflow state differ, and how a single request gets exactly the knowledge it needs and nothing more.\par
+
+\BookChapter{06}{Context Engineering, RAG, Memory, and State}
+
+\begin{bookcallout}[Northstar at this point]
+As runs grow, prompts become a mixture of chat, workflow state, retrieved documents, summaries, and learned preferences. Northstar separates these domains and records exactly which authorized projection reached each model call.
+\end{bookcallout}
+
+\begin{bookcallout}[Design decision]
+Treat prompts as disposable authorized projections; keep canonical state, knowledge, artifacts, and memory in distinct stores.
+\end{bookcallout}
+
+\section{What this chapter delivers}
+
+Assemble authorized context from distinct state and knowledge domains and govern reusable memory as a data product.\par
+
+\section{Solution blueprint}
+
+\BookFigureCaption{Figure 14. Context Engineering, Memory, and State.}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\fontsize{7.2}{9}\selectfont
+\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
+\endhead
+Context Service; workflow remains canonical & authorized sources to model prompt & tenant · source · context budget & one context projection & ContextManifest · MemoryRecord · EvidenceRef \\
+\end{longtable}
+\BookTableEnd
+
+\section{The context build pipeline}
+
+Northstar assembles context in stages: parse the request, calculate source candidates, enforce tenant and resource authorization, fetch immutable versions, classify and sanitize content, deduplicate, rank, allocate tokens, produce ordered references, and record a ContextManifest. Only the final authorized boundary materializes bytes into the model request.\par
+
+Instructions have a trust hierarchy. System and application instructions are code-like release artifacts. Skill instructions are pinned capability artifacts. User requests express intent within authority. Retrieved documents and tool outputs are untrusted evidence. Content cannot promote itself to a higher trust role by saying “ignore previous instructions.”\par
+
+Memory is not a bag of embeddings. Long-term memory creation is a protected data write with owner, scope, provenance, confidence, policy basis, TTL, correction, and deletion. Canonical business state always wins over a memory summary.\par
+
+\section{Context, workflow state, memory, and enterprise knowledge}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Required analysis} & \color{white}\bfseries \textbf{Design conclusion} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Required analysis} & \color{white}\bfseries \textbf{Design conclusion} \\
+\endhead
+Problem & “Memory” often conflates prompts, conversation history, task state, preferences, learned facts, documents, and recovery data—causing leakage, stale decisions, and unreproducible runs. \\
+\rowcolor{BookLight}
+Why it is difficult & Each type has different scope, consistency, privacy, retention, freshness, and retrieval semantics; models can misclassify or invent memories. \\
+Design alternatives & Full transcript replay; summarization; graph checkpoints; key/value memory; vector memory; knowledge graph; source-grounded retrieval; event-sourced state. \\
+\rowcolor{BookLight}
+Recommended architecture & Separate stores and APIs by semantic role. Build the model context as a policy-filtered projection of authoritative workflow state, recent conversation, relevant source-grounded knowledge, and explicitly approved memories. \\
+Trade-offs & Separation requires more schemas and retrieval logic, but enables correct ACLs, deletion, freshness, replay, and bounded context. \\
+\rowcolor{BookLight}
+Failure scenarios & Stale summary overwrites a current constraint; private memory leaks across tenants; model treats retrieved text as instruction; vector result lacks source ACL; deletion does not remove derived memory. \\
+Enterprise example & In claims handling, the chat transcript supports interaction, the workflow record tracks claim steps, policy documents remain in governed search, and any remembered customer preference has consent, provenance, TTL, and deletion linkage. \\
+\end{longtable}
+\BookTableEnd
+
+\subsection{State taxonomy and storage}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\fontsize{7.2}{9}\selectfont
+\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Information class} & \color{white}\bfseries \textbf{Scope and examples} & \color{white}\bfseries \textbf{System of record} & \color{white}\bfseries \textbf{Rules} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Information class} & \color{white}\bfseries \textbf{Scope and examples} & \color{white}\bfseries \textbf{System of record} & \color{white}\bfseries \textbf{Rules} \\
+\endhead
+Conversation context & Recent messages, channel state, current clarification & Conversation service / document DB & Append-only turns; compact with source links; not authoritative business state \\
+\rowcolor{BookLight}
+Workflow state & Current node, variables, child tasks, budgets, approvals & Durable workflow history + relational projection & Strong transition rules; versioned; queryable; replay-safe \\
+Durable execution state & Event history, timers, activity results, checkpoint cursor & Workflow engine persistence & Engine-owned; encrypted; retention aligned to run evidence \\
+\rowcolor{BookLight}
+Short-term working memory & Scratch notes, candidate plan, intermediate hypotheses & Run-scoped state or object artifacts & TTL; no automatic cross-run reuse; label confidence and provenance \\
+Long-term memory & Approved preferences, reusable facts, learned procedures & Governed memory service / relational + search index & Explicit write policy, consent, provenance, TTL, ACL, correction/deletion \\
+\rowcolor{BookLight}
+Enterprise knowledge & Policies, contracts, code, tickets, records, catalogs & Source systems + governed search/vector/graph indexes & Source remains authoritative; ACL filter before retrieval; freshness and lineage \\
+Artifacts & Reports, patches, extracted tables, evidence packages & Versioned object store & Immutable versions, content hash, classification, owner, retention \\
+\rowcolor{BookLight}
+Telemetry and audit & Traces, metrics, policy decisions, effect records & Trace store + SIEM + append-only/WORM archive & Redaction; role-separated access; retention/legal hold \\
+\end{longtable}
+\BookTableEnd
+
+\subsection{Context assembly pipeline}
+
+\begin{enumerate}
+
+\item Start with agent instructions and policy-owned constraints from pinned versions.
+
+\item Load canonical workflow state and unresolved obligations—not the raw event history.
+
+\item Select the smallest recent conversation window needed for continuity.
+
+\item Retrieve enterprise knowledge only after identity/tenant/ACL filtering; attach source, timestamp, classification, and confidence metadata.
+
+\item Retrieve long-term memory through a separate policy gate; prefer verified facts and user-approved preferences.
+
+\item Remove duplicates, stale items, secrets, and content outside the task purpose; summarize only with links to originals.
+
+\item Label each segment as instruction, user\_input, enterprise\_data, tool\_result, or memory; the model must not promote data into instructions.
+
+\item Record a context-manifest hash on the model span so the call can be reconstructed without logging sensitive plaintext by default.
+
+\end{enumerate}
+
+\subsection{Detailed design — APIs, data model, and scalability}
+
+\subsection{Component boundaries}
+
+The Conversation Service owns turns; the Workflow Projection Service owns canonical run state; the Context Assembler creates an ephemeral model-input projection; the Retrieval Broker queries governed knowledge; the Memory Service owns approved cross-run memory; the Provenance Service tracks lineage; and the Compaction Service produces source-linked summaries. No component can silently promote a conversation statement into workflow truth or long-term memory.\par
+
+\subsection{High-level APIs}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{API} & \color{white}\bfseries \textbf{Purpose and key semantics} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{API} & \color{white}\bfseries \textbf{Purpose and key semantics} \\
+\endhead
+POST /v1/context:assemble & Build a token-bounded context from pinned instructions, run state, conversation, knowledge, and memory under a policy and data budget \\
+\rowcolor{BookLight}
+GET /v1/runs/\{run\_id\}/state & Return the canonical typed state projection and state\_version; separate from transcript/history \\
+POST /v1/conversations/\{id\}/turns & Append an immutable user/agent/tool turn with provenance, classification, and client idempotency key \\
+\rowcolor{BookLight}
+POST /v1/knowledge:search & Hybrid search with subject+actor context, source allowlist, freshness, filters, top-k, and required citations \\
+POST /v1/memories & Propose/write a governed memory with scope, provenance, confidence, consent, TTL, and deduplication key; policy may require review \\
+\rowcolor{BookLight}
+GET /v1/memories:search & Search only memories visible to the subject/purpose/run; returns confidence and source lineage \\
+PATCH /v1/memories/\{memory\_id\} & Correct via optimistic version; preserves previous version and reason \\
+\rowcolor{BookLight}
+DELETE /v1/memories/\{memory\_id\} & Create deletion tombstone and enqueue removal from indexes, caches, summaries, and derived artifacts \\
+POST /v1/context:compact & Produce a source-linked summary/checkpoint under a target token budget; never overwrites source turns \\
+\end{longtable}
+\BookTableEnd
+
+\subsection{Core data model}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Entity} & \color{white}\bfseries \textbf{Required fields and invariants} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Entity} & \color{white}\bfseries \textbf{Required fields and invariants} \\
+\endhead
+ConversationTurn & conversation/turn IDs, role/type, content reference/hash, producer, created time, classification, source/trace refs; append-only \\
+\rowcolor{BookLight}
+RunStateProjection & run ID, schema/version, state version, variables, obligations, unresolved questions, budgets, artifact refs; derived from workflow history \\
+ContextManifest & context ID, run/node/model call, token budget/allocation, policy/version pins, ordered segment refs/hashes, redaction summary, total tokens \\
+\rowcolor{BookLight}
+ContextSegment & segment ID/type, source URI/revision, content hash, trust label, instruction flag, classification, ACL decision, freshness, token count \\
+MemoryRecord & memory ID, tenant, subject/team scope, type, canonical value, provenance, confidence, consent, purpose allowlist, TTL, status, supersedes \\
+\rowcolor{BookLight}
+KnowledgeObject & source URI/revision, object/chunk IDs, text/blob reference, embedding version, metadata, ACL pointer, ingestion cursor, deletion state \\
+SummarySnapshot & input segment hashes, summary hash/reference, model/prompt version, coverage map, unresolved facts, expiry; immutable \\
+\end{longtable}
+\BookTableEnd
+
+Example context-manifest shape:\par
+
+JSON · implementation excerpt\par
+
+\needspace{167.2pt}
+\begin{lstlisting}[style=bookcode,title={JSON},language=bookjson]
+{
+  "context_id": "ctx_...",
+  "run_id": "run_42",
+  "node_id": "n7",
+  "budget": {"max_tokens": 24000, "instructions": 3000, "state": 4000, "evidence": 14000, "conversation": 3000},
+  "segments": [{
+    "kind": "enterprise_data",
+    "uri": "doc://policy/91@rev17",
+    "sha256": "...",
+    "trust": "untrusted-content",
+    "acl_decision_id": "dec_...",
+    "tokens": 1840
+  }],
+  "redactions": ["pii:ssn"],
+  "manifest_sha256": "..."
+}
+\end{lstlisting}
+
+\subsection{Retrieval and memory consistency}
+
+\begin{itemize}
+
+\item The source system revision is authoritative. Index entries are disposable projections and must carry source revision, ACL pointer, ingestion time, and deletion state.
+
+\item Search performs tenant/source pruning, exact ACL filtering, hybrid lexical/vector scoring, reranking, freshness filtering, and diversity/deduplication before context selection.
+
+\item A memory write is a governed business operation: validate type, scope, consent, provenance, contradiction, retention, and sensitivity. Derived guesses default to run-scoped working memory, not long-term memory.
+
+\item Correcting or deleting a source creates lineage events that invalidate affected memories, summaries, embeddings, model caches, and evidence packages according to retention/legal-hold policy.
+
+\end{itemize}
+
+\subsection{Scalability and token economics}
+
+\begin{itemize}
+
+\item Partition conversations and memories by tenant + subject/team; partition knowledge by tenant + source + region. Use routing metadata so a query touches only eligible partitions.
+
+\item Store content in object storage and metadata in relational/search stores. Context APIs exchange references; only the assembler materializes bytes for the authorized model call.
+
+\item Run ingestion as an asynchronous CDC/event pipeline with separate extract, classify, ACL, chunk, embed, and index stages. Track independent cursors so failed embedding does not block ACL deletion.
+
+\item Cache retrieval candidates by tenant, source revision, normalized query, policy scope, and embedding/reranker version; re-run exact authorization on cache hit.
+
+\item Allocate a fixed context budget before retrieval. Use maximum marginal relevance/source diversity, per-source caps, and evidence-quality thresholds rather than filling the entire window.
+
+\item Compact long conversations asynchronously and incrementally. Keep recent turns plus source-linked summaries; rebuild summaries when covered inputs change.
+
+\item Enforce deletion SLOs across primary metadata, vector/search indexes, caches, and derived summaries. Tombstones must outlive the longest replica/cache lag to prevent resurrection.
+
+\end{itemize}
+
+\begin{bookcost}[Performance and cost]
+Retrieve less, and cite what you retrieved. Context is the dominant cost in most agentic systems and the dominant cause of distraction. Record a context manifest identifier rather than the context body, and measure answer quality against context size — most systems are past the point where more retrieval helps.
+\end{bookcost}
+
+\section{Grounding, corrections, and evidence boundary}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
+\endhead
+Privacy lifecycle & Context and memory need purpose limitation, consent or other legal basis where applicable, data-subject request handling, deletion propagation, legal-hold precedence, residency, provider retention controls, and proof that derived summaries/indexes were handled too. & NIST-GAI; GDPR \\
+\end{longtable}
+\BookTableEnd
+
+Evidence anchors: NIST-GAI; GDPR. Full URLs, authority, version, and scope appear in Appendix K.\par
+
+\section{Pattern reference — Memory}
+
+\begin{bookcallout}[The problem]
+The system should reuse useful information across turns or runs without confusing stale summaries with canonical truth or retaining data indefinitely.
+\end{bookcallout}
+
+\subsection{Architecture and flow}
+
+Working memory is run-scoped; long-term memory is a governed write with subject, scope, provenance, confidence, policy basis, TTL, correction, deletion, and retrieval authorization.\par
+
+\begin{enumerate}
+
+\item Identify a candidate reusable fact.
+
+\item Validate evidence, subject, purpose, consent or policy basis, and sensitivity.
+
+\item Write a versioned memory record with TTL and provenance.
+
+\item Retrieve only after authorization and trust labeling.
+
+\item Correct, supersede, expire, or delete through propagation workflows.
+
+\end{enumerate}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
+\endhead
+Use for stable preferences, repeated domain facts, or learned operational hints with clear value and governance. & Do not persist transient chain-of-thought, secrets, unverified hypotheses, protected data without basis, or facts already authoritative elsewhere. \\
+\end{longtable}
+\BookTableEnd
+
+\subsection{Trade-offs}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
+\endhead
+Continuity & Creates privacy, staleness, correction, and deletion obligations. \\
+\rowcolor{BookLight}
+Reduced context cost & May lose nuance or introduce summary drift. \\
+\end{longtable}
+\BookTableEnd
+
+\subsection{Failures and controls}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
+\endhead
+Stale memory overrides state & Canonical state precedence and freshness checks. \\
+\rowcolor{BookLight}
+Cross-tenant leakage & Tenant-partitioned keys and authorization before retrieval. \\
+Deletion gaps & Lineage graph, tombstones, cache invalidation, and rebuild. \\
+\end{longtable}
+\BookTableEnd
+
+\subsection{Minimum observability}
+
+\begin{itemize}
+
+\item memory ID and version
+
+\item source provenance
+
+\item scope and tenant
+
+\item policy basis
+
+\item confidence and TTL
+
+\item retrieval and deletion events
+
+\end{itemize}
+
+\section{Implementation reference}
+
+\subsection{Auditable context projection}
+
+PYTHON · implementation excerpt\par
+
+\needspace{240.8pt}
+\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+from __future__ import annotations
+
+from datetime import datetime
+from typing import Literal
+from pydantic import BaseModel
+
+
+class ContextSegmentRef(BaseModel):
+    artifact_id: str
+    source_revision: str
+    sha256: str
+    authorization_decision_id: str
+    trust_role: Literal["instruction", "user_intent", "evidence"]
+    token_count: int
+
+
+class ContextManifest(BaseModel):
+    context_id: str
+    run_id: str
+    release_id: str
+    policy_version: str
+    segments: tuple[ContextSegmentRef, ...]
+    omitted_candidate_ids: tuple[str, ...]
+    created_at: datetime
+\end{lstlisting}
+
+\subsection{Cross-boundary artifact adoption policy}
+
+PYTHON · implementation excerpt\par
+
+\needspace{388.0pt}
+\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+from __future__ import annotations
+
+from datetime import datetime
+from pydantic import BaseModel, Field
+
+
+class ArtifactDescriptor(BaseModel):
+    artifact_id: str
+    tenant_id: str
+    data_classes: frozenset[str]
+    region: str
+    allowed_purposes: frozenset[str]
+    provenance_digest: str
+    expires_at: datetime
+    legal_hold: bool = False
+
+
+class AdoptionPolicy(BaseModel):
+    tenant_id: str
+    allowed_data_classes: frozenset[str]
+    allowed_regions: frozenset[str]
+    purpose: str
+    trusted_provenance_digests: frozenset[str]
+
+
+def authorize_artifact_adoption(
+    artifact: ArtifactDescriptor, policy: AdoptionPolicy, *, now: datetime
+) -> None:
+    if artifact.tenant_id != policy.tenant_id:
+        raise PermissionError("cross-tenant artifact adoption denied")
+    if not artifact.data_classes <= policy.allowed_data_classes:
+        raise PermissionError("artifact classification exceeds policy")
+    if artifact.region not in policy.allowed_regions:
+        raise PermissionError("artifact region is not allowed")
+    if policy.purpose not in artifact.allowed_purposes:
+        raise PermissionError("artifact purpose is not allowed")
+    if artifact.provenance_digest not in policy.trusted_provenance_digests:
+        raise PermissionError("artifact provenance is not trusted")
+    if now > artifact.expires_at and not artifact.legal_hold:
+        raise PermissionError("artifact expired")
+\end{lstlisting}
+
+\section{Debugging playbook}
+
+\begin{enumerate}
+
+\item Reconstruct one ContextManifest without relying on logged plaintext.
+
+\item Compare canonical state with summaries and working memory.
+
+\item Trace a corrected or deleted fact through indexes, cache, memory, and artifacts.
+
+\end{enumerate}
+
+\section{Production checklist}
+
+\textbf{\ensuremath{\checkmark}} Conversation, workflow state, working memory, long-term memory, knowledge, artifacts, telemetry, and audit are separate domains.\par
+
+\textbf{\ensuremath{\checkmark}} Authorization occurs before content materialization.\par
+
+\textbf{\ensuremath{\checkmark}} Context records ordered references, hashes, trust labels, decisions, versions, redactions, and token allocation.\par
+
+\textbf{\ensuremath{\checkmark}} Memory creation is a governed write with scope, provenance, confidence, lawful basis, TTL, correction, and deletion.\par
+
+\textbf{\ensuremath{\checkmark} Final implementation and deletion propagate through indexes, caches, summaries, memories, contexts, and artifacts.}\par
+
+\section{Exercises}
+
+\begin{enumerate}
+
+\item Design a token budget across instructions, state, evidence, memory, and reserve.
+
+\item Define the lifecycle of a reusable supplier preference memory.
+
+\end{enumerate}
+
+\section{Technical review questions}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Question} & \color{white}\bfseries \textbf{Strong answer} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Question} & \color{white}\bfseries \textbf{Strong answer} \\
+\endhead
+Why call the prompt a projection rather than state? & It is a temporary, token-bounded view assembled from authoritative stores for one model call; it can be rebuilt, audited by reference, and discarded. \\
+\rowcolor{BookLight}
+How do conversation, knowledge, working memory, and long-term memory differ? & Interaction history; source-backed enterprise facts; run-scoped hypotheses; and approved reusable facts—each with different ownership, retention, authority, and deletion. \\
+What problem does a ContextManifest solve? & Reproducibility and diagnosis through ordered source, version, and hash references, authorization decisions, trust labels, redactions, and budget without logging all plaintext. \\
+\rowcolor{BookLight}
+How should retrieved instructions be handled? & As untrusted data with provenance and taint; they cannot alter system instructions, tool eligibility, policy, credentials, or destination grants. \\
+How do you delete a fact from an agentic system? & Tombstone and revoke the source, remove derived indexes, invalidate caches, rebuild summaries and contexts, clean governed memory and affected artifacts, and preserve permitted audit evidence. \\
+\end{longtable}
+\BookTableEnd
+
+\section{Transition to Chapter 9}
+
+Context assembly completes the knowledge Part. Chapter 9 turns from what agents know to how teams build with it, defining the reusable developer platform and SDK.\par
 
 \BookPartPage{III}{AGENTIC DEVELOPER PLATFORM \& SDK}{This Part turns the reference architecture into a paved road for delivery teams. It separates reusable platform capabilities from domain logic, defines portable SDK contracts, and shows how Skills and domain packs move through local development, evaluation, promotion, deployment, and support.}{assets/parts/part-iii.png}
 
-\BookChapter{05}{Agentic Developer Platform, SDK, and Delivery Lifecycle}
+\BookChapter{07}{Agentic Developer Platform, SDK, and Delivery Lifecycle}
 
 \begin{bookquote}
 
@@ -1701,7 +2909,7 @@ The reference architecture is now concrete enough to productize; Chapter 5 defin
 
 The developer platform is a reusable paved road that lets teams build differentiated agents without repeatedly rebuilding identity, policy, tool safety, tracing, evaluation, durable execution, and delivery infrastructure. It is not a mandatory monolith: applications use platform-owned contracts and replaceable adapters.\par
 
-\BookDiagram{assets/diagrams/developer-platform.png}{Figure 5-1 — Agentic developer platform and SDK capability stack}{developer-platform}
+\BookDiagram{assets/diagrams/developer-platform.png}{Figure 7-1 — Agentic developer platform and SDK capability stack}{developer-platform}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -1742,13 +2950,13 @@ Deployment \& Versioning & Packaging, manifests, environments, gates, canary, ro
 
 \section{Portable contracts and multi-framework support}
 
-\BookDiagram{assets/diagrams/portability.png}{Figure 5-2 — Platform contracts with replaceable framework and provider adapters}{portability}
+\BookDiagram{assets/diagrams/portability.png}{Figure 7-2 — Platform contracts with replaceable framework and provider adapters}{portability}
 
 Use AgentSpec, RunContext, TaskEnvelope, ToolSpec/ToolCall, ContextManifest, MemoryRecord, EvaluationResult, and ReleaseManifest as stable contracts. Compile them into framework/provider adapters. Standardized contracts, MCP, APIs, events, agent-to-agent protocols, gateways, and shared platform services provide interoperability without leaking vendor-native message objects into applications. Compatibility suites verify cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.\par
 
 \section{Developer lifecycle}
 
-\BookDiagram{assets/diagrams/developer-lifecycle.png}{Figure 5-3 — Local-to-production agent lifecycle}{developer-lifecycle}
+\BookDiagram{assets/diagrams/developer-lifecycle.png}{Figure 7-3 — Local-to-production agent lifecycle}{developer-lifecycle}
 
 Create from an approved template; attach tools, Skills, context, and memory; configure model policy, permissions, budgets, and review; test deterministic logic, contracts, simulations, adversarial cases, and failures; evaluate quality, safety, latency, and cost; package immutable artifacts with locks, SBOM, signature, provenance, and ReleaseManifest; promote through policy gates; observe correlated production traces; improve through controlled ChangeBundles.\par
 
@@ -1778,7 +2986,7 @@ The fluent API is convenience. The compiled contracts, policy decisions, tool/ef
 
 Developer experience should compress setup and diagnosis time while making authority, versions, risk, evidence, and cost visible. A convenient SDK that hides those concerns transfers complexity to production incidents.\par
 
-\BookDiagram{assets/diagrams/dx-golden-path.png}{Figure 5-4 — Developer golden path from scaffold to operated release}{dx-golden-path}
+\BookDiagram{assets/diagrams/dx-golden-path.png}{Figure 7-4 — Developer golden path from scaffold to operated release}{dx-golden-path}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -1807,7 +3015,7 @@ Improve & Build ChangeBundle from evidence & Trace mining, dataset curation, exp
 
 \section{Testing and simulation pyramid}
 
-\BookDiagram{assets/diagrams/test-pyramid.png}{Figure 5-5 — Testing and simulation pyramid}{test-pyramid}
+\BookDiagram{assets/diagrams/test-pyramid.png}{Figure 7-5 — Testing and simulation pyramid}{test-pyramid}
 
 Deterministic units verify schemas, policy helpers, acceptance, routes, reducers, calculations, and state transitions. Contract tests verify identity, idempotency, timeout/unknown-effect semantics, protocol capability, errors, and telemetry. Component evaluations measure retrieval, tools, arguments, structured output, safety, and memory. Trajectory simulation tests planning, handoffs, loops, deadlines, cancellation, duplicates, dependency degradation, and human delay. End-to-end staging uses exact model, identity, gateway, data, and integration versions. Canary and shadow evaluation use explicit stop and rollback conditions.\par
 
@@ -1833,11 +3041,11 @@ Use one immutable artifact across environments; bind endpoints, identities, secr
 
 Start from accepted business outcome and walk backward through the causal run graph. Find the first divergent span: input classification, source/freshness, prompt, route, model, tool, arguments, policy, effect, approval, or acceptance. Do not “fix the prompt” until evidence locates the failing responsibility.\par
 
-\section{Transition to Chapter 6}
+\section{Transition to Chapter 8}
 
-The delivery path is established; Chapter 6 packages repeatable behavior as versioned Skills with explicit contracts and lifecycle controls.\par
+The delivery path is established; Chapter 8 packages repeatable behavior as versioned Skills with explicit contracts and lifecycle controls.\par
 
-\BookChapter{06}{Skills as Versioned Capabilities}
+\BookChapter{08}{Skills as Versioned Capabilities}
 
 \begin{bookcallout}[Northstar at this point]
 Teams begin copying prompts and tool wrappers between agents. Results diverge, fixes do not propagate, and no owner can prove which behavior reached production. Northstar introduces a Skill as the unit of reusable capability.
@@ -2042,11 +3250,11 @@ When should behavior remain application-specific? & When it encodes one product 
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 7}
+\section{Transition to Chapter 9}
 
-Individual Skills are governable; Chapter 7 composes them into domain packs without dissolving ownership or compatibility boundaries.\par
+Individual Skills are governable; Chapter 9 composes them into domain packs without dissolving ownership or compatibility boundaries.\par
 
-\BookChapter{07}{Skill Packs and Domain Platforms}
+\BookChapter{09}{Skill Packs and Domain Platforms}
 
 \begin{bookcallout}[Northstar at this point]
 Procurement needs a complete domain experience, not isolated Skills. Evidence retrieval, document validation, sanctions screening, policy explanation, and approval preparation must ship as a compatible, evaluated pack.
@@ -2209,13 +3417,13 @@ What is the main pack anti-pattern? & A monolithic prompt-and-tools bundle with 
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 8}
+\section{Transition to Chapter 10}
 
-The platform and capability model are complete; Chapter 8 begins the pattern sequence with the smallest bounded reasoning loop.\par
+The platform and capability model are complete; Chapter 10 begins the pattern sequence with the smallest bounded reasoning loop.\par
 
 \BookPartPage{IV}{PATTERNS AND ANTI-PATTERNS}{This Part is the working catalogue. It moves from the loop shapes that solve real problems to the architecture shapes that quietly create them, and pairs every failure with a measurable replacement.}{assets/parts/part-iv.png}
 
-\BookChapter{08}{ReAct: Bounded Reason–Act–Observe Loops}
+\BookChapter{10}{ReAct: Bounded Reason–Act–Observe Loops}
 
 \begin{bookquote}
 
@@ -2561,11 +3769,11 @@ When should ReAct not be used? & For a known workflow, a single retrieval, a pro
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 9}
+\section{Transition to Chapter 11}
 
-A bounded reason–act loop handles local uncertainty; Chapter 9 adds routing and handoff when known paths or specialists should own the work.\par
+A bounded reason–act loop handles local uncertainty; Chapter 11 adds routing and handoff when known paths or specialists should own the work.\par
 
-\BookChapter{09}{Routing, Triage, and Handoffs}
+\BookChapter{11}{Routing, Triage, and Handoffs}
 
 \begin{bookcallout}[Northstar at this point]
 Some requests are policy questions, others are document defects, screening disputes, or protected onboarding actions. Northstar needs routing, but it also needs to know when responsibility actually transfers and who owns cancellation, deadlines, and the final response.
@@ -2941,11 +4149,11 @@ When is a static router better? & When classes are stable, risk is high, complia
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 10}
+\section{Transition to Chapter 12}
 
-Routing selects among known capabilities; Chapter 10 addresses tasks whose decomposition must itself be proposed and validated.\par
+Routing selects among known capabilities; Chapter 12 addresses tasks whose decomposition must itself be proposed and validated.\par
 
-\BookChapter{10}{Planning and Plan–Execute}
+\BookChapter{12}{Planning and Plan–Execute}
 
 \begin{bookquote}
 
@@ -3447,11 +4655,11 @@ How do you prevent plausible but endless planning? & External revision, loop, st
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 11}
+\section{Transition to Chapter 13}
 
-Planning creates an executable structure; Chapter 11 adds independent evaluation and bounded revision without self-certification.\par
+Planning creates an executable structure; Chapter 13 adds independent evaluation and bounded revision without self-certification.\par
 
-\BookChapter{11}{Reflection and Evaluator–Optimizer}
+\BookChapter{13}{Reflection and Evaluator–Optimizer}
 
 \begin{bookcallout}[Northstar at this point]
 The first recommendation is coherent but omits a contradictory address and overstates confidence. Northstar adds bounded reflection for revision and an independently defined evaluator for acceptance.
@@ -3782,11 +4990,11 @@ When should you not add reflection? & When the first result already meets an exe
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 12}
+\section{Transition to Chapter 14}
 
-Automated evaluation can improve candidates; Chapter 12 identifies decisions that require explicit human authority, correction, or recourse.\par
+Automated evaluation can improve candidates; Chapter 14 identifies decisions that require explicit human authority, correction, or recourse.\par
 
-\BookChapter{12}{Human-in-the-Loop}
+\BookChapter{14}{Human-in-the-Loop}
 
 \begin{bookquote}
 
@@ -4361,11 +5569,11 @@ What should happen when a mutating tool times out? & Mark the effect unknown, bl
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 13}
+\section{Transition to Chapter 15}
 
-Human control introduces waits and resumptions; Chapter 13 makes those waits durable and gives long-running work explicit state and recovery.\par
+Human control introduces waits and resumptions; Chapter 15 makes those waits durable and gives long-running work explicit state and recovery.\par
 
-\BookChapter{13}{Long-Running and Durable Agents}
+\BookChapter{15}{Long-Running and Durable Agents}
 
 \begin{bookquote}
 
@@ -4849,17 +6057,17 @@ How do you deploy new workflow code safely? & Preserve compatible workers, use e
 
 13 MCP, A2A, and External Integration\par
 
-\section{Transition to Chapter 14}
+\section{Transition to Chapter 16}
 
-The core patterns are now defined; Chapter 14 compares them across uncertainty, authority, latency, evidence, and operating cost.\par
+The core patterns are now defined; Chapter 16 compares them across uncertainty, authority, latency, evidence, and operating cost.\par
 
-\BookChapter{14}{Enterprise Pattern Catalog}
+\BookChapter{16}{Enterprise Pattern Catalog}
 
 \section{How to use the cards}
 
 Choose by hidden obligation, uncertainty, and risk—not fashionable terminology. Every card uses one review sequence so teams can compare alternatives consistently.\par
 
-\BookDiagram{assets/diagrams/pattern-decision-tree.png}{Figure 14-1 — Pattern selection decision tree}{pattern-decision-tree}
+\BookDiagram{assets/diagrams/pattern-decision-tree.png}{Figure 16-1 — Pattern selection decision tree}{pattern-decision-tree}
 
 \section{Reasoning}
 
@@ -5101,17 +6309,17 @@ Choose by hidden obligation, uncertainty, and risk—not fashionable terminology
 
 \textbf{Trade-offs.} Abstraction may lag novel features; allow negotiated extensions.\par
 
-\section{Transition to Chapter 15}
+\section{Transition to Chapter 17}
 
-Pattern selection is easier when failure shapes are visible; Chapter 15 recasts recurring anti-patterns as measurable replacement decisions.\par
+Pattern selection is easier when failure shapes are visible; Chapter 17 recasts recurring anti-patterns as measurable replacement decisions.\par
 
-\BookChapter{15}{Enterprise Anti-Pattern Catalog}
+\BookChapter{17}{Enterprise Anti-Pattern Catalog}
 
 \section{Field-guide method}
 
 Anti-patterns are recurring system shapes. Diagnose the failed responsibility boundary, not only the symptom. Each card supplies the same replacement sequence.\par
 
-\BookDiagram{assets/diagrams/anti-before-after.png}{Figure 15-1 — Autonomous monolith versus governed agentic architecture}{anti-before-after}
+\BookDiagram{assets/diagrams/anti-before-after.png}{Figure 17-1 — Autonomous monolith versus governed agentic architecture}{anti-before-after}
 
 \section{Reasoning}
 
@@ -5433,13 +6641,13 @@ Anti-patterns are recurring system shapes. Diagnose the failed responsibility bo
 
 \textbf{Trade-offs.} Immutability needs good tooling.\par
 
-\section{Transition to Chapter 16}
+\section{Transition to Chapter 18}
 
-After removing unsafe local architectures, Chapter 16 considers when multiple agents add justified specialization rather than accidental complexity.\par
+After removing unsafe local architectures, Chapter 18 considers when multiple agents add justified specialization rather than accidental complexity.\par
 
 \BookPartPage{V}{MULTI-AGENT SYSTEMS \& EXTERNAL INTEGRATION}{This Part crosses the process boundary. It covers how agents divide work among themselves, how they reach systems and agents they do not own, and how model access itself becomes a governed control plane.}{assets/parts/part-v.png}
 
-\BookChapter{16}{Supervisor/Worker and Multi-Agent Collaboration}
+\BookChapter{18}{Supervisor/Worker and Multi-Agent Collaboration}
 
 \begin{bookquote}
 
@@ -6037,11 +7245,11 @@ What does an A2A or MCP protocol not solve? & Business authorization, peer trust
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 17}
+\section{Transition to Chapter 19}
 
-Multi-agent collaboration inside one platform is only part of the problem; Chapter 17 governs cross-platform tools, agents, APIs, and events.\par
+Multi-agent collaboration inside one platform is only part of the problem; Chapter 19 governs cross-platform tools, agents, APIs, and events.\par
 
-\BookChapter{17}{External Integration: MCP, A2A, and the Model Control Plane}
+\BookChapter{19}{External Integration: MCP, A2A, and the Model Control Plane}
 
 \begin{bookquote}
 
@@ -6301,7 +7509,7 @@ Failed/Expired/InterventionRequired & Terminal or ambiguous remote outcome & App
 
 The LLM Gateway is the controlled boundary between enterprise workloads and model providers or self-hosted inference. It normalizes model access and enforces model-specific routing, policy, privacy, economics, observability, and release governance. It does not own business workflow, tool effects, agent delegation, or the external API perimeter.\par
 
-\BookDiagram{assets/diagrams/gateway-position.png}{Figure 17-1 — LLM Gateway position relative to adjacent gateways}{gateway-position}
+\BookDiagram{assets/diagrams/gateway-position.png}{Figure 19-1 — LLM Gateway position relative to adjacent gateways}{gateway-position}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -6356,7 +7564,7 @@ Logging, tracing, evaluation hooks & Normalized spans, route, usage, policy, cac
 
 \section{Policy-first routing}
 
-\BookDiagram{assets/diagrams/model-routing.png}{Figure 17-2 — Policy-first model-routing decision tree}{model-routing}
+\BookDiagram{assets/diagrams/model-routing.png}{Figure 19-2 — Policy-first model-routing decision tree}{model-routing}
 
 Filter by tenant, purpose, data class, residency, risk, required capabilities, context length, tool/JSON behavior, and approved version. Only then optimize expected accepted-outcome quality under latency and cost budgets. Health and quota further constrain selection. Fallbacks obey the same invariants; “any available model” is not a safe fallback.\par
 
@@ -6523,13 +7731,13 @@ How do you version external capabilities? & Pin registry entry, endpoint, protoc
 
 17 Sandboxing, Egress, Data Security, and Governance\par
 
-\section{Transition to Chapter 18}
+\section{Transition to Chapter 20}
 
-The gateway controls model access, but not the entire attack surface; Chapter 18 introduces defense in depth across all agentic trust boundaries.\par
+The gateway controls model access, but not the entire attack surface; Chapter 20 introduces defense in depth across all agentic trust boundaries.\par
 
 \BookPartPage{VI}{SECURITY, IDENTITY \& GUARDRAILS}{This Part applies defense in depth to untrusted content, identity, delegated authority, tools, code, data, memory, multi-agent traffic, MCP servers, and the software supply chain. Each control is tied to a trust boundary, runtime decision, detection signal, and recovery path.}{assets/parts/part-vi.png}
 
-\BookChapter{18}{Agentic AI Security and Guardrails Architecture}
+\BookChapter{20}{Agentic AI Security and Guardrails Architecture}
 
 \begin{bookquote}
 
@@ -6541,7 +7749,7 @@ The gateway controls model access, but not the entire attack surface; Chapter 18
 
 Agentic systems combine untrusted language, privileged tools, dynamic context, durable memory, third-party protocols, and autonomous timing. Security cannot be one prompt or classifier. It constrains what enters, which capabilities become eligible, what may leave, which effects commit, and how the enterprise detects and recovers.\par
 
-\BookDiagram{assets/diagrams/security-depth.png}{Figure 18-1 — Defense-in-depth guardrails architecture}{security-depth}
+\BookDiagram{assets/diagrams/security-depth.png}{Figure 20-1 — Defense-in-depth guardrails architecture}{security-depth}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -6571,11 +7779,11 @@ Detection/response & Monitoring, auditing, containment, revocation, incident res
 
 \section{Trust boundaries and runtime sequence}
 
-\BookDiagram{assets/diagrams/security-boundaries.png}{Figure 18-2 — Agentic security trust boundaries}{security-boundaries}
+\BookDiagram{assets/diagrams/security-boundaries.png}{Figure 20-2 — Agentic security trust boundaries}{security-boundaries}
 
 Trust is not inherited through a chain. User authentication does not authorize the agent; discovery does not authorize a tool; retrieved text is not instruction; an agent message does not prove peer identity; HTTP success does not prove business acceptance.\par
 
-\BookDiagram{assets/diagrams/guardrail-sequence.png}{Figure 18-3 — Runtime guardrail and protected-effect sequence}{guardrail-sequence}
+\BookDiagram{assets/diagrams/guardrail-sequence.png}{Figure 20-3 — Runtime guardrail and protected-effect sequence}{guardrail-sequence}
 
 Authenticate subject/workload; classify/minimize input; build authorized labeled context; choose eligible model; validate structured output; authorize eligible tool and exact arguments; obtain proposal-bound approval when required; execute through sandbox/gateway with scoped credentials and DLP; reconcile effects and run deterministic acceptance; monitor, audit, contain, revoke, recover, and learn.\par
 
@@ -6865,499 +8073,11 @@ async def run(request: str, *, model=None) -> tuple[bool, str]:
 
 Use Detect → Contain → Revoke → Reconcile → Eradicate → Recover → Learn. Containment can pause a tool, MCP server, model route, Skill, memory namespace, tenant, or agent. Revoke credentials, capabilities, approvals, artifacts, signing keys, and trust. Reconcile which effects actually occurred; never infer from the model's final message. Restore a known release and authoritative state, then create privacy-reviewed regression cases.\par
 
-\section{Transition to Chapter 19}
+\section{Transition to Chapter 22}
 
-The threat model is established; Chapter 19 applies it to context, retrieval, memory, and state—the data surfaces most likely to carry hidden instructions.\par
+The guardrail architecture establishes defence in depth; Chapter 22 makes it enforceable per caller by binding every action to an authenticated identity and a delegated grant.\par
 
-\BookChapter{19}{Context Engineering, RAG, Memory, and State}
-
-\begin{bookcallout}[Northstar at this point]
-As runs grow, prompts become a mixture of chat, workflow state, retrieved documents, summaries, and learned preferences. Northstar separates these domains and records exactly which authorized projection reached each model call.
-\end{bookcallout}
-
-\begin{bookcallout}[Design decision]
-Treat prompts as disposable authorized projections; keep canonical state, knowledge, artifacts, and memory in distinct stores.
-\end{bookcallout}
-
-\section{What this chapter delivers}
-
-Assemble authorized context from distinct state and knowledge domains and govern reusable memory as a data product.\par
-
-\section{Solution blueprint}
-
-\BookFigureCaption{Figure 14. Context Engineering, Memory, and State.}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
-Context Service; workflow remains canonical & authorized sources to model prompt & tenant · source · context budget & one context projection & ContextManifest · MemoryRecord · EvidenceRef \\
-\end{longtable}
-\BookTableEnd
-
-\section{The context build pipeline}
-
-Northstar assembles context in stages: parse the request, calculate source candidates, enforce tenant and resource authorization, fetch immutable versions, classify and sanitize content, deduplicate, rank, allocate tokens, produce ordered references, and record a ContextManifest. Only the final authorized boundary materializes bytes into the model request.\par
-
-Instructions have a trust hierarchy. System and application instructions are code-like release artifacts. Skill instructions are pinned capability artifacts. User requests express intent within authority. Retrieved documents and tool outputs are untrusted evidence. Content cannot promote itself to a higher trust role by saying “ignore previous instructions.”\par
-
-Memory is not a bag of embeddings. Long-term memory creation is a protected data write with owner, scope, provenance, confidence, policy basis, TTL, correction, and deletion. Canonical business state always wins over a memory summary.\par
-
-\section{Context, workflow state, memory, and enterprise knowledge}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Required analysis} & \color{white}\bfseries \textbf{Design conclusion} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Required analysis} & \color{white}\bfseries \textbf{Design conclusion} \\
-\endhead
-Problem & “Memory” often conflates prompts, conversation history, task state, preferences, learned facts, documents, and recovery data—causing leakage, stale decisions, and unreproducible runs. \\
-\rowcolor{BookLight}
-Why it is difficult & Each type has different scope, consistency, privacy, retention, freshness, and retrieval semantics; models can misclassify or invent memories. \\
-Design alternatives & Full transcript replay; summarization; graph checkpoints; key/value memory; vector memory; knowledge graph; source-grounded retrieval; event-sourced state. \\
-\rowcolor{BookLight}
-Recommended architecture & Separate stores and APIs by semantic role. Build the model context as a policy-filtered projection of authoritative workflow state, recent conversation, relevant source-grounded knowledge, and explicitly approved memories. \\
-Trade-offs & Separation requires more schemas and retrieval logic, but enables correct ACLs, deletion, freshness, replay, and bounded context. \\
-\rowcolor{BookLight}
-Failure scenarios & Stale summary overwrites a current constraint; private memory leaks across tenants; model treats retrieved text as instruction; vector result lacks source ACL; deletion does not remove derived memory. \\
-Enterprise example & In claims handling, the chat transcript supports interaction, the workflow record tracks claim steps, policy documents remain in governed search, and any remembered customer preference has consent, provenance, TTL, and deletion linkage. \\
-\end{longtable}
-\BookTableEnd
-
-\subsection{State taxonomy and storage}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Information class} & \color{white}\bfseries \textbf{Scope and examples} & \color{white}\bfseries \textbf{System of record} & \color{white}\bfseries \textbf{Rules} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Information class} & \color{white}\bfseries \textbf{Scope and examples} & \color{white}\bfseries \textbf{System of record} & \color{white}\bfseries \textbf{Rules} \\
-\endhead
-Conversation context & Recent messages, channel state, current clarification & Conversation service / document DB & Append-only turns; compact with source links; not authoritative business state \\
-\rowcolor{BookLight}
-Workflow state & Current node, variables, child tasks, budgets, approvals & Durable workflow history + relational projection & Strong transition rules; versioned; queryable; replay-safe \\
-Durable execution state & Event history, timers, activity results, checkpoint cursor & Workflow engine persistence & Engine-owned; encrypted; retention aligned to run evidence \\
-\rowcolor{BookLight}
-Short-term working memory & Scratch notes, candidate plan, intermediate hypotheses & Run-scoped state or object artifacts & TTL; no automatic cross-run reuse; label confidence and provenance \\
-Long-term memory & Approved preferences, reusable facts, learned procedures & Governed memory service / relational + search index & Explicit write policy, consent, provenance, TTL, ACL, correction/deletion \\
-\rowcolor{BookLight}
-Enterprise knowledge & Policies, contracts, code, tickets, records, catalogs & Source systems + governed search/vector/graph indexes & Source remains authoritative; ACL filter before retrieval; freshness and lineage \\
-Artifacts & Reports, patches, extracted tables, evidence packages & Versioned object store & Immutable versions, content hash, classification, owner, retention \\
-\rowcolor{BookLight}
-Telemetry and audit & Traces, metrics, policy decisions, effect records & Trace store + SIEM + append-only/WORM archive & Redaction; role-separated access; retention/legal hold \\
-\end{longtable}
-\BookTableEnd
-
-\subsection{Context assembly pipeline}
-
-\begin{enumerate}
-
-\item Start with agent instructions and policy-owned constraints from pinned versions.
-
-\item Load canonical workflow state and unresolved obligations—not the raw event history.
-
-\item Select the smallest recent conversation window needed for continuity.
-
-\item Retrieve enterprise knowledge only after identity/tenant/ACL filtering; attach source, timestamp, classification, and confidence metadata.
-
-\item Retrieve long-term memory through a separate policy gate; prefer verified facts and user-approved preferences.
-
-\item Remove duplicates, stale items, secrets, and content outside the task purpose; summarize only with links to originals.
-
-\item Label each segment as instruction, user\_input, enterprise\_data, tool\_result, or memory; the model must not promote data into instructions.
-
-\item Record a context-manifest hash on the model span so the call can be reconstructed without logging sensitive plaintext by default.
-
-\end{enumerate}
-
-\subsection{Detailed design — APIs, data model, and scalability}
-
-\subsection{Component boundaries}
-
-The Conversation Service owns turns; the Workflow Projection Service owns canonical run state; the Context Assembler creates an ephemeral model-input projection; the Retrieval Broker queries governed knowledge; the Memory Service owns approved cross-run memory; the Provenance Service tracks lineage; and the Compaction Service produces source-linked summaries. No component can silently promote a conversation statement into workflow truth or long-term memory.\par
-
-\subsection{High-level APIs}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{API} & \color{white}\bfseries \textbf{Purpose and key semantics} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{API} & \color{white}\bfseries \textbf{Purpose and key semantics} \\
-\endhead
-POST /v1/context:assemble & Build a token-bounded context from pinned instructions, run state, conversation, knowledge, and memory under a policy and data budget \\
-\rowcolor{BookLight}
-GET /v1/runs/\{run\_id\}/state & Return the canonical typed state projection and state\_version; separate from transcript/history \\
-POST /v1/conversations/\{id\}/turns & Append an immutable user/agent/tool turn with provenance, classification, and client idempotency key \\
-\rowcolor{BookLight}
-POST /v1/knowledge:search & Hybrid search with subject+actor context, source allowlist, freshness, filters, top-k, and required citations \\
-POST /v1/memories & Propose/write a governed memory with scope, provenance, confidence, consent, TTL, and deduplication key; policy may require review \\
-\rowcolor{BookLight}
-GET /v1/memories:search & Search only memories visible to the subject/purpose/run; returns confidence and source lineage \\
-PATCH /v1/memories/\{memory\_id\} & Correct via optimistic version; preserves previous version and reason \\
-\rowcolor{BookLight}
-DELETE /v1/memories/\{memory\_id\} & Create deletion tombstone and enqueue removal from indexes, caches, summaries, and derived artifacts \\
-POST /v1/context:compact & Produce a source-linked summary/checkpoint under a target token budget; never overwrites source turns \\
-\end{longtable}
-\BookTableEnd
-
-\subsection{Core data model}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Entity} & \color{white}\bfseries \textbf{Required fields and invariants} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Entity} & \color{white}\bfseries \textbf{Required fields and invariants} \\
-\endhead
-ConversationTurn & conversation/turn IDs, role/type, content reference/hash, producer, created time, classification, source/trace refs; append-only \\
-\rowcolor{BookLight}
-RunStateProjection & run ID, schema/version, state version, variables, obligations, unresolved questions, budgets, artifact refs; derived from workflow history \\
-ContextManifest & context ID, run/node/model call, token budget/allocation, policy/version pins, ordered segment refs/hashes, redaction summary, total tokens \\
-\rowcolor{BookLight}
-ContextSegment & segment ID/type, source URI/revision, content hash, trust label, instruction flag, classification, ACL decision, freshness, token count \\
-MemoryRecord & memory ID, tenant, subject/team scope, type, canonical value, provenance, confidence, consent, purpose allowlist, TTL, status, supersedes \\
-\rowcolor{BookLight}
-KnowledgeObject & source URI/revision, object/chunk IDs, text/blob reference, embedding version, metadata, ACL pointer, ingestion cursor, deletion state \\
-SummarySnapshot & input segment hashes, summary hash/reference, model/prompt version, coverage map, unresolved facts, expiry; immutable \\
-\end{longtable}
-\BookTableEnd
-
-Example context-manifest shape:\par
-
-JSON · implementation excerpt\par
-
-\needspace{167.2pt}
-\begin{lstlisting}[style=bookcode,title={JSON},language=bookjson]
-{
-  "context_id": "ctx_...",
-  "run_id": "run_42",
-  "node_id": "n7",
-  "budget": {"max_tokens": 24000, "instructions": 3000, "state": 4000, "evidence": 14000, "conversation": 3000},
-  "segments": [{
-    "kind": "enterprise_data",
-    "uri": "doc://policy/91@rev17",
-    "sha256": "...",
-    "trust": "untrusted-content",
-    "acl_decision_id": "dec_...",
-    "tokens": 1840
-  }],
-  "redactions": ["pii:ssn"],
-  "manifest_sha256": "..."
-}
-\end{lstlisting}
-
-\subsection{Retrieval and memory consistency}
-
-\begin{itemize}
-
-\item The source system revision is authoritative. Index entries are disposable projections and must carry source revision, ACL pointer, ingestion time, and deletion state.
-
-\item Search performs tenant/source pruning, exact ACL filtering, hybrid lexical/vector scoring, reranking, freshness filtering, and diversity/deduplication before context selection.
-
-\item A memory write is a governed business operation: validate type, scope, consent, provenance, contradiction, retention, and sensitivity. Derived guesses default to run-scoped working memory, not long-term memory.
-
-\item Correcting or deleting a source creates lineage events that invalidate affected memories, summaries, embeddings, model caches, and evidence packages according to retention/legal-hold policy.
-
-\end{itemize}
-
-\subsection{Scalability and token economics}
-
-\begin{itemize}
-
-\item Partition conversations and memories by tenant + subject/team; partition knowledge by tenant + source + region. Use routing metadata so a query touches only eligible partitions.
-
-\item Store content in object storage and metadata in relational/search stores. Context APIs exchange references; only the assembler materializes bytes for the authorized model call.
-
-\item Run ingestion as an asynchronous CDC/event pipeline with separate extract, classify, ACL, chunk, embed, and index stages. Track independent cursors so failed embedding does not block ACL deletion.
-
-\item Cache retrieval candidates by tenant, source revision, normalized query, policy scope, and embedding/reranker version; re-run exact authorization on cache hit.
-
-\item Allocate a fixed context budget before retrieval. Use maximum marginal relevance/source diversity, per-source caps, and evidence-quality thresholds rather than filling the entire window.
-
-\item Compact long conversations asynchronously and incrementally. Keep recent turns plus source-linked summaries; rebuild summaries when covered inputs change.
-
-\item Enforce deletion SLOs across primary metadata, vector/search indexes, caches, and derived summaries. Tombstones must outlive the longest replica/cache lag to prevent resurrection.
-
-\end{itemize}
-
-\begin{bookcost}[Performance and cost]
-Retrieve less, and cite what you retrieved. Context is the dominant cost in most agentic systems and the dominant cause of distraction. Record a context manifest identifier rather than the context body, and measure answer quality against context size — most systems are past the point where more retrieval helps.
-\end{bookcost}
-
-\section{Grounding, corrections, and evidence boundary}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
-\endhead
-Privacy lifecycle & Context and memory need purpose limitation, consent or other legal basis where applicable, data-subject request handling, deletion propagation, legal-hold precedence, residency, provider retention controls, and proof that derived summaries/indexes were handled too. & NIST-GAI; GDPR \\
-\end{longtable}
-\BookTableEnd
-
-Evidence anchors: NIST-GAI; GDPR. Full URLs, authority, version, and scope appear in Appendix K.\par
-
-\section{Pattern reference — Memory}
-
-\begin{bookcallout}[The problem]
-The system should reuse useful information across turns or runs without confusing stale summaries with canonical truth or retaining data indefinitely.
-\end{bookcallout}
-
-\subsection{Architecture and flow}
-
-Working memory is run-scoped; long-term memory is a governed write with subject, scope, provenance, confidence, policy basis, TTL, correction, deletion, and retrieval authorization.\par
-
-\begin{enumerate}
-
-\item Identify a candidate reusable fact.
-
-\item Validate evidence, subject, purpose, consent or policy basis, and sensitivity.
-
-\item Write a versioned memory record with TTL and provenance.
-
-\item Retrieve only after authorization and trust labeling.
-
-\item Correct, supersede, expire, or delete through propagation workflows.
-
-\end{enumerate}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
-\endhead
-Use for stable preferences, repeated domain facts, or learned operational hints with clear value and governance. & Do not persist transient chain-of-thought, secrets, unverified hypotheses, protected data without basis, or facts already authoritative elsewhere. \\
-\end{longtable}
-\BookTableEnd
-
-\subsection{Trade-offs}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endhead
-Continuity & Creates privacy, staleness, correction, and deletion obligations. \\
-\rowcolor{BookLight}
-Reduced context cost & May lose nuance or introduce summary drift. \\
-\end{longtable}
-\BookTableEnd
-
-\subsection{Failures and controls}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endhead
-Stale memory overrides state & Canonical state precedence and freshness checks. \\
-\rowcolor{BookLight}
-Cross-tenant leakage & Tenant-partitioned keys and authorization before retrieval. \\
-Deletion gaps & Lineage graph, tombstones, cache invalidation, and rebuild. \\
-\end{longtable}
-\BookTableEnd
-
-\subsection{Minimum observability}
-
-\begin{itemize}
-
-\item memory ID and version
-
-\item source provenance
-
-\item scope and tenant
-
-\item policy basis
-
-\item confidence and TTL
-
-\item retrieval and deletion events
-
-\end{itemize}
-
-\section{Implementation reference}
-
-\subsection{Auditable context projection}
-
-PYTHON · implementation excerpt\par
-
-\needspace{240.8pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
-from __future__ import annotations
-
-from datetime import datetime
-from typing import Literal
-from pydantic import BaseModel
-
-
-class ContextSegmentRef(BaseModel):
-    artifact_id: str
-    source_revision: str
-    sha256: str
-    authorization_decision_id: str
-    trust_role: Literal["instruction", "user_intent", "evidence"]
-    token_count: int
-
-
-class ContextManifest(BaseModel):
-    context_id: str
-    run_id: str
-    release_id: str
-    policy_version: str
-    segments: tuple[ContextSegmentRef, ...]
-    omitted_candidate_ids: tuple[str, ...]
-    created_at: datetime
-\end{lstlisting}
-
-\subsection{Cross-boundary artifact adoption policy}
-
-PYTHON · implementation excerpt\par
-
-\needspace{388.0pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
-from __future__ import annotations
-
-from datetime import datetime
-from pydantic import BaseModel, Field
-
-
-class ArtifactDescriptor(BaseModel):
-    artifact_id: str
-    tenant_id: str
-    data_classes: frozenset[str]
-    region: str
-    allowed_purposes: frozenset[str]
-    provenance_digest: str
-    expires_at: datetime
-    legal_hold: bool = False
-
-
-class AdoptionPolicy(BaseModel):
-    tenant_id: str
-    allowed_data_classes: frozenset[str]
-    allowed_regions: frozenset[str]
-    purpose: str
-    trusted_provenance_digests: frozenset[str]
-
-
-def authorize_artifact_adoption(
-    artifact: ArtifactDescriptor, policy: AdoptionPolicy, *, now: datetime
-) -> None:
-    if artifact.tenant_id != policy.tenant_id:
-        raise PermissionError("cross-tenant artifact adoption denied")
-    if not artifact.data_classes <= policy.allowed_data_classes:
-        raise PermissionError("artifact classification exceeds policy")
-    if artifact.region not in policy.allowed_regions:
-        raise PermissionError("artifact region is not allowed")
-    if policy.purpose not in artifact.allowed_purposes:
-        raise PermissionError("artifact purpose is not allowed")
-    if artifact.provenance_digest not in policy.trusted_provenance_digests:
-        raise PermissionError("artifact provenance is not trusted")
-    if now > artifact.expires_at and not artifact.legal_hold:
-        raise PermissionError("artifact expired")
-\end{lstlisting}
-
-\section{Debugging playbook}
-
-\begin{enumerate}
-
-\item Reconstruct one ContextManifest without relying on logged plaintext.
-
-\item Compare canonical state with summaries and working memory.
-
-\item Trace a corrected or deleted fact through indexes, cache, memory, and artifacts.
-
-\end{enumerate}
-
-\section{Production checklist}
-
-\textbf{\ensuremath{\checkmark}} Conversation, workflow state, working memory, long-term memory, knowledge, artifacts, telemetry, and audit are separate domains.\par
-
-\textbf{\ensuremath{\checkmark}} Authorization occurs before content materialization.\par
-
-\textbf{\ensuremath{\checkmark}} Context records ordered references, hashes, trust labels, decisions, versions, redactions, and token allocation.\par
-
-\textbf{\ensuremath{\checkmark}} Memory creation is a governed write with scope, provenance, confidence, lawful basis, TTL, correction, and deletion.\par
-
-\textbf{\ensuremath{\checkmark} Final implementation and deletion propagate through indexes, caches, summaries, memories, contexts, and artifacts.}\par
-
-\section{Exercises}
-
-\begin{enumerate}
-
-\item Design a token budget across instructions, state, evidence, memory, and reserve.
-
-\item Define the lifecycle of a reusable supplier preference memory.
-
-\end{enumerate}
-
-\section{Technical review questions}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Question} & \color{white}\bfseries \textbf{Strong answer} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Question} & \color{white}\bfseries \textbf{Strong answer} \\
-\endhead
-Why call the prompt a projection rather than state? & It is a temporary, token-bounded view assembled from authoritative stores for one model call; it can be rebuilt, audited by reference, and discarded. \\
-\rowcolor{BookLight}
-How do conversation, knowledge, working memory, and long-term memory differ? & Interaction history; source-backed enterprise facts; run-scoped hypotheses; and approved reusable facts—each with different ownership, retention, authority, and deletion. \\
-What problem does a ContextManifest solve? & Reproducibility and diagnosis through ordered source, version, and hash references, authorization decisions, trust labels, redactions, and budget without logging all plaintext. \\
-\rowcolor{BookLight}
-How should retrieved instructions be handled? & As untrusted data with provenance and taint; they cannot alter system instructions, tool eligibility, policy, credentials, or destination grants. \\
-How do you delete a fact from an agentic system? & Tombstone and revoke the source, remove derived indexes, invalidate caches, rebuild summaries and contexts, clean governed memory and affected artifacts, and preserve permitted audit evidence. \\
-\end{longtable}
-\BookTableEnd
-
-\section{Transition to Chapter 20}
-
-Context and state are bounded; Chapter 20 determines whose authority may flow through the system and how that authority narrows across hops.\par
-
-\BookChapter{20}{Identity, RBAC/ABAC, and Delegated Authorization}
+\BookChapter{21}{Identity, RBAC/ABAC, and Delegated Authorization}
 
 \begin{bookquote}
 
@@ -7737,11 +8457,11 @@ Where must authorization occur in retrieval? & Before content reaches the model,
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 21}
+\section{Transition to Chapter 22}
 
-Identity and delegated authority answer who may ask; Chapter 21 proves whether a specific tool effect may execute, commit, retry, or recover.\par
+Identity and delegated authority answer who may ask; Chapter 22 proves whether a specific tool effect may execute, commit, retry, or recover.\par
 
-\BookChapter{21}{Tool Security, Effects, Idempotency, and Approval}
+\BookChapter{22}{Tool Security, Effects, Idempotency, and Approval}
 
 \begin{bookcallout}[Northstar at this point]
 The ERP times out after Northstar requests supplier creation. Retrying might duplicate the supplier; treating the call as failed might cause conflicting remediation. The platform records an unknown effect and reconciles before continuing.
@@ -8324,11 +9044,11 @@ Why are both idempotency and optimistic concurrency needed? & Idempotency preven
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 22}
+\section{Transition to Chapter 23}
 
-Protected effects are governed; Chapter 22 contains the remaining execution, egress, data, privacy, and supply-chain blast radius.\par
+Protected effects are governed; Chapter 23 contains the remaining execution, egress, data, privacy, and supply-chain blast radius.\par
 
-\BookChapter{22}{Sandboxing, Egress, Data Security, and Governance}
+\BookChapter{23}{Sandboxing, Egress, Data Security, and Governance}
 
 \begin{bookquote}
 
@@ -8720,13 +9440,13 @@ What makes a useful kill-switch design? & Narrow scopes, emergency-deny preceden
 
 22 Cost, Latency, Capacity, and Reliability Optimization\par
 
-\section{Transition to Chapter 23}
+\section{Transition to Chapter 24}
 
-Security controls now produce events and evidence; Chapter 23 turns those signals into end-to-end traces that operators can reconstruct.\par
+Security controls now produce events and evidence; Chapter 24 turns those signals into end-to-end traces that operators can reconstruct.\par
 
 \BookPartPage{VII}{OBSERVABILITY, EVALUATION \& CONTINUOUS LEARNING}{This Part makes behaviour measurable. It covers the trace that explains a run, the evaluation that decides whether a change is an improvement, and the governed loop that turns production evidence back into a better system.}{assets/parts/part-vii.png}
 
-\BookChapter{23}{Observability and Tracing with MLflow}
+\BookChapter{24}{Observability and Tracing with MLflow}
 
 \begin{bookquote}
 
@@ -9042,11 +9762,11 @@ Why keep audit separate? & Audit has stronger completeness, integrity, access, a
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 24}
+\section{Transition to Chapter 25}
 
-Tracing explains what happened; Chapter 24 determines whether the trajectory and outcome were acceptable and whether a change is safe to ship.\par
+Tracing explains what happened; Chapter 25 determines whether the trajectory and outcome were acceptable and whether a change is safe to ship.\par
 
-\BookChapter{24}{Evaluation, Debugging, and Continuous Improvement with MLflow}
+\BookChapter{25}{Evaluation, Debugging, and Continuous Improvement with MLflow}
 
 \begin{bookquote}
 
@@ -9234,7 +9954,7 @@ Build the evaluation set from production failures, not from imagined ones. Every
 
 Continuous improvement joins production evidence to versioned change and release. It does not let an agent rewrite its prompt, memory policy, permissions, evaluator, or code and then certify itself.\par
 
-\BookDiagram{assets/diagrams/learning-loop.png}{Figure 24-1 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn}{learning-loop}
+\BookDiagram{assets/diagrams/learning-loop.png}{Figure 25-1 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn}{learning-loop}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -9266,7 +9986,7 @@ Learn & Record causal result, curate regressions, update taxonomy/runbook into L
 
 \section{Runtime adaptation versus controlled offline improvement}
 
-\BookDiagram{assets/diagrams/runtime-offline.png}{Figure 24-2 — Runtime adaptation and offline improvement boundary}{runtime-offline}
+\BookDiagram{assets/diagrams/runtime-offline.png}{Figure 25-2 — Runtime adaptation and offline improvement boundary}{runtime-offline}
 
 Runtime adaptation selects only pre-approved routes/fallbacks, reduces optional context, sheds load, stops a loop, asks for input, escalates, or rolls back inside a fixed envelope. It cannot expand permissions, purpose, data access, spend, tools, or model allowlists. Offline improvement creates a new immutable release and may change prompts, context/RAG, memory, tools, skills, model selection, routing, deterministic code, agent topology, workflows, and system architecture after evaluation and approval.\par
 
@@ -9488,13 +10208,13 @@ How do you roll back without breaking active runs? & Stop new assignment, restor
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 25}
+\section{Transition to Chapter 26}
 
-The improvement loop proposes and validates change; Chapter 25 assigns decision rights, risk tiers, approvals, exceptions, and accountability.\par
+The improvement loop proposes and validates change; Chapter 26 assigns decision rights, risk tiers, approvals, exceptions, and accountability.\par
 
 \BookPartPage{VIII}{GOVERNANCE \& PRODUCTION OPERATIONS}{This Part is about running the system for years rather than shipping it once. It covers the operating model that assigns accountability, the release machinery that makes change reversible, and the economics that decide whether the system survives its own success.}{assets/parts/part-viii.png}
 
-\BookChapter{25}{Governance, Risk, and Operating Model}
+\BookChapter{26}{Governance, Risk, and Operating Model}
 
 \begin{bookquote}
 
@@ -9506,7 +10226,7 @@ The improvement loop proposes and validates change; Chapter 25 assigns decision 
 
 Governance makes decisions explicit, proportional, evidence-based, and reversible. It accelerates safe delivery with reusable risk tiers, policy, review paths, and evidence rather than sending every prompt edit to one committee.\par
 
-\BookDiagram{assets/diagrams/governance-model.png}{Figure 25-1 — Federated governance with centralized control services}{governance-model}
+\BookDiagram{assets/diagrams/governance-model.png}{Figure 26-1 — Federated governance with centralized control services}{governance-model}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -9564,11 +10284,11 @@ Principles define non-negotiable outcomes; standards define reusable contracts; 
 
 Operate per run (admission/policy/effects/acceptance), daily/weekly (SLO, quality, safety, cost, incidents, evaluator health), per release (classification, regression, security/privacy, compatibility, canary/rollback), quarterly (portfolio value/risk and platform roadmap), and annually/material change (policy, law, threat, recovery, independent assurance).\par
 
-\section{Transition to Chapter 26}
+\section{Transition to Chapter 27}
 
-Governance defines who may release change; Chapter 26 makes releases immutable, promotable, observable, reversible, and recoverable.\par
+Governance defines who may release change; Chapter 27 makes releases immutable, promotable, observable, reversible, and recoverable.\par
 
-\BookChapter{26}{Deployment, Versioning, CI/CD, and Recovery}
+\BookChapter{27}{Deployment, Versioning, CI/CD, and Recovery}
 
 \begin{bookquote}
 
@@ -10030,11 +10750,11 @@ Describe safe regional failover during an external write. & Stop admission, fenc
 \end{longtable}
 \BookTableEnd
 
-\section{Transition to Chapter 27}
+\section{Transition to Chapter 28}
 
-The release lifecycle is controlled; Chapter 27 sizes the system and optimizes cost, latency, capacity, and reliability around verified outcomes.\par
+The release lifecycle is controlled; Chapter 28 sizes the system and optimizes cost, latency, capacity, and reliability around verified outcomes.\par
 
-\BookChapter{27}{Cost, Latency, Capacity, and Reliability Optimization}
+\BookChapter{28}{Cost, Latency, Capacity, and Reliability Optimization}
 
 \begin{bookquote}
 
@@ -11213,6 +11933,14 @@ References are numbered by stable registry identifier. Each citation supports on
 
 \item \BookReferenceTarget{R41}\textbf{\BookCitation{R41}} W3C (2023). \emph{Web Content Accessibility Guidelines (WCAG) 2.2}. W3C Recommendation. \href{\detokenize{https://www.w3.org/TR/WCAG22/}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Defines accessibility success criteria relevant to human-review interfaces.
 
+\item \BookReferenceTarget{R44}\textbf{\BookCitation{R44}} Object Management Group (2014). \emph{Business Process Model and Notation (BPMN)}. Version 2.0.2, formal, January 2014. \href{\detokenize{https://www.omg.org/spec/BPMN/2.0.2}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Defines BPMN process modelling notation and its execution semantics. Supports the existence and semantics of the standard only, not any claim about its suitability for agentic planning.
+
+\item \BookReferenceTarget{R45}\textbf{\BookCitation{R45}} Object Management Group (2024). \emph{Decision Model and Notation (DMN)}. Version 1.5, formal, August 2024. \href{\detokenize{https://www.omg.org/spec/DMN/1.5}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Defines DMN decision tables, hit policies, and FEEL. Supports the existence and semantics of the standard only, not any claim about agent decision quality.
+
+\item \BookReferenceTarget{R46}\textbf{\BookCitation{R46}} Object Management Group (2016). \emph{Case Management Model and Notation (CMMN)}. Version 1.1, formal, December 2016. \href{\detokenize{https://www.omg.org/spec/CMMN/1.1}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Defines CMMN case modelling for unordered, event-driven work. Supports the existence and semantics of the standard only.
+
+\item \BookReferenceTarget{R47}\textbf{\BookCitation{R47}} Object Management Group (2019). \emph{Semantics of Business Vocabulary and Business Rules (SBVR)}. Version 1.5, formal, December 2019. \href{\detokenize{https://www.omg.org/spec/SBVR/1.5}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only.
+
 \end{itemize}
 
 \section{Security, governance, law, and assurance}
@@ -11286,6 +12014,8 @@ References are numbered by stable registry identifier. Each citation supports on
 \item \BookReferenceTarget{R37}\textbf{\BookCitation{R37}} Dapr (2026). \emph{Dapr Agents}. Current documentation. \href{\detokenize{https://docs.dapr.io/developing-ai/dapr-agents}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Documents Dapr agent integration with workflows, actors, state, messaging, resiliency, and telemetry.
 
 \item \BookReferenceTarget{R38}\textbf{\BookCitation{R38}} DBOS (2026). \emph{DBOS AI Quickstart}. Current documentation. \href{\detokenize{https://docs.dbos.dev/ai/ai-quickstart}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Documents durable long-running agent workflows, queues, waits, and framework integrations.
+
+\item \BookReferenceTarget{R48}\textbf{\BookCitation{R48}} Rahimi, R. (2026). \emph{Policy Logic Forge: compiling compliance policy text into typed, source-grounded executable decision logic}. Repository documentation, ARCHITECTURE.md §1.1. \href{\detokenize{https://github.com/rrahimi-uci/policy-logic-forge}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44\% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction.
 
 \end{itemize}
 
@@ -11367,6 +12097,14 @@ R41 & standard & Defines accessibility success criteria relevant to human-review
 \rowcolor{BookLight}
 R42 & official guidance & Supports incident-response integration with organizational risk management. & Verified 2026-09-13; re-check living sources before use. \\
 R43 & research & Primary source for Little’s Law; book sizing equations remain workload-specific approximations. & Verified 2026-09-13; re-check living sources before use. \\
+\rowcolor{BookLight}
+R44 & standard & Defines BPMN process modelling notation and its execution semantics. Supports the existence and semantics of the standard only, not any claim about its suitability for agentic planning. & Verified 2026-09-14; re-check living sources before use. \\
+R45 & standard & Defines DMN decision tables, hit policies, and FEEL. Supports the existence and semantics of the standard only, not any claim about agent decision quality. & Verified 2026-09-14; re-check living sources before use. \\
+\rowcolor{BookLight}
+R46 & standard & Defines CMMN case modelling for unordered, event-driven work. Supports the existence and semantics of the standard only. & Verified 2026-09-14; re-check living sources before use. \\
+R47 & standard & Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only. & Verified 2026-09-14; re-check living sources before use. \\
+\rowcolor{BookLight}
+R48 & framework documentation & Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44\% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction. & Verified 2026-09-14; re-check living sources before use. \\
 \end{longtable}
 \BookTableEnd
 

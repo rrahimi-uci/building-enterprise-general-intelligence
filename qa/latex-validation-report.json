@@ -1,27 +1,27 @@
 {
-  "release": "2.0.0",
+  "release": "2.1.0",
   "validated_on": "2026-09-13",
   "format": "XeLaTeX",
   "measurements": {
-    "main_tex_sha256": "4e62b8ae7374647da3ab403054acc360c078f693c35c4adbb8a04802b0722cce",
-    "content_tex_sha256": "f3b138b1a1bb02f507be94a983ca9512a086adb4df383904df49ce13d43cd394",
-    "style_sha256": "bda09cc206a6d7f3b74cf050aa5cfc4cfb53c00c1bd830c71d48671f8a93885e",
+    "main_tex_sha256": "9992982f3e51417cdd24fca0262a4259d4ad4566a3094a523f7aee0906f9fb5d",
+    "content_tex_sha256": "cac2413de3fb65fe1d75c3b41681d7b848d7f30a4f3252067a2e705576a458b0",
+    "style_sha256": "317c568354e21151228982e5f13fd8636c58362d262030cba467ec782946a7d8",
     "narrative_parts": 8,
     "appendix_dividers": 1,
-    "chapters": 27,
+    "chapters": 28,
     "appendices": 12,
-    "diagrams": 18,
-    "code_blocks": 51,
-    "longtables": 191,
-    "callout_tables": 89,
-    "citation_occurrences": 94,
-    "reference_targets": 43,
-    "unique_citation_ids": 43,
-    "markdown_tables": 280,
-    "markdown_code_blocks": 51,
+    "diagrams": 20,
+    "code_blocks": 57,
+    "longtables": 200,
+    "callout_tables": 95,
+    "citation_occurrences": 104,
+    "reference_targets": 48,
+    "unique_citation_ids": 48,
+    "markdown_tables": 295,
+    "markdown_code_blocks": 57,
     "image_quality": [
       {
-        "file": "assets/cover/cover-v2.0.0.png",
+        "file": "assets/cover/cover-v2.1.0.png",
         "pixels": [
           2550,
           3300
@@ -46,6 +46,22 @@
       },
       {
         "file": "assets/diagrams/request-sequence.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/knowledge-fabric.png",
+        "pixels": [
+          1800,
+          1000
+        ],
+        "effective_dpi": 255.0
+      },
+      {
+        "file": "assets/diagrams/policy-to-guardrail.png",
         "pixels": [
           1800,
           1000

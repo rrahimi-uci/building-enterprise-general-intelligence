@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline structural, semantic, asset, and DOCX validation for Book v2.0.0."""
+"""Offline structural, semantic, asset, and DOCX validation for Book v2.1.0."""
 from __future__ import annotations
 import argparse, hashlib, json, re, sys, zipfile
 import json
@@ -46,7 +46,7 @@ def check_table_shapes(text: str) -> list[str]:
 def docx_callout_contrast(docx_path):
     """Every shaded callout cell must carry readable body text.
 
-    v2.0.0 shaded NORTHSTAR/DESIGN DECISION callouts navy while the paragraph
+    v2.1.0 shaded NORTHSTAR/DESIGN DECISION callouts navy while the paragraph
     style inherited Normal's dark ink -- 44 callouts at 1.09:1. The LaTeX
     contrast gate never saw it because it only reads the LaTeX palette, so the
     DOCX edition needs its own check.
@@ -86,8 +86,8 @@ def docx_callout_contrast(docx_path):
 def main() -> int:
     ap=argparse.ArgumentParser(); ap.add_argument('--root',default=str(Path(__file__).resolve().parents[1])); args=ap.parse_args()
     root=Path(args.root).resolve(); errors=[]; warnings=[]; checks={}
-    md=root/'book/manuscript.md'; distmd=root/'dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.md'; docx_path=root/'dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.docx'
-    required=[root/'README.md',root/'AGENTS.md',root/'CHANGELOG.md',root/'styles/DESIGN-SYSTEM.md',root/'styles/CROSS-FORMAT-CONTRACT.md',root/'config/book.json',root/'config/references.json',root/'config/reference-verification.json',root/'config/diagrams.json',md,distmd,docx_path,root/'assets/cover/cover-v2.0.0.png',root/'templates/book-style-template.docx']
+    md=root/'book/manuscript.md'; distmd=root/'dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.md'; docx_path=root/'dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.docx'
+    required=[root/'README.md',root/'AGENTS.md',root/'CHANGELOG.md',root/'styles/DESIGN-SYSTEM.md',root/'styles/CROSS-FORMAT-CONTRACT.md',root/'config/book.json',root/'config/references.json',root/'config/reference-verification.json',root/'config/diagrams.json',md,distmd,docx_path,root/'assets/cover/cover-v2.1.0.png',root/'templates/book-style-template.docx']
     missing=[p.relative_to(root).as_posix() for p in required if not p.exists()]
     if missing: errors.append(f"Missing required files: {missing}")
     if not md.exists(): raise SystemExit(1)
@@ -97,13 +97,13 @@ def main() -> int:
     if '\r' in text: errors.append('Canonical Markdown contains CR characters')
     if distmd.exists() and distmd.read_bytes()!=md.read_bytes(): errors.append('Canonical and distributable Markdown are not byte-identical')
     checks['parts']=len(re.findall(r'^# PART [IVXLCDM]+ — ',text,re.M)); checks['chapters']=len(re.findall(r'^# \d{2} — ',text,re.M)); checks['appendices']=len(re.findall(r'^# Appendix [A-Z] — ',text,re.M))
-    # v2.0.0 topology: four single-chapter Parts dissolved, four chapter pairs
+    # v2.1.0 topology: four single-chapter Parts dissolved, four chapter pairs
     # merged, Appendices L and N cut and M folded into K.
-    expected={'parts':8,'chapters':27,'appendices':12}
+    expected={'parts':8,'chapters':28,'appendices':12}
     for k,v in expected.items():
         if checks[k]!=v: errors.append(f"Expected {v} {k}, found {checks[k]}")
     chapter_nums=[int(x) for x in re.findall(r'^# (\d{2}) — ',text,re.M)]
-    if chapter_nums!=list(range(1,28)): errors.append(f"Chapter sequence is invalid: {chapter_nums}")
+    if chapter_nums!=list(range(1,29)): errors.append(f"Chapter sequence is invalid: {chapter_nums}")
     appendix_ids=re.findall(r'^# Appendix ([A-Z]) — ',text,re.M)
     if appendix_ids!=[chr(ord('A')+i) for i in range(12)]: errors.append(f"Appendix sequence is invalid: {appendix_ids}")
     # Fenced code must be masked before scanning for headings: a Python comment
@@ -128,7 +128,7 @@ def main() -> int:
     if text.count('```')%2: errors.append('Unbalanced fenced code blocks')
     checks['code_blocks']=len(re.findall(r'^```[^\n]*$',text,re.M))//2
     errors.extend(check_table_shapes(text))
-    # Legacy pre-1.0 labels. The negative lookahead stops the real v2.0.0 release
+    # Legacy pre-1.0 labels. The negative lookahead stops the real v2.1.0 release
     # string from matching the v2.0 legacy pattern.
     stale=sorted(set(re.findall(r'\bv(?:2\.[01]|3\.[01])(?!\.\d)\b',text)))
     if stale: errors.append(f"Stale release labels remain: {stale}")
@@ -154,7 +154,7 @@ def main() -> int:
             with Image.open(p) as im:
                 if im.width<1200 or im.height<600: warnings.append(f"Diagram may be low resolution: {d['file']} ({im.width}x{im.height})")
         except Exception as exc: errors.append(f"Cannot decode diagram {d['file']}: {exc}")
-    cover=root/'assets/cover/cover-v2.0.0.png'
+    cover=root/'assets/cover/cover-v2.1.0.png'
     if cover.exists():
         with Image.open(cover) as im:
             checks['cover_dimensions']=[im.width,im.height]
@@ -172,7 +172,7 @@ def main() -> int:
             doc_chapters=sum(1 for p in doc.paragraphs if p.style.name=='Heading 1' and re.match(r'^\d{2} — ',p.text))
             doc_appendices=sum(1 for p in doc.paragraphs if p.style.name=='Heading 1' and p.text.startswith('Appendix '))
             checks['docx_chapters']=doc_chapters; checks['docx_appendices']=doc_appendices
-            if doc_chapters!=27 or doc_appendices!=12: errors.append(f"DOCX heading counts differ: chapters={doc_chapters}, appendices={doc_appendices}")
+            if doc_chapters!=28 or doc_appendices!=12: errors.append(f"DOCX heading counts differ: chapters={doc_chapters}, appendices={doc_appendices}")
             # Derived, not fixed: cover + registered diagrams + registered Part
             # panels. A literal only proved the book had not gained an image.
             pv=root/'config/part-visuals.json'
@@ -189,17 +189,17 @@ def main() -> int:
             for failure in callout_failures:
                 errors.append(f"DOCX callout is unreadable: ink on #{failure['fill']} = {failure['ratio']}:1 — {failure['text']}")
             cp=doc.core_properties
-            if cp.title!='Enterprise Agentic AI Architecture & Developer Platform Guide — Book v2.0.0': errors.append(f"Unexpected DOCX title metadata: {cp.title}")
+            if cp.title!='Enterprise Agentic AI Architecture & Developer Platform Guide — Book v2.1.0': errors.append(f"Unexpected DOCX title metadata: {cp.title}")
             if cp.author!='Reza Rahimi, PhD': errors.append(f"Unexpected DOCX author metadata: {cp.author}")
         except Exception as exc: errors.append(f"DOCX validation error: {exc}")
-    pdf=root/'qa/render/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.pdf'
+    pdf=root/'qa/render/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.pdf'
     if pdf.exists():
         try:
             import pymupdf
             d=pymupdf.open(pdf); checks['pdf_pages']=len(d)
-            # 213 was the v1.0.0 LibreOffice baseline. v2.0.0 deliberately changed the
+            # 213 was the v1.0.0 LibreOffice baseline. v2.1.0 deliberately changed the
             # topology, so asserting it would warn about the expected result; the page
-            # count is recorded as a measurement until a v2.0.0 baseline is rendered
+            # count is recorded as a measurement until a v2.1.0 baseline is rendered
             # with `make qa-pdf`. Structural and blank-page checks below still apply.
             blank=[]
             for i,p in enumerate(d):
@@ -211,7 +211,7 @@ def main() -> int:
     report={'release':book_release(root),'validated_on':'2026-09-13','checks':checks,'errors':errors,'warnings':warnings,'pass':not errors}
     (root/'qa').mkdir(exist_ok=True); (root/'reports').mkdir(exist_ok=True)
     (root/'qa/validation-report.json').write_text(json.dumps(report,indent=2)+"\n",encoding='utf-8')
-    summary=["# Validation Summary — Book v2.0.0","",f"**Result:** {'PASS' if not errors else 'FAIL'}","", "## Measurements","",* [f"- **{k}:** `{v}`" for k,v in checks.items()],"","## Errors","",*([f"- {x}" for x in errors] or ["- None."]),"","## Warnings","",*([f"- {x}" for x in warnings] or ["- None."])]
+    summary=["# Validation Summary — Book v2.1.0","",f"**Result:** {'PASS' if not errors else 'FAIL'}","", "## Measurements","",* [f"- **{k}:** `{v}`" for k,v in checks.items()],"","## Errors","",*([f"- {x}" for x in errors] or ["- None."]),"","## Warnings","",*([f"- {x}" for x in warnings] or ["- None."])]
     (root/'reports/validation-summary.md').write_text('\n'.join(summary)+'\n',encoding='utf-8')
     print(json.dumps(report,indent=2)); return 0 if not errors else 1
 

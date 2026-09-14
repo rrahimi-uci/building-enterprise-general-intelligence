@@ -2,7 +2,25 @@
 
 All notable changes follow semantic versioning and are recorded here.
 
-## [Unreleased]
+## [2.1.0] — 2026-09-14
+
+### New chapter: Enterprise Knowledge Management for Agents
+
+- Added chapter 05, arguing that an agent needs a governed knowledge layer rather than a retrieval index, and separating the four ways agents consume knowledge — context, reasoning, constraints, and action — each with its own failure mode.
+- Covers semantic knowledge, ontology and graph, rules as enforceable constraints, business data and capability catalogs, BPMN/DMN/CMMN/SBVR, the extract–prove–project pipeline, a knowledge algebra, and governance metadata, closing on a knowledge-hub reference architecture.
+- Six runnable, CI-executed examples: typed rules with provenance, independent grounding verification, bounded graph traversal, a rule enforced at the effect boundary, union/intersection/difference/contradiction over rule sets, and capability discovery filtered by effect, grant, prerequisite and data class.
+- Two new diagrams and five new citations. The four OMG standards were verified against their specification index pages: BPMN 2.0.2 (2014), DMN 1.5 (August 2024), CMMN 1.1 (2016), SBVR 1.5 (2019). The 44% grounding-rejection figure is recorded as one run of one pipeline, not a general rate.
+
+### Chapter 19 moved into Part II
+
+- *Context Engineering, RAG, Memory, and State* had sat in the security Part since v1.0.0 despite being neither security nor identity. It is now chapter 06, beside the knowledge chapter: durable governed knowledge first, per-run context second, which is the boundary the two chapters draw between themselves.
+- Part II grows from one chapter to three and is retitled *Enterprise Reference Architecture & Knowledge*. Part VI is left as four security chapters.
+- Three transitions were rewritten rather than renumbered, because the chapter each one hands to changed.
+
+### Gates that were literals are now derived
+
+- Diagram count, diagram paths, citation occurrences, and reference targets all follow their registries instead of asserting 18, 18, 94 and 43. Adding a figure or a citation is now a registry edit rather than a validator edit.
+- Fixed `tools/generate_diagram.py`, which had been unusable: it passed a bare hex string to Pillow, which newer versions reject.
 
 ### Part divider artwork
 

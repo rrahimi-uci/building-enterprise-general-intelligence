@@ -1,29 +1,29 @@
-# Validation Summary — Book v2.0.0
+# Validation Summary — Book v2.1.0
 
 **Result:** PASS
 
 ## Measurements
 
-- **canonical_markdown_sha256:** `46d85117839397a4e892e55da6c5933f0b835dcf8b1f660aaab30dcab6beca99`
-- **canonical_markdown_bytes:** `499273`
+- **canonical_markdown_sha256:** `b6da55b49fb073980626e18b58673501a4704027b29203ca3473337028f68f36`
+- **canonical_markdown_bytes:** `534406`
 - **parts:** `8`
-- **chapters:** `27`
+- **chapters:** `28`
 - **appendices:** `12`
-- **code_blocks:** `51`
-- **reference_count:** `43`
-- **citation_occurrences:** `94`
-- **cited_reference_ids:** `43`
-- **diagram_markers:** `18`
-- **registered_diagrams:** `18`
+- **code_blocks:** `57`
+- **reference_count:** `48`
+- **citation_occurrences:** `104`
+- **cited_reference_ids:** `48`
+- **diagram_markers:** `20`
+- **registered_diagrams:** `20`
 - **cover_dimensions:** `[2550, 3300]`
-- **docx_sha256:** `484dcdccfe716f686232a4a3bc5193b98d9c4ea93d79c3374940610763ca74a3`
-- **docx_bytes:** `14890402`
-- **docx_paragraphs:** `2637`
-- **docx_tables:** `340`
-- **docx_inline_images:** `27`
-- **docx_chapters:** `27`
+- **docx_sha256:** `28b03ba92490f89828ca2079982f162047d767afebf8e8ea3bcd202ab093f727`
+- **docx_bytes:** `15060302`
+- **docx_paragraphs:** `2744`
+- **docx_tables:** `361`
+- **docx_inline_images:** `29`
+- **docx_chapters:** `28`
 - **docx_appendices:** `12`
-- **expected_docx_images:** `27`
+- **expected_docx_images:** `29`
 - **docx_callout_contrast_failures:** `0`
 
 ## Errors

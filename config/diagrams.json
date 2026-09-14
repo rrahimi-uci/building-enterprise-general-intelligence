@@ -42,6 +42,11 @@
       "sha256": "cc05e2b3315e4210205feb3b2e994effa6a5496945da89fbf970fccad50ae077"
     },
     {
+      "id": "knowledge-fabric",
+      "file": "assets/diagrams/knowledge-fabric.png",
+      "sha256": "1a2b9db925dcb58ac07010e730f016ae83382750889e0616a4677df3b5d6fec9"
+    },
+    {
       "id": "learning-loop",
       "file": "assets/diagrams/learning-loop.png",
       "sha256": "cd17949d9caee0662caf417c1c3bfaee4eee05f360f991de8ac5bab313ecde86"
@@ -55,6 +60,11 @@
       "id": "pattern-decision-tree",
       "file": "assets/diagrams/pattern-decision-tree.png",
       "sha256": "07b059e1aa8731c35f2c5f9d432dfee78d0c7816b0d6fc1fb67fce049a27bc04"
+    },
+    {
+      "id": "policy-to-guardrail",
+      "file": "assets/diagrams/policy-to-guardrail.png",
+      "sha256": "eec22a0573e7e0918bffc1aadb2024bba7e95193e188157892459bfc2ca415ae"
     },
     {
       "id": "portability",
