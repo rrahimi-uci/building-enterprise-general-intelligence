@@ -4,6 +4,13 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [2.1.0] — 2026-09-14
 
+### Retitled
+
+- The book is now *Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise*, replacing *Enterprise Agentic AI Architecture & Developer Platform Guide*.
+- Artifact filenames follow the title: `Enterprise-General-Intelligence-v2.1.0.{md,docx,tex,pdf}`.
+- The cover, title page, PDF and DOCX metadata, and the running header now read their wording from `config/book.json` rather than from strings hard-coded in three generators, so the next retitle is one edit. The cover subtitle is set at 44pt, measured to stay inside the darkened zone rather than running across the illustration.
+- `validate_book.py` derives the expected DOCX title and cover path from configuration instead of asserting literals that a retitle would silently invalidate.
+
 ### New chapter: Enterprise Knowledge Management for Agents
 
 - Added chapter 05, arguing that an agent needs a governed knowledge layer rather than a retrieval index, and separating the four ways agents consume knowledge — context, reasoning, constraints, and action — each with its own failure mode.
@@ -127,7 +134,7 @@ All notable changes follow semantic versioning and are recorded here.
 
 ### Publication foundation
 
-- Established the first canonical Book v1.0.0 release under the title *Enterprise Agentic AI Architecture & Developer Platform Guide* by Reza Rahimi, PhD.
+- Established the first canonical Book v1.0.0 release under the title *Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise* by Reza Rahimi, PhD.
 - Re-reviewed the complete book as one narrative: 12 Parts, 31 chapters, and 15 appendices.
 - Added explicit Part orientations and 31 curated chapter-to-chapter transitions.
 - Removed 22 repeated companion-package paragraphs and stale v2.x/v3.x release labels.

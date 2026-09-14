@@ -5,7 +5,7 @@
 PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 ROOT := $(CURDIR)
 ZIP ?= $(abspath ../Enterprise-Agentic-AI-Book-v2.1.0-Complete-Package-with-LaTeX.zip)
-TEX_ENTRY := latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.tex
+TEX_ENTRY := latex/Enterprise-General-Intelligence-v2.1.0.tex
 
 .DEFAULT_GOAL := help
 

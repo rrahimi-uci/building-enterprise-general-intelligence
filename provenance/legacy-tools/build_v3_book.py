@@ -293,7 +293,7 @@ def append_clone(old_key,new_title,page_break):
 p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_after=Pt(0); p.add_run().add_picture(str(COVER_FINAL),width=Inches(7.05))
 add_page_break()
 # Text title page supports accessible Markdown and navigation.
-p=add_para('Enterprise Agentic AI Architecture & Developer Platform Guide','Title',WD_ALIGN_PARAGRAPH.CENTER); p.paragraph_format.space_before=Pt(110)
+p=add_para('Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise','Title',WD_ALIGN_PARAGRAPH.CENTER); p.paragraph_format.space_before=Pt(110)
 p=add_para('Reference architecture, platform SDK, patterns, security, gateways, continuous learning, governance, and production operations','Subtitle',WD_ALIGN_PARAGRAPH.CENTER)
 add_para('FINAL EDITION · v3.0 · September 2026','Heading 2',WD_ALIGN_PARAGRAPH.CENTER)
 add_para('A structured enterprise reference for executives, architects, platform teams, security leaders, SREs, and senior engineers.','Normal',WD_ALIGN_PARAGRAPH.CENTER)
@@ -385,7 +385,7 @@ for t in doc.tables:
                     r.font.name='Arial'
 
 # Metadata
-doc.core_properties.title='Enterprise Agentic AI Architecture & Developer Platform Guide — Final Edition v3.0'
+doc.core_properties.title='Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise — Final Edition v3.0'
 doc.core_properties.subject='Enterprise reference architecture, developer platform SDK, patterns, security, gateways, continuous learning, governance, and production operations'
 doc.core_properties.comments='Final edition v3.0; 31-chapter restructured architecture and developer platform guide; generated with aligned canonical Markdown.'
 doc.core_properties.modified=datetime.now(timezone.utc)

@@ -1,6 +1,6 @@
 # XeLaTeX Publication Project — Book v2.1.0
 
-This directory is the maintainable LaTeX representation of *Enterprise Agentic AI Architecture & Developer Platform Guide* by **Reza Rahimi, PhD**.
+This directory is the maintainable LaTeX representation of *Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise* by **Reza Rahimi, PhD**.
 
 ## Build
 
@@ -14,7 +14,7 @@ make pdf          # validates the LaTeX source first, then compiles
 The script prefers `latexmk -xelatex` and otherwise runs XeLaTeX three times to resolve the table of contents, bookmarks, references, and page count. The output is copied to:
 
 ```text
-dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0-LaTeX.pdf
+dist/Enterprise-General-Intelligence-v2.1.0-LaTeX.pdf
 ```
 
 ### Container build
@@ -22,7 +22,7 @@ dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0-LaTeX.pd
 ```bash
 docker build -f Dockerfile.latex -t enterprise-agentic-ai-book .
 docker create --name book-build enterprise-agentic-ai-book
-docker cp book-build:/book/dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0-LaTeX.pdf .
+docker cp book-build:/book/dist/Enterprise-General-Intelligence-v2.1.0-LaTeX.pdf .
 docker rm book-build
 ```
 
@@ -30,7 +30,7 @@ A GitHub Actions workflow is also provided at `.github/workflows/latex.yml`.
 
 ## Project map
 
-- `Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.tex` — publication entry point.
+- `Enterprise-General-Intelligence-v2.1.0.tex` — publication entry point.
 - `bookstyle.sty` — page geometry, embedded fonts, palette, headings, Part/chapter pages, tables, code, callouts, figures, headers, footers, links, and PDF metadata.
 - `content/book-content.tex` — generated semantic content. Do **not** hand-edit.
 - `fonts/` — bundled Liberation Sans and Liberation Mono files plus license.

@@ -62,7 +62,7 @@ jobs:
       - run: chmod +x latex/compile.sh && latex/compile.sh
       - name: Summarize the build
         run: |
-          LOG=latex/build/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.log
+          LOG=latex/build/Enterprise-General-Intelligence-v2.1.0.log
           echo "### XeLaTeX build" >> "$GITHUB_STEP_SUMMARY"
           grep -o 'Output written.*([0-9]* pages)' "$LOG" | tail -1 >> "$GITHUB_STEP_SUMMARY" || true
           echo "- undefined references: $(grep -c 'undefined' "$LOG" || true)" >> "$GITHUB_STEP_SUMMARY"
@@ -71,7 +71,7 @@ jobs:
         with:
           name: enterprise-agentic-ai-book-v2.1.0-xelatex
           path: |
-            dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0-LaTeX.pdf
+            dist/Enterprise-General-Intelligence-v2.1.0-LaTeX.pdf
             latex/build/*.log
             latex/build/*.toc
 
@@ -94,7 +94,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release upload "${GITHUB_REF_NAME}" \
-            "artifacts/dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0-LaTeX.pdf" \
-            "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.docx" \
-            "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.md" \
+            "artifacts/dist/Enterprise-General-Intelligence-v2.1.0-LaTeX.pdf" \
+            "dist/Enterprise-General-Intelligence-v2.1.0.docx" \
+            "dist/Enterprise-General-Intelligence-v2.1.0.md" \
             --clobber

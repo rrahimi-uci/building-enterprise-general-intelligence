@@ -149,7 +149,7 @@ def main() -> int:
     manuscript, example_count = expand_examples(manuscript, root)
 
     canonical = root / "book" / "manuscript.md"
-    distribution = root / "dist" / "Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.md"
+    distribution = root / "dist" / "Enterprise-General-Intelligence-v2.1.0.md"
     canonical.parent.mkdir(parents=True, exist_ok=True)
     distribution.parent.mkdir(parents=True, exist_ok=True)
     canonical.write_text(manuscript, encoding="utf-8", newline="\n")

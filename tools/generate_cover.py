@@ -35,20 +35,26 @@ def generate(root:Path)->Path:
     im=Image.alpha_composite(art,overlay); d=ImageDraw.Draw(im)
     reg,bold=font_path(False,root),font_path(True,root)
     F=lambda n,b=False: ImageFont.truetype(bold if b else reg,n)
+    # Cover wording comes from config/book.json so a retitle is one edit rather
+    # than a hunt through the generator.
+    art=cfg.get('cover',{})
+    eyebrow=art.get('eyebrow','ENTERPRISE ARCHITECTURE REFERENCE')
+    title_lines=art.get('title_lines',['ENTERPRISE','GENERAL','INTELLIGENCE'])
+    subtitle=art.get('subtitle','ARCHITECTING GOVERNED AGENTIC SYSTEMS')
     d.rounded_rectangle((165,145,1215,245),radius=22,fill=(24,104,210,225))
-    d.text((215,175),'ENTERPRISE ARCHITECTURE REFERENCE',font=F(45,True),fill='white')
+    d.text((215,175),eyebrow,font=F(45,True),fill='white')
     y=360
-    for line in ['ENTERPRISE','AGENTIC AI','ARCHITECTURE']:
+    for line in title_lines:
         d.text((165,y),line,font=F(150,True),fill='white',stroke_width=2,stroke_fill=(8,31,58)); y+=170
-    d.text((170,900),'& DEVELOPER PLATFORM GUIDE',font=F(63,True),fill=(81,220,234))
+    d.text((170,900),subtitle,font=F(44,True),fill=(81,220,234))
     d.line((170,1010,1600,1010),fill=(224,154,50),width=10)
-    for i,line in enumerate(['Agent runtimes · Multi-agent systems · Skills & tools','Gateways · Security · Evaluation · Continuous learning','Governance · Deployment · Production operations']):
+    for i,line in enumerate(art.get('themes',[])):
         d.text((175,1070+i*68),line,font=F(41),fill=(224,238,249))
     d.rounded_rectangle((155,2740,1325,2920),radius=26,fill=(5,25,52,225),outline=(81,220,234,255),width=4)
     d.text((205,2780),cfg['author'].upper(),font=F(70,True),fill='white')
     d.rounded_rectangle((155,2965,1150,3090),radius=20,fill=(5,25,52,225),outline=(224,154,50,255),width=4)
     d.text((205,2998),f"BOOK v{cfg['version']}",font=F(51,True),fill='white')
-    d.text((165,3160),'Governed, observable, and production-grade AI agent systems',font=F(34),fill=(205,225,241))
+    d.text((165,3160),art.get('strapline',''),font=F(34),fill=(205,225,241))
     rendered=im.convert('RGB')
     # PNG bytes are only reproducible for a fixed zlib build: the same pixels
     # compress differently under a different zlib/libdeflate version, even with

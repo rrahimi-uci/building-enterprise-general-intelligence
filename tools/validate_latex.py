@@ -24,7 +24,7 @@ def book_release(root: Path) -> str:
     return json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]["version"]
 
 
-BASENAME = "Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0"
+BASENAME = "Enterprise-General-Intelligence-v2.1.0"
 
 
 def sha256(path: Path) -> str:
@@ -132,7 +132,7 @@ def main() -> int:
         errors.append("Reference targets do not cover all citation identifiers")
     if main_text.count(r"\mainmatter") + content.count(r"\mainmatter") != 1 or content.count(r"\appendix") != 1:
         errors.append("Front/main/appendix matter transitions are invalid")
-    for required_text in ("Reza Rahimi, PhD", "Enterprise Agentic AI Architecture", "Book v2.1.0"):
+    for required_text in ("Reza Rahimi, PhD", "Enterprise General Intelligence", "Book v2.1.0"):
         if required_text not in main_text:
             errors.append("Missing publication identity text: " + required_text)
     # Derive the expected count from the manuscript rather than hard-coding it.

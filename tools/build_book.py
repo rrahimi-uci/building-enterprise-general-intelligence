@@ -254,7 +254,7 @@ def normalize_zip(path:Path):
 
 def build(root:Path,out:Path,template_only=False):
     cfg=load(root); C=cfg['design']['colors']; doc=Document(); configure(doc,cfg)
-    doc.core_properties.title=cfg['book']['title']+f" — Book v{cfg['book']['version']}"; doc.core_properties.subject='Enterprise Agentic AI architecture and developer platform'; doc.core_properties.author=cfg['book']['author']; doc.core_properties.last_modified_by=cfg['book']['author']; doc.core_properties.keywords='agentic AI, enterprise architecture, developer platform, AI agents, LLM gateway, security, evaluation'; doc.core_properties.comments='Generated deterministically from book/manuscript.md; do not hand-edit the release DOCX.'; doc.core_properties.created=FIXED_DT; doc.core_properties.modified=FIXED_DT
+    doc.core_properties.title=cfg['book']['title']+f" — Book v{cfg['book']['version']}"; doc.core_properties.subject='Enterprise general intelligence: governed agentic systems architecture'; doc.core_properties.author=cfg['book']['author']; doc.core_properties.last_modified_by=cfg['book']['author']; doc.core_properties.keywords='agentic AI, enterprise architecture, developer platform, AI agents, LLM gateway, security, evaluation'; doc.core_properties.comments='Generated deterministically from book/manuscript.md; do not hand-edit the release DOCX.'; doc.core_properties.created=FIXED_DT; doc.core_properties.modified=FIXED_DT
     if template_only:
         add_paragraph(doc,'Book Style Template','Title',cfg) if False else None
         p=doc.add_paragraph(style='Title'); p.add_run('Book Style Template')
@@ -307,4 +307,4 @@ def build(root:Path,out:Path,template_only=False):
     print(json.dumps(report,indent=2)); return report
 
 if __name__=='__main__':
-    ap=argparse.ArgumentParser(); ap.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[1]); ap.add_argument('--output',type=Path); ap.add_argument('--template-only',action='store_true'); a=ap.parse_args(); root=a.root.resolve(); default=root/('templates/book-style-template.docx' if a.template_only else 'dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.docx'); build(root,(a.output or default).resolve(),a.template_only)
+    ap=argparse.ArgumentParser(); ap.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[1]); ap.add_argument('--output',type=Path); ap.add_argument('--template-only',action='store_true'); a=ap.parse_args(); root=a.root.resolve(); default=root/('templates/book-style-template.docx' if a.template_only else 'dist/Enterprise-General-Intelligence-v2.1.0.docx'); build(root,(a.output or default).resolve(),a.template_only)

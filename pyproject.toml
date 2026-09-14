@@ -1,7 +1,7 @@
 [project]
 name = "enterprise-agentic-ai-book-system"
 version = "1.0.0"
-description = "Reproducible publication system for the Enterprise Agentic AI Architecture & Developer Platform Guide"
+description = "Reproducible publication system for the Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise"
 requires-python = ">=3.13,<3.14"
 dependencies = [
   "python-docx==1.2.0",

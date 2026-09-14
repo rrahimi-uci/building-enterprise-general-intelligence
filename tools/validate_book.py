@@ -86,8 +86,8 @@ def docx_callout_contrast(docx_path):
 def main() -> int:
     ap=argparse.ArgumentParser(); ap.add_argument('--root',default=str(Path(__file__).resolve().parents[1])); args=ap.parse_args()
     root=Path(args.root).resolve(); errors=[]; warnings=[]; checks={}
-    md=root/'book/manuscript.md'; distmd=root/'dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.md'; docx_path=root/'dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.docx'
-    required=[root/'README.md',root/'AGENTS.md',root/'CHANGELOG.md',root/'styles/DESIGN-SYSTEM.md',root/'styles/CROSS-FORMAT-CONTRACT.md',root/'config/book.json',root/'config/references.json',root/'config/reference-verification.json',root/'config/diagrams.json',md,distmd,docx_path,root/'assets/cover/cover-v2.1.0.png',root/'templates/book-style-template.docx']
+    md=root/'book/manuscript.md'; distmd=root/'dist/Enterprise-General-Intelligence-v2.1.0.md'; docx_path=root/'dist/Enterprise-General-Intelligence-v2.1.0.docx'
+    required=[root/'README.md',root/'AGENTS.md',root/'CHANGELOG.md',root/'styles/DESIGN-SYSTEM.md',root/'styles/CROSS-FORMAT-CONTRACT.md',root/'config/book.json',root/'config/references.json',root/'config/reference-verification.json',root/'config/diagrams.json',md,distmd,docx_path,root/f"assets/cover/cover-v{book_release(root)}.png",root/'templates/book-style-template.docx']
     missing=[p.relative_to(root).as_posix() for p in required if not p.exists()]
     if missing: errors.append(f"Missing required files: {missing}")
     if not md.exists(): raise SystemExit(1)
@@ -154,7 +154,7 @@ def main() -> int:
             with Image.open(p) as im:
                 if im.width<1200 or im.height<600: warnings.append(f"Diagram may be low resolution: {d['file']} ({im.width}x{im.height})")
         except Exception as exc: errors.append(f"Cannot decode diagram {d['file']}: {exc}")
-    cover=root/'assets/cover/cover-v2.1.0.png'
+    cover=root/f"assets/cover/cover-v{book_release(root)}.png"
     if cover.exists():
         with Image.open(cover) as im:
             checks['cover_dimensions']=[im.width,im.height]
@@ -189,10 +189,12 @@ def main() -> int:
             for failure in callout_failures:
                 errors.append(f"DOCX callout is unreadable: ink on #{failure['fill']} = {failure['ratio']}:1 — {failure['text']}")
             cp=doc.core_properties
-            if cp.title!='Enterprise Agentic AI Architecture & Developer Platform Guide — Book v2.1.0': errors.append(f"Unexpected DOCX title metadata: {cp.title}")
+            book_cfg=json.loads((root/'config/book.json').read_text(encoding='utf-8'))['book']
+            expected_title=f"{book_cfg['title']} — Book v{book_cfg['version']}"
+            if cp.title!=expected_title: errors.append(f"DOCX title metadata is {cp.title!r}, expected {expected_title!r}")
             if cp.author!='Reza Rahimi, PhD': errors.append(f"Unexpected DOCX author metadata: {cp.author}")
         except Exception as exc: errors.append(f"DOCX validation error: {exc}")
-    pdf=root/'qa/render/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.pdf'
+    pdf=root/'qa/render/Enterprise-General-Intelligence-v2.1.0.pdf'
     if pdf.exists():
         try:
             import pymupdf

@@ -1,6 +1,6 @@
 [[COVER]]
 
-# Enterprise Agentic AI Architecture & Developer Platform Guide
+# Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise
 
 Book v2.1.0 · Publication Release · September 2026
 

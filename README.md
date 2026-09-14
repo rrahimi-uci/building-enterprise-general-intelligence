@@ -1,4 +1,4 @@
-# Enterprise Agentic AI Architecture & Developer Platform Guide
+# Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise
 
 **Book v2.1.0 development system**  
 Author: **Reza Rahimi, PhD**  
@@ -184,9 +184,9 @@ Online link checking is intentionally optional because reproducible offline buil
 
 Committed — tracked release evidence, listed in `CHECKSUMS.sha256`:
 
-- `dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.md`
-- `dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.docx`
-- `dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.1.0.tex`
+- `dist/Enterprise-General-Intelligence-v2.1.0.md`
+- `dist/Enterprise-General-Intelligence-v2.1.0.docx`
+- `dist/Enterprise-General-Intelligence-v2.1.0.tex`
 - `latex/content/book-content.tex`
 - `assets/cover/cover-v2.1.0.png`
 - `assets/parts/part-*.png` — Part divider panels, cropped from `source/part-visuals/`

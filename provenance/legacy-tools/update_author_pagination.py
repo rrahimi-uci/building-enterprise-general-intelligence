@@ -141,7 +141,7 @@ for el in list(body):
 # Metadata.
 doc.core_properties.author='Reza Rahimi, PhD'
 doc.core_properties.last_modified_by='Reza Rahimi, PhD'
-doc.core_properties.title='Enterprise Agentic AI Architecture & Developer Platform Guide — Final Edition v3.1'
+doc.core_properties.title='Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise — Final Edition v3.1'
 doc.core_properties.comments='Final Edition v3.1: Reza Rahimi, PhD author credit; agent-focused cover; standalone Part pages; every chapter and appendix begins on a new page.'
 doc.save(DOCX)
 
