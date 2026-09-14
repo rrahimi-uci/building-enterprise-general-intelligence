@@ -604,8 +604,8 @@ Tests/rules engine & Deterministic invariants and objective acceptance & Generat
 \end{longtable}
 \BookTableEnd
 
-\begin{bookcallout}[Architecture note]
-\textbf{BOUNDARY RULE: IF AN OPERATION MUST BE CORRECT EVERY TIME, SURVIVE A CRASH, ENFO}  Boundary rule: If an operation must be correct every time, survive a crash, enforce a permission, coordinate concurrent writers, or create an auditable effect, it belongs to deterministic infrastructure. The LLM may decide what to attempt; deterministic systems decide whether and how it is committed.
+\begin{bookcallout}[Boundary Rule]
+If an operation must be correct every time, survive a crash, enforce a permission, coordinate concurrent writers, or create an auditable effect, it belongs to deterministic infrastructure. The LLM may decide what to attempt; deterministic systems decide whether and how it is committed.
 \end{bookcallout}
 
 \begin{bookantipattern}[Common pitfall]
@@ -11381,8 +11381,8 @@ MLflow 3.15.x & OpenTelemetry-compatible GenAI tracing, evaluation, scorers, fee
 
 \section{Final assessment of the current framework landscape}
 
-\begin{bookcallout}[Architecture note]
-\textbf{FRAMEWORKS SOLVE DIFFERENT LAYERS. AN AGENT SDK IS NOT AUTOMATICALLY A DURABLE W}  Frameworks solve different layers. An agent SDK is not automatically a durable workflow engine; a protocol is not an authorization system; a trace product is not an audit ledger; and a managed agent runtime does not remove the enterprise’s responsibility for data, policy, and outcome risk.
+\begin{bookcallout}[Frameworks Solve Different Layers]
+An agent SDK is not automatically a durable workflow engine; a protocol is not an authorization system; a trace product is not an audit ledger; and a managed agent runtime does not remove the enterprise’s responsibility for data, policy, and outcome risk.
 \end{bookcallout}
 
 \needspace{5\baselineskip}

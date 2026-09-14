@@ -90,7 +90,7 @@ The appendices are working reference material: selection aids, runbooks, contrac
 
 |  |
 | --- |
-| **FRAMEWORKS SOLVE DIFFERENT LAYERS. AN AGENT SDK IS NOT AUTOMATICALLY A DURABLE W**  Frameworks solve different layers. An agent SDK is not automatically a durable workflow engine; a protocol is not an authorization system; a trace product is not an audit ledger; and a managed agent runtime does not remove the enterprise’s responsibility for data, policy, and outcome risk. |
+| **FRAMEWORKS SOLVE DIFFERENT LAYERS**  An agent SDK is not automatically a durable workflow engine; a protocol is not an authorization system; a trace product is not an audit ledger; and a managed agent runtime does not remove the enterprise’s responsibility for data, policy, and outcome risk. |
 
 | **Architecture/framework** | **Strongest contribution** | **Important gaps or risks** | **Recommended role** |
 | --- | --- | --- | --- |
