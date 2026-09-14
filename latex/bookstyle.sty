@@ -150,16 +150,24 @@
   \vspace{4pt}{\color{BookNavy}\fontsize{24}{28}\selectfont\bfseries #2\par}%
   \vspace{7pt}\markboth{Appendix #1 — #2}{Appendix #1 — #2}}
 
-\newcommand{\BookPartPage}[3]{%
+% #4 is the Part's artwork panel, or empty. The panel deliberately carries no
+% Part identity of its own: the number and title are set here from the canonical
+% Markdown, so they cannot disagree with the book's structure.
+\newcommand{\BookPartPage}[4]{%
   \clearpage\pagecolor{BookNavy}\color{white}\thispagestyle{empty}%
   \phantomsection\addcontentsline{toc}{part}{Part #1 — #2}%
-  \vspace*{0.20\textheight}%
+  \vspace*{\ifstrempty{#4}{0.20\textheight}{0.055\textheight}}%
   \begin{center}
     {\color{BookCyan}\fontsize{15}{18}\selectfont\bfseries PART #1\par}
     \vspace{16pt}
     {\color{white}\fontsize{28}{33}\selectfont\bfseries\MakeUppercase{#2}\par}
     \vspace{26pt}
     \begin{minipage}{0.78\textwidth}\centering\color[HTML]{D8E8F5}\fontsize{11}{16}\selectfont #3\end{minipage}
+    \ifstrempty{#4}{}{%
+      \vspace{26pt}\par
+      % 4.8in holds the panel at 257 dpi, above the 255 dpi asset contract.
+      \includegraphics[width=4.8in,keepaspectratio]{#4}%
+    }%
   \end{center}
   \vfill\clearpage\nopagecolor\color{BookInk}\pagestyle{fancy}%
 }

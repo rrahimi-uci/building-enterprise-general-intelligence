@@ -172,13 +172,18 @@ def add_paragraph(doc,text,cfg,style='Normal',align=None):
     if align is not None: p.alignment=align
     return p
 
-def add_part(doc,ident,title,intro,cfg):
+def add_part(doc,ident,title,intro,cfg,visual=None):
     C=cfg['design']['colors']; add_page_break(doc)
     t=doc.add_table(rows=1,cols=1); t.autofit=False; row=t.rows[0]; row.height=Inches(8.45); row.height_rule=WD_ROW_HEIGHT_RULE.EXACTLY; cell=t.cell(0,0); cell.vertical_alignment=WD_CELL_VERTICAL_ALIGNMENT.CENTER; shade(cell,C['navy']); cell_margins(cell,300,320,300,320)
     p=cell.paragraphs[0]; p.alignment=WD_ALIGN_PARAGRAPH.CENTER; r=p.add_run('PART '+ident); r.font.name=cfg['design']['fonts']['sans']; r.font.size=Pt(15); r.font.bold=True; r.font.color.rgb=color(C['cyan'])
     p=cell.add_paragraph(style='Book Part'); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.add_run(title.upper())
     if intro:
         p=cell.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_before=Pt(18); r=p.add_run(intro); r.font.name=cfg['design']['fonts']['sans']; r.font.size=Pt(11); r.font.color.rgb=color('D8E8F5')
+    if visual is not None and visual.exists():
+        # Same panel as the XeLaTeX divider, at the same 4.8in width, so the two
+        # editions present the Part identically.
+        p=cell.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_before=Pt(20)
+        p.add_run().add_picture(str(visual),width=Inches(4.8))
     add_page_break(doc)
 
 def add_code_run(p,text,lang,cfg):
@@ -258,6 +263,8 @@ def build(root:Path,out:Path,template_only=False):
         add_table(doc,[['Column A','Column B'],['Value','Value']],cfg); add_code(doc,'python','def example():\n    return True',cfg)
     else:
         cover=root/'assets/cover/cover-v2.0.0.png'
+        _pv=root/'config/part-visuals.json'
+        part_visuals={v['part']: root/v['file'] for v in json.loads(_pv.read_text(encoding='utf-8'))['visuals']} if _pv.exists() else {}
         if not cover.exists(): subprocess.run([sys.executable,str(root/'tools/generate_cover.py'),'--root',str(root)],check=True)
         md=(root/cfg['source']['canonical_markdown']).read_text(encoding='utf-8')
         after_part=False; title_seen=False; blocks=0
@@ -265,7 +272,7 @@ def build(root:Path,out:Path,template_only=False):
             blocks+=1; kind=b[0]
             if kind=='cover':
                 p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_after=Pt(0); p.add_run().add_picture(str(cover),width=Inches(7.05)); add_page_break(doc); continue
-            if kind=='part': add_part(doc,b[1],b[2],b[3],cfg); after_part=True; continue
+            if kind=='part': add_part(doc,b[1],b[2],b[3],cfg,part_visuals.get(b[1])); after_part=True; continue
             if kind=='heading':
                 level,text=b[1],b[2]
                 if level==1 and text==cfg['book']['title'] and not title_seen:

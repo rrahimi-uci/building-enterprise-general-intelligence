@@ -1,0 +1,257 @@
+{
+  "release": "1.0.0",
+  "title": "Enterprise Agentic AI Architecture & Developer Platform Guide \u2014 Labeled Part Visuals",
+  "author": "Reza Rahimi, PhD",
+  "created": "2026-09-13",
+  "main_visual_count": 12,
+  "overview_count": 1,
+  "format": "PNG",
+  "main_dimensions": [
+    2400,
+    1350
+  ],
+  "dpi": 300,
+  "component_labels_per_visual": 4,
+  "total_component_labels": 48,
+  "parts": [
+    {
+      "part": "I",
+      "title": "FOUNDATIONS",
+      "component_names": [
+        "Reasoning Core",
+        "Deterministic Shell",
+        "Policy & Approval Gates",
+        "State & Effect Records"
+      ]
+    },
+    {
+      "part": "II",
+      "title": "ENTERPRISE REFERENCE ARCHITECTURE",
+      "component_names": [
+        "Experience & Application Planes",
+        "Agent Runtime & Knowledge",
+        "Gateway, Security & Governance",
+        "Regional Cells & Shared Control"
+      ]
+    },
+    {
+      "part": "III",
+      "title": "AGENTIC DEVELOPER PLATFORM & SDK",
+      "component_names": [
+        "SDK & Local Development",
+        "Evaluation & Policy Gates",
+        "Immutable Release Pipeline",
+        "Skill & Runtime Platform"
+      ]
+    },
+    {
+      "part": "IV",
+      "title": "PATTERNS",
+      "component_names": [
+        "Router & Triage",
+        "Plan\u2013Execute Path",
+        "Evaluator\u2013Optimizer",
+        "Human & Durable Control"
+      ]
+    },
+    {
+      "part": "V",
+      "title": "ANTI-PATTERNS",
+      "component_names": [
+        "Unbounded Retry Loop",
+        "Hidden State & Effects",
+        "Detection Signals",
+        "Governed Replacement"
+      ]
+    },
+    {
+      "part": "VI",
+      "title": "MULTI-AGENT & PLATFORM INTEGRATION",
+      "component_names": [
+        "Supervisor",
+        "Specialist Agents",
+        "Protocol Gateways",
+        "Durable Task Exchange"
+      ]
+    },
+    {
+      "part": "VII",
+      "title": "LLM GATEWAY",
+      "component_names": [
+        "Request Intake",
+        "Policy & Privacy Filters",
+        "Model Router",
+        "Provider Endpoints & Telemetry"
+      ]
+    },
+    {
+      "part": "VIII",
+      "title": "SECURITY & GUARDRAILS",
+      "component_names": [
+        "Identity & Authorization",
+        "Prompt & Data Inspection",
+        "Sandboxed Tools & Egress",
+        "Approval, Audit & Containment"
+      ]
+    },
+    {
+      "part": "IX",
+      "title": "OBSERVABILITY & EVALUATION",
+      "component_names": [
+        "End-to-End Trace",
+        "Tool & Effect Receipts",
+        "Evaluation Layer",
+        "SLO & Cost Diagnostics"
+      ]
+    },
+    {
+      "part": "X",
+      "title": "CONTINUOUS LEARNING",
+      "component_names": [
+        "Runtime Adaptation",
+        "Evidence & Diagnosis",
+        "Validation & Approval Gate",
+        "Offline Improvement & Rollback"
+      ]
+    },
+    {
+      "part": "XI",
+      "title": "GOVERNANCE",
+      "component_names": [
+        "Risk Classification",
+        "Decision Rights",
+        "Evidence & Assurance",
+        "Exceptions & Accountability"
+      ]
+    },
+    {
+      "part": "XII",
+      "title": "DEPLOYMENT & PRODUCTION OPERATIONS",
+      "component_names": [
+        "Immutable Release",
+        "Stage & Canary",
+        "Regional Production Cells",
+        "SLOs, Cost & Safe Rollback"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "file": "00-overview-all-parts.png",
+      "width": 2304,
+      "height": 1950,
+      "mode": "RGB",
+      "format": "PNG",
+      "bytes": 2576673,
+      "sha256": "abe3f3b82b12f837057cbd03ea80fa7c5d3684ec917ba15a757d43aac288739a"
+    },
+    {
+      "file": "part-01-foundations.png",
+      "width": 2400,
+      "height": 1350,
+      "mode": "RGB",
+      "format": "PNG",
+      "bytes": 1633803,
+      "sha256": "0ca7603bb4fb868cd5b2cad4f6ad4a7a389677813fceae3ed79c588808f981e4"
+    },
+    {
+      "file": "part-02-enterprise-reference-architecture.png",
+      "width": 2400,
+      "height": 1350,
+      "mode": "RGB",
+      "format": "PNG",
+      "bytes": 1504297,
+      "sha256": "57fdbbb00f15efba045f5eab514a8eed35d78a52e22c95ab820c0880aa601a4a"
+    },
+    {
+      "file": "part-03-agentic-developer-platform-sdk.png",
+      "width": 2400,
+      "height": 1350,
+      "mode": "RGB",
+      "format": "PNG",
+      "bytes": 1614132,
+      "sha256": "2035fe7a85eb74d04a58bcc4bc68762d3c6dd10de7532f99f194551731d27683"
+    },
+    {
+      "file": "part-04-patterns.png",
+      "width": 2400,
+      "height": 1350,
+      "mode": "RGB",
+      "format": "PNG",
+      "bytes": 1577941,
+      "sha256": "1f844372cb106d81e47dfb6bf6a42a77b7571c61b2698ea8fc68827cbf2268af"
+    },
+    {
+      "file": "part-05-anti-patterns.png",
+      "width": 2400,
+      "height": 1350,
+      "mode": "RGB",
+      "format": "PNG",
+      "bytes": 1597863,
+      "sha256": "3b6810f273ecc7148ed410d6452a6ad11410a4e85d29e024ded29d136dea56ad"
+    },
+    {
+      "file": "part-06-multi-agent-platform-integration.png",
+      "width": 2400,
+      "height": 1350,
+      "mode": "RGB",
+      "format": "PNG",
+      "bytes": 1735330,
+      "sha256": "8a627bf04ded1720613a1d1e2c232144dcb169d9af8951fde8708d103e88e022"
+    },
+    {
+      "file": "part-07-llm-gateway.png",
+      "width": 2400,
+      "height": 1350,
+      "mode": "RGB",
+      "format": "PNG",
+      "bytes": 1671187,
+      "sha256": "a49728b537d0ecd57e412ad95ae7914a8059bee9de5f45e01ec6e6e85582cdad"
+    },
+    {
+      "file": "part-08-security-guardrails.png",
+      "width": 2400,
+      "height": 1350,
+      "mode": "RGB",
+      "format": "PNG",
+      "bytes": 1727996,
+      "sha256": "2fdadb087ad49b2eedc39b9579874fdc5a757c545841a5045a3d165297435f50"
+    },
+    {
+      "file": "part-09-observability-evaluation.png",
+      "width": 2400,
+      "height": 1350,
+      "mode": "RGB",
+      "format": "PNG",
+      "bytes": 266315,
+      "sha256": "e256b4125020dcaef0507085ec25c042237e0c37dcc3de87b56f3e63b835bba4"
+    },
+    {
+      "file": "part-10-continuous-learning.png",
+      "width": 2400,
+      "height": 1350,
+      "mode": "RGB",
+      "format": "PNG",
+      "bytes": 226865,
+      "sha256": "fdce7ed373a3e9a4ea458ae6dae408ba51114b463f9203f7993e2376b666adcd"
+    },
+    {
+      "file": "part-11-governance.png",
+      "width": 2400,
+      "height": 1350,
+      "mode": "RGB",
+      "format": "PNG",
+      "bytes": 271006,
+      "sha256": "a3d3e3fa237676a3eb6d4c9406c586b1463555b3ac5c850b1297cbd8debfb842"
+    },
+    {
+      "file": "part-12-deployment-production-operations.png",
+      "width": 2400,
+      "height": 1350,
+      "mode": "RGB",
+      "format": "PNG",
+      "bytes": 275352,
+      "sha256": "5d63de166615fe4100bd3723155aadf9e6dc4cfe3641a4088bcea24dd0a91340"
+    }
+  ]
+}

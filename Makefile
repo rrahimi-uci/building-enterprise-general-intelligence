@@ -11,7 +11,7 @@ TEX_ENTRY := latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v
 
 PYTHON_EXAMPLES ?= $(if $(wildcard .venv-examples/bin/python),.venv-examples/bin/python,python3)
 
-.PHONY: help setup setup-examples all assemble cover build latex draft pdf references \
+.PHONY: help setup setup-examples all assemble cover part-visuals build latex draft pdf references \
         examples examples-run latex-validate validate deterministic qa-pdf latex-pdf \
         package release clean distclean
 
@@ -25,6 +25,7 @@ help:
 	@echo "Generation"
 	@echo "  assemble        source/parts/*.md -> book/manuscript.md + dist/*.md"
 	@echo "  cover           regenerate the cover image"
+	@echo "  part-visuals    crop the Part artwork panels from their sources"
 	@echo "  build           assemble + cover + DOCX"
 	@echo "  latex           generate latex/content/book-content.tex"
 	@echo ""
@@ -70,7 +71,12 @@ assemble:
 cover:
 	$(PYTHON) tools/generate_cover.py --root "$(ROOT)"
 
-build: assemble cover
+## part-visuals: crop source/part-visuals/*.png into the artwork panels the
+## dividers render. Idempotent; digests are recorded in config/part-visuals.json.
+part-visuals:
+	$(PYTHON) tools/prepare_part_visuals.py --root "$(ROOT)"
+
+build: assemble cover part-visuals
 	$(PYTHON) tools/build_book.py --root "$(ROOT)"
 	$(PYTHON) tools/build_book.py --root "$(ROOT)" --template-only
 

@@ -2,6 +2,16 @@
 
 All notable changes follow semantic versioning and are recorded here.
 
+## [Unreleased]
+
+### Part divider artwork
+
+- The eight Part dividers now carry an illustrated panel alongside the Part number, title, and orientation paragraph, in both the DOCX and XeLaTeX editions at the same 4.8in width.
+- Source artwork is kept as immutable provenance in `source/part-visuals/`; `tools/prepare_part_visuals.py` crops it into `assets/parts/` deterministically, and `config/part-visuals.json` records the mapping and each panel's digest.
+- **Only the artwork panel is used, not the supplied full-page visual.** The source images were authored for the v1.0.0 twelve-Part structure and bake in their own PART badge, Part title, focus line and a "BOOK v1.0.0" footer. Used whole, five of the eight would have shown the wrong Roman numeral and all eight a stale release. Cropping to the artwork lets the renderers draw Part identity from the canonical Markdown, where it is correct by construction.
+- Where v2.0.0 merged two Parts, the visual of the dominant subject is used. Four Parts are therefore represented by component labels that cover most, not all, of their chapters — see the note in `config/part-visuals.json`.
+- The DOCX image-count check is now derived (cover + registered diagrams + registered panels) instead of asserting a fixed 19, and both validators verify panel digests and the 255 dpi effective-resolution contract.
+
 ## [2.0.0] — 2026-09-13
 
 ### Every oversized listing promoted to a verified example

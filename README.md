@@ -105,16 +105,19 @@ make pdf        # three-pass XeLaTeX -> dist/*-LaTeX.pdf
 │
 ├── source/                       # ← THE ONLY PLACE YOU EDIT PROSE
 │   ├── parts/                    # canonical editable Markdown sources
+│   ├── part-visuals/             # immutable source artwork for Part dividers
 │   └── original/                 # immutable v3.0/v3.1 provenance
 ├── config/                       # ← AND THE ONLY PLACE YOU EDIT METADATA
 │   ├── book.json                 # metadata, layout, typography, colors
 │   ├── diagrams.json             # diagram registry
+│   ├── part-visuals.json         # Part divider panel registry
 │   ├── examples.json             # code-example registry
 │   ├── references.json           # source-of-truth citation registry
 │   └── style-tokens.json         # portable design tokens
 ├── assets/
 │   ├── cover/                    # source artwork and generated cover
-│   └── diagrams/                 # publication diagrams
+│   ├── diagrams/                 # publication diagrams
+│   └── parts/                    # generated Part divider panels
 │
 ├── book/manuscript.md            # generated canonical assembly; do not hand-edit
 ├── dist/                         # generated Markdown, DOCX, and .tex entry point
@@ -186,6 +189,7 @@ Committed — tracked release evidence, listed in `CHECKSUMS.sha256`:
 - `dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.tex`
 - `latex/content/book-content.tex`
 - `assets/cover/cover-v2.0.0.png`
+- `assets/parts/part-*.png` — Part divider panels, cropped from `source/part-visuals/`
 - `templates/book-style-template.docx`
 
 Not committed — regenerable, and gitignored so rebuilds do not churn binaries

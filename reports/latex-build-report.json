@@ -6,7 +6,7 @@
   "main_tex": "latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.tex",
   "main_tex_sha256": "4e62b8ae7374647da3ab403054acc360c078f693c35c4adbb8a04802b0722cce",
   "content_tex": "latex/content/book-content.tex",
-  "content_tex_sha256": "f58b7d084b3597a15d891b68016888650ef63a2488d6c6cc9c64ea0a3fceb29a",
+  "content_tex_sha256": "f3b138b1a1bb02f507be94a983ca9512a086adb4df383904df49ce13d43cd394",
   "style": "latex/bookstyle.sty",
   "fonts": [
     {
@@ -61,6 +61,6 @@
     "callouts": 89,
     "citations": 94
   },
-  "source_bytes": 620598,
+  "source_bytes": 620810,
   "compile_command": "latex/compile.sh"
 }

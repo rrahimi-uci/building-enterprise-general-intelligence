@@ -20,7 +20,7 @@ When representations disagree, fix the canonical source/configuration and regene
 
 | Concept | Canonical Markdown | DOCX | XeLaTeX | Notion |
 |---|---|---|---|---|
-| Part | H1 `Part …` | standalone Book Part page | standalone `BookPartPage` | H1 or child page with orientation |
+| Part | H1 `Part …` | standalone Book Part page + 4.8in panel | standalone `BookPartPage` + 4.8in panel | H1 or child page with orientation |
 | Chapter/appendix | H1 | Heading 1, new page | forced-page chapter/appendix macro | H1/child page, same title/order |
 | Section | H2–H4 | Heading 2–4 | styled section hierarchy | H2–H4 |
 | Paragraph/list | CommonMark/GFM | Normal/List styles | native paragraph/list environments | native paragraph/list blocks |
