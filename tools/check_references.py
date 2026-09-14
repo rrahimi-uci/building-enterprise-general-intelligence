@@ -2,8 +2,19 @@
 """Validate citation registry, in-text markers, scopes, and verification records."""
 from __future__ import annotations
 import argparse, json, re, sys
+import json
 from pathlib import Path
 from urllib.request import Request, urlopen
+
+
+def book_release(root: Path) -> str:
+    """The single source of the release identifier.
+
+    Hard-coding it meant a generated report could claim 1.0.0 while every other
+    artifact said 2.0.0 -- the evidence disagreeing with the thing it certifies.
+    """
+    return json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]["version"]
+
 
 REQUIRED = {"id","type","author_or_organization","year","title","publication_or_version","url","supports","verification"}
 
@@ -41,7 +52,8 @@ def main() -> int:
     if unknown: errors.append(f"Unknown citation markers: {unknown}")
     if uncited: errors.append(f"Uncited registry entries: {uncited}")
     if manuscript.count("# Appendix K — References")!=1: errors.append("Appendix K References heading must occur exactly once")
-    if manuscript.count("# Appendix M — Citation and Claim Traceability Matrix")!=1: errors.append("Appendix M traceability heading must occur exactly once")
+    # v2.0.0 folded the traceability matrix into Appendix K, next to the entries it scopes.
+    if manuscript.count("## Claim traceability matrix")!=1: errors.append("Claim traceability matrix must occur exactly once inside Appendix K")
     online=[]
     if args.online:
         for r in refs:
@@ -54,7 +66,7 @@ def main() -> int:
                 online.append({"id":r["id"],"ok":False,"error":str(exc)})
                 warnings.append(f"{r['id']}: online check unavailable: {exc}")
     report={
-        "release":"1.0.0","checked":"2026-09-13","references":len(refs),
+        "release":book_release(root),"checked":"2026-09-13","references":len(refs),
         "citation_occurrences":len(markers),"cited_ids":marker_ids,
         "unknown_ids":unknown,"uncited_ids":uncited,"errors":errors,"warnings":warnings,
         "online_check":online,"verification_records":list(verification.values()),
@@ -63,7 +75,7 @@ def main() -> int:
     }
     (root/"reports").mkdir(exist_ok=True)
     (root/"reports/citation-verification.json").write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
-    lines=["# Citation Audit — Book v1.0.0","",f"**Result:** {'PASS' if not errors else 'FAIL'}",f"**References:** {len(refs)}",f"**Citation occurrences:** {len(markers)}",f"**Verified:** 2026-09-13","","All sources were checked against their recorded claim scope. The audit validates attribution, not the book's independently authored architecture recommendations.","","## Source-by-source status", "", "| ID | Status | Method | Caveat |", "|---|---|---|---|"]
+    lines=["# Citation Audit — Book v2.0.0","",f"**Result:** {'PASS' if not errors else 'FAIL'}",f"**References:** {len(refs)}",f"**Citation occurrences:** {len(markers)}",f"**Verified:** 2026-09-13","","All sources were checked against their recorded claim scope. The audit validates attribution, not the book's independently authored architecture recommendations.","","## Source-by-source status", "", "| ID | Status | Method | Caveat |", "|---|---|---|---|"]
     for r in refs:
         rec=verification.get(r["id"],{})
         caveat=str(rec.get("caveat","")).replace("|","\\|")

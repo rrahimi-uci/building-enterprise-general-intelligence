@@ -2,7 +2,7 @@
 
 This Part turns the reference architecture into a paved road for delivery teams. It separates reusable platform capabilities from domain logic, defines portable SDK contracts, and shows how Skills and domain packs move through local development, evaluation, promotion, deployment, and support.
 
-# 06 — Agentic Developer Platform and SDK
+# 05 — Agentic Developer Platform, SDK, and Delivery Lifecycle
 
 > **Evidence note.** The portability layer is informed by current public agent abstractions from OpenAI, Microsoft, and Google; capability parity is not assumed and must be proven by adapter conformance tests. [R29][R31][R32]
 
@@ -10,7 +10,7 @@ This Part turns the reference architecture into a paved road for delivery teams.
 
 The developer platform is a reusable paved road that lets teams build differentiated agents without repeatedly rebuilding identity, policy, tool safety, tracing, evaluation, durable execution, and delivery infrastructure. It is not a mandatory monolith: applications use platform-owned contracts and replaceable adapters.
 
-[[DIAGRAM:developer-platform|Figure 6-1 — Agentic developer platform and SDK capability stack]]
+[[DIAGRAM:developer-platform|Figure 5-1 — Agentic developer platform and SDK capability stack]]
 
 | **Capability** | **Reusable platform responsibility** | **Application-specific responsibility** |
 | --- | --- | --- |
@@ -33,13 +33,13 @@ The developer platform is a reusable paved road that lets teams build differenti
 
 ## Portable contracts and multi-framework support
 
-[[DIAGRAM:portability|Figure 6-2 — Platform contracts with replaceable framework and provider adapters]]
+[[DIAGRAM:portability|Figure 5-2 — Platform contracts with replaceable framework and provider adapters]]
 
 Use AgentSpec, RunContext, TaskEnvelope, ToolSpec/ToolCall, ContextManifest, MemoryRecord, EvaluationResult, and ReleaseManifest as stable contracts. Compile them into framework/provider adapters. Standardized contracts, MCP, APIs, events, agent-to-agent protocols, gateways, and shared platform services provide interoperability without leaking vendor-native message objects into applications. Compatibility suites verify cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.
 
 ## Developer lifecycle
 
-[[DIAGRAM:developer-lifecycle|Figure 6-3 — Local-to-production agent lifecycle]]
+[[DIAGRAM:developer-lifecycle|Figure 5-3 — Local-to-production agent lifecycle]]
 
 Create from an approved template; attach tools, Skills, context, and memory; configure model policy, permissions, budgets, and review; test deterministic logic, contracts, simulations, adversarial cases, and failures; evaluate quality, safety, latency, and cost; package immutable artifacts with locks, SBOM, signature, provenance, and ReleaseManifest; promote through policy gates; observe correlated production traces; improve through controlled ChangeBundles.
 
@@ -64,18 +64,11 @@ platform.release(agent, require=["quality", "security", "cost", "rollback"])
 
 The fluent API is convenience. The compiled contracts, policy decisions, tool/effect evidence, traces, and release manifest are the stable interface.
 
-
-## Transition to Chapter 7
-
-With platform responsibilities separated from application logic, Chapter 7 specifies the developer workflow that makes the paved road usable.
-
-# 07 — Developer Experience, Testing, and Delivery Lifecycle
-
 ## Golden path
 
 Developer experience should compress setup and diagnosis time while making authority, versions, risk, evidence, and cost visible. A convenient SDK that hides those concerns transfers complexity to production incidents.
 
-[[DIAGRAM:dx-golden-path|Figure 7-1 — Developer golden path from scaffold to operated release]]
+[[DIAGRAM:dx-golden-path|Figure 5-4 — Developer golden path from scaffold to operated release]]
 
 | **Stage** | **Developer action** | **Platform assistance** | **Evidence** |
 | --- | --- | --- | --- |
@@ -90,7 +83,7 @@ Developer experience should compress setup and diagnosis time while making autho
 
 ## Testing and simulation pyramid
 
-[[DIAGRAM:test-pyramid|Figure 7-2 — Testing and simulation pyramid]]
+[[DIAGRAM:test-pyramid|Figure 5-5 — Testing and simulation pyramid]]
 
 Deterministic units verify schemas, policy helpers, acceptance, routes, reducers, calculations, and state transitions. Contract tests verify identity, idempotency, timeout/unknown-effect semantics, protocol capability, errors, and telemetry. Component evaluations measure retrieval, tools, arguments, structured output, safety, and memory. Trajectory simulation tests planning, handoffs, loops, deadlines, cancellation, duplicates, dependency degradation, and human delay. End-to-end staging uses exact model, identity, gateway, data, and integration versions. Canary and shadow evaluation use explicit stop and rollback conditions.
 
@@ -115,12 +108,11 @@ Use one immutable artifact across environments; bind endpoints, identities, secr
 
 Start from accepted business outcome and walk backward through the causal run graph. Find the first divergent span: input classification, source/freshness, prompt, route, model, tool, arguments, policy, effect, approval, or acceptance. Do not “fix the prompt” until evidence locates the failing responsibility.
 
+## Transition to Chapter 6
 
-## Transition to Chapter 8
+The delivery path is established; Chapter 6 packages repeatable behavior as versioned Skills with explicit contracts and lifecycle controls.
 
-The delivery path is established; Chapter 8 packages repeatable behavior as versioned Skills with explicit contracts and lifecycle controls.
-
-# 08 — Skills as Versioned Capabilities
+# 06 — Skills as Versioned Capabilities
 
 |  |
 | --- |
@@ -169,170 +161,14 @@ The registry scales as a read-heavy control-plane service with immutable manifes
 | --- | --- | --- |
 | Terminology | Skill is a platform-owned package in this book. It is not an OpenAI Agents SDK primitive and is not identical to A2A AgentSkill metadata or Skills over MCP. Interchange requires an explicit adapter and loss analysis. | A2A-101; MCP-2026 |
 
-Evidence anchors: SLSA; MCP-2026. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: SLSA; MCP-2026. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Implementation reference
 
 
 ### Skill manifest and resolver
 
-PYTHON · implementation excerpt
-
-```python
-from __future__ import annotations
-
-import hashlib
-import json
-import re
-from typing import Literal
-
-from pydantic import BaseModel, Field, field_validator, model_validator
-
-from .contracts import SkillRequirement
-
-
-_SEMVER = re.compile(
-    r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
-    r"(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?"
-    r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$"
-)
-
-
-def _semver_key(version: str) -> tuple[object, ...]:
-    """Return a SemVer 2.0 precedence key; build metadata has no precedence."""
-
-    match = _SEMVER.fullmatch(version)
-    if match is None:
-        raise ValueError(f"invalid semantic version: {version}")
-    major, minor, patch = (int(match.group(i)) for i in range(1, 4))
-    prerelease = match.group(4)
-    if prerelease is None:
-        return major, minor, patch, 1, ()
-    identifiers: list[tuple[int, int | str]] = []
-    for identifier in prerelease.split("."):
-        if identifier.isdigit():
-            if len(identifier) > 1 and identifier.startswith("0"):
-                raise ValueError("numeric prerelease identifiers cannot have leading zeroes")
-            identifiers.append((0, int(identifier)))
-        else:
-            identifiers.append((1, identifier))
-    return major, minor, patch, 0, tuple(identifiers)
-
-
-class SkillManifest(BaseModel):
-    skill_id: str
-    version: str
-    description: str
-    owner: str
-    capabilities: frozenset[str]
-    tool_versions: tuple[str, ...]
-    instruction_ref: str
-    knowledge_refs: tuple[str, ...] = ()
-    workflow_ref: str | None = None
-    allowed_purposes: frozenset[str]
-    allowed_data_classes: frozenset[str]
-    allowed_regions: frozenset[str]
-    maximum_risk: int = Field(ge=0, le=4)
-    status: Literal["draft", "active", "deprecated", "revoked"] = "draft"
-    digest: str | None = None
-
-    @field_validator("version")
-    @classmethod
-    def version_is_semver(cls, value: str) -> str:
-        _semver_key(value)
-        return value
-
-    @model_validator(mode="after")
-    def validate_digest(self) -> "SkillManifest":
-        body = self.model_dump(mode="json", exclude={"digest"})
-        expected = "sha256:" + hashlib.sha256(
-            json.dumps(body, sort_keys=True, separators=(",", ":")).encode()
-        ).hexdigest()
-        if self.digest is not None and self.digest != expected:
-            raise ValueError("skill digest mismatch")
-        object.__setattr__(self, "digest", expected)
-        return self
-
-
-class SkillPackManifest(BaseModel):
-    pack_id: str
-    version: str
-    domain: str
-    owner: str
-    skill_versions: tuple[str, ...]
-    policy_bundle_ref: str
-    evaluation_suite_ref: str
-    status: Literal["draft", "active", "deprecated", "revoked"] = "draft"
-
-    @field_validator("version")
-    @classmethod
-    def version_is_semver(cls, value: str) -> str:
-        _semver_key(value)
-        return value
-
-
-class SkillRegistry:
-    def __init__(self) -> None:
-        self._skills: dict[str, SkillManifest] = {}
-        self._packs: dict[str, SkillPackManifest] = {}
-
-    def register_skill(self, skill: SkillManifest) -> str:
-        key = f"{skill.skill_id}@{skill.version}"
-        if key in self._skills:
-            raise ValueError(f"skill already exists: {key}")
-        self._skills[key] = skill
-        return key
-
-    def register_pack(self, pack: SkillPackManifest) -> str:
-        key = f"{pack.pack_id}@{pack.version}"
-        if key in self._packs:
-            raise ValueError(f"skill pack already exists: {key}")
-        missing = set(pack.skill_versions) - self._skills.keys()
-        if missing:
-            raise ValueError(f"pack references unknown skills: {sorted(missing)}")
-        if pack.status == "active" and any(
-            self._skills[skill_key].status != "active"
-            for skill_key in pack.skill_versions
-        ):
-            raise ValueError("active pack must reference only active skills")
-        self._packs[key] = pack
-        return key
-
-    def resolve(self, requirement: SkillRequirement) -> SkillManifest:
-        candidates = [
-            skill
-            for skill in self._skills.values()
-            if skill.status == "active"
-            and requirement.capability in skill.capabilities
-            and requirement.purpose in skill.allowed_purposes
-            and requirement.region in skill.allowed_regions
-            and requirement.maximum_risk <= skill.maximum_risk
-            and requirement.required_data_classes <= skill.allowed_data_classes
-        ]
-        if not candidates:
-            raise LookupError("no eligible skill")
-        # Production resolution also uses evaluation, health, cost, and rollout policy.
-        return max(candidates, key=lambda skill: _semver_key(skill.version))
-
-    def resolve_pack(
-        self, pack_key: str, *, allow_deprecated_for_replay: bool = False
-    ) -> tuple[SkillManifest, ...]:
-        try:
-            pack = self._packs[pack_key]
-        except KeyError as error:
-            raise LookupError("unknown skill pack") from error
-        permitted_pack_states = {"active"}
-        permitted_skill_states = {"active"}
-        if allow_deprecated_for_replay:
-            permitted_pack_states.add("deprecated")
-            permitted_skill_states.add("deprecated")
-        if pack.status not in permitted_pack_states:
-            raise LookupError("skill pack is not available for this resolution mode")
-        skills = tuple(self._skills[key] for key in pack.skill_versions)
-        if any(skill.status not in permitted_skill_states for skill in skills):
-            raise LookupError("skill pack contains unavailable skill")
-        return skills
-```
+[[EXAMPLE:skills-registry#resolution]]
 
 ## Debugging playbook
 
@@ -367,12 +203,11 @@ class SkillRegistry:
 | How should a Skill be tested? | Contract, deterministic unit, simulation, trajectory, threat, data-boundary, failure-injection, regression, load, and canary tests. |
 | When should behavior remain application-specific? | When it encodes one product transaction, unstable workflow, private data boundary, or ownership model that should not be generalized. |
 
+## Transition to Chapter 7
 
-## Transition to Chapter 9
+Individual Skills are governable; Chapter 7 composes them into domain packs without dissolving ownership or compatibility boundaries.
 
-Individual Skills are governable; Chapter 9 composes them into domain packs without dissolving ownership or compatibility boundaries.
-
-# 09 — Skill Packs and Domain Platforms
+# 07 — Skill Packs and Domain Platforms
 
 |  |
 | --- |
@@ -418,7 +253,7 @@ Packs move through signed releases and aliases such as development, staging, and
 | --- | --- | --- |
 | Distribution security | A Skill Pack is executable supply chain: pin dependencies and tool schemas, produce SBOM and signed provenance, scan transitive content and binaries, enforce publisher trust, and support revocation without rewriting historical runs. | SLSA; OWASP-CHEAT |
 
-Evidence anchors: SLSA; OWASP-CHEAT. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: SLSA; OWASP-CHEAT. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Implementation reference
 
@@ -486,7 +321,6 @@ class SkillPackManifest(BaseModel):
 | How should packs be promoted? | As signed immutable releases through dev, staging, shadow, canary, production, and rollback aliases backed by evaluation evidence. |
 | What is the main pack anti-pattern? | A monolithic prompt-and-tools bundle with hidden dependencies, no owner, no tests, and no independent versioning. |
 
+## Transition to Chapter 8
 
-## Transition to Chapter 10
-
-The platform and capability model are complete; Chapter 10 begins the pattern sequence with the smallest bounded reasoning loop.
+The platform and capability model are complete; Chapter 8 begins the pattern sequence with the smallest bounded reasoning loop.

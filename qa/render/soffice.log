@@ -1,1 +1,0 @@
-convert /data/Book-v1.0.0/dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.docx as a Writer document -> /vercel/sandbox/data/Book-v1.0.0/qa/render/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.pdf using filter : writer_pdf_Export

@@ -2,7 +2,7 @@
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
-ENTRY="latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.tex"
+ENTRY="latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.tex"
 OUT="latex/build"
 mkdir -p "$OUT"
 if command -v latexmk >/dev/null 2>&1; then
@@ -13,4 +13,4 @@ else
   echo "XeLaTeX is required. Use the included Dockerfile.latex or CI workflow." >&2
   exit 2
 fi
-cp "$OUT/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.pdf" "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0-LaTeX.pdf"
+cp "$OUT/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.pdf" "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0-LaTeX.pdf"

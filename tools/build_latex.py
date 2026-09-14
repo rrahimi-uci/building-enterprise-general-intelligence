@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the XeLaTeX representation of Book v1.0.0.
+"""Generate the XeLaTeX representation of Book v2.0.0.
 
 The canonical Markdown remains the semantic source. This tool converts the
 restricted publication Markdown vocabulary into a styled, self-contained
@@ -13,8 +13,20 @@ import re
 import shutil
 from pathlib import Path
 
+import callouts
+
+
+def book_release(root: Path) -> str:
+    """The single source of the release identifier.
+
+    Hard-coding it meant a generated report could claim 1.0.0 while every other
+    artifact said 2.0.0 -- the evidence disagreeing with the thing it certifies.
+    """
+    return json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]["version"]
+
+
 BOOK_TITLE = "Enterprise Agentic AI Architecture & Developer Platform Guide"
-BASENAME = "Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0"
+BASENAME = "Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0"
 
 
 def sha256(path: Path) -> str:
@@ -216,27 +228,13 @@ def inline(text: str) -> str:
     return "".join(output)
 
 
-def title_case_label(text: str, fallback: str) -> str:
-    plain = re.sub(r"[*_`]", "", text).strip()
-    for marker in ["NORTHSTAR AT THIS POINT", "DESIGN DECISION", "SOURCE DISCIPLINE", "EVIDENCE CAVEAT", "CAUTION", "IMPLEMENTATION NOTE", "NORTH-STAR RULE"]:
-        if marker in plain.upper():
-            return marker.title().replace("North-Star", "North-star")
-    return fallback
-
-
 def render_callout(rows: list[list[str]]) -> str:
     content = " ".join(row[0] for row in rows[1:] if row and row[0].strip()).strip()
-    upper = re.sub(r"[*_`]", "", content).upper()
-    label = title_case_label(content, "Architecture note")
-    if "THREAT" in upper:
-        environment = "bookthreat"
-    elif "CAUTION" in upper or "EVIDENCE CAVEAT" in upper:
-        environment = "bookcaution"
-    else:
-        environment = "bookcallout"
+    environment, _fill, title = callouts.classify(content)
+    body = callouts.strip_marker(content)
     return "\n".join([
-        r"\begin{" + environment + "}[" + escape_plain(label) + "]",
-        inline(content),
+        r"\begin{" + environment + "}[" + escape_plain(title) + "]",
+        inline(body),
         r"\end{" + environment + "}",
     ])
 
@@ -253,7 +251,11 @@ def render_table(rows: list[list[str]]) -> str:
     width = 0.94 / columns
     specification = "@{}" + "".join("Y{" + format(width, ".4f") + r"\linewidth}" for _ in range(columns)) + "@{}"
     font_command = r"\small" if columns <= 3 else r"\fontsize{7.2}{9}\selectfont"
-    output = [r"\BookTableStart", font_command, r"\begin{longtable}{" + specification + "}"]
+    # A longtable header alone at the foot of a page reads as a defect. Reserve
+    # the header plus a few body rows so the table starts where it can breathe;
+    # anything longer still breaks naturally, with the header repeated.
+    output = [r"\needspace{5\baselineskip}", r"\BookTableStart", font_command,
+              r"\begin{longtable}{" + specification + "}"]
     output.extend([r"\rowcolor{BookNavy}", table_header(rows[0], columns), r"\endfirsthead", r"\rowcolor{BookNavy}", table_header(rows[0], columns), r"\endhead"])
     for index, row in enumerate(rows[1:], 1):
         padded = row + [""] * (columns - len(row))
@@ -264,6 +266,27 @@ def render_table(rows: list[list[str]]) -> str:
     return "\n".join(output)
 
 
+# Code is set at 7.4/9.2pt (see bookcode in bookstyle.sty). A listing that fits
+# on one page should never be split, so reserve its height up front: needspace
+# ejects the page when too little room is left, moving the whole listing over.
+CODE_BASELINE_PT = 9.2
+CODE_FRAME_PT = 20.0
+# \textheight is 698.85pt, so ~73 code lines is the most that can ever sit on
+# one page. Above that a listing must break however much space is reserved, and
+# reserving would only strand a half-empty page in front of it. Listings that
+# large are editorial debt: use the example region markers to show the part that
+# teaches instead of the whole file.
+CODE_MAX_RESERVE_PT = 643.0
+
+
+def code_reservation(code: str) -> str:
+    """The \needspace guard that keeps a page-sized listing intact."""
+    height = len(code.splitlines()) * CODE_BASELINE_PT + CODE_FRAME_PT
+    if height > CODE_MAX_RESERVE_PT:
+        return ""
+    return r"\needspace{" + format(height, ".1f") + "pt}"
+
+
 def render_code(language: str, code: str) -> str:
     if "\\end{lstlisting}" in code:
         raise ValueError("Code block contains a reserved lstlisting terminator")
@@ -272,7 +295,12 @@ def render_code(language: str, code: str) -> str:
     options = ["style=bookcode", "title={" + escape_plain(language.upper() or "TEXT") + "}"]
     if mapped:
         options.append("language=" + mapped)
-    return "\n".join([r"\begin{lstlisting}[" + ",".join(options) + "]", code, r"\end{lstlisting}"])
+    lines = []
+    reservation = code_reservation(code)
+    if reservation:
+        lines.append(reservation)
+    lines += [r"\begin{lstlisting}[" + ",".join(options) + "]", code, r"\end{lstlisting}"]
+    return "\n".join(lines)
 
 
 def reference_target(text: str) -> str:
@@ -377,8 +405,8 @@ def make_main() -> str:
         r"\documentclass[10pt,letterpaper,openany]{book}",
         r"\usepackage{latex/bookstyle}",
         r"\begin{document}",
-        r"\BookCover{assets/cover/cover-v1.0.0.png}",
-        r"\BookTitlePage{Enterprise Agentic AI Architecture \& Developer Platform Guide}{Book v1.0.0 · Publication Release · September 2026}{Reza Rahimi, PhD}{A structured enterprise reference for executives, architects, platform teams, security leaders, SREs, and senior engineers.}",
+        r"\BookCover{assets/cover/cover-v2.0.0.png}",
+        r"\BookTitlePage{Enterprise Agentic AI Architecture \& Developer Platform Guide}{Book v2.0.0 · Publication Release · September 2026}{Reza Rahimi, PhD}{A structured enterprise reference for executives, architects, platform teams, security leaders, SREs, and senior engineers.}",
         r"\input{latex/content/book-content.tex}",
         r"\end{document}",
         "",
@@ -391,7 +419,7 @@ def write_compile_files(root: Path) -> None:
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
-ENTRY="latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.tex"
+ENTRY="latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.tex"
 OUT="latex/build"
 mkdir -p "$OUT"
 if command -v latexmk >/dev/null 2>&1; then
@@ -402,7 +430,7 @@ else
   echo "XeLaTeX is required. Use the included Dockerfile.latex or CI workflow." >&2
   exit 2
 fi
-cp "$OUT/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.pdf" "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0-LaTeX.pdf"
+cp "$OUT/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.pdf" "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0-LaTeX.pdf"
 """
     (latex_dir / "compile.sh").write_text(compile_script, encoding="utf-8", newline="\n")
     (latex_dir / "compile.sh").chmod(0o755)
@@ -475,10 +503,10 @@ def main() -> int:
     reference_dir = latex_dir / "reference"
     reference_dir.mkdir(parents=True, exist_ok=True)
     if reference_pdf.exists():
-        shutil.copy2(reference_pdf, reference_dir / "DOCX-layout-reference.pdf")
+        shutil.copy2(reference_pdf, reference_dir / "DOCX-layout-reference-v1.0.0.pdf")
 
     report = {
-        "release": "1.0.0",
+        "release": book_release(root),
         "engine": "XeLaTeX",
         "canonical_markdown": markdown_path.relative_to(root).as_posix(),
         "canonical_markdown_sha256": sha256(markdown_path),

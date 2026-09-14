@@ -1,4 +1,4 @@
-# LaTeX Publication System — Book v1.0.0
+# LaTeX Publication System — Book v2.0.0
 
 This specification extends the book design system to XeLaTeX. It is normative for `latex/bookstyle.sty`, `tools/build_latex.py`, and the compiled PDF.
 
@@ -25,7 +25,7 @@ Presentation changes belong in `latex/bookstyle.sty` and this specification. Con
 - A designed title page follows the cover.
 - Native linked table of contents and PDF bookmarks supplement the authored hierarchical reader map.
 - Each Part, chapter, and appendix begins after a forced page break.
-- All 12 Parts plus the appendices reference divider use standalone navy pages.
+- All 8 Parts plus the appendices reference divider use standalone navy pages.
 - Running header names the book; footer shows release and current/total page numbers.
 
 ## 4. Accessible palette
@@ -67,11 +67,11 @@ Every semantic color is paired with a text label, heading, border, or structure.
 
 ## 6. Tables
 
-- All 260 source tables must be represented: 193 as long tables and 67 as semantic callouts in v1.0.0.
+- Every Markdown table must be represented, as either a long table or a semantic callout. `tools/validate_latex.py` derives the expected total from the manuscript rather than asserting a fixed number, so the check survives editing.
 - Headers repeat across page breaks.
 - Header row uses white bold text on Book Navy.
 - Body uses Book Ink on white/Book Light; color does not encode meaning.
-- Width is allocated across the available line width. Up to five source columns are supported by v1.0.0.
+- Width is allocated across the available line width. Up to five source columns are supported by v2.0.0.
 - Dense four/five-column tables use 7.2 pt type. If a future table requires smaller text, split, rotate, or redesign it rather than silently shrinking.
 - URLs and inline code are wrap-safe; cells use ragged-right alignment to avoid rivers and overfull justification.
 
@@ -102,9 +102,9 @@ Every semantic color is paired with a text label, heading, border, or structure.
 
 A LaTeX release must prove:
 
-1. 12 narrative Parts plus one appendices divider.
-2. 31 chapters and 15 appendices.
-3. 18 diagrams, 43 code blocks, 260 tables/callouts, and 94 citation occurrences.
+1. 8 narrative Parts plus one appendices divider.
+2. 27 chapters and 12 appendices.
+3. 18 diagrams and 94 citation occurrences. Code-block and table totals are derived from the manuscript by the validator, not fixed here.
 4. Balanced braces/environments outside verbatim code.
 5. Every image and bundled font exists and passes minimum resolution/file-integrity gates.
 6. Designated color pairs meet 4.5:1.

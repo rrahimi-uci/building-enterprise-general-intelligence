@@ -1,0 +1,237 @@
+{
+  "schema_version": "1.0.0",
+  "region_markers": {
+    "start": "# --8<-- example:start",
+    "end": "# --8<-- example:end"
+  },
+  "verification_modes": {
+    "test": "Executed by pytest in CI with assertions on behaviour.",
+    "import": "Imported in CI against the pinned SDK, proving every symbol exists, but not executed."
+  },
+  "examples": [
+    {
+      "id": "contracts",
+      "path": "examples/contracts.py",
+      "language": "python",
+      "title": "Provider-neutral agent-step and platform contracts",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_contracts.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ],
+      "regions": {
+        "step": "The agent-step subset used in the foundations chapter."
+      }
+    },
+    {
+      "id": "agent-tool-loop",
+      "path": "examples/foundations/agent_tool_loop.py",
+      "language": "python",
+      "title": "Bounded agent loop with a typed tool",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_agent_tool_loop.py"
+      ],
+      "libraries": [
+        "openai-agents==0.22.2",
+        "pydantic==2.13.5"
+      ]
+    },
+    {
+      "id": "effect-idempotency",
+      "path": "examples/foundations/effect_idempotency.py",
+      "language": "python",
+      "title": "Effect-level idempotency ledger",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_effect_idempotency.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "mlflow-tracing",
+      "path": "examples/observability/mlflow_tracing.py",
+      "language": "python",
+      "title": "Tracing an agent run with MLflow",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_mlflow_tracing.py"
+      ],
+      "libraries": [
+        "mlflow==3.15.2"
+      ]
+    },
+    {
+      "id": "mlflow-trace-configuration",
+      "path": "examples/observability/mlflow_trace_configuration.py",
+      "language": "python",
+      "title": "Configuring MLflow tracing around a governed agent step",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_mlflow_trace_configuration.py"
+      ],
+      "libraries": [
+        "mlflow==3.15.2"
+      ]
+    },
+    {
+      "id": "bounded-react-loop",
+      "path": "examples/patterns/bounded_react_loop.py",
+      "language": "python",
+      "title": "Bounded ReAct loop with an explicit run budget",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_bounded_react_loop.py"
+      ],
+      "libraries": [
+        "openai-agents==0.22.2"
+      ]
+    },
+    {
+      "id": "routing-handoff",
+      "path": "examples/patterns/routing_handoff.py",
+      "language": "python",
+      "title": "Routing by handoff: transferring ownership, not context",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_routing_handoff.py"
+      ],
+      "libraries": [
+        "openai-agents==0.22.2"
+      ]
+    },
+    {
+      "id": "approval-gate",
+      "path": "examples/patterns/approval_gate.py",
+      "language": "python",
+      "title": "A human approval gate that survives the wait",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_approval_gate.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "input-guardrail",
+      "path": "examples/security/input_guardrail.py",
+      "language": "python",
+      "title": "An input guardrail that trips before any tool runs",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_input_guardrail.py"
+      ],
+      "libraries": [
+        "openai-agents==0.22.2"
+      ]
+    },
+    {
+      "id": "mlflow-evaluation",
+      "path": "examples/observability/mlflow_evaluation.py",
+      "language": "python",
+      "title": "Scoring an agent against a dataset with MLflow",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_mlflow_evaluation.py"
+      ],
+      "libraries": [
+        "mlflow==3.15.2"
+      ]
+    },
+    {
+      "id": "skills-registry",
+      "path": "examples/platform/skills_registry.py",
+      "language": "python",
+      "title": "Resolving a skill version under policy and SemVer precedence",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_skills_registry.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ],
+      "regions": {
+        "resolution": "Eligibility and resolution, without the SemVer parser."
+      }
+    },
+    {
+      "id": "plan-compilation",
+      "path": "examples/patterns/plan_compilation.py",
+      "language": "python",
+      "title": "Compiling an approved plan into a budget-bounded envelope",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_plan_compilation.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ],
+      "regions": {
+        "core": "The logic the chapter teaches, without the supporting models."
+      }
+    },
+    {
+      "id": "approval-verification",
+      "path": "examples/patterns/approval_verification.py",
+      "language": "python",
+      "title": "Verifying an approval grant against this exact proposal",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_approval_verification.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ],
+      "regions": {
+        "core": "The logic the chapter teaches, without the supporting models."
+      }
+    },
+    {
+      "id": "step-execution",
+      "path": "examples/runtime/step_execution.py",
+      "language": "python",
+      "title": "One bounded agent step behind a platform-owned adapter",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_step_execution.py"
+      ],
+      "libraries": [
+        "openai-agents==0.22.2"
+      ],
+      "regions": {
+        "core": "The logic the chapter teaches, without the supporting models."
+      }
+    },
+    {
+      "id": "durable-state",
+      "path": "examples/runtime/durable_state.py",
+      "language": "python",
+      "title": "Durable run state as a replayable event fold",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_durable_state.py"
+      ],
+      "libraries": [],
+      "regions": {
+        "core": "The logic the chapter teaches, without the supporting models."
+      }
+    },
+    {
+      "id": "react-engine",
+      "path": "examples/patterns/react_engine.py",
+      "language": "python",
+      "title": "A ReAct controller that owns the budgets",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_react_engine.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ],
+      "regions": {
+        "core": "The logic the chapter teaches, without the supporting models."
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Cross-Format Synchronization Contract
 
-Book v1.0.0 exists as synchronized Markdown, DOCX, XeLaTeX, and Notion representations. They share content and structure but may use representation-specific affordances.
+Book v2.0.0 exists as synchronized Markdown, DOCX, XeLaTeX, and Notion representations. They share content and structure but may use representation-specific affordances.
 
 ## Authority order
 
@@ -14,6 +14,8 @@ Book v1.0.0 exists as synchronized Markdown, DOCX, XeLaTeX, and Notion represent
 
 When representations disagree, fix the canonical source/configuration and regenerate. Do not repair only the derivative.
 
+`tools/callouts.py` holds the single callout taxonomy that both renderers read. A kind added to one renderer only is a contract violation: add it there, and both editions follow. The DOCX keeps the bold marker inline because its callout has no title bar; the LaTeX edition strips it because the box title already carries the kind.
+
 ## Semantic mapping
 
 | Concept | Canonical Markdown | DOCX | XeLaTeX | Notion |
@@ -24,7 +26,7 @@ When representations disagree, fix the canonical source/configuration and regene
 | Paragraph/list | CommonMark/GFM | Normal/List styles | native paragraph/list environments | native paragraph/list blocks |
 | Table | GFM table | styled Word table | repeat-header `longtable` or semantic callout | native simple table where feasible |
 | Code | fenced block + language | styled line-numbered panel | line-numbered wrap-safe listing | code block + language |
-| Callout | labeled block/table | named callout style | breakable labeled box | callout block or labeled paragraph |
+| Callout | one-column table opening with the bold kind | shaded cell, `Book Callout` style | typed breakable `tcolorbox` | callout block or labeled paragraph |
 | Diagram | registered marker | embedded image + Caption | aspect-safe figure + caption | image + caption/file reference |
 | Citation | `[Rxx]` | linked/styled marker | hyperlink to Appendix K target | literal stable marker |
 | Reference | generated Appendix K | rendered bibliography | same generated bibliography | same text/order |

@@ -1,4 +1,4 @@
-# Book Design System — v1.0.0
+# Book Design System — v2.0.0
 
 This document is the visual and editorial contract for every representation of the book. `config/book.json`, `config/style-tokens.json`, and `tools/build_book.py` are the executable counterparts.
 
@@ -142,15 +142,46 @@ Tables must answer a decision, comparison, contract, or traceability question—
 
 ## 10. Callouts and learning sections
 
-Use callouts sparingly and semantically:
+Callouts are authored as a one-column Markdown table whose single cell opens
+with the kind in bold. `tools/callouts.py` is the one definition both renderers
+read, so a kind cannot mean one thing in DOCX and another in the PDF.
 
+```markdown
+|  |
+| --- |
+| **BEST PRACTICE**  Validate, authorize, and commit outside the model. |
+```
+
+### Narrative and evidence callouts
+
+- **Northstar at this point:** where the running case study now stands.
 - **North-star rule:** a durable design principle.
 - **Design decision:** a choice with explicit consequences.
-- **Evidence note:** what a source supports and does not support.
+- **Evidence caveat / Source discipline:** what a source supports and does not.
 - **Caution:** a failure mode, maturity issue, or operational hazard.
 - **Implementation note:** concrete guidance that would interrupt the main flow.
+- **Threat:** an attack the architecture must withstand.
 
-Callouts are not substitutes for argument. Keep them short, use one theme, and follow with implementation or evidence when needed.
+### Guidance boxes
+
+| Kind | Frame | Ground | Carries |
+|---|---|---|---|
+| Best practice | teal | pale teal | The thing to do, stated as an instruction |
+| Architecture guidance | navy 2 | pale blue | A boundary or ownership decision |
+| Developer guideline | blue | pale indigo | A rule that shapes code the reader writes |
+| Production consideration | plum | pale plum | What changes once real traffic and real time arrive |
+| Security and governance | red | pale red | An authorization, evidence, or policy obligation |
+| Common pitfall / Anti-pattern | amber | pale amber | The mistake, named, and what to do instead |
+| Performance and cost | olive | pale olive | Where the money and the latency actually go |
+| Observability tip | deep cyan | pale cyan | What to record so a later investigation can succeed |
+
+**The test for a guidance box:** it must contain an instruction the reader can
+act on. If it restates the paragraph above it, delete it — being true is not
+sufficient. Keep each to a few sentences, one theme, and never rely on colour
+alone: the title states the kind, so the palette is a fast index, not the signal.
+
+Callouts are not substitutes for argument. Follow them with implementation or
+evidence where the reader will need it.
 
 ## 11. Pattern, anti-pattern, and threat cards
 
@@ -167,7 +198,7 @@ Use the templates in `templates/`.
 - Registry: `config/references.json`.
 - In-text form: `[Rxx]` at the claim it supports.
 - Appendix K: generated bibliography.
-- Appendix M: generated claim-scope traceability matrix.
+- Appendix K: generated reference list, with the claim-scope traceability matrix as its closing section. v2.0.0 folded the former Appendix M into it so a reader checking a citation holds one appendix letter, not two.
 - Prefer primary standards, official documentation, peer-reviewed research, and binding legal texts.
 - Living documentation uses `n.d.` and an access date.
 - Versions/pins are recorded separately from publication year.

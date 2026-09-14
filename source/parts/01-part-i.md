@@ -78,56 +78,14 @@ An enterprise agent must translate an ambiguous goal into actions across systems
 | --- | --- | --- |
 | Grounding boundary | Separate model capability from system correctness. A benchmark or demo does not establish authorization, durability, privacy, or business acceptance. Every material output should carry evidence references and uncertainty. | NIST-GAI; REACT |
 
-Evidence anchors: NIST-GAI; REACT. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: NIST-GAI; REACT. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Implementation reference
 
 
 ### Provider-neutral agent-step contracts
 
-PYTHON · implementation excerpt
-
-```python
-from __future__ import annotations
-from datetime import datetime
-from typing import Any, Literal
-from pydantic import BaseModel, Field
-
-class EvidenceRef(BaseModel):
-    uri: str
-    sha256: str
-    source_revision: str
-    authorization_decision_id: str
-
-class ToolCall(BaseModel):
-    tool_id: str
-    arguments: dict[str, Any]
-    logical_effect_key: str | None = None
-
-class AgentDecision(BaseModel):
-    disposition: Literal["answer", "needs_input", "invoke_tool", "delegate"]
-    answer: str | None = None
-    tool_call: ToolCall | None = None
-    evidence: list[EvidenceRef] = Field(default_factory=list)
-    uncertainties: list[str] = Field(default_factory=list)
-
-class AgentStepRequest(BaseModel):
-    run_id: str
-    node_id: str
-    state_version: int
-    agent_version: str
-    context_manifest_id: str
-    eligible_tool_versions: tuple[str, ...]
-    max_turns: int = Field(ge=1, le=20)
-    deadline: datetime
-
-class AgentStepResult(BaseModel):
-    status: Literal["completed", "needs_input", "proposed_action", "failed"]
-    decision: AgentDecision | None = None
-    output_artifact_ids: tuple[str, ...] = ()
-    usage: dict[str, int | float] = Field(default_factory=dict)
-    error_code: str | None = None
-```
+[[EXAMPLE:contracts#step]]
 
 ## Debugging playbook
 
@@ -161,7 +119,6 @@ class AgentStepResult(BaseModel):
 | How would you choose an autonomy level for a new use case? | Start with measurable value and risk; decompose autonomy; grant the minimum tools, data, time, spend, delegation, and effect authority needed. |
 | Which records must remain authoritative outside the model and prompt? | Run and workflow state, identity, policy decisions, budgets, approvals, business records, effect receipts, release versions, and audit evidence. |
 | What would you require before calling an agent production-ready? | Evaluated outcomes and trajectories, bounded limits, delegated authorization, idempotent effects, recovery paths, observability, audit, release pinning, and operational controls. |
-
 
 ## Transition to Chapter 2
 
@@ -217,6 +174,10 @@ Scale tool work by workload and risk class, not with one global queue. Read-only
 9. **Bounded recursion.** Cap steps, wall-clock time, spend, tokens, tool calls, delegation depth, parallel branches, and repeated failures.
 10. **Open telemetry and portable state.** Use standard trace/event envelopes and keep the authoritative run record outside a proprietary agent runtime.
 
+|  |
+| --- |
+| **BEST PRACTICE**  Validate, authorize, and commit outside the model. A structured output is a *proposal*: parse it against a schema you own, check authority against the caller's grant, then commit through the same service path a human request would take. If a tool can be invoked without passing that gate, the gate is decorative. |
+
 ## Where distributed systems must remain authoritative
 
 | **Traditional concept** | **What it should own** | **Appropriate LLM role** | **If replaced by the LLM** |
@@ -240,13 +201,17 @@ Scale tool work by workload and risk class, not with one global queue. Read-only
 | --- |
 | **BOUNDARY RULE: IF AN OPERATION MUST BE CORRECT EVERY TIME, SURVIVE A CRASH, ENFO**  Boundary rule: If an operation must be correct every time, survive a crash, enforce a permission, coordinate concurrent writers, or create an auditable effect, it belongs to deterministic infrastructure. The LLM may decide what to attempt; deterministic systems decide whether and how it is committed. |
 
+|  |
+| --- |
+| **COMMON PITFALL**  Treating schema validity as correctness. A response that parses cleanly can still name a stale record, a resource the caller cannot see, or an amount nobody approved. Schema validation rejects malformed proposals; it says nothing about whether the proposal should be allowed. Keep the two checks separate and run both. |
+
 ## Grounding, corrections, and evidence boundary
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | Exactly-once wording | The recommendation is effect-level idempotency plus reconciliation under at-least-once delivery—not an end-to-end exactly-once guarantee. Timeout after dispatch is unknown until proved otherwise. | CLOUDEVENTS; OUTBOX |
 
-Evidence anchors: CLOUDEVENTS; OUTBOX. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: CLOUDEVENTS; OUTBOX. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Pattern reference — Tool Use
 
@@ -294,6 +259,8 @@ The model proposes ToolIntent; the Tool Gateway validates the exact tool version
 
 ## Implementation reference
 
+
+[[EXAMPLE:agent-tool-loop]]
 
 ### Governed Tool Gateway
 
@@ -394,7 +361,6 @@ class ToolGateway:
 | Where should completion be decided? | In an acceptance engine or workflow guard using required artifacts, effect states, policy obligations, and domain invariants—not from a model’s “done” message. |
 | What is the trade-off of a stronger deterministic shell? | More contracts and platform complexity, but improved safety, replayability, testing, provider portability, incident recovery, and auditability. |
 
-
 ## Transition to Chapter 3
 
 With tools bounded, Chapter 3 defines the runtime contract that keeps applications portable across agent frameworks and model providers.
@@ -475,93 +441,7 @@ AgentStepRequest pins run and node identity, state version, agent and model rout
 
 ## Bounded Python adapter
 
-PYTHON · implementation excerpt
-
-```python
-import os
-from dataclasses import dataclass
-from typing import Literal, Protocol
-
-from agents import Agent, RunConfig, RunContextWrapper, Runner, ToolExecutionConfig
-from agents.decorators import tool
-from pydantic import BaseModel
-
-
-class ToolGateway(Protocol):
-    async def invoke(self, *, tenant_id: str, subject_id: str,
-                     actor_id: str, run_id: str, tool: str,
-                     arguments: dict[str, object]) -> dict[str, object]: ...
-
-
-@dataclass(frozen=True)
-class PlatformContext:
-    tenant_id: str
-    subject_id: str
-    actor_id: str
-    run_id: str
-    gateway: ToolGateway
-
-
-class StepDisposition(BaseModel):
-    status: Literal["completed", "needs_input", "proposed_action"]
-    summary: str
-    evidence_artifact_ids: list[str]
-
-
-@tool
-async def retrieve_supplier_policy(
-    ctx: RunContextWrapper[PlatformContext], country: str
-) -> dict[str, object]:
-    """Retrieve authorized policy through the enterprise Tool Gateway."""
-    return await ctx.context.gateway.invoke(
-        tenant_id=ctx.context.tenant_id,
-        subject_id=ctx.context.subject_id,
-        actor_id=ctx.context.actor_id,
-        run_id=ctx.context.run_id,
-        tool="supplier.policy.read.v2",
-        arguments={"country": country},
-    )
-
-
-agent = Agent[PlatformContext](
-    name="Supplier analyst",
-    model=os.environ["OPENAI_AGENT_MODEL"],
-    instructions=(
-        "Analyze only supplied authorized evidence. Return a structured "
-        "disposition. Never claim that an external write occurred."
-    ),
-    tools=[retrieve_supplier_policy],
-    output_type=StepDisposition,
-)
-
-
-async def execute_step(request, context: PlatformContext) -> dict[str, object]:
-    result = await Runner.run(
-        starting_agent=agent,
-        input=request.input_items,
-        context=context,
-        max_turns=request.max_turns,
-        run_config=RunConfig(
-            workflow_name="supplier-onboarding",
-            group_id=request.run_id,
-            trace_include_sensitive_data=False,
-            trace_metadata={
-                "run_id": request.run_id,
-                "agent_version": request.agent_version,
-            },
-            tool_execution=ToolExecutionConfig(
-                max_function_tool_concurrency=2,
-            ),
-        ),
-    )
-    output = StepDisposition.model_validate(result.final_output)
-    return {
-        "status": output.status,
-        "decision_summary": output.summary,
-        "output_artifacts": output.evidence_artifact_ids,
-        "usage": str(result.context_wrapper.usage),
-    }
-```
+[[EXAMPLE:step-execution#core]]
 
 The model and SDK never receive a reusable production credential. The tool façade submits identifiers and typed arguments to the gateway, which reauthorizes the exact resource, mints a short-lived last-hop credential, enforces effects and quotas, and sanitizes the result.
 
@@ -575,9 +455,17 @@ SDK guardrails are valuable for early input, tool, and output checks. They do no
 
 Assign one retry owner per failure class: the workflow owns activity retries; the Model Gateway may perform short transport retries inside one recorded attempt; the Tool Gateway follows the tool manifest and effect protocol; an unknown mutation is reconciled before any retry.
 
+|  |
+| --- |
+| **ARCHITECTURE GUIDANCE**  Let the framework own the agent loop, never the workflow truth. Run state, approvals, and effect records belong in your durable store, keyed by your identifiers. The SDK's session object is a convenience for one process; if losing it would lose the run, the boundary is in the wrong place. |
+
 ## Adoption test
 
 Adopt the SDK only after proving that tools cannot bypass gateways, every invocation is externally bounded, handoffs map to durable ownership correctly, sensitive tracing is disabled or isolated, protected commits require deterministic validation, and another runtime could replace the adapter without migrating public APIs, workflow history, effects, artifacts, approvals, or audit.
+
+|  |
+| --- |
+| **DEVELOPER GUIDELINE**  Depend on the adapter you wrote, not on the SDK's types, everywhere above the runtime boundary. One module should import the vendor package. That module is also the only thing you rewrite when a 0.x SDK changes its API, which it will. |
 
 ## Grounding, corrections, and evidence boundary
 
@@ -587,7 +475,7 @@ Adopt the SDK only after proving that tools cannot bypass gateways, every invoca
 | Pause/resume boundary | RunState is the SDK pause/resume object. Custom context serialization is conservative; rebuild live gateways and secrets rather than serializing them blindly. Independently restored states must not resume concurrently against one session history. | OAI-RUNSTATE |
 | Scope of SDK approval | An SDK approval interruption pauses a call; it does not by itself prove enterprise authorization, separation of duties, resource freshness, or idempotent effect semantics. The gateway must verify those controls. | OAI-HITL |
 
-Evidence anchors: OAI-RELEASE; OAI-TOOLS; OAI-RUNSTATE; OAI-HITL. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: OAI-RELEASE; OAI-TOOLS; OAI-RUNSTATE; OAI-HITL. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Implementation reference
 
@@ -707,7 +595,6 @@ async def approve_in_memory_and_resume(result:Any,interruption_index:int=0):
 08 Human-in-the-Loop
 
 09 Long-Running and Durable Agents
-
 
 ## Transition to Chapter 4
 

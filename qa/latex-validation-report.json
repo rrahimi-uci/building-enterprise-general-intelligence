@@ -1,25 +1,27 @@
 {
-  "release": "1.0.0",
+  "release": "2.0.0",
   "validated_on": "2026-09-13",
   "format": "XeLaTeX",
   "measurements": {
-    "main_tex_sha256": "b0cf956a577c461b7ab8b0ee1451324e544d31bb63b731c9dcb43ec7b839d3b9",
-    "content_tex_sha256": "ea494b2dbb5c2ba970758e5a7d279d9b2cb841ae5b457a2f62a4c926f1dd2ec1",
-    "style_sha256": "009e3a5c9950cb52c5b481bfd81b804600e754b867bc2c0d10b23f30c118ce49",
-    "narrative_parts": 12,
+    "main_tex_sha256": "4e62b8ae7374647da3ab403054acc360c078f693c35c4adbb8a04802b0722cce",
+    "content_tex_sha256": "f58b7d084b3597a15d891b68016888650ef63a2488d6c6cc9c64ea0a3fceb29a",
+    "style_sha256": "2a418b355302ee1bdb56d2912414036310ea71592bc0cdc9b9aa778bd0e83228",
+    "narrative_parts": 8,
     "appendix_dividers": 1,
-    "chapters": 31,
-    "appendices": 15,
+    "chapters": 27,
+    "appendices": 12,
     "diagrams": 18,
-    "code_blocks": 43,
-    "longtables": 193,
-    "callout_tables": 67,
+    "code_blocks": 51,
+    "longtables": 191,
+    "callout_tables": 89,
     "citation_occurrences": 94,
     "reference_targets": 43,
     "unique_citation_ids": 43,
+    "markdown_tables": 280,
+    "markdown_code_blocks": 51,
     "image_quality": [
       {
-        "file": "assets/cover/cover-v1.0.0.png",
+        "file": "assets/cover/cover-v2.0.0.png",
         "pixels": [
           2550,
           3300
@@ -179,6 +181,7 @@
         "U+2713 CHECK MARK"
       ]
     },
+    "style_token_colors_checked": 19,
     "contrast_tests": [
       {
         "foreground": "BookInk",
@@ -244,6 +247,56 @@
         "foreground": "BookInk",
         "background": "BookPaleRed",
         "ratio": 13.71
+      },
+      {
+        "foreground": "White",
+        "background": "BookTeal",
+        "ratio": 6.08
+      },
+      {
+        "foreground": "White",
+        "background": "BookNavyTwo",
+        "ratio": 10.91
+      },
+      {
+        "foreground": "White",
+        "background": "BookPlum",
+        "ratio": 9.42
+      },
+      {
+        "foreground": "White",
+        "background": "BookOlive",
+        "ratio": 7.22
+      },
+      {
+        "foreground": "White",
+        "background": "BookDeepCyan",
+        "ratio": 7.12
+      },
+      {
+        "foreground": "BookInk",
+        "background": "BookPaleTeal",
+        "ratio": 14.02
+      },
+      {
+        "foreground": "BookInk",
+        "background": "BookPaleIndigo",
+        "ratio": 14.07
+      },
+      {
+        "foreground": "BookInk",
+        "background": "BookPalePlum",
+        "ratio": 13.68
+      },
+      {
+        "foreground": "BookInk",
+        "background": "BookPaleOlive",
+        "ratio": 14.27
+      },
+      {
+        "foreground": "BookInk",
+        "background": "BookPaleCyan",
+        "ratio": 14.05
       }
     ],
     "cross_format_reference_pdf_pages": 213,

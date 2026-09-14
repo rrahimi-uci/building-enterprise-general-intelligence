@@ -36,8 +36,11 @@ to `main`.
    sheet.
 8. Commit the regenerated artifacts along with the source change — CI fails a PR
    whose generated files are stale.
-9. Update `CHANGELOG.md` under an Unreleased heading or the target version.
-10. Fill in the pull request template. Record the reason, affected chapters,
+9. If you add or change a code listing, edit the file under `examples/`, not the
+   manuscript. Add a behavioural test, register it in `config/examples.json`,
+   and run `make examples-run`. Never paste code straight into `source/parts/`.
+10. Update `CHANGELOG.md` under an Unreleased heading or the target version.
+11. Fill in the pull request template. Record the reason, affected chapters,
     citation impact, diagram impact, backward compatibility, and the real result
     of every check you ran.
 
@@ -48,6 +51,7 @@ to `main`.
 | `source/parts/*.md` | `book/manuscript.md` |
 | `config/*.json` | `dist/*.md`, `dist/*.docx`, `dist/*.tex` |
 | `assets/**` | `latex/content/book-content.tex` |
+| `examples/**` | code listings in the manuscript (expanded from `[[EXAMPLE:id]]`) |
 | `latex/bookstyle.sty`, `styles/**` | `assets/cover/cover-v*.png`, `qa/**`, manifests, checksums |
 
 Presentation changes belong in `latex/bookstyle.sty` (PDF), `config/book.json`

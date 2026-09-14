@@ -8,11 +8,23 @@ import re
 import shutil
 import sys
 from pathlib import Path
+
+import callouts
 from collections import Counter
 from PIL import Image
 from fontTools.ttLib import TTFont
 
-BASENAME = "Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0"
+
+def book_release(root: Path) -> str:
+    """The single source of the release identifier.
+
+    Hard-coding it meant a generated report could claim 1.0.0 while every other
+    artifact said 2.0.0 -- the evidence disagreeing with the thing it certifies.
+    """
+    return json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]["version"]
+
+
+BASENAME = "Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0"
 
 
 def sha256(path: Path) -> str:
@@ -98,16 +110,15 @@ def main() -> int:
         "diagrams": content.count(r"\BookDiagram{"),
         "code_blocks": content.count(r"\begin{lstlisting}"),
         "longtables": content.count(r"\begin{longtable}"),
-        "callout_tables": sum(content.count(r"\begin{" + name + "}") for name in ("bookcallout", "bookcaution", "bookthreat")),
+        "callout_tables": sum(content.count(r"\begin{" + name + "}") for name in callouts.ENVIRONMENTS),
         "citation_occurrences": content.count(r"\BookCitation{"),
     }
     expected = {
-        "narrative_parts": 12,
+        "narrative_parts": 8,
         "appendix_dividers": 1,
-        "chapters": 31,
-        "appendices": 15,
+        "chapters": 27,
+        "appendices": 12,
         "diagrams": 18,
-        "code_blocks": 43,
         "citation_occurrences": 94,
     }
     for key, value in expected.items():
@@ -121,11 +132,43 @@ def main() -> int:
         errors.append("Reference targets do not cover all citation identifiers")
     if main_text.count(r"\mainmatter") + content.count(r"\mainmatter") != 1 or content.count(r"\appendix") != 1:
         errors.append("Front/main/appendix matter transitions are invalid")
-    for required_text in ("Reza Rahimi, PhD", "Enterprise Agentic AI Architecture", "Book v1.0.0"):
+    for required_text in ("Reza Rahimi, PhD", "Enterprise Agentic AI Architecture", "Book v2.0.0"):
         if required_text not in main_text:
             errors.append("Missing publication identity text: " + required_text)
-    if measurements["longtables"] + measurements["callout_tables"] != 260:
-        errors.append("Expected 260 converted Markdown tables/callouts")
+    # Derive the expected count from the manuscript rather than hard-coding it.
+    # The check exists to prove every Markdown table reached the PDF as either a
+    # longtable or a callout; a magic number only proved the book had not changed.
+    manuscript_text = (root / "book" / "manuscript.md").read_text(encoding="utf-8")
+    markdown_tables = 0
+    in_block = False
+    in_code = False
+    for line in manuscript_text.split("\n"):
+        if line.startswith("```"):
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
+        if line.startswith("|"):
+            if not in_block:
+                markdown_tables += 1
+                in_block = True
+        else:
+            in_block = False
+    measurements["markdown_tables"] = markdown_tables
+    # Code listings are derived too: the manuscript's fenced blocks must all reach
+    # the PDF. Hard-coding the count would break every time an example is added.
+    fenced = manuscript_text.count("\n```") // 2
+    measurements["markdown_code_blocks"] = fenced
+    if measurements["code_blocks"] != fenced:
+        errors.append(
+            f"Code blocks not fully converted: {fenced} fenced blocks in the manuscript, "
+            f"{measurements['code_blocks']} lstlisting environments in the TeX")
+    converted = measurements["longtables"] + measurements["callout_tables"]
+    if converted != markdown_tables:
+        errors.append(
+            f"Markdown tables not fully converted: {markdown_tables} in the manuscript, "
+            f"{converted} in the TeX ({measurements['longtables']} longtables + "
+            f"{measurements['callout_tables']} callouts)")
     if dist_path.read_bytes() != main_path.read_bytes():
         errors.append("Distributable and project entry-point TeX files differ")
     for marker in ("[[COVER]]", "[[DIAGRAM:", "```"):
@@ -144,7 +187,7 @@ def main() -> int:
     if len(set(diagram_paths)) != 18:
         errors.append("Expected 18 unique diagram paths")
     image_quality = []
-    for value in ["assets/cover/cover-v1.0.0.png"] + diagram_paths:
+    for value in ["assets/cover/cover-v2.0.0.png"] + diagram_paths:
         path = root / value
         if not path.exists():
             errors.append("Missing image: " + value)
@@ -195,7 +238,47 @@ def main() -> int:
         ("White", "BookBlue"), ("White", "BookAmber"), ("White", "BookRed"),
         ("BookCyan", "BookNavy"), ("BookInk", "BookPaleBlue"),
         ("BookInk", "BookPaleAmber"), ("BookInk", "BookPaleRed"),
+        # Guidance boxes: white title on the frame, body ink on the pale ground.
+        ("White", "BookTeal"), ("White", "BookNavyTwo"), ("White", "BookPlum"),
+        ("White", "BookOlive"), ("White", "BookDeepCyan"),
+        ("BookInk", "BookPaleTeal"), ("BookInk", "BookPaleIndigo"),
+        ("BookInk", "BookPalePlum"), ("BookInk", "BookPaleOlive"),
+        ("BookInk", "BookPaleCyan"),
     ]
+    # config/style-tokens.json is meant to be the portable description of the
+    # palette. Nothing reads it at build time, so without this check it can drift
+    # from bookstyle.sty and quietly become documentation of a palette that no
+    # longer exists. Checking it makes it a contract rather than a comment.
+    token_path = root / "config" / "style-tokens.json"
+    if token_path.exists():
+        tokens = json.loads(token_path.read_text(encoding="utf-8")).get("colors", {})
+        token_aliases = {
+            "navy": "BookNavy", "navy2": "BookNavyTwo", "blue": "BookBlue",
+            "cyan": "BookCyan", "teal": "BookTeal", "amber": "BookAmber",
+            "red": "BookRed", "ink": "BookInk", "plum": "BookPlum",
+            "olive": "BookOlive", "deep_cyan": "BookDeepCyan",
+            "pale_blue": "BookPaleBlue", "pale_teal": "BookPaleTeal",
+            "pale_indigo": "BookPaleIndigo", "pale_plum": "BookPalePlum",
+            "pale_amber": "BookPaleAmber", "pale_red": "BookPaleRed",
+            "pale_olive": "BookPaleOlive", "pale_cyan": "BookPaleCyan",
+        }
+        # Where the LaTeX frame role needs a darker value than the document
+        # palette, the override is the authority for that token.
+        document = json.loads(token_path.read_text(encoding="utf-8"))
+        overrides = document.get("color_roles", {}).get("latex_frame_overrides", {})
+        expected = {name: overrides.get(name, value) for name, value in tokens.items()}
+        drifted = [
+            f"{name}={expected[name]} but {token}={colors.get(token)}"
+            for name, token in token_aliases.items()
+            if name in expected and token in colors
+            and expected[name].upper() != colors[token].upper()
+        ]
+        measurements["style_token_colors_checked"] = sum(
+            1 for n, t in token_aliases.items() if n in tokens and t in colors
+        )
+        for entry in drifted:
+            errors.append("config/style-tokens.json has drifted from bookstyle.sty: " + entry)
+
     contrast_results = []
     for foreground, background in pairs:
         if foreground not in colors or background not in colors:
@@ -207,15 +290,19 @@ def main() -> int:
             errors.append("Insufficient text contrast: " + foreground + "/" + background + " = " + format(ratio, ".2f"))
     measurements["contrast_tests"] = contrast_results
 
-    reference_pdf = root / "latex" / "reference" / "DOCX-layout-reference.pdf"
+    reference_pdf = root / "latex" / "reference" / "DOCX-layout-reference-v1.0.0.pdf"
     if reference_pdf.exists():
         try:
             import pymupdf
             pdf = pymupdf.open(reference_pdf)
             measurements["cross_format_reference_pdf_pages"] = len(pdf)
             measurements["cross_format_reference_page_size"] = [round(pdf[0].rect.width, 1), round(pdf[0].rect.height, 1)] if pdf else None
+            # This is the v1.0.0 cross-format baseline, kept for comparison. It is
+            # deliberately not re-asserted against the current page count: v2.0.0
+            # changed the topology, so a difference is expected rather than a defect.
+            # Regenerate the v2.0.0 baseline with `make qa-pdf` where LibreOffice exists.
             if len(pdf) != 213:
-                warnings.append("Reference layout PDF page count differs from the approved 213-page baseline")
+                warnings.append("v1.0.0 reference layout PDF is no longer the 213-page baseline it should be")
             pdf.close()
         except Exception as exc:
             warnings.append("Could not inspect reference PDF: " + str(exc))
@@ -228,7 +315,7 @@ def main() -> int:
         warnings.append("XeLaTeX is not installed in this sandbox; source validation passed and Docker/CI compile paths are included")
 
     report = {
-        "release": "1.0.0",
+        "release": book_release(root),
         "validated_on": "2026-09-13",
         "format": "XeLaTeX",
         "measurements": measurements,
@@ -240,7 +327,7 @@ def main() -> int:
     }
     (root / "qa" / "latex-validation-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     lines = [
-        "# LaTeX Validation — Book v1.0.0", "",
+        "# LaTeX Validation — Book v2.0.0", "",
         "**Source result:** " + ("PASS" if not errors else "FAIL"),
         "**Target engine:** XeLaTeX", "",
         "## Structural measurements", "",

@@ -4,14 +4,16 @@
 # run against a system Python that is missing python-docx, Pillow, or fontTools.
 PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 ROOT := $(CURDIR)
-ZIP ?= $(abspath ../Enterprise-Agentic-AI-Book-v1.0.0-Complete-Package-with-LaTeX.zip)
-TEX_ENTRY := latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.tex
+ZIP ?= $(abspath ../Enterprise-Agentic-AI-Book-v2.0.0-Complete-Package-with-LaTeX.zip)
+TEX_ENTRY := latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.tex
 
 .DEFAULT_GOAL := help
 
-.PHONY: help setup all assemble cover build latex draft pdf references \
-        latex-validate validate deterministic qa-pdf latex-pdf package release \
-        clean distclean
+PYTHON_EXAMPLES ?= $(if $(wildcard .venv-examples/bin/python),.venv-examples/bin/python,python3)
+
+.PHONY: help setup setup-examples all assemble cover build latex draft pdf references \
+        examples examples-run latex-validate validate deterministic qa-pdf latex-pdf \
+        package release clean distclean
 
 ## help: show the available targets
 help:
@@ -27,6 +29,8 @@ help:
 	@echo "  latex           generate latex/content/book-content.tex"
 	@echo ""
 	@echo "Verification"
+	@echo "  examples        validate the code-example registry and markers"
+	@echo "  examples-run    execute the example test suite against the pinned SDKs"
 	@echo "  references      check every [Rxx] against config/references.json"
 	@echo "  latex-validate  structural/contrast/asset checks on the LaTeX source"
 	@echo "  validate        build + references + latex-validate + structural validators"
@@ -47,7 +51,16 @@ setup:
 	.venv/bin/python -m pip install --upgrade pip
 	.venv/bin/python -m pip install -r requirements.txt
 	./tools/bootstrap_tex.sh
+	$(MAKE) setup-examples
 	@echo "Setup complete. Run 'make draft' or 'make pdf'."
+
+## setup-examples: separate venv for the book's runnable examples.
+## The SDKs the examples pin (openai-agents, mlflow) are heavy and must never
+## become dependencies of the book build itself.
+setup-examples:
+	python3 -m venv .venv-examples
+	.venv-examples/bin/python -m pip install --upgrade pip
+	.venv-examples/bin/python -m pip install -r examples/requirements.txt
 
 all: build latex validate
 
@@ -80,10 +93,19 @@ pdf: latex-pdf
 references: assemble
 	$(PYTHON) tools/check_references.py --root "$(ROOT)"
 
+## examples: registry/marker validation only -- no SDKs needed, so it runs in
+## the book venv and belongs in `validate`.
+examples:
+	$(PYTHON) tools/check_examples.py --root "$(ROOT)"
+
+## examples-run: actually executes the examples. Needs the examples venv.
+examples-run:
+	$(PYTHON) tools/check_examples.py --root "$(ROOT)" --run --python "$(PYTHON_EXAMPLES)"
+
 latex-validate: latex
 	$(PYTHON) tools/validate_latex.py --root "$(ROOT)"
 
-validate: build references latex-validate
+validate: build references examples latex-validate
 	$(PYTHON) tools/validate_book.py --root "$(ROOT)"
 
 deterministic: build
@@ -96,7 +118,11 @@ latex-pdf: latex-validate
 	@./tools/bootstrap_tex.sh --check
 	./latex/compile.sh
 
-package: validate
+## package: runs the examples for real first, so the committed
+## reports/examples-report.json is evidence of execution rather than of a
+## metadata-only check. `validate` runs the checker without --run, which would
+## otherwise overwrite the executed report with tests_executed:false.
+package: validate examples-run
 	$(PYTHON) tools/package_release.py --root "$(ROOT)" --output "$(ZIP)"
 
 release: validate deterministic qa-pdf package
@@ -106,4 +132,4 @@ clean:
 	rm -f qa/validation-report.json qa/latex-validation-report.json reports/validation-summary.md reports/latex-validation.md reports/assembly-report.json
 
 distclean: clean
-	rm -rf .venv
+	rm -rf .venv .venv-examples

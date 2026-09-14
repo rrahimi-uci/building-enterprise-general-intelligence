@@ -1,0 +1,36 @@
+name: Verify book examples
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: examples-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  examples:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: examples/requirements.txt
+      - run: pip install -r examples/requirements.txt
+      - name: Execute every runnable example
+        # No OPENAI_API_KEY is provided on purpose. Examples run against the
+        # ScriptedModel harness, so a listing that silently reaches a real
+        # provider fails here instead of in a reader's account.
+        run: python3 tools/check_examples.py --root . --run --python "$(which python3)"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: examples-report
+          path: reports/examples-report.json
+          retention-days: 7

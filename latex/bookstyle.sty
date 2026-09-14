@@ -1,7 +1,7 @@
 % Enterprise Agentic AI Architecture — publication style
-% Book v1.0.0 · generated and maintained with the package design system.
+% Book v2.0.0 · generated and maintained with the package design system.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{bookstyle}[2026/09/13 v1.0.0 Enterprise Agentic AI book style]
+\ProvidesPackage{bookstyle}[2026/09/13 v2.0.0 Enterprise Agentic AI book style]
 
 \RequirePackage[letterpaper,top=0.68in,bottom=0.65in,left=0.72in,right=0.72in,headheight=15pt,headsep=0.18in,footskip=0.32in]{geometry}
 \RequirePackage{fontspec}
@@ -70,6 +70,18 @@
 \definecolor{BookInk}{HTML}{12233F}
 \definecolor{BookSlate}{HTML}{4A6078}
 \definecolor{BookRule}{HTML}{B9C8D8}
+% Guidance-box palette. Every frame carries white title text and every pale
+% ground carries BookInk body text; all sixteen pairs are contrast-tested in
+% tools/validate_latex.py. Colour never carries meaning alone -- each box states
+% its kind in the title -- so the palette is a fast index, not the signal.
+\definecolor{BookPlum}{HTML}{6A2E6E}
+\definecolor{BookOlive}{HTML}{5A5A16}
+\definecolor{BookDeepCyan}{HTML}{0B6076}
+\definecolor{BookPaleTeal}{HTML}{E7F5F3}
+\definecolor{BookPaleIndigo}{HTML}{EDF3FC}
+\definecolor{BookPalePlum}{HTML}{F7ECF8}
+\definecolor{BookPaleOlive}{HTML}{F6F5E3}
+\definecolor{BookPaleCyan}{HTML}{E6F5F9}
 \definecolor{CodeBackground}{HTML}{F7F9FC}
 \definecolor{CodeNumber}{HTML}{5E7185}
 \definecolor{CodeString}{HTML}{0B6B65}
@@ -94,7 +106,7 @@
   urlcolor=BookBlue,
   citecolor=BookBlue,
   pdfborder={0 0 0},
-  pdftitle={Enterprise Agentic AI Architecture \& Developer Platform Guide — Book v1.0.0},
+  pdftitle={Enterprise Agentic AI Architecture \& Developer Platform Guide — Book v2.0.0},
   pdfauthor={Reza Rahimi, PhD},
   pdfsubject={Enterprise Agentic AI architecture and developer platform},
   pdfkeywords={agentic AI, enterprise architecture, developer platform, security, governance, operations}
@@ -106,10 +118,10 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[R]{\color{BookSlate}\fontsize{7.2}{8.6}\selectfont\bfseries ENTERPRISE AGENTIC AI ARCHITECTURE \& DEVELOPER PLATFORM GUIDE}
-\fancyfoot[C]{\color{BookSlate}\fontsize{7.5}{9}\selectfont BOOK v1.0.0\quad\textbar\quad PAGE \thepage\ OF \pageref*{LastPage}}
+\fancyfoot[C]{\color{BookSlate}\fontsize{7.5}{9}\selectfont BOOK v2.0.0\quad\textbar\quad PAGE \thepage\ OF \pageref*{LastPage}}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
-\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\color{BookSlate}\fontsize{7.5}{9}\selectfont BOOK v1.0.0\quad\textbar\quad PAGE \thepage\ OF \pageref*{LastPage}}\renewcommand{\headrulewidth}{0pt}}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\color{BookSlate}\fontsize{7.5}{9}\selectfont BOOK v2.0.0\quad\textbar\quad PAGE \thepage\ OF \pageref*{LastPage}}\renewcommand{\headrulewidth}{0pt}}
 
 % Heading hierarchy.
 \titleformat{\section}{\color{BookBlue}\fontsize{16}{19}\selectfont\bfseries}{\thesection}{0.65em}{}
@@ -173,6 +185,29 @@
 \newtcolorbox{bookcallout}[1][Architecture note]{enhanced,breakable,colback=BookPaleBlue,colframe=BookBlue,coltitle=white,fonttitle=\bfseries,title=#1,boxrule=0.7pt,arc=2pt,left=10pt,right=10pt,top=8pt,bottom=8pt,before skip=7pt,after skip=7pt}
 \newtcolorbox{bookcaution}[1][Caution]{enhanced,breakable,colback=BookPaleAmber,colframe=BookAmber,coltitle=white,fonttitle=\bfseries,title=#1,boxrule=0.7pt,arc=2pt,left=10pt,right=10pt,top=8pt,bottom=8pt,before skip=7pt,after skip=7pt}
 \newtcolorbox{bookthreat}[1][Threat]{enhanced,breakable,colback=BookPaleRed,colframe=BookRed,coltitle=white,fonttitle=\bfseries,title=#1,boxrule=0.7pt,arc=2pt,left=10pt,right=10pt,top=8pt,bottom=8pt,before skip=7pt,after skip=7pt}
+% One shared shape for every guidance box, so a new kind is a colour and a
+% default title rather than another block of duplicated geometry.
+\newtcolorbox{bookguidancebase}[3][]{enhanced,breakable,colback=#2,colframe=#3,
+  coltitle=white,fonttitle=\bfseries\fontsize{8.4}{10}\selectfont,
+  boxrule=0.7pt,arc=2pt,left=10pt,right=10pt,top=8pt,bottom=8pt,
+  before skip=7pt,after skip=7pt,#1}
+\newenvironment{bookbestpractice}[1][Best practice]%
+  {\begin{bookguidancebase}[title={#1}]{BookPaleTeal}{BookTeal}}{\end{bookguidancebase}}
+\newenvironment{bookarchitecture}[1][Architecture guidance]%
+  {\begin{bookguidancebase}[title={#1}]{BookPaleBlue}{BookNavyTwo}}{\end{bookguidancebase}}
+\newenvironment{bookdeveloper}[1][Developer guideline]%
+  {\begin{bookguidancebase}[title={#1}]{BookPaleIndigo}{BookBlue}}{\end{bookguidancebase}}
+\newenvironment{bookproduction}[1][Production consideration]%
+  {\begin{bookguidancebase}[title={#1}]{BookPalePlum}{BookPlum}}{\end{bookguidancebase}}
+\newenvironment{booksecurity}[1][Security \& governance]%
+  {\begin{bookguidancebase}[title={#1}]{BookPaleRed}{BookRed}}{\end{bookguidancebase}}
+\newenvironment{bookantipattern}[1][Common pitfall]%
+  {\begin{bookguidancebase}[title={#1}]{BookPaleAmber}{BookAmber}}{\end{bookguidancebase}}
+\newenvironment{bookcost}[1][Performance \& cost]%
+  {\begin{bookguidancebase}[title={#1}]{BookPaleOlive}{BookOlive}}{\end{bookguidancebase}}
+\newenvironment{bookobservability}[1][Observability tip]%
+  {\begin{bookguidancebase}[title={#1}]{BookPaleCyan}{BookDeepCyan}}{\end{bookguidancebase}}
+
 \newtcolorbox{bookquote}{enhanced,breakable,colback=BookLight,colframe=BookSlate,leftrule=3pt,rightrule=0pt,toprule=0pt,bottomrule=0pt,arc=0pt,left=10pt,right=8pt,top=7pt,bottom=7pt,before skip=7pt,after skip=7pt,fontupper=\itshape\color{BookNavyTwo}}
 
 % Lists.

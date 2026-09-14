@@ -1,6 +1,6 @@
 # Enterprise Agentic AI Architecture & Developer Platform Guide
 
-**Book v1.0.0 development system**  
+**Book v2.0.0 development system**  
 Author: **Reza Rahimi, PhD**  
 Release date: 2026-09-13
 
@@ -17,7 +17,7 @@ One canonical source in `source/parts/*.md` produces three synchronized represen
 5. **Render:** `tools/build_book.py` generates DOCX from the assembled manuscript and configuration.
 6. **Validate before release:** never hand-edit generated DOCX or distributable Markdown.
 
-`source/original/` is immutable provenance. `tools/prepare_manuscript.py` is the one-time v3.1-to-v1.0.0 migration/bootstrap tool; do not use it during ordinary future editing because it regenerates `source/parts` from the legacy source.
+`source/original/` is immutable provenance. `tools/prepare_manuscript.py` is the frozen one-time v3.1-to-**v1.0.0** migration/bootstrap tool. It still emits the v1.0.0 topology and metadata and has deliberately not been updated for v2.0.0; never run it during ordinary editing, because it would regenerate `source/parts` from the legacy source and undo the v2.0.0 restructure.
 
 ## Quick start
 
@@ -45,6 +45,26 @@ builds it on every push.
 
 The release ZIP is written next to the repository root by default. All commands
 derive paths from their script location and do not depend on `/data`.
+
+## Runnable code examples
+
+Every code listing in the book is the exact text of a file under `examples/`,
+and CI executes it. Chapters cite an example by marker:
+
+```markdown
+[[EXAMPLE:mlflow-trace-configuration]]
+```
+
+`tools/assemble_manuscript.py` expands the marker at assembly time, so the
+Markdown, DOCX, and XeLaTeX editions all carry identical, verified code and no
+listing can drift from the file that CI runs. Agent examples execute offline
+against a scripted model that implements the Agents SDK `Model` interface, so
+they need no API key. See [examples/README.md](examples/README.md).
+
+```bash
+make examples        # validate the registry and every [[EXAMPLE:id]] marker
+make examples-run    # execute the example test suite against the pinned SDKs
+```
 
 ## Authoring loop
 
@@ -78,12 +98,18 @@ make pdf        # three-pass XeLaTeX -> dist/*-LaTeX.pdf
 ├── .latexmkrc                    # latexmk defaults for the XeLaTeX edition
 ├── requirements.txt
 │
+├── examples/                     # runnable, CI-verified code listings
+│   ├── _harness/                 # offline scripted model for Agents SDK runs
+│   ├── tests/                    # behavioural assertions per example
+│   └── requirements.txt          # pinned SDKs, kept out of the book build
+│
 ├── source/                       # ← THE ONLY PLACE YOU EDIT PROSE
 │   ├── parts/                    # canonical editable Markdown sources
 │   └── original/                 # immutable v3.0/v3.1 provenance
 ├── config/                       # ← AND THE ONLY PLACE YOU EDIT METADATA
 │   ├── book.json                 # metadata, layout, typography, colors
 │   ├── diagrams.json             # diagram registry
+│   ├── examples.json             # code-example registry
 │   ├── references.json           # source-of-truth citation registry
 │   └── style-tokens.json         # portable design tokens
 ├── assets/
@@ -155,11 +181,11 @@ Online link checking is intentionally optional because reproducible offline buil
 
 Committed — tracked release evidence, listed in `CHECKSUMS.sha256`:
 
-- `dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.md`
-- `dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.docx`
-- `dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.tex`
+- `dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.md`
+- `dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.docx`
+- `dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.tex`
 - `latex/content/book-content.tex`
-- `assets/cover/cover-v1.0.0.png`
+- `assets/cover/cover-v2.0.0.png`
 - `templates/book-style-template.docx`
 
 Not committed — regenerable, and gitignored so rebuilds do not churn binaries
@@ -171,7 +197,7 @@ through history:
 - `qa/render/*.pdf` and `qa/render/visual-contact-sheet.png` — QA only
 
 To get a published PDF without building it locally, download the
-`enterprise-agentic-ai-book-v1.0.0-xelatex` artifact from the **Build XeLaTeX
+`enterprise-agentic-ai-book-v2.0.0-xelatex` artifact from the **Build XeLaTeX
 edition** workflow run, or take it from the release assets.
 
 ## Determinism
@@ -182,7 +208,7 @@ Expected differences are allowed only after canonical source, configuration, ass
 
 ## Notion synchronization
 
-Notion is a published representation, not the build source. Publish only after local validation. The Notion release page must identify Book v1.0.0, author, release date, structure counts, citation count, checksums, QA status, and attach the exact ZIP/DOCX/Markdown/cover produced by this package. Preserve child-page blocks and permissions. If private source material would be copied to a broader destination, obtain confirmation first.
+Notion is a published representation, not the build source. Publish only after local validation. The Notion release page must identify Book v2.0.0, author, release date, structure counts, citation count, checksums, QA status, and attach the exact ZIP/DOCX/Markdown/cover produced by this package. Preserve child-page blocks and permissions. If private source material would be copied to a broader destination, obtain confirmation first.
 
 ## Troubleshooting
 

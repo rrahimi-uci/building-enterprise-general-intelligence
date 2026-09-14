@@ -41,3 +41,8 @@ dist/*.pdf
 *.fdb_latexmk
 *.synctex.gz
 !latex/reference/*.pdf
+
+# Examples virtualenv (pinned SDKs; created by `make setup-examples`)
+.venv-examples/
+.pytest_cache/
+mlflow.db

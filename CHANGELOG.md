@@ -2,7 +2,72 @@
 
 All notable changes follow semantic versioning and are recorded here.
 
-## [Unreleased]
+## [2.0.0] — 2026-09-13
+
+### Every oversized listing promoted to a verified example
+
+- The six listings too long to fit a page (82–153 lines) are now real files under `examples/`, shown through named regions. Page splits fell from 9 to **3**, and all 51 listings are verified rather than 9.
+- Added **named regions** (`[[EXAMPLE:id#region]]`), so one verified file can serve two chapters at two depths.
+- **Removed a genuine duplication:** the agent-step contracts were defined twice, in chapters 01 and 04, and the copies had already drifted — the shorter was not even a prefix of the longer. Both now render from one tested `examples/contracts.py`: chapter 01 shows the five-type step region, chapter 04 the full eight-type platform set.
+
+### Defects found by making the listings run
+
+- **`ReActLimits` was missing its `@dataclass` decorator.** `dataclass` was imported but never applied, so `__post_init__` never ran and the "all ReAct limits must be positive" validation was dead code. The class could not be constructed with arguments either.
+- **`DecisionModel` and `ToolInvoker` were referenced but never defined.** The ReAct listing imported `Protocol`, `Awaitable`, and `Callable` to declare them, but the declarations were absent — the code as printed did not run.
+- **The step adapter read `os.environ["OPENAI_AGENT_MODEL"]` at import time**, making the module unimportable wherever that variable is unset. It now reads with a default, and takes an injectable model so a platform can test a step without a provider.
+
+### Verified examples across the book
+
+- Nine runnable, CI-executed examples now appear in nine chapters, covering the OpenAI Agents SDK and MLflow: a bounded agent loop with a typed tool (ch 02), a ReAct loop with an explicit run budget (ch 08), routing by handoff (ch 09), a human approval gate that survives the wait (ch 12), an input guardrail that trips before any tool runs (ch 18), an effect-idempotency ledger (ch 21), MLflow trace configuration and tracing (ch 23), and dataset evaluation with scorers (ch 24).
+- Agent examples run offline against the scripted-model harness, so CI executes the real SDK control flow with no API key. The guardrail test asserts the model was never consulted at all — the property the architecture actually claims.
+- Code listings rose from 43 to 51, and split listings fell from 20 to 9.
+- Added `asyncio_mode = "auto"` so the book's async listings carry no per-test markers that teach nothing about agents.
+
+### Validator fixes found while wiring the examples
+
+- **`validate_book.py` read Python comments as Markdown headings.** The heading-level check scanned the raw manuscript, so a line like `# Captures OpenAI calls` inside a fenced block counted as an H1 and produced spurious "skips from H1 to H3" errors. Fenced code is now masked before the scan, with line numbers preserved.
+- **The code-block count is now derived from the manuscript**, like the table count, instead of asserting a fixed 43. Both checks exist to prove every block reached the PDF; a literal only proved the book had not changed.
+
+### Topology: 12 Parts / 31 chapters / 15 appendices → 8 / 27 / 12
+
+- Dissolved the four Parts that held a single thin chapter each. Part V (anti-patterns) joins Part IV as *Patterns and Anti-Patterns*; Part VII (LLM Gateway) joins integration; Part X (continuous learning) joins observability and evaluation; Part XI (governance) joins production operations. A full-page navy divider for a 471-word chapter was structure the content did not earn.
+- Merged four chapter pairs where one member was too thin to stand alone: 04+05 → *Enterprise Reference Architecture, Boundaries, and Contracts*; 06+07 → *Agentic Developer Platform, SDK, and Delivery Lifecycle*; 19+20 → *External Integration: MCP, A2A, and the Model Control Plane*; 27+28 → *Evaluation, Debugging, and Continuous Improvement with MLflow*. Chapter sizes now range 1,064–3,393 words instead of 471–3,393.
+- All 27 chapter-to-chapter transitions are preserved and retargeted. Only the four inner transitions of merged pairs were dropped, because they pointed at a chapter the reader is now already inside.
+- Cut Appendix L (release history) and Appendix N (assurance coverage): both recorded build process rather than reader-facing material. Folded the former Appendix M (claim traceability matrix) into Appendix K as a section, next to the entries it scopes — the 23 chapter references to "Appendix M" now point at Appendix K, which actually contains the matrix.
+- Refilled Appendix I. It was a seven-word stub followed by a stray H1 that broke the appendix's own heading hierarchy; the Northstar reference-implementation content is now the appendix body where it belonged.
+- Rebuilt the table of contents and the reader map from the real structure rather than maintaining them by hand.
+- Every cross-reference remapped: 62 chapter references, 12 Part references, 37 appendix references.
+
+### Build and validation
+
+- Version bumped to 2.0.0 across metadata, artifact filenames, page furniture, and PDF metadata. The v1.0.0 cross-format baseline PDF is retained and relabelled `DOCX-layout-reference-v1.0.0.pdf`; it is no longer asserted against the current page count, because the topology deliberately changed.
+- The LaTeX validator now derives the expected table count from the manuscript instead of asserting a magic 260. The check exists to prove every Markdown table reached the PDF; a fixed number only proved the book had not changed.
+- Tightened the stale-release-label guard, which matched the real `v2.0.0` string against the legacy `v2.0` pattern.
+- 232 pages, down from 244, with 0 errors and 0 undefined references.
+- Removed `qa/render/` — 20 page images and a contact sheet rendered from the v1.0.0 pagination. They document a layout the book no longer has. Regenerate with `make qa-pdf` on a machine with LibreOffice before cutting the v2.0.0 release.
+
+### Callout taxonomy and a DOCX accessibility fix
+
+- Added eight guidance-box kinds — best practice, architecture guidance, developer guideline, production consideration, security and governance, common pitfall/anti-pattern, performance and cost, and observability tip — and used all eight across fourteen chapters.
+- Moved the taxonomy into `tools/callouts.py`, which both renderers import. A duplicated mapping in two renderers drifts the first time a kind is added to one, and the cross-format contract forbids that.
+- **Fixed a shipped accessibility defect in the DOCX edition.** All 44 `NORTHSTAR AT THIS POINT` and `DESIGN DECISION` callouts were shaded navy `#102A4C` while `Book Callout` inherits Normal's ink `#12233F` — a contrast ratio of **1.09:1** against the 4.5:1 requirement, making them effectively invisible. They now use the pale ground at 13.99:1. The LaTeX contrast gate never caught it because it only reads the LaTeX palette.
+- Added `docx_callout_contrast()` to `tools/validate_book.py` so every shaded callout cell is gated in the DOCX edition too, and added ten pairs to the LaTeX contrast gate. 23 pairs are now tested; the lowest is 6.08:1.
+- Documented the taxonomy in `styles/DESIGN-SYSTEM.md` with the test for whether a box earns its place, and recorded the palette in `config/style-tokens.json`.
+
+### Runnable, CI-verified code examples
+
+- Added `examples/`: code listings are now real files that CI executes, not prose. `config/examples.json` registers each one, and `tools/assemble_manuscript.py` expands `[[EXAMPLE:id]]` markers at assembly time so the Markdown, DOCX, and XeLaTeX editions all carry identical code and no listing can drift from the file under test.
+- Added `examples/_harness/scripted_model.py`, which implements the OpenAI Agents SDK `Model` interface and replays a fixed script. Agent examples therefore exercise real tool dispatch, structured output parsing, and the run loop with no network and no API key. It must subclass `Model`: the runner resolves `RunConfig.model` with an `isinstance` check, so a duck-typed double is silently ignored and the run reaches the real provider.
+- Added `tools/check_examples.py`, wired into `make validate`: every `[[EXAMPLE:id]]` resolves, every registered example is cited, every excerpt region closes, and `--run` executes the suite.
+- Pinned `openai-agents==0.22.2`, `mlflow==3.15.2`, `pydantic==2.13.5` in `examples/requirements.txt`, deliberately separate from the book's own dependencies so the manuscript still builds without them.
+- Migrated chapter 26's MLflow listing to the new mechanism as the reference case. Verified the chapter's existing API claims hold against the pinned MLflow: `mlflow.genai.judges.make_judge`, `ToolCallCorrectness`, `ToolCallEfficiency`, and `mlflow.openai.autolog` all exist.
+- Recorded two MLflow 3.15 behaviours the examples must respect: the filesystem tracking store is in maintenance mode for traces, so a database backend is required; and trace export is asynchronous by default, so assertions must force synchronous export or flush.
+
+### LaTeX page composition
+
+- Code listings that fit on a page are no longer split across one. `render_code` reserves the listing's height with `\needspace`, capped at 643pt because `\textheight` is 698.85pt and a longer listing must break however much space is reserved. Splits fell from 20 to 10; the remaining ones are listings of 82–153 lines, which are editorial debt to be trimmed with example region markers.
+- Long tables no longer strand a header at the foot of a page: `render_table` reserves the header plus several body rows. Stranded headers fell from 17 to 6.
+- Page count moved from 235 to 242, and mean page fill *improved* from 95.0% to 95.6%.
 
 ### Repository structure
 

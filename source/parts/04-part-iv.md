@@ -1,8 +1,8 @@
-# PART IV — PATTERNS
+# PART IV — PATTERNS AND ANTI-PATTERNS
 
-This Part selects the smallest topology that resolves the uncertainty at hand. The chapters progress from bounded reason–act loops through routing, planning, evaluation, human control, durable execution, and a cross-category decision catalog.
+This Part is the working catalogue. It moves from the loop shapes that solve real problems to the architecture shapes that quietly create them, and pairs every failure with a measurable replacement.
 
-# 10 — ReAct: Bounded Reason–Act–Observe Loops
+# 08 — ReAct: Bounded Reason–Act–Observe Loops
 
 > **Evidence note.** ReAct was introduced as a prompting paradigm that interleaves reasoning and action; its reported benchmark results motivate the loop, not an assertion that unrestricted production autonomy is safe. [R01]
 
@@ -41,13 +41,21 @@ A ReAct activity can return answer, needs\_input, delegate, proposed\_action, bu
 
 Plan capacity in turns per successful outcome, not only requests per second. Track model tokens, tool calls, connector time, observation bytes, and repeated-action rate. Per-tenant permits and hard per-run limits prevent one pathological loop from consuming a worker pool.
 
+|  |
+| --- |
+| **PERFORMANCE AND COST**  A ReAct loop's cost is set by its trajectory, not its prompt. Each observation re-enters the context, so an n-step loop is roughly quadratic in tokens. Cap the step count, summarize observations before they re-enter, and measure cost per *completed task* rather than per call — a cheap call that loops eight times is not cheap. |
+
 ## Grounding, corrections, and evidence boundary
 
 |  |
 | --- |
 | **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
 
-Evidence anchors: REACT; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: REACT; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.
+
+|  |
+| --- |
+| **COMMON PITFALL**  Unbounded retries disguised as reasoning. When a tool fails and the model is free to try again, the loop can burn its whole budget rediscovering the same error. Return failures as typed data the model can read, cap attempts per tool, and make the cap a run-level budget rather than a per-call one. |
 
 ## Pattern reference — ReAct
 
@@ -97,94 +105,11 @@ A bounded controller alternates model decision and governed tool invocation. The
 ## Implementation reference
 
 
+[[EXAMPLE:bounded-react-loop]]
+
 ### Bounded ReAct controller
 
-PYTHON · implementation excerpt
-
-```python
-from __future__ import annotations
-import hashlib
-import json
-from dataclasses import dataclass
-from typing import Awaitable, Callable, Protocol
-from .contracts import AgentDecision
-
-class ReActLimits:
-    maximum_turns: int = 6
-    maximum_tool_calls: int = 4
-    maximum_identical_observations: int = 2
-
-    def __post_init__(self) -> None:
-        if min(
-            self.maximum_turns,
-            self.maximum_tool_calls,
-            self.maximum_identical_observations,
-        ) < 1:
-            raise ValueError("all ReAct limits must be positive")
-
-class ReActEngine:
-    """A bounded reason-act-observe loop with an external tool boundary."""
-
-    def __init__(
-        self,
-        model: DecisionModel,
-        invoke_tool: ToolInvoker,
-        limits: ReActLimits = ReActLimits(),
-    ) -> None:
-        self.model = model
-        self.invoke_tool = invoke_tool
-        self.limits = limits
-
-    @staticmethod
-    def _observation_fingerprint(
-        tool_id: str, arguments: dict[str, object], result: dict[str, object]
-    ) -> str:
-        payload = json.dumps(
-            {"tool_id": tool_id, "arguments": arguments, "result": result},
-            sort_keys=True,
-            separators=(",", ":"),
-            default=repr,
-        ).encode()
-        return hashlib.sha256(payload).hexdigest()
-
-    async def run(self, goal: str) -> AgentDecision:
-        observations: list[dict[str, object]] = []
-        identical_observations: dict[str, int] = {}
-        tool_calls = 0
-        for _turn in range(self.limits.maximum_turns):
-            decision = await self.model.decide(
-                goal=goal, observations=tuple(observations)
-            )
-            if decision.disposition in {"answer", "needs_input", "delegate"}:
-                return decision
-            if decision.tool_call is None:
-                raise ValueError("invoke_tool decision is missing tool_call")
-            tool_calls += 1
-            if tool_calls > self.limits.maximum_tool_calls:
-                raise RuntimeError("tool-call budget exceeded")
-            result = await self.invoke_tool(
-                decision.tool_call.tool_id,
-                decision.tool_call.arguments,
-                decision.tool_call.logical_effect_key,
-            )
-            observations.append(
-                {"tool": decision.tool_call.tool_id, "result": result}
-            )
-            fingerprint = self._observation_fingerprint(
-                decision.tool_call.tool_id,
-                decision.tool_call.arguments,
-                result,
-            )
-            identical_observations[fingerprint] = (
-                identical_observations.get(fingerprint, 0) + 1
-            )
-            if (
-                identical_observations[fingerprint]
-                >= self.limits.maximum_identical_observations
-            ):
-                raise RuntimeError("no-progress loop detected")
-        raise RuntimeError("ReAct turn limit exceeded")
-```
+[[EXAMPLE:react-engine#core]]
 
 ## Debugging playbook
 
@@ -219,12 +144,11 @@ class ReActEngine:
 | What should an observation contain? | A typed, sanitized result or artifact reference with provenance, version, classification, and explicit error semantics. |
 | When should ReAct not be used? | For a known workflow, a single retrieval, a protected transaction, or a task whose acceptance can be computed directly. |
 
+## Transition to Chapter 9
 
-## Transition to Chapter 11
+A bounded reason–act loop handles local uncertainty; Chapter 9 adds routing and handoff when known paths or specialists should own the work.
 
-A bounded reason–act loop handles local uncertainty; Chapter 11 adds routing and handoff when known paths or specialists should own the work.
-
-# 11 — Routing, Triage, and Handoffs
+# 09 — Routing, Triage, and Handoffs
 
 |  |
 | --- |
@@ -270,7 +194,7 @@ Confidence is calibrated on a versioned domain dataset. Below a threshold, the r
 | --- |
 | **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
 
-Evidence anchors: OAI-TOOLS; A2A-101. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: OAI-TOOLS; A2A-101. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Pattern reference — Routing
 
@@ -363,6 +287,8 @@ The current owner creates a typed transfer containing state references, unresolv
 ## Implementation reference
 
 
+[[EXAMPLE:routing-handoff]]
+
 ### Deterministic route validation
 
 PYTHON · implementation excerpt
@@ -426,12 +352,11 @@ class DeterministicRouter:
 | How do you make routing debuggable? | Record candidates, eligibility filters, proposed route, confidence, validator decision, fallback, version, latency, and outcome. |
 | When is a static router better? | When classes are stable, risk is high, compliance requires predictability, or a simple rule already separates the work. |
 
+## Transition to Chapter 10
 
-## Transition to Chapter 12
+Routing selects among known capabilities; Chapter 10 addresses tasks whose decomposition must itself be proposed and validated.
 
-Routing selects among known capabilities; Chapter 12 addresses tasks whose decomposition must itself be proposed and validated.
-
-# 12 — Planning and Plan–Execute
+# 10 — Planning and Plan–Execute
 
 > **Evidence note.** Published engineering guidance distinguishes predefined workflows from model-directed agents and recommends adding complexity only when simpler compositions are insufficient. [R27]
 
@@ -590,13 +515,17 @@ A deterministic compiler rejects cycles unless explicitly permitted, missing sch
 * Apply per-run ready-node limits and weighted fair scheduling across tenants. Planning cannot reserve unbounded future capacity; reservations expire and are reclaimed.
 * Use deterministic routing for common/high-confidence cases and invoke the planner only at entry, material uncertainty, or failure boundaries. This reduces model cost and plan churn.
 
+|  |
+| --- |
+| **ARCHITECTURE GUIDANCE**  Separate the plan from its execution. A plan is data: persist it, version it, and let it be inspected and approved before any step commits an effect. Once execution is a separate pass over a stored plan, replay, partial resume, and human amendment all become ordinary operations instead of special cases. |
+
 ## Grounding, corrections, and evidence boundary
 
 |  |
 | --- |
 | **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
 
-Evidence anchors: TEMPORAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: TEMPORAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Pattern reference — Planning
 
@@ -647,111 +576,7 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 
 ### Plan IR compiler
 
-PYTHON · implementation excerpt
-
-```python
-from __future__ import annotations
-
-import hashlib
-import json
-import math
-import re
-from dataclasses import dataclass
-
-from .contracts import CandidatePlan
-
-
-_SHA256 = re.compile(r"^sha256:[0-9a-f]{64}$")
-
-
-@dataclass(frozen=True)
-class PlanEnvelope:
-    """Deterministic limits used to compile one candidate plan."""
-
-    allowed_capabilities: frozenset[str]
-    maximum_cost_usd: float
-    policy_digest: str
-    maximum_nodes: int = 100
-    maximum_risk: int = 4
-
-    def __post_init__(self) -> None:
-        if not math.isfinite(self.maximum_cost_usd) or self.maximum_cost_usd < 0:
-            raise ValueError("maximum_cost_usd must be finite and non-negative")
-        if self.maximum_nodes < 1:
-            raise ValueError("maximum_nodes must be positive")
-        if not 0 <= self.maximum_risk <= 4:
-            raise ValueError("maximum_risk must be between 0 and 4")
-        if _SHA256.fullmatch(self.policy_digest) is None:
-            raise ValueError("policy_digest must be a canonical sha256 digest")
-
-
-def _sha256(payload: object) -> str:
-    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
-    return "sha256:" + hashlib.sha256(canonical).hexdigest()
-
-
-def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, object]:
-    """Validate and bind a proposed plan to the policy envelope.
-
-    Node maximum_cost_usd values are conservative reservations. Their sum is
-    the compiled reservation even if runtime branches may be mutually exclusive.
-    Actual spend is tracked separately and can never consume beyond the run grant.
-    """
-
-    if len(plan.nodes) > envelope.maximum_nodes:
-        raise ValueError("node limit exceeded")
-    by_id = {node.id: node for node in plan.nodes}
-    if len(by_id) != len(plan.nodes):
-        raise ValueError("duplicate node ID")
-
-    for node in plan.nodes:
-        if node.capability not in envelope.allowed_capabilities:
-            raise PermissionError(f"capability not allowed: {node.capability}")
-        if node.risk_class > envelope.maximum_risk:
-            raise PermissionError(f"risk ceiling exceeded: {node.id}")
-        unknown = set(node.depends_on) - by_id.keys()
-        if unknown:
-            raise ValueError(f"unknown dependencies for {node.id}: {sorted(unknown)}")
-
-    reserved_cost = sum(node.maximum_cost_usd for node in plan.nodes)
-    if not math.isfinite(reserved_cost) or reserved_cost > envelope.maximum_cost_usd:
-        raise ValueError("plan exceeds maximum cost")
-
-    dependencies = {node.id: set(node.depends_on) for node in plan.nodes}
-    ready = sorted(node_id for node_id, deps in dependencies.items() if not deps)
-    order: list[str] = []
-    while ready:
-        current = ready.pop(0)
-        order.append(current)
-        for node_id, deps in dependencies.items():
-            if current in deps:
-                deps.remove(current)
-                if not deps and node_id not in order and node_id not in ready:
-                    ready.append(node_id)
-        ready.sort()
-    if len(order) != len(plan.nodes):
-        raise ValueError("cycle detected")
-
-    plan_payload = plan.model_dump(mode="json")
-    envelope_payload = {
-        "allowed_capabilities": sorted(envelope.allowed_capabilities),
-        "maximum_cost_usd": envelope.maximum_cost_usd,
-        "maximum_nodes": envelope.maximum_nodes,
-        "maximum_risk": envelope.maximum_risk,
-        "policy_digest": envelope.policy_digest,
-    }
-    return {
-        "revision": plan.revision,
-        "topological_order": tuple(order),
-        "reserved_cost_usd": reserved_cost,
-        "cost_semantics": "sum_of_per_node_maximum_reservations",
-        "policy_digest": envelope.policy_digest,
-        "plan_digest": _sha256(plan_payload),
-        "compiled_plan_digest": _sha256(
-            {"plan": plan_payload, "envelope": envelope_payload}
-        ),
-    }
-```
+[[EXAMPLE:plan-compilation#core]]
 
 ## Debugging playbook
 
@@ -786,12 +611,11 @@ def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, objec
 | How should replanning handle completed work? | Treat committed effects and accepted artifacts as immutable facts; revise only the affected future horizon and append a new version with rationale and diff. |
 | How do you prevent plausible but endless planning? | External revision, loop, step, cost, time, delegation, and no-progress limits plus deterministic acceptance and terminal transitions. |
 
+## Transition to Chapter 11
 
-## Transition to Chapter 13
+Planning creates an executable structure; Chapter 11 adds independent evaluation and bounded revision without self-certification.
 
-Planning creates an executable structure; Chapter 13 adds independent evaluation and bounded revision without self-certification.
-
-# 13 — Reflection and Evaluator–Optimizer
+# 11 — Reflection and Evaluator–Optimizer
 
 |  |
 | --- |
@@ -830,7 +654,7 @@ Each revision targets structured feedback and carries a diff. The loop stops on 
 | --- |
 | **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
 
-Evidence anchors: MLFLOW-EVAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: MLFLOW-EVAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Pattern reference — Reflection
 
@@ -992,12 +816,11 @@ class EvaluatorOptimizer:
 | What should always be checked deterministically? | Schema, policy, authority, evidence presence, effect state, resource versions, arithmetic, and other computable invariants. |
 | When should you not add reflection? | When the first result already meets an executable specification, latency is critical, or critique adds no measured improvement. |
 
+## Transition to Chapter 12
 
-## Transition to Chapter 14
+Automated evaluation can improve candidates; Chapter 12 identifies decisions that require explicit human authority, correction, or recourse.
 
-Automated evaluation can improve candidates; Chapter 14 identifies decisions that require explicit human authority, correction, or recourse.
-
-# 14 — Human-in-the-Loop
+# 12 — Human-in-the-Loop
 
 > **Evidence note.** Human-review interfaces should be tested against WCAG 2.2 accessibility criteria; accessibility conformance does not by itself eliminate automation bias or establish decision fairness. [R41]
 
@@ -1116,13 +939,17 @@ A decision is valid only when the presented proposal hash equals the current pro
 * Replicate redacted queue projections for availability, but keep the authoritative decision write in the run’s home/legal region. After failover, fence the prior writer before accepting decisions.
 * Cache immutable evidence by hash and render role-specific views on demand; large source material remains in governed artifact storage.
 
+|  |
+| --- |
+| **PRODUCTION CONSIDERATION**  Design the wait, not just the prompt. A run paused for approval may sit for days across deploys, token expiry, and staff changes. Persist the full decision context with the pause, expire it explicitly, and define what happens when it lapses — an approval request with no expiry becomes an approval nobody can safely grant. |
+
 ## Grounding, corrections, and evidence boundary
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | Approval integrity | Approve the exact canonical proposal, not a natural-language summary. Revalidate policy, authority, proposal hash, expiry, destination, and resource version immediately before commit. Never transport serialized run state inside exception text or ordinary logs. | OAI-HITL; OWASP-AGENT |
 
-Evidence anchors: OAI-HITL; OWASP-AGENT; WCAG22. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: OAI-HITL; OWASP-AGENT; WCAG22. Full URLs, authority, version, and scope appear in Appendix K.
 
 ## Pattern reference — Human-in-the-Loop
 
@@ -1171,6 +998,8 @@ The workflow persists a proposal-bound ApprovalRequest or InterventionTask, paus
 ## Implementation reference
 
 
+[[EXAMPLE:approval-gate]]
+
 ### Proposal-bound approval contract
 
 PYTHON · implementation excerpt
@@ -1214,98 +1043,7 @@ def proposal_hash(action: str, destination: str,
 
 ### Executable proposal-bound approval
 
-PYTHON · implementation excerpt
-
-```python
-from __future__ import annotations
-
-import hashlib
-import json
-from datetime import datetime
-from typing import Any
-
-from pydantic import BaseModel, Field, field_validator, model_validator
-
-
-def _require_aware(value: datetime, field_name: str) -> datetime:
-    if value.tzinfo is None or value.utcoffset() is None:
-        raise ValueError(f"{field_name} must be timezone-aware")
-    return value
-
-
-class ActionProposal(BaseModel):
-    """Exact action reviewed by an approver; immutable after presentation."""
-
-    tenant_id: str
-    run_id: str
-    actor_id: str
-    tool_version: str
-    logical_effect_key: str
-    arguments: dict[str, Any]
-    expected_resource_version: int
-    policy_digest: str
-    expires_at: datetime
-
-    @field_validator("expires_at")
-    @classmethod
-    def expiry_is_aware(cls, value: datetime) -> datetime:
-        return _require_aware(value, "expires_at")
-
-    def digest(self) -> str:
-        payload = json.dumps(
-            self.model_dump(mode="json"), sort_keys=True, separators=(",", ":")
-        ).encode()
-        return "sha256:" + hashlib.sha256(payload).hexdigest()
-
-
-class ApprovalGrant(BaseModel):
-    approval_id: str
-    proposal_hash: str
-    tenant_id: str
-    run_id: str
-    approver_id: str
-    approved_at: datetime
-    expires_at: datetime
-    policy_digest: str
-    obligations: tuple[str, ...] = Field(default_factory=tuple)
-
-    @field_validator("approved_at", "expires_at")
-    @classmethod
-    def timestamps_are_aware(cls, value: datetime, info) -> datetime:
-        return _require_aware(value, info.field_name)
-
-    @model_validator(mode="after")
-    def expiry_follows_approval(self) -> "ApprovalGrant":
-        if self.expires_at <= self.approved_at:
-            raise ValueError("expires_at must be later than approved_at")
-        return self
-
-
-def verify_approval(
-    proposal: ActionProposal,
-    grant: ApprovalGrant,
-    *,
-    now: datetime,
-    actual_resource_version: int,
-) -> None:
-    """Fail closed if approval no longer matches the action or current state."""
-
-    _require_aware(now, "now")
-    if grant.proposal_hash != proposal.digest():
-        raise PermissionError("approval is not bound to this proposal")
-    if (grant.tenant_id, grant.run_id) != (proposal.tenant_id, proposal.run_id):
-        raise PermissionError("approval scope mismatch")
-    if grant.approver_id == proposal.actor_id:
-        raise PermissionError("actor cannot self-approve")
-    if grant.policy_digest != proposal.policy_digest:
-        raise PermissionError("policy changed after approval")
-    if now < grant.approved_at:
-        raise PermissionError("approval is not yet effective")
-    if now >= min(grant.expires_at, proposal.expires_at):
-        raise PermissionError("approval expired")
-    if actual_resource_version != proposal.expected_resource_version:
-        raise PermissionError("resource changed after approval")
-```
+[[EXAMPLE:approval-verification#core]]
 
 ## Debugging playbook
 
@@ -1340,12 +1078,11 @@ def verify_approval(
 | Why are both idempotency and optimistic concurrency needed? | Idempotency prevents duplicate logical intent; expected versions prevent an otherwise valid action from overwriting newer state. |
 | What should happen when a mutating tool times out? | Mark the effect unknown, block dependent work and blind retry, reconcile using downstream identifiers or observed state, then conclude committed, absent, partial, or intervention required. |
 
+## Transition to Chapter 13
 
-## Transition to Chapter 15
+Human control introduces waits and resumptions; Chapter 13 makes those waits durable and gives long-running work explicit state and recovery.
 
-Human control introduces waits and resumptions; Chapter 15 makes those waits durable and gives long-running work explicit state and recovery.
-
-# 15 — Long-Running and Durable Agents
+# 13 — Long-Running and Durable Agents
 
 > **Evidence note.** Durable-execution systems preserve workflow progress across failures and long waits; concrete integrations and replay semantics vary by backend. [R02][R36][R38]
 
@@ -1479,13 +1216,21 @@ The Run API persists intent and returns quickly; the durable workflow owns lifec
 * Separate task queues by workflow build compatibility. Keep old workers available for in-flight runs or migrate explicitly; never replay old history against untested new code.
 * Rate-limit external signals per tenant/source and coalesce superseding updates where domain semantics allow. Preserve individual inbox receipts even when only the latest value wakes the workflow.
 
+|  |
+| --- |
+| **PRODUCTION CONSIDERATION**  Assume at-least-once delivery and make effects idempotent. Exactly-once is not available end to end; a dispatch that times out leaves the outcome genuinely unknown. Give every logical effect a stable key, record its receipt, and reconcile rather than retrying blind. |
+
 ## Grounding, corrections, and evidence boundary
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | Recovery objective | Durability is incomplete without measured RTO/RPO, compatible worker availability, backup restoration, region failover, and explicit treatment of pending approvals and unknown effects during disaster recovery. | TEMPORAL; CLOUDEVENTS |
 
-Evidence anchors: TEMPORAL; CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix M.
+Evidence anchors: TEMPORAL; CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix K.
+
+|  |
+| --- |
+| **COMMON PITFALL**  Storing conversation history and calling it durable state. Transcripts record what was said, not what was decided or committed. Persist decisions, approvals, and effect receipts as first-class records; a run must be resumable from them even if every message is discarded. |
 
 ## Pattern reference — Long-Running Agents
 
@@ -1537,92 +1282,7 @@ A durable workflow records deterministic decisions and schedules bounded activit
 
 ### Replay-safe workflow reducer
 
-PYTHON · implementation excerpt
-
-```python
-from __future__ import annotations
-
-from dataclasses import dataclass, replace
-from typing import Literal
-
-RunStatus = Literal["submitted", "running", "waiting", "needs_approval",
-                    "succeeded", "failed", "canceled", "intervention_required"]
-TERMINAL = frozenset({"succeeded", "failed", "canceled", "intervention_required"})
-
-@dataclass(frozen=True)
-class RunState:
-    status: RunStatus = "submitted"
-    state_version: int = 0
-    current_node: str | None = None
-    cancel_requested: bool = False
-    unknown_effect_ids: tuple[str, ...] = ()
-    terminal_reason: str | None = None
-
-@dataclass(frozen=True)
-class WorkflowEvent:
-    kind: str
-    data: dict[str, object]
-    expected_state_version: int | None = None
-
-
-def evolve(state: RunState, event: WorkflowEvent) -> RunState:
-    if event.expected_state_version is not None and event.expected_state_version != state.state_version:
-        raise ValueError("stale workflow event")
-    if state.status in TERMINAL:
-        raise ValueError("terminal workflow cannot transition")
-    version = state.state_version + 1
-    if event.kind == "RunAuthorized" and state.status == "submitted":
-        start = str(event.data["start_node"])
-        return replace(state, status="running", current_node=start, state_version=version)
-    if event.kind == "ActivityCompleted" and state.status == "running":
-        return replace(state, current_node=str(event.data["next_node"]), state_version=version)
-    if event.kind == "WaitStarted" and state.status == "running":
-        return replace(state, status="waiting", state_version=version)
-    if event.kind == "WaitSatisfied" and state.status == "waiting":
-        return replace(state, status="running", state_version=version)
-    if event.kind == "ApprovalRequired" and state.status == "running":
-        return replace(state, status="needs_approval", state_version=version)
-    if event.kind == "ApprovalReceived" and state.status == "needs_approval":
-        return replace(state, status="running", state_version=version)
-    if event.kind == "EffectUnknown":
-        effect_id = str(event.data["effect_id"])
-        if effect_id in state.unknown_effect_ids:
-            return replace(state, state_version=version)
-        return replace(state, unknown_effect_ids=state.unknown_effect_ids + (effect_id,), state_version=version)
-    if event.kind == "EffectReconciled":
-        effect_id = str(event.data["effect_id"])
-        return replace(state, unknown_effect_ids=tuple(e for e in state.unknown_effect_ids if e != effect_id), state_version=version)
-    if event.kind == "CancelRequested":
-        return replace(state, cancel_requested=True, state_version=version)
-    if event.kind == "RunSucceeded" and state.status == "running":
-        if state.unknown_effect_ids:
-            raise ValueError("cannot succeed with unknown effects")
-        return replace(state, status="succeeded", terminal_reason="accepted", state_version=version)
-    if event.kind == "RunFailed":
-        return replace(state, status="failed", terminal_reason=str(event.data["reason"]), state_version=version)
-    if event.kind == "InterventionRequired":
-        return replace(state, status="intervention_required", terminal_reason=str(event.data["reason"]), state_version=version)
-    raise ValueError(f"invalid event {event.kind!r} from state {state.status!r}")
-
-
-def decide(state: RunState) -> list[dict[str, object]]:
-    if state.unknown_effect_ids:
-        return [{"type": "reconcile_effect", "effect_id": e} for e in state.unknown_effect_ids]
-    if state.cancel_requested:
-        return [{"type": "close_canceled"}]
-    if state.status in TERMINAL or state.status in {"waiting", "needs_approval", "submitted"}:
-        return []
-    if state.status == "running" and state.current_node:
-        return [{"type": "schedule_activity", "node": state.current_node}]
-    return [{"type": "require_intervention", "reason": "running workflow has no current node"}]
-
-
-def replay(history: list[WorkflowEvent]) -> RunState:
-    state = RunState()
-    for event in history:
-        state = evolve(state, event)
-    return state
-```
+[[EXAMPLE:durable-state#core]]
 
 ## Debugging playbook
 
@@ -1669,18 +1329,17 @@ def replay(history: list[WorkflowEvent]) -> RunState:
 
 13 MCP, A2A, and External Integration
 
+## Transition to Chapter 14
 
-## Transition to Chapter 16
+The core patterns are now defined; Chapter 14 compares them across uncertainty, authority, latency, evidence, and operating cost.
 
-The core patterns are now defined; Chapter 16 compares them across uncertainty, authority, latency, evidence, and operating cost.
-
-# 16 — Enterprise Pattern Catalog
+# 14 — Enterprise Pattern Catalog
 
 ## How to use the cards
 
 Choose by hidden obligation, uncertainty, and risk—not fashionable terminology. Every card uses one review sequence so teams can compare alternatives consistently.
 
-[[DIAGRAM:pattern-decision-tree|Figure 16-1 — Pattern selection decision tree]]
+[[DIAGRAM:pattern-decision-tree|Figure 14-1 — Pattern selection decision tree]]
 
 ## Reasoning
 
@@ -1922,7 +1581,338 @@ Choose by hidden obligation, uncertainty, and risk—not fashionable terminology
 
 **Trade-offs.** Abstraction may lag novel features; allow negotiated extensions.
 
+## Transition to Chapter 15
 
-## Transition to Chapter 17
+Pattern selection is easier when failure shapes are visible; Chapter 15 recasts recurring anti-patterns as measurable replacement decisions.
 
-Pattern selection is easier when failure shapes are visible; Chapter 17 recasts recurring anti-patterns as measurable replacement decisions.
+# 15 — Enterprise Anti-Pattern Catalog
+
+## Field-guide method
+
+Anti-patterns are recurring system shapes. Diagnose the failed responsibility boundary, not only the symptom. Each card supplies the same replacement sequence.
+
+[[DIAGRAM:anti-before-after|Figure 15-1 — Autonomous monolith versus governed agentic architecture]]
+
+## Reasoning
+
+### AP-01 — Autonomous monolith
+
+**Problem.** A prototype mixes reasoning, state, credentials, tools, retries, approval, completion.
+
+**Anti-Pattern.** One unconstrained agent owns end-to-end control.
+
+**Why It Fails.** Probabilistic behavior becomes the control plane and failures cannot be isolated.
+
+**Recommended Pattern.** Bounded runtime inside durable workflow, policy, tool/effect, acceptance services.
+
+**Architecture.** Monolith → direct tools → “done” versus workflow → semantic nodes → governed effects → acceptance.
+
+**Enterprise Example.** Onboarding restarts and repeats vendor creation.
+
+**Detection Metrics.** Direct protected calls, restart loss, false completion, mixed responsibilities.
+
+**Trade-offs.** Decompose around highest-risk effects; more services add interfaces.
+
+## Context engineering
+
+### AP-02 — Prompt as database
+
+**Problem.** Business state must survive.
+
+**Anti-Pattern.** Chat history or summary is authoritative.
+
+**Why It Fails.** Truncation, drift, concurrency, schema, and audit fail.
+
+**Recommended Pattern.** Canonical typed state plus ContextManifest projection.
+
+**Architecture.** Transcript state versus State Service → snapshot → prompt.
+
+**Enterprise Example.** Renewal forgets legal approval after summarization.
+
+**Detection Metrics.** Compaction loss, summary conflict, recovery mismatch.
+
+**Trade-offs.** Typed state needs schema evolution.
+
+## Security
+
+### AP-03 — Ambient authority
+
+**Problem.** Agents need access.
+
+**Anti-Pattern.** Workers receive reusable broad credentials.
+
+**Why It Fails.** Compromise obtains broad, long-lived authority.
+
+**Recommended Pattern.** Subject+workload identity and narrowed capability leases.
+
+**Architecture.** Broad token versus policy → scoped lease → enforcement.
+
+**Enterprise Example.** Support token can export all customers.
+
+**Detection Metrics.** Scope/age, unused privilege, expansion, cross-tenant attempts.
+
+**Trade-offs.** Fine policy adds design/latency.
+
+## Reliability
+
+### AP-04 — Retry everywhere
+
+**Problem.** Transient failures occur.
+
+**Anti-Pattern.** SDK, gateway, workflow, connector, tool each retry.
+
+**Why It Fails.** Attempts multiply, cost/load spike, mutations duplicate.
+
+**Recommended Pattern.** One retry owner per failure class and shared attempt/deadline budget.
+
+**Architecture.** Nested retries versus classified failure → one schedule → terminal.
+
+**Enterprise Example.** 3×3×2 policies create 18 registry calls.
+
+**Detection Metrics.** Attempts/logical operation, amplification, duplicates, deadline overrun.
+
+**Trade-offs.** Central policy can be conservative.
+
+## Reliability
+
+### AP-05 — Timeout means failure
+
+**Problem.** Response is lost after dispatch.
+
+**Anti-Pattern.** Mark failed and retry immediately.
+
+**Why It Fails.** First call may have committed.
+
+**Recommended Pattern.** Unknown-effect terminal and reconciliation before retry/compensate.
+
+**Architecture.** Timeout→failed→retry versus timeout→unknown→lookup→decide.
+
+**Enterprise Example.** Vendor is created twice.
+
+**Detection Metrics.** Unknown count/age, duplicate keys, post-timeout conflicts.
+
+**Trade-offs.** Unknown may delay completion.
+
+## Governance
+
+### AP-06 — Boolean or conversational approval
+
+**Problem.** Humans approve protected actions.
+
+**Anti-Pattern.** A Boolean/chat message authorizes later current arguments.
+
+**Why It Fails.** Effect, policy, actor, or version can change.
+
+**Recommended Pattern.** Immutable proposal and expiring exact ApprovalGrant.
+
+**Architecture.** approved=true versus proposal hash → grant → revalidate → commit.
+
+**Enterprise Example.** $10k approval reused for $100k.
+
+**Detection Metrics.** Hash mismatch, reuse, expiry, post-approval incident.
+
+**Trade-offs.** Benign changes may require reapproval.
+
+## Observability
+
+### AP-07 — Model says done
+
+**Problem.** Runs need completion.
+
+**Anti-Pattern.** Model assertion sets success.
+
+**Why It Fails.** Missing evidence, approval, effect, or obligation hides as success.
+
+**Recommended Pattern.** Independent executable acceptance over authoritative state.
+
+**Architecture.** Model text→success versus AcceptanceEngine→accepted/blocked/failed/unknown.
+
+**Enterprise Example.** Onboarding says complete with stale sanctions check.
+
+**Detection Metrics.** False completion, reopen rate, missing artifacts/effects.
+
+**Trade-offs.** Rules require domain maintenance.
+
+## Multi-agent collaboration
+
+### AP-08 — Multi-agent chat as workflow
+
+**Problem.** Specialists coordinate.
+
+**Anti-Pattern.** Free-form messages own state, work, deadlines, joins.
+
+**Why It Fails.** Duplicate work, cycles, lost cancellation/artifacts.
+
+**Recommended Pattern.** TaskEnvelope, owner, child tasks, artifacts, deterministic join.
+
+**Architecture.** Chat mesh versus supervisor workflow + task service.
+
+**Enterprise Example.** Finance and legal each expect the other to approve.
+
+**Detection Metrics.** Orphans, conflicts, depth, join age, late effects.
+
+**Trade-offs.** Formal tasks reduce fluidity.
+
+## Context engineering
+
+### AP-09 — Vector store as source of truth
+
+**Problem.** Relevant knowledge is needed.
+
+**Anti-Pattern.** Similarity hit is current authoritative fact.
+
+**Why It Fails.** Stale, unauthorized, poisoned, duplicated chunks drive action.
+
+**Recommended Pattern.** Governed source/snapshot; index is derived locator with ACL/freshness verification.
+
+**Architecture.** Vector hit→action versus source+ACL+snapshot→evidence→decision.
+
+**Enterprise Example.** Old policy chunk applies obsolete limit.
+
+**Detection Metrics.** Freshness, source disagreement, ACL/citation mismatch.
+
+**Trade-offs.** Authoritative lookup may be slower.
+
+## Security
+
+### AP-10 — LLM judge as security gate
+
+**Problem.** Ambiguous content needs review.
+
+**Anti-Pattern.** Model score alone authorizes protected action.
+
+**Why It Fails.** Judge is injectable, nondeterministic, biased, and drifts.
+
+**Recommended Pattern.** Deterministic policy/invariant gate; judge only triages/evidences.
+
+**Architecture.** score>threshold→execute versus policy→optional judge→human/escalation.
+
+**Enterprise Example.** Judge calls excessive payment low risk.
+
+**Detection Metrics.** Repeated-run disagreement, bypass, false negative, override.
+
+**Trade-offs.** Rules cannot express all nuance.
+
+## Reasoning
+
+### AP-11 — Unbounded loops and recursive delegation
+
+**Problem.** Complex work varies.
+
+**Anti-Pattern.** Agents iterate/spawn without global limits.
+
+**Why It Fails.** Runaway cost, cyclic delegation, queue saturation.
+
+**Recommended Pattern.** Global decreasing budgets, acyclic ownership, depth/fan-out/progress limits.
+
+**Architecture.** Recursion versus runtime-governed task graph.
+
+**Enterprise Example.** Research supervisor spawns endless fact-checkers.
+
+**Detection Metrics.** Depth, fan-out, repeated state, no progress, budget exhaustion.
+
+**Trade-offs.** Caps may truncate rare work.
+
+## Tools
+
+### AP-12 — Ungated tool discovery and catalog dumping
+
+**Problem.** Many tools exist.
+
+**Anti-Pattern.** Every discovered tool/schema enters the prompt.
+
+**Why It Fails.** Confusion, token load, malicious descriptions, excessive agency.
+
+**Recommended Pattern.** Registry → eligibility/policy → task shortlist → schema validation.
+
+**Architecture.** Full MCP catalog versus approved tool slice and lease.
+
+**Enterprise Example.** Reporting agent finds admin delete tool.
+
+**Detection Metrics.** Exposed/eligible/used, confusion, overhead, unauthorized discovery.
+
+**Trade-offs.** Narrow list can omit needed tool.
+
+## Memory
+
+### AP-13 — Memory write by default
+
+**Problem.** Personalization is desired.
+
+**Anti-Pattern.** Every interaction/summary becomes durable memory.
+
+**Why It Fails.** Secrets, errors, injections, bias, stale facts persist.
+
+**Recommended Pattern.** Purpose-bound candidate with provenance, verification, scope, TTL, deletion.
+
+**Architecture.** Transcript→memory versus candidate→gate→typed record.
+
+**Enterprise Example.** Malicious email stores fake bank account.
+
+**Detection Metrics.** Sensitive writes, stale retrieval, corrections, memory incidents.
+
+**Trade-offs.** Strict writes reduce convenience.
+
+## Observability
+
+### AP-14 — Telemetry without causal/effect lineage
+
+**Problem.** Teams instrument components.
+
+**Anti-Pattern.** Logs cannot join versions, policy, effects, acceptance, outcome.
+
+**Why It Fails.** Local optimization hides business regression.
+
+**Recommended Pattern.** Causal run graph joining release, context, decisions, effects, outcome/cost.
+
+**Architecture.** Separate dashboards versus correlated graph.
+
+**Enterprise Example.** Lower model latency hides more retries and lower completion.
+
+**Detection Metrics.** Outcome join, missing parents/versions, unattributed cost.
+
+**Trade-offs.** Correlation increases governance burden.
+
+## System architecture
+
+### AP-15 — Model/provider swap as configuration
+
+**Problem.** Teams seek cost/quality changes.
+
+**Anti-Pattern.** Alias changes without behavioral validation.
+
+**Why It Fails.** Tool, schema, refusal, safety, latency, cost behavior shifts.
+
+**Recommended Pattern.** Versioned ChangeBundle with evaluation, security, load, canary, rollback.
+
+**Architecture.** Edit alias versus immutable route policy→replay→approval→canary.
+
+**Enterprise Example.** Cheaper model drops tool args in one language.
+
+**Detection Metrics.** Schema/tool regression, refusal shift, slice drift, fallback.
+
+**Trade-offs.** Validation slows experimentation.
+
+## Operations
+
+### AP-16 — In-place change and test after release
+
+**Problem.** Fast edits are convenient.
+
+**Anti-Pattern.** Prompts/Skills/tools/policy/routes mutate production.
+
+**Why It Fails.** Runs are irreproducible; rollback/attribution fail.
+
+**Recommended Pattern.** Immutable artifacts, ReleaseManifest, pretests, signed promotion, canary, rollback.
+
+**Architecture.** Mutable console versus build→validate→approve→promote→monitor.
+
+**Enterprise Example.** Prompt fix increases leakage and cannot roll back exactly.
+
+**Detection Metrics.** Unversioned runs, out-of-band edits, rollback failure.
+
+**Trade-offs.** Immutability needs good tooling.
+
+## Transition to Chapter 16
+
+After removing unsafe local architectures, Chapter 16 considers when multiple agents add justified specialization rather than accidental complexity.
