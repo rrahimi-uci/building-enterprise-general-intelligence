@@ -47,14 +47,29 @@ def splice_theme(source: str, theme: str) -> str:
     return source[:match.end()] + "\n" + body + "\n" + source[match.end():]
 
 
+# The renderers place every figure at the full column width, so a narrow diagram
+# gets stretched. Rendering it at a flat 300 dpi would then land below the
+# contract once scaled up, so the raster dpi is chosen per diagram from its
+# natural width. The vector PDF is unaffected -- it scales losslessly.
+MAX_RENDER_DPI = 700
+
+
+def natural_width_inches(staged: Path) -> float:
+    plain = subprocess.run(["dot", "-Tplain", str(staged)], check=True, capture_output=True, text=True)
+    return float(plain.stdout.splitlines()[0].split()[2])
+
+
 def render_graphviz(source: Path, theme: Path, pdf: Path, png: Path) -> None:
     spliced = splice_theme(source.read_text(encoding="utf-8"), theme.read_text(encoding="utf-8"))
     with tempfile.NamedTemporaryFile("w", suffix=".gv", delete=False) as handle:
         handle.write(spliced)
         staged = Path(handle.name)
     try:
+        width_in = natural_width_inches(staged) or PUBLICATION_WIDTH_INCHES
+        scale = max(1.0, PUBLICATION_WIDTH_INCHES / width_in)
+        dpi = min(MAX_RENDER_DPI, int(RENDER_DPI * scale))
         subprocess.run(["dot", "-Tpdf", str(staged), "-o", str(pdf)], check=True, capture_output=True)
-        subprocess.run(["dot", "-Tpng", f"-Gdpi={RENDER_DPI}", str(staged), "-o", str(png)],
+        subprocess.run(["dot", "-Tpng", f"-Gdpi={dpi}", str(staged), "-o", str(png)],
                        check=True, capture_output=True)
     finally:
         staged.unlink(missing_ok=True)
@@ -67,13 +82,13 @@ def render_mermaid(source: Path, config: Path, pdf: Path, png: Path) -> None:
         if config.exists():
             command += ["-c", str(config)]
         subprocess.run(command, check=True, capture_output=True)
-        subprocess.run(["rsvg-convert", "-f", "pdf", "-o", str(pdf), str(svg)],
+        subprocess.run(["rsvg-convert", "-f", "pdf", "-b", "white", "-o", str(pdf), str(svg)],
                        check=True, capture_output=True)
         # Width in pixels, not a dpi flag: rsvg's dpi applies to the SVG's own
         # units, and mermaid emits a pixel viewBox, so ask for the width we want.
         width = int(PUBLICATION_WIDTH_INCHES * RENDER_DPI)
-        subprocess.run(["rsvg-convert", "-f", "png", "-w", str(width), "-o", str(png), str(svg)],
-                       check=True, capture_output=True)
+        subprocess.run(["rsvg-convert", "-f", "png", "-b", "white", "-w", str(width),
+                        "-o", str(png), str(svg)], check=True, capture_output=True)
 
 
 def identical_png(candidate: Path, existing: Path) -> bool:

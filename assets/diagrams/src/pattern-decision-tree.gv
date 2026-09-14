@@ -1,28 +1,28 @@
 // Figure 16-1 — Pattern selection decision tree.
 // Message: choose by hidden obligation, uncertainty and risk, not by fashionable
-// terminology. Every leaf names the pattern and the reason it was reached.
+// terminology. Each leaf names the pattern and the condition that reached it.
 digraph pattern_decision_tree {
   rankdir = TB
-  graph [ranksep=0.30, nodesep=0.14]
-  node [width=1.45, fontsize=11.5]
-  edge [fontsize=10]
+  graph [ranksep=0.32, nodesep=0.14]
+  node [width=1.35, fontsize=10.5]
+  edge [fontsize=9.5]
 
-  q1 [label="Is the path\nknown in advance?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.9, height=1.0]
-  q2 [label="Does the next step depend\non what was observed?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=2.2, height=1.0]
-  q3 [label="Is the work\nlong-running?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.9, height=1.0]
-  q4 [label="Does an effect need\nhuman authority?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=2.1, height=1.0]
+  q1 [label="Path known\nin advance?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.5, height=0.85]
+  q2 [label="Next step depends\non observation?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.8, height=0.85]
+  q3 [label="Long-running?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.5, height=0.85]
+  q4 [label="Effect needs\nhuman authority?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.7, height=0.85]
 
-  p1 [label="Deterministic workflow\nno agent required", fillcolor="#E7F5F3", color="#0D6E69"]
-  p2 [label="Bounded ReAct\nbudgets and acceptance", fillcolor="#E7F5F3", color="#0D6E69"]
-  p3 [label="Plan–Execute\nplan as reviewable data", fillcolor="#E7F5F3", color="#0D6E69"]
-  p4 [label="Durable agent\nreplayable event state", fillcolor="#E7F5F3", color="#0D6E69"]
-  p5 [label="Human-in-the-loop\napproval bound to proposal", fillcolor="#E7F5F3", color="#0D6E69"]
+  p1 [label="Deterministic\nworkflow", fillcolor="#E7F5F3", color="#0D6E69"]
+  p2 [label="Bounded\nReAct", fillcolor="#E7F5F3", color="#0D6E69"]
+  p3 [label="Plan–Execute", fillcolor="#E7F5F3", color="#0D6E69"]
+  p4 [label="Durable\nagent", fillcolor="#E7F5F3", color="#0D6E69"]
+  p5 [label="Human-in-\nthe-loop", fillcolor="#E7F5F3", color="#0D6E69"]
 
   q1 -> p1 [label=" yes ", color="#0D6E69", fontcolor="#0D6E69"]
   q1 -> q2 [label=" no "]
   q2 -> p2 [label=" yes ", color="#0D6E69", fontcolor="#0D6E69"]
   q2 -> p3 [label=" no "]
-  p2 -> q3 [style=dashed, color="#4A6078"]
+  q2 -> q3 [style=dashed, color="#4A6078", label=" then "]
   q3 -> p4 [label=" yes ", color="#0D6E69", fontcolor="#0D6E69"]
   q3 -> q4 [label=" no "]
   q4 -> p5 [label=" yes ", color="#0D6E69", fontcolor="#0D6E69"]

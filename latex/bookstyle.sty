@@ -226,10 +226,14 @@
 \captionsetup{font=small,labelfont={bf,color=BookNavy},textfont={it,color=BookSlate},justification=centering,singlelinecheck=false,skip=4pt}
 \setlength{\floatsep}{12pt plus 2pt minus 2pt}
 \setlength{\textfloatsep}{13pt plus 2pt minus 3pt}
+% The caption text already carries the book's own chapter-relative number
+% ("Figure 4-1 — ..."), which the prose cross-references. LaTeX's automatic
+% "Figure N:" label would print a second, different number in front of it, so
+% the label is suppressed and the book's numbering stands alone.
 \newcommand{\BookDiagram}[3]{%
   \begin{figure}[htbp]\centering
   \includegraphics[width=\linewidth,height=0.76\textheight,keepaspectratio]{#1}%
-  \caption{#2}\label{fig:#3}
+  \captionsetup{labelformat=empty}\caption{#2}\label{fig:#3}
   \end{figure}}
 \newcommand{\BookFigureCaption}[1]{\begin{center}\color{BookSlate}\fontsize{8.5}{10.5}\selectfont\itshape #1\end{center}}
 

@@ -48,7 +48,7 @@ SRE / operations & Parts VII, VIII and Appendices B, L & SLOs, incidents, recove
 
 \section{Architecture at a glance}
 
-\BookDiagram{assets/diagrams/book-map.png}{Figure 0-1 — Narrative map from foundations to production operations}{book-map}
+\BookDiagram{assets/diagrams/book-map.pdf}{Figure 0-1 — Narrative map from foundations to production operations}{book-map}
 
 \section{Reference-guide contract}
 
@@ -1205,7 +1205,7 @@ Each platform service owns one authoritative record & global control plane to re
 
 The enterprise architecture places probabilistic reasoning inside explicit experience, runtime, workflow, knowledge, integration, security, evaluation, and operations planes. The agent is a decision component—not the workflow, authorization service, database, policy engine, or proof of completion.\par
 
-\BookDiagram{assets/diagrams/reference-architecture.png}{Figure 4-1 — Enterprise agentic AI layered reference architecture}{reference-architecture}
+\BookDiagram{assets/diagrams/reference-architecture.pdf}{Figure 4-1 — Enterprise agentic AI layered reference architecture}{reference-architecture}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -1232,7 +1232,7 @@ Evaluation and operations & Tracing, evaluation, SLOs, incidents, release, capac
 
 \section{End-to-end responsibility flow}
 
-\BookDiagram{assets/diagrams/request-sequence.png}{Figure 4-2 — Request-to-verified-outcome sequence}{request-sequence}
+\BookDiagram{assets/diagrams/request-sequence.pdf}{Figure 4-2 — Request-to-verified-outcome sequence}{request-sequence}
 
 \begin{enumerate}
 
@@ -1705,7 +1705,7 @@ Separate the four things an agent does with what the organization knows, and giv
 
 \section{Solution blueprint}
 
-\BookDiagram{assets/diagrams/knowledge-fabric.png}{Figure 5-1 — The enterprise knowledge fabric and its four consumption modes}{knowledge-fabric}
+\BookDiagram{assets/diagrams/knowledge-fabric.pdf}{Figure 5-1 — The enterprise knowledge fabric and its four consumption modes}{knowledge-fabric}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -2045,7 +2045,7 @@ DMN earns its place fastest. A decision table with a declared hit policy is the 
 
 Extraction is probabilistic. Verification must not be. The pipeline that works separates the two and refuses to let the first vouch for itself.\par
 
-\BookDiagram{assets/diagrams/policy-to-guardrail.png}{Figure 5-2 — Extract, prove, and project: from policy text to an enforced guardrail}{policy-to-guardrail}
+\BookDiagram{assets/diagrams/policy-to-guardrail.pdf}{Figure 5-2 — Extract, prove, and project: from policy text to an enforced guardrail}{policy-to-guardrail}
 
 \textbf{Extract} is the part a language model does well: find the rules, type their conditions and outcomes, record where each came from.\par
 
@@ -2909,7 +2909,7 @@ Context assembly completes the knowledge Part. Chapter 9 turns from what agents 
 
 The developer platform is a reusable paved road that lets teams build differentiated agents without repeatedly rebuilding identity, policy, tool safety, tracing, evaluation, durable execution, and delivery infrastructure. It is not a mandatory monolith: applications use platform-owned contracts and replaceable adapters.\par
 
-\BookDiagram{assets/diagrams/developer-platform.png}{Figure 7-1 — Agentic developer platform and SDK capability stack}{developer-platform}
+\BookDiagram{assets/diagrams/developer-platform.pdf}{Figure 7-1 — Agentic developer platform and SDK capability stack}{developer-platform}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -2950,13 +2950,13 @@ Deployment \& Versioning & Packaging, manifests, environments, gates, canary, ro
 
 \section{Portable contracts and multi-framework support}
 
-\BookDiagram{assets/diagrams/portability.png}{Figure 7-2 — Platform contracts with replaceable framework and provider adapters}{portability}
+\BookDiagram{assets/diagrams/portability.pdf}{Figure 7-2 — Platform contracts with replaceable framework and provider adapters}{portability}
 
 Use AgentSpec, RunContext, TaskEnvelope, ToolSpec/ToolCall, ContextManifest, MemoryRecord, EvaluationResult, and ReleaseManifest as stable contracts. Compile them into framework/provider adapters. Standardized contracts, MCP, APIs, events, agent-to-agent protocols, gateways, and shared platform services provide interoperability without leaking vendor-native message objects into applications. Compatibility suites verify cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.\par
 
 \section{Developer lifecycle}
 
-\BookDiagram{assets/diagrams/developer-lifecycle.png}{Figure 7-3 — Local-to-production agent lifecycle}{developer-lifecycle}
+\BookDiagram{assets/diagrams/developer-lifecycle.pdf}{Figure 7-3 — Local-to-production agent lifecycle}{developer-lifecycle}
 
 Create from an approved template; attach tools, Skills, context, and memory; configure model policy, permissions, budgets, and review; test deterministic logic, contracts, simulations, adversarial cases, and failures; evaluate quality, safety, latency, and cost; package immutable artifacts with locks, SBOM, signature, provenance, and ReleaseManifest; promote through policy gates; observe correlated production traces; improve through controlled ChangeBundles.\par
 
@@ -2986,7 +2986,7 @@ The fluent API is convenience. The compiled contracts, policy decisions, tool/ef
 
 Developer experience should compress setup and diagnosis time while making authority, versions, risk, evidence, and cost visible. A convenient SDK that hides those concerns transfers complexity to production incidents.\par
 
-\BookDiagram{assets/diagrams/dx-golden-path.png}{Figure 7-4 — Developer golden path from scaffold to operated release}{dx-golden-path}
+\BookDiagram{assets/diagrams/dx-golden-path.pdf}{Figure 7-4 — Developer golden path from scaffold to operated release}{dx-golden-path}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -3015,7 +3015,7 @@ Improve & Build ChangeBundle from evidence & Trace mining, dataset curation, exp
 
 \section{Testing and simulation pyramid}
 
-\BookDiagram{assets/diagrams/test-pyramid.png}{Figure 7-5 — Testing and simulation pyramid}{test-pyramid}
+\BookDiagram{assets/diagrams/test-pyramid.pdf}{Figure 7-5 — Testing and simulation pyramid}{test-pyramid}
 
 Deterministic units verify schemas, policy helpers, acceptance, routes, reducers, calculations, and state transitions. Contract tests verify identity, idempotency, timeout/unknown-effect semantics, protocol capability, errors, and telemetry. Component evaluations measure retrieval, tools, arguments, structured output, safety, and memory. Trajectory simulation tests planning, handoffs, loops, deadlines, cancellation, duplicates, dependency degradation, and human delay. End-to-end staging uses exact model, identity, gateway, data, and integration versions. Canary and shadow evaluation use explicit stop and rollback conditions.\par
 
@@ -6067,7 +6067,7 @@ The core patterns are now defined; Chapter 16 compares them across uncertainty, 
 
 Choose by hidden obligation, uncertainty, and risk—not fashionable terminology. Every card uses one review sequence so teams can compare alternatives consistently.\par
 
-\BookDiagram{assets/diagrams/pattern-decision-tree.png}{Figure 16-1 — Pattern selection decision tree}{pattern-decision-tree}
+\BookDiagram{assets/diagrams/pattern-decision-tree.pdf}{Figure 16-1 — Pattern selection decision tree}{pattern-decision-tree}
 
 \section{Reasoning}
 
@@ -6319,7 +6319,7 @@ Pattern selection is easier when failure shapes are visible; Chapter 17 recasts 
 
 Anti-patterns are recurring system shapes. Diagnose the failed responsibility boundary, not only the symptom. Each card supplies the same replacement sequence.\par
 
-\BookDiagram{assets/diagrams/anti-before-after.png}{Figure 17-1 — Autonomous monolith versus governed agentic architecture}{anti-before-after}
+\BookDiagram{assets/diagrams/anti-before-after.pdf}{Figure 17-1 — Autonomous monolith versus governed agentic architecture}{anti-before-after}
 
 \section{Reasoning}
 
@@ -7509,7 +7509,7 @@ Failed/Expired/InterventionRequired & Terminal or ambiguous remote outcome & App
 
 The LLM Gateway is the controlled boundary between enterprise workloads and model providers or self-hosted inference. It normalizes model access and enforces model-specific routing, policy, privacy, economics, observability, and release governance. It does not own business workflow, tool effects, agent delegation, or the external API perimeter.\par
 
-\BookDiagram{assets/diagrams/gateway-position.png}{Figure 19-1 — LLM Gateway position relative to adjacent gateways}{gateway-position}
+\BookDiagram{assets/diagrams/gateway-position.pdf}{Figure 19-1 — LLM Gateway position relative to adjacent gateways}{gateway-position}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -7564,7 +7564,7 @@ Logging, tracing, evaluation hooks & Normalized spans, route, usage, policy, cac
 
 \section{Policy-first routing}
 
-\BookDiagram{assets/diagrams/model-routing.png}{Figure 19-2 — Policy-first model-routing decision tree}{model-routing}
+\BookDiagram{assets/diagrams/model-routing.pdf}{Figure 19-2 — Policy-first model-routing decision tree}{model-routing}
 
 Filter by tenant, purpose, data class, residency, risk, required capabilities, context length, tool/JSON behavior, and approved version. Only then optimize expected accepted-outcome quality under latency and cost budgets. Health and quota further constrain selection. Fallbacks obey the same invariants; “any available model” is not a safe fallback.\par
 
@@ -7749,7 +7749,7 @@ The gateway controls model access, but not the entire attack surface; Chapter 20
 
 Agentic systems combine untrusted language, privileged tools, dynamic context, durable memory, third-party protocols, and autonomous timing. Security cannot be one prompt or classifier. It constrains what enters, which capabilities become eligible, what may leave, which effects commit, and how the enterprise detects and recovers.\par
 
-\BookDiagram{assets/diagrams/security-depth.png}{Figure 20-1 — Defense-in-depth guardrails architecture}{security-depth}
+\BookDiagram{assets/diagrams/security-depth.pdf}{Figure 20-1 — Defense-in-depth guardrails architecture}{security-depth}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -7779,11 +7779,11 @@ Detection/response & Monitoring, auditing, containment, revocation, incident res
 
 \section{Trust boundaries and runtime sequence}
 
-\BookDiagram{assets/diagrams/security-boundaries.png}{Figure 20-2 — Agentic security trust boundaries}{security-boundaries}
+\BookDiagram{assets/diagrams/security-boundaries.pdf}{Figure 20-2 — Agentic security trust boundaries}{security-boundaries}
 
 Trust is not inherited through a chain. User authentication does not authorize the agent; discovery does not authorize a tool; retrieved text is not instruction; an agent message does not prove peer identity; HTTP success does not prove business acceptance.\par
 
-\BookDiagram{assets/diagrams/guardrail-sequence.png}{Figure 20-3 — Runtime guardrail and protected-effect sequence}{guardrail-sequence}
+\BookDiagram{assets/diagrams/guardrail-sequence.pdf}{Figure 20-3 — Runtime guardrail and protected-effect sequence}{guardrail-sequence}
 
 Authenticate subject/workload; classify/minimize input; build authorized labeled context; choose eligible model; validate structured output; authorize eligible tool and exact arguments; obtain proposal-bound approval when required; execute through sandbox/gateway with scoped credentials and DLP; reconcile effects and run deterministic acceptance; monitor, audit, contain, revoke, recover, and learn.\par
 
@@ -9954,7 +9954,7 @@ Build the evaluation set from production failures, not from imagined ones. Every
 
 Continuous improvement joins production evidence to versioned change and release. It does not let an agent rewrite its prompt, memory policy, permissions, evaluator, or code and then certify itself.\par
 
-\BookDiagram{assets/diagrams/learning-loop.png}{Figure 25-1 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn}{learning-loop}
+\BookDiagram{assets/diagrams/learning-loop.pdf}{Figure 25-1 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn}{learning-loop}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -9986,7 +9986,7 @@ Learn & Record causal result, curate regressions, update taxonomy/runbook into L
 
 \section{Runtime adaptation versus controlled offline improvement}
 
-\BookDiagram{assets/diagrams/runtime-offline.png}{Figure 25-2 — Runtime adaptation and offline improvement boundary}{runtime-offline}
+\BookDiagram{assets/diagrams/runtime-offline.pdf}{Figure 25-2 — Runtime adaptation and offline improvement boundary}{runtime-offline}
 
 Runtime adaptation selects only pre-approved routes/fallbacks, reduces optional context, sheds load, stops a loop, asks for input, escalates, or rolls back inside a fixed envelope. It cannot expand permissions, purpose, data access, spend, tools, or model allowlists. Offline improvement creates a new immutable release and may change prompts, context/RAG, memory, tools, skills, model selection, routing, deterministic code, agent topology, workflows, and system architecture after evaluation and approval.\par
 
@@ -10226,7 +10226,7 @@ The improvement loop proposes and validates change; Chapter 26 assigns decision 
 
 Governance makes decisions explicit, proportional, evidence-based, and reversible. It accelerates safe delivery with reusable risk tiers, policy, review paths, and evidence rather than sending every prompt edit to one committee.\par
 
-\BookDiagram{assets/diagrams/governance-model.png}{Figure 26-1 — Federated governance with centralized control services}{governance-model}
+\BookDiagram{assets/diagrams/governance-model.pdf}{Figure 26-1 — Federated governance with centralized control services}{governance-model}
 
 \needspace{5\baselineskip}
 \BookTableStart

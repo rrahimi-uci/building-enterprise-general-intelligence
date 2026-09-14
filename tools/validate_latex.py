@@ -191,17 +191,38 @@ def main() -> int:
             errors.append(path.name + " has unbalanced environment " + issue)
 
     diagram_paths = re.findall(r"\\BookDiagram\{([^}]+)\}", content)
-    registered_files = {d["file"] for d in json.loads(
-        (root / "config" / "diagrams.json").read_text(encoding="utf-8"))["diagrams"]}
+    diagram_registry = json.loads(
+        (root / "config" / "diagrams.json").read_text(encoding="utf-8"))["diagrams"]
+    # The TeX embeds the vector render where one exists, so compare against that.
+    registered_files = {
+        (d.get("vector") if d.get("vector") and (root / d["vector"]).exists() else d["file"])
+        for d in diagram_registry
+    }
+    # Every diagram must keep an editable source, so a future contributor can
+    # change it rather than recreating it from the rendered image.
+    for d in diagram_registry:
+        if not d.get("source"):
+            errors.append(f"{d['id']}: no editable source recorded in the registry")
+        elif not (root / d["source"]).exists():
+            errors.append(f"{d['id']}: editable source {d['source']} is missing")
+        if d.get("vector") and not (root / d["vector"]).exists():
+            errors.append(f"{d['id']}: vector render {d['vector']} is missing")
     if set(diagram_paths) != registered_files:
         missing = sorted(registered_files - set(diagram_paths))
         extra = sorted(set(diagram_paths) - registered_files)
         errors.append(f"Diagram paths differ from the registry: unreferenced={missing}, unregistered={extra}")
     image_quality = []
-    for value in ["assets/cover/cover-v2.1.0.png"] + diagram_paths:
+    # Resolution is a property of the raster render. A vector diagram has none,
+    # so measure the PNG beside it -- that is what the DOCX edition embeds and
+    # the only render where pixel density can be wrong.
+    raster_for = {d["vector"]: d["file"] for d in diagram_registry if d.get("vector")}
+    cover = f"assets/cover/cover-v{book_release(root)}.png"
+    for value in [cover] + [raster_for.get(p, p) for p in diagram_paths]:
         path = root / value
         if not path.exists():
             errors.append("Missing image: " + value)
+            continue
+        if path.suffix.lower() == ".pdf":
             continue
         with Image.open(path) as image:
             target_width = 8.5 if "cover" in value else 7.06
