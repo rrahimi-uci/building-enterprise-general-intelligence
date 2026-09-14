@@ -1,0 +1,42 @@
+// Figure 17-4 — AP-06. Boolean consent versus a proposal-bound grant.
+// Message: the top path lets the payload change between consent and commit; the bottom path makes that change detectable.
+//
+// Layout: two labelled columns rather than two clusters. A top-level
+// `rank=same` naming nodes that live inside clusters makes dot drop the cluster
+// boxes entirely, so each panel is a rank=same group with its heading as a
+// plain node and its flow edges unconstrained. With rankdir=LR a rank becomes a
+// column, which is why this reads top-to-bottom within each panel. The heading
+// lands at the foot of its column -- dot orders within a rank by edge
+// structure, not by the order names are listed -- so it reads as a caption.
+// That is deliberate; do not spend time trying to move it.
+digraph anti_approval_binding {
+  rankdir = LR
+  graph [ranksep=0.30, nodesep=0.18]
+  node [shape=box, style="filled,rounded", penwidth=1.4, fontsize=11,
+        margin="0.13,0.08", height=0.40]
+  edge [arrowsize=0.7, penwidth=1.6]
+
+  bad  [shape=plaintext, style="", label=<<B><FONT COLOR="#A62C2C" POINT-SIZE="12">ANTI&#8209;PATTERN</FONT></B>>]
+  good [shape=plaintext, style="", label=<<B><FONT COLOR="#0D6E69" POINT-SIZE="12">CORRECTION</FONT></B>>]
+  bad -> good [style=invis]
+
+
+  b1 [label="Reviewer sees\n\"pay $10,000\"", shape=box, style="filled,rounded", fillcolor="#EEF4FA", color="#4A6078"]
+  b2 [label="approved = true", shape=box, style="filled,rounded", fillcolor="#FBE3E3", color="#A62C2C"]
+  b3 [label="Arguments change", shape=note, style=filled, fillcolor="#FBE3E3", color="#A62C2C"]
+  b4 [label="Commits $100,000", shape=box, style="filled,rounded", fillcolor="#FBE3E3", color="#A62C2C"]
+  g1 [label="Immutable proposal\ndigest + policy version", shape=note, style=filled, fillcolor="#E6F5F9", color="#0B6076"]
+  g2 [label="ApprovalGrant\nbound to digest · expires", shape=box, style="filled,rounded", fillcolor="#EAF3FB", color="#1450A3"]
+  g3 [label="Digest still\nmatches?", shape=diamond, style=filled, fillcolor="#FFF4DF", color="#8A5600", height=0.62]
+  g4 [label="Commit\nidempotency = digest", shape=box, style="filled,rounded", fillcolor="#E7F5F3", color="#0D6E69"]
+
+  b1 -> b2 [color="#A62C2C", constraint=false]
+  b2 -> b3 [color="#A62C2C", constraint=false]
+  b3 -> b4 [color="#A62C2C", constraint=false]
+  g1 -> g2 [color="#0D6E69", constraint=false]
+  g2 -> g3 [color="#0D6E69", constraint=false]
+  g3 -> g4 [color="#0D6E69", constraint=false, xlabel=" yes"]
+
+  { rank=same; b1; b2; b3; b4; bad }
+  { rank=same; g1; g2; g3; g4; good }
+}
