@@ -4,21 +4,21 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "33fa699204f2d583715cdd617ecabe63bef29b9f6e9decd07e8442894d9fcd3d",
-    "content_tex_sha256": "ccbeb8aecbed48db897d94914e60e98b5d515463e40b2ac54c38d8f368aff1e3",
+    "content_tex_sha256": "c4bfb8ed426b131ea19216156f4ce0dd49d856b2452e9becde481ab81adaf48e",
     "style_sha256": "f2f56a95c6d5382add095f9df3e90ee3a6f508577ec5413768159c668f1e7da3",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "appendices": 12,
-    "diagrams": 26,
-    "code_blocks": 67,
-    "longtables": 214,
-    "callout_tables": 98,
+    "diagrams": 27,
+    "code_blocks": 68,
+    "longtables": 216,
+    "callout_tables": 99,
     "citation_occurrences": 104,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 312,
-    "markdown_code_blocks": 67,
+    "markdown_tables": 315,
+    "markdown_code_blocks": 68,
     "image_quality": [
       {
         "file": "assets/cover/cover-v2.1.0.png",
@@ -59,6 +59,14 @@
           839
         ],
         "effective_dpi": 554.1
+      },
+      {
+        "file": "assets/diagrams/deterministic-shell.png",
+        "pixels": [
+          2379,
+          2371
+        ],
+        "effective_dpi": 337.0
       },
       {
         "file": "assets/diagrams/reference-architecture.png",

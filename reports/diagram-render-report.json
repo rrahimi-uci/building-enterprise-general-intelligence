@@ -1,6 +1,6 @@
 {
-  "diagrams": 26,
-  "with_vector": 26,
+  "diagrams": 27,
+  "with_vector": 27,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -67,6 +67,17 @@
       "effective_dpi": 330,
       "vector": true,
       "sha256": "adb374580defa4632e86c5ea65a64cbc51d1e4ca6aad831f55d3ab03b7b0a9f1"
+    },
+    {
+      "id": "deterministic-shell",
+      "source": "deterministic-shell.gv",
+      "pixels": [
+        2379,
+        2371
+      ],
+      "effective_dpi": 347,
+      "vector": true,
+      "sha256": "470b5cf7eb6a5b8ab0f082b914ed56c153b6dc03402a770c5b0c0b2166bae21b"
     },
     {
       "id": "developer-lifecycle",

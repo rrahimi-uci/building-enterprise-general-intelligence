@@ -48,6 +48,14 @@
       "sha256": "adb374580defa4632e86c5ea65a64cbc51d1e4ca6aad831f55d3ab03b7b0a9f1"
     },
     {
+      "id": "deterministic-shell",
+      "file": "assets/diagrams/deterministic-shell.png",
+      "source": "assets/diagrams/src/deterministic-shell.gv",
+      "vector": "assets/diagrams/deterministic-shell.pdf",
+      "description": "The six gates between a model proposal and an accepted effect, and what each one refuses",
+      "sha256": "470b5cf7eb6a5b8ab0f082b914ed56c153b6dc03402a770c5b0c0b2166bae21b"
+    },
+    {
       "id": "developer-lifecycle",
       "file": "assets/diagrams/developer-lifecycle.png",
       "sha256": "54dfe08451ffa40cb3dfbb39f2554d7f317c4b7f1688813192d23b5241f4c7b2",
