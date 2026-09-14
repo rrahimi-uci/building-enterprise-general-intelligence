@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "note": "Source visuals were authored for the v1.0.0 twelve-Part structure and bake in their own PART badge, title, focus line and a 'BOOK v1.0.0' footer. Only the artwork panel is used; the renderers draw Part identity from the canonical Markdown so it stays correct. Where v2.0.0 merged two Parts, the visual of the dominant subject is used.",
+  "note": "Source visuals were authored for the v1.0.0 twelve-Part structure and bake in their own PART badge, title, focus line and a 'BOOK v1.0.0' footer. Only the artwork panel is used; the renderers draw Part identity from the canonical Markdown so it stays correct. Where v2.1.0 merged two Parts, the visual of the dominant subject is used.",
   "crop_box": {
     "left": 0.47,
     "top": 0.055,

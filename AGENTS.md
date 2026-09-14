@@ -53,7 +53,7 @@ every check — a stated failure is acceptable, a silent one is not.
 
 ## Structural invariants
 
-- Exactly 8 Parts, 27 chapters, and 12 appendices for v2.0.0 unless a versioned topology change is intentional.
+- Exactly 8 Parts, 28 chapters, and 12 appendices for v2.1.0 unless a versioned topology change is intentional.
 - Every Part/chapter/appendix starts with H1 and on a new DOCX and LaTeX page.
 - Part and appendices divider pages are standalone in both publication renderers.
 - Heading levels are not skipped.

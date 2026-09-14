@@ -2,7 +2,7 @@
 
 This Part is about running the system for years rather than shipping it once. It covers the operating model that assigns accountability, the release machinery that makes change reversible, and the economics that decide whether the system survives its own success.
 
-# 25 — Governance, Risk, and Operating Model
+# 26 — Governance, Risk, and Operating Model
 
 > **Evidence note.** NIST AI RMF and its Generative AI Profile are voluntary risk guidance; ISO/IEC 42001 specifies an AI management system; the EU AI Act source provides official implementation context. Applicability and legal obligations require qualified jurisdiction-specific review. [R12][R13][R14][R40]
 
@@ -10,7 +10,7 @@ This Part is about running the system for years rather than shipping it once. It
 
 Governance makes decisions explicit, proportional, evidence-based, and reversible. It accelerates safe delivery with reusable risk tiers, policy, review paths, and evidence rather than sending every prompt edit to one committee.
 
-[[DIAGRAM:governance-model|Figure 25-1 — Federated governance with centralized control services]]
+[[DIAGRAM:governance-model|Figure 26-1 — Federated governance with centralized control services]]
 
 | **Decision** | **Accountable owner** | **Evidence** |
 | --- | --- | --- |
@@ -42,11 +42,11 @@ Principles define non-negotiable outcomes; standards define reusable contracts; 
 
 Operate per run (admission/policy/effects/acceptance), daily/weekly (SLO, quality, safety, cost, incidents, evaluator health), per release (classification, regression, security/privacy, compatibility, canary/rollback), quarterly (portfolio value/risk and platform roadmap), and annually/material change (policy, law, threat, recovery, independent assurance).
 
-## Transition to Chapter 26
+## Transition to Chapter 27
 
-Governance defines who may release change; Chapter 26 makes releases immutable, promotable, observable, reversible, and recoverable.
+Governance defines who may release change; Chapter 27 makes releases immutable, promotable, observable, reversible, and recoverable.
 
-# 26 — Deployment, Versioning, CI/CD, and Recovery
+# 27 — Deployment, Versioning, CI/CD, and Recovery
 
 > **Evidence note.** The incident lifecycle aligns with NIST SP 800-61 Rev. 3’s integration of incident response into cybersecurity risk management; agent-specific containment and recovery remain workload-defined. [R42]
 
@@ -336,11 +336,11 @@ def verify_release_artifact(
 | Why use workload queues and regional cells? | Isolate risk and latency classes, control noisy neighbors, scale additively, enforce residency, bound blast radius, and keep critical execution dependencies local. |
 | Describe safe regional failover during an external write. | Stop admission, fence the old writer, restore compatible durable state, reconcile executing and unknown effects and signals, atomically advance placement, then resume by risk tier. |
 
-## Transition to Chapter 27
+## Transition to Chapter 28
 
-The release lifecycle is controlled; Chapter 27 sizes the system and optimizes cost, latency, capacity, and reliability around verified outcomes.
+The release lifecycle is controlled; Chapter 28 sizes the system and optimizes cost, latency, capacity, and reliability around verified outcomes.
 
-# 27 — Cost, Latency, Capacity, and Reliability Optimization
+# 28 — Cost, Latency, Capacity, and Reliability Optimization
 
 > **Evidence note.** Little’s Law relates average items in a stable system to arrival rate and average time in system. The capacity equations in this chapter are planning approximations and must be calibrated by load tests. [R43]
 

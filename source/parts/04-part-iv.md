@@ -2,7 +2,7 @@
 
 This Part is the working catalogue. It moves from the loop shapes that solve real problems to the architecture shapes that quietly create them, and pairs every failure with a measurable replacement.
 
-# 08 — ReAct: Bounded Reason–Act–Observe Loops
+# 10 — ReAct: Bounded Reason–Act–Observe Loops
 
 > **Evidence note.** ReAct was introduced as a prompting paradigm that interleaves reasoning and action; its reported benchmark results motivate the loop, not an assertion that unrestricted production autonomy is safe. [R01]
 
@@ -144,11 +144,11 @@ A bounded controller alternates model decision and governed tool invocation. The
 | What should an observation contain? | A typed, sanitized result or artifact reference with provenance, version, classification, and explicit error semantics. |
 | When should ReAct not be used? | For a known workflow, a single retrieval, a protected transaction, or a task whose acceptance can be computed directly. |
 
-## Transition to Chapter 9
+## Transition to Chapter 11
 
-A bounded reason–act loop handles local uncertainty; Chapter 9 adds routing and handoff when known paths or specialists should own the work.
+A bounded reason–act loop handles local uncertainty; Chapter 11 adds routing and handoff when known paths or specialists should own the work.
 
-# 09 — Routing, Triage, and Handoffs
+# 11 — Routing, Triage, and Handoffs
 
 |  |
 | --- |
@@ -352,11 +352,11 @@ class DeterministicRouter:
 | How do you make routing debuggable? | Record candidates, eligibility filters, proposed route, confidence, validator decision, fallback, version, latency, and outcome. |
 | When is a static router better? | When classes are stable, risk is high, compliance requires predictability, or a simple rule already separates the work. |
 
-## Transition to Chapter 10
+## Transition to Chapter 12
 
-Routing selects among known capabilities; Chapter 10 addresses tasks whose decomposition must itself be proposed and validated.
+Routing selects among known capabilities; Chapter 12 addresses tasks whose decomposition must itself be proposed and validated.
 
-# 10 — Planning and Plan–Execute
+# 12 — Planning and Plan–Execute
 
 > **Evidence note.** Published engineering guidance distinguishes predefined workflows from model-directed agents and recommends adding complexity only when simpler compositions are insufficient. [R27]
 
@@ -611,11 +611,11 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 | How should replanning handle completed work? | Treat committed effects and accepted artifacts as immutable facts; revise only the affected future horizon and append a new version with rationale and diff. |
 | How do you prevent plausible but endless planning? | External revision, loop, step, cost, time, delegation, and no-progress limits plus deterministic acceptance and terminal transitions. |
 
-## Transition to Chapter 11
+## Transition to Chapter 13
 
-Planning creates an executable structure; Chapter 11 adds independent evaluation and bounded revision without self-certification.
+Planning creates an executable structure; Chapter 13 adds independent evaluation and bounded revision without self-certification.
 
-# 11 — Reflection and Evaluator–Optimizer
+# 13 — Reflection and Evaluator–Optimizer
 
 |  |
 | --- |
@@ -816,11 +816,11 @@ class EvaluatorOptimizer:
 | What should always be checked deterministically? | Schema, policy, authority, evidence presence, effect state, resource versions, arithmetic, and other computable invariants. |
 | When should you not add reflection? | When the first result already meets an executable specification, latency is critical, or critique adds no measured improvement. |
 
-## Transition to Chapter 12
+## Transition to Chapter 14
 
-Automated evaluation can improve candidates; Chapter 12 identifies decisions that require explicit human authority, correction, or recourse.
+Automated evaluation can improve candidates; Chapter 14 identifies decisions that require explicit human authority, correction, or recourse.
 
-# 12 — Human-in-the-Loop
+# 14 — Human-in-the-Loop
 
 > **Evidence note.** Human-review interfaces should be tested against WCAG 2.2 accessibility criteria; accessibility conformance does not by itself eliminate automation bias or establish decision fairness. [R41]
 
@@ -1078,11 +1078,11 @@ def proposal_hash(action: str, destination: str,
 | Why are both idempotency and optimistic concurrency needed? | Idempotency prevents duplicate logical intent; expected versions prevent an otherwise valid action from overwriting newer state. |
 | What should happen when a mutating tool times out? | Mark the effect unknown, block dependent work and blind retry, reconcile using downstream identifiers or observed state, then conclude committed, absent, partial, or intervention required. |
 
-## Transition to Chapter 13
+## Transition to Chapter 15
 
-Human control introduces waits and resumptions; Chapter 13 makes those waits durable and gives long-running work explicit state and recovery.
+Human control introduces waits and resumptions; Chapter 15 makes those waits durable and gives long-running work explicit state and recovery.
 
-# 13 — Long-Running and Durable Agents
+# 15 — Long-Running and Durable Agents
 
 > **Evidence note.** Durable-execution systems preserve workflow progress across failures and long waits; concrete integrations and replay semantics vary by backend. [R02][R36][R38]
 
@@ -1329,17 +1329,17 @@ A durable workflow records deterministic decisions and schedules bounded activit
 
 13 MCP, A2A, and External Integration
 
-## Transition to Chapter 14
+## Transition to Chapter 16
 
-The core patterns are now defined; Chapter 14 compares them across uncertainty, authority, latency, evidence, and operating cost.
+The core patterns are now defined; Chapter 16 compares them across uncertainty, authority, latency, evidence, and operating cost.
 
-# 14 — Enterprise Pattern Catalog
+# 16 — Enterprise Pattern Catalog
 
 ## How to use the cards
 
 Choose by hidden obligation, uncertainty, and risk—not fashionable terminology. Every card uses one review sequence so teams can compare alternatives consistently.
 
-[[DIAGRAM:pattern-decision-tree|Figure 14-1 — Pattern selection decision tree]]
+[[DIAGRAM:pattern-decision-tree|Figure 16-1 — Pattern selection decision tree]]
 
 ## Reasoning
 
@@ -1581,17 +1581,17 @@ Choose by hidden obligation, uncertainty, and risk—not fashionable terminology
 
 **Trade-offs.** Abstraction may lag novel features; allow negotiated extensions.
 
-## Transition to Chapter 15
+## Transition to Chapter 17
 
-Pattern selection is easier when failure shapes are visible; Chapter 15 recasts recurring anti-patterns as measurable replacement decisions.
+Pattern selection is easier when failure shapes are visible; Chapter 17 recasts recurring anti-patterns as measurable replacement decisions.
 
-# 15 — Enterprise Anti-Pattern Catalog
+# 17 — Enterprise Anti-Pattern Catalog
 
 ## Field-guide method
 
 Anti-patterns are recurring system shapes. Diagnose the failed responsibility boundary, not only the symptom. Each card supplies the same replacement sequence.
 
-[[DIAGRAM:anti-before-after|Figure 15-1 — Autonomous monolith versus governed agentic architecture]]
+[[DIAGRAM:anti-before-after|Figure 17-1 — Autonomous monolith versus governed agentic architecture]]
 
 ## Reasoning
 
@@ -1913,6 +1913,6 @@ Anti-patterns are recurring system shapes. Diagnose the failed responsibility bo
 
 **Trade-offs.** Immutability needs good tooling.
 
-## Transition to Chapter 16
+## Transition to Chapter 18
 
-After removing unsafe local architectures, Chapter 16 considers when multiple agents add justified specialization rather than accidental complexity.
+After removing unsafe local architectures, Chapter 18 considers when multiple agents add justified specialization rather than accidental complexity.

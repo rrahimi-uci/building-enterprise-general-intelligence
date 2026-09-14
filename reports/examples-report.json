@@ -1,6 +1,6 @@
 {
-  "examples": 16,
-  "cited": 16,
+  "examples": 22,
+  "cited": 22,
   "uncited": [],
   "rendered_lines": {
     "contracts": 69,
@@ -18,7 +18,13 @@
     "approval-verification": 98,
     "step-execution": 98,
     "durable-state": 91,
-    "react-engine": 106
+    "react-engine": 106,
+    "policy-to-rule": 51,
+    "grounding-verifier": 42,
+    "knowledge-graph": 42,
+    "rule-as-guardrail": 58,
+    "set-operations": 81,
+    "capability-catalog": 55
   },
   "tests_executed": true,
   "tests_passed": true,

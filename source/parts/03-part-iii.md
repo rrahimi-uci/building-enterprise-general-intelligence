@@ -2,7 +2,7 @@
 
 This Part turns the reference architecture into a paved road for delivery teams. It separates reusable platform capabilities from domain logic, defines portable SDK contracts, and shows how Skills and domain packs move through local development, evaluation, promotion, deployment, and support.
 
-# 05 — Agentic Developer Platform, SDK, and Delivery Lifecycle
+# 07 — Agentic Developer Platform, SDK, and Delivery Lifecycle
 
 > **Evidence note.** The portability layer is informed by current public agent abstractions from OpenAI, Microsoft, and Google; capability parity is not assumed and must be proven by adapter conformance tests. [R29][R31][R32]
 
@@ -10,7 +10,7 @@ This Part turns the reference architecture into a paved road for delivery teams.
 
 The developer platform is a reusable paved road that lets teams build differentiated agents without repeatedly rebuilding identity, policy, tool safety, tracing, evaluation, durable execution, and delivery infrastructure. It is not a mandatory monolith: applications use platform-owned contracts and replaceable adapters.
 
-[[DIAGRAM:developer-platform|Figure 5-1 — Agentic developer platform and SDK capability stack]]
+[[DIAGRAM:developer-platform|Figure 7-1 — Agentic developer platform and SDK capability stack]]
 
 | **Capability** | **Reusable platform responsibility** | **Application-specific responsibility** |
 | --- | --- | --- |
@@ -33,13 +33,13 @@ The developer platform is a reusable paved road that lets teams build differenti
 
 ## Portable contracts and multi-framework support
 
-[[DIAGRAM:portability|Figure 5-2 — Platform contracts with replaceable framework and provider adapters]]
+[[DIAGRAM:portability|Figure 7-2 — Platform contracts with replaceable framework and provider adapters]]
 
 Use AgentSpec, RunContext, TaskEnvelope, ToolSpec/ToolCall, ContextManifest, MemoryRecord, EvaluationResult, and ReleaseManifest as stable contracts. Compile them into framework/provider adapters. Standardized contracts, MCP, APIs, events, agent-to-agent protocols, gateways, and shared platform services provide interoperability without leaking vendor-native message objects into applications. Compatibility suites verify cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.
 
 ## Developer lifecycle
 
-[[DIAGRAM:developer-lifecycle|Figure 5-3 — Local-to-production agent lifecycle]]
+[[DIAGRAM:developer-lifecycle|Figure 7-3 — Local-to-production agent lifecycle]]
 
 Create from an approved template; attach tools, Skills, context, and memory; configure model policy, permissions, budgets, and review; test deterministic logic, contracts, simulations, adversarial cases, and failures; evaluate quality, safety, latency, and cost; package immutable artifacts with locks, SBOM, signature, provenance, and ReleaseManifest; promote through policy gates; observe correlated production traces; improve through controlled ChangeBundles.
 
@@ -68,7 +68,7 @@ The fluent API is convenience. The compiled contracts, policy decisions, tool/ef
 
 Developer experience should compress setup and diagnosis time while making authority, versions, risk, evidence, and cost visible. A convenient SDK that hides those concerns transfers complexity to production incidents.
 
-[[DIAGRAM:dx-golden-path|Figure 5-4 — Developer golden path from scaffold to operated release]]
+[[DIAGRAM:dx-golden-path|Figure 7-4 — Developer golden path from scaffold to operated release]]
 
 | **Stage** | **Developer action** | **Platform assistance** | **Evidence** |
 | --- | --- | --- | --- |
@@ -83,7 +83,7 @@ Developer experience should compress setup and diagnosis time while making autho
 
 ## Testing and simulation pyramid
 
-[[DIAGRAM:test-pyramid|Figure 5-5 — Testing and simulation pyramid]]
+[[DIAGRAM:test-pyramid|Figure 7-5 — Testing and simulation pyramid]]
 
 Deterministic units verify schemas, policy helpers, acceptance, routes, reducers, calculations, and state transitions. Contract tests verify identity, idempotency, timeout/unknown-effect semantics, protocol capability, errors, and telemetry. Component evaluations measure retrieval, tools, arguments, structured output, safety, and memory. Trajectory simulation tests planning, handoffs, loops, deadlines, cancellation, duplicates, dependency degradation, and human delay. End-to-end staging uses exact model, identity, gateway, data, and integration versions. Canary and shadow evaluation use explicit stop and rollback conditions.
 
@@ -108,11 +108,11 @@ Use one immutable artifact across environments; bind endpoints, identities, secr
 
 Start from accepted business outcome and walk backward through the causal run graph. Find the first divergent span: input classification, source/freshness, prompt, route, model, tool, arguments, policy, effect, approval, or acceptance. Do not “fix the prompt” until evidence locates the failing responsibility.
 
-## Transition to Chapter 6
+## Transition to Chapter 8
 
-The delivery path is established; Chapter 6 packages repeatable behavior as versioned Skills with explicit contracts and lifecycle controls.
+The delivery path is established; Chapter 8 packages repeatable behavior as versioned Skills with explicit contracts and lifecycle controls.
 
-# 06 — Skills as Versioned Capabilities
+# 08 — Skills as Versioned Capabilities
 
 |  |
 | --- |
@@ -203,11 +203,11 @@ Evidence anchors: SLSA; MCP-2026. Full URLs, authority, version, and scope appea
 | How should a Skill be tested? | Contract, deterministic unit, simulation, trajectory, threat, data-boundary, failure-injection, regression, load, and canary tests. |
 | When should behavior remain application-specific? | When it encodes one product transaction, unstable workflow, private data boundary, or ownership model that should not be generalized. |
 
-## Transition to Chapter 7
+## Transition to Chapter 9
 
-Individual Skills are governable; Chapter 7 composes them into domain packs without dissolving ownership or compatibility boundaries.
+Individual Skills are governable; Chapter 9 composes them into domain packs without dissolving ownership or compatibility boundaries.
 
-# 07 — Skill Packs and Domain Platforms
+# 09 — Skill Packs and Domain Platforms
 
 |  |
 | --- |
@@ -321,6 +321,6 @@ class SkillPackManifest(BaseModel):
 | How should packs be promoted? | As signed immutable releases through dev, staging, shadow, canary, production, and rollback aliases backed by evaluation evidence. |
 | What is the main pack anti-pattern? | A monolithic prompt-and-tools bundle with hidden dependencies, no owner, no tests, and no independent versioning. |
 
-## Transition to Chapter 8
+## Transition to Chapter 10
 
-The platform and capability model are complete; Chapter 8 begins the pattern sequence with the smallest bounded reasoning loop.
+The platform and capability model are complete; Chapter 10 begins the pattern sequence with the smallest bounded reasoning loop.

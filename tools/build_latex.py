@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the XeLaTeX representation of Book v2.0.0.
+"""Generate the XeLaTeX representation of Book v2.1.0.
 
 The canonical Markdown remains the semantic source. This tool converts the
 restricted publication Markdown vocabulary into a styled, self-contained
@@ -34,8 +34,8 @@ def book_release(root: Path) -> str:
     return json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]["version"]
 
 
-BOOK_TITLE = "Enterprise Agentic AI Architecture & Developer Platform Guide"
-BASENAME = "Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0"
+BOOK_TITLE = "Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise"
+BASENAME = "Enterprise-General-Intelligence-v2.1.0"
 
 
 def sha256(path: Path) -> str:
@@ -413,14 +413,15 @@ def render_content(blocks: list[tuple], diagram_files: dict[str, str], visuals: 
     return joined, stats
 
 
-def make_main() -> str:
+def make_main(book: dict) -> str:
+    """Title page text comes from config/book.json, so a retitle is one edit."""
     return "\n".join([
         "% Compile from the package root: latexmk -xelatex latex/" + BASENAME + ".tex",
         r"\documentclass[10pt,letterpaper,openany]{book}",
         r"\usepackage{latex/bookstyle}",
         r"\begin{document}",
-        r"\BookCover{assets/cover/cover-v2.0.0.png}",
-        r"\BookTitlePage{Enterprise Agentic AI Architecture \& Developer Platform Guide}{Book v2.0.0 · Publication Release · September 2026}{Reza Rahimi, PhD}{A structured enterprise reference for executives, architects, platform teams, security leaders, SREs, and senior engineers.}",
+        r"\BookCover{assets/cover/cover-v" + book["version"] + ".png}",
+        r"\BookTitlePage{" + escape_plain(book["title"]) + "}{Book v" + book["version"] + " · Publication Release · September 2026}{" + escape_plain(book["author"]) + "}{A structured enterprise reference for executives, architects, platform teams, security leaders, SREs, and senior engineers.}",
         r"\input{latex/content/book-content.tex}",
         r"\end{document}",
         "",
@@ -433,7 +434,7 @@ def write_compile_files(root: Path) -> None:
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
-ENTRY="latex/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.tex"
+ENTRY="latex/Enterprise-General-Intelligence-v2.1.0.tex"
 OUT="latex/build"
 mkdir -p "$OUT"
 if command -v latexmk >/dev/null 2>&1; then
@@ -444,7 +445,7 @@ else
   echo "XeLaTeX is required. Use the included Dockerfile.latex or CI workflow." >&2
   exit 2
 fi
-cp "$OUT/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0.pdf" "dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v2.0.0-LaTeX.pdf"
+cp "$OUT/Enterprise-General-Intelligence-v2.1.0.pdf" "dist/Enterprise-General-Intelligence-v2.1.0-LaTeX.pdf"
 """
     (latex_dir / "compile.sh").write_text(compile_script, encoding="utf-8", newline="\n")
     (latex_dir / "compile.sh").chmod(0o755)
@@ -506,7 +507,8 @@ def main() -> int:
     main_path = latex_dir / (BASENAME + ".tex")
     content_path = content_dir / "book-content.tex"
     dist_path = root / "dist" / (BASENAME + ".tex")
-    main_text = make_main()
+    book_cfg = json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]
+    main_text = make_main(book_cfg)
     main_path.write_text(main_text, encoding="utf-8", newline="\n")
     content_path.write_text(content, encoding="utf-8", newline="\n")
     dist_path.write_text(main_text, encoding="utf-8", newline="\n")

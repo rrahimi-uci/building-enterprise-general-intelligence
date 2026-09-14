@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "citation_style": "Numbered source identifiers [R01]…[R43]; bibliography ordered by identifier; accessed date shown for online sources.",
+  "citation_style": "Numbered source identifiers [R01]\u2026[R43]; bibliography ordered by identifier; accessed date shown for online sources.",
   "release": "1.0.0",
   "verified_on": "2026-09-13",
   "references": [
@@ -204,7 +204,7 @@
       "type": "standard",
       "author_or_organization": "ISO/IEC",
       "year": "2023",
-      "title": "Information technology — Artificial intelligence — Management system",
+      "title": "Information technology \u2014 Artificial intelligence \u2014 Management system",
       "publication_or_version": "ISO/IEC 42001:2023",
       "url": "https://www.iso.org/standard/42001",
       "supports": "Defines requirements for an AI management system and continual improvement.",
@@ -639,14 +639,89 @@
       "type": "research",
       "author_or_organization": "Little, John D. C.",
       "year": "1961",
-      "title": "A Proof for the Queuing Formula: L = λW",
+      "title": "A Proof for the Queuing Formula: L = \u03bbW",
       "publication_or_version": "Operations Research 9(3)",
       "url": "https://doi.org/10.1287/opre.9.3.383",
-      "supports": "Primary source for Little’s Law; book sizing equations remain workload-specific approximations.",
+      "supports": "Primary source for Little\u2019s Law; book sizing equations remain workload-specific approximations.",
       "verification": {
         "checked_on": "2026-09-13",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R44",
+      "type": "standard",
+      "author_or_organization": "Object Management Group",
+      "year": "2014",
+      "title": "Business Process Model and Notation (BPMN)",
+      "publication_or_version": "Version 2.0.2, formal, January 2014",
+      "url": "https://www.omg.org/spec/BPMN/2.0.2",
+      "supports": "Defines BPMN process modelling notation and its execution semantics. Supports the existence and semantics of the standard only, not any claim about its suitability for agentic planning.",
+      "verification": {
+        "checked_on": "2026-09-14",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated scope; re-verify living documentation before reuse."
+      }
+    },
+    {
+      "id": "R45",
+      "type": "standard",
+      "author_or_organization": "Object Management Group",
+      "year": "2024",
+      "title": "Decision Model and Notation (DMN)",
+      "publication_or_version": "Version 1.5, formal, August 2024",
+      "url": "https://www.omg.org/spec/DMN/1.5",
+      "supports": "Defines DMN decision tables, hit policies, and FEEL. Supports the existence and semantics of the standard only, not any claim about agent decision quality.",
+      "verification": {
+        "checked_on": "2026-09-14",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated scope; re-verify living documentation before reuse."
+      }
+    },
+    {
+      "id": "R46",
+      "type": "standard",
+      "author_or_organization": "Object Management Group",
+      "year": "2016",
+      "title": "Case Management Model and Notation (CMMN)",
+      "publication_or_version": "Version 1.1, formal, December 2016",
+      "url": "https://www.omg.org/spec/CMMN/1.1",
+      "supports": "Defines CMMN case modelling for unordered, event-driven work. Supports the existence and semantics of the standard only.",
+      "verification": {
+        "checked_on": "2026-09-14",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated scope; re-verify living documentation before reuse."
+      }
+    },
+    {
+      "id": "R47",
+      "type": "standard",
+      "author_or_organization": "Object Management Group",
+      "year": "2019",
+      "title": "Semantics of Business Vocabulary and Business Rules (SBVR)",
+      "publication_or_version": "Version 1.5, formal, December 2019",
+      "url": "https://www.omg.org/spec/SBVR/1.5",
+      "supports": "Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only.",
+      "verification": {
+        "checked_on": "2026-09-14",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated scope; re-verify living documentation before reuse."
+      }
+    },
+    {
+      "id": "R48",
+      "type": "framework documentation",
+      "author_or_organization": "Rahimi, R.",
+      "year": "2026",
+      "title": "Policy Logic Forge: compiling compliance policy text into typed, source-grounded executable decision logic",
+      "publication_or_version": "Repository documentation, ARCHITECTURE.md \u00a71.1",
+      "url": "https://github.com/rrahimi-uci/policy-logic-forge",
+      "supports": "Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction.",
+      "verification": {
+        "checked_on": "2026-09-14",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated scope; re-verify living documentation before reuse."
       }
     }
   ]

@@ -40,7 +40,7 @@ jobs:
           fi
       - uses: actions/upload-artifact@v4
         with:
-          name: book-v2.0.0-validation
+          name: book-v2.1.0-validation
           path: |
             dist/
             reports/

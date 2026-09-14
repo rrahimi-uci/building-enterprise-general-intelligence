@@ -11,7 +11,7 @@ import json,re,hashlib
 ROOT=Path(__file__).resolve().parents[1]
 SRC=ROOT/'source/original/Enterprise-Agentic-AI-Guide-v3.1-source.md'
 OUT=ROOT/'book/manuscript.md'
-DIST=ROOT/'dist/Enterprise-Agentic-AI-Architecture-Developer-Platform-Guide-v1.0.0.md'
+DIST=ROOT/'dist/Enterprise-General-Intelligence-v1.0.0.md'
 REFS=json.loads((ROOT/'config/references.json').read_text(encoding='utf-8'))['references']
 
 s=SRC.read_text(encoding='utf-8').replace('\r\n','\n')

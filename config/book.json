@@ -1,14 +1,29 @@
 {
   "schema_version": "1.0",
   "book": {
-    "title": "Enterprise Agentic AI Architecture & Developer Platform Guide",
-    "short_title": "Enterprise Agentic AI Architecture",
-    "version": "2.0.0",
+    "title": "Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise",
+    "short_title": "Enterprise General Intelligence",
+    "version": "2.1.0",
     "release_date": "2026-09-13",
     "author": "Reza Rahimi, PhD",
     "language": "en-US",
     "page_size": "Letter",
-    "status": "Publication release"
+    "status": "Publication release",
+    "cover": {
+      "eyebrow": "ENTERPRISE ARCHITECTURE REFERENCE",
+      "title_lines": [
+        "ENTERPRISE",
+        "GENERAL",
+        "INTELLIGENCE"
+      ],
+      "subtitle": "ARCHITECTING GOVERNED AGENTIC SYSTEMS",
+      "themes": [
+        "Agent runtimes \u00b7 Multi-agent systems \u00b7 Skills & tools",
+        "Gateways \u00b7 Security \u00b7 Evaluation \u00b7 Continuous learning",
+        "Governance \u00b7 Deployment \u00b7 Production operations"
+      ],
+      "strapline": "Governed, observable, and production-grade AI agent systems"
+    }
   },
   "structure": {
     "parts": [

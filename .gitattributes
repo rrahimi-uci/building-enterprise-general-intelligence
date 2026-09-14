@@ -11,7 +11,7 @@
 
 # Generated release/QA artifacts: collapse in PR diffs and exclude from
 # GitHub language statistics. They stay tracked because CHECKSUMS.sha256
-# and RELEASE-MANIFEST.json record them as v2.0.0 release evidence.
+# and RELEASE-MANIFEST.json record them as v2.1.0 release evidence.
 dist/**            linguist-generated=true
 qa/**              linguist-generated=true
 book/manuscript.md linguist-generated=true

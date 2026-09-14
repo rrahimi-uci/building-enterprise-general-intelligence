@@ -2,7 +2,7 @@
 
 This Part crosses the process boundary. It covers how agents divide work among themselves, how they reach systems and agents they do not own, and how model access itself becomes a governed control plane.
 
-# 16 — Supervisor/Worker and Multi-Agent Collaboration
+# 18 — Supervisor/Worker and Multi-Agent Collaboration
 
 > **Evidence note.** Public multi-agent implementation reports describe supervisor/specialist designs and substantial token/context trade-offs; these observations justify explicit topology and cost tests rather than universal multi-agent adoption. [R28][R33]
 
@@ -366,11 +366,11 @@ def derive_child(
 | How should fan-in be implemented? | Persist child states and artifacts, wait for an explicit join condition, then validate schemas, provenance, conflicts, quality, and policy deterministically. |
 | What does an A2A or MCP protocol not solve? | Business authorization, peer trust, quality, tenant isolation, effect semantics, artifact safety, cancellation guarantees, and audit remain local platform responsibilities. |
 
-## Transition to Chapter 17
+## Transition to Chapter 19
 
-Multi-agent collaboration inside one platform is only part of the problem; Chapter 17 governs cross-platform tools, agents, APIs, and events.
+Multi-agent collaboration inside one platform is only part of the problem; Chapter 19 governs cross-platform tools, agents, APIs, and events.
 
-# 17 — External Integration: MCP, A2A, and the Model Control Plane
+# 19 — External Integration: MCP, A2A, and the Model Control Plane
 
 > **Evidence note.** MCP 2026-07-28 defines a stateless, self-contained protocol core for resources, prompts, and tools, while A2A v1.0.1 defines agent cards and task/message/artifact exchange. Neither protocol transfers application authorization or business acceptance automatically. [R05][R06][R07]
 
@@ -517,7 +517,7 @@ At an open boundary, expose the standard A2A agent-card and task/message operati
 
 The LLM Gateway is the controlled boundary between enterprise workloads and model providers or self-hosted inference. It normalizes model access and enforces model-specific routing, policy, privacy, economics, observability, and release governance. It does not own business workflow, tool effects, agent delegation, or the external API perimeter.
 
-[[DIAGRAM:gateway-position|Figure 17-1 — LLM Gateway position relative to adjacent gateways]]
+[[DIAGRAM:gateway-position|Figure 19-1 — LLM Gateway position relative to adjacent gateways]]
 
 | **Component** | **Primary boundary** | **Owns** | **Does not own** |
 | --- | --- | --- | --- |
@@ -545,7 +545,7 @@ The LLM Gateway is the controlled boundary between enterprise workloads and mode
 
 ## Policy-first routing
 
-[[DIAGRAM:model-routing|Figure 17-2 — Policy-first model-routing decision tree]]
+[[DIAGRAM:model-routing|Figure 19-2 — Policy-first model-routing decision tree]]
 
 Filter by tenant, purpose, data class, residency, risk, required capabilities, context length, tool/JSON behavior, and approved version. Only then optimize expected accepted-outcome quality under latency and cost budgets. Health and quota further constrain selection. Fallbacks obey the same invariants; “any available model” is not a safe fallback.
 
@@ -677,6 +677,6 @@ def resolve_production_mcp_server():
 
 17 Sandboxing, Egress, Data Security, and Governance
 
-## Transition to Chapter 18
+## Transition to Chapter 20
 
-The gateway controls model access, but not the entire attack surface; Chapter 18 introduces defense in depth across all agentic trust boundaries.
+The gateway controls model access, but not the entire attack surface; Chapter 20 introduces defense in depth across all agentic trust boundaries.

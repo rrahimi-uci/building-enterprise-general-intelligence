@@ -1,8 +1,8 @@
 {
-  "release": "2.0.0",
+  "release": "2.1.0",
   "checked": "2026-09-13",
-  "references": 43,
-  "citation_occurrences": 94,
+  "references": 48,
+  "citation_occurrences": 104,
   "cited_ids": [
     "R01",
     "R02",
@@ -46,7 +46,12 @@
     "R40",
     "R41",
     "R42",
-    "R43"
+    "R43",
+    "R44",
+    "R45",
+    "R46",
+    "R47",
+    "R48"
   ],
   "unknown_ids": [],
   "uncited_ids": [],
@@ -354,6 +359,41 @@
       "method": "DOI metadata and authoritative search-index record",
       "verified": "2026-09-13",
       "caveat": "DOI extraction timed out; title, journal, year, and Little\u2019s Law scope were cross-checked."
+    },
+    {
+      "id": "R44",
+      "status": "verified",
+      "method": "OMG specification index page",
+      "verified": "2026-09-14",
+      "caveat": "Version and adoption date read from omg.org/spec/BPMN; 2.0.2 is the latest formal version."
+    },
+    {
+      "id": "R45",
+      "status": "verified",
+      "method": "OMG specification index page",
+      "verified": "2026-09-14",
+      "caveat": "1.5 (August 2024) is the latest formal version; a 1.7 beta exists and is informational only."
+    },
+    {
+      "id": "R46",
+      "status": "verified",
+      "method": "OMG specification index page",
+      "verified": "2026-09-14",
+      "caveat": "1.1 (December 2016) is the latest formal version; CMMN has not been revised since."
+    },
+    {
+      "id": "R47",
+      "status": "verified",
+      "method": "OMG specification index page",
+      "verified": "2026-09-14",
+      "caveat": "1.5 (December 2019) is the latest formal version."
+    },
+    {
+      "id": "R48",
+      "status": "verified_with_caveat",
+      "method": "direct inspection of the repository at ARCHITECTURE.md \u00a71.1",
+      "verified": "2026-09-14",
+      "caveat": "Book-authored project. The 44% figure is self-reported from one documented run on one corpus and was read from the source repository, not independently reproduced."
     }
   ],
   "pass": true,

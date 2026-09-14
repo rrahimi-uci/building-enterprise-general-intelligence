@@ -16,9 +16,10 @@ def font(size,bold=False):
         try:return ImageFont.truetype(p,size)
         except:pass
     return ImageFont.load_default()
+# Pillow rejects a bare hex string as a colour; the leading '#' is required.
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument('spec'); ap.add_argument('--output'); args=ap.parse_args(); spec=json.loads(Path(args.spec).read_text()); out=Path(args.output or f"{spec['id']}.png")
-    im=Image.new('RGB',(spec.get('width',1800),spec.get('height',1000)),'FFFFFF'); d=ImageDraw.Draw(im); nodes={n['id']:n for n in spec['nodes']}
+    im=Image.new('RGB',(spec.get('width',1800),spec.get('height',1000)),'#FFFFFF'); d=ImageDraw.Draw(im); nodes={n['id']:n for n in spec['nodes']}; d=ImageDraw.Draw(im); nodes={n['id']:n for n in spec['nodes']}
     d.text((60,35),spec['title'],font=font(42,True),fill='#102A4C')
     for e in spec.get('edges',[]):
         a,b=nodes[e['from']],nodes[e['to']]; x1,y1=a['x']+a['w'],a['y']+a['h']/2; x2,y2=b['x'],b['y']+b['h']/2; d.line((x1,y1,x2,y2),fill='#1769D2',width=8); d.polygon([(x2,y2),(x2-22,y2-13),(x2-22,y2+13)],fill='#1769D2'); d.text(((x1+x2)/2-40,(y1+y2)/2-30),e.get('label',''),font=font(22),fill='#173E68')

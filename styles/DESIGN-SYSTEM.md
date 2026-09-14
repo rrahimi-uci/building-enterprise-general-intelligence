@@ -1,4 +1,4 @@
-# Book Design System — v2.0.0
+# Book Design System — v2.1.0
 
 This document is the visual and editorial contract for every representation of the book. `config/book.json`, `config/style-tokens.json`, and `tools/build_book.py` are the executable counterparts.
 
@@ -198,7 +198,7 @@ Use the templates in `templates/`.
 - Registry: `config/references.json`.
 - In-text form: `[Rxx]` at the claim it supports.
 - Appendix K: generated bibliography.
-- Appendix K: generated reference list, with the claim-scope traceability matrix as its closing section. v2.0.0 folded the former Appendix M into it so a reader checking a citation holds one appendix letter, not two.
+- Appendix K: generated reference list, with the claim-scope traceability matrix as its closing section. v2.1.0 folded the former Appendix M into it so a reader checking a citation holds one appendix letter, not two.
 - Prefer primary standards, official documentation, peer-reviewed research, and binding legal texts.
 - Living documentation uses `n.d.` and an access date.
 - Versions/pins are recorded separately from publication year.

@@ -1,8 +1,8 @@
-# Citation Audit — Book v2.0.0
+# Citation Audit — Book v2.1.0
 
 **Result:** PASS
-**References:** 43
-**Citation occurrences:** 94
+**References:** 48
+**Citation occurrences:** 104
 **Verified:** 2026-09-13
 
 All sources were checked against their recorded claim scope. The audit validates attribution, not the book's independently authored architecture recommendations.
@@ -54,6 +54,11 @@ All sources were checked against their recorded claim scope. The audit validates
 | R41 | verified_with_caveat | W3C canonical metadata and search-index record | Live extraction timed out; Recommendation identity and accessibility scope were cross-checked. |
 | R42 | verified | direct primary-source review | Source identity and recorded claim scope were reviewed on the primary page. |
 | R43 | verified_with_caveat | DOI metadata and authoritative search-index record | DOI extraction timed out; title, journal, year, and Little’s Law scope were cross-checked. |
+| R44 | verified | OMG specification index page | Version and adoption date read from omg.org/spec/BPMN; 2.0.2 is the latest formal version. |
+| R45 | verified | OMG specification index page | 1.5 (August 2024) is the latest formal version; a 1.7 beta exists and is informational only. |
+| R46 | verified | OMG specification index page | 1.1 (December 2016) is the latest formal version; CMMN has not been revised since. |
+| R47 | verified | OMG specification index page | 1.5 (December 2019) is the latest formal version. |
+| R48 | verified_with_caveat | direct inspection of the repository at ARCHITECTURE.md §1.1 | Book-authored project. The 44% figure is self-reported from one documented run on one corpus and was read from the source repository, not independently reproduced. |
 
 ## Errors
 
