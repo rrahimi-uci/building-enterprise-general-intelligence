@@ -20,7 +20,9 @@ Figure 20. Enterprise Platform Architecture, APIs, and Data Models.
 
 The enterprise architecture places probabilistic reasoning inside explicit experience, runtime, workflow, knowledge, integration, security, evaluation, and operations planes. The agent is a decision component—not the workflow, authorization service, database, policy engine, or proof of completion.
 
-[[DIAGRAM:reference-architecture|Figure 4-1 — Enterprise agentic AI layered reference architecture]]
+[[DIAGRAM:reference-architecture|Figure 4-1 — The layered reference architecture: planes, the components in each, and the two concerns that cross them all]]
+
+Read the figure downward: each layer names the components the plane owns, and the solid path traces one request from intent to committed effect, narrowing in authority at every step. Trust and governance and evidence and improvement are drawn as vertical spines rather than layers because neither sits between two planes — the policy decision point is consulted at admission, at run control, and again at the Tool Gateway, and the collector gathers from every plane. Dashed edges are control, dotted edges are evidence, and the bottom band sits outside the trust boundary: nothing there is assumed, and everything returned from it is revalidated.
 
 | **Plane** | **Responsibilities** | **Authoritative records** | **Boundary** |
 | --- | --- | --- | --- |

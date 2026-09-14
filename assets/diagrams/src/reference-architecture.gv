@@ -1,47 +1,184 @@
 // Figure 4-1 — Enterprise agentic AI layered reference architecture.
+//
 // Message: probabilistic reasoning sits inside explicit planes; each plane owns
-// one named responsibility, and authority narrows as you read downward.
+// named components and one responsibility; authority narrows as a request
+// descends; and governance and evidence are not layers but spines that cross
+// every layer.
+//
+// This figure has to work as an architecture diagram rather than a contents
+// list, so each layer is a container holding the components the chapter names,
+// the request path is drawn descending through them, and trust/governance and
+// evidence are drawn as vertical spines -- the prose says both apply at every
+// layer, and drawing either as a band between two layers would contradict it.
+//
+// Layout notes for anyone editing this:
+//   * Each spine is a cluster whose nodes are chained, so the cluster occupies
+//     the same seven ranks as the layer stack and genuinely spans it. A single
+//     tall node cannot: dot centres a node on one rank.
+//   * The invisible column chains lock the stack into a grid. Without them each
+//     labelled flow edge pulls its endpoints into line and the stack drifts
+//     diagonally across the page.
+//   * Cross-cutting edges are `constraint=false` so they cannot add ranks, and
+//     deliberately few -- one per spine per layer would be unreadable.
 digraph reference_architecture {
-  rankdir = TB
-  graph [ranksep=0.16]
-  node [shape=plaintext, style="", margin=0]
-  edge [style=invis]
+  rankdir   = TB
+  compound  = true
+  graph [ranksep=0.40, nodesep=0.20]
+  node  [shape=box, style="filled,rounded", penwidth=1.3, fontsize=11,
+         margin="0.12,0.07", height=0.34, width=1.72, fixedsize=false, color="#4A6078", fillcolor="white"]
 
-  layer0 [label=<
-    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#4A6078" BGCOLOR="#EEF4FA">
-      <TR><TD COLSPAN="4" ALIGN="LEFT" BGCOLOR="#4A6078"><FONT COLOR="white" POINT-SIZE="12"><B>  Experience and channels</B></FONT></TD></TR>
-      <TR><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">User intent</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Review surfaces</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Accessibility</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Recourse</FONT></TD></TR>
-    </TABLE>>]
-  layer1 [label=<
-    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#0D6E69" BGCOLOR="#E7F5F3">
-      <TR><TD COLSPAN="4" ALIGN="LEFT" BGCOLOR="#0D6E69"><FONT COLOR="white" POINT-SIZE="12"><B>  Agent applications</B></FONT></TD></TR>
-      <TR><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Domain behaviour</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Topology</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Accepted outcomes</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Escalation</FONT></TD></TR>
-    </TABLE>>]
-  layer2 [label=<
-    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#0D6E69" BGCOLOR="#E7F5F3">
-      <TR><TD COLSPAN="4" ALIGN="LEFT" BGCOLOR="#0D6E69"><FONT COLOR="white" POINT-SIZE="12"><B>  Runtime and orchestration</B></FONT></TD></TR>
-      <TR><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Durable state</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Budgets and retries</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Human pauses</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Effect records</FONT></TD></TR>
-    </TABLE>>]
-  layer3 [label=<
-    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#0B6076" BGCOLOR="#E6F5F9">
-      <TR><TD COLSPAN="4" ALIGN="LEFT" BGCOLOR="#0B6076"><FONT COLOR="white" POINT-SIZE="12"><B>  Knowledge, context and memory</B></FONT></TD></TR>
-      <TR><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Authorized evidence</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Provenance</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Memory scope</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Reusable skills</FONT></TD></TR>
-    </TABLE>>]
-  layer4 [label=<
-    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#1450A3" BGCOLOR="#EAF3FB">
-      <TR><TD COLSPAN="4" ALIGN="LEFT" BGCOLOR="#1450A3"><FONT COLOR="white" POINT-SIZE="12"><B>  Gateways and integration</B></FONT></TD></TR>
-      <TR><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">LLM Gateway</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Tool Gateway</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">MCP and A2A</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Enterprise APIs</FONT></TD></TR>
-    </TABLE>>]
-  layer5 [label=<
-    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#A62C2C" BGCOLOR="#FCECEC">
-      <TR><TD COLSPAN="4" ALIGN="LEFT" BGCOLOR="#A62C2C"><FONT COLOR="white" POINT-SIZE="12"><B>  Security and governance</B></FONT></TD></TR>
-      <TR><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Identity and policy</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Guardrails</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Approvals</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Audit and evidence</FONT></TD></TR>
-    </TABLE>>]
-  layer6 [label=<
-    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#1450A3" BGCOLOR="#EDF3FC">
-      <TR><TD COLSPAN="4" ALIGN="LEFT" BGCOLOR="#1450A3"><FONT COLOR="white" POINT-SIZE="12"><B>  Evaluation and operations</B></FONT></TD></TR>
-      <TR><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Tracing</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Evaluation</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Release and SLOs</FONT></TD><TD WIDTH="120" ALIGN="CENTER"><FONT POINT-SIZE="11">Cost and capacity</FONT></TD></TR>
-    </TABLE>>]
+  // ------------------------------------------------- trust spine (left) --
+  subgraph cluster_gov {
+    label = <<B>Trust and governance</B>>
+    fontsize = 12; fontcolor = "#A62C2C"
+    style = filled; fillcolor = "#FBEFEF"; color = "#A62C2C"; penwidth = 1.5
+    margin = 8
+    node [fillcolor="#FCECEC", color="#A62C2C", fontsize=10, width=1.45]
+    v0 [label="IdP · STS"]
+    v1 [label="Workload identity"]
+    v2 [label="PDP / PEP"]
+    v3 [label="Guardrails"]
+    v4 [label="Secrets · leases"]
+    v5 [label="Approvals"]
+    v6 [label="Audit · WORM"]
+    v0 -> v1 -> v2 -> v3 -> v4 -> v5 -> v6 [style=invis]
+  }
 
-  layer0 -> layer1 -> layer2 -> layer3 -> layer4 -> layer5 -> layer6
+  // ---------------------------------------------------------- the stack --
+  subgraph cluster_exp {
+    label = <<B>Experience and channels</B>>
+    fontsize = 12; fontcolor = "#FFFFFF"
+    style = filled; fillcolor = "#4A6078"; color = "#4A6078"; penwidth = 1.5
+    margin = 8
+    node [fillcolor="#EEF4FA", color="#4A6078"]
+    e0 [label="Chat and UI"]
+    e1 [label="API clients"]
+    e2 [label="Operator console"]
+    e3 [style=invis, label=""]
+  }
+
+  subgraph cluster_edge {
+    label = <<B>Edge and admission</B>>
+    fontsize = 12; fontcolor = "#FFFFFF"
+    style = filled; fillcolor = "#4A6078"; color = "#4A6078"; penwidth = 1.5
+    margin = 8
+    node [fillcolor="#EEF4FA", color="#4A6078"]
+    d0 [label="API gateway · WAF"]
+    d1 [label="Tenant router"]
+    d2 [label="Request validator"]
+    d3 [style=invis, label=""]
+  }
+
+  subgraph cluster_run {
+    label = <<B>Run control and durable execution</B>>
+    fontsize = 12; fontcolor = "#FFFFFF"
+    style = filled; fillcolor = "#0D6E69"; color = "#0D6E69"; penwidth = 1.5
+    margin = 8
+    node [fillcolor="#E7F5F3", color="#0D6E69"]
+    r0 [label="Run API"]
+    r1 [label="Planner · coordinator"]
+    r2 [label="Workflow engine"]
+    r3 [label="Checkpoint store", shape=cylinder, style=filled]
+  }
+
+  subgraph cluster_agent {
+    label = <<B>Agent applications</B>>
+    fontsize = 12; fontcolor = "#FFFFFF"
+    style = filled; fillcolor = "#0D6E69"; color = "#0D6E69"; penwidth = 1.5
+    margin = 8
+    node [fillcolor="#E7F5F3", color="#0D6E69"]
+    a0 [label="AgentSpec"]
+    a1 [label="Bounded agent workers"]
+    a2 [label="Topology · handoffs"]
+    a3 [style=invis, label=""]
+  }
+
+  subgraph cluster_know {
+    label = <<B>Knowledge, context and memory</B>>
+    fontsize = 12; fontcolor = "#FFFFFF"
+    style = filled; fillcolor = "#0B6076"; color = "#0B6076"; penwidth = 1.5
+    margin = 8
+    node [fillcolor="#E6F5F9", color="#0B6076"]
+    k0 [label="Context service"]
+    k1 [label="Search · vector index", shape=cylinder, style=filled]
+    k2 [label="Catalog · lineage"]
+    k3 [label="Memory · Skills"]
+  }
+
+  subgraph cluster_gw {
+    label = <<B>Gateways and integration &#8212; the only way out</B>>
+    fontsize = 12; fontcolor = "#FFFFFF"
+    style = filled; fillcolor = "#1450A3"; color = "#1450A3"; penwidth = 1.5
+    margin = 8
+    node [fillcolor="#EAF3FB", color="#1450A3"]
+    g0 [label="LLM Gateway"]
+    g1 [label="Tool Gateway"]
+    g2 [label="MCP · A2A"]
+    g3 [label="Egress proxy"]
+  }
+
+  subgraph cluster_sor {
+    label = <<B>Systems of record and providers &#8212; outside the trust boundary</B>>
+    fontsize = 12; fontcolor = "#FFFFFF"
+    style = filled; fillcolor = "#6A2E6E"; color = "#6A2E6E"; penwidth = 1.5
+    margin = 8
+    node [fillcolor="#F7ECF8", color="#6A2E6E"]
+    s0 [label="Domain systems", shape=cylinder, style=filled]
+    s1 [label="Effect ledger", shape=cylinder, style=filled]
+    s2 [label="Artifact store", shape=cylinder, style=filled]
+    s3 [label="Model providers"]
+  }
+
+  // -------------------------------------------- evidence spine (right) --
+  subgraph cluster_obs {
+    label = <<B>Evidence and improvement</B>>
+    fontsize = 12; fontcolor = "#8A5600"
+    style = filled; fillcolor = "#FFFAF0"; color = "#8A5600"; penwidth = 1.5
+    margin = 8
+    node [fillcolor="#FFF4DF", color="#8A5600", fontsize=10, width=1.45]
+    o0 [label="OTel collector"]
+    o1 [label="Trace store"]
+    o2 [label="Evaluation service"]
+    o3 [label="Datasets"]
+    o4 [label="SLOs · cost"]
+    o5 [label="Incident tooling"]
+    o6 [label="ReleaseManifest"]
+    o0 -> o1 -> o2 -> o3 -> o4 -> o5 -> o6 [style=invis]
+  }
+
+  // Lock the stack into a grid so the labelled flow edges below cannot drag
+  // successive layers sideways.
+  edge [style=invis, weight=20]
+  e0 -> d0 -> r0 -> a0 -> k0 -> g0 -> s0
+  e1 -> d1 -> r1 -> a1 -> k1 -> g1 -> s1
+  e2 -> d2 -> r2 -> a2 -> k2 -> g2 -> s2
+  e3 -> d3 -> r3 -> a3 -> k3 -> g3 -> s3
+
+  // ------------------------------------------------------ request path --
+  edge [style=solid, weight=1, constraint=false, color="#1450A3", penwidth=1.7,
+        arrowsize=0.75, fontsize=9, fontcolor="#123A66"]
+  e1 -> d0 [label=" intent"]
+  d2 -> r0 [label=" admitted run"]
+  r1 -> a1 [label=" task envelope"]
+  a1 -> k0 [label=" context request"]
+  k0 -> g0 [label=" typed proposal"]
+  g1 -> s0 [label=" committed effect"]
+
+  // ------------------------------------------- cross-cutting concerns --
+  // Dashed = control (policy decides), dotted = evidence (telemetry observes).
+  // Kept to three per spine: one per layer would obscure the architecture.
+  // Every dashed edge leaves the PDP/PEP and every dotted edge arrives at the
+  // collector, because that is the architecture: one decision point, one
+  // collection point. Fanning them out across the spine implied several of
+  // each and made the routing wander over the stack.
+  edge [style=dashed, color="#A62C2C", penwidth=1.3, arrowsize=0.6, label=""]
+  v2 -> d0
+  v2 -> r0
+  v2 -> g0
+
+  edge [style=dotted, color="#8A5600", penwidth=1.3, dir=back]
+  o0 -> d2
+  o0 -> a2
+  o0 -> g3
 }
+
