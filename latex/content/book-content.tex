@@ -746,6 +746,52 @@ Structured output is valuable because it makes a model decision parseable, versi
 
 A useful proposal is small. It names one disposition, one tool or delegation target, canonical arguments, evidence references, uncertainty, and the expected resource version. It does not carry credentials, policy truth, or an instruction to bypass a failing control.\par
 
+\BookDiagram{assets/diagrams/deterministic-shell.pdf}{Figure 2-1 — The deterministic shell: six gates between a model proposal and an accepted effect}{deterministic-shell}
+
+\subsection{One proposal, six gates}
+
+The sequence above is the chapter in one line, but it only becomes useful when you can see what each gate rejects. Here is a single proposal from Northstar, and what happens to it.\par
+
+JSON · what the model actually emits\par
+
+\needspace{93.6pt}
+\begin{lstlisting}[style=bookcode,title={JSON},language=bookjson]
+{
+  "disposition": "propose_effect",
+  "tool": "supplier.create@2",
+  "arguments": {"legal_name": "Acme Industrial GmbH", "country": "DE",
+                "risk_tier": "standard", "expected_version": 4},
+  "evidence": ["doc:reg-extract-8812", "screen:sanctions-4471"],
+  "uncertainty": "medium — registry extract is 9 days old"
+}
+\end{lstlisting}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries Gate & \color{white}\bfseries Question it asks & \color{white}\bfseries What it rejects here \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries Gate & \color{white}\bfseries Question it asks & \color{white}\bfseries What it rejects here \\
+\endhead
+\textbf{Propose} & What does the model want to do? & Nothing — this stage only produces the object \\
+\rowcolor{BookLight}
+\textbf{Validate} & Is this well-formed against a schema \emph{we} own? & Unknown field, wrong type, unknown tool version \\
+\textbf{Authorize} & May \emph{this} subject do \emph{this} to \emph{this} resource, now? & Caller holds \lstinline[style=bookinline]!supplier:read! but not \lstinline[style=bookinline]!supplier:write! \\
+\rowcolor{BookLight}
+\textbf{Commit} & Execute once, through the same path a human request takes & A duplicate arriving from a retry, via the idempotency key \\
+\textbf{Verify} & Did the effect actually land, and does it match? & A timeout, which resolves to unknown rather than failed \\
+\rowcolor{BookLight}
+\textbf{Accept} & Are the run's obligations discharged? & Sanctions evidence older than policy allows \\
+\end{longtable}
+\BookTableEnd
+
+Two things are worth noticing. First, \textbf{validate and authorize are separate gates}, and conflating them is the most common mistake in this chapter's territory: the proposal above is perfectly well-formed and may still be forbidden. Schema validity is about shape; authorization is about permission.\par
+
+Second, the proposal carries \lstinline[style=bookinline]!expected_version: 4!. If the supplier record has moved to version 5 since the model read it, the commit fails rather than silently overwriting someone else's change. The model is allowed to be stale; it is not allowed to be stale \emph{and} authoritative.\par
+
 \subsection{Deterministic acceptance}
 
 Acceptance is not the model saying “done.” Northstar declares supplier onboarding complete only when required evidence artifacts exist, every screening result is fresh, approvals cover the exact proposal, all protected effects are committed with receipts, no unknown effect remains, and the supplier record satisfies domain invariants.\par
@@ -755,6 +801,8 @@ Acceptance is not the model saying “done.” Northstar declares supplier onboa
 Scale tool work by workload and risk class, not with one global queue. Read-only retrieval can use high concurrency. Browser sessions, code sandboxes, high-risk writes, and human approvals need independent quotas and backpressure. The Tool Gateway is stateless where possible; manifests, policy, effect records, and receipts live in durable stores. Downstream concurrency limits, not model throughput, usually determine safe capacity.\par
 
 \section{Design principles}
+
+These ten principles recur throughout the book. They divide into three groups: principles 1–3 decide \textbf{what the model is allowed to own}, 4–6 decide \textbf{where truth and permission live}, and 7–10 decide \textbf{what must be true before autonomy increases}.\par
 
 \begin{enumerate}
 
@@ -1200,6 +1248,43 @@ An SDK upgrade is a behavior change even when public types remain compatible. No
 \section{Architectural role}
 
 The OpenAI Agents SDK is best treated as a \textbf{bounded agent harness}, not the platform kernel. It contributes model-facing ergonomics—agent definitions, tools, structured outputs, local handoffs, run context, streaming, guardrails, and tracing hooks. Enterprise durability, delegated authorization, business transactions, approvals, effect reconciliation, tenant isolation, and audit remain platform responsibilities.\par
+
+\section{Why not just use the SDK directly?}
+
+This is the right question to ask, and the answer is not "frameworks are bad." The OpenAI Agents SDK is genuinely good at what it does, and reimplementing an agent loop is wasted effort. The argument is narrower: the SDK should own one bounded step, and nothing that must outlive that step.\par
+
+The distinction is about lifetime and authority, not quality.\par
+
+\needspace{5\baselineskip}
+\BookTableStart
+\fontsize{7.2}{9}\selectfont
+\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries Concern & \color{white}\bfseries Lifetime & \color{white}\bfseries Where it belongs & \color{white}\bfseries Why \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries Concern & \color{white}\bfseries Lifetime & \color{white}\bfseries Where it belongs & \color{white}\bfseries Why \\
+\endhead
+Agent definition, tools, turn loop & One step & \textbf{SDK} & This is what it is for, and it does it well \\
+\rowcolor{BookLight}
+Structured output, local handoff & One step & \textbf{SDK} & Same — bounded, in-process, replaceable \\
+Run state and history & Days & \textbf{Platform} & Must survive process restarts and SDK upgrades \\
+\rowcolor{BookLight}
+Identity and authorization & Per call & \textbf{Platform} & The SDK has no concept of your tenants or grants \\
+Credentials & Per call & \textbf{Platform} & An agent process should never hold a durable secret \\
+\rowcolor{BookLight}
+Effects and receipts & Permanent & \textbf{Platform} & These are business records, not runtime artifacts \\
+Audit evidence & Years & \textbf{Platform} & Must outlive every version of every framework \\
+\end{longtable}
+\BookTableEnd
+
+Read the right-hand column as a single test: \textbf{would you still need this record if you replaced the framework tomorrow?} If yes, the framework must not own it.\par
+
+That test also explains the upgrade discipline. An SDK minor release can change retry behaviour, tool-call formatting, or how an interruption surfaces — none of which breaks a type signature, and all of which change what your system does. If the SDK owned your run state, that upgrade would be a data migration. Because it owns only one step, it is a behaviour change you can canary and roll back, which is the whole point of putting it behind \lstinline[style=bookinline]!AgentRuntime!.\par
+
+\begin{bookarchitecture}[Architecture guidance]
+Adopting a framework is a reversible decision only for as long as none of your durable records are expressed in its types. The moment workflow state, approvals, or audit evidence use SDK objects, the framework has stopped being an adapter and become your data model.
+\end{bookarchitecture}
 
 \section{Stable runtime contract}
 

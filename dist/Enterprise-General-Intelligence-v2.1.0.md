@@ -633,6 +633,46 @@ Structured output is valuable because it makes a model decision parseable, versi
 
 A useful proposal is small. It names one disposition, one tool or delegation target, canonical arguments, evidence references, uncertainty, and the expected resource version. It does not carry credentials, policy truth, or an instruction to bypass a failing control.
 
+[[DIAGRAM:deterministic-shell|Figure 2-1 — The deterministic shell: six gates between a model proposal and an accepted effect]]
+
+### One proposal, six gates
+
+The sequence above is the chapter in one line, but it only becomes useful when
+you can see what each gate rejects. Here is a single proposal from Northstar,
+and what happens to it.
+
+JSON · what the model actually emits
+
+```json
+{
+  "disposition": "propose_effect",
+  "tool": "supplier.create@2",
+  "arguments": {"legal_name": "Acme Industrial GmbH", "country": "DE",
+                "risk_tier": "standard", "expected_version": 4},
+  "evidence": ["doc:reg-extract-8812", "screen:sanctions-4471"],
+  "uncertainty": "medium — registry extract is 9 days old"
+}
+```
+
+| Gate | Question it asks | What it rejects here |
+| --- | --- | --- |
+| **Propose** | What does the model want to do? | Nothing — this stage only produces the object |
+| **Validate** | Is this well-formed against a schema *we* own? | Unknown field, wrong type, unknown tool version |
+| **Authorize** | May *this* subject do *this* to *this* resource, now? | Caller holds `supplier:read` but not `supplier:write` |
+| **Commit** | Execute once, through the same path a human request takes | A duplicate arriving from a retry, via the idempotency key |
+| **Verify** | Did the effect actually land, and does it match? | A timeout, which resolves to unknown rather than failed |
+| **Accept** | Are the run's obligations discharged? | Sanctions evidence older than policy allows |
+
+Two things are worth noticing. First, **validate and authorize are separate
+gates**, and conflating them is the most common mistake in this chapter's
+territory: the proposal above is perfectly well-formed and may still be
+forbidden. Schema validity is about shape; authorization is about permission.
+
+Second, the proposal carries `expected_version: 4`. If the supplier record has
+moved to version 5 since the model read it, the commit fails rather than
+silently overwriting someone else's change. The model is allowed to be stale;
+it is not allowed to be stale *and* authoritative.
+
 ### Deterministic acceptance
 
 Acceptance is not the model saying “done.” Northstar declares supplier onboarding complete only when required evidence artifacts exist, every screening result is fresh, approvals cover the exact proposal, all protected effects are committed with receipts, no unknown effect remains, and the supplier record satisfies domain invariants.
@@ -642,6 +682,11 @@ Acceptance is not the model saying “done.” Northstar declares supplier onboa
 Scale tool work by workload and risk class, not with one global queue. Read-only retrieval can use high concurrency. Browser sessions, code sandboxes, high-risk writes, and human approvals need independent quotas and backpressure. The Tool Gateway is stateless where possible; manifests, policy, effect records, and receipts live in durable stores. Downstream concurrency limits, not model throughput, usually determine safe capacity.
 
 ## Design principles
+
+These ten principles recur throughout the book. They divide into three groups:
+principles 1–3 decide **what the model is allowed to own**, 4–6 decide **where
+truth and permission live**, and 7–10 decide **what must be true before
+autonomy increases**.
 
 1. **Deterministic shell, agentic core.** Put LLM reasoning inside typed activities; keep authorization, state transitions, budgets, validation, approvals, and side-effect commits in code.
 2. **Least agency.** Grant the minimum autonomy, tools, data, time, tokens, fan-out, and mutation scope needed for the task.
@@ -943,6 +988,39 @@ An SDK upgrade is a behavior change even when public types remain compatible. No
 ## Architectural role
 
 The OpenAI Agents SDK is best treated as a **bounded agent harness**, not the platform kernel. It contributes model-facing ergonomics—agent definitions, tools, structured outputs, local handoffs, run context, streaming, guardrails, and tracing hooks. Enterprise durability, delegated authorization, business transactions, approvals, effect reconciliation, tenant isolation, and audit remain platform responsibilities.
+
+## Why not just use the SDK directly?
+
+This is the right question to ask, and the answer is not "frameworks are bad."
+The OpenAI Agents SDK is genuinely good at what it does, and reimplementing an
+agent loop is wasted effort. The argument is narrower: the SDK should own one
+bounded step, and nothing that must outlive that step.
+
+The distinction is about lifetime and authority, not quality.
+
+| Concern | Lifetime | Where it belongs | Why |
+| --- | --- | --- | --- |
+| Agent definition, tools, turn loop | One step | **SDK** | This is what it is for, and it does it well |
+| Structured output, local handoff | One step | **SDK** | Same — bounded, in-process, replaceable |
+| Run state and history | Days | **Platform** | Must survive process restarts and SDK upgrades |
+| Identity and authorization | Per call | **Platform** | The SDK has no concept of your tenants or grants |
+| Credentials | Per call | **Platform** | An agent process should never hold a durable secret |
+| Effects and receipts | Permanent | **Platform** | These are business records, not runtime artifacts |
+| Audit evidence | Years | **Platform** | Must outlive every version of every framework |
+
+Read the right-hand column as a single test: **would you still need this record
+if you replaced the framework tomorrow?** If yes, the framework must not own it.
+
+That test also explains the upgrade discipline. An SDK minor release can change
+retry behaviour, tool-call formatting, or how an interruption surfaces — none of
+which breaks a type signature, and all of which change what your system does. If
+the SDK owned your run state, that upgrade would be a data migration. Because it
+owns only one step, it is a behaviour change you can canary and roll back, which
+is the whole point of putting it behind `AgentRuntime`.
+
+|  |
+| --- |
+| **ARCHITECTURE GUIDANCE**  Adopting a framework is a reversible decision only for as long as none of your durable records are expressed in its types. The moment workflow state, approvals, or audit evidence use SDK objects, the framework has stopped being an adapter and become your data model. |
 
 ## Stable runtime contract
 
