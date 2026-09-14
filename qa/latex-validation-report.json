@@ -4,21 +4,21 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "33fa699204f2d583715cdd617ecabe63bef29b9f6e9decd07e8442894d9fcd3d",
-    "content_tex_sha256": "93de3d85b179f0379070d82d2b8a92f6d42d171ec1e9c3ba5208311401bf7e08",
+    "content_tex_sha256": "1d2428deaa7e48b5549694b7d7bd0569d5f400e8f7ff0713310f0ca04a0e2bf0",
     "style_sha256": "f2f56a95c6d5382add095f9df3e90ee3a6f508577ec5413768159c668f1e7da3",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "appendices": 12,
-    "diagrams": 28,
-    "code_blocks": 68,
-    "longtables": 219,
+    "diagrams": 29,
+    "code_blocks": 69,
+    "longtables": 222,
     "callout_tables": 99,
     "citation_occurrences": 104,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 318,
-    "markdown_code_blocks": 68,
+    "markdown_tables": 321,
+    "markdown_code_blocks": 69,
     "image_quality": [
       {
         "file": "assets/cover/cover-v2.1.0.png",
@@ -147,6 +147,14 @@
           1020
         ],
         "effective_dpi": 321.4
+      },
+      {
+        "file": "assets/diagrams/skill-resolution.png",
+        "pixels": [
+          2636,
+          1294
+        ],
+        "effective_dpi": 373.4
       },
       {
         "file": "assets/diagrams/pattern-decision-tree.png",

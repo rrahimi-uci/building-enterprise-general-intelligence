@@ -1,6 +1,6 @@
 {
-  "diagrams": 28,
-  "with_vector": 28,
+  "diagrams": 29,
+  "with_vector": 29,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -287,6 +287,17 @@
       "effective_dpi": 333,
       "vector": true,
       "sha256": "82e0ca96cd7be9e0bdbce41573d63ef8c67c8f7a130ecef61f21f489f3650da3"
+    },
+    {
+      "id": "skill-resolution",
+      "source": "skill-resolution.gv",
+      "pixels": [
+        2636,
+        1294
+      ],
+      "effective_dpi": 385,
+      "vector": true,
+      "sha256": "5e54fdd88b5b8393d1c1404f656c59982c7d5b31f2705cbe2dd36c72b5035304"
     },
     {
       "id": "system-overview",

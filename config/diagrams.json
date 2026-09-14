@@ -190,6 +190,14 @@
       "vector": "assets/diagrams/security-depth.pdf"
     },
     {
+      "id": "skill-resolution",
+      "file": "assets/diagrams/skill-resolution.png",
+      "source": "assets/diagrams/src/skill-resolution.gv",
+      "vector": "assets/diagrams/skill-resolution.pdf",
+      "description": "Semantic discovery proposes candidates; deterministic resolution pins one digest or refuses",
+      "sha256": "5e54fdd88b5b8393d1c1404f656c59982c7d5b31f2705cbe2dd36c72b5035304"
+    },
+    {
       "id": "system-overview",
       "file": "assets/diagrams/system-overview.png",
       "source": "assets/diagrams/src/system-overview.gv",
