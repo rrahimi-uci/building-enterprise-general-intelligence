@@ -4,8 +4,8 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "33fa699204f2d583715cdd617ecabe63bef29b9f6e9decd07e8442894d9fcd3d",
-    "content_tex_sha256": "51606f747cbe01fdd676fff8b287a64a8b3af6347f488689353235d11339dc88",
-    "style_sha256": "84d6c5fb54308c0f75fdcd1d799dee51a522637e4759fe6bc2877185baf40d66",
+    "content_tex_sha256": "42fa1e7feb8fc056d62da16192bce19e0b5f1c769e658033ef202fef057eee04",
+    "style_sha256": "f2f56a95c6d5382add095f9df3e90ee3a6f508577ec5413768159c668f1e7da3",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,

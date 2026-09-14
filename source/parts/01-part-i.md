@@ -265,7 +265,7 @@ Scale tool work by workload and risk class, not with one global queue. Read-only
 
 |  |
 | --- |
-| **BOUNDARY RULE: IF AN OPERATION MUST BE CORRECT EVERY TIME, SURVIVE A CRASH, ENFO**  Boundary rule: If an operation must be correct every time, survive a crash, enforce a permission, coordinate concurrent writers, or create an auditable effect, it belongs to deterministic infrastructure. The LLM may decide what to attempt; deterministic systems decide whether and how it is committed. |
+| **BOUNDARY RULE**  If an operation must be correct every time, survive a crash, enforce a permission, coordinate concurrent writers, or create an auditable effect, it belongs to deterministic infrastructure. The LLM may decide what to attempt; deterministic systems decide whether and how it is committed. |
 
 |  |
 | --- |

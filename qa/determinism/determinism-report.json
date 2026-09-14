@@ -1,6 +1,6 @@
 {
-  "build_a_sha256": "beab1c4ec7283e1eae9d67055c1c032240897f775e023e688b31d7a2226e2bdb",
-  "build_b_sha256": "beab1c4ec7283e1eae9d67055c1c032240897f775e023e688b31d7a2226e2bdb",
+  "build_a_sha256": "dac229658aee159f978b9c8c438162cdb6c77fae8e6801a45fde239ce06ece00",
+  "build_b_sha256": "dac229658aee159f978b9c8c438162cdb6c77fae8e6801a45fde239ce06ece00",
   "byte_identical": true,
-  "bytes": 18226233
+  "bytes": 18226099
 }
