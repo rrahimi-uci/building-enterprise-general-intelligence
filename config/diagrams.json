@@ -146,7 +146,7 @@
       "file": "assets/diagrams/system-overview.png",
       "source": "assets/diagrams/src/system-overview.gv",
       "vector": "assets/diagrams/system-overview.pdf",
-      "sha256": "0fb3ef3549c462ba75e4ab588a10e43a94fd7cdfea1effa64b58cd19509d71a1"
+      "sha256": "6b8c704866959f979c2712a0f900588d0c1cf4fe2f2484218f065910e71382ac"
     },
     {
       "id": "test-pyramid",

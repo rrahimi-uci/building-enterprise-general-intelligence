@@ -226,12 +226,12 @@
       "id": "system-overview",
       "source": "system-overview.gv",
       "pixels": [
-        2345,
-        1860
+        3794,
+        1851
       ],
-      "effective_dpi": 342,
+      "effective_dpi": 554,
       "vector": true,
-      "sha256": "0fb3ef3549c462ba75e4ab588a10e43a94fd7cdfea1effa64b58cd19509d71a1"
+      "sha256": "6b8c704866959f979c2712a0f900588d0c1cf4fe2f2484218f065910e71382ac"
     },
     {
       "id": "test-pyramid",

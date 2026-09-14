@@ -4,7 +4,7 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "33fa699204f2d583715cdd617ecabe63bef29b9f6e9decd07e8442894d9fcd3d",
-    "content_tex_sha256": "b575fc1e96b9d0e7f4d2c04869a8c9be3f1e1f57dc77980787e6532c1c8d495d",
+    "content_tex_sha256": "51606f747cbe01fdd676fff8b287a64a8b3af6347f488689353235d11339dc88",
     "style_sha256": "84d6c5fb54308c0f75fdcd1d799dee51a522637e4759fe6bc2877185baf40d66",
     "narrative_parts": 8,
     "appendix_dividers": 1,
@@ -39,10 +39,10 @@
       {
         "file": "assets/diagrams/system-overview.png",
         "pixels": [
-          2345,
-          1860
+          3794,
+          1851
         ],
-        "effective_dpi": 332.2
+        "effective_dpi": 537.4
       },
       {
         "file": "assets/diagrams/gateway-roles.png",
