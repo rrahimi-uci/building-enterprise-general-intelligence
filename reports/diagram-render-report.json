@@ -66,7 +66,7 @@
       ],
       "effective_dpi": 330,
       "vector": true,
-      "sha256": "adb374580defa4632e86c5ea65a64cbc51d1e4ca6aad831f55d3ab03b7b0a9f1"
+      "sha256": "9e371a2a5a8d1efb6e1f982fb6e142451b665d5bfc4404c4aa7411c422e8c768"
     },
     {
       "id": "causal-trace",
@@ -160,12 +160,12 @@
       "id": "gateway-roles",
       "source": "gateway-roles.gv",
       "pixels": [
-        3912,
-        839
+        5278,
+        1173
       ],
-      "effective_dpi": 571,
+      "effective_dpi": 771,
       "vector": true,
-      "sha256": "3ad9b99845c9670a732fb70f4262ce64168c11206900adeef5d8fe59d8fd651c"
+      "sha256": "822fdc303fba2e1a744514730c107916e9779b86a0c23b0861e251f0f16e8265"
     },
     {
       "id": "governance-model",
@@ -462,7 +462,7 @@
       ],
       "effective_dpi": 554,
       "vector": true,
-      "sha256": "6b8c704866959f979c2712a0f900588d0c1cf4fe2f2484218f065910e71382ac"
+      "sha256": "8ff18685606b98a1f3e4e559c527ec2376a98e42c921ed5a5f4bfd178919293c"
     },
     {
       "id": "test-pyramid",

@@ -710,7 +710,7 @@ def derive_child(
 
 Identity and delegated authority answer who may ask; Chapter 22 proves whether a specific tool effect may execute, commit, retry, or recover.
 
-# 22 — Tool Security, Effects, Idempotency, and Approval
+# 22 — Tool Security, Side Effects, Idempotency, and Approval
 
 |  |
 | --- |

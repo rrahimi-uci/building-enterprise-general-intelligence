@@ -1,21 +1,21 @@
-# Technical Validation Record — Book v1.0.0
+# Technical Validation Record — Book v2.1.0
 
 **Result:** PASS  
 **Validated:** 2026-09-13
 
 ## Final measurements
 
-- 12 Parts; 31 chapters; 15 appendices.
-- 18 registered architecture diagrams; 19 DOCX inline images including cover.
-- 43 fenced code blocks; 316 DOCX tables.
-- 43 registered references; 94 citation occurrences; no unknown or uncited IDs.
+- 8 Parts; 28 chapters; 12 appendices.
+- 43 registered architecture diagrams; 52 DOCX inline images including cover.
+- 68 fenced code blocks; 409 DOCX tables.
+- 48 registered references; 104 citation occurrences; no unknown or uncited IDs.
 - Canonical and distributable Markdown are byte-identical.
 - DOCX package opens successfully and contains required named styles and metadata.
 - DOCX builds twice to the same SHA-256 hash.
-- LibreOffice reference render: 213 Letter-size pages.
-- 46 chapter/appendix headings found on 46 unique start pages.
-- 13 standalone divider pages (12 Parts plus appendices).
-- No unintended blank PDF pages.
+- Genuine XeLaTeX compile: 277 pages.
+- 40 chapter/appendix headings are structurally represented in the current source and generated artifacts; the DOCX validator found 28 chapter and 12 appendix headings.
+- LaTeX source validation passed for 43 diagrams, bundled fonts, contrast, citations, and cross-format contracts.
+- Pagination QA is pending because LibreOffice/soffice is not installed in this environment.
 
 ## Technical corrections incorporated
 
@@ -27,13 +27,13 @@
 
 ## Executable evidence
 
-See:
+See the current generated evidence:
 
 - `qa/validation-report.json`
-- `qa/pagination-report.json`
 - `qa/determinism/determinism-report.json`
 - `reports/citation-verification.json`
 - `reports/citation-audit.md`
-- `qa/render/visual-contact-sheet.png`
+- `reports/latex-validation.md`
+- `reports/editorial-audit.md`
 - `CHECKSUMS.sha256`
 - `RELEASE-MANIFEST.json`

@@ -1,6 +1,6 @@
 // Figure 1-2 — The whole system at a thousand feet.
 //
-// Message: this is the destination. Each band is one Part's subject, authority
+// Message: this is the destination. Each band maps to the Parts that develop it, authority
 // narrows as you read down, and the two concerns that do not sit in the stack
 // -- security, and the platform that builds and runs it -- flank it.
 //
@@ -61,9 +61,9 @@ digraph system_overview {
         <TD WIDTH="268" ALIGN="LEFT"><FONT POINT-SIZE="11">governed knowledge, rules, catalogs, per-run context</FONT></TD></TR></TABLE>>]
 
   gw [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#1450A3" BGCOLOR="#EAF3FB">
-    <TR><TD WIDTH="56" BGCOLOR="#1450A3" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>V</B></FONT></TD>
+    <TR><TD WIDTH="56" BGCOLOR="#1450A3" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>IV&#8211;VII</B></FONT></TD>
         <TD WIDTH="150" ALIGN="LEFT"><B>Control points</B></TD>
-        <TD WIDTH="268" ALIGN="LEFT"><FONT POINT-SIZE="11">LLM Gateway for inference, Tool Gateway for effects</FONT></TD></TR></TABLE>>]
+        <TD WIDTH="268" ALIGN="LEFT"><FONT POINT-SIZE="11">admission, inference, effects, and approval</FONT></TD></TR></TABLE>>]
 
   sor [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#6A2E6E" BGCOLOR="#F1E3F3">
     <TR><TD WIDTH="56" BGCOLOR="#6A2E6E" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>—</B></FONT></TD>

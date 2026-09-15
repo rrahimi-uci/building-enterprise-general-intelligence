@@ -1,8 +1,8 @@
-# PART VII — OBSERVABILITY, EVALUATION & CONTINUOUS LEARNING
+# PART VII — OBSERVABILITY, EVALUATION & LEARNING
 
-This Part makes behaviour measurable. It covers the trace that explains a run, the evaluation that decides whether a change is an improvement, and the governed loop that turns production evidence back into a better system.
+This Part makes behaviour measurable. It covers the distributed trace that explains a run, the evaluation that decides whether a change is an improvement, and the governed learning loop that turns production evidence into a safer, better system.
 
-# 24 — Observability and Tracing with MLflow
+# 24 — Distributed Tracing
 
 > **Evidence note.** OpenTelemetry GenAI semantic conventions remain in Development and have moved to a dedicated repository; isolate them behind an internal mapping layer. Phoenix is one implementation option for OpenInference/OTel-based tracing and evaluation. [R19][R23]
 
@@ -201,7 +201,7 @@ Evidence anchors: OTEL-GENAI; MLFLOW-TRACE. Full URLs, authority, version, and s
 
 Tracing explains what happened; Chapter 25 determines whether the trajectory and outcome were acceptable and whether a change is safe to ship.
 
-# 25 — Evaluation, Debugging, and Continuous Improvement with MLflow
+# 25 — Continuous Learning and Governed Improvement
 
 > **Evidence note.** The evaluation architecture maps to current capabilities documented by MLflow, DeepEval, Ragas, LangSmith, and OpenAI. Tool names and APIs are examples; the durable contract is dataset + release graph + scorer versions + trace/effect evidence. [R20][R21][R22][R24][R25][R26]
 
@@ -215,7 +215,7 @@ Tracing explains what happened; Chapter 25 determines whether the trajectory and
 
 ## What this chapter delivers
 
-Evaluate outcomes and trajectories using immutable datasets, executable scorers, calibrated judges, failure simulation, and release gates.
+Turn production evidence into governed improvement by evaluating outcomes and trajectories, diagnosing failures, validating candidates, and promoting only release bundles that satisfy deterministic safety and acceptance gates.
 
 ## Solution blueprint
 
@@ -225,6 +225,12 @@ the versioned set of model route, workflow, tools, policies, context strategy,
 and runtime configuration that could change the trajectory. A release gate
 combines deterministic checks with calibrated quality evidence, then records a
 decision that another operator can reproduce.
+
+The chapter therefore treats evaluation as the measurement stage of a larger
+learning system. Observe, measure, detect, and diagnose before recommending a
+change; validate and approve it before deployment; then monitor the result and
+curate the evidence into the next regression set. The loop improves the system
+without granting any model authority to rewrite controls or certify itself.
 
 [[DIAGRAM:evaluation-gate|Figure 25-3 — Candidate evaluation combines deterministic checks, calibrated judges, slices, and a risk-tiered release gate]]
 

@@ -686,18 +686,6 @@ def resolve_production_mcp_server():
 | How should a remote artifact be adopted? | Authenticate the source, validate schema and hash, scan content, enforce classification and provenance, then copy or reference under local policy. |
 | How do you version external capabilities? | Pin registry entry, endpoint, protocol profile, schemas, trust material, tool or agent version, and tested compatibility in the release manifest. |
 
-|  |
-| --- |
-| **PART IV**  **ENTERPRISE CONTROL**  Control context, state, identity, authorization, effects, security, and governance outside the model. |
-
-14 Context Engineering, Memory, and State
-
-15 Identity, RBAC/ABAC, and Delegated Authorization
-
-16 Tool Security, Effects, Idempotency, and Approval
-
-17 Sandboxing, Egress, Data Security, and Governance
-
 ## Transition to Chapter 20
 
 The gateway controls model access, but not the entire attack surface; Chapter 20 introduces defense in depth across all agentic trust boundaries.

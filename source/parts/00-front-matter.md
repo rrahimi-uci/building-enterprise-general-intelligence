@@ -1,26 +1,40 @@
 [[COVER]]
 
-# Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise
+# Building Enterprise General Intelligence Platform
 
 Book v2.1.0 · Publication Release · September 2026
 
 **Reza Rahimi, PhD**
 
-A structured enterprise reference for executives, architects, platform teams, security leaders, SREs, and senior engineers.
+A practical, structured enterprise reference for architects, platform engineers, DevOps engineers, and SREs.
 
 # Preface to Book v2.1.0
 
 Book v2.1.0 is the publication baseline for this guide and the canonical starting point for all future editions. It treats an agentic application as a governed distributed system: models may propose, while deterministic services own authority, state, effects, evidence, acceptance, and release.
 
-The narrative follows one dependency chain. Foundations establish the deterministic shell; the reference architecture assigns ownership; the developer platform makes those controls reusable; patterns and anti-patterns guide topology; gateways and security enforce boundaries; observability and evaluation produce evidence; continuous learning converts evidence into governed change; and production operations keep the resulting system reliable and economical.
+The narrative follows a clear progression from foundations to production. It begins with the core principles and deterministic controls that make agentic systems predictable and governable. The reference architecture then defines the major components and their responsibilities, while the platform team turns these architectural principles into reusable capabilities for engineering teams through SDKs.
+
+From there, patterns and anti-patterns guide how agents, tools, and workflows should be designed and connected. Gateways and security controls establish safe boundaries around models, data, tools, and external systems. Observability and evaluation provide the evidence needed to understand system behavior, quality, cost, and reliability. That evidence feeds into continuous learning, where improvements are introduced through controlled and governed processes. Finally, production operations ensure that the entire system remains reliable, scalable, secure, and cost-efficient over time.
 
 ## Scope and claim discipline
 
-External facts, protocol behavior, framework capabilities, research findings, standards, and legal or regulatory context use numbered citations such as [R05]. Architecture choices without citations are recommendations authored for this book; they must be validated against the reader’s workload, jurisdiction, threat model, provider terms, and operating constraints. A source supports only the claim stated beside it—vendor documentation does not establish production fitness, community guidance is not law, and a benchmark result does not guarantee enterprise outcomes.
+Throughout this book, claims about external facts, technologies, standards, research, and regulations are supported by numbered references such as [R05].
+
+The architectural recommendations in this book are grounded in the author’s practical experience designing and building real-world enterprise AI and agentic platforms for mortgage and financial systems, combined with established industry best practices. They reflect lessons learned from working with systems where reliability, security, compliance, auditability, scalability, and cost are production requirements rather than theoretical concerns.
+
+When an architectural recommendation does not include a citation, treat it as experience-based guidance, not a universal rule. Every enterprise environment is different. Validate these recommendations against your own workloads, security requirements, regulatory environment, threat model, technology providers, and operational constraints.
+
+References should also be understood within their scope. Vendor documentation explains what a technology supports, but does not prove that it is suitable for your production environment. Community best practices provide useful guidance, but are not laws or regulations. Benchmarks demonstrate performance under specific conditions, but do not guarantee the same results in your environment.
+
+In short, this book combines published evidence, industry best practices, and lessons from building real enterprise platforms. Use them as a foundation, then adapt and validate the architecture for your own organization.
 
 ## Reproducible edition
 
-The accompanying Book v2.1.0 development package contains this canonical Markdown, the generated DOCX, source files, cover and diagrams, a reference registry, style tokens, templates, skills, build tools, validation tools, and release evidence. Future agents should modify the canonical Markdown and registries, never hand-format the release DOCX. The build and validation workflow is documented in the package README.
+This book is designed to be reproducible, maintainable, and easy to extend. The accompanying Book v2.1.0 development package contains everything needed to rebuild and update the book consistently, including the canonical Markdown source, generated DOCX, diagrams, cover assets, references, style definitions, templates, skills, build tools, validation tools, and release evidence.
+
+The Markdown file is the primary source of truth. When updating the book—whether manually or with an AI agent—changes should be made to the Markdown source and the relevant registries first. The DOCX should then be regenerated through the provided build process rather than edited or formatted manually. This helps prevent inconsistencies in formatting, references, diagrams, and document structure.
+
+The package README explains how to build, validate, and release a new version of the book. Following this workflow ensures that future contributors and AI agents can extend the book without breaking its established structure, style, or quality.
 
 # How to use this guide
 
@@ -41,26 +55,26 @@ This guide is organized as one architecture story rather than a collection of in
 
 ## Reference-guide contract
 
-1. Probabilistic components propose; deterministic components authorize and commit.
-2. Every run is pinned to immutable prompt, Skill, workflow, policy, model-route, tool, evaluator, and knowledge versions.
-3. Every side effect has one owner, an idempotency key, an effect record, and executable acceptance.
-4. Every trust-boundary crossing revalidates identity, authority, content, and data policy.
-5. Every material change is evaluated, approved at the right risk tier, canaried, observable, and reversible.
-6. Every production failure can become an authorized regression case and improvement candidate.
+The architectures and practices in this book are built around a small set of principles for operating agentic systems safely and reliably in production:
 
-## Canonical-source rule
+- **AI can propose; deterministic systems decide and commit.** Models and agents may reason, recommend, generate, and plan, but important actions should pass through deterministic rules, policies, and validation before they change enterprise state.
+- **Every production run must be reproducible.** Record the exact versions of the prompts, Skills, workflows, policies, model routes, tools, evaluators, and knowledge used for each run. When something goes wrong, teams should be able to determine exactly what produced the result.
+- **Every action must have clear ownership.** Any action that changes external state—such as updating a database, sending a message, or calling a business API—should have one responsible owner, protection against duplicate execution, a record of what happened, and a clear way to verify that it succeeded.
+- **Never assume trust across system boundaries.** Whenever data or an action crosses a trust boundary, revalidate who is making the request, what they are allowed to do, whether the content is safe, and whether the data can be used in that context.
+- **Production changes must be controlled and reversible.** Material changes should be evaluated before release, approved according to their level of risk, introduced gradually through canary deployments when appropriate, monitored after deployment, and designed so they can be rolled back safely.
+- **Production failures should improve the system.** Significant failures should not end with incident resolution. When appropriate and authorized, they should become regression tests, evaluation cases, or improvement candidates so the system can learn from real production experience.
 
-The Markdown manuscript is the semantic source of truth. DOCX, Notion release metadata, split chapter files, and rendered validation artifacts are generated or synchronized representations. Typography and pagination may differ by medium; chapter order, prose, examples, tables, code, diagrams, captions, citations, and references must remain semantically aligned.
+Together, these principles establish a simple operating contract: agents provide intelligence and flexibility, while deterministic controls provide authority, safety, traceability, and reliability.
 
 # Hierarchical Table of Contents
 
 ## Part I — Foundations
 
-01. From an LLM Call to a Production System
+01. From an LLM Call to a Production Agentic System
 02. Tools, Structured Outputs, and the Deterministic Shell
 03. Agent Runtime and Framework Abstraction
 
-## Part II — Enterprise Reference Architecture & Knowledge
+## Part II — Enterprise Architecture & Knowledge
 
 04. Enterprise Reference Architecture, Boundaries, and Contracts
 05. Enterprise Knowledge Management for Agents
@@ -92,13 +106,13 @@ The Markdown manuscript is the semantic source of truth. DOCX, Notion release me
 
 20. Agentic AI Security and Guardrails Architecture
 21. Identity, RBAC/ABAC, and Delegated Authorization
-22. Tool Security, Effects, Idempotency, and Approval
+22. Tool Security, Side Effects, Idempotency, and Approval
 23. Sandboxing, Egress, Data Security, and Governance
 
-## Part VII — Observability, Evaluation & Continuous Learning
+## Part VII — Observability, Evaluation & Learning
 
-24. Observability and Tracing with MLflow
-25. Evaluation, Debugging, and Continuous Improvement with MLflow
+24. Distributed Tracing
+25. Continuous Learning and Governed Improvement
 
 ## Part VIII — Governance & Production Operations
 
@@ -108,15 +122,15 @@ The Markdown manuscript is the semantic source of truth. DOCX, Notion release me
 
 ## Appendices
 
-A. Pattern Selection Decision Tree and Catalog Index
-B. Failure triage and operator runbooks
-C. Platform contracts quick reference
-D. Framework landscape
-E. Research implications
-F. Known limits and enforced mitigations
-G. Enterprise adoption roadmap
-H. Glossary
-I. Companion Implementation Guide: Northstar Reference
-J. Coding-agent prompt and acceptance criteria
-K. References
-L. Capacity, resilience, and release acceptance
+- A. Pattern Selection Decision Tree and Catalog Index
+- B. Failure Triage and Operator Runbooks
+- C. Platform Contracts Quick Reference
+- D. Framework Landscape
+- E. Research Implications
+- F. Known Limitations and Enforced Mitigations
+- G. Enterprise Adoption Roadmap
+- H. Glossary
+- I. Companion Implementation Guide: Northstar Reference
+- J. Coding-Agent Prompts and Acceptance Criteria
+- K. References
+- L. Capacity, Resilience, and Release Acceptance

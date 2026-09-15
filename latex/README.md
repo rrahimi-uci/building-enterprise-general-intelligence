@@ -1,6 +1,6 @@
 # XeLaTeX Publication Project — Book v2.1.0
 
-This directory is the maintainable LaTeX representation of *Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise* by **Reza Rahimi, PhD**.
+This directory is the maintainable LaTeX representation of *Building Enterprise General Intelligence Platform* by **Reza Rahimi, PhD**.
 
 ## Build
 

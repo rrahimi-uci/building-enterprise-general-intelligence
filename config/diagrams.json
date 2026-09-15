@@ -44,8 +44,8 @@
       "file": "assets/diagrams/capability-ladder.png",
       "source": "assets/diagrams/src/capability-ladder.gv",
       "vector": "assets/diagrams/capability-ladder.pdf",
-      "description": "The four rungs from a model to an enterprise agentic system, with what each adds and the failure class it introduces",
-      "sha256": "adb374580defa4632e86c5ea65a64cbc51d1e4ca6aad831f55d3ab03b7b0a9f1"
+      "description": "The four levels from a model to an enterprise agentic system, with what each adds and the failure class it introduces",
+      "sha256": "9e371a2a5a8d1efb6e1f982fb6e142451b665d5bfc4404c4aa7411c422e8c768"
     },
     {
       "id": "causal-trace",
@@ -112,7 +112,7 @@
       "file": "assets/diagrams/gateway-roles.png",
       "source": "assets/diagrams/src/gateway-roles.gv",
       "vector": "assets/diagrams/gateway-roles.pdf",
-      "sha256": "3ad9b99845c9670a732fb70f4262ce64168c11206900adeef5d8fe59d8fd651c"
+      "sha256": "822fdc303fba2e1a744514730c107916e9779b86a0c23b0861e251f0f16e8265"
     },
     {
       "id": "governance-model",
@@ -314,7 +314,7 @@
       "file": "assets/diagrams/system-overview.png",
       "source": "assets/diagrams/src/system-overview.gv",
       "vector": "assets/diagrams/system-overview.pdf",
-      "sha256": "6b8c704866959f979c2712a0f900588d0c1cf4fe2f2484218f065910e71382ac"
+      "sha256": "8ff18685606b98a1f3e4e559c527ec2376a98e42c921ed5a5f4bfd178919293c"
     },
     {
       "id": "test-pyramid",

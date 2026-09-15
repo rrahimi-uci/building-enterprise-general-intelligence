@@ -1,7 +1,7 @@
-// Figure 1-1 — The four rungs from a model to an enterprise agentic system.
+// Figure 1-1 — The four levels from a model to an enterprise agentic system.
 //
-// Message: each rung adds one capability and introduces one new class of
-// failure, and the top rung adds no intelligence at all -- only constraint and
+// Message: each level adds one capability and introduces one new class of
+// failure, and the top level adds no intelligence at all -- only constraint and
 // record-keeping. The right-hand column is the point of the figure: the reason
 // to climb is never that the model gets better.
 //
@@ -15,7 +15,7 @@ digraph capability_ladder {
   node [shape=box, style="filled,rounded", penwidth=1.4, fontsize=11,
         margin="0.14,0.09", height=0.46, width=1.95]
 
-  h1 [label=<<B><FONT POINT-SIZE="11" COLOR="#12233F">RUNG</FONT></B>>, shape=plaintext, style=""]
+  h1 [label=<<B><FONT POINT-SIZE="11" COLOR="#12233F">LEVEL</FONT></B>>, shape=plaintext, style=""]
   h2 [label=<<B><FONT POINT-SIZE="11" COLOR="#0D6E69">WHAT IT ADDS</FONT></B>>, shape=plaintext, style=""]
   h3 [label=<<B><FONT POINT-SIZE="11" COLOR="#A62C2C">THE NEW FAILURE CLASS</FONT></B>>, shape=plaintext, style=""]
 

@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "book": {
-    "title": "Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise",
-    "short_title": "Enterprise General Intelligence",
+    "title": "Building Enterprise General Intelligence Platform",
+    "short_title": "Enterprise General Intelligence Platform",
     "version": "2.1.0",
     "release_date": "2026-09-13",
     "author": "Reza Rahimi, PhD",
@@ -10,76 +10,34 @@
     "page_size": "Letter",
     "status": "Publication release",
     "cover": {
-      "eyebrow": "ENTERPRISE ARCHITECTURE REFERENCE",
+      "eyebrow": "ENTERPRISE SYSTEMS REFERENCE",
       "title_lines": [
+        "BUILDING",
         "ENTERPRISE",
         "GENERAL",
-        "INTELLIGENCE"
+        "INTELLIGENCE",
+        "PLATFORM"
       ],
-      "subtitle": "ARCHITECTING GOVERNED AGENTIC SYSTEMS",
-      "themes": [
-        "Agent runtimes \u00b7 Multi-agent systems \u00b7 Skills & tools",
-        "Gateways \u00b7 Security \u00b7 Evaluation \u00b7 Continuous learning",
-        "Governance \u00b7 Deployment \u00b7 Production operations"
-      ],
-      "strapline": "Governed, observable, and production-grade AI agent systems"
+      "subtitle": "GOVERNED ARCHITECTURE AND OPERATIONS",
+      "themes": [],
+      "strapline": "A practical guide to reliable enterprise AI platforms"
     }
   },
   "structure": {
     "parts": [
-      {
-        "id": "I",
-        "title": "Foundations"
-      },
-      {
-        "id": "II",
-        "title": "Enterprise Reference Architecture"
-      },
-      {
-        "id": "III",
-        "title": "Agentic Developer Platform & Sdk"
-      },
-      {
-        "id": "IV",
-        "title": "Patterns"
-      },
-      {
-        "id": "V",
-        "title": "Anti-Patterns"
-      },
-      {
-        "id": "VI",
-        "title": "Multi-Agent & Platform Integration"
-      },
-      {
-        "id": "VII",
-        "title": "Llm Gateway"
-      },
-      {
-        "id": "VIII",
-        "title": "Security & Guardrails"
-      },
-      {
-        "id": "IX",
-        "title": "Observability & Evaluation"
-      },
-      {
-        "id": "X",
-        "title": "Continuous Learning"
-      },
-      {
-        "id": "XI",
-        "title": "Governance"
-      },
-      {
-        "id": "XII",
-        "title": "Deployment & Production Operations"
-      }
+      {"id": "I", "title": "Foundations"},
+      {"id": "II", "title": "Enterprise Architecture & Knowledge"},
+      {"id": "III", "title": "Agentic Developer Platform & SDK"},
+      {"id": "IV", "title": "Patterns and Anti-Patterns"},
+      {"id": "V", "title": "Multi-Agent Systems & External Integration"},
+      {"id": "VI", "title": "Security, Identity & Guardrails"},
+      {"id": "VII", "title": "Observability, Evaluation & Learning"},
+      {"id": "VIII", "title": "Governance & Production Operations"}
     ],
     "chapters": [
       {
         "number": 1,
-        "title": "From an LLM Call to a Production System"
+        "title": "From an LLM Call to a Production Agentic System"
       },
       {
         "number": 2,
@@ -91,19 +49,19 @@
       },
       {
         "number": 4,
-        "title": "Enterprise Agentic AI Reference Architecture"
+        "title": "Enterprise Reference Architecture, Boundaries, and Contracts"
       },
       {
         "number": 5,
-        "title": "Platform Boundaries, APIs, and Data Models"
+        "title": "Enterprise Knowledge Management for Agents"
       },
       {
         "number": 6,
-        "title": "Agentic Developer Platform and SDK"
+        "title": "Context Engineering, RAG, Memory, and State"
       },
       {
         "number": 7,
-        "title": "Developer Experience, Testing, and Delivery Lifecycle"
+        "title": "Agentic Developer Platform, SDK, and Delivery Lifecycle"
       },
       {
         "number": 8,
@@ -151,54 +109,42 @@
       },
       {
         "number": 19,
-        "title": "MCP, A2A, and External Integration"
+        "title": "External Integration: MCP, A2A, and the Model Control Plane"
       },
       {
         "number": 20,
-        "title": "LLM Gateway and Model Control Plane"
-      },
-      {
-        "number": 21,
         "title": "Agentic AI Security and Guardrails Architecture"
       },
       {
-        "number": 22,
-        "title": "Context Engineering, RAG, Memory, and State"
-      },
-      {
-        "number": 23,
+        "number": 21,
         "title": "Identity, RBAC/ABAC, and Delegated Authorization"
       },
       {
-        "number": 24,
-        "title": "Tool Security, Effects, Idempotency, and Approval"
+        "number": 22,
+        "title": "Tool Security, Side Effects, Idempotency, and Approval"
       },
       {
-        "number": 25,
+        "number": 23,
         "title": "Sandboxing, Egress, Data Security, and Governance"
       },
       {
+        "number": 24,
+        "title": "Distributed Tracing"
+      },
+      {
+        "number": 25,
+        "title": "Continuous Learning and Governed Improvement"
+      },
+      {
         "number": 26,
-        "title": "Observability and Tracing with MLflow"
-      },
-      {
-        "number": 27,
-        "title": "Evaluation, Testing, and Debugging with MLflow"
-      },
-      {
-        "number": 28,
-        "title": "Continuous Learning and Improvement Architecture"
-      },
-      {
-        "number": 29,
         "title": "Governance, Risk, and Operating Model"
       },
       {
-        "number": 30,
+        "number": 27,
         "title": "Deployment, Versioning, CI/CD, and Recovery"
       },
       {
-        "number": 31,
+        "number": 28,
         "title": "Cost, Latency, Capacity, and Reliability Optimization"
       }
     ],
@@ -214,10 +160,7 @@
       "I",
       "J",
       "K",
-      "L",
-      "M",
-      "N",
-      "O"
+      "L"
     ]
   },
   "design": {

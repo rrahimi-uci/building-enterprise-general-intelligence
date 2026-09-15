@@ -1,4 +1,4 @@
-# Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise
+# Building Enterprise General Intelligence Platform
 
 **Book v2.1.0 development system**  
 Author: **Reza Rahimi, PhD**  
@@ -163,15 +163,15 @@ never in generated content.
 ## Editing topology
 
 - `00-front-matter.md`: title marker, publication preface, reader map, table of contents.
-- `01-part-i.md` … `12-part-xii.md`: one Part divider plus its chapters.
-- `13-appendices.md`: appendix divider and Appendices A–O.
+- `01-part-i.md` … `08-part-viii.md`: one Part divider plus its chapters.
+- `09-appendices.md`: appendix divider and Appendices A–L.
 - Every Part, chapter, and appendix begins with an H1. DOCX rendering inserts a new page before each and makes Part/appendix dividers standalone.
 - H2 is a major section, H3 a subsection, and H4 a local subtopic. Do not skip levels.
 - Keep transitions at chapter endings so prerequisites and next steps remain explicit.
 
 ## References and claim discipline
 
-`config/references.json` defines each source, version/date, URL, permitted support scope, verification date, and source class. Appendix K and Appendix M are generated from this registry during assembly. Cite only what the recorded scope supports. Book-authored patterns, estimates, examples, architectures, and formulas must be identified as guidance unless a reference explicitly validates them. Living documentation uses `n.d.` plus an access date. Maturity-sensitive claims must state pins and re-verification requirements rather than claiming a framework is “latest.”
+`config/references.json` defines each source, version/date, URL, permitted support scope, verification date, and source class. Appendix K is generated from this registry during assembly. Cite only what the recorded scope supports. Book-authored patterns, estimates, examples, architectures, and formulas must be identified as guidance unless a reference explicitly validates them. Living documentation uses `n.d.` plus an access date. Maturity-sensitive claims must state pins and re-verification requirements rather than claiming a framework is “latest.”
 
 Run:
 
