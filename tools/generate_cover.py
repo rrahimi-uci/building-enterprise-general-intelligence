@@ -46,10 +46,12 @@ def generate(root:Path)->Path:
     y=360
     for line in title_lines:
         d.text((165,y),line,font=F(150,True),fill='white',stroke_width=2,stroke_fill=(8,31,58)); y+=170
-    d.text((170,900),subtitle,font=F(44,True),fill=(81,220,234))
-    d.line((170,1010,1600,1010),fill=(224,154,50),width=10)
+    subtitle_y=y+20
+    d.text((170,subtitle_y),subtitle,font=F(44,True),fill=(81,220,234))
+    divider_y=subtitle_y+110
+    d.line((170,divider_y,1600,divider_y),fill=(224,154,50),width=10)
     for i,line in enumerate(art.get('themes',[])):
-        d.text((175,1070+i*68),line,font=F(41),fill=(224,238,249))
+        d.text((175,divider_y+60+i*68),line,font=F(41),fill=(224,238,249))
     d.rounded_rectangle((155,2740,1325,2920),radius=26,fill=(5,25,52,225),outline=(81,220,234,255),width=4)
     d.text((205,2780),cfg['author'].upper(),font=F(70,True),fill='white')
     d.rounded_rectangle((155,2965,1150,3090),radius=20,fill=(5,25,52,225),outline=(224,154,50,255),width=4)

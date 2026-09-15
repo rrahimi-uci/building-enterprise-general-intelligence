@@ -10,15 +10,29 @@
 
 Book v2.1.0 is the publication baseline for this guide and the canonical starting point for all future editions. It treats an agentic application as a governed distributed system: models may propose, while deterministic services own authority, state, effects, evidence, acceptance, and release.\par
 
-The narrative follows one dependency chain. Foundations establish the deterministic shell; the reference architecture assigns ownership; the developer platform makes those controls reusable; patterns and anti-patterns guide topology; gateways and security enforce boundaries; observability and evaluation produce evidence; continuous learning converts evidence into governed change; and production operations keep the resulting system reliable and economical.\par
+The narrative follows a clear progression from foundations to production. It begins with the core principles and deterministic controls that make agentic systems predictable and governable. The reference architecture then defines the major components and their responsibilities, while the platform team turns these architectural principles into reusable capabilities for engineering teams through SDKs.\par
+
+From there, patterns and anti-patterns guide how agents, tools, and workflows should be designed and connected. Gateways and security controls establish safe boundaries around models, data, tools, and external systems. Observability and evaluation provide the evidence needed to understand system behavior, quality, cost, and reliability. That evidence feeds into continuous learning, where improvements are introduced through controlled and governed processes. Finally, production operations ensure that the entire system remains reliable, scalable, secure, and cost-efficient over time.\par
 
 \section{Scope and claim discipline}
 
-External facts, protocol behavior, framework capabilities, research findings, standards, and legal or regulatory context use numbered citations such as \BookCitation{R05}. Architecture choices without citations are recommendations authored for this book; they must be validated against the reader’s workload, jurisdiction, threat model, provider terms, and operating constraints. A source supports only the claim stated beside it—vendor documentation does not establish production fitness, community guidance is not law, and a benchmark result does not guarantee enterprise outcomes.\par
+Throughout this book, claims about external facts, technologies, standards, research, and regulations are supported by numbered references such as \BookCitation{R05}.\par
+
+The architectural recommendations in this book are grounded in the author’s practical experience designing and building real-world enterprise AI and agentic platforms for mortgage and financial systems, combined with established industry best practices. They reflect lessons learned from working with systems where reliability, security, compliance, auditability, scalability, and cost are production requirements rather than theoretical concerns.\par
+
+When an architectural recommendation does not include a citation, treat it as experience-based guidance, not a universal rule. Every enterprise environment is different. Validate these recommendations against your own workloads, security requirements, regulatory environment, threat model, technology providers, and operational constraints.\par
+
+References should also be understood within their scope. Vendor documentation explains what a technology supports, but does not prove that it is suitable for your production environment. Community best practices provide useful guidance, but are not laws or regulations. Benchmarks demonstrate performance under specific conditions, but do not guarantee the same results in your environment.\par
+
+In short, this book combines published evidence, industry best practices, and lessons from building real enterprise platforms. Use them as a foundation, then adapt and validate the architecture for your own organization.\par
 
 \section{Reproducible edition}
 
-The accompanying Book v2.1.0 development package contains this canonical Markdown, the generated DOCX, source files, cover and diagrams, a reference registry, style tokens, templates, skills, build tools, validation tools, and release evidence. Future agents should modify the canonical Markdown and registries, never hand-format the release DOCX. The build and validation workflow is documented in the package README.\par
+This book is designed to be reproducible, maintainable, and easy to extend. The accompanying Book v2.1.0 development package contains everything needed to rebuild and update the book consistently, including the canonical Markdown source, generated DOCX, diagrams, cover assets, references, style definitions, templates, skills, build tools, validation tools, and release evidence.\par
+
+The Markdown file is the primary source of truth. When updating the book—whether manually or with an AI agent—changes should be made to the Markdown source and the relevant registries first. The DOCX should then be regenerated through the provided build process rather than edited or formatted manually. This helps prevent inconsistencies in formatting, references, diagrams, and document structure.\par
+
+The package README explains how to build, validate, and release a new version of the book. Following this workflow ensures that future contributors and AI agents can extend the book without breaking its established structure, style, or quality.\par
 
 \BookFrontChapter{How to use this guide}
 
@@ -52,25 +66,25 @@ SRE / operations & Parts VII, VIII and Appendices B, L & SLOs, incidents, recove
 
 \section{Reference-guide contract}
 
-\begin{enumerate}
+The architectures and practices in this book are built around a small set of principles for operating agentic systems safely and reliably in production:\par
 
-\item Probabilistic components propose; deterministic components authorize and commit.
+\begin{itemize}
 
-\item Every run is pinned to immutable prompt, Skill, workflow, policy, model-route, tool, evaluator, and knowledge versions.
+\item \textbf{AI can propose; deterministic systems decide and commit.} Models and agents may reason, recommend, generate, and plan, but important actions should pass through deterministic rules, policies, and validation before they change enterprise state.
 
-\item Every side effect has one owner, an idempotency key, an effect record, and executable acceptance.
+\item \textbf{Every production run must be reproducible.} Record the exact versions of the prompts, Skills, workflows, policies, model routes, tools, evaluators, and knowledge used for each run. When something goes wrong, teams should be able to determine exactly what produced the result.
 
-\item Every trust-boundary crossing revalidates identity, authority, content, and data policy.
+\item \textbf{Every action must have clear ownership.} Any action that changes external state—such as updating a database, sending a message, or calling a business API—should have one responsible owner, protection against duplicate execution, a record of what happened, and a clear way to verify that it succeeded.
 
-\item Every material change is evaluated, approved at the right risk tier, canaried, observable, and reversible.
+\item \textbf{Never assume trust across system boundaries.} Whenever data or an action crosses a trust boundary, revalidate who is making the request, what they are allowed to do, whether the content is safe, and whether the data can be used in that context.
 
-\item Every production failure can become an authorized regression case and improvement candidate.
+\item \textbf{Production changes must be controlled and reversible.} Material changes should be evaluated before release, approved according to their level of risk, introduced gradually through canary deployments when appropriate, monitored after deployment, and designed so they can be rolled back safely.
 
-\end{enumerate}
+\item \textbf{Production failures should improve the system.} Significant failures should not end with incident resolution. When appropriate and authorized, they should become regression tests, evaluation cases, or improvement candidates so the system can learn from real production experience.
 
-\section{Canonical-source rule}
+\end{itemize}
 
-The Markdown manuscript is the semantic source of truth. DOCX, Notion release metadata, split chapter files, and rendered validation artifacts are generated or synchronized representations. Typography and pagination may differ by medium; chapter order, prose, examples, tables, code, diagrams, captions, citations, and references must remain semantically aligned.\par
+Together, these principles establish a simple operating contract: agents provide intelligence and flexibility, while deterministic controls provide authority, safety, traceability, and reliability.\par
 
 \BookFrontChapter{Hierarchical Table of Contents}
 
@@ -78,7 +92,7 @@ The Markdown manuscript is the semantic source of truth. DOCX, Notion release me
 
 \begin{enumerate}
 
-\item From an LLM Call to a Production System
+\item From an LLM Call to a Production Agentic System
 
 \item Tools, Structured Outputs, and the Deterministic Shell
 
@@ -86,7 +100,7 @@ The Markdown manuscript is the semantic source of truth. DOCX, Notion release me
 
 \end{enumerate}
 
-\section{Part II — Enterprise Reference Architecture \& Knowledge}
+\section{Part II — Enterprise Architecture \& Knowledge}
 
 \begin{enumerate}
 
@@ -150,19 +164,19 @@ The Markdown manuscript is the semantic source of truth. DOCX, Notion release me
 
 \item Identity, RBAC/ABAC, and Delegated Authorization
 
-\item Tool Security, Effects, Idempotency, and Approval
+\item Tool Security, Side Effects, Idempotency, and Approval
 
 \item Sandboxing, Egress, Data Security, and Governance
 
 \end{enumerate}
 
-\section{Part VII — Observability, Evaluation \& Continuous Learning}
+\section{Part VII — Observability, Evaluation \& Learning}
 
 \begin{enumerate}
 
-\item Observability and Tracing with MLflow
+\item Distributed Tracing
 
-\item Evaluation, Debugging, and Continuous Improvement with MLflow
+\item Continuous Learning and Governed Improvement
 
 \end{enumerate}
 
@@ -180,13 +194,39 @@ The Markdown manuscript is the semantic source of truth. DOCX, Notion release me
 
 \section{Appendices}
 
-A. Pattern Selection Decision Tree and Catalog Index B. Failure triage and operator runbooks C. Platform contracts quick reference D. Framework landscape E. Research implications F. Known limits and enforced mitigations G. Enterprise adoption roadmap H. Glossary I. Companion Implementation Guide: Northstar Reference J. Coding-agent prompt and acceptance criteria K. References L. Capacity, resilience, and release acceptance\par
+\begin{itemize}
+
+\item A. Pattern Selection Decision Tree and Catalog Index
+
+\item B. Failure Triage and Operator Runbooks
+
+\item C. Platform Contracts Quick Reference
+
+\item D. Framework Landscape
+
+\item E. Research Implications
+
+\item F. Known Limitations and Enforced Mitigations
+
+\item G. Enterprise Adoption Roadmap
+
+\item H. Glossary
+
+\item I. Companion Implementation Guide: Northstar Reference
+
+\item J. Coding-Agent Prompts and Acceptance Criteria
+
+\item K. References
+
+\item L. Capacity, Resilience, and Release Acceptance
+
+\end{itemize}
 
 \mainmatter
 
-\BookPartPage{I}{FOUNDATIONS}{This Part defines the vocabulary and invariants used everywhere else. It begins with the progression from model call to production system, then turns model outputs into typed tool proposals, and finally places bounded reasoning behind a framework-neutral runtime contract. Read it before selecting orchestration patterns or products.}{assets/parts/part-i.png}
+\BookPartPage{I}{FOUNDATIONS}{Foundations establish the vocabulary and deterministic boundaries that every later Part depends on.}{assets/parts/part-i.png}
 
-\BookChapter{01}{From an LLM Call to a Production System}
+\BookChapter{01}{From an LLM Call to a Production Agentic System}
 
 \begin{bookcallout}[Northstar at this point]
 Northstar Components wants to shorten supplier onboarding from twelve days to two. A prototype can summarize a supplier file, but production must also retrieve authorized records, request missing evidence, pause for people, screen sanctions, create auditable decisions, and survive days of inactivity.
@@ -242,7 +282,7 @@ Explain why an agentic application is a distributed system and assign every auth
 
 \section{Solution blueprint}
 
-\BookFigureCaption{Figure 1. From an LLM Call to a Production System.}
+\BookFigureCaption{Figure 1. From an LLM Call to a Production Agentic System.}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -260,11 +300,11 @@ Run Service and durable workflow & User/edge, content/model, model/tool & run ·
 
 \section{The progression: model, tool, agent, system}
 
-Four things get called "an agent" in enterprise conversations, and they are four different systems with four different risk profiles. Being precise about which one you are building is not pedantry — the jump between adjacent rungs is where most project estimates go wrong.\par
+Four things get called "an agent" in enterprise conversations, and they are four different systems with four different risk profiles. Being precise about which one you are building is not pedantry — the jump between adjacent levels is where most project estimates go wrong.\par
 
-\BookDiagram{assets/diagrams/capability-ladder.pdf}{Figure 1-1 — Four rungs: what each one adds, and what it still cannot do}{capability-ladder}
+\BookDiagram{assets/diagrams/capability-ladder.pdf}{Figure 1-1 — Four levels: what each one adds, and what it still cannot do}{capability-ladder}
 
-\subsection{Rung one — a model}
+\subsection{Level one — a model}
 
 A language model maps input tokens to output tokens. That is the whole contract. It has no memory between calls, no ability to act, and no access to anything you have not placed in the prompt.\par
 
@@ -277,7 +317,7 @@ answer = await model.complete("Summarize this supplier file: " + file_text)
 
 \textbf{What it cannot do.} Find out anything it was not told. A model asked "is this supplier sanctioned?" will produce a confident answer drawn from training data that may be two years stale, because producing an answer is the only thing it does. It has no mechanism for \emph{not knowing}.\par
 
-\subsection{Rung two — a model with tools}
+\subsection{Level two — a model with tools}
 
 Give the model a set of typed functions and a way to request them, and it can now interact with the world. Critically, the model does not \emph{execute} anything: it emits a structured request, and ordinary code you own decides what happens.\par
 
@@ -293,9 +333,9 @@ def lookup_supplier(supplier_id: str) -> str:
 
 \textbf{What it still cannot do.} Anything that takes more than one exchange to figure out. The caller still decides the sequence.\par
 
-This rung is also where the book's most important boundary appears for the first time: a tool call is a \emph{proposal}, not an action. The model proposes \lstinline[style=bookinline]!lookup_supplier("S-1001")!; your function decides whether that supplier may be read by this caller. Chapter 2 is entirely about making that boundary explicit.\par
+This level is also where the book's most important boundary appears for the first time: a tool call is a \emph{proposal}, not an action. The model proposes \lstinline[style=bookinline]!lookup_supplier("S-1001")!; your function decides whether that supplier may be read by this caller. Chapter 2 is entirely about making that boundary explicit.\par
 
-\subsection{Rung three — an agent}
+\subsection{Level three — an agent}
 
 An agent loops. It observes the result of each tool call and chooses the next step, until it decides it is finished.\par
 
@@ -309,21 +349,21 @@ result = await Runner.run(agent, "Onboard supplier Acme Industrial GmbH",
 
 \textbf{What it still cannot do.} Survive. The loop lives in one process. If that process restarts, everything it knew is gone, including the knowledge that it already created a supplier record. It also decides for itself when to stop, which means \emph{termination is now a property of a text generator}.\par
 
-That last point is worth sitting with. At rung two, a bug produces a wrong answer. At rung three, a bug produces an unbounded loop that spends money and takes actions. The failure modes change category, not just severity.\par
+That last point is worth sitting with. At level two, a bug produces a wrong answer. At level three, a bug produces an unbounded loop that spends money and takes actions. The failure modes change category, not just severity.\par
 
-\subsection{Rung four — an enterprise agentic system}
+\subsection{Level four — an enterprise agentic system}
 
-The fourth rung is everything that makes rung three safe to operate: durable state, identity and authorization, bounded resources, effect semantics, evidence, human control, evaluation, and release management.\par
+The fourth level is everything that makes level three safe to operate: durable state, identity and authorization, bounded resources, effect semantics, evidence, human control, evaluation, and release management.\par
 
 \needspace{5\baselineskip}
 \BookTableStart
 \small
 \begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
-\color{white}\bfseries Rung & \color{white}\bfseries Adds & \color{white}\bfseries Characteristic new failure \\
+\color{white}\bfseries Level & \color{white}\bfseries Adds & \color{white}\bfseries Characteristic new failure \\
 \endfirsthead
 \rowcolor{BookNavy}
-\color{white}\bfseries Rung & \color{white}\bfseries Adds & \color{white}\bfseries Characteristic new failure \\
+\color{white}\bfseries Level & \color{white}\bfseries Adds & \color{white}\bfseries Characteristic new failure \\
 \endhead
 Model & Language understanding & Confidently wrong about facts it cannot access \\
 \rowcolor{BookLight}
@@ -334,7 +374,7 @@ Enterprise system & Durability, authority, evidence, control & Complexity — wh
 \end{longtable}
 \BookTableEnd
 
-Notice that the fourth rung adds no intelligence at all. Everything it adds is constraint and record-keeping. That is the shape of the discipline: the model does not become more capable as you productionize it; the system around it becomes more accountable.\par
+Notice that the fourth level adds no intelligence at all. Everything it adds is constraint and record-keeping. That is the shape of the discipline: the model does not become more capable as you productionize it; the system around it becomes more accountable.\par
 
 This distinction prevents a common category error. Better prompting can improve a reasoning step; it cannot provide transactional integrity, credential isolation, deterministic replay, tenant boundaries, or a provable audit trail. Those are properties of the surrounding system, and no prompt can grant them.\par
 
@@ -539,7 +579,7 @@ Agent runtime & Bounded reasoning, loop patterns, durable run state & Parts I an
 Collaboration & Specialist agents, peer agents, external protocols & Part V \\
 \rowcolor{BookLight}
 Knowledge & Governed knowledge, rules, catalogs, per-run context & Part II \\
-Control points & Which model may answer, and which effect may commit & Part V \\
+Control points & Which model, task, tool, or approval may proceed & Parts IV–VII \\
 \rowcolor{BookLight}
 Security & Identity, guardrails, approvals, containment & Part VI \\
 Systems of record & Where effects actually commit and stay true & Throughout \\
@@ -551,13 +591,13 @@ Platform and operations & The paved road that builds, releases and runs it & Par
 
 Two properties of this picture matter more than any component in it. Authority narrows downward, which is what the labelled descent records: the agent proposes, the platform authorizes, and only the bottom bands commit anything. And security is not a band you pass through once — it spans every one of them, which is why the figure draws it as a spine beside the stack rather than a layer within it, and why it gets a Part of its own. The platform that builds, releases and runs the system is drawn the same way and for the same reason.\par
 
-\BookFigureCaption{Figure 4-1 is this same picture at higher resolution: every band there opens into the components it owns. The notation carries over — a solid path is the request, dashed is control, dotted is evidence — so nothing new has to be learned to read it.}
+\BookFigureCaption{Figure 1-2 is this same picture at higher resolution: every band there opens into the components it owns. The notation carries over — a solid path is the request, dashed is control, dotted is evidence — so nothing new has to be learned to read it.}
 
-\section{Four control points, four different questions}
+\section{Control points, each with a different question}
 
 The architecture has several gateways, and they are routinely confused because the word is the same. They are not alternatives, and none replaces another.\par
 
-\BookDiagram{assets/diagrams/gateway-roles.pdf}{Figure 1-3 — The control points, and the question each one answers}{gateway-roles}
+\BookDiagram{assets/diagrams/gateway-roles.pdf}{Figure 1-3 — Control points and the questions they answer}{gateway-roles}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -571,16 +611,23 @@ The architecture has several gateways, and they are routinely confused because t
 \endhead
 API Gateway & Is this caller admitted to the platform at all? & Anything about agents or models \\
 \rowcolor{BookLight}
+Agent Gateway & May this workload start, receive, or delegate this task? & Which model answers or which business effect commits \\
 LLM Gateway & Which model may answer, under which data policy? & Whether an effect may happen \\
-Tool Gateway & May this effect happen, for this subject, exactly once? & Which model produced the proposal \\
 \rowcolor{BookLight}
+Tool Gateway & May this effect happen, for this subject, exactly once? & Which model produced the proposal \\
 MCP Gateway & Is this external server and tool trusted and eligible? & Whether the resulting effect is authorized \\
+\rowcolor{BookLight}
+Human approval gate & Has an authorized reviewer approved this exact proposal? & Current identity, policy, resource version, or effect receipt \\
 \end{longtable}
 \BookTableEnd
 
 The \textbf{Tool Gateway} is the enterprise's control point for \emph{effects}. It validates the tool version and schema, re-authorizes the action and resource against the caller's grant, mints a last-hop credential, enforces idempotency, and records the receipt. It is deliberately protocol-agnostic, because effects arrive over REST, gRPC, a database transaction, a queue, and MCP, and the control must be the same for all of them.\par
 
 The \textbf{MCP Gateway} terminates one protocol. It decides whether an external MCP server is trusted, which of its tools are eligible, and what scoped credentials it may use. That is a real and necessary job, and it is a different job.\par
+
+The \textbf{human approval gate} is a control point for protected proposals, not a replacement for authorization or effect verification. It presents the exact proposal, evidence, expected resource version, and consequences to an eligible reviewer. The resulting grant is bound to that proposal and expires; the Tool Gateway still reauthorizes the request and records the effect receipt.\par
+
+Two lifecycle controls are related but deliberately named separately. The \textbf{acceptance gate} decides whether a run has discharged its obligations, while the \textbf{evaluation/release gate} decides whether a new behavior bundle may be promoted. Neither lets a model certify its own output, and neither substitutes for the request-time control points above.\par
 
 \begin{bookarchitecture}[Architecture guidance]
 Do not rename the Tool Gateway after a protocol. A tool invoked over MCP still passes the Tool Gateway, because MCP describes how a tool is discovered and called — not who may call it, whether the effect is idempotent, or what evidence is recorded. Naming a control boundary after today's protocol is how the boundary disappears when the protocol is replaced.
@@ -1380,131 +1427,6 @@ Adopt the SDK only after proving that tools cannot bypass gateways, every invoca
 Depend on the adapter you wrote, not on the SDK's types, everywhere above the runtime boundary. One module should import the vendor package. That module is also the only thing you rewrite when a 0.x SDK changes its API, which it will.
 \end{bookdeveloper}
 
-\section{Grounding, corrections, and evidence boundary}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
-\endhead
-Pinned SDK behavior & OpenAI Agents SDK 0.22.2 was released 9 September 2026. The project uses 0.Y.Z versioning and remains fast-moving. Deferred tool search is Responses-only, needs openai>=2.25.0, and requires exactly one ToolSearchTool when deferred function surfaces are used. & OAI-RELEASE; OAI-TOOLS \\
-\rowcolor{BookLight}
-Pause/resume boundary & RunState is the SDK pause/resume object. Custom context serialization is conservative; rebuild live gateways and secrets rather than serializing them blindly. Independently restored states must not resume concurrently against one session history. & OAI-RUNSTATE \\
-Scope of SDK approval & An SDK approval interruption pauses a call; it does not by itself prove enterprise authorization, separation of duties, resource freshness, or idempotent effect semantics. The gateway must verify those controls. & OAI-HITL \\
-\end{longtable}
-\BookTableEnd
-
-Evidence anchors: OAI-RELEASE; OAI-TOOLS; OAI-RUNSTATE; OAI-HITL. Full URLs, authority, version, and scope appear in Appendix K.\par
-
-\section{Implementation reference}
-
-\subsection{OpenAI Agents SDK enterprise adapter}
-
-PYTHON · implementation excerpt\par
-
-\needspace{572.0pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
-"""OpenAI Agents SDK 0.22.2 adapter.
-
-Requires openai-agents==0.22.2 and openai>=2.25.0. Framework-owned approval
-interrupts complement—but do not replace—the enterprise proposal and effect ledgers.
-"""
-from __future__ import annotations
-import os
-from dataclasses import dataclass
-from typing import Annotated, Any, Literal, Protocol
-from agents import Agent, RunConfig, RunContextWrapper, Runner, ToolSearchTool, tool_namespace
-from agents.decorators import tool
-from pydantic import BaseModel, Field
-
-class EnterpriseToolGateway(Protocol):
-    async def invoke(self,*,tenant_id:str,subject_id:str,actor_id:str,run_id:str,tool_version:str,arguments:dict[str,object],logical_effect_key:str|None=None,approval_id:str|None=None,proposal_hash:str|None=None)->dict[str,object]: ...
-
-@dataclass(frozen=True)
-class PlatformContext:
-    tenant_id:str; subject_id:str; actor_id:str; run_id:str; purpose:str; gateway:EnterpriseToolGateway
-
-class SupplierDecision(BaseModel):
-    disposition:Literal["request_evidence","ready_for_approval","reject"]
-    rationale:str=Field(min_length=1,max_length=1_000)
-    evidence_artifact_ids:list[str]
-
-@tool(defer_loading=True)
-async def get_supplier_profile(ctx:RunContextWrapper[PlatformContext],supplier_id:Annotated[str,"Canonical supplier candidate ID"])->dict[str,object]:
-    """Load the authorized profile for one canonical supplier candidate."""
-    return await ctx.context.gateway.invoke(tenant_id=ctx.context.tenant_id,subject_id=ctx.context.subject_id,actor_id=ctx.context.actor_id,run_id=ctx.context.run_id,tool_version="supplier.profile.read@2.1.0",arguments={"supplier_id":supplier_id})
-
-@tool(defer_loading=True)
-async def screen_supplier(ctx:RunContextWrapper[PlatformContext],supplier_id:Annotated[str,"Canonical supplier candidate ID"])->dict[str,object]:
-    """Run the governed screening capability for one supplier candidate."""
-    return await ctx.context.gateway.invoke(tenant_id=ctx.context.tenant_id,subject_id=ctx.context.subject_id,actor_id=ctx.context.actor_id,run_id=ctx.context.run_id,tool_version="supplier.screen@3.0.0",arguments={"supplier_id":supplier_id})
-
-@tool(needs_approval=True)
-async def create_supplier_record(ctx:RunContextWrapper[PlatformContext],supplier_id:str,expected_version:int,approval_id:str,proposal_hash:str)->dict[str,object]:
-    """Commit only after SDK interruption and gateway verification of the exact proposal."""
-    return await ctx.context.gateway.invoke(tenant_id=ctx.context.tenant_id,subject_id=ctx.context.subject_id,actor_id=ctx.context.actor_id,run_id=ctx.context.run_id,tool_version="supplier.create@1.4.0",arguments={"supplier_id":supplier_id,"expected_version":expected_version},logical_effect_key=f"{ctx.context.run_id}:supplier.create:{supplier_id}",approval_id=approval_id,proposal_hash=proposal_hash)
-
-supplier_tools=tool_namespace(name="supplier_onboarding",description="Read-only supplier profile and screening capabilities.",tools=[get_supplier_profile,screen_supplier])
-
-def build_supplier_agent()->Agent[PlatformContext]:
-    model=os.environ["OPENAI_AGENT_MODEL"]
-    return Agent[PlatformContext](name="Supplier onboarding analyst",model=model,instructions="Use only supplied, authorized evidence. Load the supplier_onboarding namespace when evidence is required. Protected writes require the direct create_supplier_record tool and must preserve approval IDs and proposal hashes. Never claim an external write without its receipt.",tools=[*supplier_tools,create_supplier_record,ToolSearchTool()],output_type=SupplierDecision)
-
-async def execute_bounded_run(input_items:str|list[dict[str,object]],context:PlatformContext):
-    """Return RunResult so the platform—not an exception string—owns pause/resume."""
-    return await Runner.run(starting_agent=build_supplier_agent(),input=input_items,context=context,max_turns=6,run_config=RunConfig(workflow_name="northstar-supplier-onboarding",group_id=context.run_id,trace_include_sensitive_data=False,trace_metadata={"run_id":context.run_id,"purpose":context.purpose}))
-
-def serialize_interrupted_run(result:Any)->str:
-    if not result.interruptions: raise ValueError("run has no pending approval")
-    # Custom PlatformContext contains a live gateway; configure an application serializer
-    # or persist identifiers separately and rebuild context when restoring the snapshot.
-    return result.to_state().to_string()
-
-async def approve_in_memory_and_resume(result:Any,interruption_index:int=0):
-    """Minimal SDK flow; production first verifies the enterprise ApprovalGrant."""
-    state=result.to_state(); state.approve(result.interruptions[interruption_index])
-    return await Runner.run(build_supplier_agent(),state)
-\end{lstlisting}
-
-\section{Debugging playbook}
-
-\begin{enumerate}
-
-\item Capture the platform request and SDK adapter request and diff their responsibilities.
-
-\item Verify which SDK state is persisted and whether its version is pinned.
-
-\item Disable one tool at the gateway and confirm the agent cannot recover ambient access.
-
-\end{enumerate}
-
-\section{Production checklist}
-
-\textbf{\ensuremath{\checkmark}} The SDK sits behind a platform-owned AgentRuntime adapter.\par
-
-\textbf{\ensuremath{\checkmark}} Only governed tool façades enter the agent process.\par
-
-\textbf{\ensuremath{\checkmark}} Turns, time, tokens, cost, tool calls, and delegation have external limits.\par
-
-\textbf{\ensuremath{\checkmark}} Local handoffs are distinct from durable task ownership.\par
-
-\textbf{\ensuremath{\checkmark}} Retry, state, trace privacy, and release compatibility are coordinated outside the SDK.\par
-
-\section{Exercises}
-
-\begin{enumerate}
-
-\item Implement a minimal AgentRuntime protocol and an OpenAI Agents SDK adapter.
-
-\item Design a compatibility test that proves an SDK upgrade preserves platform contracts.
-
-\end{enumerate}
-
 \section{Technical review questions}
 
 \needspace{5\baselineskip}
@@ -1527,27 +1449,11 @@ How do you keep the SDK replaceable? & Store platform contracts, workflow histor
 \end{longtable}
 \BookTableEnd
 
-\begin{bookcallout}[Part Ii]
-\textbf{AGENTIC DESIGN PATTERNS}  Choose and implement the smallest pattern that resolves the real uncertainty: ReAct, routing, planning, reflection, human control, and durable execution.
-\end{bookcallout}
-
-04 ReAct: Bounded Reason–Act–Observe Loops\par
-
-05 Routing, Triage, and Handoffs\par
-
-06 Planning and Plan–Execute\par
-
-07 Reflection and Evaluator–Optimizer\par
-
-08 Human-in-the-Loop\par
-
-09 Long-Running and Durable Agents\par
-
 \section{Transition to Chapter 4}
 
 The runtime now has a stable boundary; Chapter 4 places it inside the complete enterprise reference architecture.\par
 
-\BookPartPage{II}{ENTERPRISE REFERENCE ARCHITECTURE \& KNOWLEDGE}{This Part converts the foundational invariants into an enterprise system of record, then fills the knowledge plane it names. It assigns ownership across experience, application, runtime, knowledge, gateway, security, governance, and operations planes; defines the governed knowledge layer agents retrieve, reason over, are constrained by, and act through; and closes with how a single run assembles the context it is entitled to.}{assets/parts/part-ii.png}
+\BookPartPage{II}{ENTERPRISE ARCHITECTURE \& KNOWLEDGE}{This Part converts the foundational invariants into an enterprise system of record, then fills the knowledge plane it names. It assigns ownership across experience, application, runtime, knowledge, gateway, security, governance, and operations planes; defines the governed knowledge layer agents retrieve, reason over, are constrained by, and act through; and closes with how a single run assembles the context it is entitled to.}{assets/parts/part-ii.png}
 
 \BookChapter{04}{Enterprise Reference Architecture, Boundaries, and Contracts}
 
@@ -6734,18 +6640,6 @@ How do you deploy new workflow code safely? & Preserve compatible workers, use e
 \end{longtable}
 \BookTableEnd
 
-\begin{bookcallout}[Part Iii]
-\textbf{SKILLS AND COLLABORATION}  Package capabilities as versioned Skills and Skill Packs, coordinate specialist agents, and govern MCP and A2A boundaries.
-\end{bookcallout}
-
-10 Skills as Versioned Capabilities\par
-
-11 Skill Packs and Domain Platforms\par
-
-12 Supervisor/Worker and Multi-Agent Collaboration\par
-
-13 MCP, A2A, and External Integration\par
-
 \section{Transition to Chapter 16}
 
 The core patterns are now defined; Chapter 16 compares them across uncertainty, authority, latency, evidence, and operating cost.\par
@@ -8616,18 +8510,6 @@ How do you version external capabilities? & Pin registry entry, endpoint, protoc
 \end{longtable}
 \BookTableEnd
 
-\begin{bookcallout}[Part Iv]
-\textbf{ENTERPRISE CONTROL}  Control context, state, identity, authorization, effects, security, and governance outside the model.
-\end{bookcallout}
-
-14 Context Engineering, Memory, and State\par
-
-15 Identity, RBAC/ABAC, and Delegated Authorization\par
-
-16 Tool Security, Effects, Idempotency, and Approval\par
-
-17 Sandboxing, Egress, Data Security, and Governance\par
-
 \section{Transition to Chapter 20}
 
 The gateway controls model access, but not the entire attack surface; Chapter 20 introduces defense in depth across all agentic trust boundaries.\par
@@ -9567,7 +9449,7 @@ Where must authorization occur in retrieval? & Before content reaches the model,
 
 Identity and delegated authority answer who may ask; Chapter 22 proves whether a specific tool effect may execute, commit, retry, or recover.\par
 
-\BookChapter{22}{Tool Security, Effects, Idempotency, and Approval}
+\BookChapter{22}{Tool Security, Side Effects, Idempotency, and Approval}
 
 \begin{bookcallout}[Northstar at this point]
 The ERP times out after Northstar requests supplier creation. Retrying might duplicate the supplier; treating the call as failed might cause conflicting remediation. The platform records an unknown effect and reconciles before continuing.
@@ -10627,9 +10509,9 @@ What makes a useful kill-switch design? & Narrow scopes, emergency-deny preceden
 
 Security controls now produce events and evidence; Chapter 24 turns those signals into end-to-end traces that operators can reconstruct.\par
 
-\BookPartPage{VII}{OBSERVABILITY, EVALUATION \& CONTINUOUS LEARNING}{This Part makes behaviour measurable. It covers the trace that explains a run, the evaluation that decides whether a change is an improvement, and the governed loop that turns production evidence back into a better system.}{assets/parts/part-vii.png}
+\BookPartPage{VII}{OBSERVABILITY, EVALUATION \& LEARNING}{This Part makes behaviour measurable. It covers the distributed trace that explains a run, the evaluation that decides whether a change is an improvement, and the governed learning loop that turns production evidence into a safer, better system.}{assets/parts/part-vii.png}
 
-\BookChapter{24}{Observability and Tracing with MLflow}
+\BookChapter{24}{Distributed Tracing}
 
 \begin{bookquote}
 
@@ -10979,7 +10861,7 @@ Why keep audit separate? & Audit has stronger completeness, integrity, access, a
 
 Tracing explains what happened; Chapter 25 determines whether the trajectory and outcome were acceptable and whether a change is safe to ship.\par
 
-\BookChapter{25}{Evaluation, Debugging, and Continuous Improvement with MLflow}
+\BookChapter{25}{Continuous Learning and Governed Improvement}
 
 \begin{bookquote}
 
@@ -10997,11 +10879,13 @@ Gate releases on immutable datasets, executable trajectory checks, calibrated ju
 
 \section{What this chapter delivers}
 
-Evaluate outcomes and trajectories using immutable datasets, executable scorers, calibrated judges, failure simulation, and release gates.\par
+Turn production evidence into governed improvement by evaluating outcomes and trajectories, diagnosing failures, validating candidates, and promoting only release bundles that satisfy deterministic safety and acceptance gates.\par
 
 \section{Solution blueprint}
 
 An evaluation compares a candidate against an explicit contract, a baseline, and the slices where failure matters. The candidate is not just a prompt: it is the versioned set of model route, workflow, tools, policies, context strategy, and runtime configuration that could change the trajectory. A release gate combines deterministic checks with calibrated quality evidence, then records a decision that another operator can reproduce.\par
+
+The chapter therefore treats evaluation as the measurement stage of a larger learning system. Observe, measure, detect, and diagnose before recommending a change; validate and approve it before deployment; then monitor the result and curate the evidence into the next regression set. The loop improves the system without granting any model authority to rewrite controls or certify itself.\par
 
 \BookDiagram{assets/diagrams/evaluation-gate.pdf}{Figure 25-3 — Candidate evaluation combines deterministic checks, calibrated judges, slices, and a risk-tiered release gate}{evaluation-gate}
 

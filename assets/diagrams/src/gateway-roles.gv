@@ -1,26 +1,31 @@
-// Figure 1-3 — Four control points, four different questions.
+// Figure 1-3 — Control points and the questions they answer.
 // Message: these are not alternatives and none replaces another. An MCP tool
 // call still passes the Tool Gateway, because MCP does not decide authority.
 digraph gateway_roles {
   rankdir = LR
-  graph [ranksep=0.45, nodesep=0.16]
-  node [width=1.55, fontsize=10.5]
+  graph [ranksep=0.42, nodesep=0.18]
+  node [width=1.52, fontsize=10.2]
 
   agent [label="Agent runtime\nproposes", fillcolor="#E7F5F3", color="#0D6E69"]
   api [label="API Gateway\nis this caller\nadmitted?", fillcolor="#EEF4FA", color="#4A6078"]
+  task [label="Agent Gateway\nmay this task\nrun or delegate?", fillcolor="#EEF4FA", color="#4A6078", style=filled]
   llm [label="LLM Gateway\nwhich model,\nunder what policy?", fillcolor="#FFF4DF", color="#8A5600", style=filled]
   tool [label="Tool Gateway\nmay this effect\nhappen, and once?", fillcolor="#FCECEC", color="#A62C2C", style=filled]
   mcp [label="MCP Gateway\nis this server\ntrusted?", fillcolor="#EAF3FB", color="#1450A3", style=filled]
+  approval [label="Human approval\nis this exact\nproposal approved?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled]
   prov [label="Model providers", fillcolor="#EEF4FA", color="#4A6078"]
   ext [label="External\nMCP servers", fillcolor="#EEF4FA", color="#4A6078"]
   sys [label="Systems of record", fillcolor="#EDF3FC", color="#1450A3", shape=cylinder, style=filled]
 
-  api -> agent [label="  inbound  "]
+  api -> task [label="  inbound  "]
+  task -> agent [label="  admitted  "]
   agent -> llm [label="  inference  "]
   agent -> tool [label="  effects  "]
   llm -> prov
-  tool -> sys [label="  committed once  "]
+  tool -> sys [label="  read or pre-approved  "]
+  tool -> approval [label="  protected effect  ", style=dashed]
+  approval -> sys [label="  approved once  "]
   tool -> mcp [label="  external tools  ", style=dashed]
   mcp -> ext
-  { rank=same; llm; tool }
+  { rank=same; llm; tool; approval }
 }

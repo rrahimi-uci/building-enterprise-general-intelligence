@@ -27,7 +27,7 @@ when it genuinely does not apply, and say why it does not.
 - **Affected Parts/chapters/appendices:**
 - **Citation impact** (`config/references.json`, new or changed `[Rxx]`):
 - **Diagram impact** (`config/diagrams.json`, `assets/diagrams/`):
-- **Structural invariants** (12 Parts / 31 chapters / 15 appendices — preserved?):
+- **Structural invariants** (8 Parts / 28 chapters / 12 appendices — preserved?):
 - **Backward compatibility** (does any existing contract change?):
 
 ## Testing performed

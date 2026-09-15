@@ -1,8 +1,8 @@
 # PART I — FOUNDATIONS
 
-This Part defines the vocabulary and invariants used everywhere else. It begins with the progression from model call to production system, then turns model outputs into typed tool proposals, and finally places bounded reasoning behind a framework-neutral runtime contract. Read it before selecting orchestration patterns or products.
+Foundations establish the vocabulary and deterministic boundaries that every later Part depends on.
 
-# 01 — From an LLM Call to a Production System
+# 01 — From an LLM Call to a Production Agentic System
 
 |  |
 | --- |
@@ -82,7 +82,7 @@ Explain why an agentic application is a distributed system and assign every auth
 ## Solution blueprint
 
 
-Figure 1. From an LLM Call to a Production System.
+Figure 1. From an LLM Call to a Production Agentic System.
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
@@ -92,12 +92,12 @@ Figure 1. From an LLM Call to a Production System.
 
 Four things get called "an agent" in enterprise conversations, and they are four
 different systems with four different risk profiles. Being precise about which
-one you are building is not pedantry — the jump between adjacent rungs is where
+one you are building is not pedantry — the jump between adjacent levels is where
 most project estimates go wrong.
 
-[[DIAGRAM:capability-ladder|Figure 1-1 — Four rungs: what each one adds, and what it still cannot do]]
+[[DIAGRAM:capability-ladder|Figure 1-1 — Four levels: what each one adds, and what it still cannot do]]
 
-### Rung one — a model
+### Level one — a model
 
 A language model maps input tokens to output tokens. That is the whole contract.
 It has no memory between calls, no ability to act, and no access to anything you
@@ -114,7 +114,7 @@ supplier sanctioned?" will produce a confident answer drawn from training data
 that may be two years stale, because producing an answer is the only thing it
 does. It has no mechanism for *not knowing*.
 
-### Rung two — a model with tools
+### Level two — a model with tools
 
 Give the model a set of typed functions and a way to request them, and it can
 now interact with the world. Critically, the model does not *execute* anything:
@@ -133,12 +133,12 @@ about sanctions status can now come from the sanctions registry.
 **What it still cannot do.** Anything that takes more than one exchange to
 figure out. The caller still decides the sequence.
 
-This rung is also where the book's most important boundary appears for the first
+This level is also where the book's most important boundary appears for the first
 time: a tool call is a *proposal*, not an action. The model proposes
 `lookup_supplier("S-1001")`; your function decides whether that supplier may be
 read by this caller. Chapter 2 is entirely about making that boundary explicit.
 
-### Rung three — an agent
+### Level three — an agent
 
 An agent loops. It observes the result of each tool call and chooses the next
 step, until it decides it is finished.
@@ -156,24 +156,24 @@ process restarts, everything it knew is gone, including the knowledge that it
 already created a supplier record. It also decides for itself when to stop,
 which means *termination is now a property of a text generator*.
 
-That last point is worth sitting with. At rung two, a bug produces a wrong
-answer. At rung three, a bug produces an unbounded loop that spends money and
+That last point is worth sitting with. At level two, a bug produces a wrong
+answer. At level three, a bug produces an unbounded loop that spends money and
 takes actions. The failure modes change category, not just severity.
 
-### Rung four — an enterprise agentic system
+### Level four — an enterprise agentic system
 
-The fourth rung is everything that makes rung three safe to operate: durable
+The fourth level is everything that makes level three safe to operate: durable
 state, identity and authorization, bounded resources, effect semantics,
 evidence, human control, evaluation, and release management.
 
-| Rung | Adds | Characteristic new failure |
+| Level | Adds | Characteristic new failure |
 | --- | --- | --- |
 | Model | Language understanding | Confidently wrong about facts it cannot access |
 | Model + tools | Contact with current reality | Acts on data the caller was not authorized to see |
 | Agent | Adaptive multi-step work | Runs forever; loses everything on restart |
 | Enterprise system | Durability, authority, evidence, control | Complexity — which is why the boundaries must be explicit |
 
-Notice that the fourth rung adds no intelligence at all. Everything it adds is
+Notice that the fourth level adds no intelligence at all. Everything it adds is
 constraint and record-keeping. That is the shape of the discipline: the model
 does not become more capable as you productionize it; the system around it
 becomes more accountable.
@@ -343,7 +343,7 @@ implementation inside each layer.
 | Agent runtime | Bounded reasoning, loop patterns, durable run state | Parts I and IV |
 | Collaboration | Specialist agents, peer agents, external protocols | Part V |
 | Knowledge | Governed knowledge, rules, catalogs, per-run context | Part II |
-| Control points | Which model may answer, and which effect may commit | Part V |
+| Control points | Which model, task, tool, or approval may proceed | Parts IV–VII |
 | Security | Identity, guardrails, approvals, containment | Part VI |
 | Systems of record | Where effects actually commit and stay true | Throughout |
 | Evidence | Traces, evaluation, and the loop into the next release | Part VII |
@@ -357,24 +357,26 @@ which is why the figure draws it as a spine beside the stack rather than a layer
 within it, and why it gets a Part of its own. The platform that builds,
 releases and runs the system is drawn the same way and for the same reason.
 
-Figure 4-1 is this same picture at higher resolution: every band there opens
+Figure 1-2 is this same picture at higher resolution: every band there opens
 into the components it owns. The notation carries over — a solid path is the
 request, dashed is control, dotted is evidence — so nothing new has to be
 learned to read it.
 
-## Four control points, four different questions
+## Control points, each with a different question
 
 The architecture has several gateways, and they are routinely confused because
 the word is the same. They are not alternatives, and none replaces another.
 
-[[DIAGRAM:gateway-roles|Figure 1-3 — The control points, and the question each one answers]]
+[[DIAGRAM:gateway-roles|Figure 1-3 — Control points and the questions they answer]]
 
 | Control point | The question it answers | What it does not decide |
 | --- | --- | --- |
 | API Gateway | Is this caller admitted to the platform at all? | Anything about agents or models |
+| Agent Gateway | May this workload start, receive, or delegate this task? | Which model answers or which business effect commits |
 | LLM Gateway | Which model may answer, under which data policy? | Whether an effect may happen |
 | Tool Gateway | May this effect happen, for this subject, exactly once? | Which model produced the proposal |
 | MCP Gateway | Is this external server and tool trusted and eligible? | Whether the resulting effect is authorized |
+| Human approval gate | Has an authorized reviewer approved this exact proposal? | Current identity, policy, resource version, or effect receipt |
 
 The **Tool Gateway** is the enterprise's control point for *effects*. It validates
 the tool version and schema, re-authorizes the action and resource against the
@@ -386,6 +388,18 @@ the same for all of them.
 The **MCP Gateway** terminates one protocol. It decides whether an external MCP
 server is trusted, which of its tools are eligible, and what scoped credentials
 it may use. That is a real and necessary job, and it is a different job.
+
+The **human approval gate** is a control point for protected proposals, not a
+replacement for authorization or effect verification. It presents the exact
+proposal, evidence, expected resource version, and consequences to an eligible
+reviewer. The resulting grant is bound to that proposal and expires; the Tool
+Gateway still reauthorizes the request and records the effect receipt.
+
+Two lifecycle controls are related but deliberately named separately. The
+**acceptance gate** decides whether a run has discharged its obligations, while
+the **evaluation/release gate** decides whether a new behavior bundle may be
+promoted. Neither lets a model certify its own output, and neither substitutes
+for the request-time control points above.
 
 |  |
 | --- |
@@ -865,109 +879,6 @@ Adopt the SDK only after proving that tools cannot bypass gateways, every invoca
 | --- |
 | **DEVELOPER GUIDELINE**  Depend on the adapter you wrote, not on the SDK's types, everywhere above the runtime boundary. One module should import the vendor package. That module is also the only thing you rewrite when a 0.x SDK changes its API, which it will. |
 
-## Grounding, corrections, and evidence boundary
-
-| **Claim or correction** | **Grounded statement** | **Source IDs** |
-| --- | --- | --- |
-| Pinned SDK behavior | OpenAI Agents SDK 0.22.2 was released 9 September 2026. The project uses 0.Y.Z versioning and remains fast-moving. Deferred tool search is Responses-only, needs openai>=2.25.0, and requires exactly one ToolSearchTool when deferred function surfaces are used. | OAI-RELEASE; OAI-TOOLS |
-| Pause/resume boundary | RunState is the SDK pause/resume object. Custom context serialization is conservative; rebuild live gateways and secrets rather than serializing them blindly. Independently restored states must not resume concurrently against one session history. | OAI-RUNSTATE |
-| Scope of SDK approval | An SDK approval interruption pauses a call; it does not by itself prove enterprise authorization, separation of duties, resource freshness, or idempotent effect semantics. The gateway must verify those controls. | OAI-HITL |
-
-Evidence anchors: OAI-RELEASE; OAI-TOOLS; OAI-RUNSTATE; OAI-HITL. Full URLs, authority, version, and scope appear in Appendix K.
-
-## Implementation reference
-
-
-### OpenAI Agents SDK enterprise adapter
-
-PYTHON · implementation excerpt
-
-```python
-"""OpenAI Agents SDK 0.22.2 adapter.
-
-Requires openai-agents==0.22.2 and openai>=2.25.0. Framework-owned approval
-interrupts complement—but do not replace—the enterprise proposal and effect ledgers.
-"""
-from __future__ import annotations
-import os
-from dataclasses import dataclass
-from typing import Annotated, Any, Literal, Protocol
-from agents import Agent, RunConfig, RunContextWrapper, Runner, ToolSearchTool, tool_namespace
-from agents.decorators import tool
-from pydantic import BaseModel, Field
-
-class EnterpriseToolGateway(Protocol):
-    async def invoke(self,*,tenant_id:str,subject_id:str,actor_id:str,run_id:str,tool_version:str,arguments:dict[str,object],logical_effect_key:str|None=None,approval_id:str|None=None,proposal_hash:str|None=None)->dict[str,object]: ...
-
-@dataclass(frozen=True)
-class PlatformContext:
-    tenant_id:str; subject_id:str; actor_id:str; run_id:str; purpose:str; gateway:EnterpriseToolGateway
-
-class SupplierDecision(BaseModel):
-    disposition:Literal["request_evidence","ready_for_approval","reject"]
-    rationale:str=Field(min_length=1,max_length=1_000)
-    evidence_artifact_ids:list[str]
-
-@tool(defer_loading=True)
-async def get_supplier_profile(ctx:RunContextWrapper[PlatformContext],supplier_id:Annotated[str,"Canonical supplier candidate ID"])->dict[str,object]:
-    """Load the authorized profile for one canonical supplier candidate."""
-    return await ctx.context.gateway.invoke(tenant_id=ctx.context.tenant_id,subject_id=ctx.context.subject_id,actor_id=ctx.context.actor_id,run_id=ctx.context.run_id,tool_version="supplier.profile.read@2.1.0",arguments={"supplier_id":supplier_id})
-
-@tool(defer_loading=True)
-async def screen_supplier(ctx:RunContextWrapper[PlatformContext],supplier_id:Annotated[str,"Canonical supplier candidate ID"])->dict[str,object]:
-    """Run the governed screening capability for one supplier candidate."""
-    return await ctx.context.gateway.invoke(tenant_id=ctx.context.tenant_id,subject_id=ctx.context.subject_id,actor_id=ctx.context.actor_id,run_id=ctx.context.run_id,tool_version="supplier.screen@3.0.0",arguments={"supplier_id":supplier_id})
-
-@tool(needs_approval=True)
-async def create_supplier_record(ctx:RunContextWrapper[PlatformContext],supplier_id:str,expected_version:int,approval_id:str,proposal_hash:str)->dict[str,object]:
-    """Commit only after SDK interruption and gateway verification of the exact proposal."""
-    return await ctx.context.gateway.invoke(tenant_id=ctx.context.tenant_id,subject_id=ctx.context.subject_id,actor_id=ctx.context.actor_id,run_id=ctx.context.run_id,tool_version="supplier.create@1.4.0",arguments={"supplier_id":supplier_id,"expected_version":expected_version},logical_effect_key=f"{ctx.context.run_id}:supplier.create:{supplier_id}",approval_id=approval_id,proposal_hash=proposal_hash)
-
-supplier_tools=tool_namespace(name="supplier_onboarding",description="Read-only supplier profile and screening capabilities.",tools=[get_supplier_profile,screen_supplier])
-
-def build_supplier_agent()->Agent[PlatformContext]:
-    model=os.environ["OPENAI_AGENT_MODEL"]
-    return Agent[PlatformContext](name="Supplier onboarding analyst",model=model,instructions="Use only supplied, authorized evidence. Load the supplier_onboarding namespace when evidence is required. Protected writes require the direct create_supplier_record tool and must preserve approval IDs and proposal hashes. Never claim an external write without its receipt.",tools=[*supplier_tools,create_supplier_record,ToolSearchTool()],output_type=SupplierDecision)
-
-async def execute_bounded_run(input_items:str|list[dict[str,object]],context:PlatformContext):
-    """Return RunResult so the platform—not an exception string—owns pause/resume."""
-    return await Runner.run(starting_agent=build_supplier_agent(),input=input_items,context=context,max_turns=6,run_config=RunConfig(workflow_name="northstar-supplier-onboarding",group_id=context.run_id,trace_include_sensitive_data=False,trace_metadata={"run_id":context.run_id,"purpose":context.purpose}))
-
-def serialize_interrupted_run(result:Any)->str:
-    if not result.interruptions: raise ValueError("run has no pending approval")
-    # Custom PlatformContext contains a live gateway; configure an application serializer
-    # or persist identifiers separately and rebuild context when restoring the snapshot.
-    return result.to_state().to_string()
-
-async def approve_in_memory_and_resume(result:Any,interruption_index:int=0):
-    """Minimal SDK flow; production first verifies the enterprise ApprovalGrant."""
-    state=result.to_state(); state.approve(result.interruptions[interruption_index])
-    return await Runner.run(build_supplier_agent(),state)
-```
-
-## Debugging playbook
-
-1. Capture the platform request and SDK adapter request and diff their responsibilities.
-2. Verify which SDK state is persisted and whether its version is pinned.
-3. Disable one tool at the gateway and confirm the agent cannot recover ambient access.
-
-## Production checklist
-
-**✓** The SDK sits behind a platform-owned AgentRuntime adapter.
-
-**✓** Only governed tool façades enter the agent process.
-
-**✓** Turns, time, tokens, cost, tool calls, and delegation have external limits.
-
-**✓** Local handoffs are distinct from durable task ownership.
-
-**✓** Retry, state, trace privacy, and release compatibility are coordinated outside the SDK.
-
-## Exercises
-
-1. Implement a minimal AgentRuntime protocol and an OpenAI Agents SDK adapter.
-2. Design a compatibility test that proves an SDK upgrade preserves platform contracts.
-
 ## Technical review questions
 
 | **Question** | **Strong answer** |
@@ -977,22 +888,6 @@ async def approve_in_memory_and_resume(result:Any,interruption_index:int=0):
 | When should you use an agent-as-tool, a handoff, or a durable child task? | Use an agent-as-tool when a manager retains control; a handoff when conversational control transfers; a durable task when work needs separate ownership, waits, retries, scaling, or recovery. |
 | How do you make SDK tools safe? | Supply a minimal set, use typed façades, reauthorize exact resources at the Tool Gateway, mint last-hop credentials, enforce idempotency, and sanitize results. |
 | How do you keep the SDK replaceable? | Store platform contracts, workflow history, artifacts, effects, approvals, and public APIs in provider-neutral forms; confine SDK types to the adapter. |
-
-|  |
-| --- |
-| **PART II**  **AGENTIC DESIGN PATTERNS**  Choose and implement the smallest pattern that resolves the real uncertainty: ReAct, routing, planning, reflection, human control, and durable execution. |
-
-04 ReAct: Bounded Reason–Act–Observe Loops
-
-05 Routing, Triage, and Handoffs
-
-06 Planning and Plan–Execute
-
-07 Reflection and Evaluator–Optimizer
-
-08 Human-in-the-Loop
-
-09 Long-Running and Durable Agents
 
 ## Transition to Chapter 4
 

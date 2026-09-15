@@ -34,7 +34,6 @@ def book_release(root: Path) -> str:
     return json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]["version"]
 
 
-BOOK_TITLE = "Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise"
 BASENAME = "Enterprise-General-Intelligence-v2.1.0"
 
 
@@ -317,13 +316,13 @@ def reference_target(text: str) -> str:
     return (r"\BookReferenceTarget{" + match.group(1) + "}") if match else ""
 
 
-def render_content(blocks: list[tuple], diagram_files: dict[str, str], visuals: dict[str, str] | None = None) -> tuple[str, dict[str, int]]:
+def render_content(blocks: list[tuple], diagram_files: dict[str, str], book_title: str, visuals: dict[str, str] | None = None) -> tuple[str, dict[str, int]]:
     output: list[str] = ["% Generated from book/manuscript.md. Do not hand-edit."]
     stats = {"parts": 0, "appendix_dividers": 0, "chapters": 0, "appendices": 0, "diagrams": 0, "code_blocks": 0, "tables": 0, "callouts": 0, "citations": 0}
     index = 0
     if blocks and blocks[0][0] == "cover":
         index = 1
-    if index < len(blocks) and blocks[index][0] == "heading" and blocks[index][2] == BOOK_TITLE:
+    if index < len(blocks) and blocks[index][0] == "heading" and blocks[index][2] == book_title:
         index += 1
         skipped = 0
         while index < len(blocks) and blocks[index][0] == "paragraph" and skipped < 3:
@@ -505,7 +504,8 @@ def main() -> int:
         vector = Path(item["file"]).with_suffix(".pdf")
         diagram_files[item["id"]] = vector.as_posix() if (root / vector).exists() else item["file"]
     blocks = list(parse_markdown(markdown))
-    content, stats = render_content(blocks, diagram_files, part_visuals(root))
+    book_cfg = json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]
+    content, stats = render_content(blocks, diagram_files, book_cfg["title"], part_visuals(root))
 
     latex_dir = root / "latex"
     content_dir = latex_dir / "content"
@@ -513,7 +513,6 @@ def main() -> int:
     main_path = latex_dir / (BASENAME + ".tex")
     content_path = content_dir / "book-content.tex"
     dist_path = root / "dist" / (BASENAME + ".tex")
-    book_cfg = json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]
     main_text = make_main(book_cfg)
     main_path.write_text(main_text, encoding="utf-8", newline="\n")
     content_path.write_text(content, encoding="utf-8", newline="\n")

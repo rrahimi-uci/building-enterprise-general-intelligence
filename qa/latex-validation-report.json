@@ -3,22 +3,22 @@
   "validated_on": "2026-09-13",
   "format": "XeLaTeX",
   "measurements": {
-    "main_tex_sha256": "33fa699204f2d583715cdd617ecabe63bef29b9f6e9decd07e8442894d9fcd3d",
-    "content_tex_sha256": "ad5ee95ef896ef3816f8fe5af9274ccec1096671783324c2c263e9bfe6f77320",
-    "style_sha256": "f2f56a95c6d5382add095f9df3e90ee3a6f508577ec5413768159c668f1e7da3",
+    "main_tex_sha256": "a33c7b93c23d54ab107d5d7c8e29070cd0f85d52260d840c962c28a790fa2732",
+    "content_tex_sha256": "a2d79027db2b7b399675d36679c74f3ae80c4587c9f5511d394f41e9aefcbf06",
+    "style_sha256": "969e536c5af90c2fca7888b85182bd74b73f0690f7a4198a3a8d2dbf3024cff1",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "appendices": 12,
     "diagrams": 43,
-    "code_blocks": 69,
-    "longtables": 238,
-    "callout_tables": 98,
+    "code_blocks": 68,
+    "longtables": 237,
+    "callout_tables": 95,
     "citation_occurrences": 104,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 336,
-    "markdown_code_blocks": 69,
+    "markdown_tables": 332,
+    "markdown_code_blocks": 68,
     "image_quality": [
       {
         "file": "assets/cover/cover-v2.1.0.png",
@@ -55,10 +55,10 @@
       {
         "file": "assets/diagrams/gateway-roles.png",
         "pixels": [
-          3912,
-          839
+          5278,
+          1173
         ],
-        "effective_dpi": 554.1
+        "effective_dpi": 747.6
       },
       {
         "file": "assets/diagrams/deterministic-shell.png",

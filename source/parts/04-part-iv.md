@@ -1331,18 +1331,6 @@ A durable workflow records deterministic decisions and schedules bounded activit
 | What happens if cancellation arrives while a write may have committed? | Persist cancellation intent, stop new work, mark the effect unknown if needed, reconcile the source system, then compensate or require intervention before closing. |
 | How do you deploy new workflow code safely? | Preserve compatible workers, use explicit version markers, test replay, migrate deterministically when supported, or start a new linked generation when semantics cannot be preserved. |
 
-|  |
-| --- |
-| **PART III**  **SKILLS AND COLLABORATION**  Package capabilities as versioned Skills and Skill Packs, coordinate specialist agents, and govern MCP and A2A boundaries. |
-
-10 Skills as Versioned Capabilities
-
-11 Skill Packs and Domain Platforms
-
-12 Supervisor/Worker and Multi-Agent Collaboration
-
-13 MCP, A2A, and External Integration
-
 ## Transition to Chapter 16
 
 The core patterns are now defined; Chapter 16 compares them across uncertainty, authority, latency, evidence, and operating cost.

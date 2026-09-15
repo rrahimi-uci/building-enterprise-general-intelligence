@@ -1,9 +1,9 @@
-# Book v1.0.0 Release Notes
+# Book v2.1.0 Release Notes
 
-Book v1.0.0 is the canonical foundation for *Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise* by Reza Rahimi, PhD.
+Book v2.1.0 is the canonical foundation for *Building Enterprise General Intelligence Platform* by Reza Rahimi, PhD.
 
-This release combines a publication-ready DOCX/Markdown book with its complete development system: split canonical source, original v3.1 provenance, cover and diagrams, machine-readable registries, deterministic builders, validators, PDF/visual QA, templates, four reusable maintenance skills, a design system, cross-format contract, contribution guidance, release checklist, manifest, and checksums.
+This release combines the canonical Markdown source with synchronized DOCX and XeLaTeX representations, editable cover and diagram sources, machine-readable registries, deterministic builders, validators, PDF/visual QA, templates, reusable maintenance skills, a design system, cross-format contract, contribution guidance, release checklist, manifest, and checksums.
 
-The release is intended to be edited by changing `source/parts/*.md`, configuration, and assets, then regenerating every derivative. Manual editing of the final DOCX, distributable Markdown, or Notion copy is prohibited because it creates drift.
+The book is organized as eight Parts, 28 chapters, and 12 appendices. It is edited by changing `source/parts/*.md`, configuration, and assets, then regenerating every derivative. Manual editing of the final DOCX, distributable Markdown, or Notion copy is prohibited because it creates drift.
 
-Validation passed for narrative structure, citation resolution, DOCX integrity, deterministic builds, diagram registry, pagination, chapter/appendix starts, standalone Part pages, and blank-page detection. Living external sources must be re-verified in future releases.
+The editorial review through page 30 has been generalized across the full book, including terminology, control-point architecture, navigation, front matter, and governed learning. Full validation results for this working tree are recorded in the generated reports after the rebuild; living external sources must be re-verified in future releases.

@@ -1,4 +1,4 @@
-# PART II — ENTERPRISE REFERENCE ARCHITECTURE & KNOWLEDGE
+# PART II — ENTERPRISE ARCHITECTURE & KNOWLEDGE
 
 This Part converts the foundational invariants into an enterprise system of record, then fills the knowledge plane it names. It assigns ownership across experience, application, runtime, knowledge, gateway, security, governance, and operations planes; defines the governed knowledge layer agents retrieve, reason over, are constrained by, and act through; and closes with how a single run assembles the context it is entitled to.
 

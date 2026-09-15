@@ -4,6 +4,13 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Generalized the first-30-page editorial review across the book
+
+- Retitled the book and aligned its audience promise, preface, scope discipline, reproducible-edition explanation, and reference-guide contract with the reviewed direction.
+- Standardized the progression vocabulary from “rung” to “level,” corrected chapter and Part labels, and removed stale embedded topology maps and redundant early chapter boilerplate.
+- Expanded the control-point model to include agent admission and human approval, clarified lifecycle acceptance/evaluation gates, and synchronized the related prose and diagrams.
+- Reframed Chapter 25 as governed continuous learning and updated the cover configuration, repository map, and chapter registry to the canonical eight-Part, 28-chapter, 12-appendix topology.
+
 ### Part VIII teaches governance, release recovery, and operating economics
 
 - Expanded Chapters 26–28 with a governance control-loop explanation, a decision-and-evidence table, an immutable release walkthrough, and a quarter-end capacity-planning scenario.
