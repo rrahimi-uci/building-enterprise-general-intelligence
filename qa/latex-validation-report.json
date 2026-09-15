@@ -4,20 +4,20 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "33fa699204f2d583715cdd617ecabe63bef29b9f6e9decd07e8442894d9fcd3d",
-    "content_tex_sha256": "4f8c2cd6fb1c481f4a86d5fe8e20fe2cb0598f73f2553f496b02a371cdbcb6c4",
+    "content_tex_sha256": "d5c39f47e25fa9ceb9bf3679fb80e5b061f593e5681c2841e87a11abd32efc15",
     "style_sha256": "f2f56a95c6d5382add095f9df3e90ee3a6f508577ec5413768159c668f1e7da3",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "appendices": 12,
-    "diagrams": 36,
+    "diagrams": 39,
     "code_blocks": 69,
-    "longtables": 223,
-    "callout_tables": 99,
+    "longtables": 229,
+    "callout_tables": 98,
     "citation_occurrences": 104,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 322,
+    "markdown_tables": 327,
     "markdown_code_blocks": 69,
     "image_quality": [
       {
@@ -291,6 +291,30 @@
           1376
         ],
         "effective_dpi": 291.1
+      },
+      {
+        "file": "assets/diagrams/identity-delegation.png",
+        "pixels": [
+          2290,
+          3726
+        ],
+        "effective_dpi": 324.4
+      },
+      {
+        "file": "assets/diagrams/effect-lifecycle.png",
+        "pixels": [
+          2979,
+          3212
+        ],
+        "effective_dpi": 422.0
+      },
+      {
+        "file": "assets/diagrams/sandbox-egress.png",
+        "pixels": [
+          2448,
+          3145
+        ],
+        "effective_dpi": 346.7
       },
       {
         "file": "assets/diagrams/learning-loop.png",

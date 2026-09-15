@@ -238,6 +238,30 @@
       "vector": "assets/diagrams/security-depth.pdf"
     },
     {
+      "id": "identity-delegation",
+      "file": "assets/diagrams/identity-delegation.png",
+      "source": "assets/diagrams/src/identity-delegation.gv",
+      "vector": "assets/diagrams/identity-delegation.pdf",
+      "description": "Subject and actor identity narrow through a child task before a last-hop credential is issued",
+      "sha256": "0bcaf4a10e230e68c9ab1dd93996f9080896860da629c0dbdd18994fc62c5e86"
+    },
+    {
+      "id": "effect-lifecycle",
+      "file": "assets/diagrams/effect-lifecycle.png",
+      "source": "assets/diagrams/src/effect-lifecycle.gv",
+      "vector": "assets/diagrams/effect-lifecycle.pdf",
+      "description": "Protected effect lifecycle with approval, idempotency, unknown outcomes, reconciliation, and compensation",
+      "sha256": "68eea51546aeabbcd2bfabfc064bec9153f7205cd86245d9e99f9962f5cdbb39"
+    },
+    {
+      "id": "sandbox-egress",
+      "file": "assets/diagrams/sandbox-egress.png",
+      "source": "assets/diagrams/src/sandbox-egress.gv",
+      "vector": "assets/diagrams/sandbox-egress.pdf",
+      "description": "Containment across capability, sandbox, egress, credential, DLP, and effect boundaries",
+      "sha256": "51eb3151325ee7636081bc0d47d95a0a0b860c3337b79d1604628bd6e7087504"
+    },
+    {
       "id": "skill-resolution",
       "file": "assets/diagrams/skill-resolution.png",
       "source": "assets/diagrams/src/skill-resolution.gv",
