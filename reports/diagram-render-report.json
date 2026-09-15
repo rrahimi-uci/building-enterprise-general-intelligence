@@ -1,6 +1,6 @@
 {
-  "diagrams": 36,
-  "with_vector": 36,
+  "diagrams": 39,
+  "with_vector": 39,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -353,6 +353,39 @@
       "effective_dpi": 333,
       "vector": true,
       "sha256": "82e0ca96cd7be9e0bdbce41573d63ef8c67c8f7a130ecef61f21f489f3650da3"
+    },
+    {
+      "id": "identity-delegation",
+      "source": "identity-delegation.gv",
+      "pixels": [
+        2290,
+        3726
+      ],
+      "effective_dpi": 334,
+      "vector": true,
+      "sha256": "0bcaf4a10e230e68c9ab1dd93996f9080896860da629c0dbdd18994fc62c5e86"
+    },
+    {
+      "id": "effect-lifecycle",
+      "source": "effect-lifecycle.gv",
+      "pixels": [
+        2979,
+        3212
+      ],
+      "effective_dpi": 435,
+      "vector": true,
+      "sha256": "68eea51546aeabbcd2bfabfc064bec9153f7205cd86245d9e99f9962f5cdbb39"
+    },
+    {
+      "id": "sandbox-egress",
+      "source": "sandbox-egress.gv",
+      "pixels": [
+        2448,
+        3145
+      ],
+      "effective_dpi": 357,
+      "vector": true,
+      "sha256": "51eb3151325ee7636081bc0d47d95a0a0b860c3337b79d1604628bd6e7087504"
     },
     {
       "id": "skill-resolution",

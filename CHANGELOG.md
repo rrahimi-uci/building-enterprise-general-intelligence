@@ -4,6 +4,13 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Part VI teaches security as containment, identity as delegation, and effects as evidence
+
+- Expanded chapters 20–23 with progressive explanations of detector, policy, and enforcement boundaries; RBAC versus ABAC; approval, idempotency, preconditions, and reconciliation; and the difference between prevention and blast-radius containment.
+- Added a worked Northstar supplier-document attack path, an incident-response phase table, a subject/actor/purpose table, an effect-property comparison, invocation stages, and a sandbox/egress boundary table.
+- Added three editable, registered diagrams: subject and actor delegation, the protected-effect lifecycle, and containment across sandbox, egress, credential, DLP, and effect boundaries.
+- Removed stale unregistered figure labels and the duplicated Part V orientation that followed chapter 23, preserving the eight-Part / 28-chapter / 12-appendix topology.
+
 ### A whole-system view before the details
 
 - Chapter 01 gains **"The system in one view"**: one diagram of the complete architecture, annotated with the Part that details each band, plus a table mapping band to Part. A reader now has somewhere to put every later chapter before any of it is justified.
