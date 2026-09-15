@@ -1,6 +1,6 @@
 {
-  "diagrams": 41,
-  "with_vector": 41,
+  "diagrams": 43,
+  "with_vector": 43,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -342,6 +342,28 @@
       "effective_dpi": 300,
       "vector": true,
       "sha256": "9a3b07d4bf51c402d678f77c2eef298fc1d3f72ae26069a61adde8ea0e7f38f5"
+    },
+    {
+      "id": "release-recovery",
+      "source": "release-recovery.gv",
+      "pixels": [
+        2639,
+        3270
+      ],
+      "effective_dpi": 385,
+      "vector": true,
+      "sha256": "2821187cb8b0efb8af797ab239cd4effaff5907c3b07ae4bf09ab2a582f1b63e"
+    },
+    {
+      "id": "reliability-economics",
+      "source": "reliability-economics.gv",
+      "pixels": [
+        2528,
+        2396
+      ],
+      "effective_dpi": 369,
+      "vector": true,
+      "sha256": "741f097070c5b94bde04fbc1db7f091b5112a563c33f0a5059e1f232e51c6645"
     },
     {
       "id": "runtime-offline",

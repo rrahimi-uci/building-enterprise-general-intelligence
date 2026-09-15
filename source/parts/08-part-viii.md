@@ -12,11 +12,22 @@ Make governance decisions explicit, proportional, owned, and reversible, so that
 
 ## Solution blueprint
 
-Figure 25. Governance, Risk, and Operating Model.
-
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | A named accountable owner per decision class; a named risk authority owns exceptions | delegated domain autonomy to enterprise risk appetite | risk tier · domain · release | one decision, one exception, one release | risk classification · PolicyDecision · ValidationReport · exception record |
+
+Governance is easiest to understand as a control loop, not as a meeting. A team first states the outcome it is accountable for, then identifies what could make that outcome harmful, chooses controls proportional to the consequence, collects evidence while the system runs, and revises the controls when evidence or circumstances change. The loop is useful only when each step has an owner and a record that another person can inspect.
+
+Consider Northstar's supplier-document assistant. The domain owner may accept a draft classification, but the assistant must not change a supplier record. The data owner decides which contracts may enter context; the risk owner classifies the workflow; the resource owner defines whether a write tool is available; and the release owner verifies that the assembled controls were tested. No single committee needs to understand every supplier rule, but every decision has a clear owner and an evidence boundary.
+
+| **If the team asks…** | **Governance must answer…** | **Evidence that closes the question** |
+| --- | --- | --- |
+| “Can this use case run?” | What outcome, data, autonomy, and consequence define its risk tier? | Use-case record, risk assessment, prohibited-use boundary |
+| “Can this tool be called?” | Who owns the resource, and what authorization and reconciliation does the effect require? | Tool contract, capability decision, effect policy |
+| “Can this release go live?” | Did the candidate satisfy the required technical, safety, and business gates? | ValidationReport, approvals, canary plan, rollback owner |
+| “Why was an exception allowed?” | What exact gap was accepted, by whom, with which compensating controls, and until when? | Time-bounded exception record and monitoring result |
+
+This framing also explains why a central board alone scales poorly. A board can set the risk vocabulary and approve high-consequence boundaries, but it cannot supply the local knowledge needed for every data source, business effect, or acceptance criterion. Central services make decisions consistent; domain owners make them meaningful.
 
 ## Federated operating model
 
@@ -120,8 +131,7 @@ Ship immutable release bundles through compatibility checks, canaries, workflow-
 
 ## Solution blueprint
 
-
-Figure 21. Deployment, Versioning, CI/CD, and Recovery.
+[[DIAGRAM:release-recovery|Figure 27-1 — Immutable release promotion and recovery without rewriting active history]]
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
@@ -139,9 +149,34 @@ Rollback changes the release assigned to **new work**. Active workflows continue
 
 Regional recovery fences the old writer, restores durable state with a compatible build, reconciles executing and unknown effects, verifies signals and task ownership, advances placement atomically, and resumes by risk tier. Recovery is rehearsed with evidence, not inferred from replica health.
 
+### A release walkthrough
+
+The distinction between a release and a deployment becomes concrete during a tool-schema change. Suppose Northstar changes `create_supplier_case` so that the tool requires a new `classification` field. The release builder creates a new bundle containing the workflow build, tool schema, policy, model route, image, evaluation evidence, and rollback plan. The compatibility matrix records that workers serving old runs understand the old schema, while the new worker pool understands the new one.
+
+| **Moment** | **Control** | **What must remain true** |
+| --- | --- | --- |
+| Candidate assembled | Resolve every dependency to a digest and test compatibility | The bundle can be reproduced and no mutable “latest” reference is admitted |
+| New starts canary | Assign only a bounded tenant or traffic cohort | Existing runs remain on their pinned manifest; canary evidence is separately attributable |
+| Canary finds a defect | Stop new assignment and restore the prior binding | Rollback changes placement, not the history or effects of an active run |
+| Old run reaches a tool call | Route to a worker compatible with its manifest | A worker may support the run’s old contract, or a tested migration must be explicit |
+| Region fails during a write | Fence the old writer, restore, reconcile, then advance placement | No effect is assumed absent merely because the request timed out |
+
+This is why “roll back the model” is usually incomplete. If the prompt, tool schema, policy, workflow build, or retrieved knowledge strategy also changed, restoring one model identifier does not restore the behavior. The smallest safe rollback unit is the release bundle, while emergency deny and credential revocation remain separate controls that can take effect immediately and be recorded alongside the pinned release.
+
 ## Deployment architecture
 
 ### Recommended production topology
+
+The topology has two different jobs. The control plane decides what may run and which immutable bundle a run receives; regional execution planes do the work within that decision. Keeping those jobs separate lets a release be globally described while state, queues, credentials, and model endpoints remain inside the required residency and failure boundary.
+
+| **Layer** | **Owns** | **What it must not assume** |
+| --- | --- | --- |
+| Control plane | Registries, release bundles, evaluation gates, governance inventory, and promotion decisions | That a healthy registry means an execution region can safely resume effects |
+| Regional execution plane | Admission, workflow history, queues, workers, retrieval, traces, and local service endpoints | That a replica is a compatible worker for every historical run |
+| Source systems and effect boundaries | Business records, external writes, receipts, and reconciliation predicates | That a timeout proves the write was absent |
+| Recovery controls | Fencing, deny/kill switch, credential revocation, placement, and resume policy | That normal deployment automation is sufficient during an incident |
+
+The boundary is operational as well as logical. A regional worker should be able to verify a signed bundle from a local cache, but it should not invent a new policy when the control plane is unavailable. A high-risk admission may therefore fail closed, while a low-risk read-only task can use a documented last-known-good policy. That explicit distinction is more useful than a generic claim of “high availability.”
 
 ### Deployment guidance
 
@@ -198,6 +233,19 @@ Regional recovery fences the old writer, restores durable state with a compatibl
 | Artifact | Content hash + schema + creator run/version | Classification, destination policy, retention |
 
 ### Promotion and continuous-improvement loop
+
+Promotion is a chain of evidence, not a sequence of environments that an artifact happens to visit. Each stage asks a narrower question, and the answer travels with the same signed bundle to the next stage. A failed gate returns the candidate to revision; it does not create an undocumented production-only patch.
+
+| **Stage** | **Question** | **Evidence** |
+| --- | --- | --- |
+| Build | Can the dependency graph be reproduced and attested? | Digests, lockfiles, SBOM, provenance, signature |
+| Evaluate | Does the candidate satisfy its risk-tiered behavioral and security gates? | Dataset results, replay, threat cases, slice analysis |
+| Shadow | What would the candidate do on representative traffic without effects? | Linked traces, drift signals, latency and cost forecast |
+| Canary | Does bounded real traffic stay within acceptance and SLO limits? | Cohort-level metrics, effect safeguards, rollback trigger |
+| Promote | Is the decision owned and recorded? | Approval, effective binding, release and audit record |
+| Learn | Did production evidence justify a change? | Incident/eval case, reviewed proposal, new candidate—not direct mutation |
+
+The last row closes the loop without allowing production to rewrite itself. A trace or conversation can become input to a curated dataset, but it becomes a release only after de-identification, review, evaluation, and promotion. That separation preserves both learning velocity and the ability to explain which version produced an earlier result.
 
 ### Governance controls
 
@@ -414,8 +462,7 @@ Optimize verified outcome quality, latency, cost, and capacity without weakening
 
 ## Solution blueprint
 
-
-Figure 22. Cost, Latency, Capacity, and Reliability Optimization.
+[[DIAGRAM:reliability-economics|Figure 28-1 — Admission, bounded execution, and outcome-based operating feedback]]
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
@@ -437,6 +484,32 @@ Separate queues by workload and risk class. Weighted fair scheduling prevents a 
 
 Under pressure, Northstar can defer nonurgent work, produce a draft rather than commit, reduce optional context, use an evaluated lower-cost route, serialize optional fan-out, or request human scheduling. It never disables authorization, tenant isolation, approval, effect verification, or required audit. Every optimization is tested by slice, canaried, reversible, and observable.
 
+### Start with the four measurements
+
+Optimization becomes confused when one number is treated as the whole system. Latency tells us how long a user waits; cost tells us what resources the run consumes; capacity tells us how much work can be admitted; and reliability tells us whether the result is completed correctly. These measures interact, but they are not interchangeable.
+
+| **Question** | **Useful measure** | **A misleading shortcut** |
+| --- | --- | --- |
+| How long did the customer wait? | End-to-end p50/p95/p99, including queue and human dwell | Model-token latency alone |
+| How much work did success require? | Cost per verified successful outcome, including retries and review | Price per million tokens |
+| How much can the system accept? | Queue age, service-time distribution, permits, and downstream quota | CPU utilization without provider limits |
+| Did the system do the right thing? | Acceptance rate, groundedness, effect correctness, and failure recovery | “The request returned 200” |
+
+For a stable workload, Little’s Law gives a useful first estimate: `average work in system = arrival rate × average time in system`. If Northstar admits 120 runs per minute and an admitted run occupies the workflow system for four minutes on average, about 480 runs are active. That estimate is not a capacity guarantee: fan-out, retries, provider quotas, and burstiness can require more permits. It is a way to locate the question that a load test must answer.
+
+### A quarter-end planning example
+
+Assume the 120-runs-per-minute peak is expected to last long enough for queues to reach steady state. The planning model estimates 480 active runs before headroom. Northstar reserves 25 percent of capacity for close-critical work, so ordinary research cannot consume the last protected permits. When the browser pool reaches its limit, the admission controller defers new browser-heavy runs or offers a draft path; it does not keep accepting work that will wait past its deadline.
+
+| **Observed pressure** | **Safe response** | **Shortcut to avoid** |
+| --- | --- | --- |
+| Queue age predicts a deadline miss | Defer low-priority work, preserve reserved capacity, and expose a retry-after time | Add workers while the provider quota is already exhausted |
+| Token spend rises without better acceptance | Reduce duplicate context, tighten tool schemas, and inspect retry/fan-out causes | Switch every node to the cheapest model |
+| A lower-cost route increases escalations | Revert the route for the affected slice and compare cost per verified success | Keep the route because token cost fell |
+| A tool call is slow or unknown | Preserve the effect record and reconcile before retrying | Treat timeout as proof that no effect occurred |
+
+The numbers above are illustrative planning inputs, not universal limits. Their purpose is to show the order of reasoning: measure demand, identify the scarce resource, reserve capacity for the outcomes that matter, choose a reversible degradation, and verify that the degraded path still satisfies its safety and acceptance contract.
+
 ## Scalability, performance, and cost
 
 | **Required analysis** | **Design conclusion** |
@@ -450,6 +523,18 @@ Under pressure, Northstar can defer nonurgent work, produce a draft rather than 
 | Enterprise example | A month-end finance workload uses priority queues and reserved model quota for close-critical tasks, separate pools for OCR/code execution, and backpressure that defers low-priority research rather than failing all runs. |
 
 ### Scaling topology
+
+Begin with a small number of meaningful pools rather than a queue for every tenant. A pool represents a real operational difference: interactive versus batch latency, read-only versus mutating risk, browser versus GPU resource profile, or one residency boundary versus another. Within a pool, tenant-aware quotas and fair scheduling provide isolation without creating an unmanageable number of services.
+
+| **Layer** | **Scaling signal** | **Overload behavior** |
+| --- | --- | --- |
+| Admission | Predicted deadline miss, budget, risk, and downstream permits | Reject, defer, or offer a bounded draft path |
+| Queue and scheduler | Oldest age, arrival rate, priority, and fairness | Preserve reserved capacity; prevent starvation and retry storms |
+| Worker pool | Service time, active leases, and workload-specific utilization | Scale compatible workers; do not exceed provider or tool permits |
+| External dependency | Provider quota, browser slots, database writers, and approver dwell | Queue before the dependency; expose retry-after and reconcile unknowns |
+| Usage ledger | Reserved versus actual cost and successful outcomes | Release unused reservations and flag unexplained spend |
+
+This layered view prevents a common operational mistake: treating worker count as capacity. If the model provider has no remaining token quota, adding workers only increases contention and may amplify retries. The scheduler should keep work queued until the scarce permit is available, while the admission controller decides whether waiting is still compatible with the deadline.
 
 ### Capacity and concurrency controls
 
