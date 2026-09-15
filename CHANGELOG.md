@@ -4,6 +4,13 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Part VII teaches traces, evaluation gates, and governed learning
+
+- Expanded Chapters 24–25 with progressive explanations of causal traces versus audit evidence, outcome versus trajectory evaluation, deterministic checks versus calibrated judges, and slice-aware release decisions.
+- Added a worked Northstar slow-refund trace walkthrough, a protected-slice regression scenario, trace/evidence tables, and a candidate evaluation gate that turns failures into reviewed regression cases.
+- Added two editable, registered diagrams: asynchronous causal tracing with a separate audit ledger, and risk-tiered evaluation with deterministic checks, calibrated quality evidence, and release feedback.
+- Preserved the existing continuous-learning and runtime/offline boundary diagrams, examples, citations, and the eight-Part / 28-chapter / 12-appendix topology.
+
 ### Part VI teaches security as containment, identity as delegation, and effects as evidence
 
 - Expanded chapters 20–23 with progressive explanations of detector, policy, and enforcement boundaries; RBAC versus ABAC; approval, idempotency, preconditions, and reconciliation; and the difference between prevention and blast-radius containment.

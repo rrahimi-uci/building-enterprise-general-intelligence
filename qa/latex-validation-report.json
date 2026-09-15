@@ -4,20 +4,20 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "33fa699204f2d583715cdd617ecabe63bef29b9f6e9decd07e8442894d9fcd3d",
-    "content_tex_sha256": "d5c39f47e25fa9ceb9bf3679fb80e5b061f593e5681c2841e87a11abd32efc15",
+    "content_tex_sha256": "3e2e3857571d82ee79fed42bb1c25c56553bf68804f12a860e43c2efe2036bc8",
     "style_sha256": "f2f56a95c6d5382add095f9df3e90ee3a6f508577ec5413768159c668f1e7da3",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "appendices": 12,
-    "diagrams": 39,
+    "diagrams": 41,
     "code_blocks": 69,
-    "longtables": 229,
+    "longtables": 231,
     "callout_tables": 98,
     "citation_occurrences": 104,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 327,
+    "markdown_tables": 329,
     "markdown_code_blocks": 69,
     "image_quality": [
       {
@@ -315,6 +315,22 @@
           3145
         ],
         "effective_dpi": 346.7
+      },
+      {
+        "file": "assets/diagrams/causal-trace.png",
+        "pixels": [
+          3287,
+          2369
+        ],
+        "effective_dpi": 465.6
+      },
+      {
+        "file": "assets/diagrams/evaluation-gate.png",
+        "pixels": [
+          4014,
+          2099
+        ],
+        "effective_dpi": 568.6
       },
       {
         "file": "assets/diagrams/learning-loop.png",
