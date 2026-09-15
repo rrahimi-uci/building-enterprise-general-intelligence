@@ -20,12 +20,26 @@ Connect workflow, agent, model, retrieval, policy, tool, approval, effect, and h
 
 ## Solution blueprint
 
+Observability answers two different questions. Diagnostics ask, “Why was this
+run slow, wrong, or expensive?” Audit asks, “Which protected decision and effect
+must the enterprise be able to prove later?” A causal trace is optimized for
+the first question: it links activity across services, retries, queues, and
+remote agents. The audit ledger is optimized for the second: it preserves the
+complete, integrity-protected records required for protected decisions and
+effects. A trace may point to an audit record, but it should not become the
+only copy of that record.
 
-Figure 18. Observability and Tracing with MLflow.
+[[DIAGRAM:causal-trace|Figure 24-1 — A causal run trace links asynchronous work while protected decisions and effects enter a separate audit ledger]]
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Trace pipeline; separate audit ledger | sensitive runtime to operations access | trace shard · regional collector | one span/export batch | TraceContext · SpanLink · AuditEvent |
+
+The reader should be able to ask a trace four questions without opening every
+log line: what run was this, which decision changed the path, which activity
+consumed the time or budget, and what evidence proves the final effect? The
+answer comes from stable identifiers and typed links, not from copying every
+prompt and response into a search index.
 
 ## One causal trajectory
 
@@ -40,6 +54,30 @@ Raw prompts, retrieved documents, credentials, and protected tool payloads do no
 ### Debugging method
 
 Start with the violated outcome or SLO, identify the critical path, then find the first divergent state transition or decision. Distinguish queue time, execution time, human dwell, retry delay, and reconciliation time. Compare the run manifest and context/evidence versions before comparing final prose.
+
+### Worked example — diagnosing a slow refund
+
+Northstar reports that a customer refund took twelve minutes. The final answer
+looks plausible, so a request log alone would make the incident appear closed.
+The causal trace instead shows a three-minute queue wait, two retrieval
+attempts caused by a stale index, a four-minute approval wait, and a connector
+timeout whose effect record is **Unknown**. The operator now has a safe next
+step: reconcile the payment system before retrying, then decide whether the
+latency problem belongs to capacity, retrieval freshness, human workflow, or
+effect recovery.
+
+| **Trace segment** | **What the operator learns** | **Action or evidence** |
+| --- | --- | --- |
+| Admission and queue | The run waited before any model work began | Queue age, capacity class, and assignment event |
+| Retrieval | The first context snapshot was stale and a second attempt ran | Index snapshot, ACL-filter count, freshness, query hash |
+| Approval | Human dwell dominated model latency | Proposal hash, approver role, wait and expiry timestamps |
+| Connector | The downstream call timed out after dispatch | Tool span, idempotency key, downstream request ID |
+| Effect ledger | The refund cannot yet be called successful or declined | Receipt or reconciliation case; no blind retry |
+
+This example also shows why “trace everything” is not a sufficient design. The
+trace needs the identifiers and state transitions that explain the run, while
+the sensitive payment payload remains in a controlled content or audit store
+with an authorized reference.
 
 ## Observability, debugging, testing, and evaluation
 
@@ -181,18 +219,46 @@ Evaluate outcomes and trajectories using immutable datasets, executable scorers,
 
 ## Solution blueprint
 
+An evaluation compares a candidate against an explicit contract, a baseline,
+and the slices where failure matters. The candidate is not just a prompt: it is
+the versioned set of model route, workflow, tools, policies, context strategy,
+and runtime configuration that could change the trajectory. A release gate
+combines deterministic checks with calibrated quality evidence, then records a
+decision that another operator can reproduce.
 
-Figure 19. Evaluation, Testing, and Debugging with MLflow.
+[[DIAGRAM:evaluation-gate|Figure 25-3 — Candidate evaluation combines deterministic checks, calibrated judges, slices, and a risk-tiered release gate]]
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Evaluation Service and release gate | production evidence to development corpus | dataset version · scorer pool · slice | one case and candidate release | EvaluationCase · Feedback · ReleaseDecision |
+
+The gate is deliberately not a single score. A candidate can improve a
+language-quality metric while violating an authorization invariant, increasing
+unknown effects, or regressing a small but high-consequence slice. Deterministic
+failure therefore blocks promotion; a model judge can add useful evidence about
+nuanced quality, but it cannot override a protected invariant.
 
 ## Evaluation-driven development
 
 An agent evaluation case includes input, initial state, user simulation or messages, expected outcome properties, allowed and forbidden tools, required evidence, maximum budgets, failure injections, and slice tags. The result includes final output, complete trajectory, artifacts, policy decisions, effects, human events, latency, cost, and terminal state.
 
 MLflow 3.15.x supports GenAI evaluation, trace-based scorers, code-based scorers, LLM judges, human feedback, and OpenAI Agent tracing integration. Version 3.15.2 adds immutable evaluation-dataset versions and scorer ensembles within the requested 3.15 line. This book pins 3.15.2; newer overall MLflow releases may exist and require separate compatibility validation.
+
+### Outcomes and trajectories are different questions
+
+Outcome evaluation asks whether the user-visible result satisfies the task
+contract: was the answer correct, grounded, complete, and accepted? Trajectory
+evaluation asks how the system got there: did it retrieve only authorized
+context, choose the permitted tool, respect the budget, request approval, and
+leave a verifiable effect? Both are necessary because a lucky final answer can
+hide an unsafe path, while a safe path can still produce an unhelpful result.
+
+Treat each expected property according to how it can be known. Schema validity,
+authorization, approval binding, budget limits, effect state, and required
+evidence should be checked deterministically. Nuanced qualities such as tone,
+clarity, or usefulness may use a calibrated judge alongside human labels and
+confidence information. The evaluator type belongs in the result so later
+readers do not mistake a probabilistic opinion for a proof.
 
 ### Evaluation pyramid
 
@@ -221,6 +287,26 @@ Use executable scorers wherever the expected property is computable. Calibrate m
 | Continuous | Drift, novel failures, cost/latency, policy incidents | Sampled online evals, human review, alerts, incident-to-test loop |
 
 Use deterministic validators as the gold standard where possible. LLM-as-judge is useful for nuanced rubrics but must be calibrated against humans, blinded to candidate identity, tested for variance/bias, and never be the sole gate for safety-critical correctness. Measure repeated-run reliability (pass^k or equivalent), not just best-of-one success.
+
+### Worked example — average improvement, protected-slice regression
+
+Suppose a Northstar prompt revision makes routine support answers clearer, but
+one low-volume region now produces an unauthorized CRM lookup in a simulated
+trajectory. The aggregate score is better, yet the candidate is not a safe
+release. Slice-aware evaluation makes the disagreement visible and gives the
+release owner a concrete decision record.
+
+| **Evidence** | **Candidate result** | **Release interpretation** |
+| --- | --- | --- |
+| Routine answer quality | Improved against the baseline | Useful quality evidence, not sufficient for promotion |
+| Protected-action trajectory | One forbidden lookup appears | Deterministic safety regression; block the candidate |
+| Region/risk slice | Regression is low volume but high consequence | Volume cannot dilute the risk tier |
+| Diagnosis | New context or routing path selects the CRM tool | Compare trace, policy decision, context manifest, and release graph |
+| Next candidate | Narrow retrieval/tool eligibility and add the case to the regression set | Re-run held-out, adversarial, and protected-effect checks |
+
+The important habit is to preserve the failing trace as a versioned case after
+privacy and purpose review. Otherwise the next improvement can repeat the same
+failure while the dashboard reports only the improved average.
 
 ### Detailed design — APIs, data model, and scalability
 

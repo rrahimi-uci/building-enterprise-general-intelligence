@@ -1,6 +1,6 @@
 {
-  "diagrams": 39,
-  "with_vector": 39,
+  "diagrams": 41,
+  "with_vector": 41,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -69,6 +69,17 @@
       "sha256": "adb374580defa4632e86c5ea65a64cbc51d1e4ca6aad831f55d3ab03b7b0a9f1"
     },
     {
+      "id": "causal-trace",
+      "source": "causal-trace.gv",
+      "pixels": [
+        3287,
+        2369
+      ],
+      "effective_dpi": 480,
+      "vector": true,
+      "sha256": "0b19c15851a2e8fe51c79413a5cd7fdbf0485937b4a230659b2c4f10ca49b76c"
+    },
+    {
       "id": "context-pipeline",
       "source": "context-pipeline.gv",
       "pixels": [
@@ -89,6 +100,17 @@
       "effective_dpi": 347,
       "vector": true,
       "sha256": "470b5cf7eb6a5b8ab0f082b914ed56c153b6dc03402a770c5b0c0b2166bae21b"
+    },
+    {
+      "id": "evaluation-gate",
+      "source": "evaluation-gate.gv",
+      "pixels": [
+        4014,
+        2099
+      ],
+      "effective_dpi": 586,
+      "vector": true,
+      "sha256": "fa414e7cc7da8b066e4d54e773d3516d5c893d7c7c92359c074976184836cb50"
     },
     {
       "id": "developer-lifecycle",

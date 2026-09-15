@@ -1,0 +1,54 @@
+// Figure 25-3 — Candidate evaluation and a risk-tiered release gate.
+// Message: an average score cannot outweigh a deterministic invariant or a
+// high-consequence slice regression; failures become reviewed future cases.
+digraph evaluation_gate {
+  rankdir = TB
+  graph [ranksep=0.32, nodesep=0.26, compound=true]
+  node [shape=box, style="filled,rounded", penwidth=1.4, fontsize=10.5,
+        margin="0.12,0.07", height=0.43, width=2.25]
+  edge [arrowsize=0.65, penwidth=1.5, color="#1450A3"]
+
+  dataset   [label="Immutable dataset\ncases + slices + provenance", shape=cylinder,
+             style=filled, fillcolor="#EDF3FC", color="#1450A3", width=2.45]
+  candidate [label="Candidate release\nmodel · prompt · tools · policy", shape=note,
+             style=filled, fillcolor="#E7F5F3", color="#0D6E69", width=2.45]
+  baseline  [label="Pinned baseline\nmanifest + prior results", shape=note,
+             style=filled, fillcolor="#EEF4FA", color="#0B6076", width=2.45]
+  run       [label="Evaluation orchestrator\nseeds · environments · budget", fillcolor="#EAF3FB", color="#1450A3", width=2.65]
+
+  contract  [label="Deterministic checks\nschema · auth · budget · effects", fillcolor="#EAF3FB", color="#1450A3", width=2.5]
+  trajectory [label="Trajectory checks\ntools · order · evidence · handoff", fillcolor="#E7F5F3", color="#0D6E69", width=2.5]
+  quality   [label="Calibrated quality\njudge + human labels + uncertainty", fillcolor="#FFF4DF", color="#8A5600", width=2.5]
+  slices    [label="Slice comparison\nrisk · region · task · tenant", fillcolor="#EAF3FB", color="#1450A3", width=2.5]
+
+  gate      [label="Risk-tier release gate\nprotected invariants first", shape=diamond,
+             style=filled, fillcolor="#FFF4DF", color="#8A5600", width=2.8, height=0.9]
+  promote   [label="Promote to canary\nReleaseManifest + rollback", fillcolor="#F7ECF8", color="#6A2E6E", width=2.5]
+  waiver    [label="Waiver required\nowner + expiry + evidence", fillcolor="#FFF4DF", color="#8A5600", width=2.35]
+  block     [label="Block release\nregression or invariant failure", fillcolor="#FCECEC", color="#A62C2C", width=2.45]
+  case      [label="Review and reduce\nnew regression case", shape=note,
+             style=filled, fillcolor="#FCECEC", color="#A62C2C", width=2.25]
+
+  dataset -> run
+  candidate -> run
+  baseline -> run
+  run -> contract
+  run -> trajectory
+  run -> quality
+  run -> slices
+  contract -> gate
+  trajectory -> gate
+  quality -> gate
+  slices -> gate
+  gate -> promote [label="pass", color="#6A2E6E", fontcolor="#6A2E6E"]
+  gate -> waiver [label="residual risk", color="#8A5600", fontcolor="#8A5600"]
+  gate -> block [label="fail", color="#A62C2C", fontcolor="#A62C2C"]
+  waiver -> promote [label="approved + expires", color="#8A5600", fontcolor="#8A5600"]
+  waiver -> block [label="denied", color="#A62C2C", fontcolor="#A62C2C"]
+  block -> case [label="privacy-reviewed", color="#A62C2C", fontcolor="#A62C2C"]
+  case -> dataset [label="future regression", style=dashed, color="#A62C2C",
+                   fontcolor="#A62C2C", constraint=false]
+
+  { rank=same; dataset; candidate; baseline }
+  { rank=same; contract; trajectory; quality; slices }
+}

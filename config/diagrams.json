@@ -48,6 +48,14 @@
       "sha256": "adb374580defa4632e86c5ea65a64cbc51d1e4ca6aad831f55d3ab03b7b0a9f1"
     },
     {
+      "id": "causal-trace",
+      "file": "assets/diagrams/causal-trace.png",
+      "source": "assets/diagrams/src/causal-trace.gv",
+      "vector": "assets/diagrams/causal-trace.pdf",
+      "description": "A causal run trace links asynchronous work while protected decisions and effects enter a separate audit ledger",
+      "sha256": "0b19c15851a2e8fe51c79413a5cd7fdbf0485937b4a230659b2c4f10ca49b76c"
+    },
+    {
       "id": "context-pipeline",
       "file": "assets/diagrams/context-pipeline.png",
       "source": "assets/diagrams/src/context-pipeline.gv",
@@ -62,6 +70,14 @@
       "vector": "assets/diagrams/deterministic-shell.pdf",
       "description": "The six gates between a model proposal and an accepted effect, and what each one refuses",
       "sha256": "470b5cf7eb6a5b8ab0f082b914ed56c153b6dc03402a770c5b0c0b2166bae21b"
+    },
+    {
+      "id": "evaluation-gate",
+      "file": "assets/diagrams/evaluation-gate.png",
+      "source": "assets/diagrams/src/evaluation-gate.gv",
+      "vector": "assets/diagrams/evaluation-gate.pdf",
+      "description": "Candidate evaluation combines deterministic checks, calibrated judges, slices, and a risk-tiered release gate",
+      "sha256": "fa414e7cc7da8b066e4d54e773d3516d5c893d7c7c92359c074976184836cb50"
     },
     {
       "id": "developer-lifecycle",
