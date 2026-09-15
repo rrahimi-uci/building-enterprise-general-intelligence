@@ -3,7 +3,7 @@
 // verdict is advisory. Promotion is decided outside the loop, by a gate the
 // loop cannot reach -- otherwise the system grades its own homework.
 digraph pattern_reflection {
-  rankdir = LR
+  rankdir = TB
   graph [ranksep=0.36, nodesep=0.26]
   node [shape=box, style="filled,rounded", penwidth=1.4, fontsize=10.5,
         margin="0.12,0.07", height=0.40, width=1.6]

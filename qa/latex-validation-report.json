@@ -4,20 +4,20 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "33fa699204f2d583715cdd617ecabe63bef29b9f6e9decd07e8442894d9fcd3d",
-    "content_tex_sha256": "1fe3e8283ac02ab0cd7bb62128714dfda5089ed67b5ce45a9a7cbfcd23e08303",
+    "content_tex_sha256": "4f8c2cd6fb1c481f4a86d5fe8e20fe2cb0598f73f2553f496b02a371cdbcb6c4",
     "style_sha256": "f2f56a95c6d5382add095f9df3e90ee3a6f508577ec5413768159c668f1e7da3",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "appendices": 12,
-    "diagrams": 35,
+    "diagrams": 36,
     "code_blocks": 69,
-    "longtables": 222,
+    "longtables": 223,
     "callout_tables": 99,
     "citation_occurrences": 104,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 321,
+    "markdown_tables": 322,
     "markdown_code_blocks": 69,
     "image_quality": [
       {
@@ -183,10 +183,10 @@
       {
         "file": "assets/diagrams/pattern-reflection.png",
         "pixels": [
-          3050,
-          817
+          2282,
+          1226
         ],
-        "effective_dpi": 432.0
+        "effective_dpi": 323.2
       },
       {
         "file": "assets/diagrams/pattern-hitl.png",
@@ -243,6 +243,14 @@
           2370
         ],
         "effective_dpi": 345.5
+      },
+      {
+        "file": "assets/diagrams/supervisor-worker.png",
+        "pixels": [
+          3224,
+          1442
+        ],
+        "effective_dpi": 456.7
       },
       {
         "file": "assets/diagrams/gateway-position.png",
