@@ -233,6 +233,22 @@
       "vector": "assets/diagrams/request-sequence.pdf"
     },
     {
+      "id": "release-recovery",
+      "file": "assets/diagrams/release-recovery.png",
+      "source": "assets/diagrams/src/release-recovery.gv",
+      "vector": "assets/diagrams/release-recovery.pdf",
+      "description": "Immutable release promotion and regional recovery without rewriting active run history",
+      "sha256": "2821187cb8b0efb8af797ab239cd4effaff5907c3b07ae4bf09ab2a582f1b63e"
+    },
+    {
+      "id": "reliability-economics",
+      "file": "assets/diagrams/reliability-economics.png",
+      "source": "assets/diagrams/src/reliability-economics.gv",
+      "vector": "assets/diagrams/reliability-economics.pdf",
+      "description": "Admission, bounded execution, and outcome-based operating feedback",
+      "sha256": "741f097070c5b94bde04fbc1db7f091b5112a563c33f0a5059e1f232e51c6645"
+    },
+    {
       "id": "runtime-offline",
       "file": "assets/diagrams/runtime-offline.png",
       "sha256": "ae9175f77e46e1dfcc28f99be1c08d9c4dbe9c9ff44a15287a9deb49d1271e95",

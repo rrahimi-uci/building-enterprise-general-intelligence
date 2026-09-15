@@ -4,20 +4,20 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "33fa699204f2d583715cdd617ecabe63bef29b9f6e9decd07e8442894d9fcd3d",
-    "content_tex_sha256": "3e2e3857571d82ee79fed42bb1c25c56553bf68804f12a860e43c2efe2036bc8",
+    "content_tex_sha256": "ad5ee95ef896ef3816f8fe5af9274ccec1096671783324c2c263e9bfe6f77320",
     "style_sha256": "f2f56a95c6d5382add095f9df3e90ee3a6f508577ec5413768159c668f1e7da3",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "appendices": 12,
-    "diagrams": 41,
+    "diagrams": 43,
     "code_blocks": 69,
-    "longtables": 231,
+    "longtables": 238,
     "callout_tables": 98,
     "citation_occurrences": 104,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 329,
+    "markdown_tables": 336,
     "markdown_code_blocks": 69,
     "image_quality": [
       {
@@ -355,6 +355,22 @@
           1560
         ],
         "effective_dpi": 323.8
+      },
+      {
+        "file": "assets/diagrams/release-recovery.png",
+        "pixels": [
+          2639,
+          3270
+        ],
+        "effective_dpi": 310.5
+      },
+      {
+        "file": "assets/diagrams/reliability-economics.png",
+        "pixels": [
+          2528,
+          2396
+        ],
+        "effective_dpi": 358.1
       }
     ],
     "bundled_fonts": 8,

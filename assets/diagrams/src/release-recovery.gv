@@ -1,0 +1,30 @@
+// Figure 27-1 — Immutable release promotion and recovery without rewriting active history.
+// Message: new work can move between release bindings, while active history stays
+// with compatible workers until it completes or follows an explicit migration.
+digraph release_recovery {
+  rankdir = TB
+  graph [ranksep=0.36, nodesep=0.28, pad=0.9]
+  node [width=2.1]
+
+  source [label="Source and dependencies\ncontent-addressed", fillcolor="#E7F5F3", color="#0D6E69"]
+  bundle [label="Signed ReleaseManifest\ncompatibility + evidence", fillcolor="#EAF3FB", color="#1450A3", style=filled]
+  gate [label="Promotion gate", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.8, height=0.9]
+  canary [label="Canary binding\nnew starts only", fillcolor="#EAF3FB", color="#1450A3", style=filled]
+  prior [label="Prior binding\nnew starts", fillcolor="#E7F5F3", color="#0D6E69"]
+  active [label="Active runs\npinned history", fillcolor="#F7ECF8", color="#6A2E6E"]
+  worker [label="Compatible worker\nold or migrated", fillcolor="#E7F5F3", color="#0D6E69"]
+  reconcile [label="Fence, reconcile\nunknown effects", fillcolor="#FFF4DF", color="#8A5600", style=filled]
+  recovery [label="Regional recovery\nadvance placement", fillcolor="#F7ECF8", color="#6A2E6E"]
+  rollback [label="Rollback assignment\nwithout rewriting history", fillcolor="#FCECEC", color="#A62C2C", style=filled]
+
+  source -> bundle -> gate
+  gate -> canary [label="  pass  ", color="#0D6E69", fontcolor="#0D6E69"]
+  gate -> source [label="  fail  ", color="#A62C2C", fontcolor="#A62C2C", style=dashed, constraint=false]
+  canary -> active [label="  pinned at admission  ", color="#1450A3", fontcolor="#1450A3"]
+  prior -> active [label="  existing binding  ", color="#1450A3", fontcolor="#1450A3"]
+  active -> worker [label="  compatible execution  ", color="#0D6E69", fontcolor="#0D6E69"]
+  canary -> rollback [label="  SLO/eval breach  ", color="#A62C2C", fontcolor="#A62C2C", style=dashed]
+  active -> reconcile [label="  timeout or failover  ", color="#8A5600", fontcolor="#8A5600", style=dashed]
+  reconcile -> recovery
+  recovery -> worker [label="  resume by risk tier  ", color="#6A2E6E", fontcolor="#6A2E6E"]
+}

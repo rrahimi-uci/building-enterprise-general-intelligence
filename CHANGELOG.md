@@ -4,6 +4,13 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Part VIII teaches governance, release recovery, and operating economics
+
+- Expanded Chapters 26–28 with a governance control-loop explanation, a decision-and-evidence table, an immutable release walkthrough, and a quarter-end capacity-planning scenario.
+- Added practical explanations of risk ownership, active-run compatibility, rollback boundaries, Little’s Law as a planning estimate, fair scheduling, safe degradation, and cost per verified successful outcome.
+- Added two editable, registered diagrams: release promotion and recovery without rewriting active history, and admission/execution feedback for outcome-based optimization.
+- Preserved the existing Part VIII contracts, implementation references, citations, and eight-Part / 28-chapter / 12-appendix topology.
+
 ### Part VII teaches traces, evaluation gates, and governed learning
 
 - Expanded Chapters 24–25 with progressive explanations of causal traces versus audit evidence, outcome versus trajectory evaluation, deterministic checks versus calibrated judges, and slice-aware release decisions.
