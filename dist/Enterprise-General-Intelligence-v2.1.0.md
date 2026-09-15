@@ -5659,6 +5659,8 @@ Figure 12. Supervisor/Worker and Multi-Agent Collaboration.
 
 ## Collaboration is a state machine
 
+[[DIAGRAM:supervisor-worker|Figure 18-1 — Supervisor/worker: narrowed child grants, an explicit fan-in contract, and durable cancellation]]
+
 A supervisor/worker topology is justified when specialists have different tools, data boundaries, owners, SLOs, or deployment needs. Northstar’s supervisor owns the onboarding outcome and creates durable child tasks for screening, tax, and security. Each child receives only the capability, evidence, budget, deadline, and cancellation scope it needs.
 
 Fan-in is explicit: wait for all, quorum, first valid, or fallback. Artifact conflicts use deterministic precedence, source freshness, confidence thresholds, or human resolution. Free-form conversation may help agents explain results, but it cannot replace task status, ownership, artifact, or effect records.
@@ -6026,6 +6028,24 @@ Figure 13. MCP, A2A, and External Integration.
 | MCP and A2A Gateways | local trust domain to external endpoint or peer | endpoint · peer · tenant quota | one remote call or task | ServerManifest · A2ATask · ArtifactEnvelope |
 
 ## Two protocols, two responsibilities
+
+MCP and A2A are routinely discussed as alternatives. They are not, and choosing
+between them is usually the wrong question — they standardize different things,
+and a mature system runs both.
+
+| | **MCP** | **A2A** |
+| --- | --- | --- |
+| Standardizes | How a host discovers and invokes **tools, resources and prompts** on a server | How peers collaborate around a **task**: messages, status, streaming, artifacts, cancellation |
+| Unit of exchange | A tool call and its result | A task with a lifecycle |
+| Who owns the work | The caller, throughout | Transfers to the peer, which reports status back |
+| Typical use | "Read this record for me" | "Own this sub-goal and tell me when it is done" |
+| What it does **not** decide | Whether the caller may invoke the tool | Whether the peer may be trusted with the task |
+
+That last row is the one that matters. Neither protocol carries authorization.
+MCP describes how a tool is discovered and called, not who may call it; A2A
+describes how a task is delegated, not whether this peer should receive it.
+Both therefore terminate at a gateway that supplies the decision the protocol
+omits.
 
 MCP standardizes how a host discovers and invokes tools, resources, and prompts exposed by a server. A2A standardizes collaboration around tasks, messages, status, streaming, artifacts, and cancellation. They can coexist: a local agent may use MCP for a capability and A2A to delegate independently owned work.
 

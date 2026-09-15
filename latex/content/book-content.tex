@@ -7556,6 +7556,8 @@ Task Service and supervisor workflow & parent/child authority and artifact adopt
 
 \section{Collaboration is a state machine}
 
+\BookDiagram{assets/diagrams/supervisor-worker.pdf}{Figure 18-1 — Supervisor/worker: narrowed child grants, an explicit fan-in contract, and durable cancellation}{supervisor-worker}
+
 A supervisor/worker topology is justified when specialists have different tools, data boundaries, owners, SLOs, or deployment needs. Northstar’s supervisor owns the onboarding outcome and creates durable child tasks for screening, tax, and security. Each child receives only the capability, evidence, budget, deadline, and cancellation scope it needs.\par
 
 Fan-in is explicit: wait for all, quorum, first valid, or fallback. Artifact conflicts use deterministic precedence, source freshness, confidence thresholds, or human resolution. Free-form conversation may help agents explain results, but it cannot replace task status, ownership, artifact, or effect records.\par
@@ -8157,6 +8159,30 @@ MCP and A2A Gateways & local trust domain to external endpoint or peer & endpoin
 \BookTableEnd
 
 \section{Two protocols, two responsibilities}
+
+MCP and A2A are routinely discussed as alternatives. They are not, and choosing between them is usually the wrong question — they standardize different things, and a mature system runs both.\par
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries  & \color{white}\bfseries \textbf{MCP} & \color{white}\bfseries \textbf{A2A} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries  & \color{white}\bfseries \textbf{MCP} & \color{white}\bfseries \textbf{A2A} \\
+\endhead
+Standardizes & How a host discovers and invokes \textbf{tools, resources and prompts} on a server & How peers collaborate around a \textbf{task}: messages, status, streaming, artifacts, cancellation \\
+\rowcolor{BookLight}
+Unit of exchange & A tool call and its result & A task with a lifecycle \\
+Who owns the work & The caller, throughout & Transfers to the peer, which reports status back \\
+\rowcolor{BookLight}
+Typical use & "Read this record for me" & "Own this sub-goal and tell me when it is done" \\
+What it does \textbf{not} decide & Whether the caller may invoke the tool & Whether the peer may be trusted with the task \\
+\end{longtable}
+\BookTableEnd
+
+That last row is the one that matters. Neither protocol carries authorization. MCP describes how a tool is discovered and called, not who may call it; A2A describes how a task is delegated, not whether this peer should receive it. Both therefore terminate at a gateway that supplies the decision the protocol omits.\par
 
 MCP standardizes how a host discovers and invokes tools, resources, and prompts exposed by a server. A2A standardizes collaboration around tasks, messages, status, streaming, artifacts, and cancellation. They can coexist: a local agent may use MCP for a capability and A2A to delegate independently owned work.\par
 

@@ -178,7 +178,7 @@
       "source": "assets/diagrams/src/pattern-reflection.gv",
       "vector": "assets/diagrams/pattern-reflection.pdf",
       "description": "Reflection: a bounded produce-evaluate-revise loop whose verdict cannot self-promote",
-      "sha256": "2fa54b8552445e3bf91962bfe07fe0a4ed172d1d5905f7b03442e26995cf6c79"
+      "sha256": "2226864094dce7c11a766879028b9b0243afd6f1ee7c2982de77862645be2a56"
     },
     {
       "id": "pattern-routing",
@@ -244,6 +244,14 @@
       "vector": "assets/diagrams/skill-resolution.pdf",
       "description": "Semantic discovery proposes candidates; deterministic resolution pins one digest or refuses",
       "sha256": "5e54fdd88b5b8393d1c1404f656c59982c7d5b31f2705cbe2dd36c72b5035304"
+    },
+    {
+      "id": "supervisor-worker",
+      "file": "assets/diagrams/supervisor-worker.png",
+      "source": "assets/diagrams/src/supervisor-worker.gv",
+      "vector": "assets/diagrams/supervisor-worker.pdf",
+      "description": "Supervisor/worker with narrowed child grants, an explicit fan-in contract, and durable cancellation",
+      "sha256": "c4009fa0a6d7ecdd907b1e096d4cb6d7421c66a02e6349d85744e59d2aee578b"
     },
     {
       "id": "system-overview",
