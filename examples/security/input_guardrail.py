@@ -7,6 +7,8 @@ input, but the important property is where it sits in the pipeline: it trips
 """
 from __future__ import annotations
 
+from decimal import Decimal, InvalidOperation
+
 from agents import (
     Agent,
     GuardrailFunctionOutput,
@@ -41,9 +43,15 @@ async def no_instruction_override(
 
 
 @function_tool
-def issue_refund(order_id: str, amount_usd: float) -> str:
+def issue_refund(order_id: str, amount_usd: str) -> str:
     """Issue a refund. Guarded: this is a real, irreversible effect."""
-    return f"refunded {amount_usd:.2f} for {order_id}"
+    try:
+        amount = Decimal(amount_usd)
+    except (InvalidOperation, ValueError):
+        return "invalid refund amount"
+    if amount < 0:
+        return "invalid refund amount"
+    return f"refunded {amount:.2f} for {order_id}"
 
 
 agent = Agent(

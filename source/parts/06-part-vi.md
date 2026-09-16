@@ -609,6 +609,7 @@ Evidence anchors: RFC8693; RFC8707. Full URLs, authority, version, and scope app
 from __future__ import annotations
 
 from dataclasses import dataclass
+from decimal import Decimal
 from datetime import datetime, timezone
 
 
@@ -630,7 +631,7 @@ class CapabilityEnvelope:
     data_classes: frozenset[str]
     regions: frozenset[str]
     maximum_risk: int
-    maximum_cost_usd: float
+    maximum_cost_usd: Decimal
     delegation_depth: int
     expires_at: datetime
 

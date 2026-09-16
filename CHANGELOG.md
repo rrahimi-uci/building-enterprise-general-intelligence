@@ -4,6 +4,20 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### OpenAI SDK and MLflow grounding audit
+
+- Pinned the offline example profile to `openai==3.13.0`,
+  `openai-agents==0.22.2`, and `mlflow==3.15.2`, and aligned the registered
+  examples with those package boundaries.
+- Added an offline mortgage integration that executes the real OpenAI Agents
+  SDK runner with a scripted model and records its runtime spans in MLflow
+  without exposing raw synthetic case content.
+- Added real `mlflow.genai.evaluate` and trajectory-evaluation examples,
+  direct OpenAI Responses API adapter contract coverage, and corrected source
+  sketches for SDK invocation, trace privacy, guardrails, and Decimal money.
+- Preserved the provider-neutral platform contracts and documented the
+  remaining cumulative-example implementation gaps in `code-gap.md`.
+
 ### Mortgage cumulative-example foundation
 
 - Added the synthetic Harborlight mortgage anchor case `MORT-2026-000184` and

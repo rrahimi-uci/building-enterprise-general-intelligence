@@ -45,7 +45,7 @@ prompt and response into a search index.
 
 A production trace links admission, workflow tasks, AgentRuntime activities, model calls, retrieval, policy decisions, tool invocations, approvals, effects, waits, remote tasks, operator commands, and terminal acceptance. Long-running runs require stable domain IDs and span links because queues, retries, resumptions, and fan-out do not form one in-process call stack.
 
-Northstar uses OpenTelemetry-compatible context propagation and MLflow 3.15.x tracing. mlflow.openai.autolog() can capture OpenAI calls, while explicit spans cover platform-owned boundaries. Required attributes include tenant-safe run and task IDs, release versions, workflow build, model route, tool and policy versions, risk class, token and cost usage, effect state, retry owner, artifact references, and stop reason.
+Northstar uses OpenTelemetry-compatible context propagation and MLflow 3.15.x tracing. `mlflow.openai.autolog()` can capture OpenAI calls, while explicit spans cover platform-owned boundaries. In the pinned MLflow 3.15.2 profile, Agents SDK tracing is disabled by default; an Agents SDK integration must pass `disable_openai_agent_tracer=False` to register MLflow's Agents SDK trace processor. `RunConfig(trace_include_sensitive_data=False)` remains a separate privacy control. Required attributes include tenant-safe run and task IDs, release versions, workflow build, model route, tool and policy versions, risk class, token and cost usage, effect state, retry owner, artifact references, and stop reason.
 
 ### Privacy and reliability
 
@@ -163,6 +163,16 @@ Evidence anchors: OTEL-GENAI; MLFLOW-TRACE. Full URLs, authority, version, and s
 ### MLflow tracing integration
 
 [[EXAMPLE:mlflow-trace-configuration]]
+
+### Mortgage Agents SDK integration
+
+The cumulative mortgage runtime makes the boundary concrete: the OpenAI Agents
+SDK performs one bounded, read-only tool loop; the platform gateway owns the
+synthetic projection; MLflow records the causal AgentRunner, agent, and tool
+spans. The scripted model keeps the example offline, so a trace proves the
+integration and redaction mechanics without claiming a live provider call.
+
+[[EXAMPLE:mortgage-agents-mlflow]]
 
 ## Debugging playbook
 
@@ -431,43 +441,7 @@ Evidence anchors: MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Full URLs, authority, vers
 
 ### MLflow trajectory evaluation
 
-🐍 · implementation excerpt
-
-```python
-from __future__ import annotations
-import os
-from typing import Literal
-import mlflow
-from mlflow.entities import Feedback, SpanType, Trace
-from mlflow.genai import scorer
-from mlflow.genai.judges import make_judge
-from mlflow.genai.scorers import Correctness, Guidelines, ToolCallCorrectness, ToolCallEfficiency
-
-def no_unknown_effects(trace: Trace) -> Feedback:
-    unknown = [
-        span for span in trace.search_spans()
-        if span.attributes.get("effect.state") == "unknown"
-    ]
-    return Feedback(
-        name="no_unknown_effects",
-        value=not unknown,
-        rationale="No unresolved effects" if not unknown else f"{len(unknown)} unknown effects remain",
-    )
-
-def evaluate_agent(predict_fn, dataset: list[dict[str, object]]):
-    return mlflow.genai.evaluate(
-        data=dataset,
-        predict_fn=predict_fn,
-        scorers=[
-            Correctness(),
-            Guidelines(name="grounded", guidelines="Every material claim cites authorized evidence."),
-            ToolCallCorrectness(),
-            ToolCallEfficiency(),
-            no_unknown_effects,
-            tool_trajectory_judge,
-        ],
-    )
-```
+[[EXAMPLE:mlflow-trajectory-evaluation]]
 
 ## Debugging playbook
 

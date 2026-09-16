@@ -68,7 +68,14 @@ Almost every enterprise agent begins as a script that works on the first try. It
 is worth looking at one honestly, because the gap between it and a production
 system is the subject of this entire book — and the gap is not intelligence.
 
-🐍 · the prototype, and it genuinely works
+🐍 · an intentionally abbreviated prototype sketch
+
+The following supplier example is retained as a contrast, but it is not a
+repository-executed listing: the three tool names stand for application code
+that a demo would provide. The runnable, provider-pinned foundation is the
+mortgage example above; keeping this sketch visibly non-executable prevents a
+reader from mistaking omitted gateway and effect controls for a complete
+implementation.
 
 ```python
 from agents import Agent, Runner
@@ -84,7 +91,7 @@ print(result.final_output)      # "Supplier onboarded successfully."
 ```
 
 Fifteen lines. It reads the supplier file, calls the tools in a sensible order,
-and reports success. In a demo it is genuinely impressive, and it is reasonable
+and reports success. In a demo this shape can be genuinely impressive, and it is reasonable
 to conclude that the remaining work is refinement: better instructions, a few
 more tools, some error handling.
 
@@ -194,8 +201,7 @@ An agent loops. It observes the result of each tool call and chooses the next
 step, until it decides it is finished.
 
 ```python
-result = await Runner.run(agent, "Onboard supplier Acme Industrial GmbH",
-                          run_config=RunConfig(max_turns=8))
+result = await Runner.run(agent, "Onboard supplier Acme Industrial GmbH", max_turns=8)
 ```
 
 **What this adds.** The ability to handle tasks whose shape is not known in

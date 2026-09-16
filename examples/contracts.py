@@ -7,9 +7,10 @@ drifted apart -- the shorter one was not even a prefix of the longer.
 from __future__ import annotations
 
 from datetime import datetime
+from decimal import Decimal
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 # --8<-- region:step
 class EvidenceRef(BaseModel):
@@ -60,9 +61,16 @@ class PlanNode(BaseModel):
     id: str
     capability: str
     depends_on: tuple[str, ...] = ()
-    maximum_cost_usd: float = Field(ge=0)
+    maximum_cost_usd: Decimal = Field(ge=0)
     maximum_attempts: int = Field(ge=1, le=10)
     risk_class: int = Field(ge=0, le=4)
+
+    @field_validator("maximum_cost_usd", mode="before")
+    @classmethod
+    def reject_binary_float_costs(cls, value: object) -> object:
+        if isinstance(value, float):
+            raise ValueError("maximum_cost_usd must be Decimal or a decimal string")
+        return value
 
 class CandidatePlan(BaseModel):
     revision: int = Field(ge=1)

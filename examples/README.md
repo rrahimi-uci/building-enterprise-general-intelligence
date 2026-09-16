@@ -70,6 +70,13 @@ resolves `RunConfig.model` with an `isinstance` check, so a structurally
 compatible class that does not inherit from it is silently ignored and the run
 falls through to the real OpenAI provider.
 
+The Chapter 24 mortgage integration also uses the real Agents SDK runner, but
+keeps the model scripted. It calls
+`mlflow.openai.autolog(disable_openai_agent_tracer=False)` explicitly: MLflow
+3.15.2 otherwise disables its Agents SDK trace processor by default. The run
+uses a SQLite tracking URI, records only safe synthetic metadata, and never
+requires an API key.
+
 ## Cumulative mortgage case
 
 The book’s new anchor implementation is a synthetic Harborlight mortgage intake.
@@ -109,7 +116,9 @@ denies credit and never writes to a real loan-origination system.
 | `security/input_guardrail.py` | 18 | Tripwire before the model is consulted |
 | `observability/mlflow_tracing.py` | 23 | Agent and tool spans |
 | `observability/mlflow_trace_configuration.py` | 23 | Autolog plus platform-owned spans |
-| `observability/mlflow_evaluation.py` | 24 | Dataset scoring and regression detection |
+| `observability/mlflow_evaluation.py` | 24 | Dataset evaluation and regression detection |
+| `observability/mortgage_agents_mlflow.py` | 24 | Real Agents SDK tool run traced by MLflow |
+| `observability/mlflow_trajectory_evaluation.py` | 25 | Deterministic and model-assisted trajectory scorers |
 | `contracts.py` | 01, 04 | Shared step and platform contracts (two regions) |
 | `platform/skills_registry.py` | 06 | Policy-aware resolution, SemVer precedence |
 | `patterns/react_engine.py` | 08 | Turn, tool and no-progress budgets |
@@ -141,10 +150,11 @@ make setup-examples     # .venv-examples with the pinned SDKs
 make examples-run
 ```
 
-The SDKs are pinned in `requirements.txt` and deliberately kept **out** of the
+The SDKs are pinned in `examples/requirements.txt` and deliberately kept **out** of the
 book's own `requirements.txt` — the manuscript must build without them. Bumping
 a pin is an editorial act: the prose describing that API has to be re-checked
-against the new version.
+against the new version. The current offline profile pins `openai==3.13.0`,
+`openai-agents==0.22.2`, and `mlflow==3.15.2`.
 
 MLflow 3.15 put the filesystem tracking store into maintenance mode for traces,
 so the tests use a SQLite backend, and trace export is forced synchronous so

@@ -1,4 +1,4 @@
-"""Scoring an agent against a dataset with MLflow, offline.
+"""Evaluating an agent against a dataset with MLflow, offline.
 
 The book's position is that an evaluation suite should be grown from production
 failures, and that a judge you have not calibrated is just another model with
@@ -12,7 +12,8 @@ from mlflow.genai.scorers import scorer
 
 # --8<-- example:start
 
-# Each case is an incident that actually happened, not an imagined one.
+# These are controlled synthetic cases, not production incidents. A production
+# dataset needs its own privacy, purpose, leakage, and retention review.
 DATASET = [
     {"inputs": {"supplier_id": "S-1001"}, "expectations": {"status": "active"}},
     {"inputs": {"supplier_id": "S-2002"}, "expectations": {"status": "suspended"}},
@@ -47,19 +48,23 @@ def predict(supplier_id: str) -> dict:
 SCORERS = (status_is_correct, escalates_when_unknown)
 
 
+def evaluate_result():
+    """Run MLflow's evaluation orchestration and return its result object."""
+    mlflow.set_experiment("book-mortgage-evaluation")
+    return mlflow.genai.evaluate(
+        data=DATASET,
+        predict_fn=predict,
+        scorers=list(SCORERS),
+    )
+
+
 def evaluate() -> dict[str, float]:
-    """Score every case with the registered scorers and return each pass rate."""
-    results: dict[str, list[bool]] = {s.name: [] for s in SCORERS}
-    for case in DATASET:
-        with mlflow.start_span(name="evaluation_case") as span:
-            span.set_inputs(case["inputs"])
-            outputs = predict(**case["inputs"])
-            span.set_outputs(outputs)
-            for scorer_fn in SCORERS:
-                results[scorer_fn.name].append(
-                    bool(scorer_fn(outputs=outputs, expectations=case["expectations"]))
-                )
-    return {name: sum(values) / len(values) for name, values in results.items()}
+    """Return the mean metrics produced by ``mlflow.genai.evaluate``."""
+    result = evaluate_result()
+    return {
+        scorer_fn.name: float(result.metrics[f"{scorer_fn.name}/mean"])
+        for scorer_fn in SCORERS
+    }
 
 
 # --8<-- example:end

@@ -1,4 +1,4 @@
-"""Tracing an agent run with MLflow so failures are diagnosable after the fact.
+"""Tracing a manual agent/tool boundary with MLflow.
 
 A trace is the difference between "the agent gave a wrong answer" and "the agent
 called the right tool, got stale data, and the staleness was never surfaced".

@@ -8,9 +8,9 @@ from __future__ import annotations
 
 import hashlib
 import json
-import math
 import re
 from dataclasses import dataclass
+from decimal import Decimal
 
 from examples.contracts import CandidatePlan
 
@@ -23,13 +23,15 @@ class PlanEnvelope:
     """Deterministic limits used to compile one candidate plan."""
 
     allowed_capabilities: frozenset[str]
-    maximum_cost_usd: float
+    maximum_cost_usd: Decimal
     policy_digest: str
     maximum_nodes: int = 100
     maximum_risk: int = 4
 
     def __post_init__(self) -> None:
-        if not math.isfinite(self.maximum_cost_usd) or self.maximum_cost_usd < 0:
+        if not isinstance(self.maximum_cost_usd, Decimal):
+            raise TypeError("maximum_cost_usd must be Decimal")
+        if not self.maximum_cost_usd.is_finite() or self.maximum_cost_usd < 0:
             raise ValueError("maximum_cost_usd must be finite and non-negative")
         if self.maximum_nodes < 1:
             raise ValueError("maximum_nodes must be positive")
@@ -68,8 +70,10 @@ def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, objec
         if unknown:
             raise ValueError(f"unknown dependencies for {node.id}: {sorted(unknown)}")
 
-    reserved_cost = sum(node.maximum_cost_usd for node in plan.nodes)
-    if not math.isfinite(reserved_cost) or reserved_cost > envelope.maximum_cost_usd:
+    reserved_cost = sum(
+        (node.maximum_cost_usd for node in plan.nodes), Decimal("0")
+    )
+    if not reserved_cost.is_finite() or reserved_cost > envelope.maximum_cost_usd:
         raise ValueError("plan exceeds maximum cost")
 
     dependencies = {node.id: set(node.depends_on) for node in plan.nodes}
@@ -90,7 +94,7 @@ def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, objec
     plan_payload = plan.model_dump(mode="json")
     envelope_payload = {
         "allowed_capabilities": sorted(envelope.allowed_capabilities),
-        "maximum_cost_usd": envelope.maximum_cost_usd,
+        "maximum_cost_usd": str(envelope.maximum_cost_usd),
         "maximum_nodes": envelope.maximum_nodes,
         "maximum_risk": envelope.maximum_risk,
         "policy_digest": envelope.policy_digest,
