@@ -77,7 +77,7 @@ The appendices are working reference material: selection aids, runbooks, contrac
 
 | **Framework** | **Strength** | **Enterprise caution** | **Recommended placement** |
 | --- | --- | --- | --- |
-| OpenAI Agents SDK | Compact Python runtime for agents, tools, handoffs, guardrails, structured outputs, sessions, tracing, MCP, HITL, RunState, and sandbox surfaces. | SDK state is not enterprise workflow truth; protect credentials, authorization, effects, and long waits outside it. | Bounded AgentRuntime adapter. Book baseline: openai-agents 0.22.2 and openai >=2.25.0. |
+| OpenAI Agents SDK | Compact Python runtime for agents, tools, handoffs, guardrails, structured outputs, sessions, tracing, MCP, HITL, RunState, and sandbox surfaces. | SDK state is not enterprise workflow truth; protect credentials, authorization, effects, and long waits outside it. | Bounded AgentRuntime adapter. Book baseline: `openai-agents==0.22.2` with `openai==3.13.0` in the offline profile. |
 | LangGraph | Graph-oriented stateful agent orchestration with persistence and interrupts. | Graph state and persistence semantics still need enterprise identity, effects, policy, release, and audit integration. | Use for application-level graph orchestration when its persistence model fits; keep external writes governed. |
 | Microsoft Agent Framework | Agent and workflow abstractions aligned with Microsoft ecosystems. | Avoid binding public enterprise contracts to framework-specific messages or state. | Use behind adapters when Azure and Microsoft identity/tooling are strategic. |
 | Google ADK | Composable agents and tools with Google-cloud integration. | Cloud-native convenience does not replace provider-neutral run, task, policy, effect, and evidence contracts. | Use for Google-centric implementations behind the same platform boundary. |
@@ -224,18 +224,19 @@ Companion code for the book **Building Enterprise Agentic AI Systems**.
 
 * Python 3.11+
 * OpenAI Agents SDK 0.22.2
-* OpenAI Python >=2.25.0 (required by the SDK's deferred tool-search surfaces)
+* OpenAI Python SDK 3.13.0 (the exact offline-profile pin; the pinned Agents SDK declares the compatible `openai` 3.x range)
 * MLflow 3.15.2 (the pinned example baseline; re-verify current releases before implementation)
 * Pydantic 2
 
 MLflow 3.15.0 introduced the MCP Registry and multimodal trace judges; 3.15.2 adds immutable evaluation dataset versions and scorer ensembles. The examples deliberately pin versions so a reader can reproduce behavior.
 
-## Run the framework-neutral tests
+## Run the repository examples and tests
 
 BASH · implementation excerpt
 
 ```bash
-python -m unittest discover -s tests -v
+make examples-run
+.venv-examples/bin/python -m pytest tests/mortgage_case -q
 ```
 
 ## Run the deterministic demo
@@ -243,29 +244,26 @@ python -m unittest discover -s tests -v
 BASH · implementation excerpt
 
 ```bash
-python -m northstar.demo
+.venv-examples/bin/python -m mortgage_case --chapter 3 --scenario happy_path --offline --json
 ```
 
-The OpenAI and MLflow adapters require their corresponding packages and configured credentials/tracking endpoints. They are kept behind provider-neutral interfaces so the deterministic tests do not make network calls.
+The direct OpenAI Python SDK adapter and OpenAI Agents SDK adapter are optional
+provider integrations behind provider-neutral contracts. The mandatory path
+uses the scripted Agents SDK model and a synthetic gateway, while the MLflow
+example uses a local SQLite tracking URI. No command in the offline profile
+requires credentials or a network connection.
 
 ## Package map
 
-* contracts.py — typed public and internal contracts
-* tools.py — governed tool gateway and connector boundary
-* skills.py — skills, skill packs, eligibility, and immutable resolution
-* patterns.py — ReAct, routing, and evaluator-optimizer harnesses
-* planning.py — deterministic Plan IR compiler
-* durable.py — replay-safe workflow reducer
-* authorization.py — monotonic delegated authority
-* effects.py — idempotent effect ledger and unknown outcomes
-* approvals.py — proposal-bound, expiring approval grants
-* events.py — CloudEvents-compatible envelope and transactional outbox record
-* data\_policy.py — tenant, purpose, region, and provenance checks for artifact adoption
-* supply\_chain.py — signed-release, SBOM, provenance, signer, and builder evidence
-* operations.py — scoped kill switches and recovery objectives
-* openai\_adapter.py — OpenAI Agents SDK 0.22.2 adapter, tool namespaces, and HITL
-* mlflow\_ops.py — MLflow 3.15.x tracing, agent evaluation, and MCP Registry examples
-* demo.py — end-to-end local supplier-onboarding simulation
+* `mortgage_case/domain/` — synthetic case, evidence, proposal, and money contracts
+* `mortgage_case/platform/` — provider-neutral runtime and gateway boundaries
+* `mortgage_case/stages/` — cumulative C01–C03 checkpoint façades
+* `mortgage_case/adapters/openai_responses.py` — direct OpenAI Python SDK Responses adapter
+* `mortgage_case/adapters/openai_agents.py` — OpenAI Agents SDK 0.22.2 adapter
+* `examples/_harness/scripted_model.py` — offline implementation of the Agents SDK model interface
+* `examples/observability/mortgage_agents_mlflow.py` — real Agents SDK run with MLflow tracing
+* `examples/observability/mlflow_evaluation.py` — `mlflow.genai.evaluate` dataset/scorer orchestration
+* `code-gap.md` — chapter-by-chapter C04–C28 implementation roadmap
 
 ## Final-edition corrections and closure record
 
@@ -279,18 +277,23 @@ The OpenAI and MLflow adapters require their corresponding packages and configur
 * Skill and Skill Pack versions use SemVer precedence; duplicate packs fail, and deprecated artifacts require explicit replay mode.
 * ReAct stops repeated identical observations instead of looping to a turn limit.
 * Compiled plans bind the plan to the policy envelope and make conservative cost-reservation semantics explicit.
-* The deterministic suite executes 19 tests; two optional adapter smoke tests skip cleanly when openai-agents and mlflow are absent.
+* The C01–C03 foundation has 19 focused mortgage unit/contract tests in this revision; the generated example report and CI output remain authoritative for the complete count.
+* The direct OpenAI Responses adapter is contract-tested with a fake client, so the test proves request shape and platform-schema translation without a network call.
+* The MLflow mortgage integration proves that `disable_openai_agent_tracer=False` exposes Agents SDK AgentRunner, agent, and tool spans while `trace_include_sensitive_data=False` prevents raw fixture content from entering model trace payloads.
 
-The framework adapters are syntax-checked here but require their pinned optional dependencies, credentials, and integration endpoints for execution. Treat the book's Skill and SkillPack as platform-owned packaging patterns, not as aliases for A2A AgentSkill metadata or the optional Skills-over-MCP extension.
+The live provider path still requires credentials and should be treated as an
+explicit integration test, not as evidence supplied by the offline suite. Treat
+the book's Skill and SkillPack as platform-owned packaging patterns, not as
+aliases for A2A AgentSkill metadata or the optional Skills-over-MCP extension.
 
 ## Validation commands
 
 BASH · implementation excerpt
 
 ```bash
-python -m compileall -q northstar tests
-python -m unittest discover -s tests -v
-python -m northstar.demo
+.venv-examples/bin/python -m compileall -q mortgage_case examples tests
+make examples-run
+.venv-examples/bin/python -m mortgage_case --chapter 3 --scenario happy_path --offline --json
 ```
 
 # Appendix J — Coding-agent prompt and acceptance criteria

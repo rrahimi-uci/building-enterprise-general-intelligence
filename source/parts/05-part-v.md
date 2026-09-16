@@ -246,6 +246,7 @@ Collaboration uses durable TaskEnvelope, message, status, artifact, cancellation
 
 ```python
 from __future__ import annotations
+from decimal import Decimal
 from datetime import datetime
 from pydantic import BaseModel, Field
 class TaskEnvelope(BaseModel):
@@ -258,7 +259,7 @@ class TaskEnvelope(BaseModel):
     capability_grant_id: str
     input_artifact_ids: tuple[str, ...]
     deadline: datetime
-    maximum_cost_usd: float = Field(ge=0)
+    maximum_cost_usd: Decimal = Field(ge=0)
     cancellation_parent_id: str
     state_version: int = 0
 ```
@@ -271,6 +272,7 @@ class TaskEnvelope(BaseModel):
 from __future__ import annotations
 
 from dataclasses import dataclass
+from decimal import Decimal
 from datetime import datetime, timezone
 
 
@@ -292,7 +294,7 @@ class CapabilityEnvelope:
     data_classes: frozenset[str]
     regions: frozenset[str]
     maximum_risk: int
-    maximum_cost_usd: float
+    maximum_cost_usd: Decimal
     delegation_depth: int
     expires_at: datetime
 
@@ -597,6 +599,7 @@ Evidence anchors: MCP-2026; MCP-AUTH; A2A-101. Full URLs, authority, version, an
 from __future__ import annotations
 
 from datetime import datetime
+from decimal import Decimal
 from typing import Literal
 from pydantic import BaseModel, Field
 
@@ -610,7 +613,7 @@ class A2ATaskEnvelope(BaseModel):
     capability_grant_id: str
     input_artifact_ids: tuple[str, ...]
     deadline: datetime
-    maximum_cost_usd: float = Field(ge=0)
+    maximum_cost_usd: Decimal = Field(ge=0)
     status: Literal[
         "submitted", "working", "waiting", "completed",
         "failed", "cancel_requested", "canceled",
@@ -623,24 +626,17 @@ class A2ATaskEnvelope(BaseModel):
 🐍 · implementation excerpt
 
 ```python
-from __future__ import annotations
-import os
-from typing import Literal
 import mlflow
-from mlflow.entities import Feedback, SpanType, Trace
-from mlflow.genai import scorer
-from mlflow.genai.judges import make_judge
-from mlflow.genai.scorers import Correctness, Guidelines, ToolCallCorrectness, ToolCallEfficiency
 
-def register_supplier_mcp_server():
+def register_mortgage_mcp_server():
     """MLflow 3.15 MCP Registry is experimental; pin exact versions in releases."""
     return mlflow.genai.register_mcp_server(
         server_json={
-            "name": "com.northstar/supplier-tools",
+            "name": "com.harborlight/mortgage-tools",
             "version": "1.2.0",
-            "description": "Governed supplier onboarding tools",
+            "description": "Governed mortgage evidence tools",
             "remotes": [
-                {"url": "https://mcp.northstar.example/supplier", "type": "streamable-http"}
+                {"url": "https://mcp.harborlight.example/mortgage", "type": "streamable-http"}
             ],
         },
         status="active",
@@ -649,7 +645,7 @@ def register_supplier_mcp_server():
 
 def resolve_production_mcp_server():
     return mlflow.genai.get_mcp_server_version_by_alias(
-        name="com.northstar/supplier-tools", alias="production"
+        name="com.harborlight/mortgage-tools", alias="production"
     )
 ```
 

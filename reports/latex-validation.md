@@ -10,7 +10,7 @@
 - **chapters:** `28`
 - **appendices:** `12`
 - **diagrams:** `45`
-- **code_blocks:** `70`
+- **code_blocks:** `71`
 - **longtables:** `142`
 - **compact_tables:** `105`
 - **callout_tables:** `95`

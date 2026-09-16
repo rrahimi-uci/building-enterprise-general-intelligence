@@ -139,6 +139,11 @@ async def execute_with_agents_sdk(
                     model=model,
                     workflow_name="mortgage-evidence-review",
                     group_id=request.run_id,
+                    trace_metadata={
+                        "run_id": request.run_id,
+                        "case_id": request.case_id,
+                        "agent_version": request.agent_version,
+                    },
                     trace_include_sensitive_data=False,
                     tool_execution=ToolExecutionConfig(max_function_tool_concurrency=1),
                 ),

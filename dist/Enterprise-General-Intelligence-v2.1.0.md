@@ -212,7 +212,14 @@ Almost every enterprise agent begins as a script that works on the first try. It
 is worth looking at one honestly, because the gap between it and a production
 system is the subject of this entire book — and the gap is not intelligence.
 
-🐍 · the prototype, and it genuinely works
+🐍 · an intentionally abbreviated prototype sketch
+
+The following supplier example is retained as a contrast, but it is not a
+repository-executed listing: the three tool names stand for application code
+that a demo would provide. The runnable, provider-pinned foundation is the
+mortgage example above; keeping this sketch visibly non-executable prevents a
+reader from mistaking omitted gateway and effect controls for a complete
+implementation.
 
 ```python
 from agents import Agent, Runner
@@ -228,7 +235,7 @@ print(result.final_output)      # "Supplier onboarded successfully."
 ```
 
 Fifteen lines. It reads the supplier file, calls the tools in a sensible order,
-and reports success. In a demo it is genuinely impressive, and it is reasonable
+and reports success. In a demo this shape can be genuinely impressive, and it is reasonable
 to conclude that the remaining work is refinement: better instructions, a few
 more tools, some error handling.
 
@@ -338,8 +345,7 @@ An agent loops. It observes the result of each tool call and chooses the next
 step, until it decides it is finished.
 
 ```python
-result = await Runner.run(agent, "Onboard supplier Acme Industrial GmbH",
-                          run_config=RunConfig(max_turns=8))
+result = await Runner.run(agent, "Onboard supplier Acme Industrial GmbH", max_turns=8)
 ```
 
 **What this adds.** The ability to handle tasks whose shape is not known in
@@ -1956,9 +1962,10 @@ drifted apart -- the shorter one was not even a prefix of the longer.
 from __future__ import annotations
 
 from datetime import datetime
+from decimal import Decimal
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 class EvidenceRef(BaseModel):
     uri: str
@@ -2007,9 +2014,16 @@ class PlanNode(BaseModel):
     id: str
     capability: str
     depends_on: tuple[str, ...] = ()
-    maximum_cost_usd: float = Field(ge=0)
+    maximum_cost_usd: Decimal = Field(ge=0)
     maximum_attempts: int = Field(ge=1, le=10)
     risk_class: int = Field(ge=0, le=4)
+
+    @field_validator("maximum_cost_usd", mode="before")
+    @classmethod
+    def reject_binary_float_costs(cls, value: object) -> object:
+        if isinstance(value, float):
+            raise ValueError("maximum_cost_usd must be Decimal or a decimal string")
+        return value
 
 class CandidatePlan(BaseModel):
     revision: int = Field(ge=1)
@@ -3118,7 +3132,13 @@ report = platform.test(agent).simulate("supplier-onboarding-regression")
 platform.release(agent, require=["quality", "security", "cost", "rollback"])
 ```
 
-The fluent API is convenience. The compiled contracts, policy decisions, tool/effect evidence, traces, and release manifest are the stable interface.
+This is deliberately platform pseudocode, not a claim that the OpenAI Agents
+SDK exposes `platform.agent`, `attach_skill`, or `platform.release` with these
+method names. The repository's checked implementation uses a provider-neutral
+`AgentRuntime` and translates its request into the pinned Agents SDK at the
+adapter boundary. The fluent API is convenience. The compiled contracts,
+policy decisions, tool/effect evidence, traces, and release manifest are the
+stable interface.
 
 ## Golden path
 
@@ -4349,8 +4369,10 @@ def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, objec
         if unknown:
             raise ValueError(f"unknown dependencies for {node.id}: {sorted(unknown)}")
 
-    reserved_cost = sum(node.maximum_cost_usd for node in plan.nodes)
-    if not math.isfinite(reserved_cost) or reserved_cost > envelope.maximum_cost_usd:
+    reserved_cost = sum(
+        (node.maximum_cost_usd for node in plan.nodes), Decimal("0")
+    )
+    if not reserved_cost.is_finite() or reserved_cost > envelope.maximum_cost_usd:
         raise ValueError("plan exceeds maximum cost")
 
     dependencies = {node.id: set(node.depends_on) for node in plan.nodes}
@@ -4371,7 +4393,7 @@ def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, objec
     plan_payload = plan.model_dump(mode="json")
     envelope_payload = {
         "allowed_capabilities": sorted(envelope.allowed_capabilities),
-        "maximum_cost_usd": envelope.maximum_cost_usd,
+        "maximum_cost_usd": str(envelope.maximum_cost_usd),
         "maximum_nodes": envelope.maximum_nodes,
         "maximum_risk": envelope.maximum_risk,
         "policy_digest": envelope.policy_digest,
@@ -6325,6 +6347,7 @@ Collaboration uses durable TaskEnvelope, message, status, artifact, cancellation
 
 ```python
 from __future__ import annotations
+from decimal import Decimal
 from datetime import datetime
 from pydantic import BaseModel, Field
 class TaskEnvelope(BaseModel):
@@ -6337,7 +6360,7 @@ class TaskEnvelope(BaseModel):
     capability_grant_id: str
     input_artifact_ids: tuple[str, ...]
     deadline: datetime
-    maximum_cost_usd: float = Field(ge=0)
+    maximum_cost_usd: Decimal = Field(ge=0)
     cancellation_parent_id: str
     state_version: int = 0
 ```
@@ -6350,6 +6373,7 @@ class TaskEnvelope(BaseModel):
 from __future__ import annotations
 
 from dataclasses import dataclass
+from decimal import Decimal
 from datetime import datetime, timezone
 
 
@@ -6371,7 +6395,7 @@ class CapabilityEnvelope:
     data_classes: frozenset[str]
     regions: frozenset[str]
     maximum_risk: int
-    maximum_cost_usd: float
+    maximum_cost_usd: Decimal
     delegation_depth: int
     expires_at: datetime
 
@@ -6676,6 +6700,7 @@ Evidence anchors: MCP-2026; MCP-AUTH; A2A-101. Full URLs, authority, version, an
 from __future__ import annotations
 
 from datetime import datetime
+from decimal import Decimal
 from typing import Literal
 from pydantic import BaseModel, Field
 
@@ -6689,7 +6714,7 @@ class A2ATaskEnvelope(BaseModel):
     capability_grant_id: str
     input_artifact_ids: tuple[str, ...]
     deadline: datetime
-    maximum_cost_usd: float = Field(ge=0)
+    maximum_cost_usd: Decimal = Field(ge=0)
     status: Literal[
         "submitted", "working", "waiting", "completed",
         "failed", "cancel_requested", "canceled",
@@ -6702,24 +6727,17 @@ class A2ATaskEnvelope(BaseModel):
 🐍 · implementation excerpt
 
 ```python
-from __future__ import annotations
-import os
-from typing import Literal
 import mlflow
-from mlflow.entities import Feedback, SpanType, Trace
-from mlflow.genai import scorer
-from mlflow.genai.judges import make_judge
-from mlflow.genai.scorers import Correctness, Guidelines, ToolCallCorrectness, ToolCallEfficiency
 
-def register_supplier_mcp_server():
+def register_mortgage_mcp_server():
     """MLflow 3.15 MCP Registry is experimental; pin exact versions in releases."""
     return mlflow.genai.register_mcp_server(
         server_json={
-            "name": "com.northstar/supplier-tools",
+            "name": "com.harborlight/mortgage-tools",
             "version": "1.2.0",
-            "description": "Governed supplier onboarding tools",
+            "description": "Governed mortgage evidence tools",
             "remotes": [
-                {"url": "https://mcp.northstar.example/supplier", "type": "streamable-http"}
+                {"url": "https://mcp.harborlight.example/mortgage", "type": "streamable-http"}
             ],
         },
         status="active",
@@ -6728,7 +6746,7 @@ def register_supplier_mcp_server():
 
 def resolve_production_mcp_server():
     return mlflow.genai.get_mcp_server_version_by_alias(
-        name="com.northstar/supplier-tools", alias="production"
+        name="com.harborlight/mortgage-tools", alias="production"
     )
 ```
 
@@ -7146,9 +7164,15 @@ async def no_instruction_override(
 
 
 @function_tool
-def issue_refund(order_id: str, amount_usd: float) -> str:
+def issue_refund(order_id: str, amount_usd: str) -> str:
     """Issue a refund. Guarded: this is a real, irreversible effect."""
-    return f"refunded {amount_usd:.2f} for {order_id}"
+    try:
+        amount = Decimal(amount_usd)
+    except (InvalidOperation, ValueError):
+        return "invalid refund amount"
+    if amount < 0:
+        return "invalid refund amount"
+    return f"refunded {amount:.2f} for {order_id}"
 
 
 agent = Agent(
@@ -7427,6 +7451,7 @@ Evidence anchors: RFC8693; RFC8707. Full URLs, authority, version, and scope app
 from __future__ import annotations
 
 from dataclasses import dataclass
+from decimal import Decimal
 from datetime import datetime, timezone
 
 
@@ -7448,7 +7473,7 @@ class CapabilityEnvelope:
     data_classes: frozenset[str]
     regions: frozenset[str]
     maximum_risk: int
-    maximum_cost_usd: float
+    maximum_cost_usd: Decimal
     delegation_depth: int
     expires_at: datetime
 
@@ -8263,7 +8288,7 @@ prompt and response into a search index.
 
 A production trace links admission, workflow tasks, AgentRuntime activities, model calls, retrieval, policy decisions, tool invocations, approvals, effects, waits, remote tasks, operator commands, and terminal acceptance. Long-running runs require stable domain IDs and span links because queues, retries, resumptions, and fan-out do not form one in-process call stack.
 
-Northstar uses OpenTelemetry-compatible context propagation and MLflow 3.15.x tracing. mlflow.openai.autolog() can capture OpenAI calls, while explicit spans cover platform-owned boundaries. Required attributes include tenant-safe run and task IDs, release versions, workflow build, model route, tool and policy versions, risk class, token and cost usage, effect state, retry owner, artifact references, and stop reason.
+Northstar uses OpenTelemetry-compatible context propagation and MLflow 3.15.x tracing. `mlflow.openai.autolog()` can capture OpenAI calls, while explicit spans cover platform-owned boundaries. In the pinned MLflow 3.15.2 profile, Agents SDK tracing is disabled by default; an Agents SDK integration must pass `disable_openai_agent_tracer=False` to register MLflow's Agents SDK trace processor. `RunConfig(trace_include_sensitive_data=False)` remains a separate privacy control. Required attributes include tenant-safe run and task IDs, release versions, workflow build, model route, tool and policy versions, risk class, token and cost usage, effect state, retry owner, artifact references, and stop reason.
 
 ### Privacy and reliability
 
@@ -8376,7 +8401,7 @@ Evidence anchors: OTEL-GENAI; MLFLOW-TRACE. Full URLs, authority, version, and s
 ## Implementation reference
 
 
-🐍 · Tracing an agent run with MLflow
+🐍 · Manually tracing agent and tool boundaries with MLflow
 
 ```python
 @mlflow.trace(span_type="TOOL")
@@ -8414,9 +8439,13 @@ def configure_observability(experiment: str = "northstar-supplier-onboarding") -
     """
     mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db"))
     mlflow.set_experiment(experiment)
-    # Captures OpenAI calls; the explicit spans below cover the platform-owned
-    # workflow, policy, approval, and effect boundaries that autolog cannot see.
-    mlflow.openai.autolog()
+    # Captures OpenAI calls and enables MLflow's Agents SDK trace processor. The
+    # explicit spans below cover the platform-owned workflow, policy, approval,
+    # and effect boundaries that provider autologging cannot see.
+    mlflow.openai.autolog(
+        log_traces=True,
+        disable_openai_agent_tracer=False,
+    )
 
 
 def traced_step(run_id: str, supplier_id: str) -> dict[str, str]:
@@ -8433,6 +8462,88 @@ def traced_step(run_id: str, supplier_id: str) -> dict[str, str]:
         # useful without turning it into a second copy of sensitive data.
         span.set_outputs({"context_manifest_id": context_manifest_id})
     return {"status": "ready_for_approval", "context_manifest_id": context_manifest_id}
+```
+
+### Mortgage Agents SDK integration
+
+The cumulative mortgage runtime makes the boundary concrete: the OpenAI Agents
+SDK performs one bounded, read-only tool loop; the platform gateway owns the
+synthetic projection; MLflow records the causal AgentRunner, agent, and tool
+spans. The scripted model keeps the example offline, so a trace proves the
+integration and redaction mechanics without claiming a live provider call.
+
+🐍 · Tracing the mortgage Agents SDK runtime with MLflow
+
+```python
+class SyntheticMortgageGateway:
+    """Return a safe projection, never raw mortgage documents or PII."""
+
+    async def invoke(self, **kwargs: object) -> dict[str, object]:
+        if kwargs.get("tool_version") != "mortgage.case.read@1":
+            return {"error_code": "UNSUPPORTED_TOOL", "synthetic_notice": SYNTHETIC_NOTICE}
+        return {
+            "case_id": kwargs["case_id"],
+            "available_document_ids": ["APP-000184", "PAY-000184-01", "PUR-000184"],
+            "missing_document_kinds": ["employment_verification"],
+            "synthetic_notice": SYNTHETIC_NOTICE,
+        }
+
+
+def configure_observability(experiment: str = "book-mortgage-agents") -> None:
+    """Enable MLflow's OpenAI and Agents SDK integrations for this run."""
+
+    mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db"))
+    mlflow.set_experiment(experiment)
+    # MLflow 3.15 disables its Agents SDK trace processor by default. Explicitly
+    # enabling it is what makes AgentRunner, agent, and tool spans appear here.
+    mlflow.openai.autolog(
+        log_traces=True,
+        disable_openai_agent_tracer=False,
+    )
+
+
+def run_mortgage_review() -> dict[str, object]:
+    """Run one read-only mortgage evidence review and return safe trace facts."""
+
+    case = load_anchor_case()
+    request = AgentStepRequest(
+        run_id="RUN-MORT-000184-OBS",
+        case_id=case.case_id,
+        tenant_id=case.tenant_id,
+        input_items=(
+            f"Review authorized evidence metadata for {case.case_id}. "
+            "Report missing evidence. Do not decide credit or write to a system."
+        ),
+        agent_version="mortgage-evidence-agent@0.1.0",
+        eligible_tool_versions=("mortgage.case.read@1",),
+        deadline=datetime.now(timezone.utc) + timedelta(seconds=10),
+        max_turns=3,
+    )
+    model = ScriptedModel([
+        ToolCall("read_mortgage_case", {"case_id": case.case_id}),
+        Say(
+            '{"status":"needs_input","summary":"Employment verification is '
+            'missing.","evidence_artifact_ids":[]}'
+        ),
+    ])
+    result = asyncio.run(
+        execute_with_agents_sdk(
+            request,
+            model=model,
+            gateway=SyntheticMortgageGateway(),
+        )
+    )
+    trace_id = mlflow.get_last_active_trace_id()
+    if trace_id is None:
+        raise RuntimeError("MLflow did not return a trace for the Agents SDK run")
+    trace = mlflow.get_trace(trace_id, flush=True)
+    return {
+        "status": result.status,
+        "summary": result.summary,
+        "trace_id": trace_id,
+        "span_names": sorted({span.name for span in trace.data.spans}),
+        "synthetic_notice": SYNTHETIC_NOTICE,
+    }
 ```
 
 ## Debugging playbook
@@ -8698,10 +8809,11 @@ Evidence anchors: MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Full URLs, authority, vers
 ## Implementation reference
 
 
-🐍 · Scoring an agent against a dataset with MLflow
+🐍 · Evaluating an agent against a dataset with MLflow
 
 ```python
-# Each case is an incident that actually happened, not an imagined one.
+# These are controlled synthetic cases, not production incidents. A production
+# dataset needs its own privacy, purpose, leakage, and retention review.
 DATASET = [
     {"inputs": {"supplier_id": "S-1001"}, "expectations": {"status": "active"}},
     {"inputs": {"supplier_id": "S-2002"}, "expectations": {"status": "suspended"}},
@@ -8736,53 +8848,72 @@ def predict(supplier_id: str) -> dict:
 SCORERS = (status_is_correct, escalates_when_unknown)
 
 
+def evaluate_result():
+    """Run MLflow's evaluation orchestration and return its result object."""
+    mlflow.set_experiment("book-mortgage-evaluation")
+    return mlflow.genai.evaluate(
+        data=DATASET,
+        predict_fn=predict,
+        scorers=list(SCORERS),
+    )
+
+
 def evaluate() -> dict[str, float]:
-    """Score every case with the registered scorers and return each pass rate."""
-    results: dict[str, list[bool]] = {s.name: [] for s in SCORERS}
-    for case in DATASET:
-        with mlflow.start_span(name="evaluation_case") as span:
-            span.set_inputs(case["inputs"])
-            outputs = predict(**case["inputs"])
-            span.set_outputs(outputs)
-            for scorer_fn in SCORERS:
-                results[scorer_fn.name].append(
-                    bool(scorer_fn(outputs=outputs, expectations=case["expectations"]))
-                )
-    return {name: sum(values) / len(values) for name, values in results.items()}
+    """Return the mean metrics produced by ``mlflow.genai.evaluate``."""
+    result = evaluate_result()
+    return {
+        scorer_fn.name: float(result.metrics[f"{scorer_fn.name}/mean"])
+        for scorer_fn in SCORERS
+    }
 ```
 
 ### MLflow trajectory evaluation
 
-🐍 · implementation excerpt
+🐍 · Combining deterministic and model-assisted MLflow trajectory scorers
 
 ```python
-from __future__ import annotations
-import os
-from typing import Literal
-import mlflow
-from mlflow.entities import Feedback, SpanType, Trace
-from mlflow.genai import scorer
-from mlflow.genai.judges import make_judge
-from mlflow.genai.scorers import Correctness, Guidelines, ToolCallCorrectness, ToolCallEfficiency
-
+@scorer(name="no_unknown_effects")
 def no_unknown_effects(trace: Trace) -> Feedback:
+    """Block a candidate when a protected effect is still unresolved."""
+
     unknown = [
-        span for span in trace.search_spans()
+        span
+        for span in trace.search_spans()
         if span.attributes.get("effect.state") == "unknown"
     ]
     return Feedback(
         name="no_unknown_effects",
         value=not unknown,
-        rationale="No unresolved effects" if not unknown else f"{len(unknown)} unknown effects remain",
+        rationale=(
+            "No unresolved effects"
+            if not unknown
+            else f"{len(unknown)} unknown effects remain"
+        ),
     )
 
+
+tool_trajectory_judge = make_judge(
+    name="tool_trajectory_grounded",
+    instructions=(
+        "Evaluate {{ trace }}. Return true only when every tool call is needed "
+        "for the request and stays within the authorized trajectory."
+    ),
+    feedback_value_type=bool,
+)
+
+
 def evaluate_agent(predict_fn, dataset: list[dict[str, object]]):
+    """Run MLflow evaluation with outcome, trajectory, and safety scorers."""
+
     return mlflow.genai.evaluate(
         data=dataset,
         predict_fn=predict_fn,
         scorers=[
             Correctness(),
-            Guidelines(name="grounded", guidelines="Every material claim cites authorized evidence."),
+            Guidelines(
+                name="grounded",
+                guidelines="Every material claim cites authorized evidence.",
+            ),
             ToolCallCorrectness(),
             ToolCallEfficiency(),
             no_unknown_effects,
@@ -9624,7 +9755,7 @@ The appendices are working reference material: selection aids, runbooks, contrac
 
 | **Framework** | **Strength** | **Enterprise caution** | **Recommended placement** |
 | --- | --- | --- | --- |
-| OpenAI Agents SDK | Compact Python runtime for agents, tools, handoffs, guardrails, structured outputs, sessions, tracing, MCP, HITL, RunState, and sandbox surfaces. | SDK state is not enterprise workflow truth; protect credentials, authorization, effects, and long waits outside it. | Bounded AgentRuntime adapter. Book baseline: openai-agents 0.22.2 and openai >=2.25.0. |
+| OpenAI Agents SDK | Compact Python runtime for agents, tools, handoffs, guardrails, structured outputs, sessions, tracing, MCP, HITL, RunState, and sandbox surfaces. | SDK state is not enterprise workflow truth; protect credentials, authorization, effects, and long waits outside it. | Bounded AgentRuntime adapter. Book baseline: `openai-agents==0.22.2` with `openai==3.13.0` in the offline profile. |
 | LangGraph | Graph-oriented stateful agent orchestration with persistence and interrupts. | Graph state and persistence semantics still need enterprise identity, effects, policy, release, and audit integration. | Use for application-level graph orchestration when its persistence model fits; keep external writes governed. |
 | Microsoft Agent Framework | Agent and workflow abstractions aligned with Microsoft ecosystems. | Avoid binding public enterprise contracts to framework-specific messages or state. | Use behind adapters when Azure and Microsoft identity/tooling are strategic. |
 | Google ADK | Composable agents and tools with Google-cloud integration. | Cloud-native convenience does not replace provider-neutral run, task, policy, effect, and evidence contracts. | Use for Google-centric implementations behind the same platform boundary. |
@@ -9771,18 +9902,19 @@ Companion code for the book **Building Enterprise Agentic AI Systems**.
 
 * Python 3.11+
 * OpenAI Agents SDK 0.22.2
-* OpenAI Python >=2.25.0 (required by the SDK's deferred tool-search surfaces)
+* OpenAI Python SDK 3.13.0 (the exact offline-profile pin; the pinned Agents SDK declares the compatible `openai` 3.x range)
 * MLflow 3.15.2 (the pinned example baseline; re-verify current releases before implementation)
 * Pydantic 2
 
 MLflow 3.15.0 introduced the MCP Registry and multimodal trace judges; 3.15.2 adds immutable evaluation dataset versions and scorer ensembles. The examples deliberately pin versions so a reader can reproduce behavior.
 
-## Run the framework-neutral tests
+## Run the repository examples and tests
 
 BASH · implementation excerpt
 
 ```bash
-python -m unittest discover -s tests -v
+make examples-run
+.venv-examples/bin/python -m pytest tests/mortgage_case -q
 ```
 
 ## Run the deterministic demo
@@ -9790,29 +9922,26 @@ python -m unittest discover -s tests -v
 BASH · implementation excerpt
 
 ```bash
-python -m northstar.demo
+.venv-examples/bin/python -m mortgage_case --chapter 3 --scenario happy_path --offline --json
 ```
 
-The OpenAI and MLflow adapters require their corresponding packages and configured credentials/tracking endpoints. They are kept behind provider-neutral interfaces so the deterministic tests do not make network calls.
+The direct OpenAI Python SDK adapter and OpenAI Agents SDK adapter are optional
+provider integrations behind provider-neutral contracts. The mandatory path
+uses the scripted Agents SDK model and a synthetic gateway, while the MLflow
+example uses a local SQLite tracking URI. No command in the offline profile
+requires credentials or a network connection.
 
 ## Package map
 
-* contracts.py — typed public and internal contracts
-* tools.py — governed tool gateway and connector boundary
-* skills.py — skills, skill packs, eligibility, and immutable resolution
-* patterns.py — ReAct, routing, and evaluator-optimizer harnesses
-* planning.py — deterministic Plan IR compiler
-* durable.py — replay-safe workflow reducer
-* authorization.py — monotonic delegated authority
-* effects.py — idempotent effect ledger and unknown outcomes
-* approvals.py — proposal-bound, expiring approval grants
-* events.py — CloudEvents-compatible envelope and transactional outbox record
-* data\_policy.py — tenant, purpose, region, and provenance checks for artifact adoption
-* supply\_chain.py — signed-release, SBOM, provenance, signer, and builder evidence
-* operations.py — scoped kill switches and recovery objectives
-* openai\_adapter.py — OpenAI Agents SDK 0.22.2 adapter, tool namespaces, and HITL
-* mlflow\_ops.py — MLflow 3.15.x tracing, agent evaluation, and MCP Registry examples
-* demo.py — end-to-end local supplier-onboarding simulation
+* `mortgage_case/domain/` — synthetic case, evidence, proposal, and money contracts
+* `mortgage_case/platform/` — provider-neutral runtime and gateway boundaries
+* `mortgage_case/stages/` — cumulative C01–C03 checkpoint façades
+* `mortgage_case/adapters/openai_responses.py` — direct OpenAI Python SDK Responses adapter
+* `mortgage_case/adapters/openai_agents.py` — OpenAI Agents SDK 0.22.2 adapter
+* `examples/_harness/scripted_model.py` — offline implementation of the Agents SDK model interface
+* `examples/observability/mortgage_agents_mlflow.py` — real Agents SDK run with MLflow tracing
+* `examples/observability/mlflow_evaluation.py` — `mlflow.genai.evaluate` dataset/scorer orchestration
+* `code-gap.md` — chapter-by-chapter C04–C28 implementation roadmap
 
 ## Final-edition corrections and closure record
 
@@ -9826,18 +9955,23 @@ The OpenAI and MLflow adapters require their corresponding packages and configur
 * Skill and Skill Pack versions use SemVer precedence; duplicate packs fail, and deprecated artifacts require explicit replay mode.
 * ReAct stops repeated identical observations instead of looping to a turn limit.
 * Compiled plans bind the plan to the policy envelope and make conservative cost-reservation semantics explicit.
-* The deterministic suite executes 19 tests; two optional adapter smoke tests skip cleanly when openai-agents and mlflow are absent.
+* The C01–C03 foundation has 19 focused mortgage unit/contract tests in this revision; the generated example report and CI output remain authoritative for the complete count.
+* The direct OpenAI Responses adapter is contract-tested with a fake client, so the test proves request shape and platform-schema translation without a network call.
+* The MLflow mortgage integration proves that `disable_openai_agent_tracer=False` exposes Agents SDK AgentRunner, agent, and tool spans while `trace_include_sensitive_data=False` prevents raw fixture content from entering model trace payloads.
 
-The framework adapters are syntax-checked here but require their pinned optional dependencies, credentials, and integration endpoints for execution. Treat the book's Skill and SkillPack as platform-owned packaging patterns, not as aliases for A2A AgentSkill metadata or the optional Skills-over-MCP extension.
+The live provider path still requires credentials and should be treated as an
+explicit integration test, not as evidence supplied by the offline suite. Treat
+the book's Skill and SkillPack as platform-owned packaging patterns, not as
+aliases for A2A AgentSkill metadata or the optional Skills-over-MCP extension.
 
 ## Validation commands
 
 BASH · implementation excerpt
 
 ```bash
-python -m compileall -q northstar tests
-python -m unittest discover -s tests -v
-python -m northstar.demo
+.venv-examples/bin/python -m compileall -q mortgage_case examples tests
+make examples-run
+.venv-examples/bin/python -m mortgage_case --chapter 3 --scenario happy_path --offline --json
 ```
 
 # Appendix J — Coding-agent prompt and acceptance criteria

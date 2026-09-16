@@ -1,5 +1,6 @@
 # Pinned so a book example is reproducible years from now. Bumping a pin is an
 # editorial act: the prose that describes the API has to be re-checked with it.
+openai==3.13.0
 openai-agents==0.22.2
 mlflow==3.15.2
 pydantic==2.13.5

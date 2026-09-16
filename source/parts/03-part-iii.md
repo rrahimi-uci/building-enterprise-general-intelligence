@@ -74,7 +74,13 @@ report = platform.test(agent).simulate("supplier-onboarding-regression")
 platform.release(agent, require=["quality", "security", "cost", "rollback"])
 ```
 
-The fluent API is convenience. The compiled contracts, policy decisions, tool/effect evidence, traces, and release manifest are the stable interface.
+This is deliberately platform pseudocode, not a claim that the OpenAI Agents
+SDK exposes `platform.agent`, `attach_skill`, or `platform.release` with these
+method names. The repository's checked implementation uses a provider-neutral
+`AgentRuntime` and translates its request into the pinned Agents SDK at the
+adapter boundary. The fluent API is convenience. The compiled contracts,
+policy decisions, tool/effect evidence, traces, and release manifest are the
+stable interface.
 
 ## Golden path
 

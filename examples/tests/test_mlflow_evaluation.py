@@ -17,15 +17,18 @@ def test_unknown_supplier_escalates_rather_than_guessing():
 
 def test_the_scorers_are_the_ones_actually_invoked():
     # The predicates used to be re-implemented inside evaluate(), so a broken
-    # scorer scored perfectly. Replacing a scorer must move the reported number.
+    # scorer scored perfectly. Replacing a registered scorer must move the
+    # metric produced by MLflow's evaluation harness.
     import examples.observability.mlflow_evaluation as m
 
-    class AlwaysFails:
-        name = "status_is_correct"
-        def __call__(self, **kwargs): return False
+    from mlflow.genai.scorers import scorer
+
+    @scorer(name="status_is_correct")
+    def always_fails(outputs: dict, expectations: dict) -> bool:
+        return False
 
     original = m.SCORERS
-    m.SCORERS = (AlwaysFails(), original[1])
+    m.SCORERS = (always_fails, original[1])
     try:
         assert m.evaluate()["status_is_correct"] == 0.0
     finally:

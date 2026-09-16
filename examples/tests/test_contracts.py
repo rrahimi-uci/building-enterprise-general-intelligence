@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from decimal import Decimal
 
 import pytest
 from pydantic import ValidationError
@@ -51,10 +52,13 @@ def test_step_request_pins_everything_a_replay_needs():
 def test_plan_nodes_must_declare_their_own_bounds():
     SkillRequirement(capability="screen_supplier", purpose="onboarding",
                      region="eu", maximum_risk=2)
-    node = PlanNode(id="n1", capability="lookup", maximum_cost_usd=0.25,
+    node = PlanNode(id="n1", capability="lookup", maximum_cost_usd=Decimal("0.25"),
                     maximum_attempts=2, risk_class=1)
     # Every node carries its own cost, attempt, and risk bounds, so a plan cannot
     # be approved without the reviewer seeing what each step may spend.
-    assert (node.maximum_cost_usd, node.maximum_attempts) == (0.25, 2)
+    assert (node.maximum_cost_usd, node.maximum_attempts) == (Decimal("0.25"), 2)
+    with pytest.raises(ValidationError, match="Decimal"):
+        PlanNode(id="n-float", capability="lookup", maximum_cost_usd=0.25,
+                 maximum_attempts=2, risk_class=1)
     with pytest.raises(ValidationError):
         PlanNode(id="n2", capability="lookup")

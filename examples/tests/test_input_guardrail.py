@@ -7,7 +7,7 @@ from examples.security.input_guardrail import run
 async def test_override_attempt_is_blocked_before_any_tool_runs():
     # The script would issue a refund if the guardrail let the run proceed.
     model = ScriptedModel([
-        ToolCall("issue_refund", {"order_id": "A-1", "amount_usd": 5000.0}),
+        ToolCall("issue_refund", {"order_id": "A-1", "amount_usd": "5000.00"}),
         Say("done"),
     ])
     allowed, result = await run(
@@ -21,7 +21,7 @@ async def test_override_attempt_is_blocked_before_any_tool_runs():
 
 async def test_legitimate_request_proceeds():
     model = ScriptedModel([
-        ToolCall("issue_refund", {"order_id": "A-2", "amount_usd": 20.0}),
+        ToolCall("issue_refund", {"order_id": "A-2", "amount_usd": "20.00"}),
         Say("Refunded 20.00 for A-2."),
     ])
     allowed, result = await run("Please refund order A-2 for $20", model=model)

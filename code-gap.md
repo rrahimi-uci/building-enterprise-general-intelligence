@@ -5,7 +5,7 @@
 **Course alignment:** *Building Enterprise-Grade Agentic Systems — Course*, 14 lessons
 **Scope:** one cumulative mortgage case across Book Chapters 1–28, cross-mapped to the 14 course lessons
 **Audit date:** 2026-09-16
-**Status:** corrected implementation roadmap; the foundation slice for `C01`–`C03` is now implemented on the migration branch, while `C04`–`C28` remain planned
+**Status:** corrected implementation roadmap; the foundation slice for `C01`–`C03` and the targeted C24 OpenAI/Agents SDK/MLflow grounding slice are implemented on this branch, while the remaining C04–C28 capabilities remain planned
 
 > **Version resolution.** The request names v2.0.1, but the attached source identifies itself throughout as Book v2.1.0. This revision treats the supplied v2.1.0 file as the authoritative baseline. If v2.0.1 was intentional, compare that source before implementation and update this roadmap rather than assuming the editions are equivalent.
 
@@ -62,9 +62,9 @@ meaning for a shared identifier.
 
 ## What was reviewed
 
-The review covered the supplied Book v2.1.0 Markdown, the 14-lesson course, the original `code-gap.md`, and the public API names referenced by the book. Static extraction found 54 Python fenced snippets in the book; all parse as Python syntax when considered individually, but many are teaching excerpts rather than standalone programs. Syntax validity therefore does not prove that imports, names, external services, or end-to-end behavior work.
+The review covered the supplied Book v2.1.0 Markdown, the 14-lesson course, the original `code-gap.md`, the repository implementation, and the public API names referenced by the book. Static extraction found 54 Python fenced snippets in the original book; all parse as Python syntax when considered individually, but many are teaching excerpts rather than standalone programs. Syntax validity therefore does not prove that imports, names, external services, or end-to-end behavior work. The implementation audit runs the pinned offline environment and tests the provider boundaries with fakes or the scripted Agents SDK model.
 
-The supplied book makes the following implementation claims in Appendix I: a `northstar` package, a supplier-onboarding demo, 19 deterministic tests, and two optional adapter smoke tests. No repository or release package accompanied this review, so those claims cannot be independently executed here. The original roadmap’s statement that there are “23 registered, behavior-tested examples” is therefore removed as unverified.
+Appendix I originally described a `northstar` package and supplier-onboarding demo that do not match the repository’s canonical `mortgage_case` package. The appendix is now corrected to distinguish the framework-neutral architecture from the implemented mortgage slice. The registry and generated reports, rather than hand-maintained prose counts, are authoritative for the complete example suite.
 
 ## Bugs and design defects corrected across both critique passes
 
@@ -77,7 +77,7 @@ The supplied book makes the following implementation claims in Appendix I: a `no
 | Major | The original Chapter 2 stage introduced a protected supplier creation before approvals, durable effects, and identity were taught. | Early mortgage checkpoints remain read-only or draft-only. The canonical protected LOS mutation is introduced only after approval, durability, identity, and effect semantics exist. |
 | Major | A mortgage case is a high-impact lending context, but the roadmap had no explicit boundary preventing model-owned approve/deny decisions. | Final lending decisions, eligibility, authoritative calculations, and adverse-action reasons are human/domain-service responsibilities and are executable negative-test invariants. |
 | Major | “OpenAI SDK” and “OpenAI agentic SDK” were not separated by package or role. | The roadmap distinguishes the OpenAI Python SDK (`openai`) from the OpenAI Agents SDK (`openai-agents`). “OpenAI Agentic SDK” is not treated as a third library. |
-| Major | The source gives `openai>=2.25.0`, which is a compatibility floor rather than a reproducible pin. | The manifest records the supported range, while the lock file and release bundle record the exact resolved package and transitive dependency versions. |
+| Major | The source gives `openai>=2.25.0`, which does not match the pinned OpenAI Agents SDK 0.22.2 environment (`openai-agents` declares the compatible OpenAI Python SDK 3.x range). | The offline profile now pins `openai==3.13.0` explicitly, and the adapter contract test proves the Responses API request shape without a network call. |
 | Major | Model-extracted values were not cleanly separated from verified facts and deterministic mortgage calculations. | `ExtractedFactCandidate`, `VerifiedEvidence`, `CalculationResult`, and `UnderwritingRecommendation` have different owners and acceptance rules. Money and ratios use `Decimal`, not binary floating point. |
 | Major | Mortgage PII, document sensitivity, and fair-lending risks were not addressed. | All fixtures are synthetic; SSNs/account numbers are tokenized; raw document bytes stay outside prompts and traces; protected attributes are excluded from runtime decisions and isolated, when authorized, for governed fairness evaluation only. |
 | Major | MLflow could be read as the audit system or as permission to capture prompts automatically. | MLflow is diagnostic/evaluation infrastructure only. Sensitive input/output capture is off by default, and audit/effect/approval evidence remains in separate authoritative stores. |
@@ -270,9 +270,9 @@ The course has 14 lessons, while the supplied book has 28 chapters. The executab
 | --- | --- | --- |
 | Python 3.11+ | Domain contracts, deterministic workflow model, adapters, fixtures, CLI, and tests | Replayable workflow code cannot read the clock, call I/O, or generate uncontrolled randomness |
 | Pydantic 2 | Public/internal schemas and validation | A valid schema is not proof of truth, authorization, or acceptance |
-| OpenAI Python SDK (`openai`) | Optional direct Responses API baseline and provider adapter | Does not own tools, workflow, policy, effects, human action authorizations, or durable state |
+| OpenAI Python SDK (`openai==3.13.0`) | Optional direct Responses API baseline and provider adapter | Does not own tools, workflow, policy, effects, human action authorizations, or durable state |
 | OpenAI Agents SDK (`openai-agents==0.22.2`) | `Agent`, `Runner`, function tools, structured output, local handoffs, limits, HITL state, and SDK tracing inside `AgentRuntime` | Does not own enterprise workflow truth, connector credentials, lending decisions, or audit |
-| MLflow (`mlflow==3.15.2`) | Local/remote traces, experiments, datasets, scorers, comparisons, and evaluation evidence | Not the action-authorization store, policy source, effect ledger, LOS, or audit ledger |
+| MLflow (`mlflow==3.15.2`) | Local/remote traces, experiments, datasets, scorers, comparisons, and evaluation evidence; its OpenAI integration also records Agents SDK spans when explicitly enabled | Not the action-authorization store, policy source, effect ledger, LOS, or audit ledger |
 | OpenTelemetry-compatible context | Cross-process trace propagation and semantic span envelope | Trace sampling or loss cannot erase required audit evidence |
 | SQLite/in-memory stores | Deterministic local teaching implementation | Clearly labeled as test stores, not production persistence claims |
 | Durable workflow abstraction | Pure reducer and activity contracts in required offline path | A production adapter may use Temporal, DBOS, Restate, or another engine after conformance tests |
@@ -291,8 +291,7 @@ Do not use “OpenAI SDK” when the specific package matters, and do not introd
 
 ### Reproducibility rules
 
-- Keep the source compatibility floor `openai>=2.25.0` only in the compatibility declaration if required by the chosen Agents SDK features; record the exact resolved `openai` version in the lock file and release manifest.
-- Pin `openai-agents==0.22.2` and `mlflow==3.15.2` for the Book v2.1.0 reproduction profile, then verify their transitive compatibility in CI.
+- Pin `openai==3.13.0`, `openai-agents==0.22.2`, and `mlflow==3.15.2` for the Book v2.1.0 offline reproduction profile, then verify their transitive compatibility in CI. Do not describe the old `openai>=2.25.0` floor as the supported runtime baseline for this profile.
 - Separate extras: `offline`, `openai`, `agents`, `mlflow`, `protocols`, and `all`.
 - The mandatory test job uses the scripted model and synthetic connectors. Live OpenAI and remote MLflow jobs are opt-in and never the only evidence.
 - Record Python, OS, package lock digest, model route, tool schema, prompt/Skill, policy, dataset, scorer, and workflow build in every release manifest.
@@ -467,10 +466,10 @@ The anchor fixture is used for the narrative and most fault demonstrations. `eva
 
 | Evidence class | What the supplied material shows | What remains unproven |
 | --- | --- | --- |
-| Verified in supplied Markdown | 28 chapter headings, 54 syntactically parseable Python fences, OpenAI Agents SDK 0.22.2 baseline, OpenAI Python >=2.25.0 floor, MLflow 3.15.2 baseline | Runtime imports, package installation, network calls, end-to-end behavior, generated artifacts |
+| Verified in supplied Markdown | 28 chapter headings, 54 syntactically parseable Python fences, OpenAI Agents SDK 0.22.2 baseline, MLflow 3.15.2 baseline | Runtime imports, package installation, network calls, end-to-end behavior, generated artifacts |
 | Verified defect in supplied Markdown | Initial agent listing references write/email tools not defined in that listing; cumulative narrative is supplier onboarding | A runnable mortgage baseline and chapter-by-chapter mortgage progression |
-| Claimed by Appendix I | `northstar` package, supplier demo, 19 deterministic tests, two optional adapter smoke tests | Repository contents and test results; repository was not supplied |
-| Implemented foundation slice | `mortgage_case` package, `C01`–`C03`, offline scenarios, optional OpenAI/Agents SDK adapter | 16 behavior/contract tests pass locally; later checkpoint composition remains unproven |
+| Corrected implementation baseline | `mortgage_case` package, `C01`–`C03`, offline scenarios, direct OpenAI Responses contract, OpenAI Agents SDK runtime, and MLflow Agent tracing/evaluation examples | Live provider calls, later checkpoint composition, and production tracking deployment remain unproven |
+| Implemented foundation slice | `mortgage_case` package, `C01`–`C03`, offline scenarios, optional OpenAI/Agents SDK adapters | 19 focused mortgage tests and the registered example suite are validated locally on this branch; later checkpoint composition remains unproven |
 | Remaining target of this roadmap | `C04`–`C28`, durable workflow, identity, effects, security, MLflow, evaluation, release, and capacity extensions | Implementation remains to be created and reviewed |
 
 ## Progressive-hardening dependency rule
