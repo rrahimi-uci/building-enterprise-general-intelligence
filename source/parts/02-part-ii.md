@@ -248,7 +248,7 @@ Evidence anchors: CLOUDEVENTS. Full URLs, authority, version, and scope appear i
 
 ### CloudEvents and outbox contracts
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -812,7 +812,7 @@ Working memory is run-scoped; long-term memory is a governed write with subject,
 
 ### Auditable context projection
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -843,7 +843,7 @@ class ContextManifest(BaseModel):
 
 ### Cross-boundary artifact adoption policy
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations

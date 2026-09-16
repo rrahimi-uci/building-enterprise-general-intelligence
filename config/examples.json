@@ -40,6 +40,17 @@
       ]
     },
     {
+      "id": "governed-tool-gateway",
+      "path": "examples/foundations/governed_tool_gateway.py",
+      "language": "python",
+      "title": "A readable Tool Gateway with validation, authorization, and effect idempotency",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_governed_tool_gateway.py"
+      ],
+      "libraries": []
+    },
+    {
       "id": "effect-idempotency",
       "path": "examples/foundations/effect_idempotency.py",
       "language": "python",

@@ -123,17 +123,17 @@ Together, these principles establish a simple operating contract: agents provide
 ## Appendices
 
 - A. Pattern Selection Decision Tree and Catalog Index
-- B. Failure Triage and Operator Runbooks
-- C. Platform Contracts Quick Reference
-- D. Framework Landscape
-- E. Research Implications
-- F. Known Limitations and Enforced Mitigations
-- G. Enterprise Adoption Roadmap
+- B. Failure triage and operator runbooks
+- C. Platform contracts quick reference
+- D. Framework landscape
+- E. Research implications
+- F. Known limits and enforced mitigations
+- G. Enterprise adoption roadmap
 - H. Glossary
 - I. Companion Implementation Guide: Northstar Reference
-- J. Coding-Agent Prompts and Acceptance Criteria
+- J. Coding-agent prompt and acceptance criteria
 - K. References
-- L. Capacity, Resilience, and Release Acceptance
+- L. Capacity, resilience, and release acceptance
 
 # PART I — FOUNDATIONS
 
@@ -155,7 +155,7 @@ Almost every enterprise agent begins as a script that works on the first try. It
 is worth looking at one honestly, because the gap between it and a production
 system is the subject of this entire book — and the gap is not intelligence.
 
-PYTHON · the prototype, and it genuinely works
+🐍 · the prototype, and it genuinely works
 
 ```python
 from agents import Agent, Runner
@@ -556,7 +556,7 @@ Evidence anchors: NIST-GAI; REACT. Full URLs, authority, version, and scope appe
 
 ### Provider-neutral agent-step contracts
 
-PYTHON · Provider-neutral agent-step and platform contracts
+🐍 · Provider-neutral agent-step and platform contracts
 
 ```python
 class EvidenceRef(BaseModel):
@@ -669,6 +669,10 @@ The sequence above is the chapter in one line, but it only becomes useful when
 you can see what each gate rejects. Here is a single proposal from Northstar,
 and what happens to it.
 
+The diagram establishes the order. The table below is the single operational
+summary, placed after the concrete proposal so each rejection is tied to a
+specific field or state rather than repeated as abstract gate descriptions.
+
 JSON · what the model actually emits
 
 ```json
@@ -691,15 +695,29 @@ JSON · what the model actually emits
 | **Verify** | Did the effect actually land, and does it match? | A timeout, which resolves to unknown rather than failed |
 | **Accept** | Are the run's obligations discharged? | Sanctions evidence older than policy allows |
 
-Two things are worth noticing. First, **validate and authorize are separate
-gates**, and conflating them is the most common mistake in this chapter's
-territory: the proposal above is perfectly well-formed and may still be
-forbidden. Schema validity is about shape; authorization is about permission.
+Two distinctions are important here.
 
-Second, the proposal carries `expected_version: 4`. If the supplier record has
-moved to version 5 since the model read it, the commit fails rather than
-silently overwriting someone else's change. The model is allowed to be stale;
-it is not allowed to be stale *and* authoritative.
+First, validation and authorization answer different questions. A proposal can
+be perfectly well-formed and still be forbidden. Validation asks whether the
+request has the correct structure, types, required fields, and acceptable
+values. Authorization asks whether this specific caller is permitted to perform
+this specific action on this specific resource. Passing validation never implies
+permission to act.
+
+Second, the proposal is based on a specific version of business state. The field
+`expected_version: 4` means the model made its decision after reading version 4
+of the supplier record. If another process updates that record to version 5
+before the action is committed, the write should be rejected and the latest
+state reconsidered rather than silently overwriting the newer change.
+
+This is an important principle for agentic systems:
+
+> The model is allowed to reason from stale information; stale reasoning is not allowed to become an authoritative write.
+
+Together, these controls protect two different boundaries: authorization
+prevents an invalid actor from making a valid-looking change, while version
+checking prevents a valid actor from committing a decision based on outdated
+state.
 
 ### Deterministic acceptance
 
@@ -758,14 +776,6 @@ autonomy increases**.
 | --- |
 | **COMMON PITFALL**  Treating schema validity as correctness. A response that parses cleanly can still name a stale record, a resource the caller cannot see, or an amount nobody approved. Schema validation rejects malformed proposals; it says nothing about whether the proposal should be allowed. Keep the two checks separate and run both. |
 
-## Grounding, corrections, and evidence boundary
-
-| **Claim or correction** | **Grounded statement** | **Source IDs** |
-| --- | --- | --- |
-| Exactly-once wording | The recommendation is effect-level idempotency plus reconciliation under at-least-once delivery—not an end-to-end exactly-once guarantee. Timeout after dispatch is unknown until proved otherwise. | CLOUDEVENTS; OUTBOX |
-
-Evidence anchors: CLOUDEVENTS; OUTBOX. Full URLs, authority, version, and scope appear in Appendix K.
-
 ## Pattern reference — Tool Use
 
 |  |
@@ -813,7 +823,7 @@ The model proposes ToolIntent; the Tool Gateway validates the exact tool version
 ## Implementation reference
 
 
-PYTHON · Bounded agent loop with a typed tool
+🐍 · Bounded agent loop with a typed tool
 
 ```python
 class SupplierStatus(BaseModel):
@@ -839,12 +849,17 @@ def lookup_supplier(supplier_id: str) -> str:
 
 
 def build_agent() -> Agent:
+    # Keep each behavioral instruction explicit and reviewable. These are
+    # model-facing hints, not a substitute for gateway authorization.
+    instructions = "\n".join(
+        [
+            "Answer questions about supplier onboarding.",
+            "Always call lookup_supplier before making a claim about a record.",
+        ]
+    )
     return Agent(
         name="Supplier onboarding",
-        instructions=(
-            "Answer questions about supplier onboarding. "
-            "Always call lookup_supplier before making a claim about a record."
-        ),
+        instructions=instructions,
         tools=[lookup_supplier],
         # max_turns on the run, plus a declared output type, are what make this
         # a bounded loop rather than an open-ended conversation.
@@ -864,75 +879,247 @@ async def run(question: str, *, model=None) -> SupplierStatus:
 
 ### Governed Tool Gateway
 
-PYTHON · implementation excerpt
+The first listing shows the model-facing loop. This second listing shows the
+platform-facing boundary that receives its proposal. Every instruction is on
+its own line and the comments call out the decisions that must remain
+deterministic. The in-memory ledger keeps the example runnable offline;
+production persists these transitions atomically with the downstream effect.
+
+🐍 · A readable Tool Gateway with validation, authorization, and effect idempotency
 
 ```python
 from __future__ import annotations
-from dataclasses import dataclass
-from datetime import datetime, timezone
+
+from dataclasses import dataclass, field
 from typing import Awaitable, Callable, Literal
-from pydantic import BaseModel, Field
-from .approvals import ActionProposal, ApprovalGrant, verify_approval
-from .effects import EffectOutcomeUnknown, InMemoryEffectLedger
 
-class ToolManifest(BaseModel):
-    tool_id:str; version:str; description:str
-    risk_class:int=Field(ge=0,le=4); mutating:bool; required_action:str
-    timeout_seconds:float=Field(gt=0,le=300); approval_required:bool=False
-    idempotency_required:bool=False
 
-class InvocationContext(BaseModel):
-    tenant_id:str; subject_id:str; actor_id:str; run_id:str; purpose:str
-    allowed_actions:frozenset[str]; eligible_tool_versions:frozenset[str]
-    policy_digest:str="policy:unspecified"; region:str="unspecified"
+Connector = Callable[
+    [dict[str, object], str | None],
+    Awaitable[dict[str, object]],
+]
 
-class ToolResult(BaseModel):
-    status:Literal["succeeded","declined","unknown"]
-    output:dict[str,object]=Field(default_factory=dict); effect_key:str|None=None
+
+class ToolGatewayError(RuntimeError):
+    """The gateway rejected the proposal before or during execution."""
+
+
+class StaleResource(ToolGatewayError):
+    """The proposal was based on an older resource version."""
+
+
+class EffectOutcomeUnknown(ToolGatewayError):
+    """Dispatch may have happened, but its outcome is not yet proven."""
+
+
+@dataclass(frozen=True)
+class ToolManifest:
+    """The capability contract published by the platform."""
+
+    tool_id: str
+    version: str
+    description: str
+    input_schema: str
+    required_action: str
+    mutating: bool
+    idempotency_required: bool = False
+
+    @property
+    def tool_version(self) -> str:
+        return f"{self.tool_id}@{self.version}"
+
+
+@dataclass(frozen=True)
+class ToolIntent:
+    """A model proposal; it carries intent, not authority."""
+
+    tool_version: str
+    arguments: dict[str, object]
+    expected_resource_version: int | None = None
+    logical_effect_key: str | None = None
+
+
+@dataclass(frozen=True)
+class InvocationContext:
+    """The current, platform-issued authority and resource snapshot."""
+
+    allowed_actions: frozenset[str]
+    eligible_tool_versions: frozenset[str]
+    actual_resource_version: int | None = None
+
+
+@dataclass(frozen=True)
+class ToolResult:
+    status: Literal["succeeded", "unknown"]
+    output: dict[str, object] = field(default_factory=dict)
+    effect_key: str | None = None
+
+
+@dataclass
+class EffectRecord:
+    """The durable record a real implementation would store transactionally."""
+
+    logical_effect_key: str
+    intent: dict[str, object]
+    state: Literal["pending", "executing", "committed", "unknown"] = "pending"
+    receipt: dict[str, object] | None = None
+
+
+class InMemoryEffectLedger:
+    """Keep one logical effect and its receipt for this runnable example."""
+
+    def __init__(self) -> None:
+        self._records: dict[str, EffectRecord] = {}
+
+    def begin(
+        self,
+        logical_effect_key: str,
+        intent: dict[str, object],
+    ) -> EffectRecord:
+        existing = self._records.get(logical_effect_key)
+        if existing is not None:
+            if existing.intent != intent:
+                raise ToolGatewayError("effect key was reused for a different intent")
+            return existing
+
+        record = EffectRecord(logical_effect_key, intent)
+        self._records[logical_effect_key] = record
+        return record
+
+    def mark_executing(self, logical_effect_key: str) -> None:
+        self._records[logical_effect_key].state = "executing"
+
+    def mark_unknown(self, logical_effect_key: str) -> None:
+        self._records[logical_effect_key].state = "unknown"
+
+    def mark_committed(
+        self,
+        logical_effect_key: str,
+        receipt: dict[str, object],
+    ) -> EffectRecord:
+        record = self._records[logical_effect_key]
+        record.state = "committed"
+        record.receipt = receipt
+        return record
+
+
+@dataclass(frozen=True)
+class RegisteredTool:
+    manifest: ToolManifest
+    connector: Connector
+
 
 class ToolGateway:
-    def __init__(self,effect_ledger:InMemoryEffectLedger|None=None)->None:
-        self._tools:dict[str,RegisteredTool]={}; self._effects=effect_ledger or InMemoryEffectLedger()
-    def register(self,manifest:ToolManifest,connector:Connector)->None:
-        key=f"{manifest.tool_id}@{manifest.version}"
-        if key in self._tools: raise ValueError(f"tool already registered: {key}")
+    """Validate, authorize, and execute one typed proposal."""
+
+    def __init__(self, effect_ledger: InMemoryEffectLedger | None = None) -> None:
+        self._tools: dict[str, RegisteredTool] = {}
+        self._effects = effect_ledger or InMemoryEffectLedger()
+
+    def register(self, manifest: ToolManifest, connector: Connector) -> None:
+        """Register an immutable tool version with its connector."""
+
+        if manifest.tool_version in self._tools:
+            raise ToolGatewayError("tool version is already registered")
         if manifest.mutating and not manifest.idempotency_required:
-            raise ValueError("mutating tools must declare idempotency_required")
-        self._tools[key]=RegisteredTool(manifest,connector)
-    def discover(self,ctx:InvocationContext)->tuple[ToolManifest,...]:
-        return tuple(item.manifest for key,item in sorted(self._tools.items()) if key in ctx.eligible_tool_versions and item.manifest.required_action in ctx.allowed_actions)
-    async def invoke(self,*,ctx:InvocationContext,tool_version:str,arguments:dict[str,object],logical_effect_key:str|None=None,proposal:ActionProposal|None=None,approval:ApprovalGrant|None=None,actual_resource_version:int|None=None)->ToolResult:
-        if tool_version not in ctx.eligible_tool_versions: raise PermissionError("tool is not eligible for this run node")
-        item=self._tools.get(tool_version)
-        if item is None: raise LookupError("eligible tool version is not registered")
-        m=item.manifest
-        if m.required_action not in ctx.allowed_actions: raise PermissionError("required action is outside delegated authority")
-        if m.approval_required:
-            if proposal is None or approval is None or actual_resource_version is None: raise PermissionError("proposal-bound approval is required")
-            if proposal.model_dump(mode="json",exclude={"expires_at"}) != ActionProposal(tenant_id=ctx.tenant_id,run_id=ctx.run_id,actor_id=ctx.actor_id,tool_version=tool_version,logical_effect_key=logical_effect_key or "",arguments=arguments,expected_resource_version=proposal.expected_resource_version,policy_digest=ctx.policy_digest,expires_at=proposal.expires_at).model_dump(mode="json",exclude={"expires_at"}): raise PermissionError("proposal does not match invocation")
-            verify_approval(proposal,approval,now=datetime.now(timezone.utc),actual_resource_version=actual_resource_version)
-        if not m.mutating:
-            return ToolResult(status="succeeded",output=await item.connector(arguments,None))
-        if not logical_effect_key: raise ValueError("mutating tools require a stable logical effect key")
-        intent={"tool":tool_version,"arguments":arguments,"run_id":ctx.run_id,"tenant_id":ctx.tenant_id}
-        effect=self._effects.begin(logical_effect_key,intent)
-        if effect.state=="committed": return ToolResult(status="succeeded",output=effect.receipt or {},effect_key=logical_effect_key)
-        if effect.state in {"executing","unknown","intervention_required"}: raise EffectOutcomeUnknown(logical_effect_key)
-        if effect.state=="declined": return ToolResult(status="declined",output=effect.receipt or {},effect_key=logical_effect_key)
-        self._effects.mark_executing(logical_effect_key,f"req:{logical_effect_key}")
-        try: output=await item.connector(arguments,logical_effect_key)
+            raise ToolGatewayError("mutating tools must declare idempotency")
+        self._tools[manifest.tool_version] = RegisteredTool(manifest, connector)
+
+    def discover(self, context: InvocationContext) -> tuple[ToolManifest, ...]:
+        """Expose only eligible tools whose actions are currently delegated."""
+
+        return tuple(
+            item.manifest
+            for key, item in sorted(self._tools.items())
+            if key in context.eligible_tool_versions
+            and item.manifest.required_action in context.allowed_actions
+        )
+
+    async def invoke(
+        self,
+        *,
+        intent: ToolIntent,
+        context: InvocationContext,
+    ) -> ToolResult:
+        """Run a proposal only after all deterministic checks pass."""
+
+        # Eligibility is a platform decision, not something the model can add
+        # to its own proposal.
+        if intent.tool_version not in context.eligible_tool_versions:
+            raise ToolGatewayError("tool version is not eligible for this run")
+
+        registered = self._tools.get(intent.tool_version)
+        if registered is None:
+            raise ToolGatewayError("eligible tool version is not registered")
+
+        manifest = registered.manifest
+        if manifest.required_action not in context.allowed_actions:
+            raise ToolGatewayError("required action is outside delegated authority")
+
+        # Optimistic concurrency prevents a well-authorized caller from
+        # overwriting state that changed after the model formed its proposal.
+        if intent.expected_resource_version is not None:
+            if context.actual_resource_version != intent.expected_resource_version:
+                raise StaleResource("resource version changed before commit")
+
+        if not manifest.mutating:
+            output = await registered.connector(intent.arguments, None)
+            return ToolResult(status="succeeded", output=output)
+
+        if not intent.logical_effect_key:
+            raise ToolGatewayError("mutating tools require a logical effect key")
+
+        effect_intent = {
+            "tool_version": intent.tool_version,
+            "arguments": intent.arguments,
+            "expected_resource_version": intent.expected_resource_version,
+        }
+        record = self._effects.begin(intent.logical_effect_key, effect_intent)
+
+        # A replay of a committed effect returns its original receipt instead
+        # of dispatching the downstream mutation a second time.
+        if record.state == "committed":
+            return ToolResult(
+                status="succeeded",
+                output=record.receipt or {},
+                effect_key=intent.logical_effect_key,
+            )
+
+        # Unknown and in-flight outcomes need reconciliation or intervention;
+        # blindly retrying them would defeat the idempotency boundary.
+        if record.state in {"executing", "unknown"}:
+            raise EffectOutcomeUnknown(intent.logical_effect_key)
+
+        self._effects.mark_executing(intent.logical_effect_key)
+        try:
+            receipt = await registered.connector(
+                intent.arguments,
+                intent.logical_effect_key,
+            )
         except Exception as exc:
-            self._effects.mark_unknown(logical_effect_key)
-            raise EffectOutcomeUnknown(logical_effect_key) from exc
-        committed=self._effects.mark_committed(logical_effect_key,output)
-        return ToolResult(status="succeeded",output=committed.receipt or {},effect_key=logical_effect_key)
+            self._effects.mark_unknown(intent.logical_effect_key)
+            raise EffectOutcomeUnknown(intent.logical_effect_key) from exc
+
+        committed = self._effects.mark_committed(
+            intent.logical_effect_key,
+            receipt,
+        )
+        return ToolResult(
+            status="succeeded",
+            output=committed.receipt or {},
+            effect_key=intent.logical_effect_key,
+        )
 ```
 
 ## Debugging playbook
 
-1. Compare the raw model proposal with the validated command and list rejected fields.
-2. Inspect the policy decision and resource version immediately before commit.
-3. Replay the same logical mutation and verify one receipt.
+* Trace the intent-to-execution path. Compare the model’s raw proposal with the
+  validated command, identifying any rejected, modified, or defaulted fields.
+* Verify the execution boundary. Inspect the final authorization and policy
+  decision, approval state, and resource version immediately before the side
+  effect is committed.
+* Test idempotency. Replay the same logical mutation and confirm that it
+  produces no duplicate side effect and resolves to the same durable receipt.
 
 ## Production checklist
 
@@ -1074,7 +1261,7 @@ AgentStepRequest pins run and node identity, state version, agent and model rout
 
 ## Bounded Python adapter
 
-PYTHON · One bounded agent step behind a platform-owned adapter
+🐍 · One bounded agent step behind a platform-owned adapter
 
 ```python
 async def execute_step(request, context: PlatformContext, *, model=None) -> dict[str, object]:
@@ -1392,7 +1579,7 @@ Evidence anchors: CLOUDEVENTS. Full URLs, authority, version, and scope appear i
 
 ### Core platform data contracts
 
-PYTHON · Provider-neutral agent-step and platform contracts
+🐍 · Provider-neutral agent-step and platform contracts
 
 ```python
 """The provider-neutral contracts every agent step and platform API shares.
@@ -1466,7 +1653,7 @@ class CandidatePlan(BaseModel):
 
 ### CloudEvents and outbox contracts
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -1599,7 +1786,7 @@ A retrieved passage should never reach a model without the metadata that decides
 
 Entities, relationships, dependencies, and the organization's own semantics. Traversal answers questions similarity cannot: *what depends on this system three hops away?* No wording links a payments API to a regulatory filing obligation, so no embedding will connect them. The graph does.
 
-PYTHON · Traversal answering a question similarity cannot
+🐍 · Traversal answering a question similarity cannot
 
 ```python
 @dataclass
@@ -1654,7 +1841,7 @@ The honest caveat: ontologies are where enterprise knowledge programmes go to di
 
 The core of the layer. A rule an agent reads is documentation; a rule the platform evaluates at the effect boundary is a control. The move from prose to knowledge is not parsing — it is committing to a shape.
 
-PYTHON · A policy sentence as a typed, scoped rule with provenance
+🐍 · A policy sentence as a typed, scoped rule with provenance
 
 ```python
 Modality = Literal["obligation", "permission", "prohibition"]
@@ -1714,7 +1901,7 @@ Scope is required, not optional. A rule whose applicability is implicit will be 
 
 Enforcement then happens where intent becomes action:
 
-PYTHON · A policy rule enforced at the effect boundary
+🐍 · A policy rule enforced at the effect boundary
 
 ```python
 class PolicyViolation(Exception):
@@ -1787,7 +1974,7 @@ Entities, fields, definitions, ownership, lineage, sensitivity, and access const
 
 What the agent may do, with the consequences attached. A tool list says what exists; a capability catalog says whether an action mutates, what must be true first, who may invoke it, and whether a retry is safe.
 
-PYTHON · Discovering a capability with its effects and prerequisites
+🐍 · Discovering a capability with its effects and prerequisites
 
 ```python
 Effect = Literal["read", "write", "irreversible"]
@@ -1872,7 +2059,7 @@ Extraction is probabilistic. Verification must not be. The pipeline that works s
 
 **Prove** is the part that decides whether to believe it. The critical move is that verification does not trust the citation a rule carries; it rebuilds the evidence from the raw corpus and compares.
 
-PYTHON · Rebuilding a claim's evidence instead of trusting its citation
+🐍 · Rebuilding a claim's evidence instead of trusting its citation
 
 ```python
 @dataclass(frozen=True)
@@ -1931,7 +2118,7 @@ A model that invents a rule will invent a plausible citation for it, so checking
 
 An enterprise never has one knowledge base. It has a regulator's and its own, last quarter's and this quarter's, one business unit's and another's. Agents must operate across them, and that requires defined operations rather than a merge.
 
-PYTHON · Union, intersection, difference and contradiction over rule sets
+🐍 · Union, intersection, difference and contradiction over rule sets
 
 ```python
 @dataclass(frozen=True)
@@ -2377,7 +2564,7 @@ Working memory is run-scoped; long-term memory is a governed write with subject,
 
 ### Auditable context projection
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -2408,7 +2595,7 @@ class ContextManifest(BaseModel):
 
 ### Cross-boundary artifact adoption policy
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -2549,7 +2736,7 @@ Create from an approved template; attach tools, Skills, context, and memory; con
 
 ## SDK example
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 agent = platform.agent(
@@ -2788,7 +2975,7 @@ Evidence anchors: SLSA; MCP-2026. Full URLs, authority, version, and scope appea
 
 ### Skill manifest and resolver
 
-PYTHON · Resolving a skill version under policy and SemVer precedence
+🐍 · Resolving a skill version under policy and SemVer precedence
 
 ```python
 class SkillRegistry:
@@ -2969,7 +3156,7 @@ Evidence anchors: SLSA; OWASP-CHEAT. Full URLs, authority, version, and scope ap
 
 ### Skill Pack contract
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -3145,7 +3332,7 @@ A bounded controller alternates model decision and governed tool invocation. The
 ## Implementation reference
 
 
-PYTHON · Bounded ReAct loop with an explicit run budget
+🐍 · Bounded ReAct loop with an explicit run budget
 
 ```python
 @dataclass
@@ -3201,7 +3388,7 @@ async def run(question: str, *, budget: RunBudget, model=None) -> str:
 
 ### Bounded ReAct controller
 
-PYTHON · A ReAct controller that owns the budgets
+🐍 · A ReAct controller that owns the budgets
 
 ```python
 class ReActEngine:
@@ -3446,7 +3633,7 @@ The current owner creates a typed transfer containing state references, unresolv
 ## Implementation reference
 
 
-PYTHON · Routing by handoff: transferring ownership, not context
+🐍 · Routing by handoff: transferring ownership, not context
 
 ```python
 refunds = Agent(
@@ -3484,7 +3671,7 @@ async def run(request: str, *, model=None):
 
 ### Deterministic route validation
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -3771,7 +3958,7 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 
 ### Plan IR compiler
 
-PYTHON · Compiling an approved plan into a budget-bounded envelope
+🐍 · Compiling an approved plan into a budget-bounded envelope
 
 ```python
 def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, object]:
@@ -4010,7 +4197,7 @@ A generator creates candidates; deterministic scorers and calibrated evaluators 
 
 ### Bounded evaluator–optimizer
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -4261,7 +4448,7 @@ The workflow persists a proposal-bound ApprovalRequest or InterventionTask, paus
 ## Implementation reference
 
 
-PYTHON · A human approval gate that survives the wait
+🐍 · A human approval gate that survives the wait
 
 ```python
 def proposal_hash(action: str, arguments: dict) -> str:
@@ -4354,7 +4541,7 @@ class PendingApprovals:
 
 ### Proposal-bound approval contract
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -4395,7 +4582,7 @@ def proposal_hash(action: str, destination: str,
 
 ### Executable proposal-bound approval
 
-PYTHON · Verifying an approval grant against this exact proposal
+🐍 · Verifying an approval grant against this exact proposal
 
 ```python
 class ApprovalGrant(BaseModel):
@@ -4686,7 +4873,7 @@ A durable workflow records deterministic decisions and schedules bounded activit
 
 ### Replay-safe workflow reducer
 
-PYTHON · Durable run state as a replayable event fold
+🐍 · Durable run state as a replayable event fold
 
 ```python
 def evolve(state: RunState, event: WorkflowEvent) -> RunState:
@@ -5110,7 +5297,7 @@ These two failures share a root cause: the model is allowed to decide when to st
 
 **Architecture.** Recursion becomes a runtime-governed task graph.
 
-PYTHON · anti-pattern and correction
+🐍 · anti-pattern and correction
 
 ```python
 # Anti-pattern: every child starts fresh, so the ceiling is depth x fan-out.
@@ -5153,7 +5340,7 @@ Everything an agent believes arrives through one of these three channels, and al
 
 **Architecture.** Transcript-as-state becomes State Service → snapshot → prompt.
 
-PYTHON · anti-pattern and correction
+🐍 · anti-pattern and correction
 
 ```python
 # Anti-pattern: the transcript is the record, so whatever survives
@@ -5208,7 +5395,7 @@ context = ContextManifest.project(await state.snapshot(run.id), budget=4_000)
 
 **Architecture.** Transcript → memory becomes candidate → gate → typed record.
 
-PYTHON · anti-pattern and correction
+🐍 · anti-pattern and correction
 
 ```python
 # Anti-pattern: the model decides what is worth remembering, and the write
@@ -5313,7 +5500,7 @@ These two cards are the most expensive in the catalog, because they produce dupl
 
 **Architecture.** Nested retries become classified failure → one schedule → terminal.
 
-PYTHON · anti-pattern and correction
+🐍 · anti-pattern and correction
 
 ```python
 # Anti-pattern: each layer is independently "resilient". 3 x 3 x 2 = 18.
@@ -5351,7 +5538,7 @@ workflow.call(gateway, retry_policy=RetryPolicy(
 
 **Architecture.** timeout → failed → retry becomes timeout → unknown → lookup → decide.
 
-PYTHON · anti-pattern and correction
+🐍 · anti-pattern and correction
 
 ```python
 # Anti-pattern: timeout is treated as proof that nothing happened.
@@ -5396,7 +5583,7 @@ Both cards here concern the moment a system decides that something is allowed, o
 
 **Architecture.** `approved=true` becomes proposal hash → grant → revalidate → commit.
 
-PYTHON · anti-pattern and correction
+🐍 · anti-pattern and correction
 
 ```python
 # Anti-pattern: consent is a flag on the run, detached from what executes.
@@ -5769,7 +5956,7 @@ Collaboration uses durable TaskEnvelope, message, status, artifact, cancellation
 
 ### Durable child-task contract
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -5792,7 +5979,7 @@ class TaskEnvelope(BaseModel):
 
 ### Monotonic child authority
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -6118,7 +6305,7 @@ Evidence anchors: MCP-2026; MCP-AUTH; A2A-101. Full URLs, authority, version, an
 
 ### A2A task envelope
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -6147,7 +6334,7 @@ class A2ATaskEnvelope(BaseModel):
 
 ### MLflow MCP Registry adapter
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -6570,7 +6757,7 @@ Evidence anchors: R11; R15; R16. Full URLs, authority, version, and scope appear
 
 ## Implementation reference
 
-PYTHON · An input guardrail that trips before any tool runs
+🐍 · An input guardrail that trips before any tool runs
 
 ```python
 # Phrases that attempt to re-authorize the agent from inside the content. A real
@@ -6869,7 +7056,7 @@ Evidence anchors: RFC8693; RFC8707. Full URLs, authority, version, and scope app
 
 ### Capability-envelope subset proof
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -7259,7 +7446,7 @@ Evidence anchors: OUTBOX; CLOUDEVENTS. Full URLs, authority, version, and scope 
 ## Implementation reference
 
 
-PYTHON · Effect-level idempotency ledger
+🐍 · Effect-level idempotency ledger
 
 ```python
 class EffectOutcomeUnknown(Exception):
@@ -7291,7 +7478,7 @@ class EffectLedger:
 
 ### Effect-state ledger
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -7555,7 +7742,7 @@ Evidence anchors: OWASP-AGENT; NIST-IR; NIST-RMF; ISO42001; EU-AI-ACT. Full URLs
 
 ### Default-deny URL authorization
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -7587,7 +7774,7 @@ def authorize_url(raw_url: str, allowed_hosts: frozenset[str]) -> tuple[str, tup
 
 ### Scoped operational kill switch
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -7824,7 +8011,7 @@ Evidence anchors: OTEL-GENAI; MLFLOW-TRACE. Full URLs, authority, version, and s
 ## Implementation reference
 
 
-PYTHON · Tracing an agent run with MLflow
+🐍 · Tracing an agent run with MLflow
 
 ```python
 @mlflow.trace(span_type="TOOL")
@@ -7850,7 +8037,7 @@ def handle_request(supplier_id: str) -> str:
 
 ### MLflow tracing integration
 
-PYTHON · Configuring MLflow tracing around a governed agent step
+🐍 · Configuring MLflow tracing around a governed agent step
 
 ```python
 def configure_observability(experiment: str = "northstar-supplier-onboarding") -> None:
@@ -8146,7 +8333,7 @@ Evidence anchors: MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Full URLs, authority, vers
 ## Implementation reference
 
 
-PYTHON · Scoring an agent against a dataset with MLflow
+🐍 · Scoring an agent against a dataset with MLflow
 
 ```python
 # Each case is an incident that actually happened, not an imagined one.
@@ -8201,7 +8388,7 @@ def evaluate() -> dict[str, float]:
 
 ### MLflow trajectory evaluation
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -8614,7 +8801,7 @@ Evidence anchors: SLSA; CISA-SBOM. Full URLs, authority, version, and scope appe
 
 ### Release compatibility check
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -8646,7 +8833,7 @@ def compatible(run: ReleaseManifest, worker: ReleaseManifest) -> bool:
 
 ### Release attestation verification
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -8925,7 +9112,7 @@ Evidence anchors: QUEUEING; MLFLOW-TRACE. Full URLs, authority, version, and sco
 
 ### Admission and capacity permit
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations

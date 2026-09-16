@@ -199,7 +199,7 @@ def add_code_run(p,text,lang,cfg):
 
 def add_code(doc,lang,code,cfg):
     C=cfg['design']['colors']; t=doc.add_table(rows=1,cols=2); t.autofit=False; t.columns[0].width=Inches(.42); t.columns[1].width=Inches(6.42)
-    h=t.rows[0].cells[0]; h.merge(t.rows[0].cells[1]); shade(h,C['navy']); cell_margins(h,45,90,45,90); p=h.paragraphs[0]; p.style='Book Code Label'; p.add_run((lang or 'text').upper())
+    h=t.rows[0].cells[0]; h.merge(t.rows[0].cells[1]); shade(h,C['navy']); cell_margins(h,45,90,45,90); p=h.paragraphs[0]; p.style='Book Code Label'; p.add_run('🐍' if (lang or 'text').lower() == 'python' else (lang or 'text').upper())
     for i,line in enumerate(code.splitlines() or [''],1):
         cells=t.add_row().cells; prevent_row_split(t.rows[-1]); shade(cells[0],'E5ECF3'); shade(cells[1],'F7F9FC'); cell_margins(cells[0],15,55,15,55); cell_margins(cells[1],15,80,15,80)
         lp,rp=cells[0].paragraphs[0],cells[1].paragraphs[0]

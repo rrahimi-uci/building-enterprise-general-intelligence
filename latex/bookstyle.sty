@@ -245,6 +245,24 @@
 \newcommand{\BookTableStart}{\par\vspace{4pt}\begingroup\small\setlength{\LTpre}{2pt}\setlength{\LTpost}{5pt}}
 \newcommand{\BookTableEnd}{\endgroup\par\vspace{2pt}}
 
+% The bundled Liberation fonts do not contain the snake emoji. Keep the
+% canonical Markdown/DOCX label as 🐍 and render an equivalent portable glyph in
+% XeLaTeX without relying on a host emoji font.
+\newcommand{\BookSnake}{%
+  \raisebox{0.05em}{%
+    \begingroup
+    \setlength{\unitlength}{0.1em}%
+    \begin{picture}(11,7)
+      \color{BookTeal}
+      \linethickness{1.3pt}%
+      \qbezier(1,2)(3,6)(5,2)
+      \qbezier(5,2)(7,-2)(9,2)
+      \put(9,2){\circle*{3}}
+    \end{picture}%
+    \endgroup
+  }%
+}
+
 % Code. All colors are readable against CodeBackground.
 \lstdefinestyle{bookcode}{
   basicstyle=\ttfamily\fontsize{7.4}{9.2}\selectfont\color{BookInk},

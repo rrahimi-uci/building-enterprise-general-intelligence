@@ -603,7 +603,7 @@ Evidence anchors: RFC8693; RFC8707. Full URLs, authority, version, and scope app
 
 ### Capability-envelope subset proof
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -997,7 +997,7 @@ Evidence anchors: OUTBOX; CLOUDEVENTS. Full URLs, authority, version, and scope 
 
 ### Effect-state ledger
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -1261,7 +1261,7 @@ Evidence anchors: OWASP-AGENT; NIST-IR; NIST-RMF; ISO42001; EU-AI-ACT. Full URLs
 
 ### Default-deny URL authorization
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -1293,7 +1293,7 @@ def authorize_url(raw_url: str, allowed_hosts: frozenset[str]) -> tuple[str, tup
 
 ### Scoped operational kill switch
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations

@@ -4,6 +4,14 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Chapter 2 review reconciliation and cross-book consistency
+
+- Reworked Chapter 2's deterministic-shell flow so the single gate table follows the concrete proposal, while the surrounding prose explains the distinct validation, authorization, resource-version, and deterministic-acceptance boundaries without repetition.
+- Removed the redundant Chapter 2 grounding subsection and replaced its debugging playbook with an intent-to-execution trace, final-boundary verification, and idempotent-replay checks.
+- Replaced the unreadable, non-runnable Tool Gateway excerpt with a readable, offline-tested example covering tool eligibility, delegated authority, stale-state rejection, durable-effect semantics, and unknown outcomes; all instructions and control decisions are visible line by line.
+- Standardized Python listing labels as 🐍 across the canonical book and generated renderers, including the portable XeLaTeX fallback, and synchronized the examples guide and generated release artifacts.
+- Preserved and verified the authored 8-Part, 28-chapter, 12-appendix table of contents and all reference/cross-reference contracts.
+
 ### Generalized the first-30-page editorial review across the book
 
 - Retitled the book and aligned its audience promise, preface, scope discipline, reproducible-edition explanation, and reference-guide contract with the reviewed direction.

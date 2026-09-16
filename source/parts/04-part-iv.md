@@ -297,7 +297,7 @@ The current owner creates a typed transfer containing state references, unresolv
 
 ### Deterministic route validation
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -759,7 +759,7 @@ A generator creates candidates; deterministic scorers and calibrated evaluators 
 
 ### Bounded evaluator–optimizer
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -1014,7 +1014,7 @@ The workflow persists a proposal-bound ApprovalRequest or InterventionTask, paus
 
 ### Proposal-bound approval contract
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -1660,7 +1660,7 @@ These two failures share a root cause: the model is allowed to decide when to st
 
 **Architecture.** Recursion becomes a runtime-governed task graph.
 
-PYTHON · anti-pattern and correction
+🐍 · anti-pattern and correction
 
 ```python
 # Anti-pattern: every child starts fresh, so the ceiling is depth x fan-out.
@@ -1703,7 +1703,7 @@ Everything an agent believes arrives through one of these three channels, and al
 
 **Architecture.** Transcript-as-state becomes State Service → snapshot → prompt.
 
-PYTHON · anti-pattern and correction
+🐍 · anti-pattern and correction
 
 ```python
 # Anti-pattern: the transcript is the record, so whatever survives
@@ -1758,7 +1758,7 @@ context = ContextManifest.project(await state.snapshot(run.id), budget=4_000)
 
 **Architecture.** Transcript → memory becomes candidate → gate → typed record.
 
-PYTHON · anti-pattern and correction
+🐍 · anti-pattern and correction
 
 ```python
 # Anti-pattern: the model decides what is worth remembering, and the write
@@ -1863,7 +1863,7 @@ These two cards are the most expensive in the catalog, because they produce dupl
 
 **Architecture.** Nested retries become classified failure → one schedule → terminal.
 
-PYTHON · anti-pattern and correction
+🐍 · anti-pattern and correction
 
 ```python
 # Anti-pattern: each layer is independently "resilient". 3 x 3 x 2 = 18.
@@ -1901,7 +1901,7 @@ workflow.call(gateway, retry_policy=RetryPolicy(
 
 **Architecture.** timeout → failed → retry becomes timeout → unknown → lookup → decide.
 
-PYTHON · anti-pattern and correction
+🐍 · anti-pattern and correction
 
 ```python
 # Anti-pattern: timeout is treated as proof that nothing happened.
@@ -1946,7 +1946,7 @@ Both cards here concern the moment a system decides that something is allowed, o
 
 **Architecture.** `approved=true` becomes proposal hash → grant → revalidate → commit.
 
-PYTHON · anti-pattern and correction
+🐍 · anti-pattern and correction
 
 ```python
 # Anti-pattern: consent is a flag on the run, detached from what executes.

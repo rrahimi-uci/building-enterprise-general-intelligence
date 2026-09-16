@@ -18,7 +18,7 @@ Almost every enterprise agent begins as a script that works on the first try. It
 is worth looking at one honestly, because the gap between it and a production
 system is the subject of this entire book — and the gap is not intelligence.
 
-PYTHON · the prototype, and it genuinely works
+🐍 · the prototype, and it genuinely works
 
 ```python
 from agents import Agent, Runner
@@ -495,6 +495,10 @@ The sequence above is the chapter in one line, but it only becomes useful when
 you can see what each gate rejects. Here is a single proposal from Northstar,
 and what happens to it.
 
+The diagram establishes the order. The table below is the single operational
+summary, placed after the concrete proposal so each rejection is tied to a
+specific field or state rather than repeated as abstract gate descriptions.
+
 JSON · what the model actually emits
 
 ```json
@@ -517,15 +521,29 @@ JSON · what the model actually emits
 | **Verify** | Did the effect actually land, and does it match? | A timeout, which resolves to unknown rather than failed |
 | **Accept** | Are the run's obligations discharged? | Sanctions evidence older than policy allows |
 
-Two things are worth noticing. First, **validate and authorize are separate
-gates**, and conflating them is the most common mistake in this chapter's
-territory: the proposal above is perfectly well-formed and may still be
-forbidden. Schema validity is about shape; authorization is about permission.
+Two distinctions are important here.
 
-Second, the proposal carries `expected_version: 4`. If the supplier record has
-moved to version 5 since the model read it, the commit fails rather than
-silently overwriting someone else's change. The model is allowed to be stale;
-it is not allowed to be stale *and* authoritative.
+First, validation and authorization answer different questions. A proposal can
+be perfectly well-formed and still be forbidden. Validation asks whether the
+request has the correct structure, types, required fields, and acceptable
+values. Authorization asks whether this specific caller is permitted to perform
+this specific action on this specific resource. Passing validation never implies
+permission to act.
+
+Second, the proposal is based on a specific version of business state. The field
+`expected_version: 4` means the model made its decision after reading version 4
+of the supplier record. If another process updates that record to version 5
+before the action is committed, the write should be rejected and the latest
+state reconsidered rather than silently overwriting the newer change.
+
+This is an important principle for agentic systems:
+
+> The model is allowed to reason from stale information; stale reasoning is not allowed to become an authoritative write.
+
+Together, these controls protect two different boundaries: authorization
+prevents an invalid actor from making a valid-looking change, while version
+checking prevents a valid actor from committing a decision based on outdated
+state.
 
 ### Deterministic acceptance
 
@@ -584,14 +602,6 @@ autonomy increases**.
 | --- |
 | **COMMON PITFALL**  Treating schema validity as correctness. A response that parses cleanly can still name a stale record, a resource the caller cannot see, or an amount nobody approved. Schema validation rejects malformed proposals; it says nothing about whether the proposal should be allowed. Keep the two checks separate and run both. |
 
-## Grounding, corrections, and evidence boundary
-
-| **Claim or correction** | **Grounded statement** | **Source IDs** |
-| --- | --- | --- |
-| Exactly-once wording | The recommendation is effect-level idempotency plus reconciliation under at-least-once delivery—not an end-to-end exactly-once guarantee. Timeout after dispatch is unknown until proved otherwise. | CLOUDEVENTS; OUTBOX |
-
-Evidence anchors: CLOUDEVENTS; OUTBOX. Full URLs, authority, version, and scope appear in Appendix K.
-
 ## Pattern reference — Tool Use
 
 |  |
@@ -643,75 +653,23 @@ The model proposes ToolIntent; the Tool Gateway validates the exact tool version
 
 ### Governed Tool Gateway
 
-PYTHON · implementation excerpt
+The first listing shows the model-facing loop. This second listing shows the
+platform-facing boundary that receives its proposal. Every instruction is on
+its own line and the comments call out the decisions that must remain
+deterministic. The in-memory ledger keeps the example runnable offline;
+production persists these transitions atomically with the downstream effect.
 
-```python
-from __future__ import annotations
-from dataclasses import dataclass
-from datetime import datetime, timezone
-from typing import Awaitable, Callable, Literal
-from pydantic import BaseModel, Field
-from .approvals import ActionProposal, ApprovalGrant, verify_approval
-from .effects import EffectOutcomeUnknown, InMemoryEffectLedger
-
-class ToolManifest(BaseModel):
-    tool_id:str; version:str; description:str
-    risk_class:int=Field(ge=0,le=4); mutating:bool; required_action:str
-    timeout_seconds:float=Field(gt=0,le=300); approval_required:bool=False
-    idempotency_required:bool=False
-
-class InvocationContext(BaseModel):
-    tenant_id:str; subject_id:str; actor_id:str; run_id:str; purpose:str
-    allowed_actions:frozenset[str]; eligible_tool_versions:frozenset[str]
-    policy_digest:str="policy:unspecified"; region:str="unspecified"
-
-class ToolResult(BaseModel):
-    status:Literal["succeeded","declined","unknown"]
-    output:dict[str,object]=Field(default_factory=dict); effect_key:str|None=None
-
-class ToolGateway:
-    def __init__(self,effect_ledger:InMemoryEffectLedger|None=None)->None:
-        self._tools:dict[str,RegisteredTool]={}; self._effects=effect_ledger or InMemoryEffectLedger()
-    def register(self,manifest:ToolManifest,connector:Connector)->None:
-        key=f"{manifest.tool_id}@{manifest.version}"
-        if key in self._tools: raise ValueError(f"tool already registered: {key}")
-        if manifest.mutating and not manifest.idempotency_required:
-            raise ValueError("mutating tools must declare idempotency_required")
-        self._tools[key]=RegisteredTool(manifest,connector)
-    def discover(self,ctx:InvocationContext)->tuple[ToolManifest,...]:
-        return tuple(item.manifest for key,item in sorted(self._tools.items()) if key in ctx.eligible_tool_versions and item.manifest.required_action in ctx.allowed_actions)
-    async def invoke(self,*,ctx:InvocationContext,tool_version:str,arguments:dict[str,object],logical_effect_key:str|None=None,proposal:ActionProposal|None=None,approval:ApprovalGrant|None=None,actual_resource_version:int|None=None)->ToolResult:
-        if tool_version not in ctx.eligible_tool_versions: raise PermissionError("tool is not eligible for this run node")
-        item=self._tools.get(tool_version)
-        if item is None: raise LookupError("eligible tool version is not registered")
-        m=item.manifest
-        if m.required_action not in ctx.allowed_actions: raise PermissionError("required action is outside delegated authority")
-        if m.approval_required:
-            if proposal is None or approval is None or actual_resource_version is None: raise PermissionError("proposal-bound approval is required")
-            if proposal.model_dump(mode="json",exclude={"expires_at"}) != ActionProposal(tenant_id=ctx.tenant_id,run_id=ctx.run_id,actor_id=ctx.actor_id,tool_version=tool_version,logical_effect_key=logical_effect_key or "",arguments=arguments,expected_resource_version=proposal.expected_resource_version,policy_digest=ctx.policy_digest,expires_at=proposal.expires_at).model_dump(mode="json",exclude={"expires_at"}): raise PermissionError("proposal does not match invocation")
-            verify_approval(proposal,approval,now=datetime.now(timezone.utc),actual_resource_version=actual_resource_version)
-        if not m.mutating:
-            return ToolResult(status="succeeded",output=await item.connector(arguments,None))
-        if not logical_effect_key: raise ValueError("mutating tools require a stable logical effect key")
-        intent={"tool":tool_version,"arguments":arguments,"run_id":ctx.run_id,"tenant_id":ctx.tenant_id}
-        effect=self._effects.begin(logical_effect_key,intent)
-        if effect.state=="committed": return ToolResult(status="succeeded",output=effect.receipt or {},effect_key=logical_effect_key)
-        if effect.state in {"executing","unknown","intervention_required"}: raise EffectOutcomeUnknown(logical_effect_key)
-        if effect.state=="declined": return ToolResult(status="declined",output=effect.receipt or {},effect_key=logical_effect_key)
-        self._effects.mark_executing(logical_effect_key,f"req:{logical_effect_key}")
-        try: output=await item.connector(arguments,logical_effect_key)
-        except Exception as exc:
-            self._effects.mark_unknown(logical_effect_key)
-            raise EffectOutcomeUnknown(logical_effect_key) from exc
-        committed=self._effects.mark_committed(logical_effect_key,output)
-        return ToolResult(status="succeeded",output=committed.receipt or {},effect_key=logical_effect_key)
-```
+[[EXAMPLE:governed-tool-gateway]]
 
 ## Debugging playbook
 
-1. Compare the raw model proposal with the validated command and list rejected fields.
-2. Inspect the policy decision and resource version immediately before commit.
-3. Replay the same logical mutation and verify one receipt.
+* Trace the intent-to-execution path. Compare the model’s raw proposal with the
+  validated command, identifying any rejected, modified, or defaulted fields.
+* Verify the execution boundary. Inspect the final authorization and policy
+  decision, approval state, and resource version immediately before the side
+  effect is committed.
+* Test idempotency. Replay the same logical mutation and confirm that it
+  produces no duplicate side effect and resolves to the same durable receipt.
 
 ## Production checklist
 

@@ -110,6 +110,7 @@ def main() -> int:
         "diagrams": content.count(r"\BookDiagram{"),
         "code_blocks": content.count(r"\begin{lstlisting}"),
         "longtables": content.count(r"\begin{longtable}"),
+        "compact_tables": content.count(r"\begin{tabular}"),
         "callout_tables": sum(content.count(r"\begin{" + name + "}") for name in callouts.ENVIRONMENTS),
         "citation_occurrences": content.count(r"\BookCitation{"),
     }
@@ -170,11 +171,16 @@ def main() -> int:
         errors.append(
             f"Code blocks not fully converted: {fenced} fenced blocks in the manuscript, "
             f"{measurements['code_blocks']} lstlisting environments in the TeX")
-    converted = measurements["longtables"] + measurements["callout_tables"]
+    converted = (
+        measurements["longtables"]
+        + measurements["compact_tables"]
+        + measurements["callout_tables"]
+    )
     if converted != markdown_tables:
         errors.append(
             f"Markdown tables not fully converted: {markdown_tables} in the manuscript, "
             f"{converted} in the TeX ({measurements['longtables']} longtables + "
+            f"{measurements['compact_tables']} compact tables + "
             f"{measurements['callout_tables']} callouts)")
     if dist_path.read_bytes() != main_path.read_bytes():
         errors.append("Distributable and project entry-point TeX files differ")
@@ -253,14 +259,16 @@ def main() -> int:
     visible_points = {ord(ch) for ch in source_text if ord(ch) >= 32 and ch not in "\n\r\t"}
     code_text = "\n".join(re.findall(r"^```[^\n]*\n(.*?)^```\s*$", source_text, flags=re.M | re.S))
     code_points = {ord(ch) for ch in code_text if ord(ch) >= 32 and ch not in "\n\r\t"}
-    mapped_points = {0x2713}
+    mapped_points = {0x2713, 0x1F40D}
     missing_sans = sorted(visible_points - sans_points - mapped_points)
     missing_mono = sorted(code_points - mono_points - mapped_points)
-    measurements["font_coverage"] = {"sans_missing_after_tex_mappings": missing_sans, "mono_missing_after_listings_mappings": missing_mono, "mapped_codepoints": ["U+2713 CHECK MARK"]}
+    measurements["font_coverage"] = {"sans_missing_after_tex_mappings": missing_sans, "mono_missing_after_listings_mappings": missing_mono, "mapped_codepoints": ["U+2713 CHECK MARK", "U+1F40D SNAKE"]}
     if missing_sans or missing_mono:
         errors.append("Bundled fonts and TeX mappings do not cover all manuscript characters")
     if "✓" in source_text and (r"\ensuremath{\checkmark}" not in content or "literate={✓}" not in style):
         errors.append("Check-mark fallback mapping is missing")
+    if "🐍" in source_text and r"\BookSnake" not in content:
+        errors.append("Snake fallback mapping is missing")
 
     colors = dict(re.findall(r"\\definecolor\{([^}]+)\}\{HTML\}\{([0-9A-Fa-f]{6})\}", style))
     colors["White"] = "FFFFFF"
@@ -390,7 +398,7 @@ def main() -> int:
         "**Target engine:** XeLaTeX", "",
         "## Structural measurements", "",
     ]
-    for key in ("narrative_parts", "appendix_dividers", "chapters", "appendices", "diagrams", "code_blocks", "longtables", "callout_tables", "citation_occurrences", "bundled_fonts"):
+    for key in ("narrative_parts", "appendix_dividers", "chapters", "appendices", "diagrams", "code_blocks", "longtables", "compact_tables", "callout_tables", "citation_occurrences", "bundled_fonts"):
         lines.append("- **" + key + ":** `" + str(measurements.get(key)) + "`")
     lines.extend(["", "## Quality controls", "", "- All publication images meet the effective-resolution gate.", "- All tested foreground/background pairs meet or exceed 4.5:1 contrast.", "- Generated entry point, content, styles, fonts, assets, compile script, Docker path, and reference render are self-contained.", "", "## Errors", ""])
     lines.extend(["- " + item for item in errors] or ["- None."])

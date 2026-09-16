@@ -7,12 +7,13 @@ and CI executes it. There is no second copy to drift.
 
 ```text
 examples/foundations/agent_tool_loop.py   ← you edit this
+examples/foundations/governed_tool_gateway.py
         │  region between the --8<-- markers
         ▼
 config/examples.json                      ← registered here, with its tests
         │
         ▼
-source/parts/04-part-iv.md                ← cited as [[EXAMPLE:agent-tool-loop]]
+source/parts/01-part-i.md                ← cites the Chapter 2 listings
         │  tools/assemble_manuscript.py expands the marker
         ▼
 book/manuscript.md → DOCX and XeLaTeX
@@ -74,6 +75,7 @@ falls through to the real OpenAI provider.
 | Example | Chapter | Exercises |
 |---|---|---|
 | `foundations/agent_tool_loop.py` | 02 | Typed tool, structured output, bounded run |
+| `foundations/governed_tool_gateway.py` | 02 | Validation, authorization, freshness, and effect idempotency |
 | `foundations/effect_idempotency.py` | 21 | Logical effect keys, replay safety |
 | `patterns/bounded_react_loop.py` | 08 | Run budget enforced outside the model |
 | `patterns/routing_handoff.py` | 09 | Handoff as an ownership transfer |

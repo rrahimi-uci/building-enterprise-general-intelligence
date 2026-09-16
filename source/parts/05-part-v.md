@@ -242,7 +242,7 @@ Collaboration uses durable TaskEnvelope, message, status, artifact, cancellation
 
 ### Durable child-task contract
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -265,7 +265,7 @@ class TaskEnvelope(BaseModel):
 
 ### Monotonic child authority
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -591,7 +591,7 @@ Evidence anchors: MCP-2026; MCP-AUTH; A2A-101. Full URLs, authority, version, an
 
 ### A2A task envelope
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -620,7 +620,7 @@ class A2ATaskEnvelope(BaseModel):
 
 ### MLflow MCP Registry adapter
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations

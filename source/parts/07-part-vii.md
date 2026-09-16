@@ -431,7 +431,7 @@ Evidence anchors: MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Full URLs, authority, vers
 
 ### MLflow trajectory evaluation
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations

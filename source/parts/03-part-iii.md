@@ -57,7 +57,7 @@ Create from an approved template; attach tools, Skills, context, and memory; con
 
 ## SDK example
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 agent = platform.agent(
@@ -413,7 +413,7 @@ Evidence anchors: SLSA; OWASP-CHEAT. Full URLs, authority, version, and scope ap
 
 ### Skill Pack contract
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations

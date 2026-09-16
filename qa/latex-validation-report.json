@@ -4,20 +4,21 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "a33c7b93c23d54ab107d5d7c8e29070cd0f85d52260d840c962c28a790fa2732",
-    "content_tex_sha256": "a2d79027db2b7b399675d36679c74f3ae80c4587c9f5511d394f41e9aefcbf06",
-    "style_sha256": "969e536c5af90c2fca7888b85182bd74b73f0690f7a4198a3a8d2dbf3024cff1",
+    "content_tex_sha256": "80eaab6f434acb65af44b46a775fa778559ccc048a4aa137eee7bdb5523c4249",
+    "style_sha256": "fa41660bbf6252d8659659422ca3755d6d8c7887258951a16fdc169567c1b854",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "appendices": 12,
     "diagrams": 43,
     "code_blocks": 68,
-    "longtables": 237,
+    "longtables": 136,
+    "compact_tables": 100,
     "callout_tables": 95,
     "citation_occurrences": 104,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 332,
+    "markdown_tables": 331,
     "markdown_code_blocks": 68,
     "image_quality": [
       {
@@ -378,7 +379,8 @@
       "sans_missing_after_tex_mappings": [],
       "mono_missing_after_listings_mappings": [],
       "mapped_codepoints": [
-        "U+2713 CHECK MARK"
+        "U+2713 CHECK MARK",
+        "U+1F40D SNAKE"
       ]
     },
     "style_token_colors_checked": 19,

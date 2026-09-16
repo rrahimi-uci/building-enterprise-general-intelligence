@@ -123,7 +123,8 @@ def expand_examples(text: str, root: Path) -> tuple[str, int]:
             raise SystemExit(f"Example {entry['id']} rendered empty")
         language = entry.get("language", "python")
         count += 1
-        caption = f"{language.upper()} · {entry['title']}"
+        display_language = "🐍" if language.lower() == "python" else language.upper()
+        caption = f"{display_language} · {entry['title']}"
         return "\n".join([caption, "", "```" + language, rendered, "```"])
 
     return EXAMPLE_MARKER.sub(render, text), count

@@ -39,12 +39,17 @@ def lookup_supplier(supplier_id: str) -> str:
 
 
 def build_agent() -> Agent:
+    # Keep each behavioral instruction explicit and reviewable. These are
+    # model-facing hints, not a substitute for gateway authorization.
+    instructions = "\n".join(
+        [
+            "Answer questions about supplier onboarding.",
+            "Always call lookup_supplier before making a claim about a record.",
+        ]
+    )
     return Agent(
         name="Supplier onboarding",
-        instructions=(
-            "Answer questions about supplier onboarding. "
-            "Always call lookup_supplier before making a claim about a record."
-        ),
+        instructions=instructions,
         tools=[lookup_supplier],
         # max_turns on the run, plus a declared output type, are what make this
         # a bounded loop rather than an open-ended conversation.
