@@ -264,6 +264,14 @@
       "sha256": "ff9c4537372a24b0bef88702f6b4d07e59fc4a48c8b47dc76c8ce4523bc6273a"
     },
     {
+      "id": "mortgage-case-lifecycle",
+      "file": "assets/diagrams/mortgage-case-lifecycle.png",
+      "source": "assets/diagrams/src/mortgage-case-lifecycle.gv",
+      "vector": "assets/diagrams/mortgage-case-lifecycle.pdf",
+      "description": "The synthetic mortgage case evolves from evidence summary through verification and calculation to human review, with missing evidence and unsupported claims as explicit bottlenecks",
+      "sha256": "4a523f81ce1baa25e7bf3115f00121c8ce2f1e59e1ec87ebd4fd2c5ff602d9ab"
+    },
+    {
       "id": "security-boundaries",
       "file": "assets/diagrams/security-boundaries.png",
       "sha256": "037876894c555047b1c60db042b68fac30ae72e2c05a58a1c0a53834cdeca260",

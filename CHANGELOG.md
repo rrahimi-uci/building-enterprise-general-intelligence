@@ -4,6 +4,22 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Mortgage cumulative-example foundation
+
+- Added the synthetic Harborlight mortgage anchor case `MORT-2026-000184` and
+  the first three executable checkpoints: read-only evidence summary, typed
+  deterministic proposal shell, and a provider-neutral bounded runtime.
+- Added offline unit/contract coverage, an opt-in OpenAI Responses adapter, an
+  opt-in OpenAI Agents SDK adapter, the `C01`–`C28` checkpoint registry, and a
+  reader-facing cumulative example listing.
+- Extended Part I with the business problem, actors, inputs, workflow,
+  constraints, success criteria, visible bottlenecks, and before/added/after
+  transitions. Existing supplier material remains retained as labeled contrast
+  content.
+- Added the registered mortgage lifecycle diagram and regenerated synchronized
+  Markdown, DOCX, and XeLaTeX source artifacts. The 8-Part / 28-chapter /
+  12-appendix topology remains unchanged.
+
 ### Northstar cumulative-example implementation roadmap
 
 - Added `code-gap.md`, a chapter-by-chapter implementation roadmap for evolving
