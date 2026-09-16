@@ -46,3 +46,7 @@ dist/*.pdf
 .venv-examples/
 .pytest_cache/
 mlflow.db
+
+# Reviewer feedback docx copies — kept locally only, not tracked
+reviews-comments/*
+!reviews-comments/.gitkeep
