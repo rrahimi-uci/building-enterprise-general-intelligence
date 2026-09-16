@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 337,
+  "file_count": 340,
   "files": [
     {
       "path": ".gitattributes",
@@ -41,8 +41,8 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 818,
-      "sha256": "ac0bb4755849a3f8abe8881071ac064c9b7e318f75320a57284ff38508781b39"
+      "bytes": 932,
+      "sha256": "e4fb8fa3ec66703ed414c5e1c53b74b0f05f5f30f254e733a075566babe7f535"
     },
     {
       "path": ".latexmkrc",
@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 28991,
-      "sha256": "4f924635bc6be6e6fd7971af81a923d9ef1bc9a8b9a2ded9ff81a8d87935d22d"
+      "bytes": 29084,
+      "sha256": "29c50c7ec157a9cc62d8eafd607053b0eb40d0683268020c048fcb4e089b2055"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -445,6 +445,16 @@
       "sha256": "9a3b07d4bf51c402d678f77c2eef298fc1d3f72ae26069a61adde8ea0e7f38f5"
     },
     {
+      "path": "assets/diagrams/runtime-boundary.pdf",
+      "bytes": 43416,
+      "sha256": "63dedf525b1dc0b062d0f131fc949dafe5bb1dad953686667955bbee1f6bc417"
+    },
+    {
+      "path": "assets/diagrams/runtime-boundary.png",
+      "bytes": 368434,
+      "sha256": "ff9c4537372a24b0bef88702f6b4d07e59fc4a48c8b47dc76c8ce4523bc6273a"
+    },
+    {
       "path": "assets/diagrams/runtime-offline.pdf",
       "bytes": 34389,
       "sha256": "c278bbafe52b1877f9e22dbb0809e9e393d90614758858fc15bac93af0116823"
@@ -680,6 +690,11 @@
       "sha256": "d4ba65288d394ceae72a3db290587e32dca756776b78754c8cd4fcb108ab1d95"
     },
     {
+      "path": "assets/diagrams/src/runtime-boundary.gv",
+      "bytes": 2685,
+      "sha256": "2e92311e95820684244352dd43229a09f39120e9fb6c63f63ea22a8ad1d8a113"
+    },
+    {
       "path": "assets/diagrams/src/runtime-offline.gv",
       "bytes": 1639,
       "sha256": "2597c066628f39e69ea47c4fc051d9864156306f0d5730750d2a22c88eead81a"
@@ -791,8 +806,8 @@
     },
     {
       "path": "book/manuscript.md",
-      "bytes": 660458,
-      "sha256": "3e8a49dfedaef0da85835e8365fd05d04f211ffeb0fe236687dbcf31747c18dc"
+      "bytes": 660876,
+      "sha256": "272fe3c69f082c8bfbaa1f23f44d3f2d27378610c8f0071921bac329d1044ea5"
     },
     {
       "path": "config/book.json",
@@ -801,8 +816,8 @@
     },
     {
       "path": "config/diagrams.json",
-      "bytes": 15434,
-      "sha256": "50256f68db43ba1c0f2b667220b12c38f6c481ec97fe032c55b0bb1308b4a36e"
+      "bytes": 15882,
+      "sha256": "81c971fe632a63f0ac0268d5c3594437dee22bc7071d7b0e9ec960373e1d7da9"
     },
     {
       "path": "config/examples.json",
@@ -831,13 +846,13 @@
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v2.1.0.docx",
-      "bytes": 23793622,
-      "sha256": "6f55b1e365b6b66f47a32634bf5d9de9ddbefa8b1e72baf0402a0f367229f653"
+      "bytes": 24131484,
+      "sha256": "7a28888bda54af0556f91642eee75f3d8539061b091b1b8a485075d896e02e5e"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v2.1.0.md",
-      "bytes": 660458,
-      "sha256": "3e8a49dfedaef0da85835e8365fd05d04f211ffeb0fe236687dbcf31747c18dc"
+      "bytes": 660876,
+      "sha256": "272fe3c69f082c8bfbaa1f23f44d3f2d27378610c8f0071921bac329d1044ea5"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v2.1.0.tex",
@@ -1156,8 +1171,8 @@
     },
     {
       "path": "latex/content/book-content.tex",
-      "bytes": 794260,
-      "sha256": "3b80280cfb9568fbf73374a3f4c8c2597e306ab8aa8d11e0e30e4aa32b01d5dc"
+      "bytes": 794723,
+      "sha256": "70174812cf5b5a8bb7ec6cc26e74c1d7925428a60e9d879288158bbaa5c6df74"
     },
     {
       "path": "latex/fonts/LICENSE-SIL-OFL-1.1.txt",
@@ -1257,37 +1272,37 @@
     {
       "path": "qa/build-report.json",
       "bytes": 309,
-      "sha256": "7be49cabbd940b8c1ae5aeffc8ea24d77234e5ba61e6a6b6a9a0245c16dec808"
+      "sha256": "582ffc5a4c96f20323a2fcd49e8a6f8934c9e07533c7e8f04895e0790e30c662"
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 23793622,
-      "sha256": "6f55b1e365b6b66f47a32634bf5d9de9ddbefa8b1e72baf0402a0f367229f653"
+      "bytes": 24131484,
+      "sha256": "7a28888bda54af0556f91642eee75f3d8539061b091b1b8a485075d896e02e5e"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 23793622,
-      "sha256": "6f55b1e365b6b66f47a32634bf5d9de9ddbefa8b1e72baf0402a0f367229f653"
+      "bytes": 24131484,
+      "sha256": "7a28888bda54af0556f91642eee75f3d8539061b091b1b8a485075d896e02e5e"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "de8524f4d4b0a0cac1166457cd0a9e9688c9ba757ce89db333e795d7a2f088d7"
+      "sha256": "ab83c212ebd9a4ce72ffad382f904356375b0349a0ed9731105e51135edc6e0d"
     },
     {
       "path": "qa/latex-validation-report.json",
-      "bytes": 11712,
-      "sha256": "c5e604357485c85688abacedc4cdd8c74b5bef9de81a20e2c51ccf130b165f1e"
+      "bytes": 11878,
+      "sha256": "de81a4fef8e4c93e035d5c7296ed3bff0b04c4fcaa8f8bdb006d66a7295b1d09"
     },
     {
       "path": "qa/validation-report.json",
       "bytes": 875,
-      "sha256": "1dccef6047023429d13f7940575b92d9a6097a227d059bb48a1fbfa6636a8751"
+      "sha256": "a8f23358271a6baebeaa8ace112d37ce531e4037f5242ac418f6f005ba9e64b3"
     },
     {
       "path": "reports/assembly-report.json",
       "bytes": 1189,
-      "sha256": "99c6a0ee25d410d0af2ff84ce46b9be9dcd944f15e770d5a1d0fe2474aacd6e8"
+      "sha256": "2379c37e5ccd2f25b770ae74520add1756251cd1a6782780c5db90b0d37f9425"
     },
     {
       "path": "reports/chapter-insert-map.json",
@@ -1306,8 +1321,8 @@
     },
     {
       "path": "reports/diagram-render-report.json",
-      "bytes": 11753,
-      "sha256": "eef9d65aac9981d1396f5a6bf116e83f9f0e63f12576b4390a7306d0a5d63820"
+      "bytes": 12024,
+      "sha256": "286bbae8a6a991628361b1f2ed5d6918376279095de2a2c2a9f1b98098c28aff"
     },
     {
       "path": "reports/editorial-audit.md",
@@ -1332,12 +1347,12 @@
     {
       "path": "reports/latex-build-report.json",
       "bytes": 2403,
-      "sha256": "26e43b6c6f015ec9a710193bc63a81435a896053619c79ef74844f7eec8bcb16"
+      "sha256": "956d1478556f2c99c7e72c907df892876f235ca3efc4697f60aa6234525c62fc"
     },
     {
       "path": "reports/latex-validation.md",
       "bytes": 723,
-      "sha256": "88934939cbc50d78315b55bf6f2da465eb3d04b1f48e925310c487e02a3caeb9"
+      "sha256": "faa4b1a1e7a702a6ff358adbb4d6f730ca13480808ba4c9fea740cbd8ccd8666"
     },
     {
       "path": "reports/part-visuals-report.json",
@@ -1362,7 +1377,7 @@
     {
       "path": "reports/validation-summary.md",
       "bytes": 864,
-      "sha256": "9eac6b2eafbf7dc3c6d0f21ffdf8c486c03c922e711826cbd2ec578ef4cbcc7c"
+      "sha256": "0796ad85959fa826212c6f3a19b2618a49d73d7a0dd659a57f792711ccfabcd1"
     },
     {
       "path": "requirements.txt",
@@ -1511,8 +1526,8 @@
     },
     {
       "path": "source/parts/01-part-i.md",
-      "bytes": 75962,
-      "sha256": "dc5f367de6ea34240eb675d4fdb5c8883432915fcff4d49a61d6557ccb35e6e8"
+      "bytes": 76380,
+      "sha256": "4cde1c389da20d3fc7e18eaa0ef5ad96bcb2ac54d4bb26b8327a117b38177774"
     },
     {
       "path": "source/parts/02-part-ii.md",

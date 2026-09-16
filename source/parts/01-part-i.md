@@ -749,6 +749,10 @@ This gives Northstar a durable shape:
 
 The principle is short enough to remember: **let the framework run the agent; let the platform run the business.**
 
+[[DIAGRAM:runtime-boundary|Figure 3-1 — One bounded agent step: platform contracts enter the framework adapter, while authority and business effects remain outside it]]
+
+Read the flow from top to bottom. The adapter may translate a platform request into framework-native mechanics, but a model response remains a proposal. The Tool Gateway re-checks the exact action and resource before a domain service commits an effect; the receipt and workflow evidence remain platform-owned.
+
 ## What the agent actually does
 
 For the bounded activity, Northstar asks the agent to evaluate authorized evidence for `SUP-8421` and return one of three dispositions: sufficient, insufficient, or additional evidence required. The agent may need to retrieve the supplier projection, inspect document metadata, retrieve extracted fields, call a deterministic risk or completeness calculator, compare results with the supplied policy evidence, and assemble a structured recommendation.
@@ -772,21 +776,21 @@ The easiest way to reason about the boundary is to classify responsibilities by 
 
 | Concern | Framework may own | Platform must own |
 | --- | --- | --- |
-| Agent definition | Local instructions and framework-native agent construction | Versioned release identity and the public agent contract |
+| Agent definition | Local instructions and framework-native construction | Versioned release identity and public contract |
 | Reasoning loop | Turn sequencing, model calls, observation, and local stopping | External budgets, deadlines, cancellation, and terminal workflow state |
-| Model interaction | Provider request/response mechanics inside the adapter | Model route policy, redaction, usage accounting, and version pinning |
-| Tool selection | Choosing among tools made eligible for this step | Tool eligibility, exact resource authorization, and gateway enforcement |
-| Local handoff | Invoking a specialist while the bounded activity retains control | Whether delegation creates a new owner, grant, budget, or durable task |
+| Model interaction | Provider request/response mechanics inside the adapter | Route policy, redaction, usage accounting, and version pins |
+| Tool selection | Choosing among tools eligible for this step | Tool eligibility, exact-resource authorization, and gateway enforcement |
+| Local handoff | Invoking a specialist while the activity retains control | Whether delegation creates a new owner, grant, budget, or durable task |
 | Structured output | Producing a candidate result in the requested shape | Schema ownership, semantic validation, evidence requirements, and disposition mapping |
 | Guardrails | Early input, tool, and output checks | Policy decisions, fail-closed enforcement, and domain invariants |
-| Runtime tracing | Model and tool spans, events, and framework metadata | Correlation with run, task, approval, effect, artifact, and policy records |
+| Runtime tracing | Model/tool spans, events, and framework metadata | Correlation with run, task, approval, effect, artifact, and policy records |
 | Session or RunState | Optional local continuity or resumability | Canonical workflow history, checkpoints, and recovery state |
-| Identity | Passing the platform-issued execution context into tools | Authentication, delegation, audience, tenant, purpose, and actor identity |
-| Authorization | No authority beyond the capabilities supplied to the step | Policy evaluation for the subject, action, resource, context, and time |
+| Identity | Passing platform-issued execution context into tools | Authentication, delegation, audience, tenant, purpose, and actor identity |
+| Authorization | No authority beyond capabilities supplied to the step | Policy evaluation for subject, action, resource, context, and time |
 | Credentials | No reusable production credential | Short-lived, down-scoped, audience-bound last-hop credentials |
 | Approval | Interrupting or resuming local execution | Durable, expiring approval bound to the exact proposal and evidence |
 | Business effect | Proposing arguments for a tool call | Commit, idempotency, receipt, reconciliation, and compensation |
-| Retry | Framework-local transport behavior where explicitly bounded | One retry owner per failure class and reconciliation of unknown effects |
+| Retry | Framework-local transport behavior where explicitly bounded | One retry owner per failure class; reconcile unknown effects |
 | Audit | Runtime detail useful as evidence | Immutable enterprise evidence package and retention policy |
 
 The right-hand column is a replaceability test: **would the organization still need this record if it replaced the framework tomorrow?** If yes, the record must not be owned only by the framework.

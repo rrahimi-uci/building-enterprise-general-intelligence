@@ -4,13 +4,13 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "a33c7b93c23d54ab107d5d7c8e29070cd0f85d52260d840c962c28a790fa2732",
-    "content_tex_sha256": "3b80280cfb9568fbf73374a3f4c8c2597e306ab8aa8d11e0e30e4aa32b01d5dc",
+    "content_tex_sha256": "70174812cf5b5a8bb7ec6cc26e74c1d7925428a60e9d879288158bbaa5c6df74",
     "style_sha256": "fa41660bbf6252d8659659422ca3755d6d8c7887258951a16fdc169567c1b854",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "appendices": 12,
-    "diagrams": 43,
+    "diagrams": 44,
     "code_blocks": 67,
     "longtables": 138,
     "compact_tables": 105,
@@ -68,6 +68,14 @@
           2371
         ],
         "effective_dpi": 337.0
+      },
+      {
+        "file": "assets/diagrams/runtime-boundary.png",
+        "pixels": [
+          2312,
+          2908
+        ],
+        "effective_dpi": 327.5
       },
       {
         "file": "assets/diagrams/reference-architecture.png",

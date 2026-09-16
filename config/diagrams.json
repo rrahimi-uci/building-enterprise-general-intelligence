@@ -256,6 +256,14 @@
       "vector": "assets/diagrams/runtime-offline.pdf"
     },
     {
+      "id": "runtime-boundary",
+      "file": "assets/diagrams/runtime-boundary.png",
+      "source": "assets/diagrams/src/runtime-boundary.gv",
+      "vector": "assets/diagrams/runtime-boundary.pdf",
+      "description": "A bounded agent step crosses a platform-owned contract while authorization, effects, and receipts remain outside the framework",
+      "sha256": "ff9c4537372a24b0bef88702f6b4d07e59fc4a48c8b47dc76c8ce4523bc6273a"
+    },
+    {
       "id": "security-boundaries",
       "file": "assets/diagrams/security-boundaries.png",
       "sha256": "037876894c555047b1c60db042b68fac30ae72e2c05a58a1c0a53834cdeca260",

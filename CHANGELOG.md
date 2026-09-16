@@ -9,7 +9,7 @@ All notable changes follow semantic versioning and are recorded here.
 - Rebuilt Chapter 3 around the Northstar supplier-onboarding scenario, carrying one concrete execution path from durable workflow request through bounded agent reasoning, gateway authorization, approval, business effect, receipt, and audit evidence.
 - Clarified the ownership boundary between the AgentRuntime adapter, the agent framework, and the enterprise platform: framework mechanics stay local, while workflow state, identity, authorization, credentials, policy, budgets, approvals, effects, receipts, artifacts, and audit remain durable platform contracts.
 - Added practical guidance for exact-resource authorization, proposal-versus-effect semantics, restart recovery, approval-hash binding, handoff meanings, retry ownership, SDK upgrade manifests, replaceability testing, production readiness, and boundary-focused debugging.
-- Reused the existing registered and tested bounded-step example, avoided unregistered diagrams, preserved the eight-Part / 28-chapter / 12-appendix topology, and verified the table of contents and reference contracts during the rebuild.
+- Reused the existing registered and tested bounded-step example, added the registered editable `runtime-boundary` diagram, and tightened the responsibility matrix for print-scale scanning. Preserved the eight-Part / 28-chapter / 12-appendix topology, and verified the table of contents and reference contracts during the rebuild.
 
 ### Chapter 2 review reconciliation and cross-book consistency
 
