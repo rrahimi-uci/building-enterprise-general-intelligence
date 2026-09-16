@@ -12,8 +12,6 @@ Define the reusable paved road — contracts, adapters, and a delivery lifecycle
 
 ## Solution blueprint
 
-Figure 23. Agentic Developer Platform, SDK, and Delivery Lifecycle.
-
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Platform services own contracts and evidence; applications own domain behaviour | application code to platform-owned control planes | template · adapter · release artifact | one application release | AgentSpec · RunContext · ToolSpec · ReleaseManifest |
@@ -185,8 +183,6 @@ Define Skills as governed packages of instructions, tools, knowledge, policy, wo
 ## Solution blueprint
 
 
-Figure 10. Skills as Versioned Capabilities.
-
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Skill Registry and resolver | semantic discovery to policy-bound resolution | skill family · registry partition | one skill version | SkillManifest · SkillRequirement · SkillRelease |
@@ -277,7 +273,7 @@ Draft → Certified → Staged → Active → Deprecated → Revoked is evidence
 | **Deprecated** | Still resolvable for runs already using it | The compatibility window expiring |
 | **Revoked** | Not resolvable by anything new | — |
 
-Certification includes contract, unit, simulation, trajectory, threat, failure-injection, load, and operator-readiness checks. Deprecation retains a compatibility window for active runs — a long-running supplier onboarding started three weeks ago must finish on the version it pinned. Revocation removes the Skill from new resolution immediately and may trigger workflow pause or migration by risk class; it is the one transition that can affect a run already in flight, which is why it is reserved for a defect serious enough to justify that.
+Certification includes contract, unit, simulation, trajectory, threat, failure-injection, load, and operator-readiness checks. Deprecation retains a compatibility window for active runs — a long-running mortgage evidence review started three weeks ago must finish on the version it pinned. Revocation removes the Skill from new resolution immediately and may trigger workflow pause or migration by risk class; it is the one transition that can affect a run already in flight, which is why it is reserved for a defect serious enough to justify that.
 
 ### Skill contract surface
 
@@ -324,7 +320,7 @@ Evidence anchors: SLSA; MCP-2026. Full URLs, authority, version, and scope appea
 
 ## Exercises
 
-1. Author a Skill manifest for supplier evidence retrieval.
+1. Author a Skill manifest for mortgage evidence retrieval.
 2. Define a certification suite that catches a cross-tenant retrieval defect.
 
 ## Technical review questions
@@ -345,7 +341,7 @@ Individual Skills are governable; Chapter 9 composes them into domain packs with
 
 |  |
 | --- |
-| **NORTHSTAR AT THIS POINT**  Procurement needs a complete domain experience, not isolated Skills. Evidence retrieval, document validation, sanctions screening, policy explanation, and approval preparation must ship as a compatible, evaluated pack. |
+| **MORTGAGE CASE AT THIS POINT**  Harborlight needs a complete domain experience, not isolated Skills. Evidence retrieval, document validation, income and property checks, policy explanation, and approval preparation must ship as a compatible, evaluated pack. |
 
 |  |
 | --- |
@@ -358,15 +354,13 @@ Compose compatible Skills into certified, distributable domain capability releas
 ## Solution blueprint
 
 
-Figure 11. Skill Packs and Domain Platforms.
-
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Skill Pack Registry and release pipeline | pack authoring to tenant/runtime use | domain pack · tenant rollout cohort | one pack release | SkillPackManifest · CompatibilityReport · EvaluationSuite |
 
 ## From individual capability to domain platform
 
-A Skill Pack composes a coherent domain experience. Northstar’s supplier-onboarding pack pins evidence retrieval, document validation, sanctions screening, policy explanation, approval preparation, and supplier-record creation Skills. It also pins shared policy, taxonomy, knowledge strategy, workflow templates, evaluation datasets, dashboards, and runbooks.
+A Skill Pack composes a coherent domain experience. Harborlight’s mortgage-evidence pack pins evidence retrieval, document validation, income and property checks, policy explanation, approval preparation, and document-request Skills. It also pins shared policy, taxonomy, knowledge strategy, workflow templates, evaluation datasets, dashboards, and runbooks.
 
 A pack is not a directory of prompts. The pack manifest declares dependency constraints, schema compatibility, required runtime capabilities, data and region policy, risk ceiling, evaluation gates, release aliases, owner, and support window. A pack can expose a smaller capability surface to each agent even though the complete domain distribution contains more Skills.
 
@@ -389,8 +383,8 @@ installing tenant's own grants.
 | Make its evaluation suites available | Bypass region or data-class policy |
 | Declare its dependency and risk ceiling | Change the installing tenant's grants |
 
-A business unit that installs the supplier-onboarding pack and has no entitlement
-to the sanctions registry gets a pack whose screening Skill will not resolve for
+A business unit that installs the mortgage-evidence pack and has no entitlement
+to the income-verification source gets a pack whose verification Skill will not resolve for
 its runs. That is the correct outcome, and it is why sharing a pack across
 business units is a policy and data-boundary review rather than a package
 install.
@@ -401,8 +395,8 @@ Packs move through signed releases and aliases such as development, staging, and
 
 ### Domain pack examples
 
-* **Supplier onboarding:** evidence, screening, tax, policy, approval, ERP write.
-* **Customer support:** account read, entitlement, troubleshooting, refund proposal, escalation.
+* **Mortgage evidence review:** application evidence, income and property checks, policy, approval, document request.
+* **Comparative customer support:** account read, entitlement, troubleshooting, refund proposal, escalation.
 * **Software delivery:** repository context, test planning, code change, review, deployment evidence.
 * **Financial close:** reconciliation, variance explanation, exception routing, controlled posting.
 
@@ -467,7 +461,7 @@ class SkillPackManifest(BaseModel):
 
 ## Exercises
 
-1. Compose a supplier-onboarding Skill Pack and define compatibility rules.
+1. Compose a mortgage-evidence Skill Pack and define compatibility rules.
 2. Design a deprecation plan for one Skill without breaking the pack.
 
 ## Technical review questions

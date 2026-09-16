@@ -8,7 +8,7 @@ This Part crosses the process boundary. It covers how agents divide work among t
 
 |  |
 | --- |
-| **NORTHSTAR AT THIS POINT**  Screening, tax, security, and procurement specialists can run concurrently, but a plausible multi-agent conversation is not a coordination protocol. Northstar defines durable tasks, one owner per task, narrowed authority, explicit joins, and artifact contracts. |
+| **MORTGAGE CASE AT THIS POINT**  Document extraction, income verification, property review, and policy specialists can run concurrently, but a plausible multi-agent conversation is not a coordination protocol. Harborlight defines durable tasks, one owner per task, narrowed authority, explicit joins, and artifact contracts. |
 
 |  |
 | --- |
@@ -21,8 +21,6 @@ Give each task one owner, narrow authority on delegation, and make fan-out, fan-
 ## Solution blueprint
 
 
-Figure 12. Supervisor/Worker and Multi-Agent Collaboration.
-
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Task Service and supervisor workflow | parent/child authority and artifact adoption | task tree · specialist queue | one child task | TaskEnvelope · ChildGrant · JoinPolicy |
@@ -31,7 +29,7 @@ Figure 12. Supervisor/Worker and Multi-Agent Collaboration.
 
 [[DIAGRAM:supervisor-worker|Figure 18-1 — Supervisor/worker: narrowed child grants, an explicit fan-in contract, and durable cancellation]]
 
-A supervisor/worker topology is justified when specialists have different tools, data boundaries, owners, SLOs, or deployment needs. Northstar’s supervisor owns the onboarding outcome and creates durable child tasks for screening, tax, and security. Each child receives only the capability, evidence, budget, deadline, and cancellation scope it needs.
+A supervisor/worker topology is justified when specialists have different tools, data boundaries, owners, SLOs, or deployment needs. Harborlight’s supervisor owns the evidence-package outcome and creates durable child tasks for document extraction, income verification, property review, and policy explanation. Each child receives only the capability, evidence, budget, deadline, and cancellation scope it needs.
 
 Fan-in is explicit: wait for all, quorum, first valid, or fallback. Artifact conflicts use deterministic precedence, source freshness, confidence thresholds, or human resolution. Free-form conversation may help agents explain results, but it cannot replace task status, ownership, artifact, or effect records.
 
@@ -380,7 +378,7 @@ Multi-agent collaboration inside one platform is only part of the problem; Chapt
 
 |  |
 | --- |
-| **NORTHSTAR AT THIS POINT**  Northstar consumes a third-party screening MCP server and delegates regional verification to a partner agent through A2A. Protocol conformance makes messages interoperable; it does not make the endpoint trusted or the artifact safe to adopt. |
+| **MORTGAGE CASE AT THIS POINT**  Harborlight consumes a third-party employment-verification MCP server and delegates property appraisal review to a partner agent through A2A. Protocol conformance makes messages interoperable; it does not make the endpoint trusted or the artifact safe to adopt. |
 
 |  |
 | --- |
@@ -392,8 +390,6 @@ Federate tools and agents through locally governed gateways, registries, task pr
 
 ## Solution blueprint
 
-
-Figure 13. MCP, A2A, and External Integration.
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
@@ -441,7 +437,7 @@ MLflow 3.15.0 introduced experimental MCP Registry capabilities for registering 
 | Recommended architecture | For agents under one platform, use workflow-native child tasks. Across deployment or vendor boundaries, use an A2A gateway with typed task/artifact envelopes and authenticated async operations. Use MCP for tools/resources. Never use conversation alone as the durable task record. |
 | Trade-offs | Standard protocols reduce integration cost but cover transport more than governance. A gateway may reduce protocol features, yet it supplies policy, tenant binding, quotas, schema validation, and audit. |
 | Failure scenarios | Agent advertises a misleading capability; task status is lost; result schema differs; duplicate delegation starts duplicate work; parent cancels but child continues; remote agent requests broader rights. |
-| Enterprise example | A procurement platform delegates sanctions screening to a separately operated agent. The remote agent receives document references and read-only scope, returns a signed screening artifact, and cannot place or approve the order. |
+| Enterprise example | A mortgage platform delegates property appraisal review to a separately operated agent. The remote agent receives authorized document references and read-only scope, returns a signed appraisal artifact, and cannot alter the case or make the lending decision. |
 
 ### Protocol roles
 

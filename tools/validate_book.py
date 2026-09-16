@@ -2,7 +2,6 @@
 """Offline structural, semantic, asset, and DOCX validation for Book v2.1.0."""
 from __future__ import annotations
 import argparse, hashlib, json, re, sys, zipfile
-import json
 from pathlib import Path
 from collections import Counter
 from docx import Document
@@ -46,8 +45,8 @@ def check_table_shapes(text: str) -> list[str]:
 def docx_callout_contrast(docx_path):
     """Every shaded callout cell must carry readable body text.
 
-    v2.1.0 shaded NORTHSTAR/DESIGN DECISION callouts navy while the paragraph
-    style inherited Normal's dark ink -- 44 callouts at 1.09:1. The LaTeX
+    Earlier v2.1.0 builds shaded narrative/design-decision callouts navy while
+    the paragraph style inherited Normal's dark ink. The LaTeX
     contrast gate never saw it because it only reads the LaTeX palette, so the
     DOCX edition needs its own check.
     """

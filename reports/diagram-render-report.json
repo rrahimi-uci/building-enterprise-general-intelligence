@@ -39,12 +39,12 @@
       "id": "anti-retry-storm",
       "source": "anti-retry-storm.gv",
       "pixels": [
-        2389,
-        2296
+        2374,
+        2186
       ],
-      "effective_dpi": 349,
+      "effective_dpi": 347,
       "vector": true,
-      "sha256": "573cd2635b7026e2585a57024c759295fd056c6204b9f644140220509d14bca4"
+      "sha256": "fddd9b20d9c24cfc25d823e08c1405ab694b738287654441cb6e2e794a2a4740"
     },
     {
       "id": "book-map",
@@ -424,12 +424,12 @@
       "id": "identity-delegation",
       "source": "identity-delegation.gv",
       "pixels": [
-        2290,
-        3726
+        2280,
+        3626
       ],
-      "effective_dpi": 334,
+      "effective_dpi": 333,
       "vector": true,
-      "sha256": "0bcaf4a10e230e68c9ab1dd93996f9080896860da629c0dbdd18994fc62c5e86"
+      "sha256": "aa1c2a8bd78d753d7a099b15beb6d7d56a3f4fef59529a8ad40a007031fd83f6"
     },
     {
       "id": "effect-lifecycle",
@@ -451,7 +451,7 @@
       ],
       "effective_dpi": 357,
       "vector": true,
-      "sha256": "51eb3151325ee7636081bc0d47d95a0a0b860c3337b79d1604628bd6e7087504"
+      "sha256": "3f38a682544d71ac9e9c8e44a4fb99c5c3412c6719df8501f896d8327994c6cd"
     },
     {
       "id": "skill-resolution",
@@ -462,7 +462,7 @@
       ],
       "effective_dpi": 385,
       "vector": true,
-      "sha256": "5e54fdd88b5b8393d1c1404f656c59982c7d5b31f2705cbe2dd36c72b5035304"
+      "sha256": "16c322bf4ffe57747dcfbc62303f647bc9c9a21fb9fdc3418d858f99084d8f57"
     },
     {
       "id": "supervisor-worker",

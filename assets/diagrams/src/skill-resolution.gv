@@ -15,9 +15,9 @@ digraph skill_resolution {
         margin="0.13,0.07", height=0.40, width=2.25]
   edge [arrowsize=0.65, penwidth=1.5, color="#1450A3"]
 
-  need [label="Capability need\n\"read supplier evidence\"", fillcolor="#E7F5F3", color="#0D6E69"]
+  need [label="Capability need\n\"read mortgage evidence\"", fillcolor="#E7F5F3", color="#0D6E69"]
   cat  [label="Catalog search\nsemantic, permissive", fillcolor="#E6F5F9", color="#0B6076"]
-  cand [label="Candidates\nsupplier.evidence.read @ 2.3.0, 2.4.1", shape=note,
+  cand [label="Candidates\nmortgage.evidence.read @ 0.1.0, 0.1.1", shape=note,
         style=filled, fillcolor="#E6F5F9", color="#0B6076"]
 
   pol  [label="Policy evaluation against the run envelope\ntenant · purpose · grants · region · risk", shape=diamond,

@@ -8,7 +8,7 @@ This Part is the working catalogue. It moves from the loop shapes that solve rea
 
 |  |
 | --- |
-| **NORTHSTAR AT THIS POINT**  An analyst asks why a supplier is blocked. One retrieval is insufficient: the system may need the profile, a screening artifact, and a policy explanation. A bounded ReAct loop is appropriate because the next information need depends on the previous observation. |
+| **MORTGAGE CASE AT THIS POINT**  A loan officer asks why a mortgage case is not ready for underwriting. One retrieval is insufficient: the system may need the application projection, an income-verification artifact, and a policy explanation. A bounded ReAct loop is appropriate because the next information need depends on the previous observation. |
 
 |  |
 | --- |
@@ -21,8 +21,6 @@ Implement ReAct with external budgets, governed tools, no-progress detection, an
 ## Solution blueprint
 
 
-Figure 4. ReAct: Bounded Reason–Act–Observe Loops.
-
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | External loop controller and acceptance engine | observation/model and model/tool | turn · tool permit · run budget | one bounded loop | AgentDecision · Observation · ReActLimits |
@@ -33,7 +31,7 @@ Figure 4. ReAct: Bounded Reason–Act–Observe Loops.
 
 Read the figure for what is *not* in the loop. The controller admits each turn and owns the budgets; a mutation leaves as a proposal rather than executing inline; and the decision to stop belongs to the acceptance engine, not to the model's wording.
 
-ReAct interleaves reasoning, action, and observation. Its value is conditional adaptivity: after reading the supplier profile, the agent may decide that a regional registry lookup is unnecessary, or that a contradictory address requires another source. The pattern becomes harmful when it substitutes an unconstrained loop for a known process.
+ReAct interleaves reasoning, action, and observation. Its value is conditional adaptivity: after reading the application projection, the agent may decide that another income source is unnecessary, or that a contradictory address requires another authorized document. The pattern becomes harmful when it substitutes an unconstrained loop for a known process.
 
 Northstar stores only typed decisions, tool intents, observations, evidence references, and stop reasons—not private chain-of-thought. The external controller maintains counters and normalized signatures. If an agent repeats the same tool and canonical arguments against the same source revision, or if accepted evidence does not change across turns, the controller records no progress and terminates or escalates.
 
@@ -136,7 +134,7 @@ A bounded controller alternates model decision and governed tool invocation. The
 ## Exercises
 
 1. Add information-gain and repeat-signature stopping to the reference ReAct loop.
-2. Compare a one-shot retrieval design with ReAct for the same supplier question.
+2. Compare a one-shot retrieval design with ReAct for the same mortgage-evidence question.
 
 ## Technical review questions
 
@@ -156,7 +154,7 @@ A bounded reason–act loop handles local uncertainty; Chapter 11 adds routing a
 
 |  |
 | --- |
-| **NORTHSTAR AT THIS POINT**  Some requests are policy questions, others are document defects, screening disputes, or protected onboarding actions. Northstar needs routing, but it also needs to know when responsibility actually transfers and who owns cancellation, deadlines, and the final response. |
+| **MORTGAGE CASE AT THIS POINT**  Some requests are policy questions, others are document defects, evidence disputes, or protected mortgage-case actions. Harborlight needs routing, but it also needs to know when responsibility actually transfers and who owns cancellation, deadlines, and the final response. |
 
 |  |
 | --- |
@@ -169,8 +167,6 @@ Distinguish route selection from ownership transfer and design confidence, fallb
 ## Solution blueprint
 
 
-Figure 5. Routing, Triage, and Handoffs.
-
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Route service and workflow ownership record | classifier to privileged route; owner transfer | route class · specialist queue | one route or handoff | RouteDecision · Handoff · CapabilityEnvelope |
@@ -179,7 +175,7 @@ Figure 5. Routing, Triage, and Handoffs.
 
 [[DIAGRAM:pattern-routing|Figure 11-1 — Routing selects a specialist; policy decides whether it may act]]
 
-A router reduces heterogeneity by selecting an implementation: policy explanation, document validation, sanctions review, or human triage. The model may classify semantic intent, but the eligible set is assembled first from purpose, authority, risk, data region, release status, service health, and capacity. A route cannot grant a capability that was absent from the run envelope.
+A router reduces heterogeneity by selecting an implementation: policy explanation, document validation, income verification, or human triage. The model may classify semantic intent, but the eligible set is assembled first from purpose, authority, risk, data region, release status, service health, and capacity. A route cannot grant a capability that was absent from the run envelope.
 
 A **handoff** is a different event. It changes the current owner of an interaction or task. Northstar records old owner, new owner, state version, unresolved obligations, artifact references, child capability envelope, deadline, and cancellation lineage. The recipient acknowledges or rejects the transfer. Until acknowledgment, the previous owner remains accountable.
 
@@ -368,7 +364,7 @@ Routing selects among known capabilities; Chapter 12 addresses tasks whose decom
 
 |  |
 | --- |
-| **NORTHSTAR AT THIS POINT**  A supplier with four subsidiaries, missing tax evidence, and two regional checks requires adaptive sequencing. Northstar lets a planner propose a graph but compiles that graph before any node becomes schedulable. |
+| **MORTGAGE CASE AT THIS POINT**  A mortgage application with missing employment evidence, an asset discrepancy, and a property check requires adaptive sequencing. Harborlight lets a planner propose a graph but compiles that graph before any node becomes schedulable. |
 
 |  |
 | --- |
@@ -380,8 +376,6 @@ Compile model-proposed plans into authorized, resource-feasible, replayable exec
 
 ## Solution blueprint
 
-
-Figure 6. Planning and Plan–Execute.
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
@@ -640,8 +634,6 @@ Use critique and evaluation to improve outputs without self-certification, unbou
 ## Solution blueprint
 
 
-Figure 7. Reflection and Evaluator–Optimizer.
-
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Acceptance Engine | generator/evaluator and evaluator/commit | candidate · scorer pool · slice | one revision cycle | EvaluationResult · Rubric · AcceptanceDecision |
@@ -836,7 +828,7 @@ Automated evaluation can improve candidates; Chapter 14 identifies decisions tha
 
 |  |
 | --- |
-| **NORTHSTAR AT THIS POINT**  A protected supplier activation requires approval. An approver must see the exact action, destination, evidence, expected resource version, and risk—not a vague request to “approve the agent.” |
+| **MORTGAGE CASE AT THIS POINT**  A protected mortgage-case operation requires human action authorization. The reviewer must see the exact operation, destination, evidence, expected resource version, and risk—not a vague request to “approve the mortgage.” |
 
 |  |
 | --- |
@@ -849,11 +841,9 @@ Bind approval and intervention to immutable proposals and durable state transiti
 ## Solution blueprint
 
 
-Figure 8. Human-in-the-Loop.
-
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
-| Workflow plus Approval Service | machine proposal to human authority | approval queue · risk class · tenant | one immutable proposal | ApprovalRequest · ApprovalDecision · EffectReceipt |
+| Workflow plus Approval Service | machine proposal to human authority | approval queue · risk class · tenant | one immutable proposal | HumanActionAuthorizationRequest · HumanActionAuthorizationDecision · EffectReceipt |
 
 ## Two distinct human controls
 
@@ -875,11 +865,11 @@ Human capacity is finite. Queue age, dwell, abandonment, reassignment, disagreem
 | Recommended architecture | Use policy-triggered gates based on risk, novelty, confidence, value, data sensitivity, reversibility, and destination. Present a concise preview, evidence, alternatives, changed fields, policy rationale, and blast radius. Approval authorizes a specific immutable proposal for a limited time. |
 | Trade-offs | Human review adds latency and staffing cost but provides judgment and accountability where automation evidence is insufficient. Poor UX converts the control into theater. |
 | Failure scenarios | Approval applies to a changed plan; approver lacks authority; agent hides uncertainty; request times out; two operators issue conflicting overrides; “approve all” becomes normal. |
-| Enterprise example | A customer-service agent drafts a high-value refund. The supervisor sees policy basis, customer history, amount, downstream effect, and alternatives; any amount or recipient change invalidates the approval. |
+| Enterprise example | A mortgage agent drafts a request to obtain missing employment evidence. The underwriter sees the policy basis, case evidence, requested document, downstream effect, and alternatives; any case, document, or destination change invalidates the authorization. |
 
 ### Approval contract
 
-An ApprovalRequest contains: proposal/artifact hash, exact action and resource, before/after diff, subject and actor, evidence links, uncertainty, policy rule, risk class, estimated impact/cost, reversible flag, expiry, separation-of-duties requirement, and allowed responses (approve, reject, edit-and-resubmit, request-evidence, cancel-run).
+HumanActionAuthorizationRequest contains: proposal/artifact hash, exact action and resource, before/after diff, subject and actor, evidence links, uncertainty, policy rule, risk class, estimated impact/cost, reversible flag, expiry, separation-of-duties requirement, and allowed responses (authorize, reject, edit-and-resubmit, request-evidence, cancel-run).
 
 ### Operator console requirements
 
@@ -921,10 +911,10 @@ An ApprovalRequest contains: proposal/artifact hash, exact action and resource, 
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
-| ApprovalRequest | approval ID, tenant/run/node/effect, proposal hash, action/resource, before/after refs, risk/value, policy decision, required approver predicate/count, expiry, state/version |
+| HumanActionAuthorizationRequest | authorization ID, tenant/run/node/effect, proposal hash, action/resource, before/after refs, risk/value, policy decision, required approver predicate/count, expiry, state/version |
 | ApprovalEvidenceSnapshot | approval, immutable source/artifact refs and hashes, policy/rationale, uncertainty, alternatives, impact, redaction profile, created version |
 | ApprovalAssignment | approval, queue, eligible-role predicate, assignee/claim lease, SLA, escalation level, state |
-| ApprovalDecision | approval, proposal hash, approver identity/role/assurance, decision, reason, signature/attestation, time; append-only |
+| HumanActionAuthorizationDecision | authorization, proposal hash, approver identity/role/assurance, decision, reason, signature/attestation, time; append-only |
 | OperatorAction | action ID, run, command, actor/role, target/version, before/after refs, reason, linked ticket, result/effect; append-only |
 | EscalationPolicy | queue/risk/value, warning/expiry timers, fallback roles, business calendar, timeout disposition; implicit approval is forbidden |
 | NotificationDelivery | approval/action, channel, destination handle, idempotency key, attempts, delivered/acknowledged, error; contains no unredacted evidence |
@@ -971,7 +961,7 @@ Evidence anchors: OAI-HITL; OWASP-AGENT; WCAG22. Full URLs, authority, version, 
 
 ### Architecture and flow
 
-The workflow persists a proposal-bound ApprovalRequest or InterventionTask, pauses, receives an authenticated decision, revalidates current authority and resource state, then commits or replans.
+The workflow persists a proposal-bound HumanActionAuthorizationRequest or InterventionTask, pauses, receives an authenticated decision, revalidates current authority and resource state, then commits or replans.
 
 1. Create an immutable proposal and preview.
 2. Identify allowed approver roles and separation-of-duty rules.
@@ -1025,7 +1015,7 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class ApprovalRequest(BaseModel):
+class HumanActionAuthorizationRequest(BaseModel):
     approval_id: str
     run_id: str
     action: str
@@ -1077,7 +1067,7 @@ def proposal_hash(action: str, destination: str,
 
 ## Exercises
 
-1. Design an approval object for a $100,000 supplier activation.
+1. Design a human action authorization object for a protected mortgage-case operation.
 2. Define how edits, policy changes, and expired grants invalidate approval.
 
 ## Technical review questions
@@ -1100,7 +1090,7 @@ Human control introduces waits and resumptions; Chapter 15 makes those waits dur
 
 |  |
 | --- |
-| **NORTHSTAR AT THIS POINT**  The supplier waits nine days to upload a certificate. During the wait, workers deploy twice, policy changes, a user loses a role, and one earlier external request timed out. The run must resume safely rather than restart from a prompt transcript. |
+| **MORTGAGE CASE AT THIS POINT**  The applicant waits nine days to upload an employment document. During the wait, workers deploy twice, policy changes, the loan officer loses a role, and one earlier request times out. The run must resume safely rather than restart from a prompt transcript. |
 
 |  |
 | --- |
@@ -1112,8 +1102,6 @@ Preserve weeks-long work across waits, failures, deployments, retries, cancellat
 
 ## Solution blueprint
 
-
-Figure 9. Long-Running and Durable Agents.
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
@@ -1158,7 +1146,7 @@ A run reaches Succeeded only through executable acceptance. A canceled run with 
 | Recommended architecture | Use a durable workflow engine as the authoritative run kernel. Put model and tool calls in activities/tasks, record their results, persist checkpoints after meaningful steps, and use durable timers/signals for waits. Feed external events through an event bus and correlate them to existing runs. |
 | Trade-offs | Durable engines impose determinism/versioning constraints and operational cost, but remove far more bespoke recovery code. Graph checkpointers are useful for agent state but may not replace a mature cross-service workflow engine. |
 | Failure scenarios | Replay resends an email; worker dies after effect but before acknowledgment; old run cannot replay after code change; callback is spoofed; event arrives before subscription; retry storm exhausts provider quota. |
-| Enterprise example | A supplier-onboarding agent waits days for KYC documents and approvals. The workflow is unloaded while idle, resumes on correlated events, refreshes authorization, and continues from the last committed effect. |
+| Enterprise example | A mortgage-evidence agent waits days for employment documents and human action authorization. The workflow is unloaded while idle, resumes on correlated events, refreshes authorization, and continues from the last committed effect. |
 
 ### Durable execution contract
 
@@ -1357,7 +1345,7 @@ Choose by hidden obligation, uncertainty, and risk—not fashionable terminology
 
 **Architecture.** Run Service → reason → eligible tool → observation → stop/accept.
 
-**Enterprise Example.** Supplier screening queries two approved registries, asks once for missing ID, then stops.
+**Enterprise Example.** Mortgage evidence review queries two approved sources, asks once for the missing employment document, then stops.
 
 **Detection Metrics.** Steps, no-progress loops, repeat queries, budget exhaustion, evidence coverage.
 
@@ -1437,7 +1425,7 @@ Choose by hidden obligation, uncertainty, and risk—not fashionable terminology
 
 **Architecture.** Proposal → policy/approval → façade → effect → receipt → acceptance.
 
-**Enterprise Example.** Payment proposal binds invoice, amount, account, policy, expiry, version.
+**Enterprise Example.** A mortgage document-request proposal binds the case, document kind, policy, expiry, and case version.
 
 **Detection Metrics.** Denials, invalid args, grant mismatch, duplicates, unknown effects.
 
@@ -1477,7 +1465,7 @@ Choose by hidden obligation, uncertainty, and risk—not fashionable terminology
 
 **Architecture.** Identity → policy → capability lease → gateway/tool enforcement.
 
-**Enterprise Example.** Procurement may read supplier and propose screening, not approve payment.
+**Enterprise Example.** A loan officer may read an authorized mortgage case and propose a document request, but cannot authorize the operation or make the lending decision.
 
 **Detection Metrics.** Scope/age, expansion, cross-tenant attempts, denials.
 
@@ -1497,7 +1485,7 @@ Choose by hidden obligation, uncertainty, and risk—not fashionable terminology
 
 **Architecture.** Prepare → dispatch → receipt/unknown → reconcile → accept.
 
-**Enterprise Example.** Vendor creation timeout is queried by idempotency key before retry.
+**Enterprise Example.** Mortgage document-request timeout is queried by idempotency key before retry.
 
 **Detection Metrics.** Unknown rate/age, duplicate effects, reconcile latency.
 
@@ -1620,7 +1608,7 @@ Cards are grouped by the boundary they violate rather than by the technology inv
 
 ### How to read a card
 
-**Problem** states what the team was legitimately trying to achieve — no card here describes carelessness. **Anti-Pattern** is the shape that gets built. **Why It Fails** gives the mechanism, which is what you need in order to recognise the same failure in an unfamiliar system. **Enterprise Example** is a concrete instance from the Northstar supplier-onboarding scenario used throughout this book. **Recommended Pattern**, **Architecture**, **Detection Metrics** and **Trade-offs** then give the fix, its shape, the signals that tell you whether you still have the problem, and the honest cost of the correction.
+**Problem** states what the team was legitimately trying to achieve — no card here describes carelessness. **Anti-Pattern** is the shape that gets built. **Why It Fails** gives the mechanism, which is what you need in order to recognise the same failure in an unfamiliar system. **Enterprise Example** is a concrete instance from the Harborlight mortgage-evidence scenario used throughout this book; any example explicitly marked **Comparative example** is retained to show transfer to another domain. **Recommended Pattern**, **Architecture**, **Detection Metrics** and **Trade-offs** then give the fix, its shape, the signals that tell you whether you still have the problem, and the honest cost of the correction.
 
 The trade-off field matters. Every correction in this catalog costs something — latency, flexibility, or engineering time — and applying all sixteen to a read-only internal assistant would be malpractice. Correct in order of the blast radius of the effects involved.
 
@@ -1636,7 +1624,7 @@ These two failures share a root cause: the model is allowed to decide when to st
 
 **Why It Fails.** Probabilistic behaviour becomes the control plane. There is no boundary at which a failure can be isolated, so a flawed reasoning step and a failed database write are indistinguishable from outside the process. Run state lives in memory, so a restart loses work that has already had external effects. Nothing can be replayed, because nothing durable was recorded — the transcript is a narrative, not a ledger.
 
-**Enterprise Example.** Supplier onboarding restarts after a routine deploy and creates the vendor a second time, because the only record that the vendor already existed was the agent's own conversation history.
+**Enterprise Example.** Mortgage evidence review restarts after a routine deploy and sends the same document request twice, because the only record of the first request was the agent's conversation history.
 
 **Recommended Pattern.** A bounded runtime inside a durable workflow, with policy, tool and effect, and acceptance services each owning their decision.
 
@@ -1752,7 +1740,7 @@ context = ContextManifest.project(await state.snapshot(run.id), budget=4_000)
 
 **Why It Fails.** Writing by default means writing without provenance, purpose, or verification. Secrets get persisted. Model errors get persisted and then retrieved as established fact, which is how one hallucination becomes a standing belief. Injected instructions from a document become durable instructions. And because nothing recorded why a memory was written, nothing can decide when it should expire or who may delete it — which turns a retention obligation into an archaeology project.
 
-**Enterprise Example.** A malicious email is processed, and the bank account it contains is stored as the supplier's preferred payment detail. Every subsequent run retrieves it as a remembered fact about a known supplier.
+**Enterprise Example.** A malicious mortgage document is processed, and the bank account it contains is stored as an applicant fact. Every subsequent run retrieves it as if it were verified evidence for the mortgage case.
 
 **Recommended Pattern.** Memory writes are candidates, not side effects: purpose-bound, carrying provenance, verified before promotion, scoped to a tenant and subject, with a TTL and a deletion path.
 
@@ -1845,7 +1833,7 @@ The three cards here are the difference between *can* and *may*. An agent that c
 
 ## Effects, retries and recovery
 
-These two cards are the most expensive in the catalog, because they produce duplicate real-world effects — duplicate payments, duplicate vendors, duplicate emails to customers. Both stem from confusing the transport layer with the effect layer: a failed call is not a failed effect, and an unacknowledged call is not an absent one.
+These two cards are the most expensive in the catalog, because they produce duplicate real-world effects — duplicate mortgage-document requests, duplicate payments, or duplicate emails to customers. The latter examples are comparative; all stem from confusing the transport layer with the effect layer: a failed call is not a failed effect, and an unacknowledged call is not an absent one.
 
 [[DIAGRAM:anti-retry-storm|Figure 17-3 — Layered retries and timeout-as-failure versus one retry owner with an unknown-effect terminal]]
 
@@ -1857,7 +1845,7 @@ These two cards are the most expensive in the catalog, because they produce dupl
 
 **Why It Fails.** Retries compose multiplicatively, not additively. Three layers at 3, 3, and 2 attempts produce eighteen calls for one logical operation, and each layer believes it made a modest choice. The amplification arrives precisely when a dependency is already degraded, converting a slow dependency into an outage. If any layer retries a non-idempotent call, the duplicates are permanent.
 
-**Enterprise Example.** A single supplier screening produces eighteen calls to the sanctions registry, and the vendor rate-limits the enterprise for the rest of the day.
+**Enterprise Example.** A single mortgage evidence review produces eighteen calls to an employment-verification source, and the provider rate-limits the lender for the rest of the day.
 
 **Recommended Pattern.** One retry owner per failure class, with a shared attempt and deadline budget that every layer reads and no layer resets.
 
@@ -1895,7 +1883,7 @@ workflow.call(gateway, retry_policy=RetryPolicy(
 
 **Why It Fails.** A timeout describes the response, not the effect. The first call may have committed, may be committing, or may never have arrived, and the caller cannot distinguish these from the outside. Treating that state as failure asserts knowledge the system does not have, and the retry then creates the duplicate that the timeout only made possible.
 
-**Enterprise Example.** The vendor is created twice: the first call committed just after the client gave up waiting.
+**Enterprise Example.** The mortgage document request is recorded twice: the first call committed just after the client gave up waiting.
 
 **Recommended Pattern.** An explicit unknown-effect terminal that blocks retry until reconciliation resolves it against the downstream system of record.
 

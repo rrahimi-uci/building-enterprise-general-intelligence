@@ -2,7 +2,6 @@
 """Create deterministic manifest, checksums, and self-contained release ZIP."""
 from __future__ import annotations
 import argparse, hashlib, json, os, sys, zipfile
-import json
 from pathlib import Path
 
 

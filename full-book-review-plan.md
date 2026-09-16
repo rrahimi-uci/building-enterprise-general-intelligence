@@ -246,7 +246,6 @@ explicit documented limitation.
 - Local tests/builds and remote CI results are reported separately. Missing
   optional tooling (especially `soffice`) remains visible as an unmet gate.
 - A dedicated branch and open PR exist; the PR is not merged by the agent.
-
 ## Current execution ledger — 2026-09-16
 
 This ledger is the handoff point for continuing the review. It records only

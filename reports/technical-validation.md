@@ -1,6 +1,6 @@
 # Technical Validation Record — Book v2.1.0
 
-**Result:** PASS  
+**Result:** PASS; DOCX pagination QA BLOCKED
 **Validated:** 2026-09-16
 
 ## Final measurements
@@ -12,9 +12,10 @@
 - Canonical and distributable Markdown are byte-identical.
 - DOCX package opens successfully and contains required named styles and metadata.
 - DOCX builds twice to the same SHA-256 hash.
-- Genuine XeLaTeX compile: 286 pages.
+- Genuine XeLaTeX compile: 287 pages.
 - 40 chapter/appendix headings are structurally represented in the current source and generated artifacts; the DOCX validator found 28 chapter and 12 appendix headings.
 - LaTeX source validation passed for 45 diagrams, bundled fonts, contrast, citations, and cross-format contracts.
+- XeLaTeX is expected to retain non-fatal overfull/underfull box warnings in dense tables and long labels; these remain a typography follow-up item for visual inspection.
 - Example execution: 26 examples and 123 tests passed with no warnings.
 - Representative XeLaTeX pages remain the visual evidence for this environment;
   DOCX pagination QA is pending because LibreOffice/soffice is not installed.
@@ -43,3 +44,11 @@ See the current generated evidence:
 - `reports/editorial-audit.md`
 - `CHECKSUMS.sha256`
 - `RELEASE-MANIFEST.json`
+
+## Full-book review evidence
+
+- Review contract and chapter-by-chapter matrix: `full-book-review-plan.md`.
+- The running example is consistently Harborlight Mortgage; broader supplier, support, and procurement material is retained only as explicitly labeled comparative architecture evidence.
+- The primary mortgage contract vocabulary uses `HumanActionAuthorizationRequest` and `HumanActionAuthorizationDecision` consistently across source, examples, diagrams, and generated artifacts.
+- Example execution: 26 examples and 123 tests passed with no warnings.
+- Representative XeLaTeX pages (cover, TOC, Part divider, chapter body/table, and closing page) were rendered and visually inspected; no clipping, overlap, or missing-glyph defects were observed.
