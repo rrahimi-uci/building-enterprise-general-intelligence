@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 339,
+  "file_count": 337,
   "files": [
     {
       "path": ".gitattributes",
@@ -1378,16 +1378,6 @@
       "path": "reviews-comments/Enterprise-General-Intelligence-chapter-3.docx",
       "bytes": 260705,
       "sha256": "2ccbab8d8bc56a7a4faa776d620b8fa681c87c69bfea5fa0b004874f7c5c9aa6"
-    },
-    {
-      "path": "reviews-comments/Enterprise-General-Intelligence-review-2.docx",
-      "bytes": 484969,
-      "sha256": "18d0d21d3d1238bc28112d9da3f3455c9ec71352c77b9bf1120f23832a91cb12"
-    },
-    {
-      "path": "reviews-comments/Enterprise-General-Intelligence-v2.1.0 - review till page 30.docx",
-      "bytes": 6746639,
-      "sha256": "12f23783b47e363492818f9df7494df8945485d2be273ace510739d15c7ece4a"
     },
     {
       "path": "skills/book-maintainer/SKILL.md",
