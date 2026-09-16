@@ -104,7 +104,7 @@ A LaTeX release must prove:
 
 1. 8 narrative Parts plus one appendices divider.
 2. 28 chapters and 12 appendices.
-3. 18 diagrams and 94 citation occurrences. Code-block and table totals are derived from the manuscript by the validator, not fixed here.
+3. Current diagram and citation totals are derived from the canonical manuscript and diagram/reference registries. Historical totals must not be hard-coded into the style contract; code-block and table totals are likewise derived by the validators.
 4. Balanced braces/environments outside verbatim code.
 5. Every image and bundled font exists and passes minimum resolution/file-integrity gates.
 6. Designated color pairs meet 4.5:1.

@@ -4,7 +4,7 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "a33c7b93c23d54ab107d5d7c8e29070cd0f85d52260d840c962c28a790fa2732",
-    "content_tex_sha256": "262ab3427b3820cf5d82ae710a061929d81c359676a3a02def5e5582bc89d2b0",
+    "content_tex_sha256": "e28d0a4a8f40e61c2a55041dc7c73b3b2bafdbb1f3cb76c028f76e8fb35637e7",
     "style_sha256": "2ced77988fb7b87ccae527f1c42092f73a634c39b40b7a3ce60ae20e14a53641",
     "narrative_parts": 8,
     "appendix_dividers": 1,
@@ -248,10 +248,10 @@
       {
         "file": "assets/diagrams/anti-retry-storm.png",
         "pixels": [
-          2389,
-          2296
+          2374,
+          2186
         ],
-        "effective_dpi": 338.4
+        "effective_dpi": 336.3
       },
       {
         "file": "assets/diagrams/anti-approval-binding.png",
@@ -312,10 +312,10 @@
       {
         "file": "assets/diagrams/identity-delegation.png",
         "pixels": [
-          2290,
-          3726
+          2280,
+          3626
         ],
-        "effective_dpi": 324.4
+        "effective_dpi": 322.9
       },
       {
         "file": "assets/diagrams/effect-lifecycle.png",

@@ -10,8 +10,6 @@ Translate principles into planes, services, contracts, stores, consistency bound
 
 ## Solution blueprint
 
-Figure 20. Enterprise Platform Architecture, APIs, and Data Models.
-
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Each platform service owns one authoritative record | global control plane to regional execution cell | tenant · queue · partition · cell | one service/cell | Run · Task · Tool · Artifact · Release APIs |
@@ -81,7 +79,7 @@ The public Run API is asynchronous and idempotent. Commands carry expected state
 
 ### Core authoritative records
 
-RunManifest, WorkflowExecution, TaskEnvelope, AgentStep, ContextManifest, CapabilityEnvelope, PolicyDecision, CredentialLease, ToolManifest, ApprovalRequest, EffectRecord, Artifact, EvaluationReport, and ReleaseManifest each have one owner, version, retention policy, and consistency boundary.
+RunManifest, WorkflowExecution, TaskEnvelope, AgentStep, ContextManifest, CapabilityEnvelope, PolicyDecision, CredentialLease, ToolManifest, HumanActionAuthorizationRequest, EffectRecord, Artifact, EvaluationReport, and ReleaseManifest each have one owner, version, retention policy, and consistency boundary.
 
 Scale stateless APIs horizontally, partition state by tenant and run, shard workflow history and trace indexes, and isolate workload classes through queues and concurrency pools. Cell placement enforces region and residency while bounding blast radius.
 
@@ -334,7 +332,7 @@ The reference architecture names a knowledge plane but does not say what fills i
 
 |  |
 | --- |
-| **NORTHSTAR AT THIS POINT**  Northstar's onboarding agent can retrieve the supplier policy and quote it accurately. It still approves a supplier in a jurisdiction the policy excludes, because retrieving a sentence is not the same as being bound by it. The platform team stops adding documents to the index and starts building a knowledge layer. |
+| **MORTGAGE CASE AT THIS POINT**  Harborlight's evidence agent can retrieve the underwriting policy and quote it accurately. It still recommends proceeding with an application whose property or income profile the policy excludes, because retrieving a sentence is not the same as being bound by it. The platform team stops adding documents to the index and starts building a knowledge layer. |
 
 |  |
 | --- |
@@ -365,7 +363,7 @@ Retrieval-augmented generation answers one question well: *what text is relevant
 
 The fourth column is the argument. Each mode fails differently, so each needs different evidence and different tests. A system that cannot say which mode failed cannot be debugged, and a similarity score is not evidence of authority, currency, or permission.
 
-The clearest case is the one Northstar hit. A policy excludes a jurisdiction. Retrieval returns the policy, the model quotes it, and the agent proceeds anyway, because nothing in the pipeline was responsible for *enforcing* the exclusion. The document was context. Nobody made it a constraint.
+The clearest case is the one Harborlight hit. An underwriting policy excludes a property or income condition. Retrieval returns the policy, the model quotes it, and the agent proceeds anyway, because nothing in the pipeline was responsible for *enforcing* the exclusion. The document was context. Nobody made it a constraint.
 
 ## The knowledge fabric
 
@@ -584,8 +582,6 @@ Assemble authorized context from distinct state and knowledge domains and govern
 
 ## Solution blueprint
 
-
-Figure 14. Context Engineering, Memory, and State.
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
@@ -909,7 +905,7 @@ def authorize_artifact_adoption(
 ## Exercises
 
 1. Design a token budget across instructions, state, evidence, memory, and reserve.
-2. Define the lifecycle of a reusable supplier preference memory.
+2. Define the lifecycle of a reusable mortgage evidence-review preference memory.
 
 ## Technical review questions
 

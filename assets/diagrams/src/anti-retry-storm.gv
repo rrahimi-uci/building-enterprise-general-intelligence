@@ -25,7 +25,7 @@ digraph anti_retry_storm {
   b2 [label="Gateway ×3", shape=box, style="filled,rounded", fillcolor="#EAF3FB", color="#1450A3"]
   b3 [label="HTTP client ×3", shape=box, style="filled,rounded", fillcolor="#EEF4FA", color="#4A6078"]
   b4 [label="Registry\n18 calls", shape=cylinder, style=filled, fillcolor="#FBE3E3", color="#A62C2C"]
-  b5 [label="Timeout → failed → retry\nvendor created twice", shape=box, style="filled,rounded", fillcolor="#FBE3E3", color="#A62C2C"]
+  b5 [label="Timeout → failed → retry\nmortgage request duplicated", shape=box, style="filled,rounded", fillcolor="#FBE3E3", color="#A62C2C"]
   g1 [label="Classify failure", shape=diamond, style=filled, fillcolor="#FFF4DF", color="#8A5600", height=0.62]
   g2 [label="Workflow owns retry\nshared budget", shape=box, style="filled,rounded", fillcolor="#E7F5F3", color="#0D6E69"]
   g3 [label="Gateway ×0\nclient ×0", shape=box, style="filled,rounded", fillcolor="#EEF4FA", color="#4A6078"]

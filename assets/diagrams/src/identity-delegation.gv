@@ -6,19 +6,19 @@ digraph identity_delegation {
   graph [ranksep=0.34, nodesep=0.28]
   node [width=1.85, fontsize=11]
 
-  user [label="Subject\nprocurement user", fillcolor="#EEF4FA", color="#4A6078"]
+  user [label="Subject\nloan officer", fillcolor="#EEF4FA", color="#4A6078"]
   run [label="Run service\npreserves subject + actor", fillcolor="#EAF3FB", color="#1450A3"]
   policy [label="Exact policy?\nsubject · actor · purpose\nresource · action · risk", shape=diamond,
          fillcolor="#FFF4DF", color="#8A5600", width=2.25]
-  parent [label="Platform agent\nactor: agent/v3", fillcolor="#E7F5F3", color="#0D6E69"]
+  parent [label="Platform agent\nactor: mortgage-evidence-agent", fillcolor="#E7F5F3", color="#0D6E69"]
   parent_grant [label="Parent capability\nmaximum permitted scope", shape=note,
                 fillcolor="#E6F5F9", color="#0B6076"]
   child_grant [label="Child grant = intersection\nnarrower scope · shorter TTL", shape=note,
                fillcolor="#E6F5F9", color="#0B6076"]
-  child [label="Specialist agent\nactor: tax/v2", fillcolor="#E7F5F3", color="#0D6E69"]
+  child [label="Specialist agent\nactor: income-verification/v1", fillcolor="#E7F5F3", color="#0D6E69"]
   gateway [label="Tool Gateway\nre-authorize exact action", fillcolor="#EAF3FB", color="#1450A3"]
   sts [label="Credential broker\nlast-hop lease", fillcolor="#FFF4DF", color="#8A5600"]
-  erp [label="ERP\naudience = ERP\nread supplier:acct_17", shape=cylinder,
+  erp [label="LOS\naudience = LOS\nread mortgage:MORT-2026-000184", shape=cylinder,
        fillcolor="#EDF3FC", color="#1450A3"]
 
   user -> run [label="  authenticated subject  "]

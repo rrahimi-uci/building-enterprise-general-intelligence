@@ -197,3 +197,50 @@ pass is claimed.
 
 Notion synchronization and merge are out of scope for this PR. The PR remains
 open for the author’s review.
+
+## Addendum — Full-book end-to-end review
+
+**Reviewed:** 2026-09-16
+**Review plan:** `full-book-review-plan.md`
+
+This pass executed the review plan across the complete canonical source and its
+publication pipeline. The mortgage case is now the primary narrative from the
+initial bottleneck through knowledge, Skills, bounded reasoning, delegation,
+security, human action authorization, effects, observability, evaluation,
+governance, release, and capacity. Broader supplier, support, procurement, and
+payment scenarios are retained only where they teach a transferable comparison;
+the primary pattern-catalog examples and security/operations walkthroughs now
+use the mortgage case.
+
+### Corrections applied
+
+- Reconciled the front-matter promise, Part transitions, chapter callouts,
+  exercises, technical examples, and Appendix I around Harborlight Home Finance
+  and synthetic case `MORT-2026-000184`.
+- Renamed ambiguous platform approval records in prose and illustrative
+  contracts to `HumanActionAuthorizationRequest` and
+  `HumanActionAuthorizationDecision`; preserved `LendingDecision` as the
+  separate underwriter-owned credit record.
+- Removed stale hand-authored figure captions so all figures resolve through
+  registered markers and generated captions.
+- Updated the four editable diagrams that still contained supplier-era labels
+  and regenerated their vector/raster assets and registry checksums.
+- Added a dedicated mortgage callout classification to the shared renderer and
+  removed stale historical counts from the LaTeX style contract.
+- Removed duplicate imports in the validation and packaging tools.
+- Reviewed repeated debugging and capacity explanations during the
+  chapter-by-chapter pass and retained them only where each section adds a
+  distinct operational decision, without removing substantive architecture.
+
+### Current evidence
+
+- The structural topology remains 8 Parts, 28 chapters, and 12 appendices.
+- The current source registers 45 diagrams, 71 code blocks, 48 references, and
+  107 citation occurrences; the validators derive these counts rather than
+  relying on historical fixed totals.
+- The canonical mortgage implementation remains intentionally limited to
+  `C01`–`C03`; `code-gap.md` remains the roadmap for later checkpoint code and
+  no production-readiness claim is made for the incomplete cumulative runtime.
+- Source, generated Markdown, DOCX, LaTeX source, diagrams, registries, and QA
+  reports were rebuilt from the canonical source. DOCX pagination QA remains an
+  environment-gated release check when LibreOffice/`soffice` is unavailable.

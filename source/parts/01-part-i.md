@@ -6,19 +6,20 @@ Foundations establish the vocabulary and deterministic boundaries that every lat
 
 |  |
 | --- |
-| **NORTHSTAR AT THIS POINT**  Northstar Components wants to shorten supplier onboarding from twelve days to two. A prototype can summarize a supplier file, but production must also retrieve authorized records, request missing evidence, pause for people, screen sanctions, create auditable decisions, and survive days of inactivity. |
+| **MORTGAGE CASE AT THIS POINT**  Harborlight Home Finance wants to shorten mortgage evidence preparation from twelve days to two. A prototype can summarize an application file, but production must also retrieve authorized records, request missing evidence, pause for people, verify income and property evidence, create auditable decisions, and survive days of inactivity. |
 
 |  |
 | --- |
-| **DESIGN DECISION**  Start Northstar as a governed distributed application with one bounded reasoning component, not as an autonomous chatbot. |
+| **DESIGN DECISION**  Start Harborlight's mortgage assistant as a governed distributed application with one bounded reasoning component, not as an autonomous chatbot. |
 
 ## The mortgage case that will grow with the book
 
-The book keeps its original Northstar material and examples because they make
-the architectural principles concrete. Alongside that material, the cumulative
-implementation now follows one fictional mortgage case so the reader can see
-the same system acquire each capability without jumping to a new application.
-This is an additive teaching thread, not a deletion of the supplier narrative.
+The book keeps its original architectural material and comparative examples
+because they make the principles concrete. The cumulative implementation and
+the primary narrative now follow one fictional mortgage case so the reader can
+see the same system acquire each capability without jumping to a new
+application. This is a reframing of the teaching thread, not a deletion of
+the broader enterprise scenarios.
 
 **Harborlight Home Finance** is a fictional lender preparing an underwriter-ready
 package for a synthetic purchase application. The anchor case is
@@ -27,6 +28,9 @@ Morgan and a fictional property. The target is to prepare a review package
 within one business day for routine synthetic cases while preserving identity,
 privacy, evidence, policy, human oversight, audit, and recovery controls. The
 target is an illustrative design objective, not a benchmark.
+
+In the architecture sections, **Northstar** is the platform codename used for
+Harborlight's mortgage workflow. It is not a second business scenario.
 
 | Contract | Initial mortgage case |
 | --- | --- |
@@ -57,11 +61,11 @@ service is introduced:
 
 [[EXAMPLE:mortgage-cumulative-case#c01]]
 
-The supplier sections that follow remain useful contrasts: they show the same
-durability, authority, evidence, and release bottlenecks in a different
-enterprise domain. Later implementation checkpoints map both narratives to the
-same platform contracts; the mortgage case is the cumulative code path and the
-only domain used by the runnable Python examples.
+Supplier, support, procurement, and payment scenarios that remain later in the
+book are labeled comparative examples. They show that the same contracts apply
+outside lending, but they are not additional stages of the running
+implementation. The mortgage case is the cumulative code path and the only
+domain used by the runnable Python examples.
 
 ## Where this starts: a demo that works
 
@@ -72,8 +76,8 @@ system is the subject of this entire book — and the gap is not intelligence.
 🐍 · an intentionally abbreviated prototype sketch
 
 The following minimal mortgage example is retained as a contrast to the
-production design, but it is not a repository-executed listing: the three tool
-names stand for application code that a demo would provide. The runnable,
+production design, but it is not a repository-executed listing: its surrounding
+application code is intentionally omitted. The runnable,
 provider-pinned foundation is the mortgage example above; keeping this sketch
 visibly non-executable prevents a reader from mistaking omitted gateway and
 effect controls for a complete implementation.
@@ -140,8 +144,6 @@ Explain why an agentic application is a distributed system and assign every auth
 ## Solution blueprint
 
 
-Figure 1. From an LLM Call to a Production Agentic System.
-
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Run Service and durable workflow | User/edge, content/model, model/tool | run · tenant · regional cell | one run and one cell | RunManifest · AgentStep · Artifact |
@@ -179,7 +181,7 @@ answer = response.output_text
 **What it can do.** Read, summarize, classify, draft, translate, extract.
 
 **What it cannot do.** Find out anything it was not told. A model asked "is this
-supplier sanctioned?" will produce a confident answer drawn from training data
+application's income evidence sufficient?" will produce a confident answer drawn from training data
 that may be two years stale, because producing an answer is the only thing it
 does. It has no mechanism for *not knowing*.
 
@@ -197,7 +199,7 @@ def read_mortgage_case(case_id: str) -> str:
 ```
 
 **What this adds.** Current facts instead of remembered ones. The model's answer
-about sanctions status can now come from the sanctions registry.
+about evidence status can now come from the mortgage case gateway.
 
 **What it still cannot do.** Anything that takes more than one exchange to
 figure out. The caller still decides the sequence.
@@ -223,7 +225,7 @@ advance — where the second step depends on what the first returned.
 
 **What it still cannot do.** Survive. The loop lives in one process. If that
 process restarts, everything it knew is gone, including the knowledge that it
-already created a supplier record. It also decides for itself when to stop,
+already requested a mortgage document. It also decides for itself when to stop,
 which means *termination is now a property of a text generator*.
 
 That last point is worth sitting with. At level two, a bug produces a wrong
@@ -277,9 +279,9 @@ succeeded, whether a user may act, or whether the work is done — not because i
 would necessarily be wrong, but because being right by luck is indistinguishable
 from being right by construction, and only one of those can be audited.
 
-### The Northstar domain thread
+### The Harborlight domain thread
 
-Throughout this book, Northstar builds a supplier-onboarding platform. The evolving system retrieves candidate records, validates documents, screens sanctions, requests corrections, coordinates specialists, waits for human decisions, creates supplier records, and preserves evidence. The use case is deliberately inconvenient: it crosses data boundaries, lasts days, includes ambiguous reasoning, performs protected writes, and requires audit. That makes it useful for testing whether an architecture is real.
+Throughout this book, Harborlight builds a mortgage evidence and underwriting-support platform. The evolving system retrieves authorized application records, validates income and property documents, identifies contradictions, coordinates specialist checks, requests missing evidence, waits for human decisions, and preserves evidence for the underwriter. The use case is deliberately inconvenient: it crosses data boundaries, lasts days, includes ambiguous reasoning, performs protected writes such as document requests, and requires audit. That makes it useful for testing whether an architecture is real.
 
 ## The production problem
 
@@ -295,7 +297,7 @@ development, and they interact:
   output. Anything that must be reproducible therefore cannot depend on the
   model producing the same thing twice.
 - **The environment is concurrent and partially failing.** Two runs touch the
-  same supplier. A registry times out. A queue delivers a message twice. None of
+  same mortgage case. A document service times out. A queue delivers a message twice. None of
   this is exceptional; it is Tuesday.
 - **Inputs may be adversarial.** Not only from users — a retrieved document, a
   tool result, or a third-party server's tool description is untrusted text that
@@ -545,7 +547,7 @@ and shows why a well-formed proposal is still not permission to act.
 
 |  |
 | --- |
-| **NORTHSTAR AT THIS POINT**  The prototype now proposes a call to create a supplier record. The JSON is valid and the rationale sounds convincing, yet the record may be stale, the user may lack write authority, and a retry could create a duplicate. Northstar introduces a deterministic shell around every model proposal. |
+| **MORTGAGE CASE AT THIS POINT**  The prototype now proposes a document request. The JSON is valid and the rationale sounds convincing, yet the case may be stale, the user may lack request authority, and a retry could create a duplicate request. Harborlight introduces a deterministic shell around every model proposal. |
 
 |  |
 | --- |
@@ -557,8 +559,6 @@ Turn model output into typed proposals and place validation, authorization, effe
 
 ## Solution blueprint
 
-
-Figure 2. Tools, Structured Outputs, and the Deterministic Shell.
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
@@ -575,7 +575,7 @@ A useful proposal is small. It names one disposition, one tool or delegation tar
 ### One proposal, six gates
 
 The sequence above is the chapter in one line, but it only becomes useful when
-you can see what each gate rejects. Here is a single proposal from Northstar,
+you can see what each gate rejects. Here is a single proposal from Harborlight,
 and what happens to it.
 
 The diagram establishes the order. The table below is the single operational
@@ -603,7 +603,7 @@ JSON · what the model actually emits
 | **Authorize** | May *this* subject do *this* to *this* resource, now? | Caller holds `mortgage:case:read` but not `mortgage:evidence_request` |
 | **Commit** | Execute once, through the same path a human request takes | A duplicate arriving from a retry, via the idempotency key |
 | **Verify** | Did the effect actually land, and does it match? | A timeout, which resolves to unknown rather than failed |
-| **Accept** | Are the run's obligations discharged? | Sanctions evidence older than policy allows |
+| **Accept** | Are the run's obligations discharged? | Employment evidence older than policy allows |
 
 Two distinctions are important here.
 
@@ -615,8 +615,8 @@ this specific action on this specific resource. Passing validation never implies
 permission to act.
 
 Second, the proposal is based on a specific version of business state. The field
-`expected_version: 4` means the model made its decision after reading version 4
-of the supplier record. If another process updates that record to version 5
+`expected_version: 1` means the model made its decision after reading version 1
+of the mortgage case. If another process updates that case to version 2
 before the action is committed, the write should be rejected and the latest
 state reconsidered rather than silently overwriting the newer change.
 
@@ -631,7 +631,7 @@ state.
 
 ### Deterministic acceptance
 
-Acceptance is not the model saying “done.” Northstar declares supplier onboarding complete only when required evidence artifacts exist, every screening result is fresh, approvals cover the exact proposal, all protected effects are committed with receipts, no unknown effect remains, and the supplier record satisfies domain invariants.
+Acceptance is not the model saying “done.” Harborlight declares evidence preparation complete only when required artifacts exist, income and property checks are fresh, approvals cover the exact proposal, all protected effects are committed with receipts, no unknown effect remains, and the mortgage case satisfies its domain invariants.
 
 ### Scaling the shell
 
@@ -784,8 +784,8 @@ production persists these transitions atomically with the downstream effect.
 
 ## Exercises
 
-1. Define a typed proposal and deterministic acceptance function for supplier screening.
-2. Write five invariants that must be true before supplier activation can commit.
+1. Define a typed proposal and deterministic acceptance function for mortgage evidence review.
+2. Write five invariants that must be true before a mortgage document request can commit.
 
 ## Technical review questions
 
@@ -839,21 +839,21 @@ session, and uses that result as a proposal for the deterministic shell.
 
 [[EXAMPLE:mortgage-cumulative-case#c03]]
 
-Consider Northstar supplier `SUP-8421`, Acme Industrial GmbH. The supplier-onboarding workflow receives an application, collects legal and beneficial-ownership evidence, screens sanctions, requests missing documents, obtains any required approval, creates the supplier record, and accepts the run only when its obligations are discharged.
+Consider Harborlight mortgage case `MORT-2026-000184`, a synthetic purchase application for Alex Morgan. The mortgage-evidence workflow receives the application, collects income and property evidence, checks for contradictions, requests missing documents, obtains any required approval, and accepts the run only when its obligations are discharged.
 
 The durable workflow owns the business sequence:
 
-1. Receive the supplier application.
+1. Receive the mortgage application.
 2. Collect and classify the submitted evidence.
-3. Retrieve authorized supplier and policy projections.
+3. Retrieve authorized mortgage-case and policy projections.
 4. Run a bounded evidence-review activity.
-5. Request additional evidence or continue to screening and approval.
-6. Commit any protected supplier change through the Tool Gateway.
+5. Request additional evidence or continue to verification and approval.
+6. Commit any protected mortgage-case change through the Tool Gateway.
 7. Verify the effect and evaluate the run’s acceptance criteria.
 
-Most of those facts are not reasoning problems. Before an agent runs, the platform already knows the supplier identifier, tenant, initiating subject, workflow node, applicable policy revision, evidence permissions, previously committed effects, approval status, deadlines, and the exact conditions for acceptance.
+Most of those facts are not reasoning problems. Before an agent runs, the platform already knows the mortgage case identifier, tenant, initiating subject, workflow node, applicable policy revision, evidence permissions, previously committed effects, approval status, deadlines, and the exact conditions for acceptance.
 
-The agent can help with a narrower task: examine the authorized evidence for `SUP-8421` and return a structured assessment of whether it is sufficient, insufficient, or requires additional evidence, together with the evidence references supporting that assessment. The agent interprets evidence; it does not become the workflow, grant access, or declare the supplier officially created.
+The agent can help with a narrower task: examine the authorized evidence for `MORT-2026-000184` and return a structured assessment of whether it is sufficient, insufficient, or requires additional evidence, together with the evidence references supporting that assessment. The agent interprets evidence; it does not become the workflow, grant access, approve or deny the loan, or declare the case complete.
 
 This gives Northstar a durable shape:
 
@@ -872,17 +872,17 @@ Read the flow from top to bottom. The adapter may translate a platform request i
 
 ## What the agent actually does
 
-For the bounded activity, Northstar asks the agent to evaluate authorized evidence for `SUP-8421` and return one of three dispositions: sufficient, insufficient, or additional evidence required. The agent may need to retrieve the supplier projection, inspect document metadata, retrieve extracted fields, call a deterministic risk or completeness calculator, compare results with the supplied policy evidence, and assemble a structured recommendation.
+For the bounded activity, Harborlight asks the agent to evaluate authorized evidence for `MORT-2026-000184` and return one of three dispositions: sufficient, insufficient, or additional evidence required. The agent may need to retrieve the mortgage-case projection, inspect document metadata, retrieve extracted fields, call a deterministic income or completeness calculator, compare results with the supplied policy evidence, and assemble a structured recommendation.
 
 That is exactly the kind of local execution an agent framework is designed to support. The framework can provide an `Agent`, `Runner`, function tools, structured output, local handoffs, guardrails, tracing, sessions, and interruption surfaces. [R29] Northstar should use those capabilities rather than rebuilding the loop.
 
 But the framework must not answer questions that belong to the enterprise platform:
 
-- Which supplier is this run allowed to inspect?
+- Which mortgage case is this run allowed to inspect?
 - May this subject retrieve this document for this purpose?
 - Which policy revision applies at this workflow node?
 - Has the required approval been granted for this exact proposal?
-- Did the supplier write actually commit?
+- Did the mortgage document request actually commit?
 - Is the run complete, or does it still have an unmet obligation?
 
 Those are questions about truth, authority, and durable consequences. They remain outside the model-facing loop.
@@ -1037,7 +1037,7 @@ None of those facts should require reconstructing an SDK session object. If losi
 
 An SDK may pause execution when a protected tool call needs a human response. That interruption is useful runtime control, but it is not by itself an enterprise approval.
 
-The durable platform should create an `ApprovalRequest` containing the approval ID, run and workflow IDs, exact action and resource, proposal hash, evidence references, expected resource version, requested actor, risk class, expiry, and allowed responses. The workflow waits. An eligible reviewer grants or rejects the proposal. Before resuming, the platform verifies that the grant is unexpired, the actor and purpose still match, the policy still permits the action, the resource version is still current, and the proposal hash is unchanged.
+The durable platform should create a `HumanActionAuthorizationRequest` containing the authorization ID, run and workflow IDs, exact action and resource, proposal hash, evidence references, expected resource version, requested actor, risk class, expiry, and allowed responses. The workflow waits. An eligible reviewer grants or rejects the proposal. Before resuming, the platform verifies that the grant is unexpired, the actor and purpose still match, the policy still permits the action, the resource version is still current, and the proposal hash is unchanged.
 
 The distinction is:
 
@@ -1063,14 +1063,14 @@ Frameworks make it easy for one agent to involve another, but “handoff” hide
 | Case | What happens | Correct abstraction |
 | --- | --- | --- |
 | Specialist as a tool | The evidence agent asks a sanctions specialist for analysis and retains responsibility for the final disposition | Agent-as-tool or equivalent local delegation |
-| Conversational transfer | A triage agent transfers the bounded conversation to a supplier specialist; control changes locally but the same activity remains accountable | Framework handoff, with the same external budget and cancellation boundary |
+| Conversational transfer | A triage agent transfers the bounded conversation to an income-verification specialist; control changes locally but the same activity remains accountable | Framework handoff, with the same external budget and cancellation boundary |
 | Durable delegation | A fraud investigation needs independent ownership, waits, retries, deadlines, human review, or a cross-service trust boundary | Durable `TaskEnvelope` and child workflow |
 
 Use framework delegation for reasoning structure. Use platform delegation for operational ownership. A local handoff must not silently transfer authority, budget, cancellation responsibility, or the obligation to produce a durable result.
 
 ## Guardrails and authorization solve different problems
 
-Suppose a supplier document contains an instruction to ignore prior instructions and export unrelated records. An SDK input or output guardrail may detect suspicious content and stop the local loop. That is valuable defense in depth, but enterprise security cannot depend on the model or guardrail recognizing every attack.
+Suppose a mortgage document contains an instruction to ignore prior instructions and upload unrelated applicant records. An SDK input or output guardrail may detect suspicious content and stop the local loop. That is valuable defense in depth, but enterprise security cannot depend on the model or guardrail recognizing every attack.
 
 The protection stack should still enforce the request if compromised reasoning reaches the gateway:
 

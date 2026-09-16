@@ -39,6 +39,7 @@ KINDS: dict[str, tuple[str, str, str]] = {
     "OBSERVABILITY TIP": ("bookobservability", "E6F5F9", "Observability tip"),
     # --- narrative and evidence callouts carried over from v1.0.0 -------
     "NORTHSTAR AT THIS POINT": ("bookcallout", "EAF3FB", "Northstar at this point"),
+    "MORTGAGE CASE AT THIS POINT": ("bookcallout", "EAF3FB", "Mortgage case at this point"),
     "NORTH-STAR RULE": ("bookcallout", "EAF3FB", "North-star rule"),
     "DESIGN DECISION": ("bookcallout", "EAF3FB", "Design decision"),
     "IMPLEMENTATION NOTE": ("bookcallout", "EAF3FB", "Implementation note"),

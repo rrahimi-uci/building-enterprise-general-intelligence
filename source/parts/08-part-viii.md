@@ -18,7 +18,7 @@ Make governance decisions explicit, proportional, owned, and reversible, so that
 
 Governance is easiest to understand as a control loop, not as a meeting. A team first states the outcome it is accountable for, then identifies what could make that outcome harmful, chooses controls proportional to the consequence, collects evidence while the system runs, and revises the controls when evidence or circumstances change. The loop is useful only when each step has an owner and a record that another person can inspect.
 
-Consider Northstar's supplier-document assistant. The domain owner may accept a draft classification, but the assistant must not change a supplier record. The data owner decides which contracts may enter context; the risk owner classifies the workflow; the resource owner defines whether a write tool is available; and the release owner verifies that the assembled controls were tested. No single committee needs to understand every supplier rule, but every decision has a clear owner and an evidence boundary.
+Consider Harborlight's mortgage-evidence assistant. The domain owner may accept a draft evidence classification, but the assistant must not make or record a lending decision. The data owner decides which application and policy records may enter context; the risk owner classifies the workflow; the resource owner defines whether a document-request tool is available; and the release owner verifies that the assembled controls were tested. No single committee needs to understand every underwriting rule, but every decision has a clear owner and an evidence boundary.
 
 | **If the team asks…** | **Governance must answer…** | **Evidence that closes the question** |
 | --- | --- | --- |

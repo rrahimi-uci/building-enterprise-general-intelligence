@@ -130,7 +130,7 @@ Together, these principles establish a simple operating contract: agents provide
 - F. Known limits and enforced mitigations
 - G. Enterprise adoption roadmap
 - H. Glossary
-- I. Companion Implementation Guide: Northstar Reference
+- I. Companion Implementation Guide: Harborlight Mortgage Reference
 - J. Coding-agent prompt and acceptance criteria
 - K. References
 - L. Capacity, resilience, and release acceptance
