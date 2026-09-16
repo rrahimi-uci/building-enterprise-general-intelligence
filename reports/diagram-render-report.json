@@ -1,6 +1,6 @@
 {
-  "diagrams": 43,
-  "with_vector": 43,
+  "diagrams": 44,
+  "with_vector": 44,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -375,6 +375,17 @@
       "effective_dpi": 360,
       "vector": true,
       "sha256": "ae9175f77e46e1dfcc28f99be1c08d9c4dbe9c9ff44a15287a9deb49d1271e95"
+    },
+    {
+      "id": "runtime-boundary",
+      "source": "runtime-boundary.gv",
+      "pixels": [
+        2312,
+        2908
+      ],
+      "effective_dpi": 338,
+      "vector": true,
+      "sha256": "ff9c4537372a24b0bef88702f6b4d07e59fc4a48c8b47dc76c8ce4523bc6273a"
     },
     {
       "id": "security-boundaries",
