@@ -1,4 +1,4 @@
-"""A bounded agent loop with a typed tool, using the OpenAI Agents SDK.
+"""A bounded mortgage evidence loop with a typed tool, using the OpenAI Agents SDK.
 
 Shows the smallest complete shape of the pattern the book calls a deterministic
 shell: the model *proposes* a tool call, the SDK dispatches it, and the tool
@@ -11,31 +11,37 @@ import asyncio
 
 from agents import Agent, Runner, function_tool
 from agents.run import RunConfig
+from mortgage_case.domain.case import load_anchor_case
 from pydantic import BaseModel
 
 # --8<-- example:start
 
 
-class SupplierStatus(BaseModel):
+class MortgageCaseStatus(BaseModel):
     """The structured answer the agent must produce."""
 
-    supplier_id: str
-    active: bool
+    case_id: str
+    needs_input: bool
     summary: str
 
 
 # A tool is a normal, testable function. Its type hints become the schema the
 # model is allowed to call, so an out-of-contract proposal fails before dispatch.
+ANCHOR_CASE_ID = load_anchor_case().case_id
+
+
 @function_tool
-def lookup_supplier(supplier_id: str) -> str:
-    """Return the onboarding status of one supplier record."""
-    records = {"S-1001": "active", "S-2002": "suspended"}
-    status = records.get(supplier_id)
+def read_mortgage_case(case_id: str) -> str:
+    """Return the evidence status of one synthetic mortgage case."""
+    records = {
+        ANCHOR_CASE_ID: "missing employment_verification evidence",
+    }
+    status = records.get(case_id)
     if status is None:
         # Returning an error *as data* keeps the loop bounded: the model can
         # react to it, but it cannot escalate its own privileges by retrying.
-        return f"no supplier record for {supplier_id}"
-    return f"supplier {supplier_id} is {status}"
+        return f"no mortgage case record for {case_id}"
+    return f"mortgage case {case_id} {status}"
 
 
 def build_agent() -> Agent:
@@ -43,21 +49,21 @@ def build_agent() -> Agent:
     # model-facing hints, not a substitute for gateway authorization.
     instructions = "\n".join(
         [
-            "Answer questions about supplier onboarding.",
-            "Always call lookup_supplier before making a claim about a record.",
+            "Answer questions about mortgage evidence review.",
+            "Always call read_mortgage_case before making a claim about a case.",
         ]
     )
     return Agent(
-        name="Supplier onboarding",
+        name="Mortgage evidence review",
         instructions=instructions,
-        tools=[lookup_supplier],
+        tools=[read_mortgage_case],
         # max_turns on the run, plus a declared output type, are what make this
         # a bounded loop rather than an open-ended conversation.
-        output_type=SupplierStatus,
+        output_type=MortgageCaseStatus,
     )
 
 
-async def run(question: str, *, model=None) -> SupplierStatus:
+async def run(question: str, *, model=None) -> MortgageCaseStatus:
     result = await Runner.run(
         build_agent(),
         question,
@@ -71,4 +77,4 @@ async def run(question: str, *, model=None) -> SupplierStatus:
 
 
 if __name__ == "__main__":  # pragma: no cover - requires a real model
-    print(asyncio.run(run("Is supplier S-1001 active?")))
+    print(asyncio.run(run("Does MORT-2026-000184 have all required evidence?")))

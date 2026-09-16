@@ -21,16 +21,16 @@ class StubGateway:
 
 
 def _request():
-    return StepRequest(input_items="Assess supplier S-1001", max_turns=4,
+    return StepRequest(input_items="Review mortgage case MORT-2026-000184", max_turns=4,
                        run_id="r-1", agent_version="1.4.0")
 
 
 async def test_step_returns_the_platform_contract():
     model = ScriptedModel([
-        Say('{"status": "completed", "summary": "Policy permits onboarding.",'
+        Say('{"status": "completed", "summary": "Mortgage evidence review may continue.",'
             ' "evidence_artifact_ids": []}'),
     ])
-    context = PlatformContext(tenant_id="t1", subject_id="s-1", actor_id="agent-1",
+    context = PlatformContext(tenant_id="harborlight-us-west", subject_id="MORT-2026-000184", actor_id="mortgage-agent",
                               run_id="r-1", gateway=StubGateway())
     out = await execute_step(_request(), context, model=model)
     # The caller sees the platform's own dict, never an SDK RunResult.

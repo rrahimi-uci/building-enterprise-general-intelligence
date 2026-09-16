@@ -61,16 +61,16 @@ Create from an approved template; attach tools, Skills, context, and memory; con
 
 ```python
 agent = platform.agent(
-    spec="supplier_onboarding@3.2.0",
+    spec="mortgage_evidence_review@0.1.0",
     model_policy="quality-balanced@7",
-    permissions=["supplier:read", "screening:propose"],
+    permissions=["mortgage:case:read", "mortgage:evidence_request"],
     budgets={"tokens": 18_000, "usd": 0.45, "deadline_s": 90},
 )
-agent.attach_skill("supplier-screening@2.4.1")
-agent.attach_tool(screen_supplier, risk="protected", effect="screening.create")
-agent.use_context(source="supplier-policy", snapshot="approved-latest")
-agent.use_memory(policy="tenant-user-preferences@3")
-report = platform.test(agent).simulate("supplier-onboarding-regression")
+agent.attach_skill("mortgage-evidence-review@0.1.0")
+agent.attach_tool(read_mortgage_case, risk="regulated", effect="evidence.read")
+agent.use_context(source="mortgage-underwriting-policy", snapshot="approved-2026.09")
+agent.use_memory(policy="case-evidence-preferences@1")
+report = platform.test(agent).simulate("mortgage-evidence-regression")
 platform.release(agent, require=["quality", "security", "cost", "rollback"])
 ```
 
@@ -110,14 +110,14 @@ Deterministic units verify schemas, policy helpers, acceptance, routes, reducers
 BASH · implementation excerpt
 
 ```bash
-agentctl init supplier-onboarding --template regulated-workflow --risk high
-agentctl dev --scenario late-sanctions-response --trace
+agentctl init mortgage-evidence-review --template regulated-workflow --risk high
+agentctl dev --scenario missing-income-evidence --trace
 agentctl test --unit --contracts --failure-injection
-agentctl eval --dataset supplier-regression@12 --compare production
+agentctl eval --dataset mortgage-evidence-regression@1 --compare production
 agentctl package --lock --sbom --sign
 agentctl promote --from staging --to production --canary 5%
 agentctl traces diff run:failed run:accepted
-agentctl rollback supplier-onboarding@3.2.0 --to 3.1.4
+agentctl rollback mortgage-evidence-review@0.1.0 --to 0.0.9
 ```
 
 Use one immutable artifact across environments; bind endpoints, identities, secrets, sources, quotas, regions, and review queues at deployment. Pin SDKs, adapters, model aliases, tool schemas, Skills, MCP servers, policy bundles, evaluators, and knowledge snapshots. A model/provider swap is a behavior change—not harmless configuration.
@@ -200,28 +200,28 @@ That list is abstract until you see one. A manifest is a declaration, not code:
 YAML · a Skill manifest, abridged
 
 ```yaml
-skill: supplier.evidence.read
-version: 2.4.1
+skill: mortgage.evidence.read
+version: 0.1.0
 digest: sha256:9f3c...            # immutable; the version alias may move, this cannot
-owner: supplier-platform-team
+owner: mortgage-platform-team
 side_effect_class: read_only      # governs which policy gates apply at resolution
 
 interface:
-  input:  SupplierEvidenceRequest@3
-  output: SupplierEvidenceBundle@3
+  input:  MortgageEvidenceRequest@1
+  output: MortgageEvidenceBundle@1
 
 requires:
-  tools:     [registry.lookup@2, document.fetch@1]
-  knowledge: [supplier-policy@approved-latest]
+  tools:     [mortgage.case.read@1, mortgage.document.read@1]
+  knowledge: [mortgage-policy@approved-2026.09]
   runtime:   {max_turns: 6, deadline_s: 45}
 
 policy:
-  data_classes: [supplier_pii]
-  regions:      [eu]             # resolution fails outside these, it does not warn
+  data_classes: [mortgage_financial]
+  regions:      [us]             # resolution fails outside these, it does not warn
   min_risk_tier: 1
 
 evaluation:
-  suite: supplier-evidence-regression@12
+  suite: mortgage-evidence-regression@1
   gates: {accuracy: 0.94, cross_tenant_leak: 0}
 lifecycle: active
 ```
@@ -233,7 +233,7 @@ reaches for a tool not listed there fails, which is what makes the manifest a
 contract rather than documentation. And `evaluation.gates` means promotion is
 decided by evidence, not by a reviewer's judgement on the day.
 
-Skills separate reuse from copy-and-paste. An application requests a capability such as supplier.evidence.read; it does not embed a specific prompt and connector.
+Skills separate reuse from copy-and-paste. An application requests a capability such as `mortgage.evidence.read`; it does not embed a specific prompt and connector.
 
 ### Discovery is not resolution
 

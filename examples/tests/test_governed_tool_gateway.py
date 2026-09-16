@@ -16,19 +16,19 @@ from examples.foundations.governed_tool_gateway import (
 
 def context(*, version: int = 7) -> InvocationContext:
     return InvocationContext(
-        allowed_actions=frozenset({"supplier:write"}),
-        eligible_tool_versions=frozenset({"supplier.create@2"}),
+        allowed_actions=frozenset({"mortgage:evidence_request"}),
+        eligible_tool_versions=frozenset({"mortgage.document.request@1"}),
         actual_resource_version=version,
     )
 
 
 def manifest() -> ToolManifest:
     return ToolManifest(
-        tool_id="supplier.create",
-        version="2",
-        description="Create one supplier record.",
-        input_schema="SupplierCreateRequest",
-        required_action="supplier:write",
+        tool_id="mortgage.document.request",
+        version="1",
+        description="Request one missing mortgage evidence document.",
+        input_schema="MortgageDocumentRequest",
+        required_action="mortgage:evidence_request",
         mutating=True,
         idempotency_required=True,
     )
@@ -39,7 +39,7 @@ async def test_stale_proposal_is_rejected_before_dispatch():
 
     async def connector(arguments, effect_key):
         calls.append(effect_key or "read")
-        return {"receipt": "supplier:S-1001"}
+        return {"receipt": "document-request:MORT-2026-000184"}
 
     gateway = ToolGateway()
     gateway.register(manifest(), connector)
@@ -47,10 +47,10 @@ async def test_stale_proposal_is_rejected_before_dispatch():
     with pytest.raises(StaleResource):
         await gateway.invoke(
             intent=ToolIntent(
-                tool_version="supplier.create@2",
-                arguments={"supplier_id": "S-1001"},
+                tool_version="mortgage.document.request@1",
+                arguments={"case_id": "MORT-2026-000184", "document_kind": "employment_verification"},
                 expected_resource_version=6,
-                logical_effect_key="supplier:create:S-1001",
+                logical_effect_key="mortgage:document-request:MORT-2026-000184:employment_verification",
             ),
             context=context(version=7),
         )
@@ -68,14 +68,14 @@ async def test_unauthorized_action_is_rejected():
     with pytest.raises(ToolGatewayError):
         await gateway.invoke(
             intent=ToolIntent(
-                tool_version="supplier.create@2",
-                arguments={"supplier_id": "S-1001"},
+                tool_version="mortgage.document.request@1",
+                arguments={"case_id": "MORT-2026-000184", "document_kind": "employment_verification"},
                 expected_resource_version=7,
-                logical_effect_key="supplier:create:S-1001",
+                logical_effect_key="mortgage:document-request:MORT-2026-000184:employment_verification",
             ),
             context=InvocationContext(
-                allowed_actions=frozenset({"supplier:read"}),
-                eligible_tool_versions=frozenset({"supplier.create@2"}),
+                allowed_actions=frozenset({"mortgage:case:read"}),
+                eligible_tool_versions=frozenset({"mortgage.document.request@1"}),
                 actual_resource_version=7,
             ),
         )
@@ -87,15 +87,15 @@ async def test_replaying_a_committed_effect_returns_one_receipt():
     async def connector(arguments, effect_key):
         nonlocal calls
         calls += 1
-        return {"receipt": "supplier:S-1001", "effect_key": effect_key}
+        return {"receipt": "document-request:MORT-2026-000184", "effect_key": effect_key}
 
     gateway = ToolGateway()
     gateway.register(manifest(), connector)
     intent = ToolIntent(
-        tool_version="supplier.create@2",
-        arguments={"supplier_id": "S-1001"},
+        tool_version="mortgage.document.request@1",
+        arguments={"case_id": "MORT-2026-000184", "document_kind": "employment_verification"},
         expected_resource_version=7,
-        logical_effect_key="supplier:create:S-1001",
+        logical_effect_key="mortgage:document-request:MORT-2026-000184:employment_verification",
     )
 
     first = await gateway.invoke(intent=intent, context=context())
@@ -116,10 +116,10 @@ async def test_unknown_outcome_is_not_blindly_retried():
     gateway = ToolGateway()
     gateway.register(manifest(), connector)
     intent = ToolIntent(
-        tool_version="supplier.create@2",
-        arguments={"supplier_id": "S-1001"},
+        tool_version="mortgage.document.request@1",
+        arguments={"case_id": "MORT-2026-000184", "document_kind": "employment_verification"},
         expected_resource_version=7,
-        logical_effect_key="supplier:create:S-1001",
+        logical_effect_key="mortgage:document-request:MORT-2026-000184:employment_verification",
     )
 
     with pytest.raises(EffectOutcomeUnknown):

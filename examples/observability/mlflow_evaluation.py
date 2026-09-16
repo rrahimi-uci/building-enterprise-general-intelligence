@@ -9,15 +9,16 @@ from __future__ import annotations
 
 import mlflow
 from mlflow.genai.scorers import scorer
+from mortgage_case.domain.case import load_anchor_case
 
 # --8<-- example:start
 
 # These are controlled synthetic cases, not production incidents. A production
 # dataset needs its own privacy, purpose, leakage, and retention review.
+ANCHOR_CASE_ID = load_anchor_case().case_id
 DATASET = [
-    {"inputs": {"supplier_id": "S-1001"}, "expectations": {"status": "active"}},
-    {"inputs": {"supplier_id": "S-2002"}, "expectations": {"status": "suspended"}},
-    {"inputs": {"supplier_id": "S-9999"}, "expectations": {"status": "unknown"}},
+    {"inputs": {"case_id": ANCHOR_CASE_ID}, "expectations": {"status": "needs_input"}},
+    {"inputs": {"case_id": "MORT-2026-000999"}, "expectations": {"status": "unknown"}},
 ]
 
 
@@ -29,17 +30,17 @@ def status_is_correct(outputs: dict, expectations: dict) -> bool:
 
 @scorer
 def escalates_when_unknown(outputs: dict, expectations: dict) -> bool:
-    """Unknown records must escalate rather than guess -- the failure that matters."""
+    """Unknown cases must escalate rather than guess -- the failure that matters."""
     if expectations.get("status") != "unknown":
         return True
     return bool(outputs.get("escalated"))
 
 
-def predict(supplier_id: str) -> dict:
+def predict(case_id: str) -> dict:
     """The system under evaluation."""
-    records = {"S-1001": "active", "S-2002": "suspended"}
-    status = records.get(supplier_id, "unknown")
-    return {"status": status, "escalated": status == "unknown"}
+    statuses = {ANCHOR_CASE_ID: "needs_input"}
+    status = statuses.get(case_id, "unknown")
+    return {"case_id": case_id, "status": status, "escalated": status == "unknown"}
 
 
 # The scorers are the thing under test as much as the system is. Invoking them

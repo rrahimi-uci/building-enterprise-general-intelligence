@@ -4,6 +4,21 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Align all book code with the mortgage case
+
+- Migrated the domain-specific runnable examples, tests, and inline code
+  identifiers from the retired supplier/refund scenarios to the cumulative
+  Harborlight mortgage case `MORT-2026-000184`.
+- Connected tool loops, bounded ReAct, handoffs, guardrails, approvals,
+  idempotency, capability and Skill resolution, policy rules, durable events,
+  MLflow traces/evaluation, and runtime fixtures to mortgage evidence review,
+  missing employment-verification evidence, and human underwriting handoff.
+- Kept algorithmic examples framework- and domain-neutral where that is the
+  lesson, while ensuring their executable tests use the mortgage case at the
+  domain boundary.
+- Regenerated the canonical Markdown, DOCX, LaTeX source, validation reports,
+  and release evidence after the migration.
+
 ### OpenAI SDK and MLflow grounding audit
 
 - Pinned the offline example profile to `openai==3.13.0`,

@@ -151,7 +151,7 @@ Regional recovery fences the old writer, restores durable state with a compatibl
 
 ### A release walkthrough
 
-The distinction between a release and a deployment becomes concrete during a tool-schema change. Suppose Northstar changes `create_supplier_case` so that the tool requires a new `classification` field. The release builder creates a new bundle containing the workflow build, tool schema, policy, model route, image, evaluation evidence, and rollback plan. The compatibility matrix records that workers serving old runs understand the old schema, while the new worker pool understands the new one.
+The distinction between a release and a deployment becomes concrete during a tool-schema change. Suppose the mortgage workflow changes `request_mortgage_document` so that the tool requires a new `document_kind` field. The release builder creates a new bundle containing the workflow build, tool schema, policy, model route, image, evaluation evidence, and rollback plan. The compatibility matrix records that workers serving old runs understand the old schema, while the new worker pool understands the new one.
 
 | **Moment** | **Control** | **What must remain true** |
 | --- | --- | --- |

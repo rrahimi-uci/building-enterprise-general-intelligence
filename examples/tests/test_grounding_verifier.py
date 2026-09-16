@@ -3,14 +3,14 @@ from __future__ import annotations
 from examples.knowledge.grounding_verifier import verify
 from examples.knowledge.policy_to_rule import SourceRef
 
-SENTENCE = "Transactions exceeding $10,000 require compliance officer approval before processing."
-DOC = f"4.2 Approval thresholds. {SENTENCE} Lower amounts proceed automatically."
-CORPUS = {"aml_policy": DOC}
-START = DOC.index("Transactions")
+SENTENCE = "Mortgage cases with requested LTV above 80% require human underwriter approval before submission."
+DOC = f"4.2 Review thresholds. {SENTENCE} Lower LTV cases remain in evidence review."
+CORPUS = {"mortgage_underwriting_policy": DOC}
+START = DOC.index("Mortgage")
 
 
 def ref(**kw) -> SourceRef:
-    base = dict(document_id="aml_policy", section_id="sec_4_2", start_offset=START,
+    base = dict(document_id="mortgage_underwriting_policy", section_id="sec_4_2", start_offset=START,
                 end_offset=START + len(SENTENCE), source_sha256="a" * 64)
     base.update(kw)
     return SourceRef(**base)
@@ -23,7 +23,7 @@ def test_a_real_claim_against_its_real_passage_is_grounded():
 def test_a_fabricated_citation_cannot_pass():
     # The span is well-formed and inside the document; it simply does not say
     # what the claim says. This is the failure a format check never catches.
-    invented = "Transactions exceeding $500 require board approval."
+    invented = "Property inspections older than 180 days require title counsel approval before closing."
     verdict = verify(invented, ref(), CORPUS)
     assert not verdict.grounded
     assert "not supported" in verdict.reason

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from decimal import Decimal
+
 from examples.knowledge.policy_to_rule import Predicate, Rule, SourceRef
 from examples.knowledge.set_operations import (
     contradictions, difference, intersection, union,
@@ -8,11 +10,12 @@ from examples.knowledge.set_operations import (
 REF = SourceRef("doc", "sec", 0, 10, "a" * 64)
 
 
-def rule(rid, *, amount=10000, outcome=True, modality="obligation", var="requires_approval"):
+def rule(rid, *, ltv=Decimal("0.80"), outcome=True, modality="obligation",
+         var="underwriter_approved"):
     return Rule(rule_id=rid, modality=modality,
-                conditions=(Predicate("transaction_amount", ">", amount),),
+                conditions=(Predicate("requested_ltv", ">", ltv),),
                 outcome=Predicate(var, "=", outcome), jurisdiction="US",
-                responsible_party="compliance_officer", effective_from="2026-01-01",
+                responsible_party="human_underwriter", effective_from="2026-01-01",
                 source=REF)
 
 
@@ -29,21 +32,21 @@ def test_union_keeps_every_source_that_asserts_a_rule():
 
 
 def test_union_is_commutative_in_content():
-    g1 = {"a": [rule("A1"), rule("A2", amount=50000)]}
+    g1 = {"a": [rule("A1"), rule("A2", ltv=Decimal("0.90"))]}
     g2 = {"b": [rule("B1")]}
     assert {r.rule.digest() for r in union(g1, g2)} == {r.rule.digest() for r in union(g2, g1)}
 
 
 def test_intersection_is_only_what_both_sides_assert():
-    g1 = {"a": [rule("A1"), rule("A2", amount=50000)]}
+    g1 = {"a": [rule("A1"), rule("A2", ltv=Decimal("0.90"))]}
     g2 = {"b": [rule("B1")]}
     shared = intersection(g1, g2)
     assert len(shared) == 1
-    assert shared[0].rule.conditions[0].value == 10000
+    assert shared[0].rule.conditions[0].value == Decimal("0.80")
 
 
 def test_difference_is_directional():
-    g1 = {"a": [rule("A1"), rule("A2", amount=50000)]}
+    g1 = {"a": [rule("A1"), rule("A2", ltv=Decimal("0.90"))]}
     g2 = {"b": [rule("B1")]}
     assert len(difference(g1, g2)) == 1
     assert difference(g2, g1) == []
@@ -61,8 +64,8 @@ def test_a_clash_on_the_same_subject_is_reported_with_both_sides():
 
 
 def test_rules_about_different_subjects_do_not_contradict():
-    g1 = {"a": [rule("A1", var="requires_approval")]}
-    g2 = {"b": [rule("B1", var="requires_logging", outcome=False)]}
+    g1 = {"a": [rule("A1", var="underwriter_approved")]}
+    g2 = {"b": [rule("B1", var="evidence_logged", outcome=False)]}
     assert contradictions(g1, g2) == []
 
 

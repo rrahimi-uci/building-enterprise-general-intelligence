@@ -105,13 +105,13 @@ JSON · implementation excerpt
 
 ```json
 {
-  "idempotency_key": "run_42:screen-supplier:1",
-  "receiver": {"agent_id": "sanctions-screening", "version": "2.3.0"},
-  "goal": "Screen the named supplier under policy EU-2026-09",
-  "input_artifacts": [{"uri": "artifact://supplier/77", "sha256": "..."}],
-  "output_schema": "schema://screening-result@2",
-  "authority_ceiling": "grant://run_42/screen-readonly",
-  "depends_on": ["task_extract_identity"],
+  "idempotency_key": "run_42:mortgage-evidence-review:1",
+  "receiver": {"agent_id": "mortgage-evidence-specialist", "version": "0.1.0"},
+  "goal": "Review the mortgage case under policy US-2026-09",
+  "input_artifacts": [{"uri": "artifact://mortgage-case/MORT-2026-000184", "sha256": "..."}],
+  "output_schema": "schema://mortgage-evidence-result@1",
+  "authority_ceiling": "grant://run_42/mortgage-readonly",
+  "depends_on": ["task_collect_mortgage_evidence"],
   "deadline": "2026-09-11T03:00:00Z",
   "budget": {"usd": 2, "steps": 8, "delegation_depth": 0},
   "acceptance": ["schema-valid", "sources-present", "policy-version-matches"]
