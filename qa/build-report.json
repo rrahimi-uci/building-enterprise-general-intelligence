@@ -1,10 +1,10 @@
 {
   "output": "dist/Enterprise-General-Intelligence-v2.1.0.docx",
-  "sha256": "1f6b9a88887d081ea3c55602d727d5ddb6d20046f3f24c6c172af7b0d741b370",
-  "bytes": 23779154,
+  "sha256": "411a303c210c6cd8987ab9bd3e45675f93ea1a91640b9871f0371ef0518e11ba",
+  "bytes": 23783700,
   "template_only": false,
-  "paragraphs": 3049,
-  "tables": 409,
+  "paragraphs": 3055,
+  "tables": 408,
   "inline_images": 52,
   "chapter_headings": 28,
   "appendix_headings": 12

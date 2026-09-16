@@ -1,10 +1,11 @@
 {
-  "examples": 22,
-  "cited": 22,
+  "examples": 23,
+  "cited": 23,
   "uncited": [],
   "rendered_lines": {
     "contracts": 69,
-    "agent-tool-loop": 44,
+    "agent-tool-loop": 49,
+    "governed-tool-gateway": 221,
     "effect-idempotency": 25,
     "mlflow-tracing": 19,
     "mlflow-trace-configuration": 28,

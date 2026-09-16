@@ -41,13 +41,9 @@ This guide is organized as one architecture story rather than a collection of in
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Reader} & \color{white}\bfseries \textbf{Primary path} & \color{white}\bfseries \textbf{Decision supported} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Reader} & \color{white}\bfseries \textbf{Primary path} & \color{white}\bfseries \textbf{Decision supported} \\
-\endhead
 Executive and product leader & Parts II, III, VIII and Appendix G & Investment, operating model, risk appetite, platform scope, and outcome governance \\
 \rowcolor{BookLight}
 Enterprise / solution architect & Parts I–VIII & Boundaries, contracts, topology, integration, security, and lifecycle \\
@@ -57,7 +53,7 @@ Application developer & Parts I, II, III, IV, VII & Agent design, knowledge, too
 Security / risk / privacy & Parts II, VI, VIII and Appendices F, K & Knowledge governance, threat controls, evidence, approvals, exceptions, and assurance \\
 \rowcolor{BookLight}
 SRE / operations & Parts VII, VIII and Appendices B, L & SLOs, incidents, recovery, capacity, and verified-success economics \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Architecture at a glance}
@@ -198,27 +194,27 @@ Together, these principles establish a simple operating contract: agents provide
 
 \item A. Pattern Selection Decision Tree and Catalog Index
 
-\item B. Failure Triage and Operator Runbooks
+\item B. Failure triage and operator runbooks
 
-\item C. Platform Contracts Quick Reference
+\item C. Platform contracts quick reference
 
-\item D. Framework Landscape
+\item D. Framework landscape
 
-\item E. Research Implications
+\item E. Research implications
 
-\item F. Known Limitations and Enforced Mitigations
+\item F. Known limits and enforced mitigations
 
-\item G. Enterprise Adoption Roadmap
+\item G. Enterprise adoption roadmap
 
 \item H. Glossary
 
 \item I. Companion Implementation Guide: Northstar Reference
 
-\item J. Coding-Agent Prompts and Acceptance Criteria
+\item J. Coding-agent prompt and acceptance criteria
 
 \item K. References
 
-\item L. Capacity, Resilience, and Release Acceptance
+\item L. Capacity, resilience, and release acceptance
 
 \end{itemize}
 
@@ -240,10 +236,10 @@ Start Northstar as a governed distributed application with one bounded reasoning
 
 Almost every enterprise agent begins as a script that works on the first try. It is worth looking at one honestly, because the gap between it and a production system is the subject of this entire book — and the gap is not intelligence.\par
 
-PYTHON · the prototype, and it genuinely works\par
+\BookSnake · the prototype, and it genuinely works\par
 
 \needspace{112.0pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from agents import Agent, Runner
 
 agent = Agent(
@@ -287,15 +283,11 @@ Explain why an agentic application is a distributed system and assign every auth
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Run Service and durable workflow & User/edge, content/model, model/tool & run · tenant · regional cell & one run and one cell & RunManifest · AgentStep · Artifact \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{The progression: model, tool, agent, system}
@@ -309,7 +301,7 @@ Four things get called "an agent" in enterprise conversations, and they are four
 A language model maps input tokens to output tokens. That is the whole contract. It has no memory between calls, no ability to act, and no access to anything you have not placed in the prompt.\par
 
 \needspace{29.2pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 answer = await model.complete("Summarize this supplier file: " + file_text)
 \end{lstlisting}
 
@@ -322,7 +314,7 @@ answer = await model.complete("Summarize this supplier file: " + file_text)
 Give the model a set of typed functions and a way to request them, and it can now interact with the world. Critically, the model does not \emph{execute} anything: it emits a structured request, and ordinary code you own decides what happens.\par
 
 \needspace{56.8pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @function_tool
 def lookup_supplier(supplier_id: str) -> str:
     """Return the onboarding status of one supplier record."""
@@ -340,7 +332,7 @@ This level is also where the book's most important boundary appears for the firs
 An agent loops. It observes the result of each tool call and chooses the next step, until it decides it is finished.\par
 
 \needspace{38.4pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 result = await Runner.run(agent, "Onboard supplier Acme Industrial GmbH",
                           run_config=RunConfig(max_turns=8))
 \end{lstlisting}
@@ -358,20 +350,16 @@ The fourth level is everything that makes level three safe to operate: durable s
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries Level & \color{white}\bfseries Adds & \color{white}\bfseries Characteristic new failure \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries Level & \color{white}\bfseries Adds & \color{white}\bfseries Characteristic new failure \\
-\endhead
 Model & Language understanding & Confidently wrong about facts it cannot access \\
 \rowcolor{BookLight}
 Model + tools & Contact with current reality & Acts on data the caller was not authorized to see \\
 Agent & Adaptive multi-step work & Runs forever; loses everything on restart \\
 \rowcolor{BookLight}
 Enterprise system & Durability, authority, evidence, control & Complexity — which is why the boundaries must be explicit \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 Notice that the fourth level adds no intelligence at all. Everything it adds is constraint and record-keeping. That is the shape of the discipline: the model does not become more capable as you productionize it; the system around it becomes more accountable.\par
@@ -385,13 +373,9 @@ Once you accept that the model is one component among several, a practical quest
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Uncertainty} & \color{white}\bfseries \textbf{Appropriate mechanism} & \color{white}\bfseries \textbf{Authoritative owner} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Uncertainty} & \color{white}\bfseries \textbf{Appropriate mechanism} & \color{white}\bfseries \textbf{Authoritative owner} \\
-\endhead
 Meaning of an ambiguous request & Model or classifier & Bounded agent step \\
 \rowcolor{BookLight}
 Which known path applies & Router plus deterministic validation & Route service / workflow \\
@@ -402,7 +386,7 @@ Permission to act & RBAC/ABAC and delegated capability & Policy engine \\
 \rowcolor{BookLight}
 Whether a write committed & Effect receipt or reconciliation & Effect ledger + downstream system \\
 Whether the run is complete & Executable acceptance criteria & Workflow / acceptance engine \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 Read the table as a series of refusals. The model is allowed to interpret language and propose structure. It is not allowed to decide whether a payment succeeded, whether a user may act, or whether the work is done — not because it would necessarily be wrong, but because being right by luck is indistinguishable from being right by construction, and only one of those can be audited.\par
@@ -602,13 +586,9 @@ The architecture has several gateways, and they are routinely confused because t
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries Control point & \color{white}\bfseries The question it answers & \color{white}\bfseries What it does not decide \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries Control point & \color{white}\bfseries The question it answers & \color{white}\bfseries What it does not decide \\
-\endhead
 API Gateway & Is this caller admitted to the platform at all? & Anything about agents or models \\
 \rowcolor{BookLight}
 Agent Gateway & May this workload start, receive, or delegate this task? & Which model answers or which business effect commits \\
@@ -618,7 +598,7 @@ Tool Gateway & May this effect happen, for this subject, exactly once? & Which m
 MCP Gateway & Is this external server and tool trusted and eligible? & Whether the resulting effect is authorized \\
 \rowcolor{BookLight}
 Human approval gate & Has an authorized reviewer approved this exact proposal? & Current identity, policy, resource version, or effect receipt \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 The \textbf{Tool Gateway} is the enterprise's control point for \emph{effects}. It validates the tool version and schema, re-authorizes the action and resource against the caller's grant, mints a last-hop credential, enforces idempotency, and records the receipt. It is deliberately protocol-agnostic, because effects arrive over REST, gRPC, a database transaction, a queue, and MCP, and the control must be the same for all of them.\par
@@ -655,10 +635,10 @@ Evidence anchors: NIST-GAI; REACT. Full URLs, authority, version, and scope appe
 
 \subsection{Provider-neutral agent-step contracts}
 
-PYTHON · Provider-neutral agent-step and platform contracts\par
+\BookSnake · Provider-neutral agent-step and platform contracts\par
 
 \needspace{332.8pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class EvidenceRef(BaseModel):
     uri: str
     sha256: str
@@ -776,15 +756,11 @@ Turn model output into typed proposals and place validation, authorization, effe
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Tool Gateway and domain service & model proposal to authorized capability & tool class · connector · downstream limit & one logical effect & ToolManifest · ToolIntent · EffectRecord \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Structured output is a protocol boundary}
@@ -798,6 +774,8 @@ A useful proposal is small. It names one disposition, one tool or delegation tar
 \subsection{One proposal, six gates}
 
 The sequence above is the chapter in one line, but it only becomes useful when you can see what each gate rejects. Here is a single proposal from Northstar, and what happens to it.\par
+
+The diagram establishes the order. The table below is the single operational summary, placed after the concrete proposal so each rejection is tied to a specific field or state rather than repeated as abstract gate descriptions.\par
 
 JSON · what the model actually emits\par
 
@@ -816,13 +794,9 @@ JSON · what the model actually emits\par
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries Gate & \color{white}\bfseries Question it asks & \color{white}\bfseries What it rejects here \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries Gate & \color{white}\bfseries Question it asks & \color{white}\bfseries What it rejects here \\
-\endhead
 \textbf{Propose} & What does the model want to do? & Nothing — this stage only produces the object \\
 \rowcolor{BookLight}
 \textbf{Validate} & Is this well-formed against a schema \emph{we} own? & Unknown field, wrong type, unknown tool version \\
@@ -832,12 +806,24 @@ JSON · what the model actually emits\par
 \textbf{Verify} & Did the effect actually land, and does it match? & A timeout, which resolves to unknown rather than failed \\
 \rowcolor{BookLight}
 \textbf{Accept} & Are the run's obligations discharged? & Sanctions evidence older than policy allows \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
-Two things are worth noticing. First, \textbf{validate and authorize are separate gates}, and conflating them is the most common mistake in this chapter's territory: the proposal above is perfectly well-formed and may still be forbidden. Schema validity is about shape; authorization is about permission.\par
+Two distinctions are important here.\par
 
-Second, the proposal carries \lstinline[style=bookinline]!expected_version: 4!. If the supplier record has moved to version 5 since the model read it, the commit fails rather than silently overwriting someone else's change. The model is allowed to be stale; it is not allowed to be stale \emph{and} authoritative.\par
+First, validation and authorization answer different questions. A proposal can be perfectly well-formed and still be forbidden. Validation asks whether the request has the correct structure, types, required fields, and acceptable values. Authorization asks whether this specific caller is permitted to perform this specific action on this specific resource. Passing validation never implies permission to act.\par
+
+Second, the proposal is based on a specific version of business state. The field \lstinline[style=bookinline]!expected_version: 4! means the model made its decision after reading version 4 of the supplier record. If another process updates that record to version 5 before the action is committed, the write should be rejected and the latest state reconsidered rather than silently overwriting the newer change.\par
+
+This is an important principle for agentic systems:\par
+
+\begin{bookquote}
+
+The model is allowed to reason from stale information; stale reasoning is not allowed to become an authoritative write.
+
+\end{bookquote}
+
+Together, these controls protect two different boundaries: authorization prevents an invalid actor from making a valid-looking change, while version checking prevents a valid actor from committing a decision based on outdated state.\par
 
 \subsection{Deterministic acceptance}
 
@@ -923,24 +909,6 @@ If an operation must be correct every time, survive a crash, enforce a permissio
 Treating schema validity as correctness. A response that parses cleanly can still name a stale record, a resource the caller cannot see, or an amount nobody approved. Schema validation rejects malformed proposals; it says nothing about whether the proposal should be allowed. Keep the two checks separate and run both.
 \end{bookantipattern}
 
-\section{Grounding, corrections, and evidence boundary}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
-\endhead
-Exactly-once wording & The recommendation is effect-level idempotency plus reconciliation under at-least-once delivery—not an end-to-end exactly-once guarantee. Timeout after dispatch is unknown until proved otherwise. & CLOUDEVENTS; OUTBOX \\
-\end{longtable}
-\BookTableEnd
-
-Evidence anchors: CLOUDEVENTS; OUTBOX. Full URLs, authority, version, and scope appear in Appendix K.\par
-
 \section{Pattern reference — Tool Use}
 
 \begin{bookcallout}[The problem]
@@ -984,17 +952,13 @@ Use whenever the agent must read external truth or request an external effect. &
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endhead
 Typed narrow tools & More interfaces to maintain; far stronger policy, testing, observability, and least privilege. \\
 \rowcolor{BookLight}
 Dynamic discovery & Smaller prompts and flexible catalogs; requires deterministic eligibility and version resolution. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Failures and controls}
@@ -1002,18 +966,14 @@ Dynamic discovery & Smaller prompts and flexible catalogs; requires deterministi
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endhead
 Hallucinated tool or arguments & Schema and eligibility rejection. \\
 \rowcolor{BookLight}
 Duplicate mutation & Logical effect key, intent hash, downstream idempotency, and receipt. \\
 Oversized or malicious output & Connector limits, content scanning, classification, and artifact indirection. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Minimum observability}
@@ -1036,10 +996,10 @@ Oversized or malicious output & Connector limits, content scanning, classificati
 
 \section{Implementation reference}
 
-PYTHON · Bounded agent loop with a typed tool\par
+\BookSnake · Bounded agent loop with a typed tool\par
 
-\needspace{424.8pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\needspace{470.8pt}
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class SupplierStatus(BaseModel):
     """The structured answer the agent must produce."""
 
@@ -1063,12 +1023,17 @@ def lookup_supplier(supplier_id: str) -> str:
 
 
 def build_agent() -> Agent:
+    # Keep each behavioral instruction explicit and reviewable. These are
+    # model-facing hints, not a substitute for gateway authorization.
+    instructions = "\n".join(
+        [
+            "Answer questions about supplier onboarding.",
+            "Always call lookup_supplier before making a claim about a record.",
+        ]
+    )
     return Agent(
         name="Supplier onboarding",
-        instructions=(
-            "Answer questions about supplier onboarding. "
-            "Always call lookup_supplier before making a claim about a record."
-        ),
+        instructions=instructions,
         tools=[lookup_supplier],
         # max_turns on the run, plus a declared output type, are what make this
         # a bounded loop rather than an open-ended conversation.
@@ -1088,82 +1053,259 @@ async def run(question: str, *, model=None) -> SupplierStatus:
 
 \subsection{Governed Tool Gateway}
 
-PYTHON · implementation excerpt\par
+The first listing shows the model-facing loop. This second listing shows the platform-facing boundary that receives its proposal. Every instruction is on its own line and the comments call out the decisions that must remain deterministic. The in-memory ledger keeps the example runnable offline; production persists these transitions atomically with the downstream effect.\par
 
-\needspace{562.8pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\BookSnake · A readable Tool Gateway with validation, authorization, and effect idempotency\par
+
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
-from dataclasses import dataclass
-from datetime import datetime, timezone
+
+from dataclasses import dataclass, field
 from typing import Awaitable, Callable, Literal
-from pydantic import BaseModel, Field
-from .approvals import ActionProposal, ApprovalGrant, verify_approval
-from .effects import EffectOutcomeUnknown, InMemoryEffectLedger
 
-class ToolManifest(BaseModel):
-    tool_id:str; version:str; description:str
-    risk_class:int=Field(ge=0,le=4); mutating:bool; required_action:str
-    timeout_seconds:float=Field(gt=0,le=300); approval_required:bool=False
-    idempotency_required:bool=False
 
-class InvocationContext(BaseModel):
-    tenant_id:str; subject_id:str; actor_id:str; run_id:str; purpose:str
-    allowed_actions:frozenset[str]; eligible_tool_versions:frozenset[str]
-    policy_digest:str="policy:unspecified"; region:str="unspecified"
+Connector = Callable[
+    [dict[str, object], str | None],
+    Awaitable[dict[str, object]],
+]
 
-class ToolResult(BaseModel):
-    status:Literal["succeeded","declined","unknown"]
-    output:dict[str,object]=Field(default_factory=dict); effect_key:str|None=None
+
+class ToolGatewayError(RuntimeError):
+    """The gateway rejected the proposal before or during execution."""
+
+
+class StaleResource(ToolGatewayError):
+    """The proposal was based on an older resource version."""
+
+
+class EffectOutcomeUnknown(ToolGatewayError):
+    """Dispatch may have happened, but its outcome is not yet proven."""
+
+
+@dataclass(frozen=True)
+class ToolManifest:
+    """The capability contract published by the platform."""
+
+    tool_id: str
+    version: str
+    description: str
+    input_schema: str
+    required_action: str
+    mutating: bool
+    idempotency_required: bool = False
+
+    @property
+    def tool_version(self) -> str:
+        return f"{self.tool_id}@{self.version}"
+
+
+@dataclass(frozen=True)
+class ToolIntent:
+    """A model proposal; it carries intent, not authority."""
+
+    tool_version: str
+    arguments: dict[str, object]
+    expected_resource_version: int | None = None
+    logical_effect_key: str | None = None
+
+
+@dataclass(frozen=True)
+class InvocationContext:
+    """The current, platform-issued authority and resource snapshot."""
+
+    allowed_actions: frozenset[str]
+    eligible_tool_versions: frozenset[str]
+    actual_resource_version: int | None = None
+
+
+@dataclass(frozen=True)
+class ToolResult:
+    status: Literal["succeeded", "unknown"]
+    output: dict[str, object] = field(default_factory=dict)
+    effect_key: str | None = None
+
+
+@dataclass
+class EffectRecord:
+    """The durable record a real implementation would store transactionally."""
+
+    logical_effect_key: str
+    intent: dict[str, object]
+    state: Literal["pending", "executing", "committed", "unknown"] = "pending"
+    receipt: dict[str, object] | None = None
+
+
+class InMemoryEffectLedger:
+    """Keep one logical effect and its receipt for this runnable example."""
+
+    def __init__(self) -> None:
+        self._records: dict[str, EffectRecord] = {}
+
+    def begin(
+        self,
+        logical_effect_key: str,
+        intent: dict[str, object],
+    ) -> EffectRecord:
+        existing = self._records.get(logical_effect_key)
+        if existing is not None:
+            if existing.intent != intent:
+                raise ToolGatewayError("effect key was reused for a different intent")
+            return existing
+
+        record = EffectRecord(logical_effect_key, intent)
+        self._records[logical_effect_key] = record
+        return record
+
+    def mark_executing(self, logical_effect_key: str) -> None:
+        self._records[logical_effect_key].state = "executing"
+
+    def mark_unknown(self, logical_effect_key: str) -> None:
+        self._records[logical_effect_key].state = "unknown"
+
+    def mark_committed(
+        self,
+        logical_effect_key: str,
+        receipt: dict[str, object],
+    ) -> EffectRecord:
+        record = self._records[logical_effect_key]
+        record.state = "committed"
+        record.receipt = receipt
+        return record
+
+
+@dataclass(frozen=True)
+class RegisteredTool:
+    manifest: ToolManifest
+    connector: Connector
+
 
 class ToolGateway:
-    def __init__(self,effect_ledger:InMemoryEffectLedger|None=None)->None:
-        self._tools:dict[str,RegisteredTool]={}; self._effects=effect_ledger or InMemoryEffectLedger()
-    def register(self,manifest:ToolManifest,connector:Connector)->None:
-        key=f"{manifest.tool_id}@{manifest.version}"
-        if key in self._tools: raise ValueError(f"tool already registered: {key}")
+    """Validate, authorize, and execute one typed proposal."""
+
+    def __init__(self, effect_ledger: InMemoryEffectLedger | None = None) -> None:
+        self._tools: dict[str, RegisteredTool] = {}
+        self._effects = effect_ledger or InMemoryEffectLedger()
+
+    def register(self, manifest: ToolManifest, connector: Connector) -> None:
+        """Register an immutable tool version with its connector."""
+
+        if manifest.tool_version in self._tools:
+            raise ToolGatewayError("tool version is already registered")
         if manifest.mutating and not manifest.idempotency_required:
-            raise ValueError("mutating tools must declare idempotency_required")
-        self._tools[key]=RegisteredTool(manifest,connector)
-    def discover(self,ctx:InvocationContext)->tuple[ToolManifest,...]:
-        return tuple(item.manifest for key,item in sorted(self._tools.items()) if key in ctx.eligible_tool_versions and item.manifest.required_action in ctx.allowed_actions)
-    async def invoke(self,*,ctx:InvocationContext,tool_version:str,arguments:dict[str,object],logical_effect_key:str|None=None,proposal:ActionProposal|None=None,approval:ApprovalGrant|None=None,actual_resource_version:int|None=None)->ToolResult:
-        if tool_version not in ctx.eligible_tool_versions: raise PermissionError("tool is not eligible for this run node")
-        item=self._tools.get(tool_version)
-        if item is None: raise LookupError("eligible tool version is not registered")
-        m=item.manifest
-        if m.required_action not in ctx.allowed_actions: raise PermissionError("required action is outside delegated authority")
-        if m.approval_required:
-            if proposal is None or approval is None or actual_resource_version is None: raise PermissionError("proposal-bound approval is required")
-            if proposal.model_dump(mode="json",exclude={"expires_at"}) != ActionProposal(tenant_id=ctx.tenant_id,run_id=ctx.run_id,actor_id=ctx.actor_id,tool_version=tool_version,logical_effect_key=logical_effect_key or "",arguments=arguments,expected_resource_version=proposal.expected_resource_version,policy_digest=ctx.policy_digest,expires_at=proposal.expires_at).model_dump(mode="json",exclude={"expires_at"}): raise PermissionError("proposal does not match invocation")
-            verify_approval(proposal,approval,now=datetime.now(timezone.utc),actual_resource_version=actual_resource_version)
-        if not m.mutating:
-            return ToolResult(status="succeeded",output=await item.connector(arguments,None))
-        if not logical_effect_key: raise ValueError("mutating tools require a stable logical effect key")
-        intent={"tool":tool_version,"arguments":arguments,"run_id":ctx.run_id,"tenant_id":ctx.tenant_id}
-        effect=self._effects.begin(logical_effect_key,intent)
-        if effect.state=="committed": return ToolResult(status="succeeded",output=effect.receipt or {},effect_key=logical_effect_key)
-        if effect.state in {"executing","unknown","intervention_required"}: raise EffectOutcomeUnknown(logical_effect_key)
-        if effect.state=="declined": return ToolResult(status="declined",output=effect.receipt or {},effect_key=logical_effect_key)
-        self._effects.mark_executing(logical_effect_key,f"req:{logical_effect_key}")
-        try: output=await item.connector(arguments,logical_effect_key)
+            raise ToolGatewayError("mutating tools must declare idempotency")
+        self._tools[manifest.tool_version] = RegisteredTool(manifest, connector)
+
+    def discover(self, context: InvocationContext) -> tuple[ToolManifest, ...]:
+        """Expose only eligible tools whose actions are currently delegated."""
+
+        return tuple(
+            item.manifest
+            for key, item in sorted(self._tools.items())
+            if key in context.eligible_tool_versions
+            and item.manifest.required_action in context.allowed_actions
+        )
+
+    async def invoke(
+        self,
+        *,
+        intent: ToolIntent,
+        context: InvocationContext,
+    ) -> ToolResult:
+        """Run a proposal only after all deterministic checks pass."""
+
+        # Eligibility is a platform decision, not something the model can add
+        # to its own proposal.
+        if intent.tool_version not in context.eligible_tool_versions:
+            raise ToolGatewayError("tool version is not eligible for this run")
+
+        registered = self._tools.get(intent.tool_version)
+        if registered is None:
+            raise ToolGatewayError("eligible tool version is not registered")
+
+        manifest = registered.manifest
+        if manifest.required_action not in context.allowed_actions:
+            raise ToolGatewayError("required action is outside delegated authority")
+
+        # Optimistic concurrency prevents a well-authorized caller from
+        # overwriting state that changed after the model formed its proposal.
+        if intent.expected_resource_version is not None:
+            if context.actual_resource_version != intent.expected_resource_version:
+                raise StaleResource("resource version changed before commit")
+
+        if not manifest.mutating:
+            output = await registered.connector(intent.arguments, None)
+            return ToolResult(status="succeeded", output=output)
+
+        if not intent.logical_effect_key:
+            raise ToolGatewayError("mutating tools require a logical effect key")
+
+        effect_intent = {
+            "tool_version": intent.tool_version,
+            "arguments": intent.arguments,
+            "expected_resource_version": intent.expected_resource_version,
+        }
+        record = self._effects.begin(intent.logical_effect_key, effect_intent)
+
+        # A replay of a committed effect returns its original receipt instead
+        # of dispatching the downstream mutation a second time.
+        if record.state == "committed":
+            return ToolResult(
+                status="succeeded",
+                output=record.receipt or {},
+                effect_key=intent.logical_effect_key,
+            )
+
+        # Unknown and in-flight outcomes need reconciliation or intervention;
+        # blindly retrying them would defeat the idempotency boundary.
+        if record.state in {"executing", "unknown"}:
+            raise EffectOutcomeUnknown(intent.logical_effect_key)
+
+        self._effects.mark_executing(intent.logical_effect_key)
+        try:
+            receipt = await registered.connector(
+                intent.arguments,
+                intent.logical_effect_key,
+            )
         except Exception as exc:
-            self._effects.mark_unknown(logical_effect_key)
-            raise EffectOutcomeUnknown(logical_effect_key) from exc
-        committed=self._effects.mark_committed(logical_effect_key,output)
-        return ToolResult(status="succeeded",output=committed.receipt or {},effect_key=logical_effect_key)
+            self._effects.mark_unknown(intent.logical_effect_key)
+            raise EffectOutcomeUnknown(intent.logical_effect_key) from exc
+
+        committed = self._effects.mark_committed(
+            intent.logical_effect_key,
+            receipt,
+        )
+        return ToolResult(
+            status="succeeded",
+            output=committed.receipt or {},
+            effect_key=intent.logical_effect_key,
+        )
 \end{lstlisting}
 
 \section{Debugging playbook}
 
-\begin{enumerate}
+\begin{itemize}
 
-\item Compare the raw model proposal with the validated command and list rejected fields.
+\item Trace the intent-to-execution path. Compare the model’s raw proposal with the
 
-\item Inspect the policy decision and resource version immediately before commit.
+\end{itemize}
 
-\item Replay the same logical mutation and verify one receipt.
+validated command, identifying any rejected, modified, or defaulted fields.\par
 
-\end{enumerate}
+\begin{itemize}
+
+\item Verify the execution boundary. Inspect the final authorization and policy
+
+\end{itemize}
+
+decision, approval state, and resource version immediately before the side effect is committed.\par
+
+\begin{itemize}
+
+\item Test idempotency. Replay the same logical mutation and confirm that it
+
+\end{itemize}
+
+produces no duplicate side effect and resolves to the same durable receipt.\par
 
 \section{Production checklist}
 
@@ -1246,15 +1388,11 @@ Use OpenAI Agents SDK 0.22.2 as a bounded, replaceable runtime adapter rather th
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Durable workflow; SDK only owns one bounded step & platform contract to SDK adapter & worker pool · model route · tool class & one activity attempt & AgentRuntime · AgentStepRequest · RunState \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Framework baseline and placement}
@@ -1305,13 +1443,9 @@ The distinction is about lifetime and authority, not quality.\par
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
+\begin{tabular}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries Concern & \color{white}\bfseries Lifetime & \color{white}\bfseries Where it belongs & \color{white}\bfseries Why \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries Concern & \color{white}\bfseries Lifetime & \color{white}\bfseries Where it belongs & \color{white}\bfseries Why \\
-\endhead
 Agent definition, tools, turn loop & One step & \textbf{SDK} & This is what it is for, and it does it well \\
 \rowcolor{BookLight}
 Structured output, local handoff & One step & \textbf{SDK} & Same — bounded, in-process, replaceable \\
@@ -1322,7 +1456,7 @@ Credentials & Per call & \textbf{Platform} & An agent process should never hold 
 \rowcolor{BookLight}
 Effects and receipts & Permanent & \textbf{Platform} & These are business records, not runtime artifacts \\
 Audit evidence & Years & \textbf{Platform} & Must outlive every version of every framework \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 Read the right-hand column as a single test: \textbf{would you still need this record if you replaced the framework tomorrow?} If yes, the framework must not own it.\par
@@ -1368,10 +1502,10 @@ AgentStepRequest pins run and node identity, state version, agent and model rout
 
 \section{Bounded Python adapter}
 
-PYTHON · One bounded agent step behind a platform-owned adapter\par
+\BookSnake · One bounded agent step behind a platform-owned adapter\par
 
 \needspace{286.8pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 async def execute_step(request, context: PlatformContext, *, model=None) -> dict[str, object]:
     result = await Runner.run(
         starting_agent=agent,
@@ -1468,15 +1602,11 @@ Translate principles into planes, services, contracts, stores, consistency bound
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Each platform service owns one authoritative record & global control plane to regional execution cell & tenant · queue · partition · cell & one service/cell & Run · Task · Tool · Artifact · Release APIs \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Purpose and principles}
@@ -1490,13 +1620,9 @@ Read the figure downward: each layer names the components the plane owns, and th
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
+\begin{tabular}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Plane} & \color{white}\bfseries \textbf{Responsibilities} & \color{white}\bfseries \textbf{Authoritative records} & \color{white}\bfseries \textbf{Boundary} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Plane} & \color{white}\bfseries \textbf{Responsibilities} & \color{white}\bfseries \textbf{Authoritative records} & \color{white}\bfseries \textbf{Boundary} \\
-\endhead
 Experience and channels & Intent, interaction, review, accessibility, recourse & Request and interaction record & UI state is not approval or workflow truth \\
 \rowcolor{BookLight}
 Agent applications & Domain instructions, topology, response assembly & AgentSpec and application release & Cannot mint authority or directly commit protected effects \\
@@ -1507,7 +1633,7 @@ Gateways and integration & LLM routing, tool façades, MCP/A2A, APIs, events & R
 \rowcolor{BookLight}
 Security and governance & Identity, least privilege, RBAC/ABAC, guardrails, approval, DLP, audit & PolicyDecision, CapabilityEnvelope, ApprovalGrant & Protected actions fail closed; ambiguous effects become unknown \\
 Evaluation and operations & Tracing, evaluation, SLOs, incidents, release, capacity, learning & Trace graph, EvaluationResult, ChangeBundle, ReleaseManifest & Monitoring cannot self-promote behavior change \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{End-to-end responsibility flow}
@@ -1539,13 +1665,9 @@ Evaluation and operations & Tracing, evaluation, SLOs, incidents, release, capac
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
+\begin{tabular}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Concern} & \color{white}\bfseries \textbf{Owner} & \color{white}\bfseries \textbf{Model may} & \color{white}\bfseries \textbf{Model may not} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Concern} & \color{white}\bfseries \textbf{Owner} & \color{white}\bfseries \textbf{Model may} & \color{white}\bfseries \textbf{Model may not} \\
-\endhead
 Workflow & Durable Run Service & Propose a semantic result & Invent state, retry history, or terminal \\
 \rowcolor{BookLight}
 Authorization & Identity and policy services & Explain requested scope & Grant or expand authority \\
@@ -1556,7 +1678,7 @@ Approval & Proposal and approval service & Generate rationale and preview & Reus
 \rowcolor{BookLight}
 Knowledge & Governed source/snapshot catalog & Synthesize evidence & Treat similarity as truth or freshness \\
 Learning & Evaluation, dataset, release services & Recommend a candidate & Self-certify or self-deploy \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Architecture decisions}
@@ -1602,13 +1724,9 @@ The \textbf{layer} table below is the deployable decomposition. It answers \emph
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries Plane & \color{white}\bfseries Splits into layers & \color{white}\bfseries Why it splits \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries Plane & \color{white}\bfseries Splits into layers & \color{white}\bfseries Why it splits \\
-\endhead
 Experience and channels & Experience · Edge and admission & Admission is a security surface with its own scaling and failure profile \\
 \rowcolor{BookLight}
 Agent applications & Agent control plane & Defining and releasing capability is separate from running it \\
@@ -1619,7 +1737,7 @@ Context, RAG, memory, Skills & Data and knowledge & — \\
 \rowcolor{BookLight}
 Security and governance & Trust and governance & — \\
 Evaluation and operations & Operations and improvement & — \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 Use planes when you are arguing about ownership and boundaries. Use layers when you are drawing a deployment diagram or assigning an on-call rota. If the two ever disagree about who owns a record, the plane model wins — the layer exists to serve it.\par
@@ -1821,10 +1939,10 @@ Evidence anchors: CLOUDEVENTS. Full URLs, authority, version, and scope appear i
 
 \subsection{Core platform data contracts}
 
-PYTHON · Provider-neutral agent-step and platform contracts\par
+\BookSnake · Provider-neutral agent-step and platform contracts\par
 
 \needspace{636.4pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 """The provider-neutral contracts every agent step and platform API shares.
 
 One file, two views. Chapter 02 needs the agent-step subset; chapter 04 needs
@@ -1896,10 +2014,10 @@ class CandidatePlan(BaseModel):
 
 \subsection{CloudEvents and outbox contracts}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{388.0pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
 from datetime import datetime
@@ -2023,15 +2141,11 @@ Separate the four things an agent does with what the organization knows, and giv
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries State owner & \color{white}\bfseries Trust boundary & \color{white}\bfseries Scale unit & \color{white}\bfseries Failure containment & \color{white}\bfseries Core contracts \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries State owner & \color{white}\bfseries Trust boundary & \color{white}\bfseries Scale unit & \color{white}\bfseries Failure containment & \color{white}\bfseries Core contracts \\
-\endhead
 Knowledge Hub and its registries & authored source to governed artifact & artifact · domain · tenant & one artifact version & KnowledgeArtifact · Rule · Capability · ResolutionQuery \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Why retrieval is not a knowledge architecture}
@@ -2041,20 +2155,16 @@ Retrieval-augmented generation answers one question well: \emph{what text is rel
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
+\begin{tabular}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries Mode & \color{white}\bfseries The question & \color{white}\bfseries Representation & \color{white}\bfseries How it fails when wrong \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries Mode & \color{white}\bfseries The question & \color{white}\bfseries Representation & \color{white}\bfseries How it fails when wrong \\
-\endhead
 Context & What is the situation? & Documents, embeddings, semantic search & Plausible grounding that is stale, superseded, or outside the reader's authority \\
 \rowcolor{BookLight}
 Reasoning & What should happen? & Ontology, knowledge graph, decision models & Correct facts, invalid inference \\
 Constraints & What may I do? & Policies and permissions as enforceable rules & The agent explains the rule, then violates it \\
 \rowcolor{BookLight}
 Action & How do I do it? & Capability and API contracts & Right decision, wrong or unauthorized effect \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 The fourth column is the argument. Each mode fails differently, so each needs different evidence and different tests. A system that cannot say which mode failed cannot be debugged, and a similarity score is not evidence of authority, currency, or permission.\par
@@ -2075,10 +2185,10 @@ A retrieved passage should never reach a model without the metadata that decides
 
 Entities, relationships, dependencies, and the organization's own semantics. Traversal answers questions similarity cannot: \emph{what depends on this system three hops away?} No wording links a payments API to a regulatory filing obligation, so no embedding will connect them. The graph does.\par
 
-PYTHON · Traversal answering a question similarity cannot\par
+\BookSnake · Traversal answering a question similarity cannot\par
 
 \needspace{406.4pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @dataclass
 class KnowledgeGraph:
     """A typed property graph: edges carry meaning, not just adjacency."""
@@ -2131,10 +2241,10 @@ The honest caveat: ontologies are where enterprise knowledge programmes go to di
 
 The core of the layer. A rule an agent reads is documentation; a rule the platform evaluates at the effect boundary is a control. The move from prose to knowledge is not parsing — it is committing to a shape.\par
 
-PYTHON · A policy sentence as a typed, scoped rule with provenance\par
+\BookSnake · A policy sentence as a typed, scoped rule with provenance\par
 
 \needspace{489.2pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 Modality = Literal["obligation", "permission", "prohibition"]
 
 
@@ -2192,10 +2302,10 @@ Scope is required, not optional. A rule whose applicability is implicit will be 
 
 Enforcement then happens where intent becomes action:\par
 
-PYTHON · A policy rule enforced at the effect boundary\par
+\BookSnake · A policy rule enforced at the effect boundary\par
 
 \needspace{553.6pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class PolicyViolation(Exception):
     """Refused by an enforceable rule. Carries the rule that refused it."""
 
@@ -2266,10 +2376,10 @@ Entities, fields, definitions, ownership, lineage, sensitivity, and access const
 
 What the agent may do, with the consequences attached. A tool list says what exists; a capability catalog says whether an action mutates, what must be true first, who may invoke it, and whether a retry is safe.\par
 
-PYTHON · Discovering a capability with its effects and prerequisites\par
+\BookSnake · Discovering a capability with its effects and prerequisites\par
 
 \needspace{526.0pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 Effect = Literal["read", "write", "irreversible"]
 
 
@@ -2336,20 +2446,16 @@ Four OMG standards already describe what most enterprises are otherwise inventin
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries Standard & \color{white}\bfseries Represents & \color{white}\bfseries What an agent does with it \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries Standard & \color{white}\bfseries Represents & \color{white}\bfseries What an agent does with it \\
-\endhead
 BPMN \BookCitation{R44} & Processes and their control flow & Plans against the real sequence, including the steps it may not skip \\
 \rowcolor{BookLight}
 DMN \BookCitation{R45} & Decisions as tables with a hit policy & Evaluates a decision deterministically instead of reasoning about it \\
 CMMN \BookCitation{R46} & Case management, unordered work & Handles work with no fixed sequence without inventing one \\
 \rowcolor{BookLight}
 SBVR \BookCitation{R47} & Business vocabulary and rules & Resolves what a term means in this domain before acting on it \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 DMN earns its place fastest. A decision table with a declared hit policy is the one artifact that turns a class of judgement calls into a lookup, and a lookup can be tested. BPMN pays off where the sequence is genuinely fixed and the cost of skipping a step is high. CMMN and SBVR are narrower; adopt them when case work or vocabulary ambiguity is the actual problem, not because the set is incomplete without them.\par
@@ -2364,10 +2470,10 @@ Extraction is probabilistic. Verification must not be. The pipeline that works s
 
 \textbf{Prove} is the part that decides whether to believe it. The critical move is that verification does not trust the citation a rule carries; it rebuilds the evidence from the raw corpus and compares.\par
 
-PYTHON · Rebuilding a claim's evidence instead of trusting its citation\par
+\BookSnake · Rebuilding a claim's evidence instead of trusting its citation\par
 
 \needspace{406.4pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @dataclass(frozen=True)
 class Verdict:
     grounded: bool
@@ -2424,9 +2530,9 @@ Treating extraction confidence as grounding. A high-confidence rule with a fabri
 
 An enterprise never has one knowledge base. It has a regulator's and its own, last quarter's and this quarter's, one business unit's and another's. Agents must operate across them, and that requires defined operations rather than a merge.\par
 
-PYTHON · Union, intersection, difference and contradiction over rule sets\par
+\BookSnake · Union, intersection, difference and contradiction over rule sets\par
 
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @dataclass(frozen=True)
 class Attributed:
     """A rule together with every source that asserts it."""
@@ -2513,20 +2619,16 @@ def contradictions(left: dict[str, object], right: dict[str, object]) -> list[Co
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries Operation & \color{white}\bfseries Meaning & \color{white}\bfseries What an agent may do with the result \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries Operation & \color{white}\bfseries Meaning & \color{white}\bfseries What an agent may do with the result \\
-\endhead
 Intersection & Asserted by both sources & Highest-confidence knowledge; safe to act on \\
 \rowcolor{BookLight}
 Difference & Asserted by one source only & Scope-dependent; requires a jurisdiction check first \\
 Union & Every distinct rule, with per-source attribution & Complete coverage; conflicts still possible \\
 \rowcolor{BookLight}
 Contradiction & Rules that cannot both be satisfied & Stop, escalate, and never resolve automatically \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 Three properties are worth stating as rules of the architecture.\par
@@ -2607,13 +2709,9 @@ Agents must not hold connection strings to six stores. They ask one service, whi
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries Plane & \color{white}\bfseries Holds & \color{white}\bfseries Answers \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries Plane & \color{white}\bfseries Holds & \color{white}\bfseries Answers \\
-\endhead
 Governance & Ownership, versions, effective dates, permissions, lifecycle & May this agent see this, and is it current? \\
 \rowcolor{BookLight}
 Semantic & Documents and embeddings & What text is relevant? \\
@@ -2623,7 +2721,7 @@ Normative & Rules, decision tables, vocabulary & What is required, permitted, or
 Procedural & Process and case models & In what order, and what may not be skipped? \\
 \rowcolor{BookLight}
 Capability & Tools, APIs, effects, prerequisites & What can be done, and at what cost? \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 One query surface sits above all six. Permissions are enforced there, attribution is attached there, and an agent that asks for knowledge it may not have receives a refusal rather than a filtered answer.\par
@@ -2637,13 +2735,9 @@ Version the knowledge layer alongside the agent. An agent release pinned to a po
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries Symptom & \color{white}\bfseries Likely cause & \color{white}\bfseries First check \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries Symptom & \color{white}\bfseries Likely cause & \color{white}\bfseries First check \\
-\endhead
 Agent quotes the right policy and violates it & The rule is context, never a constraint & Is any guardrail evaluating it at the effect boundary? \\
 \rowcolor{BookLight}
 Correct answer in staging, wrong in production & Scope or effective date not enforced & Does the rule declare jurisdiction and effective\_from, and are they checked? \\
@@ -2653,7 +2747,7 @@ A conflict surfaces only after an incident & Contradictions resolved silently at
 An agent selects a mutating tool for a read & Capability discovery filters on names, not effects & Does the catalog carry an effect class, and is it filtered on? \\
 \rowcolor{BookLight}
 Provenance points at text that does not support the rule & Citation trusted rather than verified & Is verification rebuilding evidence from the corpus? \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Production checklist}
@@ -2697,13 +2791,9 @@ Provenance points at text that does not support the rule & Citation trusted rath
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries Question & \color{white}\bfseries What a good answer demonstrates \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries Question & \color{white}\bfseries What a good answer demonstrates \\
-\endhead
 Which consumption mode failed in your last incident? & The four modes are separable in your architecture \\
 \rowcolor{BookLight}
 How does an agent know a retrieved passage is still authoritative? & Governance metadata reaches the point of use \\
@@ -2713,7 +2803,7 @@ Where is a policy enforced, as opposed to described? & Constraints exist outside
 What does the system do when a required input is missing? & Unknown is not silently treated as permitted \\
 \rowcolor{BookLight}
 Can you reproduce a decision made six months ago? & Knowledge is versioned and pinned per run \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Transition to Chapter 6}
@@ -2741,15 +2831,11 @@ Assemble authorized context from distinct state and knowledge domains and govern
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Context Service; workflow remains canonical & authorized sources to model prompt & tenant · source · context budget & one context projection & ContextManifest · MemoryRecord · EvidenceRef \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{The context build pipeline}
@@ -2795,20 +2881,16 @@ The model receives text from several origins in one window, and it has no inhere
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
+\begin{tabular}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries Tier & \color{white}\bfseries Origin & \color{white}\bfseries Trust & \color{white}\bfseries Can it direct behaviour? \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries Tier & \color{white}\bfseries Origin & \color{white}\bfseries Trust & \color{white}\bfseries Can it direct behaviour? \\
-\endhead
 1 & System and application instructions & Release artifact, code-reviewed & Yes — this is the definition of the agent \\
 \rowcolor{BookLight}
 2 & Skill instructions & Pinned, versioned capability artifact & Yes, within the capability's declared scope \\
 3 & User request & Authenticated intent, bounded by the caller's authority & It states a goal; it cannot grant itself authority \\
 \rowcolor{BookLight}
 4 & Retrieved documents and tool output & Untrusted evidence, whatever its source & \textbf{No.} It is data to reason over, never direction \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 Content cannot promote itself between tiers. A retrieved document that contains "ignore previous instructions" is a tier-four artifact containing a string; it does not become tier one by asserting that it should. This is why tool eligibility is decided by policy before the step runs and never by what the model has just read — the one rule that makes indirect prompt injection a containable problem rather than an open one.\par
@@ -3073,17 +3155,13 @@ Use for stable preferences, repeated domain facts, or learned operational hints 
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endhead
 Continuity & Creates privacy, staleness, correction, and deletion obligations. \\
 \rowcolor{BookLight}
 Reduced context cost & May lose nuance or introduce summary drift. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Failures and controls}
@@ -3091,18 +3169,14 @@ Reduced context cost & May lose nuance or introduce summary drift. \\
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endhead
 Stale memory overrides state & Canonical state precedence and freshness checks. \\
 \rowcolor{BookLight}
 Cross-tenant leakage & Tenant-partitioned keys and authorization before retrieval. \\
 Deletion gaps & Lineage graph, tombstones, cache invalidation, and rebuild. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Minimum observability}
@@ -3127,10 +3201,10 @@ Deletion gaps & Lineage graph, tombstones, cache invalidation, and rebuild. \\
 
 \subsection{Auditable context projection}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{240.8pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
 from datetime import datetime
@@ -3159,10 +3233,10 @@ class ContextManifest(BaseModel):
 
 \subsection{Cross-boundary artifact adoption policy}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{388.0pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
 from datetime import datetime
@@ -3286,15 +3360,11 @@ Define the reusable paved road — contracts, adapters, and a delivery lifecycle
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Platform services own contracts and evidence; applications own domain behaviour & application code to platform-owned control planes & template · adapter · release artifact & one application release & AgentSpec · RunContext · ToolSpec · ReleaseManifest \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Platform promise}
@@ -3354,10 +3424,10 @@ Create from an approved template; attach tools, Skills, context, and memory; con
 
 \section{SDK example}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{130.4pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 agent = platform.agent(
     spec="supplier_onboarding@3.2.0",
     model_policy="quality-balanced@7",
@@ -3530,15 +3600,11 @@ Define Skills as governed packages of instructions, tools, knowledge, policy, wo
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Skill Registry and resolver & semantic discovery to policy-bound resolution & skill family · registry partition & one skill version & SkillManifest · SkillRequirement · SkillRelease \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Skill anatomy}
@@ -3594,13 +3660,9 @@ This is the distinction the chapter turns on, and conflating the two is how gove
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries  & \color{white}\bfseries Discovery & \color{white}\bfseries Resolution \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries  & \color{white}\bfseries Discovery & \color{white}\bfseries Resolution \\
-\endhead
 Input & A capability need in natural terms & A requirement plus the run envelope \\
 \rowcolor{BookLight}
 Method & Semantic search over the catalog & Deterministic policy evaluation \\
@@ -3608,7 +3670,7 @@ Output & Zero or more candidates & Exactly one pinned digest, or a failure \\
 \rowcolor{BookLight}
 May a model influence it? & Yes — it can describe the need & \textbf{No} \\
 Failure mode & Returns nothing useful & Fails closed, with the rule that refused \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 The asymmetry matters. Discovery may be fuzzy because nothing it returns is yet permitted. Resolution may not, because its output is what will actually run. A system that lets a model pick from discovery results has skipped the gate and is back to ungoverned capability with a registry in front of it.\par
@@ -3620,13 +3682,9 @@ Draft → Certified → Staged → Active → Deprecated → Revoked is evidence
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries State & \color{white}\bfseries Means & \color{white}\bfseries What moves it forward \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries State & \color{white}\bfseries Means & \color{white}\bfseries What moves it forward \\
-\endhead
 \textbf{Draft} & Authored, not trusted & Passing the certification suite \\
 \rowcolor{BookLight}
 \textbf{Certified} & Evidence exists; not yet deployed & A staging release decision \\
@@ -3636,7 +3694,7 @@ Draft → Certified → Staged → Active → Deprecated → Revoked is evidence
 \textbf{Deprecated} & Still resolvable for runs already using it & The compatibility window expiring \\
 \rowcolor{BookLight}
 \textbf{Revoked} & Not resolvable by anything new & — \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 Certification includes contract, unit, simulation, trajectory, threat, failure-injection, load, and operator-readiness checks. Deprecation retains a compatibility window for active runs — a long-running supplier onboarding started three weeks ago must finish on the version it pinned. Revocation removes the Skill from new resolution immediately and may trigger workflow pause or migration by risk class; it is the one transition that can affect a run already in flight, which is why it is reserved for a defect serious enough to justify that.\par
@@ -3681,10 +3739,10 @@ Evidence anchors: SLSA; MCP-2026. Full URLs, authority, version, and scope appea
 
 \subsection{Skill manifest and resolver}
 
-PYTHON · Resolving a skill version under policy and SemVer precedence\par
+\BookSnake · Resolving a skill version under policy and SemVer precedence\par
 
 \needspace{581.2pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class SkillRegistry:
     def __init__(self) -> None:
         self._skills: dict[str, SkillManifest] = {}
@@ -3829,15 +3887,11 @@ Compose compatible Skills into certified, distributable domain capability releas
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Skill Pack Registry and release pipeline & pack authoring to tenant/runtime use & domain pack · tenant rollout cohort & one pack release & SkillPackManifest · CompatibilityReport · EvaluationSuite \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{From individual capability to domain platform}
@@ -3855,20 +3909,16 @@ This is worth stating plainly because the intuition from package managers points
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries Installing a pack does & \color{white}\bfseries Installing a pack does not \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries Installing a pack does & \color{white}\bfseries Installing a pack does not \\
-\endhead
 Add its Skills to the discovery catalog & Grant access to any data source \\
 \rowcolor{BookLight}
 Publish its manifests, schemas and digests & Grant any tool permission \\
 Make its evaluation suites available & Bypass region or data-class policy \\
 \rowcolor{BookLight}
 Declare its dependency and risk ceiling & Change the installing tenant's grants \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 A business unit that installs the supplier-onboarding pack and has no entitlement to the sanctions registry gets a pack whose screening Skill will not resolve for its runs. That is the correct outcome, and it is why sharing a pack across business units is a policy and data-boundary review rather than a package install.\par
@@ -3913,10 +3963,10 @@ Evidence anchors: SLSA; OWASP-CHEAT. Full URLs, authority, version, and scope ap
 
 \subsection{Skill Pack contract}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{231.6pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 import hashlib
 import json
@@ -4031,15 +4081,11 @@ Implement ReAct with external budgets, governed tools, no-progress detection, an
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 External loop controller and acceptance engine & observation/model and model/tool & turn · tool permit · run budget & one bounded loop & AgentDecision · Observation · ReActLimits \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Why ReAct is useful—and expensive}
@@ -4119,17 +4165,13 @@ Use for exploratory retrieval, diagnosis, or research with a small eligible tool
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endhead
 Adaptivity & Handles unknown paths; increases latency, cost, and trajectory variance. \\
 \rowcolor{BookLight}
 Intermediate observations & Improves grounding; increases attack surface and context pressure. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Failures and controls}
@@ -4137,18 +4179,14 @@ Intermediate observations & Improves grounding; increases attack surface and con
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endhead
 Tool ping-pong & Normalized repeat signatures and no-progress threshold. \\
 \rowcolor{BookLight}
 Context poisoning & Treat observations as untrusted, provenance-labeled data. \\
 Budget exhaustion & External turn, call, token, time, and cost enforcement. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Minimum observability}
@@ -4173,10 +4211,10 @@ Budget exhaustion & External turn, call, token, time, and cost enforcement. \\
 
 \section{Implementation reference}
 
-PYTHON · Bounded ReAct loop with an explicit run budget\par
+\BookSnake · Bounded ReAct loop with an explicit run budget\par
 
 \needspace{470.8pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @dataclass
 class RunBudget:
     """Budget for one run. The model cannot see or change it."""
@@ -4230,10 +4268,10 @@ async def run(question: str, *, budget: RunBudget, model=None) -> str:
 
 \subsection{Bounded ReAct controller}
 
-PYTHON · A ReAct controller that owns the budgets\par
+\BookSnake · A ReAct controller that owns the budgets\par
 
 \needspace{590.4pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class ReActEngine:
     """A bounded reason-act-observe loop with an external tool boundary."""
 
@@ -4379,15 +4417,11 @@ Distinguish route selection from ownership transfer and design confidence, fallb
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Route service and workflow ownership record & classifier to privileged route; owner transfer & route class · specialist queue & one route or handoff & RouteDecision · Handoff · CapabilityEnvelope \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Selection is not authority}
@@ -4467,17 +4501,13 @@ Use when candidate paths have materially different capabilities, owners, SLOs, c
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endhead
 Specialization & Can improve quality and cost; creates taxonomy, calibration, and drift work. \\
 \rowcolor{BookLight}
 Learned classification & Handles semantic ambiguity; requires fallback and monitoring. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Failures and controls}
@@ -4485,18 +4515,14 @@ Learned classification & Handles semantic ambiguity; requires fallback and monit
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endhead
 Low-confidence guess & Clarify, default, or human triage. \\
 \rowcolor{BookLight}
 Route drift & Versioned datasets and confusion-matrix monitoring. \\
 Privileged route selection & Eligibility before classification and exact authorization after selection. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Minimum observability}
@@ -4560,17 +4586,13 @@ Use for explicit responsibility transfer across specialist, trust, organizationa
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endhead
 Clear specialization & Introduces ownership transitions and context-transfer risk. \\
 \rowcolor{BookLight}
 Independent interaction & Reduces supervisor bottlenecks; complicates cancellation and accountability. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Failures and controls}
@@ -4578,18 +4600,14 @@ Independent interaction & Reduces supervisor bottlenecks; complicates cancellati
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endhead
 Orphaned task & Atomic ownership state and acknowledgment timeout. \\
 \rowcolor{BookLight}
 Authority expansion & Child grant intersection and exact reauthorization. \\
 Context loss & Typed artifact and obligation references instead of transcript copying. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Minimum observability}
@@ -4612,10 +4630,10 @@ Context loss & Typed artifact and obligation references instead of transcript co
 
 \section{Implementation reference}
 
-PYTHON · Routing by handoff: transferring ownership, not context\par
+\BookSnake · Routing by handoff: transferring ownership, not context\par
 
 \needspace{305.2pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 refunds = Agent(
     name="Refunds specialist",
     handoff_description="Handles refund eligibility and processing.",
@@ -4651,10 +4669,10 @@ async def run(request: str, *, model=None):
 
 \subsection{Deterministic route validation}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{231.6pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 import hashlib
 import json
@@ -4767,15 +4785,11 @@ Compile model-proposed plans into authorized, resource-feasible, replayable exec
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Plan Service and durable workflow & planner proposal to deterministic compiler & plan node · workload queue & one node and one plan revision & CandidatePlan · CompiledPlan · PlanRevision \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Planning is compilation, not permission}
@@ -4884,13 +4898,9 @@ A deterministic compiler rejects cycles unless explicitly permitted, missing sch
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Component} & \color{white}\bfseries \textbf{Responsibility} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Component} & \color{white}\bfseries \textbf{Responsibility} \\
-\endhead
 Planner Activity & Produce a typed candidate plan from goal, constraints, eligible capabilities, and current evidence \\
 \rowcolor{BookLight}
 Plan Store & Persist immutable revisions and current committed pointer \\
@@ -4901,7 +4911,7 @@ Scheduler & Materialize ready nodes into workflow activities/child tasks under c
 \rowcolor{BookLight}
 Replan Controller & Decide when replanning is allowed and define the unchanged/reusable subgraph \\
 Acceptance Engine & Run deterministic checks and policy-approved model graders before satisfying nodes/goals \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{High-level APIs}
@@ -5051,15 +5061,11 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
-\endhead
 Use for heterogeneous, dependency-rich tasks where semantic decomposition provides measurable value. & Avoid for known processes, short tasks, or high-risk paths that should be encoded as deterministic workflows. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Trade-offs}
@@ -5067,17 +5073,13 @@ Use for heterogeneous, dependency-rich tasks where semantic decomposition provid
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endhead
 Flexible decomposition & More validation, recovery, and evaluation complexity. \\
 \rowcolor{BookLight}
 Parallel execution & Lower latency; higher resource use and conflict risk. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Failures and controls}
@@ -5085,18 +5087,14 @@ Parallel execution & Lower latency; higher resource use and conflict risk. \\
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endhead
 Invalid graph & Cycle, reference, terminal, and reachability checks. \\
 \rowcolor{BookLight}
 Invented authority & Capability and grant subset checks. \\
 Plan churn & Revision, no-progress, and cost limits; freeze committed facts. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Minimum observability}
@@ -5121,10 +5119,10 @@ Plan churn & Revision, no-progress, and cost limits; freeze committed facts. \\
 
 \subsection{Plan IR compiler}
 
-PYTHON · Compiling an approved plan into a budget-bounded envelope\par
+\BookSnake · Compiling an approved plan into a budget-bounded envelope\par
 
 \needspace{581.2pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, object]:
     """Validate and bind a proposed plan to the policy envelope.
 
@@ -5269,15 +5267,11 @@ Use critique and evaluation to improve outputs without self-certification, unbou
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Acceptance Engine & generator/evaluator and evaluator/commit & candidate · scorer pool · slice & one revision cycle & EvaluationResult · Rubric · AcceptanceDecision \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Improvement without self-certification}
@@ -5327,15 +5321,11 @@ A reflector reviews a candidate against explicit evidence and rubric, emits stru
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
-\endhead
 Use when measured offline results show critique improves a specific quality dimension. & Avoid if correctness is executable, the first pass already meets it, or added latency has no measured benefit. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Trade-offs}
@@ -5343,17 +5333,13 @@ Use when measured offline results show critique improves a specific quality dime
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endhead
 Better completeness & Additional model calls, correlated errors, and longer latency. \\
 \rowcolor{BookLight}
 Structured critique & More debuggable; requires defect taxonomy and evaluation. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Failures and controls}
@@ -5361,18 +5347,14 @@ Structured critique & More debuggable; requires defect taxonomy and evaluation. 
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endhead
 Self-confirmation & Different rubric, evidence, or evaluator and deterministic checks. \\
 \rowcolor{BookLight}
 Stylistic churn & Diff limits and no-progress detection. \\
 Evidence invention & Require evidence references and reject unsupported additions. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Minimum observability}
@@ -5436,17 +5418,13 @@ Use for documents, plans, code, or analyses where iterative quality gain is meas
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endhead
 Higher quality & Higher cost and latency, plus evaluator calibration work. \\
 \rowcolor{BookLight}
 Explicit rubric & Improves governance; can overfit to benchmark or judge preferences. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Failures and controls}
@@ -5454,18 +5432,14 @@ Explicit rubric & Improves governance; can overfit to benchmark or judge prefere
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endhead
 Reward hacking & Hidden holdout tests, diverse scorers, and human calibration. \\
 \rowcolor{BookLight}
 Judge variance & Repeated runs, confidence intervals, ensembles, and thresholds. \\
 Endless revision & Maximum revisions, cost, time, and no-progress stop. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Minimum observability}
@@ -5490,10 +5464,10 @@ Endless revision & Maximum revisions, cost, time, and no-progress stop. \\
 
 \subsection{Bounded evaluator–optimizer}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{286.8pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 import hashlib
 import json
@@ -5612,15 +5586,11 @@ Bind approval and intervention to immutable proposals and durable state transiti
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Workflow plus Approval Service & machine proposal to human authority & approval queue · risk class · tenant & one immutable proposal & ApprovalRequest · ApprovalDecision · EffectReceipt \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Two distinct human controls}
@@ -5687,13 +5657,9 @@ An ApprovalRequest contains: proposal/artifact hash, exact action and resource, 
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Component} & \color{white}\bfseries \textbf{Responsibility} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Component} & \color{white}\bfseries \textbf{Responsibility} \\
-\endhead
 Approval Policy Router & Convert policy obligations, risk, value, novelty, and confidence into approval requirements \\
 \rowcolor{BookLight}
 Approval Service & Persist immutable proposal snapshots and authoritative decision state \\
@@ -5704,7 +5670,7 @@ Notification Service & Deliver idempotent channel notifications and deep links; 
 \rowcolor{BookLight}
 Operator Control Service & Perform authorized pause, cancel, retry, plan patch, budget, and compensation commands \\
 Override Journal & Append operator actions and linked incident/change records to immutable evidence \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{High-level APIs}
@@ -5866,17 +5832,13 @@ Use for high-risk, irreversible, regulated, ambiguous, or policy-exception decis
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endhead
 Risk control & Adds dwell time, queues, fatigue, and staffing requirements. \\
 \rowcolor{BookLight}
 Human judgment & Handles ambiguity; can be inconsistent and needs calibration. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Failures and controls}
@@ -5884,18 +5846,14 @@ Human judgment & Handles ambiguity; can be inconsistent and needs calibration. \
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endhead
 Approval drift & Hash binding, expiry, expected version, and reapproval. \\
 \rowcolor{BookLight}
 Wrong approver & RBAC/ABAC and separation of duties. \\
 Queue abandonment & SLA, escalation, reassignment, cancellation, and safe timeout. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Minimum observability}
@@ -5918,9 +5876,9 @@ Queue abandonment & SLA, escalation, reassignment, cancellation, and safe timeou
 
 \section{Implementation reference}
 
-PYTHON · A human approval gate that survives the wait\par
+\BookSnake · A human approval gate that survives the wait\par
 
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def proposal_hash(action: str, arguments: dict) -> str:
     """Bind a grant to one exact proposal, not to an intent."""
     payload = json.dumps({"action": action, "arguments": arguments}, sort_keys=True)
@@ -6011,10 +5969,10 @@ class PendingApprovals:
 
 \subsection{Proposal-bound approval contract}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{332.8pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
 import hashlib
@@ -6053,10 +6011,10 @@ def proposal_hash(action: str, destination: str,
 
 \subsection{Executable proposal-bound approval}
 
-PYTHON · Verifying an approval grant against this exact proposal\par
+\BookSnake · Verifying an approval grant against this exact proposal\par
 
 \needspace{452.4pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class ApprovalGrant(BaseModel):
     approval_id: str
     proposal_hash: str
@@ -6193,15 +6151,11 @@ Preserve weeks-long work across waits, failures, deployments, retries, cancellat
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Durable workflow engine & workflow activity to external I/O & history shard · activity queue · timer & one workflow execution & WorkflowEvent · Checkpoint · WaitRegistration \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Durable state is more than chat history}
@@ -6465,17 +6419,13 @@ Use for work with waits, multiple systems, protected effects, independent failur
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endhead
 Failure recovery & Requires deterministic workflow discipline and history compatibility. \\
 \rowcolor{BookLight}
 Long waits & Preserves state; creates lifecycle, retention, and migration obligations. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Failures and controls}
@@ -6483,18 +6433,14 @@ Long waits & Preserves state; creates lifecycle, retention, and migration obliga
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endhead
 Nondeterministic replay & Move I/O, clocks, randomness, and model calls to activities. \\
 \rowcolor{BookLight}
 Stuck wait & Durable deadline, accepted signal sources, escalation, and visibility. \\
 Unknown mutation & Freeze dependents and reconcile before retry or close. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Minimum observability}
@@ -6521,10 +6467,10 @@ Unknown mutation & Freeze dependents and reconcile before retry or close. \\
 
 \subsection{Replay-safe workflow reducer}
 
-PYTHON · Durable run state as a replayable event fold\par
+\BookSnake · Durable run state as a replayable event fold\par
 
 \needspace{544.4pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def evolve(state: RunState, event: WorkflowEvent) -> RunState:
     if event.expected_state_version is not None and event.expected_state_version != state.state_version:
         raise ValueError("stale workflow event")
@@ -6987,10 +6933,10 @@ These two failures share a root cause: the model is allowed to decide when to st
 
 \textbf{Architecture.} Recursion becomes a runtime-governed task graph.\par
 
-PYTHON · anti-pattern and correction\par
+\BookSnake · anti-pattern and correction\par
 
 \needspace{167.2pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 # Anti-pattern: every child starts fresh, so the ceiling is depth x fan-out.
 async def delegate(task):
     child = Budget(tokens=20_000, usd=1.00, depth=3)   # reset on every hop
@@ -7031,10 +6977,10 @@ Everything an agent believes arrives through one of these three channels, and al
 
 \textbf{Architecture.} Transcript-as-state becomes State Service → snapshot → prompt.\par
 
-PYTHON · anti-pattern and correction\par
+\BookSnake · anti-pattern and correction\par
 
 \needspace{148.8pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 # Anti-pattern: the transcript is the record, so whatever survives
 # compaction is what the system believes.
 messages.append({"role": "assistant", "content": "Legal approved with conditions."})
@@ -7087,10 +7033,10 @@ context = ContextManifest.project(await state.snapshot(run.id), budget=4_000)
 
 \textbf{Architecture.} Transcript → memory becomes candidate → gate → typed record.\par
 
-PYTHON · anti-pattern and correction\par
+\BookSnake · anti-pattern and correction\par
 
 \needspace{167.2pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 # Anti-pattern: the model decides what is worth remembering, and the write
 # path has no provenance, no purpose, and no way to expire.
 memory.write(user_id, summarize(conversation))
@@ -7193,10 +7139,10 @@ These two cards are the most expensive in the catalog, because they produce dupl
 
 \textbf{Architecture.} Nested retries become classified failure → one schedule → terminal.\par
 
-PYTHON · anti-pattern and correction\par
+\BookSnake · anti-pattern and correction\par
 
 \needspace{158.0pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 # Anti-pattern: each layer is independently "resilient". 3 x 3 x 2 = 18.
 client = HttpClient(retries=3)
 gateway = ToolGateway(client, retries=3)
@@ -7232,10 +7178,10 @@ workflow.call(gateway, retry_policy=RetryPolicy(
 
 \textbf{Architecture.} timeout → failed → retry becomes timeout → unknown → lookup → decide.\par
 
-PYTHON · anti-pattern and correction\par
+\BookSnake · anti-pattern and correction\par
 
 \needspace{167.2pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 # Anti-pattern: timeout is treated as proof that nothing happened.
 try:
     return await vendors.create(payload)
@@ -7278,10 +7224,10 @@ Both cards here concern the moment a system decides that something is allowed, o
 
 \textbf{Architecture.} \lstinline[style=bookinline]!approved=true! becomes proposal hash → grant → revalidate → commit.\par
 
-PYTHON · anti-pattern and correction\par
+\BookSnake · anti-pattern and correction\par
 
 \needspace{148.8pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 # Anti-pattern: consent is a flag on the run, detached from what executes.
 if run.approved:
     await payments.send(vendor=current.vendor, amount=current.amount)
@@ -7437,15 +7383,11 @@ Give each task one owner, narrow authority on delegation, and make fan-out, fan-
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Task Service and supervisor workflow & parent/child authority and artifact adoption & task tree · specialist queue & one child task & TaskEnvelope · ChildGrant · JoinPolicy \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Collaboration is a state machine}
@@ -7537,13 +7479,9 @@ Peer swarm / group chat & Research exploration where diversity is worth the cost
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Component} & \color{white}\bfseries \textbf{Owns} & \color{white}\bfseries \textbf{Does not own} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Component} & \color{white}\bfseries \textbf{Owns} & \color{white}\bfseries \textbf{Does not own} \\
-\endhead
 Agent Registry & Immutable agent versions, capability declarations, compatibility, ownership & Per-run mutable state \\
 \rowcolor{BookLight}
 Run Coordinator & Goal lifecycle, plan revision, child-task policy, terminal decision & Provider-specific model calls or connector credentials \\
@@ -7553,7 +7491,7 @@ Ownership Service & Atomic handoff, leases, cancellation tree, current accountab
 Router & Ranked eligible agents/tools using manifest, health, policy, cost, and locality & Authorization or unrestricted discovery \\
 \rowcolor{BookLight}
 Join/Aggregation Service & Readiness, quorum, schema validation, conflict policy, accepted result & Free-form “consensus” without evidence \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{High-level APIs}
@@ -7712,17 +7650,13 @@ Use when specialists differ in tools, data, trust, cost, SLO, ownership, or depl
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endhead
 Specialization and parallelism & More coordination, cost, cancellation, and artifact validation. \\
 \rowcolor{BookLight}
 One parent owner & Clear accountability; can become a bottleneck. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Failures and controls}
@@ -7730,18 +7664,14 @@ One parent owner & Clear accountability; can become a bottleneck. \\
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endhead
 Runaway fan-out & Depth, child, concurrency, cost, and time budgets. \\
 \rowcolor{BookLight}
 Conflicting artifacts & Schema, provenance, version, quorum, precedence, or human resolution. \\
 Child leakage & Narrow grant, data, context, and egress boundaries. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Minimum observability}
@@ -7789,15 +7719,11 @@ Collaboration uses durable TaskEnvelope, message, status, artifact, cancellation
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
-\endhead
 Use across teams, regions, vendors, trust domains, or independently recoverable specialist work. & Avoid free-form agent conversations as the sole coordination mechanism. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Trade-offs}
@@ -7805,17 +7731,13 @@ Use across teams, regions, vendors, trust domains, or independently recoverable 
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-\endhead
 Organizational scale & More protocol, trust, compatibility, and operations work. \\
 \rowcolor{BookLight}
 Independent ownership & Improves isolation; complicates global optimization and debugging. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Failures and controls}
@@ -7823,18 +7745,14 @@ Independent ownership & Improves isolation; complicates global optimization and 
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-\endhead
 Split ownership & Single current owner and versioned transfer. \\
 \rowcolor{BookLight}
 Message duplication or reordering & Inbox dedupe, sequence, expected version, and idempotent reducers. \\
 Remote task never completes & Deadline, heartbeat, cancellation, fallback, and intervention. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Minimum observability}
@@ -7859,10 +7777,10 @@ Remote task never completes & Deadline, heartbeat, cancellation, fallback, and i
 
 \subsection{Durable child-task contract}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{167.2pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 from datetime import datetime
 from pydantic import BaseModel, Field
@@ -7883,10 +7801,10 @@ class TaskEnvelope(BaseModel):
 
 \subsection{Monotonic child authority}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{618.0pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -8041,15 +7959,11 @@ Federate tools and agents through locally governed gateways, registries, task pr
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 MCP and A2A Gateways & local trust domain to external endpoint or peer & endpoint · peer · tenant quota & one remote call or task & ServerManifest · A2ATask · ArtifactEnvelope \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Two protocols, two responsibilities}
@@ -8059,13 +7973,9 @@ MCP and A2A are routinely discussed as alternatives. They are not, and choosing 
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries  & \color{white}\bfseries \textbf{MCP} & \color{white}\bfseries \textbf{A2A} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries  & \color{white}\bfseries \textbf{MCP} & \color{white}\bfseries \textbf{A2A} \\
-\endhead
 Standardizes & How a host discovers and invokes \textbf{tools, resources and prompts} on a server & How peers collaborate around a \textbf{task}: messages, status, streaming, artifacts, cancellation \\
 \rowcolor{BookLight}
 Unit of exchange & A tool call and its result & A task with a lifecycle \\
@@ -8073,7 +7983,7 @@ Who owns the work & The caller, throughout & Transfers to the peer, which report
 \rowcolor{BookLight}
 Typical use & "Read this record for me" & "Own this sub-goal and tell me when it is done" \\
 What it does \textbf{not} decide & Whether the caller may invoke the tool & Whether the peer may be trusted with the task \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 That last row is the one that matters. Neither protocol carries authorization. MCP describes how a tool is discovered and called, not who may call it; A2A describes how a task is delegated, not whether this peer should receive it. Both therefore terminate at a gateway that supplies the decision the protocol omits.\par
@@ -8120,13 +8030,9 @@ Enterprise example & A procurement platform delegates sanctions screening to a s
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Mechanism} & \color{white}\bfseries \textbf{Best use} & \color{white}\bfseries \textbf{Not sufficient for} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Mechanism} & \color{white}\bfseries \textbf{Best use} & \color{white}\bfseries \textbf{Not sufficient for} \\
-\endhead
 Direct function call & Low-latency, same-process specialist & Independent lifecycle, failure isolation, cross-team deployment \\
 \rowcolor{BookLight}
 Durable child workflow & Same trust domain, long-running task with strong parent/child semantics & Cross-vendor discovery and open interoperability \\
@@ -8136,7 +8042,7 @@ MCP & Tools, prompts, and resources exposed to an agent & Full multi-agent task 
 A2A & Agent discovery, messages, stateful tasks, streaming/push updates, artifacts & Internal durable execution, shared business transactions, policy authority \\
 \rowcolor{BookLight}
 Shared blackboard & Experimental collaboration and broad exploration & Transactional ownership, tenant isolation, deterministic conflict resolution \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 A2A’s task/message/artifact model and async operations are useful at remote-agent boundaries. Its agent card is discovery metadata—not proof of trust. Pin the card version or digest, verify issuer and endpoint, and filter advertised skills through enterprise policy.\par
@@ -8252,13 +8158,9 @@ PeerObservation & latency, availability, schema violations, security findings, c
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Canonical local state} & \color{white}\bfseries \textbf{Remote interpretation} & \color{white}\bfseries \textbf{Parent behavior} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Canonical local state} & \color{white}\bfseries \textbf{Remote interpretation} & \color{white}\bfseries \textbf{Parent behavior} \\
-\endhead
 Created/Dispatched & Submitted/message sent & Retry dispatch only with same idempotency key \\
 \rowcolor{BookLight}
 Accepted/Running & Task working/streaming & Monitor heartbeat and deadline \\
@@ -8269,7 +8171,7 @@ Succeeded & Local adoption committed & Parent may satisfy dependency \\
 \rowcolor{BookLight}
 CancelRequested & Cancel sent & Stop issuing new authority; continue monitoring possible effects \\
 Failed/Expired/InterventionRequired & Terminal or ambiguous remote outcome & Apply parent join/reconciliation policy \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Scalability, federation, and failure isolation}
@@ -8303,13 +8205,9 @@ The LLM Gateway is the controlled boundary between enterprise workloads and mode
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
+\begin{tabular}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Component} & \color{white}\bfseries \textbf{Primary boundary} & \color{white}\bfseries \textbf{Owns} & \color{white}\bfseries \textbf{Does not own} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Component} & \color{white}\bfseries \textbf{Primary boundary} & \color{white}\bfseries \textbf{Owns} & \color{white}\bfseries \textbf{Does not own} \\
-\endhead
 API Gateway & External client → enterprise API & API auth, routing, quota, WAF, protocol termination & Agent semantics or model routing \\
 \rowcolor{BookLight}
 Agent Gateway & Agent/workload → agent platform & Workload identity, task admission, delegation, tenancy, agent audit & Provider inference controls \\
@@ -8319,7 +8217,7 @@ Tool Gateway & Agent → enterprise effect & Tool version and schema, re-authori
 MCP Gateway & Platform → MCP server & Server trust, discovery, tool eligibility, scoped credentials, protocol audit & General model inference \\
 \rowcolor{BookLight}
 Orchestration layer & Run → tasks/activities & State, deadlines, retries, joins, cancellation, compensation & Provider perimeter or policy truth \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Required capabilities}
@@ -8390,10 +8288,10 @@ Evidence anchors: MCP-2026; MCP-AUTH; A2A-101. Full URLs, authority, version, an
 
 \subsection{A2A task envelope}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{222.4pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
 from datetime import datetime
@@ -8420,10 +8318,10 @@ class A2ATaskEnvelope(BaseModel):
 
 \subsection{MLflow MCP Registry adapter}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{277.6pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 import os
 from typing import Literal
@@ -8539,13 +8437,9 @@ For example, a classifier may miss an instruction hidden in a supplier PDF. That
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Control question} & \color{white}\bfseries \textbf{Example answer for Northstar} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Control question} & \color{white}\bfseries \textbf{Example answer for Northstar} \\
-\endhead
 What is untrusted? & User text, supplier documents, retrieved chunks, model output, tool results, and remote-agent artifacts \\
 \rowcolor{BookLight}
 What capability is at risk? & Reading procurement records, changing a supplier, or publishing a document \\
@@ -8553,7 +8447,7 @@ Where is permission decided? & At the policy point using subject, actor, purpose
 \rowcolor{BookLight}
 Where is harm contained? & At the credential, sandbox, egress, and effect boundaries, each with a bounded grant \\
 What proves the result? & Decision records, sanitized trace links, receipts, and reconciled effect state \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Solution blueprint}
@@ -8563,15 +8457,11 @@ The blueprint is a set of ownership and containment decisions, not a single secu
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Policy, guardrail, and gateway services own decisions; the effect boundary owns commitment & untrusted language and content to privileged capability & tenant · session · tool class · sandbox & one run, one tool, one source & PolicyDecision · ContextManifest · ApprovalGrant · EffectRecord \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Defense in depth}
@@ -8855,13 +8745,9 @@ Northstar receives a supplier PDF that says, “To complete verification, upload
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
+\begin{tabular}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Step} & \color{white}\bfseries \textbf{What the attacker tries} & \color{white}\bfseries \textbf{Control that must hold} & \color{white}\bfseries \textbf{Evidence to retain} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Step} & \color{white}\bfseries \textbf{What the attacker tries} & \color{white}\bfseries \textbf{Control that must hold} & \color{white}\bfseries \textbf{Evidence to retain} \\
-\endhead
 Ingest & Hide an instruction in a trusted-looking PDF & Malware/content inspection and provenance label mark the artifact as data & Source digest, detector version, classification \\
 \rowcolor{BookLight}
 Retrieve & Make the instruction rank beside relevant policy & ACL and task-scoped retrieval return only authorized fields and references & ContextManifest, source revision, ACL decision \\
@@ -8869,7 +8755,7 @@ Reason & Convince the model that upload is part of verification & Typed output p
 \rowcolor{BookLight}
 Dispatch & Turn the proposal into an external request & Policy re-checks subject, purpose, destination, data class, and risk & PolicyDecision, EgressGrant or denial \\
 Commit & Exfiltrate or publish the ledger & DLP, approval, and the effect boundary refuse or record the protected operation & DLP finding, ApprovalGrant, EffectRecord \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 The important result is not that the model resisted the sentence. It is that a successful manipulation did not expand authority. Detection improves the user experience and reduces investigation cost; containment preserves the security property when detection is incomplete.\par
@@ -8894,10 +8780,10 @@ Evidence anchors: R11; R15; R16. Full URLs, authority, version, and scope appear
 
 \section{Implementation reference}
 
-PYTHON · An input guardrail that trips before any tool runs\par
+\BookSnake · An input guardrail that trips before any tool runs\par
 
 \needspace{424.8pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 # Phrases that attempt to re-authorize the agent from inside the content. A real
 # deployment classifies rather than matches strings; the architecture is the
 # point, not the detector.
@@ -8951,13 +8837,9 @@ Use Detect → Contain → Revoke → Reconcile → Eradicate → Recover → Le
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Phase} & \color{white}\bfseries \textbf{Operator question} & \color{white}\bfseries \textbf{Required record} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Phase} & \color{white}\bfseries \textbf{Operator question} & \color{white}\bfseries \textbf{Required record} \\
-\endhead
 Detect & Which boundary saw the anomaly, and how confident is the detector? & Finding, detector/version, affected run and artifact \\
 \rowcolor{BookLight}
 Contain & What new work must stop while current effects are investigated? & Narrow kill switch, queue/run checkpoint, containment time \\
@@ -8967,7 +8849,7 @@ Reconcile & Did a downstream mutation commit, decline, partially commit, or rema
 Eradicate & Which source, release, memory record, or dependency enabled the path? & Quarantine/deletion lineage and remediation change \\
 \rowcolor{BookLight}
 Recover and learn & What known-good state can resume safely, and how will recurrence be tested? & Recovery approval, regression fixture, post-incident review \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 Containment can pause a tool, MCP server, model route, Skill, memory namespace, tenant, or agent. Revoke credentials, capabilities, approvals, artifacts, signing keys, and trust. Reconcile which effects actually occurred; never infer from the model's final message. Restore a known release and authoritative state, then create privacy-reviewed regression cases.\par
@@ -9065,15 +8947,11 @@ The central distinction is between \emph{who initiated the request} and \emph{wh
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Policy Engine and security-token service & subject/actor to protected resource & policy shard · tenant · resource & one decision and lease & CapabilityEnvelope · PolicyDecision · CredentialLease \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Subject, actor, and purpose}
@@ -9085,18 +8963,14 @@ The three identity questions should remain visible in records and APIs:\par
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Question} & \color{white}\bfseries \textbf{Field} & \color{white}\bfseries \textbf{Why it matters} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Question} & \color{white}\bfseries \textbf{Field} & \color{white}\bfseries \textbf{Why it matters} \\
-\endhead
 Whose authority started this work? & Subject & Preserves accountability and the user’s effective rights \\
 \rowcolor{BookLight}
 Which software is acting now? & Actor & Supports workload authentication, policy, rate limits, and incident attribution \\
 Why is the action being requested? & Purpose & Prevents a valid identity from being reused for an unrelated operation \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 RBAC is useful for stable coarse roles such as “procurement reader.” ABAC adds the facts that change per request, such as a particular account, data class, region, time window, or risk tier. A production decision normally combines both: the role makes a candidate eligible, while attributes and current state decide whether this exact request is permitted.\par
@@ -9171,13 +9045,9 @@ The sequence shows why a token should not simply be forwarded from left to right
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Component} & \color{white}\bfseries \textbf{Responsibility} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Component} & \color{white}\bfseries \textbf{Responsibility} \\
-\endhead
 Identity Adapter & Validate enterprise user/session claims and normalize subject identity \\
 \rowcolor{BookLight}
 Workload Identity Agent & Attest runtime and issue/rotate workload credentials \\
@@ -9188,7 +9058,7 @@ Connector Gateway/PEP & Enforce decisions, inject credentials, validate resource
 \rowcolor{BookLight}
 Entitlement Indexer & Convert source ACL/group changes into queryable snapshots and invalidation events \\
 Data Access Broker & Run policy-filtered search/query against sources and return provenance-rich references \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{High-level APIs}
@@ -9318,10 +9188,10 @@ Evidence anchors: RFC8693; RFC8707. Full URLs, authority, version, and scope app
 
 \subsection{Capability-envelope subset proof}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{618.0pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -9470,15 +9340,11 @@ Tools are where a model proposal meets a system that can change the world. The g
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Tool Gateway, Effect Ledger, domain writer & agent intent to external mutation & logical effect key · connector & one business effect & EffectRecord · EffectReceipt · ReconciliationTask \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{The effect protocol}
@@ -9494,20 +9360,16 @@ The distinction becomes clearer in a failure timeline. Suppose the ERP accepts a
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Property} & \color{white}\bfseries \textbf{Question it answers} & \color{white}\bfseries \textbf{Failure it does not solve} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Property} & \color{white}\bfseries \textbf{Question it answers} & \color{white}\bfseries \textbf{Failure it does not solve} \\
-\endhead
 Approval & Did an authorized person approve this exact proposal? & The write may still fail, duplicate, or become stale \\
 \rowcolor{BookLight}
 Idempotency & Is this logical intent already being processed or committed? & A valid retry may still overwrite newer business state \\
 Preconditions & Is the target still at the version the proposal examined? & The request may time out after the target accepts it \\
 \rowcolor{BookLight}
 Receipt/reconciliation & What outcome can be proven independently? & It cannot undo an irreversible effect by itself \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Tool and capability management}
@@ -9540,13 +9402,9 @@ Enterprise example & An HR assistant sees a read-only employee lookup tool by de
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Field group} & \color{white}\bfseries \textbf{Required contents} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Field group} & \color{white}\bfseries \textbf{Required contents} \\
-\endhead
 Identity & tool\_id, semantic version, owner, implementation digest, environment \\
 \rowcolor{BookLight}
 Interface & Purpose, JSON input/output schemas, examples, error schema, compatibility range \\
@@ -9557,7 +9415,7 @@ Runtime & Timeout, retry class, concurrency key, rate limit, sandbox profile, eg
 \rowcolor{BookLight}
 Effects & Idempotency-key location, precondition/version field, effect receipt, compensation tool \\
 Operations & SLO, health endpoint, trace semantics, cost unit, deprecation date, support contact \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Risk classes}
@@ -9565,13 +9423,9 @@ Operations & SLO, health endpoint, trace semantics, cost unit, deprecation date,
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Class} & \color{white}\bfseries \textbf{Capability} & \color{white}\bfseries \textbf{Default control} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Class} & \color{white}\bfseries \textbf{Capability} & \color{white}\bfseries \textbf{Default control} \\
-\endhead
 R0 & Pure deterministic transform & Schema validation and resource limits \\
 \rowcolor{BookLight}
 R1 & Read approved low-sensitivity data & User-scoped authorization and audit \\
@@ -9579,7 +9433,7 @@ R2 & Read sensitive data or write reversible draft & Fine-grained policy, DLP, e
 \rowcolor{BookLight}
 R3 & External communication or material reversible change & Preview, user confirmation/approval, idempotency, effect verification \\
 R4 & Irreversible, privileged, financial, legal, production, or safety-critical action & Deterministic service owns commit; dual control or out-of-band approval; agent may only propose \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 Use MCP as an interoperability surface for tools and resources, not as the authorization authority. The gateway must validate audience-bound tokens, prohibit token passthrough, isolate untrusted servers, and apply enterprise policy independently of protocol-level OAuth.\par
@@ -9950,10 +9804,10 @@ Evidence anchors: OUTBOX; CLOUDEVENTS. Full URLs, authority, version, and scope 
 
 \section{Implementation reference}
 
-PYTHON · Effect-level idempotency ledger\par
+\BookSnake · Effect-level idempotency ledger\par
 
 \needspace{250.0pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class EffectOutcomeUnknown(Exception):
     """Raised when a dispatch timed out and the outcome cannot be proven."""
 
@@ -9983,10 +9837,10 @@ class EffectLedger:
 
 \subsection{Effect-state ledger}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{498.4pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
 import hashlib
@@ -10128,15 +9982,11 @@ This chapter asks a narrower question than “is the model safe?”: if the mode
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Sandbox service, egress proxy, governance registry & untrusted content/code to network and data & sandbox pool · destination · tenant & one sandbox and grant & SandboxProfile · EgressGrant · UseCaseRecord \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Security assumption: the model may be manipulated}
@@ -10298,13 +10148,9 @@ Read this figure as a containment argument. The input may be malicious and the m
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Boundary} & \color{white}\bfseries \textbf{Question} & \color{white}\bfseries \textbf{Fail-closed action} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Boundary} & \color{white}\bfseries \textbf{Question} & \color{white}\bfseries \textbf{Fail-closed action} \\
-\endhead
 Capability & Is this tool, resource, and risk class eligible for this run? & Do not expose the tool or grant \\
 \rowcolor{BookLight}
 Data & May this subject use these fields for this purpose? & Remove, redact, or deny before model materialization \\
@@ -10312,7 +10158,7 @@ Execution & What files, syscalls, and resources may generated code use? & Stop t
 \rowcolor{BookLight}
 Egress & Is this exact destination and payload authorized? & Refuse the connection and preserve the finding \\
 Effect & Is the proposed external change approved and verifiable? & Do not commit, or mark Unknown and reconcile \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \subsection{Sandboxing and egress rules}
@@ -10375,10 +10221,10 @@ Evidence anchors: OWASP-AGENT; NIST-IR; NIST-RMF; ISO42001; EU-AI-ACT. Full URLs
 
 \subsection{Default-deny URL authorization}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{250.0pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
 import ipaddress
@@ -10408,10 +10254,10 @@ def authorize_url(raw_url: str, allowed_hosts: frozenset[str]) -> tuple[str, tup
 
 \subsection{Scoped operational kill switch}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{342.0pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
 from pydantic import BaseModel, Field, model_validator
@@ -10540,15 +10386,11 @@ Observability answers two different questions. Diagnostics ask, “Why was this 
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Trace pipeline; separate audit ledger & sensitive runtime to operations access & trace shard · regional collector & one span/export batch & TraceContext · SpanLink · AuditEvent \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 The reader should be able to ask a trace four questions without opening every log line: what run was this, which decision changed the path, which activity consumed the time or budget, and what evidence proves the final effect? The answer comes from stable identifiers and typed links, not from copying every prompt and response into a search index.\par
@@ -10574,13 +10416,9 @@ Northstar reports that a customer refund took twelve minutes. The final answer l
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Trace segment} & \color{white}\bfseries \textbf{What the operator learns} & \color{white}\bfseries \textbf{Action or evidence} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Trace segment} & \color{white}\bfseries \textbf{What the operator learns} & \color{white}\bfseries \textbf{Action or evidence} \\
-\endhead
 Admission and queue & The run waited before any model work began & Queue age, capacity class, and assignment event \\
 \rowcolor{BookLight}
 Retrieval & The first context snapshot was stale and a second attempt ran & Index snapshot, ACL-filter count, freshness, query hash \\
@@ -10588,7 +10426,7 @@ Approval & Human dwell dominated model latency & Proposal hash, approver role, w
 \rowcolor{BookLight}
 Connector & The downstream call timed out after dispatch & Tool span, idempotency key, downstream request ID \\
 Effect ledger & The refund cannot yet be called successful or declined & Receipt or reconciliation case; no blind retry \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 This example also shows why “trace everything” is not a sufficient design. The trace needs the identifiers and state transitions that explain the run, while the sensitive payment payload remains in a controlled content or audit store with an authorized reference.\par
@@ -10740,10 +10578,10 @@ Tag every trace with the identifiers your system of record uses — run, tenant,
 
 \section{Implementation reference}
 
-PYTHON · Tracing an agent run with MLflow\par
+\BookSnake · Tracing an agent run with MLflow\par
 
 \needspace{194.8pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @mlflow.trace(span_type="TOOL")
 def lookup_supplier(supplier_id: str) -> dict[str, str]:
     """Tool spans record the arguments and the result, not just the latency."""
@@ -10767,10 +10605,10 @@ def handle_request(supplier_id: str) -> str:
 
 \subsection{MLflow tracing integration}
 
-PYTHON · Configuring MLflow tracing around a governed agent step\par
+\BookSnake · Configuring MLflow tracing around a governed agent step\par
 
 \needspace{277.6pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def configure_observability(experiment: str = "northstar-supplier-onboarding") -> None:
     """Point MLflow at the tracking backend and capture provider calls.
 
@@ -10892,15 +10730,11 @@ The chapter therefore treats evaluation as the measurement stage of a larger lea
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Evaluation Service and release gate & production evidence to development corpus & dataset version · scorer pool · slice & one case and candidate release & EvaluationCase · Feedback · ReleaseDecision \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 The gate is deliberately not a single score. A candidate can improve a language-quality metric while violating an authorization invariant, increasing unknown effects, or regressing a small but high-consequence slice. Deterministic failure therefore blocks promotion; a model judge can add useful evidence about nuanced quality, but it cannot override a protected invariant.\par
@@ -10976,13 +10810,9 @@ Suppose a Northstar prompt revision makes routine support answers clearer, but o
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Evidence} & \color{white}\bfseries \textbf{Candidate result} & \color{white}\bfseries \textbf{Release interpretation} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Evidence} & \color{white}\bfseries \textbf{Candidate result} & \color{white}\bfseries \textbf{Release interpretation} \\
-\endhead
 Routine answer quality & Improved against the baseline & Useful quality evidence, not sufficient for promotion \\
 \rowcolor{BookLight}
 Protected-action trajectory & One forbidden lookup appears & Deterministic safety regression; block the candidate \\
@@ -10990,7 +10820,7 @@ Region/risk slice & Regression is low volume but high consequence & Volume canno
 \rowcolor{BookLight}
 Diagnosis & New context or routing path selects the CRM tool & Compare trace, policy decision, context manifest, and release graph \\
 Next candidate & Narrow retrieval/tool eligibility and add the case to the regression set & Re-run held-out, adversarial, and protected-effect checks \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 The important habit is to preserve the failing trace as a versioned case after privacy and purpose review. Otherwise the next improvement can repeat the same failure while the dashboard reports only the improved average.\par
@@ -11190,10 +11020,10 @@ Trusting an LLM judge you have not calibrated against human labels. A judge is a
 
 \section{Implementation reference}
 
-PYTHON · Scoring an agent against a dataset with MLflow\par
+\BookSnake · Scoring an agent against a dataset with MLflow\par
 
 \needspace{461.6pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 # Each case is an incident that actually happened, not an imagined one.
 DATASET = [
     {"inputs": {"supplier_id": "S-1001"}, "expectations": {"status": "active"}},
@@ -11246,10 +11076,10 @@ def evaluate() -> dict[str, float]:
 
 \subsection{MLflow trajectory evaluation}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{323.6pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 import os
 from typing import Literal
@@ -11364,15 +11194,11 @@ Make governance decisions explicit, proportional, owned, and reversible, so that
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 A named accountable owner per decision class; a named risk authority owns exceptions & delegated domain autonomy to enterprise risk appetite & risk tier · domain · release & one decision, one exception, one release & risk classification · PolicyDecision · ValidationReport · exception record \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 Governance is easiest to understand as a control loop, not as a meeting. A team first states the outcome it is accountable for, then identifies what could make that outcome harmful, chooses controls proportional to the consequence, collects evidence while the system runs, and revises the controls when evidence or circumstances change. The loop is useful only when each step has an owner and a record that another person can inspect.\par
@@ -11382,20 +11208,16 @@ Consider Northstar's supplier-document assistant. The domain owner may accept a 
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{If the team asks…} & \color{white}\bfseries \textbf{Governance must answer…} & \color{white}\bfseries \textbf{Evidence that closes the question} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{If the team asks…} & \color{white}\bfseries \textbf{Governance must answer…} & \color{white}\bfseries \textbf{Evidence that closes the question} \\
-\endhead
 “Can this use case run?” & What outcome, data, autonomy, and consequence define its risk tier? & Use-case record, risk assessment, prohibited-use boundary \\
 \rowcolor{BookLight}
 “Can this tool be called?” & Who owns the resource, and what authorization and reconciliation does the effect require? & Tool contract, capability decision, effect policy \\
 “Can this release go live?” & Did the candidate satisfy the required technical, safety, and business gates? & ValidationReport, approvals, canary plan, rollback owner \\
 \rowcolor{BookLight}
 “Why was an exception allowed?” & What exact gap was accepted, by whom, with which compensating controls, and until when? & Time-bounded exception record and monitoring result \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 This framing also explains why a central board alone scales poorly. A board can set the risk vocabulary and approve high-consequence boundaries, but it cannot supply the local knowledge needed for every data source, business effect, or acceptance criterion. Central services make decisions consistent; domain owners make them meaningful.\par
@@ -11437,13 +11259,9 @@ Exception & Named risk authority & Scope, rationale, compensating controls, expi
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Tier} & \color{white}\bfseries \textbf{Typical use} & \color{white}\bfseries \textbf{Minimum governance} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Tier} & \color{white}\bfseries \textbf{Typical use} & \color{white}\bfseries \textbf{Minimum governance} \\
-\endhead
 0 Deterministic/assistive & No model or harmless ideation & Standard engineering/data policy \\
 \rowcolor{BookLight}
 1 Bounded advisory & Low-impact content with verification & Owner, basic evaluation, data controls, monitoring \\
@@ -11451,7 +11269,7 @@ Exception & Named risk authority & Scope, rationale, compensating controls, expi
 \rowcolor{BookLight}
 3 Protected action & Financial, identity, customer, employee, infrastructure effect & Least privilege, exact approval, effect ledger, strong eval, canary, incident plan \\
 4 High consequence/systemic & Regulated, safety-critical, large-scale autonomous/cross-boundary & Executive/risk approval, independent assurance, strict envelope, recovery exercise \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 Assess incorrect-outcome impact, sensitive data, protected effects, legal relevance, autonomy, exposure, scale, reversibility, multi-agent/tool complexity, and human detectability. Risk is not the model name.\par
@@ -11571,15 +11389,11 @@ Ship immutable release bundles through compatibility checks, canaries, workflow-
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Release Registry and compatible worker pools & candidate artifact to production assignment & release cohort · workflow build · cell & one release cohort & ReleaseManifest · CompatibilityMatrix · RolloutPlan \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{The release is the behavior}
@@ -11601,13 +11415,9 @@ The distinction between a release and a deployment becomes concrete during a too
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Moment} & \color{white}\bfseries \textbf{Control} & \color{white}\bfseries \textbf{What must remain true} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Moment} & \color{white}\bfseries \textbf{Control} & \color{white}\bfseries \textbf{What must remain true} \\
-\endhead
 Candidate assembled & Resolve every dependency to a digest and test compatibility & The bundle can be reproduced and no mutable “latest” reference is admitted \\
 \rowcolor{BookLight}
 New starts canary & Assign only a bounded tenant or traffic cohort & Existing runs remain on their pinned manifest; canary evidence is separately attributable \\
@@ -11615,7 +11425,7 @@ Canary finds a defect & Stop new assignment and restore the prior binding & Roll
 \rowcolor{BookLight}
 Old run reaches a tool call & Route to a worker compatible with its manifest & A worker may support the run’s old contract, or a tested migration must be explicit \\
 Region fails during a write & Fence the old writer, restore, reconcile, then advance placement & No effect is assumed absent merely because the request timed out \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 This is why “roll back the model” is usually incomplete. If the prompt, tool schema, policy, workflow build, or retrieved knowledge strategy also changed, restoring one model identifier does not restore the behavior. The smallest safe rollback unit is the release bundle, while emergency deny and credential revocation remain separate controls that can take effect immediately and be recorded alongside the pinned release.\par
@@ -11629,20 +11439,16 @@ The topology has two different jobs. The control plane decides what may run and 
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Layer} & \color{white}\bfseries \textbf{Owns} & \color{white}\bfseries \textbf{What it must not assume} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Layer} & \color{white}\bfseries \textbf{Owns} & \color{white}\bfseries \textbf{What it must not assume} \\
-\endhead
 Control plane & Registries, release bundles, evaluation gates, governance inventory, and promotion decisions & That a healthy registry means an execution region can safely resume effects \\
 \rowcolor{BookLight}
 Regional execution plane & Admission, workflow history, queues, workers, retrieval, traces, and local service endpoints & That a replica is a compatible worker for every historical run \\
 Source systems and effect boundaries & Business records, external writes, receipts, and reconciliation predicates & That a timeout proves the write was absent \\
 \rowcolor{BookLight}
 Recovery controls & Fencing, deny/kill switch, credential revocation, placement, and resume policy & That normal deployment automation is sufficient during an incident \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 The boundary is operational as well as logical. A regional worker should be able to verify a signed bundle from a local cache, but it should not invent a new policy when the control plane is unavailable. A high-risk admission may therefore fail closed, while a low-risk read-only task can use a documented last-known-good policy. That explicit distinction is more useful than a generic claim of “high availability.”\par
@@ -11762,13 +11568,9 @@ Promotion is a chain of evidence, not a sequence of environments that an artifac
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Stage} & \color{white}\bfseries \textbf{Question} & \color{white}\bfseries \textbf{Evidence} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Stage} & \color{white}\bfseries \textbf{Question} & \color{white}\bfseries \textbf{Evidence} \\
-\endhead
 Build & Can the dependency graph be reproduced and attested? & Digests, lockfiles, SBOM, provenance, signature \\
 \rowcolor{BookLight}
 Evaluate & Does the candidate satisfy its risk-tiered behavioral and security gates? & Dataset results, replay, threat cases, slice analysis \\
@@ -11778,7 +11580,7 @@ Canary & Does bounded real traffic stay within acceptance and SLO limits? & Coho
 Promote & Is the decision owned and recorded? & Approval, effective binding, release and audit record \\
 \rowcolor{BookLight}
 Learn & Did production evidence justify a change? & Incident/eval case, reviewed proposal, new candidate—not direct mutation \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 The last row closes the loop without allowing production to rewrite itself. A trace or conversation can become input to a curated dataset, but it becomes a release only after de-identification, review, evaluation, and promotion. That separation preserves both learning velocity and the ability to explain which version produced an earlier result.\par
@@ -11952,10 +11754,10 @@ Evidence anchors: SLSA; CISA-SBOM. Full URLs, authority, version, and scope appe
 
 \subsection{Release compatibility check}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{250.0pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
 from pydantic import BaseModel
@@ -11985,10 +11787,10 @@ def compatible(run: ReleaseManifest, worker: ReleaseManifest) -> bool:
 
 \subsection{Release attestation verification}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{332.8pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
 import hashlib
@@ -12112,15 +11914,11 @@ Optimize verified outcome quality, latency, cost, and capacity without weakening
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-\endhead
 Admission controller and budget service & tenant demand to scarce shared capacity & workload class · tenant · queue & one admitted run & BudgetLease · CapacityPermit · DegradationDecision \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Optimize the trajectory, not the token}
@@ -12146,20 +11944,16 @@ Optimization becomes confused when one number is treated as the whole system. La
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Question} & \color{white}\bfseries \textbf{Useful measure} & \color{white}\bfseries \textbf{A misleading shortcut} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Question} & \color{white}\bfseries \textbf{Useful measure} & \color{white}\bfseries \textbf{A misleading shortcut} \\
-\endhead
 How long did the customer wait? & End-to-end p50/p95/p99, including queue and human dwell & Model-token latency alone \\
 \rowcolor{BookLight}
 How much work did success require? & Cost per verified successful outcome, including retries and review & Price per million tokens \\
 How much can the system accept? & Queue age, service-time distribution, permits, and downstream quota & CPU utilization without provider limits \\
 \rowcolor{BookLight}
 Did the system do the right thing? & Acceptance rate, groundedness, effect correctness, and failure recovery & “The request returned 200” \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 For a stable workload, Little’s Law gives a useful first estimate: \lstinline[style=bookinline]!average work in system = arrival rate × average time in system!. If Northstar admits 120 runs per minute and an admitted run occupies the workflow system for four minutes on average, about 480 runs are active. That estimate is not a capacity guarantee: fan-out, retries, provider quotas, and burstiness can require more permits. It is a way to locate the question that a load test must answer.\par
@@ -12171,20 +11965,16 @@ Assume the 120-runs-per-minute peak is expected to last long enough for queues t
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Observed pressure} & \color{white}\bfseries \textbf{Safe response} & \color{white}\bfseries \textbf{Shortcut to avoid} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Observed pressure} & \color{white}\bfseries \textbf{Safe response} & \color{white}\bfseries \textbf{Shortcut to avoid} \\
-\endhead
 Queue age predicts a deadline miss & Defer low-priority work, preserve reserved capacity, and expose a retry-after time & Add workers while the provider quota is already exhausted \\
 \rowcolor{BookLight}
 Token spend rises without better acceptance & Reduce duplicate context, tighten tool schemas, and inspect retry/fan-out causes & Switch every node to the cheapest model \\
 A lower-cost route increases escalations & Revert the route for the affected slice and compare cost per verified success & Keep the route because token cost fell \\
 \rowcolor{BookLight}
 A tool call is slow or unknown & Preserve the effect record and reconcile before retrying & Treat timeout as proof that no effect occurred \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 The numbers above are illustrative planning inputs, not universal limits. Their purpose is to show the order of reasoning: measure demand, identify the scarce resource, reserve capacity for the outcomes that matter, choose a reversible degradation, and verify that the degraded path still satisfies its safety and acceptance contract.\par
@@ -12221,13 +12011,9 @@ Begin with a small number of meaningful pools rather than a queue for every tena
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Layer} & \color{white}\bfseries \textbf{Scaling signal} & \color{white}\bfseries \textbf{Overload behavior} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Layer} & \color{white}\bfseries \textbf{Scaling signal} & \color{white}\bfseries \textbf{Overload behavior} \\
-\endhead
 Admission & Predicted deadline miss, budget, risk, and downstream permits & Reject, defer, or offer a bounded draft path \\
 \rowcolor{BookLight}
 Queue and scheduler & Oldest age, arrival rate, priority, and fairness & Preserve reserved capacity; prevent starvation and retry storms \\
@@ -12235,7 +12021,7 @@ Worker pool & Service time, active leases, and workload-specific utilization & S
 \rowcolor{BookLight}
 External dependency & Provider quota, browser slots, database writers, and approver dwell & Queue before the dependency; expose retry-after and reconcile unknowns \\
 Usage ledger & Reserved versus actual cost and successful outcomes & Release unused reservations and flag unexplained spend \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 This layered view prevents a common operational mistake: treating worker count as capacity. If the model provider has no remaining token quota, adding workers only increases contention and may amplify retries. The scheduler should keep work queued until the scarce permit is available, while the admission controller decides whether waiting is still compatible with the deadline.\par
@@ -12395,13 +12181,9 @@ CostAllocation & aggregated period/scope, committed/estimated cost, successful-o
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
+\begin{tabular}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Limit} & \color{white}\bfseries \textbf{Interactive/read-heavy} & \color{white}\bfseries \textbf{Mutating or high-risk} & \color{white}\bfseries \textbf{Rationale} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Limit} & \color{white}\bfseries \textbf{Interactive/read-heavy} & \color{white}\bfseries \textbf{Mutating or high-risk} & \color{white}\bfseries \textbf{Rationale} \\
-\endhead
 Parallel ready nodes & Small bounded fan-out; raise only from measured value & One or very few effects at a time per business aggregate & Control quota bursts and concurrency conflicts \\
 \rowcolor{BookLight}
 Delegation depth & Usually 1–2; hard platform ceiling & 0–1 unless explicitly approved & Prevent invisible recursive authority/cost \\
@@ -12409,7 +12191,7 @@ Retry ownership & Workflow activity only & Workflow + effect reconciliation; no 
 \rowcolor{BookLight}
 Context budget & Per-node fixed allocation with evidence cap & Minimum necessary; exclude secrets and unrelated history & Cost, privacy, injection surface \\
 Spend/time & Reserve expected + bounded contingency & Hard stop before effect if reservation is insufficient & Prevent sunk-cost pressure from bypassing controls \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 These are policy shapes, not universal numbers. Determine actual limits from task value, provider quotas, benchmark distributions, risk appetite, and SLO/error budgets.\par
@@ -12444,10 +12226,10 @@ Measure cost per verified successful outcome, not per token or per request. Toke
 
 \subsection{Admission and capacity permit}
 
-PYTHON · implementation excerpt\par
+\BookSnake · implementation excerpt\par
 
 \needspace{259.2pt}
-\begin{lstlisting}[style=bookcode,title={PYTHON},language=Python]
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -13520,13 +13302,9 @@ R48 & framework documentation & Book-authored implementation. Supports the repor
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Quantity} & \color{white}\bfseries \textbf{Approximation} & \color{white}\bfseries \textbf{Caution} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Quantity} & \color{white}\bfseries \textbf{Approximation} & \color{white}\bfseries \textbf{Caution} \\
-\endhead
 Effective work rate & lambda\_eff = lambda\_external × E[nodes] × E[fan-out] × retry\_multiplier & Estimate separately by tenant/risk/route. \\
 \rowcolor{BookLight}
 Offered concurrency & L = lambda\_eff × E[service time] & Little's Law gives mean in-flight work under stable conditions. \\
@@ -13536,7 +13314,7 @@ Retry multiplier & 1 + p\_retry + p\_retry² + … up to the attempt cap & Corre
 Token demand & requests × (input + cached-input + output + tool-schema tokens) & Track by model route and ContextManifest policy. \\
 \rowcolor{BookLight}
 Verified-success cost & total model + tool + compute + human-review cost / accepted outcomes & Include failed, abandoned, and reconciled runs. \\
-\end{longtable}
+\end{tabular}
 \BookTableEnd
 
 \section{Production acceptance evidence}

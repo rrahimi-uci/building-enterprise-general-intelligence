@@ -336,7 +336,7 @@ Evidence anchors: SLSA; CISA-SBOM. Full URLs, authority, version, and scope appe
 
 ### Release compatibility check
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -368,7 +368,7 @@ def compatible(run: ReleaseManifest, worker: ReleaseManifest) -> bool:
 
 ### Release attestation verification
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations
@@ -647,7 +647,7 @@ Evidence anchors: QUEUEING; MLFLOW-TRACE. Full URLs, authority, version, and sco
 
 ### Admission and capacity permit
 
-PYTHON · implementation excerpt
+🐍 · implementation excerpt
 
 ```python
 from __future__ import annotations

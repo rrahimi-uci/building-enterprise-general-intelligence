@@ -194,6 +194,7 @@ def escape_plain(text: str) -> str:
         "~": r"\textasciitilde{}",
         "^": r"\textasciicircum{}",
         "✓": r"\ensuremath{\checkmark}",
+        "🐍": r"\BookSnake",
     }
     segments = re.split(r"<br\s*/?>", text, flags=re.I)
     escaped = []
@@ -259,12 +260,35 @@ def render_table(rows: list[list[str]]) -> str:
     width = 0.94 / columns
     specification = "@{}" + "".join("Y{" + format(width, ".4f") + r"\linewidth}" for _ in range(columns)) + "@{}"
     font_command = r"\small" if columns <= 3 else r"\fontsize{7.2}{9}\selectfont"
+
+    # Short operational summaries should remain intact. A compact tabular is
+    # also preferable here because a longtable at a forced page boundary can
+    # print both its first-page and continuation header before the first row.
+    compact = len(rows) <= 8 and max(len(cell) for row in rows for cell in row) <= 110
+    if compact:
+        output = [r"\needspace{5\baselineskip}", r"\BookTableStart", font_command,
+                  r"\begin{tabular}{" + specification + "}",
+                  r"\rowcolor{BookNavy}", table_header(rows[0], columns)]
+        for index, row in enumerate(rows[1:], 1):
+            padded = row + [""] * (columns - len(row))
+            if index % 2 == 0:
+                output.append(r"\rowcolor{BookLight}")
+            output.append(" & ".join(inline(cell) for cell in padded) + r" \\")
+        output.extend([r"\end{tabular}", r"\BookTableEnd"])
+        return "\n".join(output)
+
     # A longtable header alone at the foot of a page reads as a defect. Reserve
     # the header plus a few body rows so the table starts where it can breathe;
     # anything longer still breaks naturally, with the header repeated.
     output = [r"\needspace{5\baselineskip}", r"\BookTableStart", font_command,
               r"\begin{longtable}{" + specification + "}"]
-    output.extend([r"\rowcolor{BookNavy}", table_header(rows[0], columns), r"\endfirsthead", r"\rowcolor{BookNavy}", table_header(rows[0], columns), r"\endhead"])
+    # Define the first-page header separately from the continuation header.
+    # Without an explicit first head, longtable can emit its continuation head
+    # in addition to the rows that precede \endhead at a page boundary.
+    output.extend([
+        r"\rowcolor{BookNavy}", table_header(rows[0], columns), r"\endfirsthead",
+        r"\rowcolor{BookNavy}", table_header(rows[0], columns), r"\endhead",
+    ])
     for index, row in enumerate(rows[1:], 1):
         padded = row + [""] * (columns - len(row))
         if index % 2 == 0:
@@ -300,7 +324,8 @@ def render_code(language: str, code: str) -> str:
         raise ValueError("Code block contains a reserved lstlisting terminator")
     language_map = {"python": "Python", "json": "bookjson", "bash": "bookbash", "yaml": "bookyaml", "text": ""}
     mapped = language_map.get(language.lower(), "")
-    options = ["style=bookcode", "title={" + escape_plain(language.upper() or "TEXT") + "}"]
+    display_language = "🐍" if language.lower() == "python" else (language.upper() or "TEXT")
+    options = ["style=bookcode", "title={" + escape_plain(display_language) + "}"]
     if mapped:
         options.append("language=" + mapped)
     lines = []

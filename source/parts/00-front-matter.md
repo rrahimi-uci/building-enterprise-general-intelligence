@@ -123,14 +123,14 @@ Together, these principles establish a simple operating contract: agents provide
 ## Appendices
 
 - A. Pattern Selection Decision Tree and Catalog Index
-- B. Failure Triage and Operator Runbooks
-- C. Platform Contracts Quick Reference
-- D. Framework Landscape
-- E. Research Implications
-- F. Known Limitations and Enforced Mitigations
-- G. Enterprise Adoption Roadmap
+- B. Failure triage and operator runbooks
+- C. Platform contracts quick reference
+- D. Framework landscape
+- E. Research implications
+- F. Known limits and enforced mitigations
+- G. Enterprise adoption roadmap
 - H. Glossary
 - I. Companion Implementation Guide: Northstar Reference
-- J. Coding-Agent Prompts and Acceptance Criteria
+- J. Coding-agent prompt and acceptance criteria
 - K. References
-- L. Capacity, Resilience, and Release Acceptance
+- L. Capacity, resilience, and release acceptance
