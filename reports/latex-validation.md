@@ -12,7 +12,7 @@
 - **diagrams:** `45`
 - **code_blocks:** `71`
 - **longtables:** `142`
-- **compact_tables:** `105`
+- **compact_tables:** `106`
 - **callout_tables:** `95`
 - **citation_occurrences:** `107`
 - **bundled_fonts:** `8`

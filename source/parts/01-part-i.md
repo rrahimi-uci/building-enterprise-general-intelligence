@@ -6,20 +6,20 @@ Foundations establish the vocabulary and deterministic boundaries that every lat
 
 |  |
 | --- |
-| **MORTGAGE CASE AT THIS POINT**  Harborlight Home Finance wants to shorten mortgage evidence preparation from twelve days to two. A prototype can summarize an application file, but production must also retrieve authorized records, request missing evidence, pause for people, verify income and property evidence, create auditable decisions, and survive days of inactivity. |
+| **HARBORLIGHT AT THIS POINT**  Harborlight Home Finance wants to prepare an underwriter-ready package for a routine synthetic case within one business day. A prototype can summarize evidence, but production must also retrieve authorized records, identify missing inputs, pause for people, preserve audit evidence, and survive days of inactivity. |
 
 |  |
 | --- |
-| **DESIGN DECISION**  Start Harborlight's mortgage assistant as a governed distributed application with one bounded reasoning component, not as an autonomous chatbot. |
+| **DESIGN DECISION**  Start Harborlight as a governed distributed application with one bounded reasoning component, not as an autonomous lender. |
 
 ## The mortgage case that will grow with the book
 
-The book keeps its original architectural material and comparative examples
-because they make the principles concrete. The cumulative implementation and
-the primary narrative now follow one fictional mortgage case so the reader can
-see the same system acquire each capability without jumping to a new
-application. This is a reframing of the teaching thread, not a deletion of
-the broader enterprise scenarios.
+The cumulative implementation follows one fictional mortgage case so the
+reader can see the same system acquire each capability without jumping to a
+new application. The original Northstar supplier-onboarding material remains
+as explicitly comparative architecture evidence: it illustrates the same
+durability, authority, evidence, and release problems in another enterprise
+domain, but it is not the runnable case or the implementation-status anchor.
 
 **Harborlight Home Finance** is a fictional lender preparing an underwriter-ready
 package for a synthetic purchase application. The anchor case is
@@ -279,9 +279,16 @@ succeeded, whether a user may act, or whether the work is done — not because i
 would necessarily be wrong, but because being right by luck is indistinguishable
 from being right by construction, and only one of those can be audited.
 
-### The Harborlight domain thread
+### The comparative Northstar domain thread
 
-Throughout this book, Harborlight builds a mortgage evidence and underwriting-support platform. The evolving system retrieves authorized application records, validates income and property documents, identifies contradictions, coordinates specialist checks, requests missing evidence, waits for human decisions, and preserves evidence for the underwriter. The use case is deliberately inconvenient: it crosses data boundaries, lasts days, includes ambiguous reasoning, performs protected writes such as document requests, and requires audit. That makes it useful for testing whether an architecture is real.
+The retained Northstar supplier-onboarding thread retrieves candidate records,
+validates documents, screens sanctions, requests corrections, coordinates
+specialists, waits for human decisions, creates supplier records, and preserves
+evidence. The use case is deliberately inconvenient: it crosses data
+boundaries, lasts days, includes ambiguous reasoning, performs protected
+writes, and requires audit. That makes it useful comparative evidence for
+testing whether an architecture is real; the Harborlight mortgage case remains
+the cumulative runnable path.
 
 ## The production problem
 
@@ -309,17 +316,9 @@ development, and they interact:
 Put together, these mean that production design has to answer three questions
 for *every step a run takes*, not once at the design stage:
 
-1. **May this principal perform this action on this resource now?** Not "is the
-   user logged in" — may *this* subject, through *this* workload, acting for
-   *this* purpose, do *this specific thing* to *this specific record*, at this
-   moment. Authorization that was true when the run started may be false by the
-   time a human approval comes back three hours later.
-2. **Can this step be retried, resumed, cancelled or compensated safely?** The
-   honest answer for many steps is "not as written", and discovering which ones
-   is a design activity rather than an operational one.
-3. **Can an operator later reconstruct what happened, why, under which versions
-   and permissions?** If the answer is no, the system cannot be debugged, cannot
-   be audited, and cannot be improved from its own failures.
+1. **May this principal perform this action on this resource now?** Not "is the user logged in" — may *this* subject, through *this* workload, acting for *this* purpose, do *this specific thing* to *this specific record*, at this moment. Authorization that was true when the run started may be false by the time a human approval comes back three hours later.
+2. **Can this step be retried, resumed, cancelled or compensated safely?** The honest answer for many steps is "not as written", and discovering which ones is a design activity rather than an operational one.
+3. **Can an operator later reconstruct what happened, why, under which versions and permissions?** If the answer is no, the system cannot be debugged, cannot be audited, and cannot be improved from its own failures.
 
 Hold these three questions in mind as you read the rest of the book. Almost
 every mechanism introduced later — the effect ledger, the capability envelope,
@@ -547,7 +546,7 @@ and shows why a well-formed proposal is still not permission to act.
 
 |  |
 | --- |
-| **MORTGAGE CASE AT THIS POINT**  The prototype now proposes a document request. The JSON is valid and the rationale sounds convincing, yet the case may be stale, the user may lack request authority, and a retry could create a duplicate request. Harborlight introduces a deterministic shell around every model proposal. |
+| **COMPARATIVE NORTHSTAR THREAD**  The retained supplier prototype proposes a call to create a supplier record. The JSON is valid and the rationale sounds convincing, yet the record may be stale, the user may lack write authority, and a retry could create a duplicate. The same failure mechanism explains why Harborlight introduces a deterministic shell around every mortgage proposal. |
 
 |  |
 | --- |
@@ -813,7 +812,7 @@ not become the owner of the case, policy, approval, or effect records.
 
 |  |
 | --- |
-| **NORTHSTAR AT THIS POINT**  Northstar adopts OpenAI Agents SDK for its compact agent loop, tools, handoffs, structured outputs, tracing, sessions, and human-interruption surfaces. The architecture team refuses to let SDK state become workflow truth or to expose raw enterprise credentials to the agent process. |
+| **COMPARATIVE NORTHSTAR THREAD**  The retained supplier platform adopts OpenAI Agents SDK for its compact agent loop, tools, handoffs, structured outputs, tracing, sessions, and human-interruption surfaces. The architecture team refuses to let SDK state become workflow truth or to expose raw enterprise credentials to the agent process; Harborlight applies the same boundary to its C03 runtime seam. |
 
 |  |
 | --- |

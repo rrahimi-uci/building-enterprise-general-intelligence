@@ -4,6 +4,17 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Make the cumulative Harborlight path explicit in the foundations
+
+- Added a front-matter checkpoint map for implemented `C01`–`C03` and clearly
+  separated those implemented foundations from the `C04`–`C28` roadmap.
+- Reframed the opening of Part I so Harborlight Home Finance is the cumulative
+  runnable case and the retained Northstar supplier material is explicitly
+  comparative architecture evidence.
+- Regenerated the canonical Markdown, distributable Markdown, DOCX, XeLaTeX
+  source, and validation reports without changing the 8-Part / 28-chapter /
+  12-appendix topology.
+
 ### Full-book end-to-end review and mortgage narrative reconciliation
 
 - Added `full-book-review-plan.md`, a complete review plan covering content,

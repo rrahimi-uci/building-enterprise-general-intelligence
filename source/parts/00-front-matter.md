@@ -40,6 +40,22 @@ The package README explains how to build, validate, and release a new version of
 
 This guide is organized as one architecture story rather than a collection of independent topics. Read the executive map, then follow the lane that matches the decision. Every major chapter moves from problem and boundaries to architecture, implementation, failure modes, metrics, trade-offs, and review questions.
 
+The cumulative implementation path follows one synthetic Harborlight Home
+Finance case so the architecture grows without changing applications between
+chapters. The first three checkpoints are implemented and deliberately stop
+before any model-owned lending decision or protected loan-origination write:
+
+| Checkpoint | Chapter | What it adds | What remains outside the model |
+| --- | --- | --- | --- |
+| `C01` | 1 | A read-only evidence summary that exposes the missing second pay statement | Evidence truth, authoritative calculations, lending decisions, and effects |
+| `C02` | 2 | Typed candidate facts, deterministic calculation metadata, and a case-scoped workflow command | Validation, authorization, commit, verification, and acceptance |
+| `C03` | 3 | A provider-neutral bounded runtime seam with an optional OpenAI adapter | Workflow state, policy, credentials, approvals, effects, receipts, and audit |
+
+Later checkpoints are roadmap targets, not claims that the corresponding
+production platform has already been implemented. The retained Northstar
+supplier-onboarding material is comparative architecture evidence; the
+Harborlight mortgage case is the cumulative runnable path.
+
 | **Reader** | **Primary path** | **Decision supported** |
 | --- | --- | --- |
 | Executive and product leader | Parts II, III, VIII and Appendix G | Investment, operating model, risk appetite, platform scope, and outcome governance |

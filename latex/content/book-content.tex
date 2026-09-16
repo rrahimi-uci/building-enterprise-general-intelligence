@@ -38,6 +38,23 @@ The package README explains how to build, validate, and release a new version of
 
 This guide is organized as one architecture story rather than a collection of independent topics. Read the executive map, then follow the lane that matches the decision. Every major chapter moves from problem and boundaries to architecture, implementation, failure modes, metrics, trade-offs, and review questions.\par
 
+The cumulative implementation path follows one synthetic Harborlight Home Finance case so the architecture grows without changing applications between chapters. The first three checkpoints are implemented and deliberately stop before any model-owned lending decision or protected loan-origination write:\par
+
+\needspace{5\baselineskip}
+\BookTableStart
+\fontsize{7.2}{9}\selectfont
+\begin{tabular}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries Checkpoint & \color{white}\bfseries Chapter & \color{white}\bfseries What it adds & \color{white}\bfseries What remains outside the model \\
+\lstinline[style=bookinline]!C01! & 1 & A read-only evidence summary that exposes the missing second pay statement & Evidence truth, authoritative calculations, lending decisions, and effects \\
+\rowcolor{BookLight}
+\lstinline[style=bookinline]!C02! & 2 & Typed candidate facts, deterministic calculation metadata, and a case-scoped workflow command & Validation, authorization, commit, verification, and acceptance \\
+\lstinline[style=bookinline]!C03! & 3 & A provider-neutral bounded runtime seam with an optional OpenAI adapter & Workflow state, policy, credentials, approvals, effects, receipts, and audit \\
+\end{tabular}
+\BookTableEnd
+
+Later checkpoints are roadmap targets, not claims that the corresponding production platform has already been implemented. The retained Northstar supplier-onboarding material is comparative architecture evidence; the Harborlight mortgage case is the cumulative runnable path.\par
+
 \needspace{5\baselineskip}
 \BookTableStart
 \small
@@ -224,17 +241,17 @@ Together, these principles establish a simple operating contract: agents provide
 
 \BookChapter{01}{From an LLM Call to a Production Agentic System}
 
-\begin{bookcallout}[Mortgage case at this point]
-Harborlight Home Finance wants to shorten mortgage evidence preparation from twelve days to two. A prototype can summarize an application file, but production must also retrieve authorized records, request missing evidence, pause for people, verify income and property evidence, create auditable decisions, and survive days of inactivity.
+\begin{bookcallout}[Harborlight At This Point]
+Harborlight Home Finance wants to prepare an underwriter-ready package for a routine synthetic case within one business day. A prototype can summarize evidence, but production must also retrieve authorized records, identify missing inputs, pause for people, preserve audit evidence, and survive days of inactivity.
 \end{bookcallout}
 
 \begin{bookcallout}[Design decision]
-Start Harborlight's mortgage assistant as a governed distributed application with one bounded reasoning component, not as an autonomous chatbot.
+Start Harborlight as a governed distributed application with one bounded reasoning component, not as an autonomous lender.
 \end{bookcallout}
 
 \section{The mortgage case that will grow with the book}
 
-The book keeps its original architectural material and comparative examples because they make the principles concrete. The cumulative implementation and the primary narrative now follow one fictional mortgage case so the reader can see the same system acquire each capability without jumping to a new application. This is a reframing of the teaching thread, not a deletion of the broader enterprise scenarios.\par
+The cumulative implementation follows one fictional mortgage case so the reader can see the same system acquire each capability without jumping to a new application. The original Northstar supplier-onboarding material remains as explicitly comparative architecture evidence: it illustrates the same durability, authority, evidence, and release problems in another enterprise domain, but it is not the runnable case or the implementation-status anchor.\par
 
 \textbf{Harborlight Home Finance} is a fictional lender preparing an underwriter-ready package for a synthetic purchase application. The anchor case is \lstinline[style=bookinline]!MORT-2026-000184! in tenant \lstinline[style=bookinline]!harborlight-us-west!, for synthetic applicant Alex Morgan and a fictional property. The target is to prepare a review package within one business day for routine synthetic cases while preserving identity, privacy, evidence, policy, human oversight, audit, and recovery controls. The target is an illustrative design objective, not a benchmark.\par
 
@@ -466,9 +483,9 @@ Whether the run is complete & Executable acceptance criteria & Workflow / accept
 
 Read the table as a series of refusals. The model is allowed to interpret language and propose structure. It is not allowed to decide whether a payment succeeded, whether a user may act, or whether the work is done — not because it would necessarily be wrong, but because being right by luck is indistinguishable from being right by construction, and only one of those can be audited.\par
 
-\subsection{The Harborlight domain thread}
+\subsection{The comparative Northstar domain thread}
 
-Throughout this book, Harborlight builds a mortgage evidence and underwriting-support platform. The evolving system retrieves authorized application records, validates income and property documents, identifies contradictions, coordinates specialist checks, requests missing evidence, waits for human decisions, and preserves evidence for the underwriter. The use case is deliberately inconvenient: it crosses data boundaries, lasts days, includes ambiguous reasoning, performs protected writes such as document requests, and requires audit. That makes it useful for testing whether an architecture is real.\par
+The retained Northstar supplier-onboarding thread retrieves candidate records, validates documents, screens sanctions, requests corrections, coordinates specialists, waits for human decisions, creates supplier records, and preserves evidence. The use case is deliberately inconvenient: it crosses data boundaries, lasts days, includes ambiguous reasoning, performs protected writes, and requires audit. That makes it useful comparative evidence for testing whether an architecture is real; the Harborlight mortgage case remains the cumulative runnable path.\par
 
 \section{The production problem}
 
@@ -512,27 +529,13 @@ Put together, these mean that production design has to answer three questions fo
 
 \begin{enumerate}
 
-\item \textbf{May this principal perform this action on this resource now?} Not "is the
+\item \textbf{May this principal perform this action on this resource now?} Not "is the user logged in" — may \emph{this} subject, through \emph{this} workload, acting for \emph{this} purpose, do \emph{this specific thing} to \emph{this specific record}, at this moment. Authorization that was true when the run started may be false by the time a human approval comes back three hours later.
+
+\item \textbf{Can this step be retried, resumed, cancelled or compensated safely?} The honest answer for many steps is "not as written", and discovering which ones is a design activity rather than an operational one.
+
+\item \textbf{Can an operator later reconstruct what happened, why, under which versions and permissions?} If the answer is no, the system cannot be debugged, cannot be audited, and cannot be improved from its own failures.
 
 \end{enumerate}
-
-user logged in" — may \emph{this} subject, through \emph{this} workload, acting for \emph{this} purpose, do \emph{this specific thing} to \emph{this specific record}, at this moment. Authorization that was true when the run started may be false by the time a human approval comes back three hours later.\par
-
-\begin{enumerate}
-
-\item \textbf{Can this step be retried, resumed, cancelled or compensated safely?} The
-
-\end{enumerate}
-
-honest answer for many steps is "not as written", and discovering which ones is a design activity rather than an operational one.\par
-
-\begin{enumerate}
-
-\item **Can an operator later reconstruct what happened, why, under which versions
-
-\end{enumerate}
-
-and permissions?** If the answer is no, the system cannot be debugged, cannot be audited, and cannot be improved from its own failures.\par
 
 Hold these three questions in mind as you read the rest of the book. Almost every mechanism introduced later — the effect ledger, the capability envelope, the run manifest, proposal-bound approval, the causal trace graph — exists to make one of them answerable.\par
 
@@ -822,8 +825,8 @@ The mortgage checkpoint ends with a useful but limited summary: the missing inco
 The case is now understandable but not yet executable: a malformed, stale, or over-authorized model output could still be mistaken for a valid workflow instruction.
 \end{bookcallout}
 
-\begin{bookcallout}[Mortgage case at this point]
-The prototype now proposes a document request. The JSON is valid and the rationale sounds convincing, yet the case may be stale, the user may lack request authority, and a retry could create a duplicate request. Harborlight introduces a deterministic shell around every model proposal.
+\begin{bookcallout}[Comparative Northstar Thread]
+The retained supplier prototype proposes a call to create a supplier record. The JSON is valid and the rationale sounds convincing, yet the record may be stale, the user may lack write authority, and a retry could create a duplicate. The same failure mechanism explains why Harborlight introduces a deterministic shell around every mortgage proposal.
 \end{bookcallout}
 
 \begin{bookcallout}[Design decision]
@@ -1488,8 +1491,8 @@ This chapter uses the OpenAI Agents SDK as a concrete adapter. Enterprise applic
 
 \end{bookquote}
 
-\begin{bookcallout}[Northstar at this point]
-Northstar adopts OpenAI Agents SDK for its compact agent loop, tools, handoffs, structured outputs, tracing, sessions, and human-interruption surfaces. The architecture team refuses to let SDK state become workflow truth or to expose raw enterprise credentials to the agent process.
+\begin{bookcallout}[Comparative Northstar Thread]
+The retained supplier platform adopts OpenAI Agents SDK for its compact agent loop, tools, handoffs, structured outputs, tracing, sessions, and human-interruption surfaces. The architecture team refuses to let SDK state become workflow truth or to expose raw enterprise credentials to the agent process; Harborlight applies the same boundary to its C03 runtime seam.
 \end{bookcallout}
 
 \begin{bookcallout}[Design decision]
