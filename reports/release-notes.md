@@ -14,9 +14,10 @@ diagrams, and QA reports were regenerated.
 Local evidence: `make validate`, `make examples-run` (123 tests / 26 examples),
 `make deterministic`, `make diagrams`, and genuine `make pdf` (287 Letter-size
 pages) pass. `make qa-pdf` remains explicitly deferred because LibreOffice /
-`soffice` is unavailable. The final release ZIP, manifest, checksums, and
-clean-extraction rebuild are produced from the final committed tree before the
-PR is submitted.
+`soffice` is unavailable. The final 388-entry release ZIP was generated from a
+clean detached worktree at 140,553,588 bytes, SHA-256
+`eecdaec618f0a994da0ad42a6b48929caee4cb0da865deac0ad552fff9457497`; the
+clean-extraction rebuild passed.
 
 The cumulative mortgage implementation is intentionally limited to executable
 C01–C03 evidence. C04–C28 remain the separately tracked implementation roadmap

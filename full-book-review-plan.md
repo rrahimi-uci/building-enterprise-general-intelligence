@@ -425,10 +425,12 @@ an environment-gated or intentionally separate implementation obligation.
 - `make examples-run` passed 123 tests across 26 examples. `make validate`,
   `make deterministic`, and `make diagrams` passed. `make qa-pdf` is the one
   explicitly deferred local gate described above.
-- The package manifest, checksums, release ZIP, and clean-extraction rebuild
-  must be generated after this closeout commit and recorded in the final PR
-  update. The extracted-package test is not considered passed until its output
-  is observed from the final ZIP.
+- The package manifest, checksums, and release-package report were generated
+  from the clean committed tree. The resulting 388-entry ZIP is 140,553,588
+  bytes with SHA-256
+  `eecdaec618f0a994da0ad42a6b48929caee4cb0da865deac0ad552fff9457497`; the
+  clean-extraction rebuild passed all listed reconstruction, validation, and
+  deterministic checks.
 
 ### Remaining implementation boundary
 

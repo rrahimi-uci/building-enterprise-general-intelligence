@@ -48,10 +48,12 @@ Markdown/DOCX/LaTeX, and representative XeLaTeX pages.
   present. C04–C28 remain explicit implementation targets in `code-gap.md` and
   are not described as production-ready evidence.
 
-The release manifest, checksums, ZIP, and clean-extraction rebuild are generated
-from the final committed tree as the last release step. Notion synchronization
-and merge remain outside agent authority; the PR is left open for the author’s
-review.
+The release manifest, checksums, ZIP, and clean-extraction rebuild were
+generated from the final committed tree. The 388-entry ZIP is 140,553,588 bytes
+with SHA-256
+`eecdaec618f0a994da0ad42a6b48929caee4cb0da865deac0ad552fff9457497`, and the
+clean-package test passed. Notion synchronization and merge remain outside
+agent authority; the PR is left open for the author’s review.
 
 # Editorial Audit — Full-Book Review and Running-Example Gap Audit
 

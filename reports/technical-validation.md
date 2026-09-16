@@ -46,8 +46,15 @@ See the current generated evidence:
 - `reports/citation-audit.md`
 - `reports/latex-validation.md`
 - `reports/editorial-audit.md`
+- `reports/release-package.json` — 388-entry release ZIP, 140,553,588 bytes,
+  SHA-256 `eecdaec618f0a994da0ad42a6b48929caee4cb0da865deac0ad552fff9457497`.
 - `CHECKSUMS.sha256`
 - `RELEASE-MANIFEST.json`
+
+The final ZIP was generated from a clean detached worktree so unrelated local
+untracked files were excluded. `tools/clean_package_test.py` extracted that ZIP
+and passed assembly, DOCX/LaTeX rebuild, reference checks, structural
+validation, LaTeX validation, and deterministic-build checks.
 
 ## Full-book review evidence
 
