@@ -263,7 +263,7 @@ not treated as proof that an unrun local gate has passed.
 | XeLaTeX and source visual inspection | `pass with caveat` | Genuine XeLaTeX completed at 287 pages; source validation and representative XeLaTeX pages passed. Dense-table and long-label overfull warnings remain typography follow-up items. |
 | DOCX pagination QA | `defer` | `make qa-pdf` is not complete because LibreOffice/`soffice` is absent. Do not promote this to `pass` from DOCX package validity or XeLaTeX inspection. |
 | Matrix finding records | `complete` | The final closeout below records one evidence-bounded `pass`, `fix`, or `defer` finding for every matrix row, with a regression check and an owner/exit condition wherever work is deferred. |
-| Review delivery | `pending until PR` | The implementation branch must be committed, pushed, opened as one PR, assigned to the author and available Copilot reviewer, and left open. Terminal CI is reported only after observation. |
+| Review delivery | `open PR #44` | `review/complete-full-book-plan` is pushed and PR #44 is open for the author’s final review. GitHub rejected reviewer login `copilot` because it is unavailable here; the PR author account cannot be a pending reviewer of its own PR. CI status is reported separately below. |
 
 ### Finding record contract
 
@@ -430,6 +430,16 @@ an environment-gated or intentionally separate implementation obligation.
   SHA-256 are recorded in `reports/release-package.json`; the clean-extraction
   rebuild passed all listed reconstruction, validation, and deterministic
   checks.
+
+### Review delivery
+
+PR [#44](https://github.com/rrahimi-uci/book-enterprise-general-intelligence/pull/44)
+is open from `review/complete-full-book-plan` and has not been merged. The
+requested author reviewer is the PR author account, so GitHub does not expose a
+self-review request. The available Copilot reviewer login was tested and
+rejected by GitHub as unavailable for this repository; no reviewer is claimed
+until GitHub exposes one. Terminal CI remains an observed external gate, not a
+local assumption.
 
 ### Remaining implementation boundary
 
