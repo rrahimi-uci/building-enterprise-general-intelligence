@@ -52,7 +52,7 @@ restart or incident review.
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
-| Policy, guardrail, and gateway services own decisions; the effect boundary owns commitment | untrusted language and content to privileged capability | tenant · session · tool class · sandbox | one run, one tool, one source | PolicyDecision · ContextManifest · ApprovalGrant · EffectRecord |
+| Policy, guardrail, and gateway services own decisions; the effect boundary owns commitment | untrusted language and content to privileged capability | tenant · session · tool class · sandbox | one run, one tool, one source | PolicyDecision · ContextManifest · HumanActionAuthorizationRequest/Decision · EffectRecord |
 
 ## Defense in depth
 
@@ -67,7 +67,7 @@ Agentic systems combine untrusted language, privileged tools, dynamic context, d
 | Model/output | Approved route, instruction integrity, schema, content safety, evidence, DLP | RoutingDecision and guard results |
 | Agent/workflow | Least-agentic topology, budgets, deadlines, loop/fan-out caps, durable terminals | Run/task graph and budget ledger |
 | Identity/policy | Subject/workload identity, least privilege, RBAC/ABAC, purpose/spend/time | PolicyDecision and CapabilityEnvelope |
-| Tools/effects | Eligible tool, schema/precondition, proposal/approval, idempotency, reconcile | ToolCall, ApprovalGrant, EffectRecord |
+| Tools/effects | Eligible tool, schema/precondition, proposal/action authorization, idempotency, reconcile | ToolCall, HumanActionAuthorizationRequest/Decision, EffectRecord |
 | Execution/egress | Sandbox, network/file/syscall, secrets isolation, destination policy, DLP | Sandbox and egress decisions |
 | Supply chain/release | Locks, SBOM, signatures, provenance, tests, canary, rollback | ReleaseManifest and ValidationReport |
 | Detection/response | Monitoring, auditing, containment, revocation, incident response | Alert, timeline, recovery and learning record |
@@ -334,7 +334,7 @@ authorize a publication.
 | Retrieve | Make the instruction rank beside relevant policy | ACL and task-scoped retrieval return only authorized fields and references | ContextManifest, source revision, ACL decision |
 | Reason | Convince the model that upload is part of verification | Typed output permits a proposal, not an arbitrary destination or capability | Model route, proposal hash, selected tool |
 | Dispatch | Turn the proposal into an external request | Policy re-checks subject, purpose, destination, data class, and risk | PolicyDecision, EgressGrant or denial |
-| Commit | Exfiltrate or publish the ledger | DLP, approval, and the effect boundary refuse or record the protected operation | DLP finding, ApprovalGrant, EffectRecord |
+| Commit | Exfiltrate or publish the ledger | DLP, action authorization, and the effect boundary refuse or record the protected operation | DLP finding, HumanActionAuthorizationDecision, EffectRecord |
 
 The important result is not that the model resisted the sentence. It is that a
 successful manipulation did not expand authority. Detection improves the user
@@ -378,7 +378,7 @@ then create privacy-reviewed regression cases.
 ## Debugging playbook
 
 1. Name the boundary the failure crossed — input, context or memory, model or output, agent or workflow, identity or policy, tool or effect, execution or egress, supply chain — before forming any hypothesis.
-2. Pull that boundary's decision record: classifier and version, PolicyDecision, ContextManifest, ApprovalGrant, or egress decision.
+2. Pull that boundary's decision record: classifier and version, PolicyDecision, ContextManifest, HumanActionAuthorizationDecision, or egress decision.
 3. Separate a detection failure from an enforcement failure. A guard that fired and was ignored is a different defect from a guard that never fired, and they have different fixes.
 4. Reconcile effects against the ledger. Never conclude from the model's final message that nothing committed.
 5. Convert the incident into a privacy-reviewed regression case pinned to the exact versions that failed.

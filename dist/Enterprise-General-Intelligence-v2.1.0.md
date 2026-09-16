@@ -623,7 +623,7 @@ it may use. That is a real and necessary job, and it is a different job.
 The **human approval gate** is a control point for protected proposals, not a
 replacement for authorization or effect verification. It presents the exact
 proposal, evidence, expected resource version, and consequences to an eligible
-reviewer. The resulting grant is bound to that proposal and expires; the Tool
+reviewer. The resulting human action authorization decision is bound to that proposal and expires; the Tool
 Gateway still reauthorizes the request and records the effect receipt.
 
 Two lifecycle controls are related but deliberately named separately. The
@@ -827,7 +827,7 @@ state.
 
 ### Deterministic acceptance
 
-Acceptance is not the model saying “done.” Harborlight declares evidence preparation complete only when required artifacts exist, income and property checks are fresh, approvals cover the exact proposal, all protected effects are committed with receipts, no unknown effect remains, and the mortgage case satisfies its domain invariants.
+Acceptance is not the model saying “done.” Harborlight declares evidence preparation complete only when required artifacts exist, income and property checks are fresh, human action authorizations cover the exact proposal, all protected effects are committed with receipts, no unknown effect remains, and the mortgage case satisfies its domain invariants.
 
 ### Scaling the shell
 
@@ -1330,7 +1330,7 @@ def chapter_03_runtime_boundary() -> dict[str, object]:
     return run_c03("happy_path").model_dump(mode="json")
 ```
 
-Consider Harborlight mortgage case `MORT-2026-000184`, a synthetic purchase application for Alex Morgan. The mortgage-evidence workflow receives the application, collects income and property evidence, checks for contradictions, requests missing documents, obtains any required approval, and accepts the run only when its obligations are discharged.
+Consider Harborlight mortgage case `MORT-2026-000184`, a synthetic purchase application for Alex Morgan. The mortgage-evidence workflow receives the application, collects income and property evidence, checks for contradictions, requests missing documents, obtains any required human action authorization, and accepts the run only when its obligations are discharged.
 
 The durable workflow owns the business sequence:
 
@@ -1342,7 +1342,7 @@ The durable workflow owns the business sequence:
 6. Commit any protected mortgage-case change through the Tool Gateway.
 7. Verify the effect and evaluate the run’s acceptance criteria.
 
-Most of those facts are not reasoning problems. Before an agent runs, the platform already knows the mortgage case identifier, tenant, initiating subject, workflow node, applicable policy revision, evidence permissions, previously committed effects, approval status, deadlines, and the exact conditions for acceptance.
+Most of those facts are not reasoning problems. Before an agent runs, the platform already knows the mortgage case identifier, tenant, initiating subject, workflow node, applicable policy revision, evidence permissions, previously committed effects, action-authorization status, deadlines, and the exact conditions for acceptance.
 
 The agent can help with a narrower task: examine the authorized evidence for `MORT-2026-000184` and return a structured assessment of whether it is sufficient, insufficient, or requires additional evidence, together with the evidence references supporting that assessment. The agent interprets evidence; it does not become the workflow, grant access, approve or deny the loan, or declare the case complete.
 
@@ -1552,7 +1552,7 @@ Framework state can help resume an agent. Platform state must recover the busine
 
 ## The restart test
 
-Imagine that all agent workers crash at 2:00 a.m. Then imagine that Northstar replaces the SDK and deploys a new adapter. The organization must still know that `MORT-2026-000184` exists, evidence review is incomplete, the document request is pending, approval `AP-718` is pending, policy `mortgage-policy@2026.09` applied, and effect receipt `RCPT-MORT-000184` records the committed action.
+Imagine that all agent workers crash at 2:00 a.m. Then imagine that Northstar replaces the SDK and deploys a new adapter. The organization must still know that `MORT-2026-000184` exists, evidence review is incomplete, the document request is pending, human action authorization `HAA-718` is pending, policy `mortgage-policy@2026.09` applied, and effect receipt `RCPT-MORT-000184` records the committed action.
 
 None of those facts should require reconstructing an SDK session object. If losing framework state means losing the business process, the framework owns too much. This test should be applied to every proposed framework feature, serialization format, and persistence shortcut.
 
@@ -1560,7 +1560,7 @@ None of those facts should require reconstructing an SDK session object. If losi
 
 An SDK may pause execution when a protected tool call needs a human response. That interruption is useful runtime control, but it is not by itself an enterprise approval.
 
-The durable platform should create a `HumanActionAuthorizationRequest` containing the authorization ID, run and workflow IDs, exact action and resource, proposal hash, evidence references, expected resource version, requested actor, risk class, expiry, and allowed responses. The workflow waits. An eligible reviewer grants or rejects the proposal. Before resuming, the platform verifies that the grant is unexpired, the actor and purpose still match, the policy still permits the action, the resource version is still current, and the proposal hash is unchanged.
+The durable platform should create a `HumanActionAuthorizationRequest` containing the authorization ID, run and workflow IDs, exact action and resource, proposal hash, evidence references, expected resource version, requested actor, risk class, expiry, and allowed responses. The workflow waits. An eligible reviewer authorizes or rejects the proposal. Before resuming, the platform verifies that the decision is unexpired, the actor and purpose still match, the policy still permits the action, the resource version is still current, and the proposal hash is unchanged.
 
 The distinction is:
 
@@ -1774,7 +1774,7 @@ Read the figure downward: each layer names the components the plane owns, and th
 | Runtime and workflow | Run graph, deadlines, budgets, retries, cancellation, checkpoints, joins | Run and TaskEnvelope state | Transcript is evidence, not execution state |
 | Context, RAG, memory, Skills | Authorized evidence, provenance, snapshots, governed persistence | ContextManifest, MemoryRecord, Skill manifest | Retrieved text remains untrusted data |
 | Gateways and integration | LLM routing, tool façades, MCP/A2A, APIs, events | RoutingDecision, ToolCall, protocol envelope | Revalidate identity, policy, schema, and tenancy |
-| Security and governance | Identity, least privilege, RBAC/ABAC, guardrails, approval, DLP, audit | PolicyDecision, CapabilityEnvelope, ApprovalGrant | Protected actions fail closed; ambiguous effects become unknown |
+| Security and governance | Identity, least privilege, RBAC/ABAC, guardrails, action authorization, DLP, audit | PolicyDecision, CapabilityEnvelope, HumanActionAuthorizationRequest/Decision | Protected actions fail closed; ambiguous effects become unknown |
 | Evaluation and operations | Tracing, evaluation, SLOs, incidents, release, capacity, learning | Trace graph, EvaluationResult, ChangeBundle, ReleaseManifest | Monitoring cannot self-promote behavior change |
 
 ## End-to-end responsibility flow
@@ -1785,7 +1785,7 @@ Read the figure downward: each layer names the components the plane owns, and th
 2. Admit a run and pin all behavior, policy, data, evaluator, and dependency versions.
 3. Build an authorized ContextManifest; preserve provenance and untrusted-content labels.
 4. Let the model propose a typed decision. Policy determines eligible models, tools, data, and actions.
-5. Bind protected changes to an ActionProposal and exact, expiring ApprovalGrant.
+5. Bind protected changes to an exact, expiring HumanActionAuthorizationRequest and HumanActionAuthorizationDecision.
 6. Commit through a tool façade with short-lived credentials, idempotency, EffectRecord, and reconciliation.
 7. Determine accepted, blocked, needs-input, failed, or unknown-effect using executable business criteria.
 8. Join traces, evaluations, human feedback, cost, latency, incidents, and outcomes for controlled improvement.
@@ -1798,7 +1798,7 @@ Read the figure downward: each layer names the components the plane owns, and th
 | Authorization | Identity and policy services | Explain requested scope | Grant or expand authority |
 | Business truth | Domain system | Read an authorized projection | Replace truth with a summary |
 | Effects | Tool/effect service and downstream receipt | Propose arguments | Assert a mutation completed |
-| Approval | Proposal and approval service | Generate rationale and preview | Reuse Boolean or stale conversational consent |
+| Human action authorization | Proposal and human action authorization service | Generate rationale and preview | Reuse Boolean or stale conversational consent |
 | Knowledge | Governed source/snapshot catalog | Synthesize evidence | Treat similarity as truth or freshness |
 | Learning | Evaluation, dataset, release services | Recommend a candidate | Self-certify or self-deploy |
 
@@ -1866,7 +1866,7 @@ to serve it.
 | Experience | Chat/UI, API clients, event subscriptions, operator console | Intent capture, progress, approvals, cancel/override |
 | Edge and admission | API gateway, WAF, tenant router, request validator | Authentication, quotas, schema validation, risk classification |
 | Agent control plane | Registry, policy bundles, prompt/skill catalog, release manager | Define, version, approve, discover, and deploy capabilities |
-| Run control plane | Run API, planner, coordinator, budget manager, approval service | Own task lifecycle and deterministic transition decisions |
+| Run control plane | Run API, planner, coordinator, budget manager, human action authorization service | Own task lifecycle and deterministic transition decisions |
 | Durable execution | Workflow engine, timers, signal handlers, checkpoint/event store | Crash recovery, pause/resume, retries, compensation, replay |
 | Model plane | Model gateway, router, prompt assembler, structured-output validator | Provider abstraction, routing, caching, quotas, redaction |
 | Capability plane | Tool gateway, MCP clients/servers, A2A gateway, connectors | Discovery, authorization, invocation, isolation, versioning |
@@ -3498,7 +3498,7 @@ Individual Skills are governable; Chapter 9 composes them into domain packs with
 
 |  |
 | --- |
-| **MORTGAGE CASE AT THIS POINT**  Harborlight needs a complete domain experience, not isolated Skills. Evidence retrieval, document validation, income and property checks, policy explanation, and approval preparation must ship as a compatible, evaluated pack. |
+| **MORTGAGE CASE AT THIS POINT**  Harborlight needs a complete domain experience, not isolated Skills. Evidence retrieval, document validation, income and property checks, policy explanation, and underwriter-package preparation must ship as a compatible, evaluated pack. |
 
 |  |
 | --- |
@@ -3517,7 +3517,7 @@ Compose compatible Skills into certified, distributable domain capability releas
 
 ## From individual capability to domain platform
 
-A Skill Pack composes a coherent domain experience. Harborlight’s mortgage-evidence pack pins evidence retrieval, document validation, income and property checks, policy explanation, approval preparation, and document-request Skills. It also pins shared policy, taxonomy, knowledge strategy, workflow templates, evaluation datasets, dashboards, and runbooks.
+A Skill Pack composes a coherent domain experience. Harborlight’s mortgage-evidence pack pins evidence retrieval, document validation, income and property checks, policy explanation, underwriter-package preparation, and document-request Skills. It also pins shared policy, taxonomy, knowledge strategy, workflow templates, evaluation datasets, dashboards, and runbooks.
 
 A pack is not a directory of prompts. The pack manifest declares dependency constraints, schema compatibility, required runtime capabilities, data and region policy, risk ceiling, evaluation gates, release aliases, owner, and support window. A pack can expose a smaller capability surface to each agent even though the complete domain distribution contains more Skills.
 
@@ -3552,7 +3552,7 @@ Packs move through signed releases and aliases such as development, staging, and
 
 ### Domain pack examples
 
-* **Mortgage evidence review:** application evidence, income and property checks, policy, approval, document request.
+* **Mortgage evidence review:** application evidence, income and property checks, policy, underwriter-package preparation, document request.
 * **Comparative customer support:** account read, entitlement, troubleshooting, refund proposal, escalation.
 * **Software delivery:** repository context, test planning, code change, review, deployment evidence.
 * **Financial close:** reconciliation, variance explanation, exception routing, controlled posting.
@@ -4708,15 +4708,15 @@ Bind approval and intervention to immutable proposals and durable state transiti
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
-| Workflow plus Approval Service | machine proposal to human authority | approval queue · risk class · tenant | one immutable proposal | HumanActionAuthorizationRequest · HumanActionAuthorizationDecision · EffectReceipt |
+| Workflow plus Human Action Authorization Service | machine proposal to human authority | authorization queue · risk class · tenant | one immutable proposal | HumanActionAuthorizationRequest · HumanActionAuthorizationDecision · EffectReceipt |
 
 ## Two distinct human controls
 
 [[DIAGRAM:pattern-hitl|Figure 14-1 — Approval and intervention: different triggers, different authority, different evidence]]
 
-**Approval** authorizes one proposed effect. **Intervention** asks a person to diagnose, correct, supply information, or choose among unresolved alternatives. Combining them creates audit ambiguity. Northstar uses separate queues, roles, forms, SLOs, and terminal semantics.
+**Human action authorization** authorizes one proposed effect. **Intervention** asks a person to diagnose, correct, supply information, or choose among unresolved alternatives. Combining them creates audit ambiguity. Northstar uses separate queues, roles, forms, SLOs, and terminal semantics.
 
-The Approval Service stores a canonical proposal, human-readable preview, destination, evidence and policy references, risk, expected resource version, expiry, and proposal hash. Approval becomes invalid when any protected field changes. A commit path rechecks approver authority, separation of duties, current policy, grant freshness, and resource version.
+The Human Action Authorization Service stores a canonical proposal, human-readable preview, destination, evidence and policy references, risk, expected resource version, expiry, and proposal hash. Human action authorization becomes invalid when any protected field changes. A commit path rechecks approver authority, separation of duties, current policy, authorization freshness, and resource version.
 
 Human capacity is finite. Queue age, dwell, abandonment, reassignment, disagreement, and after-hours coverage are production metrics. A system that requires routine approval for low-risk deterministic work may be less safe because reviewers become fatigued.
 
@@ -4727,7 +4727,7 @@ Human capacity is finite. Queue age, dwell, abandonment, reassignment, disagreem
 | Problem | Humans must understand, approve, correct, or stop consequential work without becoming a rubber stamp or breaking run integrity. |
 | Why it is difficult | Too many approvals cause fatigue; too little context prevents informed decisions; approvals can go stale as data or plans change; edits must be attributable and replayable. |
 | Design alternatives | Confirm every tool call; risk-based approvals; maker-checker; sampled review; exception-only review; fully manual commit. |
-| Recommended architecture | Use policy-triggered gates based on risk, novelty, confidence, value, data sensitivity, reversibility, and destination. Present a concise preview, evidence, alternatives, changed fields, policy rationale, and blast radius. Approval authorizes a specific immutable proposal for a limited time. |
+| Recommended architecture | Use policy-triggered gates based on risk, novelty, confidence, value, data sensitivity, reversibility, and destination. Present a concise preview, evidence, alternatives, changed fields, policy rationale, and blast radius. A HumanActionAuthorizationDecision authorizes a specific immutable proposal for a limited time. |
 | Trade-offs | Human review adds latency and staffing cost but provides judgment and accountability where automation evidence is insufficient. Poor UX converts the control into theater. |
 | Failure scenarios | Approval applies to a changed plan; approver lacks authority; agent hides uncertainty; request times out; two operators issue conflicting overrides; “approve all” becomes normal. |
 | Enterprise example | A mortgage agent drafts a request to obtain missing employment evidence. The underwriter sees the policy basis, case evidence, requested document, downstream effect, and alternatives; any case, document, or destination change invalidates the authorization. |
@@ -4752,7 +4752,7 @@ HumanActionAuthorizationRequest contains: proposal/artifact hash, exact action a
 | **Component** | **Responsibility** |
 | --- | --- |
 | Approval Policy Router | Convert policy obligations, risk, value, novelty, and confidence into approval requirements |
-| Approval Service | Persist immutable proposal snapshots and authoritative decision state |
+| Human Action Authorization Service | Persist immutable proposal snapshots and authoritative decision state |
 | Assignment/Queue Service | Resolve eligible approvers, maker-checker rules, claim/reassign, priority, and SLA |
 | Evidence Renderer | Produce role-redacted diff, sources, rationale, alternatives, uncertainty, and blast radius |
 | Notification Service | Deliver idempotent channel notifications and deep links; it never owns the decision |
@@ -4789,7 +4789,7 @@ A decision is valid only when the presented proposal hash equals the current pro
 ### Workflow integration
 
 1. The workflow commits the proposed effect and evidence snapshot, then creates the approval.
-2. The Approval Service registers durable SLA/expiry timers and returns a wait correlation ID.
+2. The Human Action Authorization Service registers durable SLA/expiry timers and returns a wait correlation ID.
 3. Assignment and notifications may retry independently; the workflow remains suspended without a worker.
 4. A decision transaction records the immutable decision and emits an outbox event.
 5. The workflow receives the event, revalidates policy/current resource version, and commits only the proposal hash that was approved.
@@ -4865,37 +4865,37 @@ The workflow persists a proposal-bound HumanActionAuthorizationRequest or Interv
 ## Implementation reference
 
 
-🐍 · A human approval gate that survives the wait
+🐍 · A human action-authorization gate that survives the wait
 
 ```python
 def proposal_hash(action: str, arguments: dict) -> str:
-    """Bind a grant to one exact proposal, not to an intent."""
+    """Bind an authorization decision to one exact proposal, not to an intent."""
     payload = json.dumps({"action": action, "arguments": arguments}, sort_keys=True)
     return hashlib.sha256(payload.encode()).hexdigest()
 
 
 @dataclass(frozen=True)
-class ApprovalGrant:
+class HumanActionAuthorizationDecision:
     proposal_hash: str
     approver_id: str
     expires_at: datetime
     signature: str
 
 
-class ApprovalExpired(Exception):
-    """The grant lapsed before the effect committed."""
+class HumanActionAuthorizationExpired(Exception):
+    """The authorization decision lapsed before the effect committed."""
 
 
-class ProposalMismatch(Exception):
+class HumanActionAuthorizationMismatch(Exception):
     """The proposal changed after it was approved."""
 
 
-class GrantNotAuthentic(Exception):
-    """The grant was not issued by the approval service."""
+class HumanActionAuthorizationNotAuthentic(Exception):
+    """The authorization decision was not issued by the authorization service."""
 
 
-class ApprovalService:
-    """Issues signed grants. Only this component speaks for a human approver."""
+class HumanActionAuthorizationService:
+    """Issues signed decisions. Only this component speaks for a human reviewer."""
 
     def __init__(self, secret: bytes) -> None:
         self._secret = secret
@@ -4904,24 +4904,24 @@ class ApprovalService:
         payload = f"{proposal_hash}|{approver_id}|{expires_at.isoformat()}".encode()
         return hmac.new(self._secret, payload, hashlib.sha256).hexdigest()
 
-    def issue(self, proposal_hash: str, approver_id: str, expires_at: datetime) -> ApprovalGrant:
-        return ApprovalGrant(
+    def issue(self, proposal_hash: str, approver_id: str, expires_at: datetime) -> HumanActionAuthorizationDecision:
+        return HumanActionAuthorizationDecision(
             proposal_hash=proposal_hash, approver_id=approver_id, expires_at=expires_at,
             signature=self._signature(proposal_hash, approver_id, expires_at),
         )
 
-    def verify(self, grant: ApprovalGrant) -> None:
-        expected = self._signature(grant.proposal_hash, grant.approver_id, grant.expires_at)
+    def verify(self, decision: HumanActionAuthorizationDecision) -> None:
+        expected = self._signature(decision.proposal_hash, decision.approver_id, decision.expires_at)
         # compare_digest, not ==: an equality check on a signature leaks timing.
-        if not hmac.compare_digest(expected, grant.signature):
-            raise GrantNotAuthentic("grant was not issued by the approval service")
+        if not hmac.compare_digest(expected, decision.signature):
+            raise HumanActionAuthorizationNotAuthentic("decision was not issued by the authorization service")
 
 
 @dataclass
 class PendingApprovals:
     """Persisted pauses. A real system stores these in the workflow database."""
 
-    service: ApprovalService
+    service: HumanActionAuthorizationService
     pending: dict[str, dict] = field(default_factory=dict)
 
     def pause(self, run_id: str, action: str, arguments: dict, ttl: timedelta) -> str:
@@ -4939,21 +4939,21 @@ class PendingApprovals:
         }
         return self.pending[run_id]["digest"]
 
-    def commit(self, run_id: str, grant: ApprovalGrant, now: datetime | None = None) -> str:
+    def commit(self, run_id: str, decision: HumanActionAuthorizationDecision, now: datetime | None = None) -> str:
         record = self.pending[run_id]
         now = now or datetime.now(timezone.utc)
-        # Authenticity first: an unsigned grant is not an approval, so there is
+        # Authenticity first: an unsigned decision is not authorization, so there is
         # nothing to compare it against.
-        self.service.verify(grant)
+        self.service.verify(decision)
         # Recompute from the stored proposal rather than trusting the stored
         # digest, so tampering with the pending record is caught too.
         current = proposal_hash(record["action"], record["arguments"])
-        if grant.proposal_hash != current:
-            raise ProposalMismatch("the approved proposal is not the one being committed")
-        if now >= grant.expires_at or now >= record["expires_at"]:
-            raise ApprovalExpired("approval lapsed; re-request rather than assume consent")
+        if decision.proposal_hash != current:
+            raise HumanActionAuthorizationMismatch("the authorized proposal is not the one being committed")
+        if now >= decision.expires_at or now >= record["expires_at"]:
+            raise HumanActionAuthorizationExpired("authorization lapsed; request it again")
         del self.pending[run_id]
-        return f"committed {record['action']} approved by {grant.approver_id}"
+        return f"committed {record['action']} authorized by {decision.approver_id}"
 ```
 
 ### Proposal-bound approval contract
@@ -4999,10 +4999,10 @@ def proposal_hash(action: str, destination: str,
 
 ### Executable proposal-bound approval
 
-🐍 · Verifying an approval grant against this exact proposal
+🐍 · Verifying human action authorization against this exact proposal
 
 ```python
-class ApprovalGrant(BaseModel):
+class HumanActionAuthorizationDecision(BaseModel):
     approval_id: str
     proposal_hash: str
     tenant_id: str
@@ -5019,36 +5019,36 @@ class ApprovalGrant(BaseModel):
         return _require_aware(value, info.field_name)
 
     @model_validator(mode="after")
-    def expiry_follows_approval(self) -> "ApprovalGrant":
+    def expiry_follows_authorization(self) -> "HumanActionAuthorizationDecision":
         if self.expires_at <= self.approved_at:
             raise ValueError("expires_at must be later than approved_at")
         return self
 
 
-def verify_approval(
-    proposal: ActionProposal,
-    grant: ApprovalGrant,
+def verify_action_authorization(
+    proposal: HumanActionAuthorizationRequest,
+    decision: HumanActionAuthorizationDecision,
     *,
     now: datetime,
     actual_resource_version: int,
 ) -> None:
-    """Fail closed if approval no longer matches the action or current state."""
+    """Fail closed if authorization no longer matches the action or current state."""
 
     _require_aware(now, "now")
-    if grant.proposal_hash != proposal.digest():
-        raise PermissionError("approval is not bound to this proposal")
-    if (grant.tenant_id, grant.run_id) != (proposal.tenant_id, proposal.run_id):
-        raise PermissionError("approval scope mismatch")
-    if grant.approver_id == proposal.actor_id:
+    if decision.proposal_hash != proposal.digest():
+        raise PermissionError("action authorization is not bound to this proposal")
+    if (decision.tenant_id, decision.run_id) != (proposal.tenant_id, proposal.run_id):
+        raise PermissionError("action authorization scope mismatch")
+    if decision.approver_id == proposal.actor_id:
         raise PermissionError("actor cannot self-approve")
-    if grant.policy_digest != proposal.policy_digest:
-        raise PermissionError("policy changed after approval")
-    if now < grant.approved_at:
-        raise PermissionError("approval is not yet effective")
-    if now >= min(grant.expires_at, proposal.expires_at):
-        raise PermissionError("approval expired")
+    if decision.policy_digest != proposal.policy_digest:
+        raise PermissionError("policy changed after authorization")
+    if now < decision.approved_at:
+        raise PermissionError("authorization is not yet effective")
+    if now >= min(decision.expires_at, proposal.expires_at):
+        raise PermissionError("action authorization expired")
     if actual_resource_version != proposal.expected_resource_version:
-        raise PermissionError("resource changed after approval")
+        raise PermissionError("resource changed after authorization")
 ```
 
 ## Debugging playbook
@@ -5982,7 +5982,7 @@ except TimeoutError:
 
 Both cards here concern the moment a system decides that something is allowed, or that something is finished. In each, a cheap signal — a Boolean, a sentence of model output — was allowed to carry a decision that the enterprise will later be asked to defend. The correction is to make the decision an artifact: something with a hash, an owner, an expiry, and an independent check.
 
-[[DIAGRAM:anti-approval-binding|Figure 17-4 — Boolean consent versus a proposal-bound, expiring approval grant]]
+[[DIAGRAM:anti-approval-binding|Figure 17-4 — Boolean consent versus proposal-bound, expiring human action authorization]]
 
 ### AP-06 — Boolean or conversational approval
 
@@ -5994,9 +5994,9 @@ Both cards here concern the moment a system decides that something is allowed, o
 
 **Enterprise Example.** An approval given for a $10,000 payment is reused, entirely within policy as implemented, for a $100,000 one.
 
-**Recommended Pattern.** An immutable proposal, hashed over the exact effect, with an ApprovalGrant bound to that hash, scoped to one action, and carrying an expiry. Revalidate immediately before commit.
+**Recommended Pattern.** An immutable proposal, hashed over the exact effect, with a HumanActionAuthorizationDecision bound to that hash, scoped to one action, and carrying an expiry. Revalidate immediately before commit.
 
-**Architecture.** `approved=true` becomes proposal hash → grant → revalidate → commit.
+**Architecture.** `approved=true` becomes proposal hash → HumanActionAuthorizationDecision → revalidate → commit.
 
 🐍 · anti-pattern and correction
 
@@ -6005,27 +6005,27 @@ Both cards here concern the moment a system decides that something is allowed, o
 if run.approved:
     await underwriting.submit_evidence_package(case_id=current.case_id)
 
-# Correction: the grant is bound to a hash of the exact proposal and cannot
+# Correction: the decision is bound to a hash of the exact proposal and cannot
 # authorize a payload the approver never saw.
 proposal = Proposal(
     action="underwriting.submit_evidence_package",
     args=args,
     policy_version=policy.version,
 )
-grant = await approvals.await_grant(proposal.digest(), ttl_s=900)
+decision = await human_action_authorization.await_decision(proposal.digest(), ttl_s=900)
 
-if grant.digest != proposal.digest():      # arguments moved since approval
-    raise ApprovalMismatch(proposal.digest(), grant.digest)
-if grant.expired(now()):                   # consent has a shelf life
-    raise ApprovalExpired(grant.id)
+if decision.proposal_hash != proposal.digest():  # arguments moved since authorization
+    raise HumanActionAuthorizationMismatch(proposal.digest(), decision.proposal_hash)
+if decision.expires_at <= now():                 # authorization has a shelf life
+    raise HumanActionAuthorizationExpired(decision.authorization_id)
 await underwriting.submit_evidence_package(
     **proposal.args, idempotency_key=proposal.digest()
 )
 ```
 
-**Detection Metrics.** Proposal-hash mismatches at commit, grant reuse attempts, expiry rate, and incidents occurring after a recorded approval.
+**Detection Metrics.** Proposal-hash mismatches at commit, authorization reuse attempts, expiry rate, and incidents occurring after a recorded decision.
 
-**Trade-offs.** Benign changes force reapproval, which approvers experience as friction. Tune by making the diff visible — showing what changed is cheaper than widening the grant.
+**Trade-offs.** Benign changes force reauthorization, which reviewers experience as friction. Tune by making the diff visible — showing what changed is cheaper than widening the authorization.
 
 ### AP-07 — Model says done
 
@@ -6871,7 +6871,7 @@ restart or incident review.
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
-| Policy, guardrail, and gateway services own decisions; the effect boundary owns commitment | untrusted language and content to privileged capability | tenant · session · tool class · sandbox | one run, one tool, one source | PolicyDecision · ContextManifest · ApprovalGrant · EffectRecord |
+| Policy, guardrail, and gateway services own decisions; the effect boundary owns commitment | untrusted language and content to privileged capability | tenant · session · tool class · sandbox | one run, one tool, one source | PolicyDecision · ContextManifest · HumanActionAuthorizationRequest/Decision · EffectRecord |
 
 ## Defense in depth
 
@@ -6886,7 +6886,7 @@ Agentic systems combine untrusted language, privileged tools, dynamic context, d
 | Model/output | Approved route, instruction integrity, schema, content safety, evidence, DLP | RoutingDecision and guard results |
 | Agent/workflow | Least-agentic topology, budgets, deadlines, loop/fan-out caps, durable terminals | Run/task graph and budget ledger |
 | Identity/policy | Subject/workload identity, least privilege, RBAC/ABAC, purpose/spend/time | PolicyDecision and CapabilityEnvelope |
-| Tools/effects | Eligible tool, schema/precondition, proposal/approval, idempotency, reconcile | ToolCall, ApprovalGrant, EffectRecord |
+| Tools/effects | Eligible tool, schema/precondition, proposal/action authorization, idempotency, reconcile | ToolCall, HumanActionAuthorizationRequest/Decision, EffectRecord |
 | Execution/egress | Sandbox, network/file/syscall, secrets isolation, destination policy, DLP | Sandbox and egress decisions |
 | Supply chain/release | Locks, SBOM, signatures, provenance, tests, canary, rollback | ReleaseManifest and ValidationReport |
 | Detection/response | Monitoring, auditing, containment, revocation, incident response | Alert, timeline, recovery and learning record |
@@ -7153,7 +7153,7 @@ authorize a publication.
 | Retrieve | Make the instruction rank beside relevant policy | ACL and task-scoped retrieval return only authorized fields and references | ContextManifest, source revision, ACL decision |
 | Reason | Convince the model that upload is part of verification | Typed output permits a proposal, not an arbitrary destination or capability | Model route, proposal hash, selected tool |
 | Dispatch | Turn the proposal into an external request | Policy re-checks subject, purpose, destination, data class, and risk | PolicyDecision, EgressGrant or denial |
-| Commit | Exfiltrate or publish the ledger | DLP, approval, and the effect boundary refuse or record the protected operation | DLP finding, ApprovalGrant, EffectRecord |
+| Commit | Exfiltrate or publish the ledger | DLP, action authorization, and the effect boundary refuse or record the protected operation | DLP finding, HumanActionAuthorizationDecision, EffectRecord |
 
 The important result is not that the model resisted the sentence. It is that a
 successful manipulation did not expand authority. Detection improves the user
@@ -7246,7 +7246,7 @@ then create privacy-reviewed regression cases.
 ## Debugging playbook
 
 1. Name the boundary the failure crossed — input, context or memory, model or output, agent or workflow, identity or policy, tool or effect, execution or egress, supply chain — before forming any hypothesis.
-2. Pull that boundary's decision record: classifier and version, PolicyDecision, ContextManifest, ApprovalGrant, or egress decision.
+2. Pull that boundary's decision record: classifier and version, PolicyDecision, ContextManifest, HumanActionAuthorizationDecision, or egress decision.
 3. Separate a detection failure from an enforcement failure. A guard that fired and was ignored is a different defect from a guard that never fired, and they have different fixes.
 4. Reconcile effects against the ledger. Never conclude from the model's final message that nothing committed.
 5. Convert the incident into a privacy-reviewed regression case pinned to the exact versions that failed.
@@ -9775,7 +9775,7 @@ The appendices are working reference material: selection aids, runbooks, contrac
 | ContextManifest | Context Service | source revisions, hashes, policy, trust, redaction, tokens |
 | CapabilityEnvelope | Authorization | subject, actor, action, resource, purpose, data, region, risk, expiry |
 | ToolManifest | Tool Registry | schemas, risk, effects, approval, credential, runtime, lifecycle |
-| HumanActionAuthorizationRequest | Approval Service | proposal hash, preview, evidence, version, expiry, approver policy |
+| HumanActionAuthorizationRequest / HumanActionAuthorizationDecision | Human Action Authorization Service | proposal hash, preview, evidence, version, expiry, approver policy, decision |
 | EffectRecord | Effect Ledger | logical key, intent hash, state, request ID, receipt, reconciliation |
 | Artifact | Artifact Service | schema, hash, provenance, classification, retention, version |
 | ReleaseManifest | Release Registry | agents, Skills, SDK, workflow, models, tools, policy, schemas, evals |
@@ -9927,7 +9927,7 @@ Before an agent can mutate an enterprise system, require all of the following:
 # Appendix I — Companion Implementation Guide: Harborlight Mortgage Reference
 
 
-Companion code for the book **Building Enterprise Agentic AI Systems**.
+Companion code for the book **Building Enterprise General Intelligence Platform**.
 
 ## Version baseline
 
@@ -10328,4 +10328,4 @@ This matrix defines exactly what each citation is permitted to support. It preve
 | --- |
 | **THE PRODUCTION STANDARD**  An enterprise-grade system produces a verified outcome within explicit authority, time, cost, data, and risk boundaries; survives partial failure and change; and preserves evidence sufficient for users, operators, reviewers, and auditors. |
 
-Harborlight began with one model call. It ends as explicit contracts and control loops: a deterministic shell around bounded intelligence, reusable Skills, durable tasks, governed protocols, narrow authority, verified effects, causal traces, executable evaluation, compatible releases, and measured optimization. Northstar remains the book's platform codename for this mortgage system.
+Harborlight began with one model call. It ends as explicit contracts and control loops: a deterministic shell around bounded intelligence, reusable Skills, durable tasks, governed protocols, narrow authority, verified effects, causal traces, executable evaluation, compatible releases, and measured optimization. Northstar remains a platform codename for the architecture; Harborlight remains the cumulative mortgage case.

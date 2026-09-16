@@ -1,7 +1,7 @@
-"""Verifying that a grant authorizes this exact proposal, and has not lapsed.
+"""Verifying that an action authorization covers this exact proposal, and has not lapsed.
 
-The companion to the approval gate: the gate persists the pause, this verifies
-the grant at commit time. Timezone-aware timestamps are required rather than
+The companion to the action-authorization gate: the gate persists the pause,
+this verifies the decision at commit time. Timezone-aware timestamps are required rather than
 assumed, because a naive datetime is how an expiry check silently passes.
 """
 from __future__ import annotations
@@ -20,8 +20,8 @@ def _require_aware(value: datetime, field_name: str) -> datetime:
     return value
 
 
-class ActionProposal(BaseModel):
-    """Exact action reviewed by an approver; immutable after presentation."""
+class HumanActionAuthorizationRequest(BaseModel):
+    """Exact action reviewed by an authorized human; immutable after presentation."""
 
     tenant_id: str
     run_id: str
@@ -46,7 +46,7 @@ class ActionProposal(BaseModel):
 
 
 # --8<-- region:core
-class ApprovalGrant(BaseModel):
+class HumanActionAuthorizationDecision(BaseModel):
     approval_id: str
     proposal_hash: str
     tenant_id: str
@@ -63,36 +63,36 @@ class ApprovalGrant(BaseModel):
         return _require_aware(value, info.field_name)
 
     @model_validator(mode="after")
-    def expiry_follows_approval(self) -> "ApprovalGrant":
+    def expiry_follows_authorization(self) -> "HumanActionAuthorizationDecision":
         if self.expires_at <= self.approved_at:
             raise ValueError("expires_at must be later than approved_at")
         return self
 
 
-def verify_approval(
-    proposal: ActionProposal,
-    grant: ApprovalGrant,
+def verify_action_authorization(
+    proposal: HumanActionAuthorizationRequest,
+    decision: HumanActionAuthorizationDecision,
     *,
     now: datetime,
     actual_resource_version: int,
 ) -> None:
-    """Fail closed if approval no longer matches the action or current state."""
+    """Fail closed if authorization no longer matches the action or current state."""
 
     _require_aware(now, "now")
-    if grant.proposal_hash != proposal.digest():
-        raise PermissionError("approval is not bound to this proposal")
-    if (grant.tenant_id, grant.run_id) != (proposal.tenant_id, proposal.run_id):
-        raise PermissionError("approval scope mismatch")
-    if grant.approver_id == proposal.actor_id:
+    if decision.proposal_hash != proposal.digest():
+        raise PermissionError("action authorization is not bound to this proposal")
+    if (decision.tenant_id, decision.run_id) != (proposal.tenant_id, proposal.run_id):
+        raise PermissionError("action authorization scope mismatch")
+    if decision.approver_id == proposal.actor_id:
         raise PermissionError("actor cannot self-approve")
-    if grant.policy_digest != proposal.policy_digest:
-        raise PermissionError("policy changed after approval")
-    if now < grant.approved_at:
-        raise PermissionError("approval is not yet effective")
-    if now >= min(grant.expires_at, proposal.expires_at):
-        raise PermissionError("approval expired")
+    if decision.policy_digest != proposal.policy_digest:
+        raise PermissionError("policy changed after authorization")
+    if now < decision.approved_at:
+        raise PermissionError("authorization is not yet effective")
+    if now >= min(decision.expires_at, proposal.expires_at):
+        raise PermissionError("action authorization expired")
     if actual_resource_version != proposal.expected_resource_version:
-        raise PermissionError("resource changed after approval")
+        raise PermissionError("resource changed after authorization")
 
 
 # --8<-- endregion:core

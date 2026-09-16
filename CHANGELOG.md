@@ -4,6 +4,20 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Complete the full-book review and publication closeout
+
+- Reconciled human action authorization terminology across the primary source,
+  runnable examples, tests, Appendix C, and the proposal-binding diagram while
+  preserving `LendingDecision` as a separate underwriter-owned record.
+- Corrected example registry chapter metadata and the examples README, fixed
+  the Appendix I companion title, and clarified Northstar versus Harborlight in
+  the closing perspective.
+- Added evidence-bounded finding records for every review-matrix row and
+  documented the explicit DOCX pagination limitation (`soffice` unavailable)
+  and the remaining C04–C28 implementation roadmap boundary.
+- Regenerated source-derived Markdown, DOCX, LaTeX, diagram renders, QA
+  reports, and final release evidence from the canonical source.
+
 ### Make the cumulative Harborlight path explicit in the foundations
 
 - Added a front-matter checkpoint map for implemented `C01`–`C03` and clearly

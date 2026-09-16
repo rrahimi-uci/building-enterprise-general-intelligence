@@ -17,12 +17,12 @@
       "id": "anti-approval-binding",
       "source": "anti-approval-binding.gv",
       "pixels": [
-        2439,
-        2370
+        2420,
+        2250
       ],
-      "effective_dpi": 356,
+      "effective_dpi": 353,
       "vector": true,
-      "sha256": "bfdf5d555fb9b935a47e35c05d86f69e450055d9e3fae17d3bf6c89d55b9d7cb"
+      "sha256": "b651f803f7c4f0a86aabdf1a628c6ad916ad3ef0522242e3e1288223df8cf6dd"
     },
     {
       "id": "anti-before-after",

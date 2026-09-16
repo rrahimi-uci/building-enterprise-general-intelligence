@@ -66,7 +66,7 @@ The appendices are working reference material: selection aids, runbooks, contrac
 | ContextManifest | Context Service | source revisions, hashes, policy, trust, redaction, tokens |
 | CapabilityEnvelope | Authorization | subject, actor, action, resource, purpose, data, region, risk, expiry |
 | ToolManifest | Tool Registry | schemas, risk, effects, approval, credential, runtime, lifecycle |
-| HumanActionAuthorizationRequest | Approval Service | proposal hash, preview, evidence, version, expiry, approver policy |
+| HumanActionAuthorizationRequest / HumanActionAuthorizationDecision | Human Action Authorization Service | proposal hash, preview, evidence, version, expiry, approver policy, decision |
 | EffectRecord | Effect Ledger | logical key, intent hash, state, request ID, receipt, reconciliation |
 | Artifact | Artifact Service | schema, hash, provenance, classification, retention, version |
 | ReleaseManifest | Release Registry | agents, Skills, SDK, workflow, models, tools, policy, schemas, evals |
@@ -218,7 +218,7 @@ Before an agent can mutate an enterprise system, require all of the following:
 # Appendix I — Companion Implementation Guide: Harborlight Mortgage Reference
 
 
-Companion code for the book **Building Enterprise Agentic AI Systems**.
+Companion code for the book **Building Enterprise General Intelligence Platform**.
 
 ## Version baseline
 
@@ -559,4 +559,4 @@ References are numbered by stable registry identifier. Each citation supports on
 | --- |
 | **THE PRODUCTION STANDARD**  An enterprise-grade system produces a verified outcome within explicit authority, time, cost, data, and risk boundaries; survives partial failure and change; and preserves evidence sufficient for users, operators, reviewers, and auditors. |
 
-Harborlight began with one model call. It ends as explicit contracts and control loops: a deterministic shell around bounded intelligence, reusable Skills, durable tasks, governed protocols, narrow authority, verified effects, causal traces, executable evaluation, compatible releases, and measured optimization. Northstar remains the book's platform codename for this mortgage system.
+Harborlight began with one model call. It ends as explicit contracts and control loops: a deterministic shell around bounded intelligence, reusable Skills, durable tasks, governed protocols, narrow authority, verified effects, causal traces, executable evaluation, compatible releases, and measured optimization. Northstar remains a platform codename for the architecture; Harborlight remains the cumulative mortgage case.

@@ -341,7 +341,7 @@ Individual Skills are governable; Chapter 9 composes them into domain packs with
 
 |  |
 | --- |
-| **MORTGAGE CASE AT THIS POINT**  Harborlight needs a complete domain experience, not isolated Skills. Evidence retrieval, document validation, income and property checks, policy explanation, and approval preparation must ship as a compatible, evaluated pack. |
+| **MORTGAGE CASE AT THIS POINT**  Harborlight needs a complete domain experience, not isolated Skills. Evidence retrieval, document validation, income and property checks, policy explanation, and underwriter-package preparation must ship as a compatible, evaluated pack. |
 
 |  |
 | --- |
@@ -360,7 +360,7 @@ Compose compatible Skills into certified, distributable domain capability releas
 
 ## From individual capability to domain platform
 
-A Skill Pack composes a coherent domain experience. Harborlight’s mortgage-evidence pack pins evidence retrieval, document validation, income and property checks, policy explanation, approval preparation, and document-request Skills. It also pins shared policy, taxonomy, knowledge strategy, workflow templates, evaluation datasets, dashboards, and runbooks.
+A Skill Pack composes a coherent domain experience. Harborlight’s mortgage-evidence pack pins evidence retrieval, document validation, income and property checks, policy explanation, underwriter-package preparation, and document-request Skills. It also pins shared policy, taxonomy, knowledge strategy, workflow templates, evaluation datasets, dashboards, and runbooks.
 
 A pack is not a directory of prompts. The pack manifest declares dependency constraints, schema compatibility, required runtime capabilities, data and region policy, risk ceiling, evaluation gates, release aliases, owner, and support window. A pack can expose a smaller capability surface to each agent even though the complete domain distribution contains more Skills.
 
@@ -395,7 +395,7 @@ Packs move through signed releases and aliases such as development, staging, and
 
 ### Domain pack examples
 
-* **Mortgage evidence review:** application evidence, income and property checks, policy, approval, document request.
+* **Mortgage evidence review:** application evidence, income and property checks, policy, underwriter-package preparation, document request.
 * **Comparative customer support:** account read, entitlement, troubleshooting, refund proposal, escalation.
 * **Software delivery:** repository context, test planning, code change, review, deployment evidence.
 * **Financial close:** reconciliation, variance explanation, exception routing, controlled posting.

@@ -254,7 +254,7 @@ not treated as proof that an unrun local gate has passed.
 
 | Area | Status | Evidence or remaining action |
 |---|---|---|
-| Repository baseline | `pass` | Current review branch is based on `eca5f82`; preserve the unrelated untracked `mortgage_case/platform/` files. Re-capture SHA and status before any source edit. |
+| Repository baseline | `pass` | Current review branch is based on `5f49b89` (`origin/main` after PR #42); preserve the unrelated untracked `mortgage_case/platform/` files. Final branch and PR evidence are recorded below. |
 | Topology and structural contracts | `pass` | `reports/validation-summary.md` records 8 Parts, 28 chapters, 12 appendices, 45 registered diagrams, 48 references, and 107 citation occurrences with no validation errors. |
 | Canonical/generated synchronization | `pass` | The same report records byte-identical canonical and distributable Markdown, a valid DOCX package, and synchronized generated reports/manifests/checksums. |
 | Mortgage narrative and terminology | `pass with evidence` | `reports/technical-validation.md` records Harborlight Mortgage continuity and consistent `HumanActionAuthorizationRequest` / `HumanActionAuthorizationDecision` vocabulary. Recheck any future source edits against this contract. |
@@ -262,8 +262,8 @@ not treated as proof that an unrun local gate has passed.
 | References and claim scope | `pass` | `reports/citation-audit.md` records 48 registry entries, 107 occurrences, and no unknown or uncited IDs. Living sources and caveats remain release-time re-verification obligations. |
 | XeLaTeX and source visual inspection | `pass with caveat` | Genuine XeLaTeX completed at 287 pages; source validation and representative XeLaTeX pages passed. Dense-table and long-label overfull warnings remain typography follow-up items. |
 | DOCX pagination QA | `defer` | `make qa-pdf` is not complete because LibreOffice/`soffice` is absent. Do not promote this to `pass` from DOCX package validity or XeLaTeX inspection. |
-| Matrix finding records | `in progress` | The matrix above defines review intent but does not yet contain one evidence-bounded `pass`, `fix`, or `defer` record for every row. Populate the record format below during the next Part-by-Part pass. |
-| Review delivery | `pending` | Commit this plan update on its dedicated branch, open a PR, request available reviewers, and leave it open. Do not merge it or claim terminal CI until observed. |
+| Matrix finding records | `complete` | The final closeout below records one evidence-bounded `pass`, `fix`, or `defer` finding for every matrix row, with a regression check and an owner/exit condition wherever work is deferred. |
+| Review delivery | `pending until PR` | The implementation branch must be committed, pushed, opened as one PR, assigned to the author and available Copilot reviewer, and left open. Terminal CI is reported only after observation. |
 
 ### Finding record contract
 
@@ -289,7 +289,11 @@ check. Use `defer` only with an owner or an observable exit condition. A source
 edit changes the status of every affected record to `needs-rerun` until its
 regression check is repeated.
 
-### Next review slices
+### Historical next review slices
+
+The following slice sequence was the execution plan before the final closeout;
+it is retained as historical context. The authoritative final status and
+remaining exit conditions are recorded in the closeout below.
 
 Continue in these slices, committing only a coherent source or documentation
 change per PR. A slice may be closed without a manuscript edit when its finding
@@ -347,3 +351,92 @@ gate. Notion synchronization is out of scope until all release gates pass.
 Next exit condition: begin the Parts II–III slice by auditing knowledge
 provenance, context/state ownership, provider-neutral contracts, capability
 resolution, and the C04–C09 roadmap against their registries and tests.
+
+## Final closeout — full-book review plan — 2026-09-16
+
+The review, reconciliation, and cross-format closeout are complete for the
+current v2.1.0 publication source. This PR is one coherent closeout of the
+remaining review-plan work; it does not silently claim that the separate
+`code-gap.md` roadmap has implemented every C04–C28 runtime checkpoint.
+
+### Matrix finding records
+
+Each row below corresponds to one row in the chapter-by-chapter matrix above.
+`pass` means the stated objective and Harborlight continuity check were
+covered by the cited evidence; `fix` identifies a correction made in this
+closeout or its immediately preceding review slices; `defer` is reserved for
+an environment-gated or intentionally separate implementation obligation.
+
+| ID | Status | Severity | Scope | Finding | Evidence | Decision | Regression check | Owner/exit condition |
+|---|---|---|---|---|---|---|---|---|
+| FB-FRONT-01 | `fix` | moderate | Front matter | Harborlight, C01, and the reader promise now establish the cumulative path without promising an autonomous lender. | `source/parts/00-front-matter.md`; `config/mortgage_stages.json` | edit | `make validate`; front-matter PDF inspection | — |
+| FB-C01-01 | `fix` | editorial | Part I / Ch 01 | C01 is explicitly read-only, synthetic, executable, and connected to the missing-evidence bottleneck. | `source/parts/01-part-i.md`; `examples/mortgage/cumulative_case.py` | preserve and edit | `make examples-run`; XeLaTeX pages 33–34 inspected | — |
+| FB-C02-01 | `pass` | none | Ch 02 | Typed proposals and deterministic calculations are separated from a lending decision. | `source/parts/01-part-i.md`; `mortgage_case/` C02 tests | preserve | `make validate`; `tests/mortgage_case/unit/test_c02.py` | — |
+| FB-C03-01 | `fix` | moderate | Ch 03 | The provider/framework seam remains explicit: the OpenAI Agents SDK is an adapter, not platform authority. | `source/parts/01-part-i.md`; `mortgage_case/runtime.py`; runtime-boundary diagram | preserve and edit | `make validate`; `make examples-run` | — |
+| FB-C04-01 | `pass` | none | Part II / Ch 04 | Reference architecture assigns ownership to durable records, stores, events, and cells while C04 remains a target checkpoint. | `source/parts/02-part-ii.md`; `config/mortgage_stages.json` | preserve and qualify | `make validate`; roadmap-status search | — |
+| FB-C05-01 | `pass` | none | Ch 05 | Knowledge governance, provenance, freshness, and refusal semantics are tied to mortgage evidence without inferring implementation from prose. | `source/parts/02-part-ii.md`; `examples/knowledge/`; `code-gap.md` | preserve and qualify | `make validate`; `make examples-run` | — |
+| FB-C06-01 | `pass` | none | Ch 06 | Context, RAG, memory, and business state have distinct owners and authorized evidence boundaries. | `source/parts/02-part-ii.md`; `config/examples.json` | preserve | `make validate`; `make examples-run` | — |
+| FB-C07-01 | `pass` | none | Part III / Ch 07 | Developer-platform contracts, lifecycle, and release gates are framed as reusable contracts rather than cumulative runtime evidence. | `source/parts/03-part-iii.md`; `code-gap.md` | preserve and qualify | `make validate` | — |
+| FB-C08-01 | `fix` | editorial | Ch 08 | Skills registry metadata and reader-facing chapter mappings agree with the actual chapter topology. | `config/examples.json`; `examples/README.md`; `examples/knowledge/skills_registry.py` | edit | `make validate`; `make examples-run` | — |
+| FB-C09-01 | `fix` | moderate | Ch 09 | The mortgage Skill Pack example is underwriter-package preparation and does not imply a credit decision or approval authority. | `source/parts/03-part-iii.md`; `config/examples.json` | edit | `make validate`; source terminology audit | — |
+| FB-C10-01 | `pass` | none | Part IV / Ch 10 | Bounded ReAct budgets, authorized retrieval, and stop rules remain coherent with the mortgage evidence task. | `source/parts/04-part-iv.md`; `examples/patterns/bounded_react_loop.py` | preserve | `make examples-run`; `make validate` | — |
+| FB-C11-01 | `pass` | none | Ch 11 | Handoffs transfer bounded ownership and preserve inherited authority ceilings. | `source/parts/04-part-iv.md`; `examples/patterns/routing_handoff.py` | preserve | `make examples-run`; `make validate` | — |
+| FB-C12-01 | `pass` | none | Ch 12 | Model-proposed work is compiled into deterministic, validated mortgage tasks. | `source/parts/04-part-iv.md`; `examples/patterns/plan_compilation.py` | preserve | `make examples-run`; `make validate` | — |
+| FB-C13-01 | `pass` | none | Ch 13 | Reflection and evaluation can improve summaries without changing authority or business truth. | `source/parts/04-part-iv.md`; `examples/patterns/` evaluator examples | preserve | `make examples-run`; `make validate` | — |
+| FB-C14-01 | `fix` | major | Ch 14 | Human action authorization is bound to an exact proposal and remains distinct from the underwriter-owned LendingDecision. | `source/parts/04-part-iv.md`; `examples/patterns/approval_gate.py`; `approval_verification.py` | edit | focused authorization tests; `make examples-run`; PDF pages 108–114 inspected | — |
+| FB-C15-01 | `pass` | none | Ch 15 | Durable execution covers waits, replay, restart, cancellation, and unknown-effect recovery without treating a model transcript as state. | `source/parts/04-part-iv.md`; `examples/patterns/durable_state.py` | preserve | `make examples-run`; `make validate` | — |
+| FB-C16-01 | `pass` | none | Ch 16 | Pattern entries provide selection criteria, mortgage mapping, metrics, failure modes, and trade-offs. | `source/parts/04-part-iv.md`; pattern catalog sections | preserve | `make validate`; representative PDF inspection | — |
+| FB-C17-01 | `fix` | moderate | Ch 17 | The anti-pattern visual and proposal-binding terminology now teach proposal-bound human action authorization rather than a generic approval grant. | `source/parts/04-part-iv.md`; `assets/diagrams/src/anti-approval-binding.gv`; `config/diagrams.json` | edit and regenerate | `make diagrams`; diagram checksum validation; PDF inspection | — |
+| FB-C18-01 | `pass` | none | Part V / Ch 18 | Supervisor/worker joins retain case ownership, child budgets, artifacts, and narrowed grants. | `source/parts/05-part-v.md`; `assets/diagrams/src/supervisor-worker.gv` | preserve | `make validate`; diagram validation | — |
+| FB-C19-01 | `pass` | none | Ch 19 | MCP/A2A and external gateways preserve authenticated boundaries and do not treat discovery as authority. | `source/parts/05-part-v.md`; gateway diagrams and examples | preserve | `make validate`; `make examples-run` | — |
+| FB-C20-01 | `pass` | none | Part VI / Ch 20 | Threat-model and guardrail boundaries prevent hostile mortgage documents from reauthorizing tools, data, or effects. | `source/parts/06-part-vi.md`; `examples/patterns/input_guardrail.py` | preserve | `make examples-run`; `make validate` | — |
+| FB-C21-01 | `pass` | none | Ch 21 | Identity, RBAC/ABAC, delegation, purpose, case scope, and last-hop credentials remain explicit. | `source/parts/06-part-vi.md`; `assets/diagrams/src/identity-delegation.gv` | preserve | `make validate`; diagram validation | — |
+| FB-C22-01 | `fix` | moderate | Ch 22 | Effect, idempotency, precondition, authorization, receipt, and unknown-state vocabulary is aligned with the mortgage control path. | `source/parts/06-part-vi.md`; `examples/patterns/effect_idempotency.py`; `config/examples.json` | edit and preserve | `make examples-run`; `make validate` | — |
+| FB-C23-01 | `pass` | none | Ch 23 | Sandbox, egress, privacy, DLP, and governance controls keep synthetic/restricted mortgage data bounded. | `source/parts/06-part-vi.md`; sandbox/egress examples | preserve | `make examples-run`; `make validate` | — |
+| FB-C24-01 | `pass` | none | Part VII / Ch 24 | MLflow remains diagnostic; traces use safe join keys and do not become applicant/document storage. | `source/parts/07-part-vii.md`; MLflow examples and tests | preserve | `make examples-run`; `make validate` | — |
+| FB-C25-01 | `pass` | none | Ch 25 | Evaluation uses governed, slice-aware cohorts and cannot self-promote behavior changes. | `source/parts/07-part-vii.md`; evaluation examples and tests | preserve | `make examples-run`; `make validate` | — |
+| FB-C26-01 | `pass` | none | Part VIII / Ch 26 | Governance and operating-model obligations identify mortgage risk owners, incidents, exceptions, and evidence. | `source/parts/08-part-viii.md`; governance sections | preserve | `make validate` | — |
+| FB-C27-01 | `pass` | none | Ch 27 | Deployment, versioning, rollback, and recovery preserve in-flight case/version compatibility. | `source/parts/08-part-viii.md`; release sections | preserve | `make validate`; `make deterministic` | — |
+| FB-C28-01 | `pass` | none | Ch 28 | Cost, latency, capacity, and reliability metrics are bounded by verified workload assumptions rather than autonomous-lending claims. | `source/parts/08-part-viii.md`; capacity sections | preserve | `make validate`; XeLaTeX build | — |
+| FB-APP-ABC-01 | `fix` | moderate | Appendices A–C | Pattern index, runbooks, and platform contracts now use the canonical human action authorization request/decision names. | `source/parts/09-appendices.md`; Appendix C | edit | `make validate`; reference/marker checks | — |
+| FB-APP-DG-01 | `pass` | none | Appendices D–G | Framework landscape, research limits, and adoption roadmap scope claims and distinguish implemented C01–C03 evidence from target C04–C28 work. | `source/parts/09-appendices.md`; `code-gap.md`; `config/mortgage_stages.json` | preserve and qualify | `make validate`; roadmap-status audit | — |
+| FB-APP-H-01 | `pass` | none | Appendix H | Glossary terms match first-use definitions and stable platform contracts. | `source/parts/09-appendices.md`; generated glossary | preserve | `make validate`; generated Markdown/DOCX/LaTeX checks | — |
+| FB-APP-IJ-01 | `fix` | editorial | Appendices I–J | Companion implementation title and coding-agent acceptance guidance now identify the current book and canonical source workflow. | `source/parts/09-appendices.md`; `README.md`; `AGENTS.md` | edit | `make validate`; PDF closing/appendix inspection | — |
+| FB-APP-K-01 | `pass` | none | Appendix K | Registry entries, in-text IDs, access dates, and permitted claim scopes remain synchronized; no citation IDs are unknown or uncited. | `config/references.json`; `reports/citation-audit.md`; `reports/citation-verification.json` | preserve | `make references`; `make validate` | Reverify living sources at the next release |
+| FB-APP-L-01 | `fix` | moderate | Appendix L / closing | Closing perspective distinguishes Northstar as an architecture codename from Harborlight as the cumulative mortgage case. | `source/parts/09-appendices.md`; closing PDF page | edit | `make pdf`; page 287 visual inspection | — |
+
+### Cross-format and release closeout
+
+- Canonical Markdown, assembled manuscript, distributable Markdown, DOCX, and
+  LaTeX source were regenerated from `source/parts/*.md`; structural validation
+  passes with 8 Parts, 28 chapters, 12 appendices, 45 diagrams, 71 code blocks,
+  48 references, and 107 citation occurrences.
+- The DOCX is structurally valid, contains 423 tables and 54 inline images,
+  and rebuilds byte-identically. Its pagination remains **deferred** because
+  `make qa-pdf` exits with `LibreOffice soffice is required for PDF QA` in this
+  environment. The owner is the release maintainer; exit condition is a
+  successful `make qa-pdf` plus inspection of its contact sheet in an
+  environment with LibreOffice installed.
+- Genuine XeLaTeX compiled a 287-page Letter-size PDF. Representative cover,
+  Part I, Chapter 14, changed diagram/authorization, and closing pages were
+  rendered and inspected; no clipping, overlap, missing-glyph, or hierarchy
+  defects were found. The PDF remains a regenerable ignored artifact and is not
+  committed.
+- `make examples-run` passed 123 tests across 26 examples. `make validate`,
+  `make deterministic`, and `make diagrams` passed. `make qa-pdf` is the one
+  explicitly deferred local gate described above.
+- The package manifest, checksums, release ZIP, and clean-extraction rebuild
+  must be generated after this closeout commit and recorded in the final PR
+  update. The extracted-package test is not considered passed until its output
+  is observed from the final ZIP.
+
+### Remaining implementation boundary
+
+The full-book review and publication consistency work is complete, but the
+separate cumulative runtime roadmap remains intentionally bounded: only C01–C03
+have executable mortgage implementation evidence in this repository. C04–C28
+remain explicit target work in `code-gap.md`, with the exit condition that each
+checkpoint gains its registry entry, implementation modules, offline behavioral
+tests, source/diagram/generated-artifact evidence, and release-gate evidence in
+its own reviewed change. This PR does not claim production readiness for the
+unfinished cumulative runtime.

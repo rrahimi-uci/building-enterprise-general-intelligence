@@ -14,8 +14,8 @@
       "file": "assets/diagrams/anti-approval-binding.png",
       "source": "assets/diagrams/src/anti-approval-binding.gv",
       "vector": "assets/diagrams/anti-approval-binding.pdf",
-      "description": "AP-06 Boolean consent versus a proposal-bound approval grant",
-      "sha256": "bfdf5d555fb9b935a47e35c05d86f69e450055d9e3fae17d3bf6c89d55b9d7cb"
+      "description": "AP-06 Boolean consent versus proposal-bound human action authorization",
+      "sha256": "b651f803f7c4f0a86aabdf1a628c6ad916ad3ef0522242e3e1288223df8cf6dd"
     },
     {
       "id": "anti-before-after",
