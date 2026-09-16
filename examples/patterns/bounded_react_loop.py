@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 
 from agents import Agent, RunContextWrapper, Runner, function_tool
 from agents.run import RunConfig
+from mortgage_case.domain.case import load_anchor_case
 
 # --8<-- example:start
 
@@ -19,6 +20,7 @@ from agents.run import RunConfig
 class RunBudget:
     """Budget for one run. The model cannot see or change it."""
 
+    case_id: str = load_anchor_case().case_id
     max_tool_calls: int = 3
     tool_calls: int = 0
     exhausted_at: str | None = None
@@ -32,24 +34,29 @@ class RunBudget:
 
 
 @function_tool
-def search_records(context: RunContextWrapper[RunBudget], query: str) -> str:
-    """Search supplier records. Refuses once the run budget is spent."""
-    if not context.context.consume("search_records"):
+def search_mortgage_evidence(context: RunContextWrapper[RunBudget], query: str) -> str:
+    """Search evidence for the anchor case. Refuses after the run budget."""
+    if not context.context.consume("search_mortgage_evidence"):
         # Refusing *as data* keeps the loop bounded without raising: the model can
         # read this, stop, and explain itself rather than retrying blindly.
         return "budget exhausted: no further searches permitted in this run"
-    hits = {"sanctions": "no sanctions match", "tax": "tax id verified"}
-    return hits.get(query, f"no records for {query!r}")
+    hits = {
+        "income": "employment_verification is missing",
+        "property": "purchase_agreement is available",
+        "title": "title evidence is not in this checkpoint",
+    }
+    evidence = hits.get(query, f"no mortgage evidence for {query!r}")
+    return f"{context.context.case_id}: {evidence}"
 
 
 def build_agent() -> Agent[RunBudget]:
     return Agent[RunBudget](
-        name="Supplier research",
+        name="Mortgage evidence research",
         instructions=(
-            "Research the supplier using search_records. "
+            "Research the mortgage case using search_mortgage_evidence. "
             "If the budget is exhausted, summarize what you found and stop."
         ),
-        tools=[search_records],
+        tools=[search_mortgage_evidence],
     )
 
 

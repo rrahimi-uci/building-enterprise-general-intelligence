@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass, field
+from decimal import Decimal
 from typing import Literal
 
 # --8<-- example:start
@@ -34,7 +35,7 @@ class SourceRef:
 class Predicate:
     variable: str
     operator: Literal["<", "<=", "=", "!=", ">=", ">"]
-    value: float | str | bool
+    value: Decimal | str | bool
 
 
 @dataclass(frozen=True)

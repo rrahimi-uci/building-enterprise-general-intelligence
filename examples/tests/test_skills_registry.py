@@ -7,19 +7,23 @@ from examples.contracts import SkillRequirement
 from examples.platform.skills_registry import SkillManifest, SkillRegistry
 
 
-def skill(version: str, *, status="active", risk=3, regions=("eu",), purposes=("onboarding",),
+def skill(version: str, *, status="active", risk=3, regions=("us",),
+          purposes=("mortgage_pre_underwriting_review",),
           data=("public",)) -> SkillManifest:
     return SkillManifest(
-        skill_id="screen_supplier", version=version, description="screen a supplier",
-        owner="trust-team", capabilities=frozenset({"screen_supplier"}),
-        tool_versions=("sanctions@1.0.0",), instruction_ref="ref:1",
+        skill_id="mortgage_evidence_review", version=version,
+        description="review mortgage evidence",
+        owner="mortgage-platform-team", capabilities=frozenset({"mortgage.evidence.review"}),
+        tool_versions=("mortgage.case.read@1", "mortgage.policy.read@1"),
+        instruction_ref="ref:mortgage-evidence-review",
         allowed_purposes=frozenset(purposes), allowed_data_classes=frozenset(data),
         allowed_regions=frozenset(regions), maximum_risk=risk, status=status,
     )
 
 
 def requirement(**kw) -> SkillRequirement:
-    base = dict(capability="screen_supplier", purpose="onboarding", maximum_risk=2, region="eu")
+    base = dict(capability="mortgage.evidence.review",
+                purpose="mortgage_pre_underwriting_review", maximum_risk=2, region="us")
     base.update(kw)
     return SkillRequirement(**base)
 

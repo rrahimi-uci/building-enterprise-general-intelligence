@@ -7,19 +7,23 @@ from examples.patterns.routing_handoff import run
 async def test_request_is_handed_to_the_owning_specialist():
     # A handoff is dispatched as a tool call named transfer_to_<agent>.
     model = ScriptedModel([
-        ToolCall("transfer_to_sanctions_specialist", {}),
-        Say("Screened: no restricted-party match for Acme Ltd."),
+        ToolCall("transfer_to_mortgage_evidence_specialist", {}),
+        Say("MORT-2026-000184 is missing employment verification."),
     ])
-    answer, decided_by = await run("Is Acme Ltd on a sanctions list?", model=model)
-    assert decided_by == "Sanctions specialist", "ownership must transfer, not just context"
-    assert "no restricted-party match" in answer
+    answer, decided_by = await run(
+        "What evidence is missing from MORT-2026-000184?", model=model
+    )
+    assert decided_by == "Mortgage evidence specialist", "ownership must transfer, not just context"
+    assert "employment verification" in answer
 
 
 async def test_routing_to_the_other_specialist():
     model = ScriptedModel([
-        ToolCall("transfer_to_refunds_specialist", {}),
-        Say("Eligible under the 30-day policy."),
+        ToolCall("transfer_to_mortgage_policy_specialist", {}),
+        Say("Apply mortgage-policy@2026.09 to the evidence review."),
     ])
-    answer, decided_by = await run("Can I refund order 88?", model=model)
-    assert decided_by == "Refunds specialist"
-    assert "30-day" in answer
+    answer, decided_by = await run(
+        "Which policy revision governs MORT-2026-000184?", model=model
+    )
+    assert decided_by == "Mortgage policy specialist"
+    assert "mortgage-policy" in answer

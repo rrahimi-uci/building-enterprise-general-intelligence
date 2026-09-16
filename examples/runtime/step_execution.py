@@ -35,31 +35,31 @@ class StepDisposition(BaseModel):
 
 
 @tool
-async def retrieve_supplier_policy(
-    ctx: RunContextWrapper[PlatformContext], country: str
+async def retrieve_mortgage_policy(
+    ctx: RunContextWrapper[PlatformContext], policy_version: str
 ) -> dict[str, object]:
-    """Retrieve authorized policy through the enterprise Tool Gateway."""
+    """Retrieve the authorized mortgage policy through the Tool Gateway."""
     return await ctx.context.gateway.invoke(
         tenant_id=ctx.context.tenant_id,
         subject_id=ctx.context.subject_id,
         actor_id=ctx.context.actor_id,
         run_id=ctx.context.run_id,
-        tool="supplier.policy.read.v2",
-        arguments={"country": country},
+        tool="mortgage.policy.read@1",
+        arguments={"policy_version": policy_version},
     )
 
 
 agent = Agent[PlatformContext](
-    name="Supplier analyst",
+    name="Mortgage evidence analyst",
     # Read with a default, not os.environ[...]: reading a required variable at
     # import time makes the module unimportable wherever it is unset, including
     # in tests and in any tool that merely inspects the package.
     model=os.environ.get("OPENAI_AGENT_MODEL", "gpt-4.1-mini"),
     instructions=(
-        "Analyze only supplied authorized evidence. Return a structured "
-        "disposition. Never claim that an external write occurred."
+        "Analyze only supplied authorized mortgage evidence. Return a structured "
+        "disposition. Never make or imply a lending decision or external write."
     ),
-    tools=[retrieve_supplier_policy],
+    tools=[retrieve_mortgage_policy],
     output_type=StepDisposition,
 )
 
@@ -75,7 +75,7 @@ async def execute_step(request, context: PlatformContext, *, model=None) -> dict
             # An injectable model is what lets the platform test this step without
             # a provider. Production passes nothing and the configured model wins.
             model=model,
-            workflow_name="supplier-onboarding",
+            workflow_name="mortgage-evidence-review",
             group_id=request.run_id,
             trace_include_sensitive_data=False,
             trace_metadata={

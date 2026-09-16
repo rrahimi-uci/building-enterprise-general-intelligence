@@ -13,8 +13,9 @@ def test_replayed_effect_key_commits_once():
         calls.append(1)
         return "receipt-1"
 
-    assert ledger.commit("payment:42", apply) == "receipt-1"
-    assert ledger.commit("payment:42", apply) == "receipt-1"
+    effect_key = "mortgage:document-request:MORT-2026-000184:employment_verification"
+    assert ledger.commit(effect_key, apply) == "receipt-1"
+    assert ledger.commit(effect_key, apply) == "receipt-1"
     assert len(calls) == 1, "a replayed logical effect must not apply twice"
 
 

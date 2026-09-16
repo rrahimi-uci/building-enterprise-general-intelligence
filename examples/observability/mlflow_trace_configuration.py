@@ -17,7 +17,7 @@ from mlflow.entities import SpanType
 # --8<-- example:start
 
 
-def configure_observability(experiment: str = "northstar-supplier-onboarding") -> None:
+def configure_observability(experiment: str = "book-mortgage-evidence-review") -> None:
     """Point MLflow at the tracking backend and capture provider calls.
 
     MLflow 3.15 placed the filesystem store into maintenance mode for traces, so
@@ -35,20 +35,22 @@ def configure_observability(experiment: str = "northstar-supplier-onboarding") -
     )
 
 
-def traced_step(run_id: str, supplier_id: str) -> dict[str, str]:
+def traced_step(run_id: str, case_id: str) -> dict[str, str]:
     """One governed step, instrumented so a later investigation can replay it."""
     # Trace-level tags are the join key between a trace and the run, tenant, and
     # risk class recorded in the system of record.
-    mlflow.update_current_trace(tags={"run_id": run_id, "risk_class": "R2"})
+    mlflow.update_current_trace(
+        tags={"run_id": run_id, "case_id": case_id, "risk_class": "R2"}
+    )
     with mlflow.start_span(
         name="load_authorized_context", span_type=SpanType.RETRIEVER
     ) as span:
-        span.set_inputs({"supplier_id": supplier_id})
+        span.set_inputs({"case_id": case_id})
         context_manifest_id = f"ctx:{run_id}:1"
         # Recording the manifest id, not the context body, keeps the trace
         # useful without turning it into a second copy of sensitive data.
         span.set_outputs({"context_manifest_id": context_manifest_id})
-    return {"status": "ready_for_approval", "context_manifest_id": context_manifest_id}
+    return {"status": "needs_input", "context_manifest_id": context_manifest_id}
 
 
 # --8<-- example:end

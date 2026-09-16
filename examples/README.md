@@ -59,10 +59,10 @@ structured output parsing, guardrails, the run loop — is the genuine SDK.
 
 ```python
 model = ScriptedModel([
-    ToolCall("lookup_supplier", {"supplier_id": "S-1001"}),
-    Say('{"supplier_id": "S-1001", "active": true, "summary": "..."}'),
+    ToolCall("read_mortgage_case", {"case_id": "MORT-2026-000184"}),
+    Say('{"case_id": "MORT-2026-000184", "needs_input": true, "summary": "..."}'),
 ])
-result = await run("Is supplier S-1001 active?", model=model)
+result = await run("Does MORT-2026-000184 have all required evidence?", model=model)
 ```
 
 `ScriptedModel` must subclass `agents.models.interface.Model`. The runner

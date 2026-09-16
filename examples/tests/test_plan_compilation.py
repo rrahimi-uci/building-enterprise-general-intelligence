@@ -10,13 +10,13 @@ from examples.patterns.plan_compilation import PlanEnvelope, compile_plan
 DIGEST = "sha256:" + "a" * 64
 
 
-def node(node_id="n1", capability="lookup", cost=Decimal("0.25"), risk=1, deps=()):
+def node(node_id="n1", capability="mortgage.case.read", cost=Decimal("0.25"), risk=1, deps=()):
     return PlanNode(id=node_id, capability=capability, maximum_cost_usd=cost,
                     maximum_attempts=2, risk_class=risk, depends_on=tuple(deps))
 
 
 def envelope(**kw):
-    base = dict(allowed_capabilities=frozenset({"lookup", "screen"}),
+    base = dict(allowed_capabilities=frozenset({"mortgage.case.read", "mortgage.evidence.verify"}),
                 maximum_cost_usd=Decimal("1.0"), policy_digest=DIGEST,
                 maximum_nodes=5, maximum_risk=2)
     base.update(kw)
@@ -40,7 +40,7 @@ def test_float_budget_is_rejected_at_the_compilation_boundary():
 
 def test_capability_outside_the_envelope_is_refused():
     with pytest.raises(PermissionError, match="capability not allowed"):
-        compile_plan(plan(node(capability="wire_transfer")), envelope())
+        compile_plan(plan(node(capability="mortgage.los.write")), envelope())
 
 
 def test_risk_ceiling_is_enforced_per_node():

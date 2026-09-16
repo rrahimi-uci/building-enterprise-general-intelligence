@@ -1769,7 +1769,7 @@ memory.write(user_id, summarize(conversation))
 # provenance cannot become durable memory, and every record carries the
 # purpose that justifies its retention.
 candidate = MemoryCandidate(
-    subject=user_id, tenant=run.tenant, purpose="supplier_payment_preference",
+    subject=case.case_id, tenant=run.tenant, purpose="mortgage_evidence_review",
     claim=extracted.claim, provenance=extracted.source,   # which document, which ACL
     confidence=extracted.confidence, ttl_days=180,
 )
@@ -1906,17 +1906,17 @@ workflow.call(gateway, retry_policy=RetryPolicy(
 ```python
 # Anti-pattern: timeout is treated as proof that nothing happened.
 try:
-    return await vendors.create(payload)
+    return await mortgage_documents.request(payload)
 except TimeoutError:
-    return await vendors.create(payload)        # may now exist twice
+    return await mortgage_documents.request(payload)  # may now exist twice
 
 # Correction: unknown is a first-class terminal. Nothing retries a mutation
 # until the downstream record has been consulted about what actually landed.
 try:
-    return await vendors.create(payload, idempotency_key=effect.key)
+    return await mortgage_documents.request(payload, idempotency_key=effect.key)
 except TimeoutError:
     effect.mark(EffectState.UNKNOWN)            # durable, visible, blocks retry
-    actual = await vendors.lookup(idempotency_key=effect.key)
+    actual = await mortgage_documents.lookup(idempotency_key=effect.key)
     if actual is not None:
         return effect.resolve(committed=actual)  # it did land; adopt it
     return effect.resolve(committed=None)        # genuinely absent; now safe to retry
@@ -1951,18 +1951,24 @@ Both cards here concern the moment a system decides that something is allowed, o
 ```python
 # Anti-pattern: consent is a flag on the run, detached from what executes.
 if run.approved:
-    await payments.send(vendor=current.vendor, amount=current.amount)
+    await underwriting.submit_evidence_package(case_id=current.case_id)
 
 # Correction: the grant is bound to a hash of the exact proposal and cannot
 # authorize a payload the approver never saw.
-proposal = Proposal(action="payments.send", args=args, policy_version=policy.version)
+proposal = Proposal(
+    action="underwriting.submit_evidence_package",
+    args=args,
+    policy_version=policy.version,
+)
 grant = await approvals.await_grant(proposal.digest(), ttl_s=900)
 
 if grant.digest != proposal.digest():      # arguments moved since approval
     raise ApprovalMismatch(proposal.digest(), grant.digest)
 if grant.expired(now()):                   # consent has a shelf life
     raise ApprovalExpired(grant.id)
-await payments.send(**proposal.args, idempotency_key=proposal.digest())
+await underwriting.submit_evidence_package(
+    **proposal.args, idempotency_key=proposal.digest()
+)
 ```
 
 **Detection Metrics.** Proposal-hash mismatches at commit, grant reuse attempts, expiry rate, and incidents occurring after a recorded approval.

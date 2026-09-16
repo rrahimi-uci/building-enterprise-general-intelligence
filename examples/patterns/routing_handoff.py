@@ -11,16 +11,21 @@ from agents.run import RunConfig
 
 # --8<-- example:start
 
-refunds = Agent(
-    name="Refunds specialist",
-    handoff_description="Handles refund eligibility and processing.",
-    instructions="Decide refund eligibility. State the policy rule you applied.",
+evidence_specialist = Agent(
+    name="Mortgage evidence specialist",
+    handoff_description="Handles missing and contradictory mortgage evidence.",
+    instructions=(
+        "Review mortgage evidence gaps. Do not make or imply a lending decision."
+    ),
 )
 
-sanctions = Agent(
-    name="Sanctions specialist",
-    handoff_description="Handles sanctions and restricted-party screening.",
-    instructions="Screen the named party. Never assert a clear result without a check.",
+policy_specialist = Agent(
+    name="Mortgage policy specialist",
+    handoff_description="Explains the policy that governs mortgage evidence review.",
+    instructions=(
+        "Explain the applicable mortgage policy and cite the policy revision. "
+        "Do not make or imply a lending decision."
+    ),
 )
 
 # The triage agent owns routing only. It deliberately has no domain tools, so it
@@ -31,7 +36,7 @@ triage = Agent(
         "Route the request to the specialist that owns it. "
         "Do not answer domain questions yourself."
     ),
-    handoffs=[refunds, sanctions],
+    handoffs=[evidence_specialist, policy_specialist],
 )
 
 

@@ -6,6 +6,8 @@ import pytest
 from examples.contracts import AgentDecision, ToolCall
 from examples.patterns.react_engine import ReActEngine, ReActLimits
 
+CASE_ID = "MORT-2026-000184"
+
 
 class ScriptedDecisions:
     def __init__(self, decisions): self._d = list(decisions); self.turns = 0
@@ -14,13 +16,13 @@ class ScriptedDecisions:
         return self._d[min(self.turns - 1, len(self._d) - 1)]
 
 
-def call(tool="lookup", **args):
+def call(tool="mortgage.case.read", **args):
     return AgentDecision(disposition="invoke_tool",
                          tool_call=ToolCall(tool_id=tool, arguments=args))
 
 
 async def _tool(tool_id, arguments, effect_key):
-    return {"status": "ok", "tool": tool_id}
+    return {"status": "ok", "tool": tool_id, "case_id": CASE_ID}
 
 
 def test_limits_reject_a_nonsense_configuration():
@@ -32,7 +34,7 @@ def test_limits_reject_a_nonsense_configuration():
 
 async def test_an_answer_ends_the_loop_immediately():
     model = ScriptedDecisions([AgentDecision(disposition="answer", answer="done")])
-    result = await ReActEngine(model, _tool).run("goal")
+    result = await ReActEngine(model, _tool).run(f"Review mortgage case {CASE_ID}")
     assert result.answer == "done"
     assert model.turns == 1
 
@@ -42,7 +44,7 @@ async def test_tool_call_budget_is_enforced_by_the_engine():
     engine = ReActEngine(model, _tool, ReActLimits(maximum_turns=9, maximum_tool_calls=2,
                                                    maximum_identical_observations=9))
     with pytest.raises(RuntimeError, match="tool-call budget"):
-        await engine.run("goal")
+        await engine.run(f"Review mortgage case {CASE_ID}")
 
 
 async def test_a_no_progress_loop_is_detected():
@@ -51,7 +53,7 @@ async def test_a_no_progress_loop_is_detected():
     engine = ReActEngine(model, _tool, ReActLimits(maximum_turns=9, maximum_tool_calls=9,
                                                    maximum_identical_observations=2))
     with pytest.raises(RuntimeError, match="no-progress"):
-        await engine.run("goal")
+        await engine.run(f"Review mortgage case {CASE_ID}")
 
 
 async def test_turn_limit_bounds_a_loop_that_never_answers():
@@ -59,4 +61,4 @@ async def test_turn_limit_bounds_a_loop_that_never_answers():
     engine = ReActEngine(model, _tool, ReActLimits(maximum_turns=2, maximum_tool_calls=9,
                                                    maximum_identical_observations=9))
     with pytest.raises(RuntimeError, match="turn limit"):
-        await engine.run("goal")
+        await engine.run(f"Review mortgage case {CASE_ID}")

@@ -15,8 +15,10 @@ POLICY = "sha256:" + "b" * 64
 
 def proposal(**kw) -> ActionProposal:
     base = dict(tenant_id="t1", run_id="r1", actor_id="agent-1",
-                tool_version="refund@1.2.0", logical_effect_key="refund:A-1",
-                arguments={"usd": 20}, expected_resource_version=7,
+                tool_version="mortgage.document.request@1",
+                logical_effect_key="mortgage:document-request:MORT-2026-000184:employment_verification",
+                arguments={"case_id": "MORT-2026-000184", "document_kind": "employment_verification"},
+                expected_resource_version=7,
                 policy_digest=POLICY, expires_at=NOW + timedelta(hours=4))
     base.update(kw)
     return ActionProposal(**base)
@@ -35,10 +37,12 @@ def test_a_matching_grant_verifies():
     verify_approval(p, grant(p), now=NOW, actual_resource_version=7)
 
 
-def test_changing_the_amount_invalidates_the_approval():
+def test_changing_the_document_kind_invalidates_the_approval():
     approved = proposal()
     g = grant(approved)
-    tampered = proposal(arguments={"usd": 5000})
+    tampered = proposal(arguments={
+        "case_id": "MORT-2026-000184", "document_kind": "tax_return"
+    })
     with pytest.raises(PermissionError, match="not bound"):
         verify_approval(tampered, g, now=NOW, actual_resource_version=7)
 

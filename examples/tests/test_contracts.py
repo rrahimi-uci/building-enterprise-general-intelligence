@@ -29,29 +29,34 @@ def test_decision_disposition_is_closed():
 
 
 def test_tool_call_carries_an_optional_logical_effect_key():
-    call = ToolCall(tool_id="refund", arguments={"usd": 20}, logical_effect_key="refund:A-1")
-    assert call.logical_effect_key == "refund:A-1"
+    call = ToolCall(
+        tool_id="mortgage.document.request",
+        arguments={"case_id": "MORT-2026-000184", "document_kind": "employment_verification"},
+        logical_effect_key="mortgage:document-request:MORT-2026-000184:employment_verification",
+    )
+    assert call.logical_effect_key == "mortgage:document-request:MORT-2026-000184:employment_verification"
     assert ToolCall(tool_id="lookup", arguments={}).logical_effect_key is None
 
 
 def test_step_request_pins_everything_a_replay_needs():
     request = AgentStepRequest(
         run_id="r1", node_id="n1", state_version=3, agent_version="1.4.0",
-        context_manifest_id="ctx:1", eligible_tool_versions=frozenset({"refund@1.2.0"}),
+        context_manifest_id="ctx:1", eligible_tool_versions=frozenset({"mortgage.document.request@1"}),
         max_turns=6, deadline=datetime(2026, 9, 13, 12, 0, tzinfo=timezone.utc),
     )
     # A replayable step pins run, state, agent, context, the eligible tool versions,
     # and its own bounds. Dropping any one of them makes the replay a new decision.
     assert (request.state_version, request.agent_version) == (3, "1.4.0")
-    assert "refund@1.2.0" in request.eligible_tool_versions
+    assert "mortgage.document.request@1" in request.eligible_tool_versions
     with pytest.raises(ValidationError):
         AgentStepRequest(run_id="r1", node_id="n1", state_version=3,
                          agent_version="1.4.0", context_manifest_id="ctx:1")
 
 
 def test_plan_nodes_must_declare_their_own_bounds():
-    SkillRequirement(capability="screen_supplier", purpose="onboarding",
-                     region="eu", maximum_risk=2)
+    SkillRequirement(capability="mortgage.evidence.review",
+                     purpose="mortgage_pre_underwriting_review", region="us",
+                     maximum_risk=2)
     node = PlanNode(id="n1", capability="lookup", maximum_cost_usd=Decimal("0.25"),
                     maximum_attempts=2, risk_class=1)
     # Every node carries its own cost, attempt, and risk bounds, so a plan cannot
