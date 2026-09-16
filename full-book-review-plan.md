@@ -246,3 +246,85 @@ explicit documented limitation.
 - Local tests/builds and remote CI results are reported separately. Missing
   optional tooling (especially `soffice`) remains visible as an unmet gate.
 - A dedicated branch and open PR exist; the PR is not merged by the agent.
+
+## Current execution ledger — 2026-09-16
+
+This ledger is the handoff point for continuing the review. It records only
+evidence present in the current checkout; a generated report or a prior PR is
+not treated as proof that an unrun local gate has passed.
+
+| Area | Status | Evidence or remaining action |
+|---|---|---|
+| Repository baseline | `pass` | Current review branch is based on `eca5f82`; preserve the unrelated untracked `mortgage_case/platform/` files. Re-capture SHA and status before any source edit. |
+| Topology and structural contracts | `pass` | `reports/validation-summary.md` records 8 Parts, 28 chapters, 12 appendices, 45 registered diagrams, 48 references, and 107 citation occurrences with no validation errors. |
+| Canonical/generated synchronization | `pass` | The same report records byte-identical canonical and distributable Markdown, a valid DOCX package, and synchronized generated reports/manifests/checksums. |
+| Mortgage narrative and terminology | `pass with evidence` | `reports/technical-validation.md` records Harborlight Mortgage continuity and consistent `HumanActionAuthorizationRequest` / `HumanActionAuthorizationDecision` vocabulary. Recheck any future source edits against this contract. |
+| Example and implementation reconciliation | `pass with evidence` | The technical validation record reports 26 examples and 123 tests passed. The next implementation pass must keep C04–C28 labelled as target work unless executable evidence is added. |
+| References and claim scope | `pass` | `reports/citation-audit.md` records 48 registry entries, 107 occurrences, and no unknown or uncited IDs. Living sources and caveats remain release-time re-verification obligations. |
+| XeLaTeX and source visual inspection | `pass with caveat` | Genuine XeLaTeX completed at 287 pages; source validation and representative XeLaTeX pages passed. Dense-table and long-label overfull warnings remain typography follow-up items. |
+| DOCX pagination QA | `defer` | `make qa-pdf` is not complete because LibreOffice/`soffice` is absent. Do not promote this to `pass` from DOCX package validity or XeLaTeX inspection. |
+| Matrix finding records | `in progress` | The matrix above defines review intent but does not yet contain one evidence-bounded `pass`, `fix`, or `defer` record for every row. Populate the record format below during the next Part-by-Part pass. |
+| Review delivery | `pending` | Commit this plan update on its dedicated branch, open a PR, request available reviewers, and leave it open. Do not merge it or claim terminal CI until observed. |
+
+### Finding record contract
+
+Every matrix row must produce one compact record, even when the result is
+`pass`. Keep records close to the source evidence so a later editor can tell
+whether a statement was inspected, tested, rendered, or merely planned.
+
+```text
+ID: FB-<unit>-<number>
+Status: pass | fix | defer
+Severity: blocker | major | moderate | editorial | none
+Scope: <chapter, appendix, or cross-book contract>
+Finding: <one reader-visible or implementation-visible statement>
+Evidence: <source/report/test/registry path and section or symbol>
+Decision: <preserve | qualify | relocate | edit | add test | defer>
+Regression check: <exact command, test, structural check, or rendered inspection>
+Owner/exit condition: <person or concrete condition; required for defer>
+```
+
+Do not use `pass` to mean “no issue found in a quick search.” Use it only when
+the stated evidence covers the row's learning objective and mortgage-continuity
+check. Use `defer` only with an owner or an observable exit condition. A source
+edit changes the status of every affected record to `needs-rerun` until its
+regression check is repeated.
+
+### Next review slices
+
+Continue in these slices, committing only a coherent source or documentation
+change per PR. A slice may be closed without a manuscript edit when its finding
+records and checks show that the current text is adequate.
+
+1. **Front matter and Part I:** reconcile the authored table of contents,
+   Harborlight/C01–C03 progression, framework/platform boundary, glossary
+   first use, and the runtime-boundary visual. Re-run structure, examples, and
+   LaTeX-source checks after any edit.
+2. **Parts II–III:** verify knowledge provenance, context/state ownership,
+   provider-neutral contracts, capability resolution, and the C04–C09 roadmap.
+   Compare prose claims with `config/examples.json`, mortgage contracts, and
+   behavioral tests; do not infer implementation from a chapter's aspiration.
+3. **Parts IV–V:** trace budgets, retry ownership, handoffs, joins, external
+   gateways, and unknown-effect semantics through the durable mortgage case.
+   Check that every pattern/anti-pattern has a failure mechanism, metric, and
+   bounded example.
+4. **Parts VI–VII:** audit identity, delegation, tool effects, privacy,
+   sandboxing, MLflow diagnostics, evaluation cohorts, and release gates. Keep
+   applicant/document data out of traces and keep authorization outside model
+   output.
+5. **Part VIII and appendices:** reconcile governance, recovery, capacity,
+   glossary, runbooks, implementation commands, references, and closing
+   acceptance criteria. Confirm the roadmap distinguishes implemented C01–C03
+   evidence from target C04–C28 work.
+6. **Cross-format closeout:** regenerate all required artifacts from canonical
+   sources, run the complete local gate set, perform the second deterministic
+   rebuild, and record `qa-pdf` separately as `pass` or `defer` according to
+   actual `soffice` availability.
+
+### Required handoff record for each slice
+
+At the end of each slice, append or link a short result containing the slice
+IDs, changed files, unresolved findings, commands and outcomes, generated
+artifact status (Markdown, DOCX, LaTeX, and PDF separately), and the next exit
+condition. This keeps a later PR review from confusing a validated source
+change with a merely planned follow-up.
