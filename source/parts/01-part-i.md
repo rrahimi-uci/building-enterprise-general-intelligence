@@ -706,7 +706,7 @@ With tools bounded, Chapter 3 defines the runtime contract that keeps applicatio
 
 > **Evidence note.** Concrete adapter examples use OpenAI Agents SDK v0.22.2 and its documented agent, tool, guardrail, handoff, result, and tracing surfaces; the platform contracts remain framework-neutral. [R29][R30]
 
-> This chapter uses the OpenAI Agents SDK as a concrete adapter. Enterprise applications should compile platform-owned contracts into this or another framework through conformance-tested adapters; Chapters 4–7 define the portable architecture.
+> This chapter uses the OpenAI Agents SDK as a concrete adapter. Enterprise applications should compile platform-owned contracts into this or another framework through conformance-tested adapters; Chapters 4–7 place that boundary in the wider architecture and delivery platform.
 
 |  |
 | --- |
@@ -718,135 +718,379 @@ With tools bounded, Chapter 3 defines the runtime contract that keeps applicatio
 
 ## What this chapter delivers
 
-Use OpenAI Agents SDK 0.22.2 as a bounded, replaceable runtime adapter rather than the enterprise control plane.
+Use OpenAI Agents SDK 0.22.2 as a bounded, replaceable runtime adapter rather than the enterprise control plane. By the end of the chapter, the reader should be able to identify which facts belong to the local reasoning loop, which facts must survive outside it, and how an enterprise request crosses the boundary safely.
 
-## Solution blueprint
+## Start with a concrete scenario
 
+Consider Northstar supplier `SUP-8421`, Acme Industrial GmbH. The supplier-onboarding workflow receives an application, collects legal and beneficial-ownership evidence, screens sanctions, requests missing documents, obtains any required approval, creates the supplier record, and accepts the run only when its obligations are discharged.
 
-Figure 3. Agent Runtime and OpenAI Agents SDK.
+The durable workflow owns the business sequence:
 
-| **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
-| --- | --- | --- | --- | --- |
-| Durable workflow; SDK only owns one bounded step | platform contract to SDK adapter | worker pool · model route · tool class | one activity attempt | AgentRuntime · AgentStepRequest · RunState |
+1. Receive the supplier application.
+2. Collect and classify the submitted evidence.
+3. Retrieve authorized supplier and policy projections.
+4. Run a bounded evidence-review activity.
+5. Request additional evidence or continue to screening and approval.
+6. Commit any protected supplier change through the Tool Gateway.
+7. Verify the effect and evaluate the run’s acceptance criteria.
 
-## Framework baseline and placement
+Most of those facts are not reasoning problems. Before an agent runs, the platform already knows the supplier identifier, tenant, initiating subject, workflow node, applicable policy revision, evidence permissions, previously committed effects, approval status, deadlines, and the exact conditions for acceptance.
 
-This edition pins openai-agents==0.22.2 and openai>=2.25.0 as an implementation baseline. The SDK provides useful application-level primitives: Agent, Runner, function tools, agents-as-tools, handoffs, guardrails, structured output, sessions, tracing, MCP integration, deferred tool loading, ToolSearchTool, tool namespaces, human interruption, serializable RunState, and sandbox-oriented agent surfaces.
+The agent can help with a narrower task: examine the authorized evidence for `SUP-8421` and return a structured assessment of whether it is sufficient, insufficient, or requires additional evidence, together with the evidence references supporting that assessment. The agent interprets evidence; it does not become the workflow, grant access, or declare the supplier officially created.
 
-Northstar uses those primitives for **one bounded agent activity**. A durable workflow calls a platform-owned AgentRuntime; the OpenAI adapter builds the eligible agent and tool set, invokes Runner, and translates the result back into provider-neutral contracts. This makes the SDK valuable without making it the owner of long-lived business truth.
+This gives Northstar a durable shape:
 
-| **SDK concern** | **Northstar placement** |
+| Boundary | Owns | Does not own |
+| --- | --- | --- |
+| Durable workflow | Run state, node transitions, waits, deadlines, retries, cancellation, and acceptance | The model’s local reasoning strategy |
+| AgentRuntime | One bounded reasoning activity, adapter selection, limits, result mapping, and trace linkage | Canonical business state or authority |
+| Agent framework | Agent loop, model interaction, eligible tool invocation, local handoffs, and framework-level hooks | Enterprise identity, durable approvals, business transactions, or effect truth |
+| Tool Gateway and domain services | Exact resource authorization, credentials, validation, effects, receipts, and reconciliation | Which interpretation the model should prefer |
+
+The principle is short enough to remember: **let the framework run the agent; let the platform run the business.**
+
+## What the agent actually does
+
+For the bounded activity, Northstar asks the agent to evaluate authorized evidence for `SUP-8421` and return one of three dispositions: sufficient, insufficient, or additional evidence required. The agent may need to retrieve the supplier projection, inspect document metadata, retrieve extracted fields, call a deterministic risk or completeness calculator, compare results with the supplied policy evidence, and assemble a structured recommendation.
+
+That is exactly the kind of local execution an agent framework is designed to support. The framework can provide an `Agent`, `Runner`, function tools, structured output, local handoffs, guardrails, tracing, sessions, and interruption surfaces. [R29] Northstar should use those capabilities rather than rebuilding the loop.
+
+But the framework must not answer questions that belong to the enterprise platform:
+
+- Which supplier is this run allowed to inspect?
+- May this subject retrieve this document for this purpose?
+- Which policy revision applies at this workflow node?
+- Has the required approval been granted for this exact proposal?
+- Did the supplier write actually commit?
+- Is the run complete, or does it still have an unmet obligation?
+
+Those are questions about truth, authority, and durable consequences. They remain outside the model-facing loop.
+
+## Runtime responsibility versus enterprise responsibility
+
+The easiest way to reason about the boundary is to classify responsibilities by the question they answer. The framework is concerned with how the agent reasons. The platform is concerned with what is true, what is allowed, and what must survive.
+
+| Concern | Framework may own | Platform must own |
+| --- | --- | --- |
+| Agent definition | Local instructions and framework-native agent construction | Versioned release identity and the public agent contract |
+| Reasoning loop | Turn sequencing, model calls, observation, and local stopping | External budgets, deadlines, cancellation, and terminal workflow state |
+| Model interaction | Provider request/response mechanics inside the adapter | Model route policy, redaction, usage accounting, and version pinning |
+| Tool selection | Choosing among tools made eligible for this step | Tool eligibility, exact resource authorization, and gateway enforcement |
+| Local handoff | Invoking a specialist while the bounded activity retains control | Whether delegation creates a new owner, grant, budget, or durable task |
+| Structured output | Producing a candidate result in the requested shape | Schema ownership, semantic validation, evidence requirements, and disposition mapping |
+| Guardrails | Early input, tool, and output checks | Policy decisions, fail-closed enforcement, and domain invariants |
+| Runtime tracing | Model and tool spans, events, and framework metadata | Correlation with run, task, approval, effect, artifact, and policy records |
+| Session or RunState | Optional local continuity or resumability | Canonical workflow history, checkpoints, and recovery state |
+| Identity | Passing the platform-issued execution context into tools | Authentication, delegation, audience, tenant, purpose, and actor identity |
+| Authorization | No authority beyond the capabilities supplied to the step | Policy evaluation for the subject, action, resource, context, and time |
+| Credentials | No reusable production credential | Short-lived, down-scoped, audience-bound last-hop credentials |
+| Approval | Interrupting or resuming local execution | Durable, expiring approval bound to the exact proposal and evidence |
+| Business effect | Proposing arguments for a tool call | Commit, idempotency, receipt, reconciliation, and compensation |
+| Retry | Framework-local transport behavior where explicitly bounded | One retry owner per failure class and reconciliation of unknown effects |
+| Audit | Runtime detail useful as evidence | Immutable enterprise evidence package and retention policy |
+
+The right-hand column is a replaceability test: **would the organization still need this record if it replaced the framework tomorrow?** If yes, the record must not be owned only by the framework.
+
+## Why the SDK sits behind AgentRuntime
+
+A prototype can call `Runner.run(agent, input)` directly. That is a reasonable way to learn the SDK. It becomes a poor enterprise boundary when every application does it independently.
+
+If the mortgage service, compliance service, customer service, fraud service, and document service each integrate the SDK directly, they will gradually develop incompatible assumptions about agents, tools, sessions, retries, tracing, approvals, model configuration, and error handling. The SDK has become part of every application’s architecture, while no shared component owns the cross-cutting contracts.
+
+Northstar inserts a stable platform contract:
+
+**Application or workflow → AgentRuntime → framework adapter → agent framework → model and governed capabilities**
+
+The exact method name is less important than ownership. `AgentStepRequest` and `AgentStepResult` are Northstar contracts, not OpenAI SDK objects. The adapter translates them into framework-native objects and translates the outcome back. Applications above the boundary depend on the platform contract, so replacing a framework is an adapter migration rather than a workflow, approval, or business-data migration.
+
+| Framework direct integration | AgentRuntime boundary |
 | --- | --- |
-| Agent instructions and structured output | SDK adapter, pinned in release manifest |
-| Turn loop and local handoff | SDK worker, bounded by external limits |
-| Sessions / RunState | Optional resumable runtime state; never canonical workflow state |
-| Function tools and MCP | Narrow façades that call the Tool Gateway |
-| Guardrails | Defense in depth; policy still enforced outside the model |
-| Tracing | Exported and correlated with workflow/effect/audit IDs |
-| Approval interruption | Mapped to durable ApprovalRequest and workflow wait |
-| Credentials and business writes | Tool Gateway and domain services only |
-
-### Upgrade discipline
-
-An SDK upgrade is a behavior change even when public types remain compatible. Northstar runs adapter contract tests, recorded trajectory replay, tool-schema tests, approval interruption tests, model-route evaluations, load tests, and canary releases. Active workflows retain the SDK and agent-definition versions in their RunManifest.
-
-## Architectural role
-
-The OpenAI Agents SDK is best treated as a **bounded agent harness**, not the platform kernel. It contributes model-facing ergonomics—agent definitions, tools, structured outputs, local handoffs, run context, streaming, guardrails, and tracing hooks. Enterprise durability, delegated authorization, business transactions, approvals, effect reconciliation, tenant isolation, and audit remain platform responsibilities.
-
-## Why not just use the SDK directly?
-
-This is the right question to ask, and the answer is not "frameworks are bad."
-The OpenAI Agents SDK is genuinely good at what it does, and reimplementing an
-agent loop is wasted effort. The argument is narrower: the SDK should own one
-bounded step, and nothing that must outlive that step.
-
-The distinction is about lifetime and authority, not quality.
-
-| Concern | Lifetime | Where it belongs | Why |
-| --- | --- | --- | --- |
-| Agent definition, tools, turn loop | One step | **SDK** | This is what it is for, and it does it well |
-| Structured output, local handoff | One step | **SDK** | Same — bounded, in-process, replaceable |
-| Run state and history | Days | **Platform** | Must survive process restarts and SDK upgrades |
-| Identity and authorization | Per call | **Platform** | The SDK has no concept of your tenants or grants |
-| Credentials | Per call | **Platform** | An agent process should never hold a durable secret |
-| Effects and receipts | Permanent | **Platform** | These are business records, not runtime artifacts |
-| Audit evidence | Years | **Platform** | Must outlive every version of every framework |
-
-Read the right-hand column as a single test: **would you still need this record
-if you replaced the framework tomorrow?** If yes, the framework must not own it.
-
-That test also explains the upgrade discipline. An SDK minor release can change
-retry behaviour, tool-call formatting, or how an interruption surfaces — none of
-which breaks a type signature, and all of which change what your system does. If
-the SDK owned your run state, that upgrade would be a data migration. Because it
-owns only one step, it is a behaviour change you can canary and roll back, which
-is the whole point of putting it behind `AgentRuntime`.
+| Each application owns vendor-native types | Applications depend on platform-owned contracts |
+| Each application interprets retries, tracing, and interruptions | The adapter and platform define conformance behavior |
+| SDK state can leak into workflow history | Workflow state remains independent and durable |
+| Vendor replacement touches many services | Vendor replacement is isolated to an adapter and its tests |
 
 |  |
 | --- |
-| **ARCHITECTURE GUIDANCE**  Adopting a framework is a reversible decision only for as long as none of your durable records are expressed in its types. The moment workflow state, approvals, or audit evidence use SDK objects, the framework has stopped being an adapter and become your data model. |
+| **ARCHITECTURE GUIDANCE**  Framework abstraction is primarily about control of responsibility, not only vendor lock-in. A framework remains replaceable only while workflow state, approvals, effects, artifacts, and audit evidence are expressed in platform-owned forms. |
 
-## Stable runtime contract
+## The request is bounded before the model sees it
 
-Keep public Run APIs and workflow history independent of SDK types. A platform-owned boundary can be expressed as:
+Return to `SUP-8421`. At the `EVIDENCE_REVIEW` node, the durable workflow constructs an `AgentStepRequest`. The request should pin at least:
 
-TEXT · implementation excerpt
+| Field group | Minimum contents |
+| --- | --- |
+| Identity | `run_id`, `workflow_id`, tenant, subject, actor, purpose, node, and state version |
+| Behavior | Agent definition and version, model route and version, policy revision, and adapter version |
+| Context | Authorized `ContextManifest`, source revisions, trust labels, redaction decisions, and evidence references |
+| Capabilities | Eligible tool versions, capability ceiling, allowed delegation mode, and approval requirement |
+| Bounds | Maximum turns, tool calls, parallelism, tokens, spend, wall-clock deadline, and cancellation lineage |
+| Output | Expected schema and allowed dispositions, artifact requirements, and uncertainty representation |
+| Trace | Run and task correlation, sensitivity policy, and trace metadata |
 
-```text
-AgentRuntime.execute(AgentStepRequest) -> AgentStepResult
-```
+The platform has already decided the problem’s identity, context, capabilities, limits, and expected result type before the SDK builds an agent. The model receives a bounded problem, not an open enterprise environment.
 
-AgentStepRequest pins run and node identity, state version, agent and model route, authorized context manifest, eligible tools, capability ceiling, output schema, resource limits, deadline, and trace context. AgentStepResult returns a typed disposition, immutable artifact references, proposed actions, a concise evidence-grounded summary, usage, trace references, and a structured error.
+The result crosses the boundary in the opposite direction. `AgentStepResult` should contain a typed disposition, concise evidence-grounded summary, immutable artifact references, proposed actions where applicable, usage, trace references, and a structured error or interruption state. It should not be a vendor-native `RunResult` that callers must interpret themselves.
 
-## One bounded step
+The conceptual interface is therefore `AgentRuntime.execute(AgentStepRequest) → AgentStepResult`. The workflow—not the SDK—uses the result to choose whether to continue, request evidence, request approval, retry, compensate, or complete.
 
-1. The durable workflow schedules a reasoning activity with pinned versions and a deadline.
-2. Context is materialized from an authorized ContextManifest.
-3. The adapter creates SDK agents and only the tool façades eligible for this node.
-4. External controls enforce turns, time, tokens, cost, tool calls, parallelism, and delegation depth.
-5. The SDK executes the local model/tool loop.
-6. The adapter validates the structured result and records usage and trace linkage.
-7. Workflow code—not the SDK—chooses the next durable transition.
+## The adapter builds one bounded runtime
 
-## Bounded Python adapter
+The OpenAI adapter translates Northstar concepts into SDK concepts: an agent definition becomes an SDK `Agent`; eligible capabilities become narrowly scoped function tools; the output contract becomes the SDK’s structured-output configuration; execution limits become runner and run configuration; and trace context becomes framework metadata. [R29][R30]
+
+The adapter then invokes the local reasoning loop and validates the returned result against the platform-owned disposition contract. The adapter does not decide the next workflow transition. It records usage and trace linkage, returns the mapped result, and leaves durable state changes to the workflow and domain services.
+
+The repository’s bounded adapter example makes this boundary executable. It uses the SDK only inside the step, routes supplier-policy retrieval through a Tool Gateway façade, disables sensitive trace payloads, injects a test model, and returns the platform’s own result shape:
 
 [[EXAMPLE:step-execution#core]]
 
-The model and SDK never receive a reusable production credential. The tool façade submits identifiers and typed arguments to the gateway, which reauthorizes the exact resource, mints a short-lived last-hop credential, enforces effects and quotas, and sanitizes the result.
+The example is intentionally smaller than a production runtime. Its job is to make the ownership boundary testable: the caller supplies a platform context, the adapter runs one step, and the caller receives a platform-owned result rather than an SDK session object.
 
-## Handoffs and specialists
+## A tool is not the enterprise API
 
-Use Agent.as\_tool() when a manager must retain control of the final result. Use an SDK handoff when conversational control genuinely transfers inside one bounded activity. Use a durable TaskEnvelope and child workflow when the work needs independent ownership, retries, waits, deadlines, scaling, cancellation, or a cross-service trust boundary. A conversational handoff must never silently transfer budget, authority, task ownership, or cancellation responsibility.
+Suppose the agent requests the supplier-read capability `supplier.read` for `SUP-8421`. The SDK tool should be a narrow façade. It should not hold a broad database credential or construct an unrestricted connection to the system of record.
 
-## Guardrails, state, and retries
+The unsafe path is **agent process → reusable credential → enterprise database**. If a prompt injection or model error redirects the call, the process already has the authority needed to perform the wrong operation.
 
-SDK guardrails are valuable for early input, tool, and output checks. They do not replace canonical schema validation, a policy decision point, Tool Gateway authorization, or domain transaction rules. SDK sessions can assist local continuity, but run state, plan revisions, budgets, approvals, effects, policy decisions, and compliance evidence remain authoritative elsewhere.
+The governed path is **agent → SDK façade → Tool Gateway → short-lived credential → domain service → sanitized result → agent**. At the gateway, deterministic controls answer:
 
-Assign one retry owner per failure class: the workflow owns activity retries; the Model Gateway may perform short transport retries inside one recorded attempt; the Tool Gateway follows the tool manifest and effect protocol; an unknown mutation is reconciled before any retry.
+- Who is requesting, through which run and workload?
+- Which tenant, purpose, and resource are in scope?
+- Is this exact tool version eligible for this node?
+- Does the caller hold the required action on this resource now?
+- Is the quota and downstream budget available?
+- What trust and data-handling rules apply to the returned fields?
 
-|  |
-| --- |
-| **ARCHITECTURE GUIDANCE**  Let the framework own the agent loop, never the workflow truth. Run state, approvals, and effect records belong in your durable store, keyed by your identifiers. The SDK's session object is a convenience for one process; if losing it would lose the run, the boundary is in the wrong place. |
+The model chooses among eligible capabilities. The gateway decides whether the requested operation is permitted. Tool availability is not authorization.
 
-## Adoption test
+## Reauthorize the exact resource
 
-Adopt the SDK only after proving that tools cannot bypass gateways, every invocation is externally bounded, handoffs map to durable ownership correctly, sensitive tracing is disabled or isolated, protected commits require deterministic validation, and another runtime could replace the adapter without migrating public APIs, workflow history, effects, artifacts, approvals, or audit.
+Assume the run is authorized to inspect `SUP-8421`, but a hallucination or injected instruction causes the agent to request `supplier.read(SUP-9999)`. The tool exists, the arguments are syntactically valid, and the call may even match the tool schema. None of those facts authorizes the operation.
 
-|  |
-| --- |
-| **DEVELOPER GUIDELINE**  Depend on the adapter you wrote, not on the SDK's types, everywhere above the runtime boundary. One module should import the vendor package. That module is also the only thing you rewrite when a 0.x SDK changes its API, which it will. |
+The Tool Gateway must compare the requested resource with the capability envelope and current policy decision. It denies `SUP-9999` because the run’s authorized resource is `SUP-8421`. This is why authorization must occur at the effect boundary, not only when the agent or tool list is created.
+
+The same rule applies to data reads. A document can be relevant to the model’s reasoning and still be outside the subject’s purpose, tenant, classification, region, or retention scope. The gateway and context services enforce those constraints; the model does not infer them from prose.
+
+## The same rule applies to writes
+
+Suppose the agent concludes that Northstar needs a missing beneficial-ownership document and proposes `request_supplier_evidence(SUP-8421, beneficial_ownership)`. That tool call means only: **the model proposes this action**. It does not mean that the enterprise has authorized or committed it.
+
+The protected path is:
+
+1. The model emits a typed proposal.
+2. Schema and semantic validation check the proposal.
+3. Policy evaluates subject, action, resource, purpose, risk, and current state.
+4. If required, an authorized reviewer approves the exact proposal.
+5. The Tool Gateway revalidates the proposal, approval, authority, and resource version.
+6. A domain service commits through its normal business path.
+7. The effect ledger records the logical key and outcome.
+8. The downstream receipt proves whether the external effect occurred.
+
+Only the receipt establishes that the business effect happened. The model’s intention, final sentence, or successful SDK run is not the business record. Chapter 22 develops the effect protocol; Chapter 21 develops delegated authorization; Chapter 14 develops proposal-bound human approval.
+
+## Framework state versus business state
+
+This boundary becomes clearest when the agent has completed several reasoning turns. Framework state might contain the current input, model responses, tool calls, tool results, a handoff, and a pending interruption. That is useful for local continuity.
+
+Northstar business state for `SUP-8421` is different:
+
+| Platform-owned fact | Example |
+| --- | --- |
+| Workflow stage | `EVIDENCE_REVIEW` |
+| Evidence status | Registration extract verified; beneficial-ownership document missing |
+| Policy | `supplier-policy@2026.4` |
+| Approval | Pending for the exact evidence-request proposal |
+| Committed effects | `SUPPLIER-DOC-8821` created and recorded |
+| Resource version | Supplier record version 7 |
+| Obligations | Fresh sanctions result, required evidence, protected effects verified |
+
+Framework state can help resume an agent. Platform state must recover the business process. A session object is a convenience for one runtime; a workflow record is an authoritative business fact.
+
+## The restart test
+
+Imagine that all agent workers crash at 2:00 a.m. Then imagine that Northstar replaces the SDK and deploys a new adapter. The organization must still know that `SUP-8421` exists, evidence review is incomplete, the document request was already sent, approval `AP-718` is pending, policy `supplier-policy@2026.4` applied, and effect receipt `RCPT-88127` records the committed action.
+
+None of those facts should require reconstructing an SDK session object. If losing framework state means losing the business process, the framework owns too much. This test should be applied to every proposed framework feature, serialization format, and persistence shortcut.
+
+## Human approval: interruption versus record
+
+An SDK may pause execution when a protected tool call needs a human response. That interruption is useful runtime control, but it is not by itself an enterprise approval.
+
+The durable platform should create an `ApprovalRequest` containing the approval ID, run and workflow IDs, exact action and resource, proposal hash, evidence references, expected resource version, requested actor, risk class, expiry, and allowed responses. The workflow waits. An eligible reviewer grants or rejects the proposal. Before resuming, the platform verifies that the grant is unexpired, the actor and purpose still match, the policy still permits the action, the resource version is still current, and the proposal hash is unchanged.
+
+The distinction is:
+
+| Event | Meaning |
+| --- | --- |
+| SDK interruption | Local execution cannot continue until someone responds |
+| Platform approval | An identified actor authorized this exact proposed action under recorded conditions |
+| Tool Gateway reauthorization | Current policy and resource state still permit the action immediately before commit |
+| Effect receipt | The downstream business system confirms what actually happened |
+
+The SDK supplies the interruption mechanism. The platform supplies the authorization semantics and durable evidence.
+
+## Bind approval to the exact proposal
+
+If a reviewer approved a request for a beneficial-ownership document for `SUP-8421`, the agent must not reuse that approval to request a tax document, target `SUP-9999`, change the destination, or silently alter the arguments.
+
+Northstar canonicalizes the proposal, computes a proposal hash, and stores that hash in the approval record. The pre-commit check requires the current proposal hash to equal the approved proposal hash. It also rechecks expiry and expected resource version. This prevents approval from becoming a reusable Boolean detached from the action that was reviewed.
+
+## Three meanings of handoff
+
+Frameworks make it easy for one agent to involve another, but “handoff” hides three different ownership models.
+
+| Case | What happens | Correct abstraction |
+| --- | --- | --- |
+| Specialist as a tool | The evidence agent asks a sanctions specialist for analysis and retains responsibility for the final disposition | Agent-as-tool or equivalent local delegation |
+| Conversational transfer | A triage agent transfers the bounded conversation to a supplier specialist; control changes locally but the same activity remains accountable | Framework handoff, with the same external budget and cancellation boundary |
+| Durable delegation | A fraud investigation needs independent ownership, waits, retries, deadlines, human review, or a cross-service trust boundary | Durable `TaskEnvelope` and child workflow |
+
+Use framework delegation for reasoning structure. Use platform delegation for operational ownership. A local handoff must not silently transfer authority, budget, cancellation responsibility, or the obligation to produce a durable result.
+
+## Guardrails and authorization solve different problems
+
+Suppose a supplier document contains an instruction to ignore prior instructions and export unrelated records. An SDK input or output guardrail may detect suspicious content and stop the local loop. That is valuable defense in depth, but enterprise security cannot depend on the model or guardrail recognizing every attack.
+
+The protection stack should still enforce the request if compromised reasoning reaches the gateway:
+
+1. Input and content controls classify untrusted instructions.
+2. Agent guardrails check local behavior.
+3. Tool eligibility limits the capabilities exposed to the step.
+4. Policy enforcement evaluates the requested action.
+5. Resource authorization checks the exact tenant and record.
+6. Domain validation checks business invariants.
+7. Effect controls enforce approval, idempotency, receipts, and reconciliation.
+
+No single layer carries the entire security burden. A guardrail may stop a bad proposal early; only the authoritative boundary can prevent an unauthorized effect when earlier reasoning controls fail.
+
+## One retry owner
+
+Retries are another place where framework and platform behavior can collide. Suppose the agent requests an evidence document, the domain service commits it, and the network fails before the response reaches the caller. The caller sees a timeout, but Northstar may already contain the document request.
+
+The safe policy is:
+
+| Failure class | Owner and response |
+| --- | --- |
+| Safe read or pure computation | The workflow or model gateway may retry within its recorded attempt and budget |
+| Known idempotent mutation | One owner retries with the same logical effect key |
+| Unknown mutation outcome | The effect service reconciles first; no component blindly retries |
+| Non-idempotent protected mutation | Require an explicit compensation or human-controlled recovery path |
+
+For the evidence request, the logical key could be `RUN-98217:REQUEST_EVIDENCE:SUP-8421`. If the same request arrives twice, the effect layer returns the original receipt instead of creating a second business action. Chapters 15 and 22 develop durable execution and effect semantics in detail.
+
+## One bounded agent step in code
+
+The implementation is easier to understand once the adapter’s responsibility is explicit. The existing `step-execution` listing builds the SDK agent, attaches the eligible façade, injects bounded run configuration, disables sensitive trace payloads, validates the structured result, and maps it into a platform-owned result.
+
+It intentionally does not choose the next workflow transition. The returned disposition goes back to the durable workflow, which may continue, request evidence, request approval, retry, compensate, or complete. Keeping that decision outside the adapter prevents a vendor-native run result from becoming a hidden state machine.
+
+## The complete execution path
+
+For `SUP-8421`, the end-to-end path is now concrete:
+
+1. The durable workflow loads the current run and `EVIDENCE_REVIEW` node.
+2. The platform authorizes context, resolves eligible tools, pins versions, and sets bounds.
+3. AgentRuntime passes the request to the framework adapter.
+4. The SDK runs the local loop and calls only narrow façades.
+5. The Tool Gateway authenticates the caller, reauthorizes the exact resource, applies policy and quota, and sanitizes results.
+6. If a protected mutation is proposed, approval and resource version are checked again.
+7. A domain service commits the effect and the effect ledger records its state and receipt.
+8. The adapter validates and maps the structured outcome to `AgentStepResult`.
+9. The workflow persists the next state and evaluates acceptance criteria.
+
+At every stage the authority narrows or is re-established. The model can reason over what it was allowed to receive, but it cannot turn a plausible response into a durable business fact.
+
+## Framework upgrades are behavioral changes
+
+An SDK upgrade may leave public types compiling while changing tool selection, retry behavior, handoff behavior, interruption behavior, serialization, tracing, or model interaction. Northstar treats an SDK upgrade as a runtime behavior change.
+
+The release path is adapter contract tests, recorded-trace replay, tool-schema tests, approval/resume tests, model-route evaluations, load tests, and a risk-appropriate canary. Active workflows retain the versions needed to explain their behavior:
+
+| RunManifest field | Example |
+| --- | --- |
+| `run_id` | `RUN-98217` |
+| `agent` | `supplier-evidence-agent@3.2` |
+| `sdk` | `openai-agents@0.22.2` |
+| `model_route` | `reasoning-standard@4` |
+| `policy` | `supplier-policy@2026.4` |
+| `context_manifest` | `CTX-7281` |
+
+This makes a production result reproducible and explainable even after the framework, model, prompt, or adapter has changed. Chapter 27 covers deployment and recovery gates; Chapter 24 covers the trace evidence used in comparison.
+
+## The replaceability test
+
+Imagine that Northstar replaces the OpenAI Agents SDK with another framework. A healthy migration changes the AgentRuntime adapter, agent construction, tool binding, tracing integration, and framework-specific tests.
+
+An unhealthy migration also requires rewriting workflow history, approval records, business transactions, public APIs, audit history, identity, or authorization. Those records have been expressed in framework-native assumptions and the framework has penetrated too deeply into the platform.
+
+The rule is precise: **a framework is replaceable only when replacing it does not require migrating enterprise truth.**
+
+## Responsibility map
+
+The division of responsibility can now be summarized as a set of non-negotiable ownership decisions:
+
+| Framework or runtime side | Platform side |
+| --- | --- |
+| Construct the bounded agent | Define the versioned agent contract |
+| Run the local reasoning loop | Own workflow state and terminal decisions |
+| Select among eligible tools | Publish eligibility and authorize exact operations |
+| Invoke local specialists | Create durable child tasks when ownership must change |
+| Produce structured output | Validate semantics, evidence, and allowed dispositions |
+| Emit runtime spans | Correlate traces with business identifiers and audit evidence |
+| Pause local execution | Record durable approval requests and grants |
+| Maintain optional session continuity | Persist canonical checkpoints, effects, and artifacts |
+| Surface framework errors | Classify failure, choose retry owner, and reconcile effects |
+
+Where both layers participate, the platform gives the runtime an explicit contract and the runtime returns evidence about what it did. Shared participation is not shared authority: the platform remains the owner of enterprise meaning.
+
+## Production checklist
+
+Before allowing a framework adapter into production, verify:
+
+- AgentRuntime is the only public dependency above the adapter boundary.
+- The platform pins agent, model, policy, context, adapter, and tool versions in a run manifest.
+- Each step has explicit limits for turns, time, tokens, cost, tools, parallelism, delegation, and sensitive tracing.
+- Framework tools are narrow façades; no agent process holds a reusable production credential.
+- The Tool Gateway reauthorizes the exact subject, action, tenant, purpose, resource, and version immediately before a protected operation.
+- Human approvals are durable, expiring, evidence-linked, proposal-bound, and revalidated before commit.
+- Mutations have stable logical effect keys, receipts, and an unknown-outcome reconciliation path.
+- Framework state can be discarded without losing workflow truth, approvals, effects, artifacts, or audit evidence.
+- Handoffs have explicit ownership, budget, cancellation, deadline, and adoption semantics.
+- Adapter conformance tests cover structured output, tools, tracing, interruptions, errors, usage, cancellation, and upgrades.
+
+## Debugging playbook
+
+When execution behaves unexpectedly, debug the boundary in order:
+
+1. **What did the workflow request?** Inspect the run, node, agent version, context manifest, eligible tools, limits, and output schema in `AgentStepRequest`.
+2. **What did the adapter give the SDK?** Compare the platform request with the generated agent, tool set, model configuration, tracing policy, and limits. A translation defect may expose a tool or omit a constraint.
+3. **What did the model actually do?** Inspect the trace for reasoning steps, tool selection, arguments, observations, handoffs, interruption, and structured output. Treat the trace as evidence of behavior, not proof of authorization or commit.
+4. **What did the gateway permit?** Compare the proposed operation with the policy decision, capability envelope, approval state, and exact resource reauthorization.
+5. **Did a business effect occur?** Find the effect record and downstream receipt. Never infer this from the model’s final message or SDK result.
+6. **Who retried?** Identify whether the workflow, Model Gateway, SDK, Tool Gateway, or domain service retried. Multiple uncoordinated retry owners are a common source of duplicate behavior.
+
+## What this chapter established
+
+The OpenAI Agents SDK gives Northstar a capable implementation for local agent execution. Northstar uses it deliberately and extensively, but within a defined boundary.
+
+The framework owns the mechanics: construct an agent, reason, select an eligible tool, observe, delegate locally, and return structured output. The enterprise platform surrounds that execution with identity, authorization, context, workflow, policy, budgets, approvals, effects, audit, and acceptance. AgentRuntime connects the two without allowing framework types to become enterprise truth.
+
+The durable test is simple. Northstar should be able to stop every agent worker, replace the SDK, deploy a new adapter, and still know what each workflow was doing, what it was authorized to access, which approvals were granted, which business actions actually occurred, which artifacts were produced, and why the system reached its current state.
+
+That is the difference between running an agent and operating an enterprise agentic system.
 
 ## Technical review questions
 
 | **Question** | **Strong answer** |
 | --- | --- |
-| Where should the OpenAI Agents SDK sit in an enterprise architecture? | Inside a bounded worker behind AgentRuntime, called by a durable workflow and connected to model and tool gateways through platform contracts. |
-| What should the SDK not own? | Authoritative workflow state, delegated authorization, credentials, business transactions, effect reconciliation, enterprise approvals, and audit evidence. |
-| When should you use an agent-as-tool, a handoff, or a durable child task? | Use an agent-as-tool when a manager retains control; a handoff when conversational control transfers; a durable task when work needs separate ownership, waits, retries, scaling, or recovery. |
-| How do you make SDK tools safe? | Supply a minimal set, use typed façades, reauthorize exact resources at the Tool Gateway, mint last-hop credentials, enforce idempotency, and sanitize results. |
-| How do you keep the SDK replaceable? | Store platform contracts, workflow history, artifacts, effects, approvals, and public APIs in provider-neutral forms; confine SDK types to the adapter. |
+| What is the framework responsible for? | Local agent construction, model interaction, bounded turns, eligible tool selection, local handoffs, structured output, and runtime hooks. |
+| What must remain platform-owned? | Workflow state, identity, authorization, credentials, policy, budgets, durable approvals, effects, receipts, artifacts, acceptance, and audit evidence. |
+| Why use AgentRuntime instead of calling the SDK from every application? | It keeps public contracts provider-neutral, concentrates vendor assumptions in an adapter, and makes behavior conformance-testable and replaceable. |
+| How are framework tools made safe? | Expose narrow façades, reauthorize the exact resource at the Tool Gateway, use short-lived credentials, sanitize results, and apply effect semantics to mutations. |
+| What is the difference between framework state and business state? | Framework state helps resume one reasoning loop; business state records the durable workflow, approvals, effects, artifacts, and obligations that must survive restarts and upgrades. |
+| When is a handoff actually a new task? | When work needs independent ownership, authority, budget, waits, retries, deadlines, cancellation, scaling, or a cross-service trust boundary; use a durable `TaskEnvelope` and child workflow. |
+| How should SDK upgrades be released? | As behavioral changes: run adapter and schema tests, replay traces, test approval/resume and cancellation, evaluate, load-test, canary, and retain versions in the `RunManifest`. |
 
 ## Transition to Chapter 4
 
-The runtime now has a stable boundary; Chapter 4 places it inside the complete enterprise reference architecture.
+The runtime boundary is now explicit: a framework runs one bounded reasoning step, while the platform owns durable truth, authority, effects, and accountability. Chapter 4 places that boundary inside the complete enterprise reference architecture.

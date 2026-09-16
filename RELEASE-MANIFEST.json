@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 338,
+  "file_count": 337,
   "files": [
     {
       "path": ".gitattributes",
@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 27852,
-      "sha256": "24b4b06146f09f5941eede9907c3376391337403573ddf81ca722f3c87428046"
+      "bytes": 28991,
+      "sha256": "4f924635bc6be6e6fd7971af81a923d9ef1bc9a8b9a2ded9ff81a8d87935d22d"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -791,8 +791,8 @@
     },
     {
       "path": "book/manuscript.md",
-      "bytes": 638257,
-      "sha256": "13a5a5992d84024847d6822d922c433c04eb9814aae0ca2e8a047b8b610a65dc"
+      "bytes": 660458,
+      "sha256": "3e8a49dfedaef0da85835e8365fd05d04f211ffeb0fe236687dbcf31747c18dc"
     },
     {
       "path": "config/book.json",
@@ -831,13 +831,13 @@
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v2.1.0.docx",
-      "bytes": 23783700,
-      "sha256": "411a303c210c6cd8987ab9bd3e45675f93ea1a91640b9871f0371ef0518e11ba"
+      "bytes": 23793622,
+      "sha256": "6f55b1e365b6b66f47a32634bf5d9de9ddbefa8b1e72baf0402a0f367229f653"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v2.1.0.md",
-      "bytes": 638257,
-      "sha256": "13a5a5992d84024847d6822d922c433c04eb9814aae0ca2e8a047b8b610a65dc"
+      "bytes": 660458,
+      "sha256": "3e8a49dfedaef0da85835e8365fd05d04f211ffeb0fe236687dbcf31747c18dc"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v2.1.0.tex",
@@ -1156,8 +1156,8 @@
     },
     {
       "path": "latex/content/book-content.tex",
-      "bytes": 767842,
-      "sha256": "80eaab6f434acb65af44b46a775fa778559ccc048a4aa137eee7bdb5523c4249"
+      "bytes": 794260,
+      "sha256": "3b80280cfb9568fbf73374a3f4c8c2597e306ab8aa8d11e0e30e4aa32b01d5dc"
     },
     {
       "path": "latex/fonts/LICENSE-SIL-OFL-1.1.txt",
@@ -1257,37 +1257,37 @@
     {
       "path": "qa/build-report.json",
       "bytes": 309,
-      "sha256": "8c455fd0650f4069919638b0e028d07475a8725930aa5a9a4cb43fb6bd37d83d"
+      "sha256": "7be49cabbd940b8c1ae5aeffc8ea24d77234e5ba61e6a6b6a9a0245c16dec808"
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 23783700,
-      "sha256": "411a303c210c6cd8987ab9bd3e45675f93ea1a91640b9871f0371ef0518e11ba"
+      "bytes": 23793622,
+      "sha256": "6f55b1e365b6b66f47a32634bf5d9de9ddbefa8b1e72baf0402a0f367229f653"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 23783700,
-      "sha256": "411a303c210c6cd8987ab9bd3e45675f93ea1a91640b9871f0371ef0518e11ba"
+      "bytes": 23793622,
+      "sha256": "6f55b1e365b6b66f47a32634bf5d9de9ddbefa8b1e72baf0402a0f367229f653"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "e24200328d42a35a7651c69bb5e0db713763b00925fe734fad8667c0e8e6642f"
+      "sha256": "de8524f4d4b0a0cac1166457cd0a9e9688c9ba757ce89db333e795d7a2f088d7"
     },
     {
       "path": "qa/latex-validation-report.json",
       "bytes": 11712,
-      "sha256": "3487fc5709819b1b81ef7f277378987b54ec216f962c6b31260f61ae690f1e15"
+      "sha256": "c5e604357485c85688abacedc4cdd8c74b5bef9de81a20e2c51ccf130b165f1e"
     },
     {
       "path": "qa/validation-report.json",
       "bytes": 875,
-      "sha256": "87714085eb1aa8a06f4b1f115011680a6fe2b7a74cd87419b0bbc17b3520c04c"
+      "sha256": "1dccef6047023429d13f7940575b92d9a6097a227d059bb48a1fbfa6636a8751"
     },
     {
       "path": "reports/assembly-report.json",
       "bytes": 1189,
-      "sha256": "ead58bae08a7c993114d5199974d40ede900df54fe6cc99b7d2fc803eab1e75e"
+      "sha256": "99c6a0ee25d410d0af2ff84ce46b9be9dcd944f15e770d5a1d0fe2474aacd6e8"
     },
     {
       "path": "reports/chapter-insert-map.json",
@@ -1297,12 +1297,12 @@
     {
       "path": "reports/citation-audit.md",
       "bytes": 7378,
-      "sha256": "2ac6e2a4731c412c4b6504057b2448fe9c6b9e25a8cd58a7a068fddbdabbe164"
+      "sha256": "e2659aa4edbd3933480da536d81419e52605e3586b400c1618ba269a93188f23"
     },
     {
       "path": "reports/citation-verification.json",
       "bytes": 13001,
-      "sha256": "afdc50c911eaf0c53ee3549510798b820bc85360c7ba73632bd125cad901631d"
+      "sha256": "9a73830b7b6eae25a0e0d6adc509d3316bdb993ae389d57f3600fc553e393bec"
     },
     {
       "path": "reports/diagram-render-report.json",
@@ -1332,12 +1332,12 @@
     {
       "path": "reports/latex-build-report.json",
       "bytes": 2403,
-      "sha256": "275c25a7ad12164be573664434ce667a302ed3f810dd3573ecb02fd108e43190"
+      "sha256": "26e43b6c6f015ec9a710193bc63a81435a896053619c79ef74844f7eec8bcb16"
     },
     {
       "path": "reports/latex-validation.md",
       "bytes": 723,
-      "sha256": "bd493139148114c9ea3335c496ba9cf3666ae09d6e08314a27bfd9f2a8518545"
+      "sha256": "88934939cbc50d78315b55bf6f2da465eb3d04b1f48e925310c487e02a3caeb9"
     },
     {
       "path": "reports/part-visuals-report.json",
@@ -1362,7 +1362,7 @@
     {
       "path": "reports/validation-summary.md",
       "bytes": 864,
-      "sha256": "3d21c6e5225166cbb1d907be276fab72445b1d8653c21f5ed824175e4b584abe"
+      "sha256": "9eac6b2eafbf7dc3c6d0f21ffdf8c486c03c922e711826cbd2ec578ef4cbcc7c"
     },
     {
       "path": "requirements.txt",
@@ -1375,14 +1375,9 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
-      "path": "reviews-comments/Enterprise-General-Intelligence-review-2.docx",
-      "bytes": 484969,
-      "sha256": "18d0d21d3d1238bc28112d9da3f3455c9ec71352c77b9bf1120f23832a91cb12"
-    },
-    {
-      "path": "reviews-comments/Enterprise-General-Intelligence-v2.1.0 - review till page 30.docx",
-      "bytes": 6746639,
-      "sha256": "12f23783b47e363492818f9df7494df8945485d2be273ace510739d15c7ece4a"
+      "path": "reviews-comments/Enterprise-General-Intelligence-chapter-3.docx",
+      "bytes": 260705,
+      "sha256": "2ccbab8d8bc56a7a4faa776d620b8fa681c87c69bfea5fa0b004874f7c5c9aa6"
     },
     {
       "path": "skills/book-maintainer/SKILL.md",
@@ -1516,8 +1511,8 @@
     },
     {
       "path": "source/parts/01-part-i.md",
-      "bytes": 53761,
-      "sha256": "328819d7b9fd488d641a0f58a414cc8eba496f57a27e49918859a9769bfb477b"
+      "bytes": 75962,
+      "sha256": "dc5f367de6ea34240eb675d4fdb5c8883432915fcff4d49a61d6557ccb35e6e8"
     },
     {
       "path": "source/parts/02-part-ii.md",
