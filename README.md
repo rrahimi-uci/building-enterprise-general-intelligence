@@ -61,6 +61,12 @@ listing can drift from the file that CI runs. Agent examples execute offline
 against a scripted model that implements the Agents SDK `Model` interface, so
 they need no API key. See [examples/README.md](examples/README.md).
 
+The cumulative mortgage implementation lives in `mortgage_case/`. Its current
+foundation follows synthetic case `MORT-2026-000184` through checkpoints `C01`–
+`C03`: read-only evidence summary, deterministic proposal validation, and the
+provider-neutral runtime seam. It never approves or denies credit and never
+writes to a real loan-origination system.
+
 ```bash
 make examples        # validate the registry and every [[EXAMPLE:id]] marker
 make examples-run    # execute the example test suite against the pinned SDKs
@@ -100,8 +106,11 @@ make pdf        # three-pass XeLaTeX -> dist/*-LaTeX.pdf
 │
 ├── examples/                     # runnable, CI-verified code listings
 │   ├── _harness/                 # offline scripted model for Agents SDK runs
+│   ├── mortgage/                 # book-facing cumulative mortgage listing
 │   ├── tests/                    # behavioural assertions per example
 │   └── requirements.txt          # pinned SDKs, kept out of the book build
+├── mortgage_case/                # cumulative synthetic mortgage implementation
+├── tests/mortgage_case/           # checkpoint and adapter contract tests
 │
 ├── source/                       # ← THE ONLY PLACE YOU EDIT PROSE
 │   ├── parts/                    # canonical editable Markdown sources
@@ -112,6 +121,7 @@ make pdf        # three-pass XeLaTeX -> dist/*-LaTeX.pdf
 │   ├── diagrams.json             # diagram registry
 │   ├── part-visuals.json         # Part divider panel registry
 │   ├── examples.json             # code-example registry
+│   ├── mortgage_stages.json      # C01–C28 checkpoint registry
 │   ├── references.json           # source-of-truth citation registry
 │   └── style-tokens.json         # portable design tokens
 ├── assets/

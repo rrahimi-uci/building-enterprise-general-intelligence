@@ -1,6 +1,6 @@
 {
-  "diagrams": 44,
-  "with_vector": 44,
+  "diagrams": 45,
+  "with_vector": 45,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -386,6 +386,17 @@
       "effective_dpi": 338,
       "vector": true,
       "sha256": "ff9c4537372a24b0bef88702f6b4d07e59fc4a48c8b47dc76c8ce4523bc6273a"
+    },
+    {
+      "id": "mortgage-case-lifecycle",
+      "source": "mortgage-case-lifecycle.gv",
+      "pixels": [
+        2310,
+        2930
+      ],
+      "effective_dpi": 337,
+      "vector": true,
+      "sha256": "4a523f81ce1baa25e7bf3115f00121c8ce2f1e59e1ec87ebd4fd2c5ff602d9ab"
     },
     {
       "id": "security-boundaries",

@@ -1,735 +1,986 @@
-# Northstar Running Example — Code Gap and Implementation Roadmap
+# Mortgage Running Example — Code Gap and Implementation Roadmap
 
-**Book:** v2.1.0 · **Scope:** Chapters 1–28 and the implementation appendices
+**Requested baseline:** v2.0.1
+**Source actually supplied and reviewed:** *Building Enterprise General Intelligence Platform*, Book v2.1.0, September 2026
+**Course alignment:** *Building Enterprise-Grade Agentic Systems — Course*, 14 lessons
+**Scope:** one cumulative mortgage case across Book Chapters 1–28, cross-mapped to the 14 course lessons
 **Audit date:** 2026-09-16
-**Status:** roadmap; no implementation is claimed by this document
+**Status:** corrected implementation roadmap; the foundation slice for `C01`–`C03` is now implemented on the migration branch, while `C04`–`C28` remain planned
+
+> **Version resolution.** The request names v2.0.1, but the attached source identifies itself throughout as Book v2.1.0. This revision treats the supplied v2.1.0 file as the authoritative baseline. If v2.0.1 was intentional, compare that source before implementation and update this roadmap rather than assuming the editions are equivalent.
 
 ## Executive decision
 
-The book already has a coherent business thread: Northstar Components wants to
-reduce supplier onboarding from twelve days to two, while collecting evidence,
-screening sanctions, obtaining approval, creating a supplier record, and
-preserving evidence. The prose evolves that scenario well, especially in
-Chapter 3 and the security chapters.
+Replace the supplier-onboarding code thread with one fictional, synthetic mortgage **anchor case** and evolve that case one bounded capability at a time. Controlled variants and synthetic cohorts may be added for failure, fairness, evaluation, and capacity tests, but they must never replace the anchor narrative. A reader should be able to run Chapter 1, understand its deliberate weaknesses, and then run every later chapter to see exactly what changed, why it changed, which component now owns the new responsibility, and which new failure modes and tests were introduced.
 
-The code does not yet evolve with it. The repository contains 23 registered,
-behavior-tested examples, but they are mostly chapter-sized demonstrations with
-different fixtures and different levels of integration. The first prototype
-also names `lookup_supplier`, `create_supplier`, and `send_email` without
-defining them. Consequently, a reader can understand each pattern in
-isolation, but cannot clone one small program and watch it become the Northstar
-system described by the book.
+The running implementation is **not** an autonomous mortgage underwriter. It prepares and verifies an evidence package, proposes conditions and next actions, coordinates human review, and records human-authorized effects. A model must never independently approve or deny credit, set authoritative eligibility, invent an adverse-action reason, use protected characteristics, or commit a loan-origination-system decision.
 
-This roadmap makes that missing implementation explicit. It establishes one
-canonical case, one cumulative module family, and one before/added/after
-contract for every chapter. The existing examples remain useful as focused
-pattern tests; the Northstar stages become the connective tissue.
+The implementation contract is:
 
-### Severity
+1. **One anchor case:** the same case ID, people, document lineage, policy family, and target outcome recur in every chapter; controlled variants and cohorts exist only for explicit tests.
+2. **One additive package:** later chapters add modules and composition; they do not silently replace the domain or start unrelated demos.
+3. **One chapter-to-checkpoint mapping:** `C01` means Chapter 1 and `C28` means Chapter 28. There is no off-by-one “Stage 0.”
+4. **One visible learning delta:** every checkpoint prints or documents **before → added → after**.
+5. **One safe authority model:** models propose; deterministic services validate, calculate, authorize, transition, commit, verify, and accept; an authorized human owns the final lending decision.
+6. **One offline path:** all required tests and demonstrations run without credentials, network access, a hosted MLflow server, or a real mortgage system.
+7. **Optional real adapters:** direct OpenAI Python SDK, OpenAI Agents SDK, MLflow, MCP, A2A, and durable-engine integrations are opt-in adapters with separate contract tests.
+8. **One command convention:** every checkpoint runs as `python -m mortgage_case --chapter N --scenario NAME --offline`; output always conforms to `StageReport`.
+9. **Progressive hardening without premature authority:** early chapters may introduce forward-compatible identity, approval, task, and effect contracts, but no protected connector can execute until the chapter that owns its enforcement has landed.
 
-| Severity | Meaning for the running example |
+## Additive-content preservation contract
+
+The mortgage migration must preserve the book as a learning system. No chapter,
+appendix, explanation, example, diagram, table, code listing, exercise, review
+question, or architectural principle may be silently removed because the
+running domain changes.
+
+The implementation may improve clarity, correct contradictions, tighten names,
+or move a passage to the place where it is taught, but each original concept
+must remain traceable to one of these outcomes:
+
+| Preservation outcome | Meaning |
 | --- | --- |
-| **Blocker** | A reader cannot run the first stage or cannot tell what system is being evolved. |
-| **Major** | A chapter teaches a production boundary that the cumulative example does not exercise. |
-| **Moderate** | The concept is demonstrated in isolation, but the Northstar integration, failure path, or acceptance evidence is missing. |
-| **Editorial** | The implementation exists or is nearly sufficient, but labels, transitions, registration, or before/after explanation can mislead the reader. |
+| Mortgage extension | The concept is demonstrated through the cumulative mortgage case and its bottleneck. |
+| Retained contrast | The original supplier, refund, payment, or support example remains because it teaches a distinct boundary; it is labeled as a contrast rather than allowed to compete with the anchor case. |
+| Cross-domain principle | The original material is already framework- or domain-neutral and remains unchanged except for terminology and cross-reference repair. |
+| Corrected explanation | The original instructional intent is retained while an unsafe, contradictory, or technically inaccurate statement is clarified. |
 
-## The canonical case that every chapter extends
+Every implementation PR must include a preservation ledger covering the affected
+source chapters and generated code listings. The ledger records the original
+concept, its mortgage extension, the bottleneck it exposes, the new owner, and
+the acceptance test or reader-facing evidence. A review is incomplete if it can
+show what was added but cannot show where the retained material went.
 
-Do not introduce a second business application as the primary example. Mortgage,
-refund, payment, and customer-support examples may remain as short contrasts,
-but Northstar supplier onboarding is the only cumulative implementation.
+Each chapter transition uses the same additive shape:
+
+`before capability → bottleneck → added mortgage capability → after capability → retained limitations → next dependency`
+
+The mortgage case is the cumulative code path. Existing supplier material may
+remain as a clearly labeled contrast during migration, but it must not introduce
+a second untracked implementation, a conflicting authority model, or a second
+meaning for a shared identifier.
+
+## What was reviewed
+
+The review covered the supplied Book v2.1.0 Markdown, the 14-lesson course, the original `code-gap.md`, and the public API names referenced by the book. Static extraction found 54 Python fenced snippets in the book; all parse as Python syntax when considered individually, but many are teaching excerpts rather than standalone programs. Syntax validity therefore does not prove that imports, names, external services, or end-to-end behavior work.
+
+The supplied book makes the following implementation claims in Appendix I: a `northstar` package, a supplier-onboarding demo, 19 deterministic tests, and two optional adapter smoke tests. No repository or release package accompanied this review, so those claims cannot be independently executed here. The original roadmap’s statement that there are “23 registered, behavior-tested examples” is therefore removed as unverified.
+
+## Bugs and design defects corrected across both critique passes
+
+| Severity | Defect found | Correction |
+| --- | --- | --- |
+| Blocker | The original roadmap explicitly prohibited mortgage as the primary case and made supplier onboarding canonical. | Mortgage evidence orchestration is now the only cumulative case; supplier examples may remain only as clearly labeled contrasts during migration. |
+| Blocker | Chapter 1 presents an `Agent` with `lookup_supplier`, `create_supplier`, and `send_email`, while the first listing does not define all three tools. | `C01` has a complete offline baseline with no undefined symbol and no write-capable tool. |
+| Major | “Stage 0 = Chapter 1” creates an avoidable off-by-one mapping through all 28 chapters. | Checkpoints are `C01` through `C28`, exactly matching chapter numbers. |
+| Major | The roadmap claimed repository inventory and test counts that were not present in the supplied artifacts. | Evidence is labeled as **verified in source**, **claimed by Appendix I**, or **target implementation**. |
+| Major | The original Chapter 2 stage introduced a protected supplier creation before approvals, durable effects, and identity were taught. | Early mortgage checkpoints remain read-only or draft-only. The canonical protected LOS mutation is introduced only after approval, durability, identity, and effect semantics exist. |
+| Major | A mortgage case is a high-impact lending context, but the roadmap had no explicit boundary preventing model-owned approve/deny decisions. | Final lending decisions, eligibility, authoritative calculations, and adverse-action reasons are human/domain-service responsibilities and are executable negative-test invariants. |
+| Major | “OpenAI SDK” and “OpenAI agentic SDK” were not separated by package or role. | The roadmap distinguishes the OpenAI Python SDK (`openai`) from the OpenAI Agents SDK (`openai-agents`). “OpenAI Agentic SDK” is not treated as a third library. |
+| Major | The source gives `openai>=2.25.0`, which is a compatibility floor rather than a reproducible pin. | The manifest records the supported range, while the lock file and release bundle record the exact resolved package and transitive dependency versions. |
+| Major | Model-extracted values were not cleanly separated from verified facts and deterministic mortgage calculations. | `ExtractedFactCandidate`, `VerifiedEvidence`, `CalculationResult`, and `UnderwritingRecommendation` have different owners and acceptance rules. Money and ratios use `Decimal`, not binary floating point. |
+| Major | Mortgage PII, document sensitivity, and fair-lending risks were not addressed. | All fixtures are synthetic; SSNs/account numbers are tokenized; raw document bytes stay outside prompts and traces; protected attributes are excluded from runtime decisions and isolated, when authorized, for governed fairness evaluation only. |
+| Major | MLflow could be read as the audit system or as permission to capture prompts automatically. | MLflow is diagnostic/evaluation infrastructure only. Sensitive input/output capture is off by default, and audit/effect/approval evidence remains in separate authoritative stores. |
+| Moderate | Each stage proposed many new files without a stable cumulative package contract. | A stable domain package, additive platform modules, and immutable chapter entry points prevent copy/paste drift while preserving earlier checkpoints. |
+| Moderate | Acceptance criteria often described success without a reader-visible command or expected evidence. | Every checkpoint requires an offline command, expected `StageReport`, at least one failure/refusal scenario, and named behavioral tests. |
+| Moderate | The attached book’s cover title and Appendix I companion title are inconsistent. | This roadmap uses the supplied cover title and refers to the companion package generically; manuscript title normalization remains a source-edit follow-up. |
+| Editorial | The request says v2.0.1 while the supplied file says v2.1.0. | The mismatch is explicit in the header and must be resolved before release tagging. |
+| Major | The first revision placed the package under `examples/mortgage_case/` but invoked it as `python -m mortgage_case`; that import does not work from a clean checkout without extra packaging configuration. | The target package now lives at repository root as `mortgage_case/`, so the documented module command and compile command agree. |
+| Major | “One case” conflicted with multi-case fairness, reliability, and capacity evaluation. | `MORT-2026-000184` is the anchor case; controlled variants and versioned synthetic cohorts are permitted for tests and never replace the narrative. |
+| Major | Bare `ApprovalRequest`/`ApprovalDecision` is dangerously ambiguous in a mortgage context because readers may confuse platform action authorization with credit approval. | The platform contract is renamed `HumanActionAuthorization`; `LendingDecision` remains a separate underwriter/domain record. |
+| Major | Chapters 14, 18, and 19 used approval/grant semantics before Chapter 21 fully introduced identity and delegated authorization. | A minimal `PrincipalContext` and non-executable `CapabilityScope` begin in `C04`; pre-`C21` tasks are synthetic/read-only, and `C21` upgrades and revalidates the contracts before `C22` permits the first protected write. |
+| Moderate | The canonical calculation fixture named LTV/DTI but did not state deterministic inputs, expected outputs, precision, or serialization. | A versioned synthetic calculation oracle now specifies `Decimal` inputs, formulas, four-decimal outputs, rounding, and string serialization. |
+| Moderate | Trace guidance allowed business identifiers without requiring pseudonymization and did not explicitly exclude hidden reasoning. | `C24` requires opaque/pseudonymous correlation IDs, a protected lookup map, and no raw PII, document text, credentials, or hidden chain-of-thought in telemetry. |
+| Moderate | Fairness and release evaluation lacked explicit sample-size, uncertainty, and leakage controls. | `C25` adds cohort provenance, holdout separation, minimum sample rules, confidence intervals/uncertainty, repeated-run variance, and the rule that synthetic results prove pipeline behavior—not real-world fairness or legal compliance. |
+
+### Severity definitions
+
+| Severity | Meaning |
+| --- | --- |
+| **Blocker** | The first case cannot run, the primary domain is wrong, or the system can imply an unsafe lending decision. |
+| **Major** | A chapter’s production boundary is absent, bypassable, or not connected to the cumulative case. |
+| **Moderate** | The concept exists but lacks a mortgage integration, failure path, documentation, or executable evidence. |
+| **Editorial** | Naming, numbering, versioning, or navigation can mislead readers even though the underlying design is sound. |
+
+## Canonical mortgage case
 
 ### Business problem
 
-Northstar Components onboards industrial suppliers. Procurement currently spends
-about twelve days collecting documents, checking sanctions and tax information,
-requesting corrections, and creating an ERP supplier record. The target is two
-days for eligible cases without weakening authorization, evidence, approval,
-audit, or recovery requirements.
+**Harborlight Home Finance** is a fictional lender. Its loan teams spend several days collecting and reconciling application documents before an authorized underwriter can review a case. The target is to prepare an accurate, explainable, underwriter-ready evidence package within one business day for routine synthetic cases without weakening identity, privacy, policy, human oversight, audit, or recovery controls.
 
-The first case is **Acme Industrial GmbH**, supplier ID `SUP-8421`, in tenant
-`northstar-eu`. The identifier is stable across all stages. A test fixture may
-contain a second supplier or a malicious document, but it must not change the
-business narrative.
+The stable training fixture is:
+
+| Field | Synthetic value |
+| --- | --- |
+| Tenant | `harborlight-us-west` |
+| Case ID | `MORT-2026-000184` |
+| Applicant | `Alex Morgan` |
+| Property | `101 Example Avenue, Portland, OR 97205` |
+| Purpose | `mortgage_pre_underwriting_review` |
+| Loan scenario | Fictional conventional, owner-occupied purchase |
+| Purchase price | `USD 625000.00` |
+| Requested principal | `USD 500000.00` |
+| Evidence set | Application, consent, pay statements, tax forms, bank statements, employment verification, credit artifact, purchase agreement, title artifact, and appraisal artifact |
+| Expected outcome | A verified review package, explicit unresolved conditions, an underwriter recommendation, and a recorded human/domain-system disposition—not an autonomous credit decision |
+
+All names, addresses, identifiers, documents, policies, scores, and amounts are synthetic. The repository must include a conspicuous `SYNTHETIC TRAINING DATA — NOT FOR CREDIT DECISIONS` marker in every fixture and rendered example output.
+
+Tokens and masked values remain classified as restricted data in the example; tokenization is not treated as anonymization.
+
+### Deterministic calculation oracle
+
+The following values become usable only after their supporting synthetic evidence has been verified. They are calculation test vectors, not eligibility rules or lending guidance.
+
+| Item | Canonical value | Rule | Expected result |
+| --- | --- | --- | --- |
+| Purchase price | `Decimal("625000.00")` | Input from verified purchase agreement | — |
+| Requested principal | `Decimal("500000.00")` | Input from verified application | — |
+| Verified gross monthly income | `Decimal("12500.00")` | Available only after required income evidence is accepted | — |
+| Total monthly obligations | `Decimal("4200.00")` | Versioned deterministic aggregation, including proposed housing obligation | — |
+| LTV | Principal ÷ purchase price | Quantize to `Decimal("0.0001")` | `Decimal("0.8000")` |
+| DTI | Total monthly obligations ÷ verified gross monthly income | Quantize to `Decimal("0.0001")` | `Decimal("0.3360")` |
+| Rounding/serialization | `ROUND_HALF_EVEN`; canonical decimal strings | Never round-trip through JSON floating point | Stable across supported platforms |
+
+The training policy may evaluate these outputs, but a numeric result by itself never creates eligibility, a lending decision, or an adverse-action reason.
+
+### Narrative shown to the reader
+
+At `C01`, Alex’s case has a mortgage application, one pay statement, and a purchase agreement. A small model call can summarize the file and suggest that evidence is missing, but it cannot prove the facts, calculate authoritative debt-to-income or loan-to-value ratios, access the loan-origination system, or make a lending decision.
+
+Each chapter repairs one concrete limitation. By `C28`, the anchor case can survive document waits and worker crashes, use bounded specialist tasks, authorize exact resources, resist a malicious document, reconcile an uncertain LOS update, produce a privacy-safe MLflow trace, run a release evaluation, and report cost and reliability per verified underwriter-ready case. From `C25` onward, a separate versioned synthetic cohort supplies the multiple cases required for slice, repeated-run, and capacity analysis.
 
 ### Actors and authority
 
-| Actor | Responsibility | May not do |
+| Actor or component | Owns | Must never own |
 | --- | --- | --- |
-| Procurement requester | Starts the run and supplies business purpose | Grant itself supplier-write authority |
-| Supplier | Provides application and evidence | Change platform state through document text |
-| Northstar workflow | Owns run state, waits, deadlines, joins, acceptance, and recovery | Interpret evidence as a business transaction |
-| Evidence-review agent | Assesses authorized evidence and proposes next work | Authorize, commit, or claim completion |
-| Policy/authorization service | Decides subject, actor, purpose, resource, data, and effect scope | Use model prose as a policy decision |
-| Human approver | Approves the exact protected proposal when required | Approve a different proposal through conversational context |
-| Tool Gateway/domain service | Validates and commits authorized reads and writes | Expand the model’s authority |
-| Sanctions/tax connectors | Return versioned external evidence | Be treated as trusted merely because a protocol call succeeded |
-| Operator/auditor | Investigates, intervenes, reconciles, and reviews evidence | Rewrite immutable run history |
+| Applicant | Supplies application data and evidence; responds to requests | Platform policy, system permissions, or final system transitions |
+| Loan officer | Initiates and monitors the case for an allowed purpose | Unreviewed model authority or unrestricted cross-case access |
+| Durable mortgage workflow | State, waits, retries, deadlines, obligations, joins, cancellation, and completion | Interpretation of ambiguous documents or final credit judgment |
+| Evidence agent | Extracts candidate facts, identifies gaps, synthesizes cited evidence, proposes next work | Fact certification, authorization, protected effects, or approve/deny decisions |
+| Specialist agents | Perform bounded document, income, asset, property, or policy tasks | Parent ownership, broader access, or final case disposition |
+| Calculation and policy services | Canonical calculations, rules, reason codes, freshness, and deterministic eligibility gates | Free-form model interpretation or unsupported legal conclusions |
+| Policy decision point and credential broker | Exact subject+actor authorization and short-lived connector credentials | Business commits or disclosure of reusable credentials to models |
+| Authorized underwriter | Reviews the exact evidence/recommendation and records the lending decision | Reusing approval for changed evidence, policy, amount, or case version |
+| Tool Gateway and connectors | Validate, authorize, invoke, sanitize, verify, and record reads/effects | Broadening authority or translating model confidence into permission |
+| Loan-origination system | Authoritative case and decision record | Agent workflow history, prompt state, or evaluation truth |
+| Operator, security reviewer, and auditor | Recovery, containment, evidence review, and governed intervention | Rewriting immutable history or silently bypassing policy |
 
-### Inputs, outputs, workflow, and constraints
+### Information and decision taxonomy
 
-| Contract area | Canonical definition |
-| --- | --- |
-| Inputs | Tenant, subject, acting workload, purpose, supplier application, immutable document references, country/jurisdiction, policy revision, risk tier, deadline, and callback/approval preferences |
-| Evidence | Legal name, registration, tax, beneficial ownership, address, sanctions result, source revision, digest, classification, authorization decision, and freshness metadata |
-| Expected outputs | `EvidenceAssessment`, missing-evidence request, `ScreeningResult`, `ActionProposal`, proposal-bound `ApprovalRequest`, `EffectRecord`/receipt, verified supplier projection, and final acceptance decision |
-| Normal states | `RECEIVED → EVIDENCE_PENDING → EVIDENCE_REVIEW → SCREENING_PENDING → APPROVAL_PENDING → EFFECT_PENDING → VERIFYING → ACCEPTED` |
-| Non-success states | `NEEDS_INPUT`, `REJECTED`, `FAILED`, `UNKNOWN_EFFECT`, `CANCELED`, and `INTERVENTION_REQUIRED`; each has an owner and operator action |
-| Constraints | Exact-resource authorization; least privilege; no reusable credentials in prompts or agent state; bounded turns/tools/tokens/cost/time; tenant and region isolation; evidence provenance; stale-resource checks; one retry owner; effect idempotency; approval hash and expiry; fail-closed unknowns |
-| Success criteria | Required evidence is present and fresh; sanctions and policy checks pass; the exact action is authorized and approved when required; the ERP mutation has one durable receipt; the supplier projection is verified; all obligations are discharged; trace, audit, and artifacts are joinable by stable IDs |
+| Type | Example | Owner and rule |
+| --- | --- | --- |
+| Candidate extraction | Employer name inferred from a pay statement | Model may propose; never treated as verified without source/provenance and deterministic checks |
+| Verified evidence | Employment verification artifact with source revision and digest | Verification/domain service owns status and freshness |
+| Deterministic calculation | LTV, DTI, document age, totals, and consistency checks | Typed calculation service using `Decimal`, explicit rounding, and versioned formulas |
+| Policy result | Required evidence, threshold result, action-authorization obligation, reason code | Versioned policy service; model may explain only from the returned result |
+| Recommendation | `ready_for_underwriter`, `needs_evidence`, or `intervention_required` | Model may propose; evaluator and workflow validate evidence and obligations |
+| Human action authorization | Permit one exact operational effect such as sending a condition request | Authorized reviewer plus platform policy; never a lending decision |
+| Lending decision | Approve, deny, suspend, or counteroffer | Authorized human and/or regulated deterministic decision service outside the model runtime |
+| External effect | Create a condition, mark case ready for review, or record the human decision | Gateway/domain service under idempotency, concurrency, human-action authorization, and receipt controls |
 
-The two-day target is a Northstar business objective and an example acceptance
-target, not a benchmark established by this repository. Stage tests should assert
-correctness and safety; performance tests should label their workload assumptions.
+### Terminology: action authorization is not credit approval
 
-### Cumulative architecture
+Use `HumanActionAuthorizationRequest` and `HumanActionAuthorizationDecision` for permission to execute an exact platform effect. Valid dispositions are `authorize_effect`, `reject_effect`, `request_evidence`, and `expired`. Use `LendingDecision` only for the authoritative mortgage disposition recorded by the underwriter/domain system. Never name both records `ApprovalDecision`, and never present an “Approve” button without saying which kind of decision it represents.
+
+### Stable workflow
 
 ```text
-Requester
-   │ authenticated request
-   ▼
-Run control ── durable history/checkpoints ── waits, retries, joins, acceptance
-   │ bounded AgentStepRequest
-   ▼
-AgentRuntime ── OpenAI Agents SDK adapter ── optional OpenAI API provider
-   │ typed proposals only
-   ▼
-Context/Policy/Capability services ── Tool Gateway ── approval service
-   │ exact authority, evidence, idempotency, short-lived credentials
-   ▼
-Domain connectors ── sanctions / tax / ERP ── EffectRecord and receipt
-   │
-   └──────────── MLflow/OpenTelemetry trace + separate audit/evidence ledger
+APPLICATION_RECEIVED
+  -> DOCUMENTS_PENDING
+  -> EVIDENCE_REVIEW
+  -> VERIFICATION_PENDING
+  -> CONDITIONS_PENDING
+  -> ACTION_REVIEW_PENDING
+  -> READY_FOR_UNDERWRITER
+  -> UNDERWRITER_DECISION_PENDING
+  -> DECISION_RECORDED
+  -> WORKFLOW_COMPLETED
 ```
 
-The model and Agents SDK are used for bounded interpretation and tool-loop
-mechanics. Custom Python owns the authoritative workflow, contracts, policy
-decisions, state fold, effect ledger, reconciliation, fixtures, and tests.
-MLflow owns trace/evaluation mechanics and joins to platform IDs; it is not the
-system of record for approvals, effects, or audit.
+Non-success or waiting dispositions are `NEEDS_INPUT`, `POLICY_BLOCKED`, `UNKNOWN_EFFECT`, `INTERVENTION_REQUIRED`, `CANCELED`, and `FAILED`. `WORKFLOW_COMPLETED` means that required workflow obligations were discharged and the external disposition was verified; it does **not** mean that the mortgage was approved.
 
-## Current implementation inventory
+### Non-negotiable mortgage invariants
 
-| Existing asset | What it proves today | Why it is not yet the running example |
+1. A model cannot emit or commit a final `approve`, `deny`, `counteroffer`, interest rate, or authoritative adverse-action reason; it may only produce bounded non-dispositive recommendations such as `ready_for_underwriter`.
+2. Candidate facts never become verified evidence merely because they are well formed or repeated by another model.
+3. DTI, LTV, totals, dates, thresholds, and money use deterministic versioned code with `Decimal`, timezone-aware dates/times, explicit rounding, and canonical string serialization.
+4. Protected characteristics are not runtime decision features and do not enter planning, tool choice, recommendation, or model context. Separately governed data may be collected for authorized compliance/fairness analysis, and proxy-feature and outcome-disparity tests remain required.
+5. Tenant and case authorization happens before document content reaches a model.
+6. No raw SSN, bank account, credential, complete document, unrestricted prompt, or hidden chain-of-thought is placed in a normal trace, log, exception, or MLflow tag.
+7. Every write has one logical effect key, one canonical intent hash, a current case precondition, a receipt or `UNKNOWN_EFFECT`, and a reconciliation path.
+8. Every human action authorization is bound to the exact case version, evidence set, policy version, proposal hash, actor, and expiry. The final `LendingDecision` is a separate authoritative record with its own actor, evidence, policy, and case version.
+9. A timeout after a write never becomes an ordinary retry.
+10. Terminal workflow completion is impossible while required evidence, action authorization, lending decision, or effect obligations are missing or unknown.
+
+### Success criteria
+
+The cumulative demonstration succeeds when the system produces an underwriter-ready package containing verified evidence references, deterministic calculations, policy results, unresolved conditions, model recommendation, human/domain disposition, effect receipts, and joinable audit/trace IDs. The business-time target is illustrative. Tests assert safety and correctness; performance claims must state workload, hardware, model route, provider quotas, and measurement method.
+
+## Cumulative architecture
+
+```text
+Loan officer / event
+        | authenticated tenant + case request
+        v
+Run API and durable workflow
+        | state, waits, retries, joins, cancellation, acceptance
+        v
+AgentRuntime adapter
+        | OpenAI Agents SDK for bounded reasoning and tool-loop mechanics
+        | optional direct OpenAI Python SDK adapter for the C01 baseline
+        v
+Context + knowledge + calculation + policy services
+        | typed candidate facts, verified evidence, exact authorization
+        v
+Tool Gateway + human action authorization + effect ledger
+        | scoped credentials, idempotency, preconditions, receipts
+        v
+Synthetic document / verification / LOS connectors
+        |
+        +--> OpenTelemetry-compatible trace and MLflow diagnostics/evaluation
+        +--> separate authoritative audit, action-authorization, lending-decision, and effect evidence
+```
+
+The OpenAI SDKs own model-facing mechanics only. MLflow owns diagnostics and evaluation mechanics only. Custom Python and the selected durable runtime own platform contracts, workflow state, authority, calculations, effects, recovery, and tests.
+
+## Course-to-book implementation crosswalk
+
+The course has 14 lessons, while the supplied book has 28 chapters. The executable checkpoints follow book chapter numbers; this crosswalk keeps the code useful to readers following either sequence.
+
+| Course lesson | Primary book checkpoints | Mortgage capability demonstrated |
 | --- | --- | --- |
-| `examples/foundations/agent_tool_loop.py` | Real OpenAI Agents SDK tool loop, structured output, bounded turns, offline scripted model | Uses `S-1001`/`S-2002` status fixtures and only a read tool |
-| `examples/foundations/governed_tool_gateway.py` | Tool eligibility, authority, stale version, idempotency, unknown outcome | Generic in-memory gateway; no Northstar supplier connector, approval, receipt, or state transition |
-| `examples/contracts.py` | Provider-neutral step/platform Pydantic contracts | Test fixture still contains unrelated `refund@1.2.0`; no canonical case manifest or domain outputs |
-| `examples/runtime/step_execution.py` | One AgentRuntime adapter around the SDK and a supplier-policy façade | Executes one step; it does not invoke the cumulative workflow or domain effect path |
-| `examples/runtime/durable_state.py` | Replayable event fold and unknown-effect blocking | Generic events are not driven by a Northstar run, artifacts, task IDs, or connector receipts |
-| `examples/knowledge/*.py` | Typed rules, provenance, graph traversal, grounding, guardrails, algebra, capability discovery | Fixtures use generic policy/transaction examples; no supplier-policy/evidence projection |
-| `examples/patterns/*.py` | ReAct limits, routing, planning, approval, verification | Examples use separate refund/sanctions/generic domains and are not cumulative |
-| `examples/security/input_guardrail.py` | An input tripwire can stop an SDK run before tools | Demonstrates a refund tool, not a malicious supplier document across retrieval, tool, egress, and effect boundaries |
-| `examples/observability/*.py` | MLflow spans, autolog configuration, and deterministic evaluation | IDs and outputs are not correlated across one Northstar run, effect ledger, approval, or audit package |
-| `config/examples.json` and `examples/README.md` | Registry and CI execution contract | Registry has no cumulative stage/scenario metadata; README chapter labels reflect older topology in several places |
-| Chapter 1 inline prototype | Communicates the initial gap | References undefined tools and is not the executable baseline cited by CI |
+| 01 — Enterprise Agentic Systems | `C01` | Honest read-only prototype and explicit production gaps |
+| 02 — Deterministic Shell, Agentic Core | `C02` | Typed proposals, deterministic calculations, validation, and no autonomous lending decision |
+| 03 — Reference Architecture | `C04`, `C07` | Stable records, owners, stores, events, and a developer-facing package |
+| 04 — OpenAI Agents SDK | `C03` | Provider-neutral `AgentRuntime` implemented with OpenAI Agents SDK |
+| 05 — Run Lifecycle and Durable Execution | `C15` | Document wait, restart, replay, signal, cancellation, and reconciliation |
+| 06 — Planning and Deterministic Execution | `C12` | Model-proposed mortgage plan compiled before scheduling |
+| 07 — Multi-Agent Systems and Delegation | `C18`, `C19` | Bounded specialists, child grants, joins, MCP, and A2A gateways |
+| 08 — Events, Failures, and Recovery | `C04`, `C15`, `C22` | Outbox/inbox, unknown effect, recovery, and operator action |
+| 09 — Identity and Delegated Authorization | `C21` | Loan-officer subject, workload actor, exact case scope, last-hop credential |
+| 10 — Context, Knowledge, and Memory | `C05`, `C06` | Governed policy, document provenance, context manifest, and safe memory |
+| 11 — Tools, Effects, and Human Approval | `C02`, `C14`, `C22` | Tool façade, exact preview, approval binding, protected LOS effect |
+| 12 — Security and Safety | `C20`, `C23` | Malicious-document containment, sandbox, egress, DLP, and privacy |
+| 13 — APIs, Data Models, Scalability, and Deployment | `C04`, `C27`, `C28` | Stable APIs, release compatibility, cells, queues, capacity, and cost |
+| 14 — Observability, Evaluation, and Governance | `C24`, `C25`, `C26` | MLflow trace/evaluation, release gates, fairness, and operating controls |
 
-## Technology ownership and boundaries
+## Technology ownership and dependency policy
 
-| Technology | Use in the cumulative example | Do not delegate to it |
+| Technology | Target use | Explicit boundary |
 | --- | --- | --- |
-| OpenAI API | Optional provider-backed smoke test, model route, structured response in a developer-configured environment | Workflow truth, authorization, credentials, effects, or acceptance |
-| OpenAI Agents SDK `0.22.2` | Concrete adapter for `Agent`, `Runner`, tools, structured output, local handoffs, guardrails, sessions, and framework tracing | Durable workflow state, business records, approval grants, or provider-neutral contracts |
-| MLflow `3.15.2` | Trace spans/tags, run correlation, datasets, scorers, evaluation evidence, and regression comparison | Protected audit ledger, policy source, effect receipt, or release authority |
-| Custom Python | Domain fixture, Pydantic contracts, workflow reducer, context builder, policy façade, capability intersection, gateway, effect ledger, reconciliation, sandbox/egress test doubles, and CI tests | None of the authoritative enterprise controls should be hidden behind a framework-only helper |
-| Test doubles | Offline model, ERP/sanctions/tax connectors, clock, queue, approval signer, failure injector | Production security claims; doubles must be marked as such |
+| Python 3.11+ | Domain contracts, deterministic workflow model, adapters, fixtures, CLI, and tests | Replayable workflow code cannot read the clock, call I/O, or generate uncontrolled randomness |
+| Pydantic 2 | Public/internal schemas and validation | A valid schema is not proof of truth, authorization, or acceptance |
+| OpenAI Python SDK (`openai`) | Optional direct Responses API baseline and provider adapter | Does not own tools, workflow, policy, effects, human action authorizations, or durable state |
+| OpenAI Agents SDK (`openai-agents==0.22.2`) | `Agent`, `Runner`, function tools, structured output, local handoffs, limits, HITL state, and SDK tracing inside `AgentRuntime` | Does not own enterprise workflow truth, connector credentials, lending decisions, or audit |
+| MLflow (`mlflow==3.15.2`) | Local/remote traces, experiments, datasets, scorers, comparisons, and evaluation evidence | Not the action-authorization store, policy source, effect ledger, LOS, or audit ledger |
+| OpenTelemetry-compatible context | Cross-process trace propagation and semantic span envelope | Trace sampling or loss cannot erase required audit evidence |
+| SQLite/in-memory stores | Deterministic local teaching implementation | Clearly labeled as test stores, not production persistence claims |
+| Durable workflow abstraction | Pure reducer and activity contracts in required offline path | A production adapter may use Temporal, DBOS, Restate, or another engine after conformance tests |
+| MCP/A2A adapters | Optional external tool/agent protocol demonstrations | Protocol success does not establish peer trust, business authorization, or artifact safety |
+| Synthetic connectors | Document store, verification providers, notification service, and LOS | Never described as production security or regulatory certification |
 
-The offline path is mandatory. No example test may require an API key, network,
-MLflow server, or live ERP. A separate opt-in integration test may use
-`OPENAI_API_KEY` and a configured MLflow backend, but it must never be the only
-evidence that an example works.
+### Naming correction
 
-## Chapter-by-chapter gap register
+Use these exact names in prose, code, dependency files, and logs:
 
-Each entry uses the same contract so implementation can proceed in order:
-**concept**, **current**, **expected**, **missing**, **educational reason**,
-**changes**, **technology**, **dependencies**, **order**, **acceptance**, and
-**files**.
+- **OpenAI Python SDK** — distribution/import family `openai`; used for direct API access.
+- **OpenAI Agents SDK** — distribution `openai-agents`, imported as `agents`; used for the bounded agent runtime.
+- **MLflow** — tracing and evaluation integration.
 
-### Stage 0 — Chapter 1: From an LLM Call to a Production Agentic System
+Do not use “OpenAI SDK” when the specific package matters, and do not introduce a fictional third dependency called “OpenAI Agentic SDK.”
+
+### Reproducibility rules
+
+- Keep the source compatibility floor `openai>=2.25.0` only in the compatibility declaration if required by the chosen Agents SDK features; record the exact resolved `openai` version in the lock file and release manifest.
+- Pin `openai-agents==0.22.2` and `mlflow==3.15.2` for the Book v2.1.0 reproduction profile, then verify their transitive compatibility in CI.
+- Separate extras: `offline`, `openai`, `agents`, `mlflow`, `protocols`, and `all`.
+- The mandatory test job uses the scripted model and synthetic connectors. Live OpenAI and remote MLflow jobs are opt-in and never the only evidence.
+- Record Python, OS, package lock digest, model route, tool schema, prompt/Skill, policy, dataset, scorer, and workflow build in every release manifest.
+- Never put an API key, access token, account number, reusable credential, raw protected attribute, or hidden chain-of-thought in source, fixtures, serialized SDK state, trace tags, or sample output.
+- Treat the v2.0.1/v2.1.0 mismatch as a release blocker: implementation may proceed against the supplied v2.1.0 baseline, but no release may be tagged “v2.0.1-aligned” without that edition and an explicit diff.
+
+## Target package layout
+
+```text
+README.md                      # business story, safety boundary, quickstart
+pyproject.toml                 # compatibility ranges and optional extras
+requirements.lock             # exact reproducible dependency resolution
+mortgage_case/
+  __init__.py
+  __main__.py                  # python -m mortgage_case ...
+  cli.py                       # --chapter, --scenario, --offline, --json
+  stage_report.py              # visible before/added/after contract
+  domain/
+    __init__.py
+    ids.py                     # typed IDs and canonical resource URIs
+    money.py                   # Decimal money/ratio/rounding rules
+    case.py                    # mortgage case and state contracts
+    evidence.py                # candidate vs verified evidence
+    decisions.py               # recommendation vs human/domain decision
+    errors.py                  # typed safe errors
+  fixtures/
+    case_000184.json
+    documents/                 # synthetic documents and malicious variants
+    policies/                  # explicitly fictional, versioned training rules
+    provider_responses/        # deterministic OpenAI/connector test responses
+  stages/
+    __init__.py
+    c01_baseline.py
+    c02_deterministic_shell.py
+    ...
+    c28_capacity.py
+  platform/
+    __init__.py
+    runtime.py                 # provider-neutral AgentRuntime
+    workflow.py                # replay-safe reducer and activity commands
+    context.py
+    knowledge.py
+    planning.py
+    delegation.py
+    authorization.py
+    tools.py
+    action_authorization.py
+    effects.py
+    events.py
+    security.py
+    observability.py
+    evaluation.py
+    releases.py
+  adapters/
+    __init__.py
+    scripted_model.py
+    openai_responses.py
+    openai_agents.py
+    mlflow_tracking.py
+    workflow_test_engine.py
+    mcp_gateway.py
+    a2a_gateway.py
+    synthetic_los.py
+    synthetic_verification.py
+  docs/
+    C01.md ... C28.md           # chapter delta, diagram, commands, outputs, limits
+
+tests/mortgage_case/
+  __init__.py
+  unit/__init__.py
+  contract/__init__.py
+  workflow/__init__.py
+  security/__init__.py
+  evaluation/__init__.py
+  integration_optional/__init__.py
+
+config/mortgage_stages.json     # chapter, entry point, scenarios, tests, concepts
+```
+
+Paths beginning with `domain/`, `stages/`, `platform/`, `adapters/`, `fixtures/`, or `docs/` in checkpoint tables are relative to `mortgage_case/`; paths beginning with `tests/` or `config/` are repository-relative.
+
+### Command convention
+
+From the repository root, every landed checkpoint uses the same interface:
+
+```bash
+python -m mortgage_case --chapter 1 --scenario happy_path --offline
+python -m mortgage_case --chapter 14 --scenario action_authorization_changed_case --offline --json
+```
+
+The CLI accepts integer chapter numbers, emits `StageReport.chapter` as zero-padded `C01`–`C28`, rejects an unregistered scenario, and defaults to offline mode. A live adapter requires both an explicit adapter flag and an environment opt-in; it can never be selected by a fixture or model output.
+
+Earlier entry points must remain runnable. Shared modules can grow additively, but a later semantic change cannot alter an earlier checkpoint without an explicit compatibility test and documentation update.
+
+## Reader-facing documentation contract
+
+Every `Cxx` checkpoint must include:
+
+1. **Case at this point:** facts available, state, owner, and unresolved question.
+2. **Before:** the exact limitation inherited from the prior checkpoint.
+3. **Added:** one primary capability and its authoritative owner.
+4. **After:** the new state/records and what still remains intentionally unsafe or absent.
+5. **Run it:** one offline command and one optional integration command where relevant.
+6. **Expected output:** a redacted `StageReport` with stable IDs and a concise explanation.
+7. **Failure demonstration:** at least one refusal, stale-state, duplicate, timeout, attack, or recovery scenario.
+8. **Code tour:** entry point, contracts, adapters, authoritative stores, and test names.
+9. **Production boundary:** what the teaching implementation does not prove.
+10. **Next chapter:** the exact remaining limitation that motivates the next capability.
+
+### Code quality rules
+
+- Use complete runnable listings; no undefined tools, ellipses standing in for control logic, or imports that exist only in prose.
+- Public classes/functions have concise docstrings covering **purpose**, **authority**, **side effects**, and **failure semantics** where applicable.
+- Prefer domain types over `dict[str, Any]` at service boundaries.
+- Use enums/literals for states and error codes; never branch on model prose.
+- Use `Decimal` for money and ratios; define currency and rounding policy explicitly; serialize decimal values as canonical strings or documented minor units, never JSON floats.
+- Use timezone-aware UTC `datetime` values and explicit domain `date` values; inject clock, ID factory, model, stores, connectors, and failure injector. Workflow reducers remain pure and never call `datetime.now()` directly.
+- Canonical hashes use one documented serializer that fixes schema/version, Unicode normalization, field order, decimal/date rendering, absent-vs-null behavior, and excluded mutable fields.
+- Distinguish candidate, verified, accepted, committed, and observed states in names.
+- Errors expose stable safe codes. Raw provider/document payloads remain behind protected references.
+- Comments explain architectural **why**; they should not paraphrase obvious syntax.
+- Each example has type, unit, contract, and behavior tests proportional to its risk. Add property/invariant tests for decimal calculations, grant narrowing, canonical hashing, idempotency, event folding, and duplicate delivery.
+- Unsafe anti-patterns live only in test fixtures and cannot be selected by the normal CLI.
+
+## Stable contracts introduced across the progression
+
+| Contract | First introduced | Key invariant |
+| --- | --- | --- |
+| `MortgageCase` / `CaseVersion` | `C01` | Synthetic marker and stable case ID are mandatory |
+| `CaseSummaryCandidate` | `C01` | Cannot contain a final lending decision |
+| `AgentProposal` / `WorkflowCommand` | `C02` | Model proposal requires deterministic mapping and validation |
+| `CalculationResult` | `C02` | Formula/version/inputs/rounding are recorded and recomputable |
+| `AgentStepRequest` / `AgentStepResult` | `C03` | No SDK type crosses the platform boundary |
+| `RunManifest` / `PrincipalContext` / `CapabilityScope` / `Artifact` / `Event` | `C04` | Identity and scope are carried from the start, but scope is not an executable credential and protected writes remain disabled |
+| `KnowledgeObject` / `Rule` | `C05` | Source, scope, effective interval, digest, and owner are required |
+| `ContextManifest` / `MemoryRecord` | `C06` | Authorization precedes model exposure; prompt is a projection |
+| `SkillManifest` / `SkillPackManifest` | `C08`–`C09` | Resolution is deterministic and does not grant authority |
+| `PlanRevision` / `PlanNode` | `C12` | Model proposes; compiler validates and scheduler executes |
+| `HumanActionAuthorizationRequest` / `HumanActionAuthorizationDecision` | `C14` | Exact operational proposal/evidence/policy/case version and expiry are bound; this is not credit approval |
+| `WorkflowEvent` / `Checkpoint` / `WaitRegistration` | `C15` | Replay never repeats unrecorded I/O or an uncertain effect |
+| `TaskEnvelope` / `OwnershipTransfer` | `C18` | One owner; child `CapabilityScope` is a strict subset; tasks remain synthetic/read-only until `C21` revalidates authority |
+| `PrincipalChain` / `CapabilityEnvelope` | `C21` | Subject is preserved and each delegation narrows authority |
+| `EffectRecord` / `EffectReceipt` | `C22` | One logical intent; unknown outcome blocks retry and completion |
+| `TraceEnvelope` / `EvalDatasetVersion` | `C24`–`C25` | Diagnostics are privacy-safe and release evidence is versioned |
+| `ReleaseBundle` / `PromotionDecision` | `C27` | Active runs remain pinned to compatible immutable behavior |
+| `StageReport` | Every checkpoint | Shows chapter, scenario, before, added, after, evidence, failures, and limitations |
+
+## Required scenario matrix
+
+| Scenario ID | Introduced by | Expected result |
+| --- | --- | --- |
+| `happy_path` | `C01` | Underwriter-ready package after all later controls are present |
+| `missing_income_document` | `C01` | Typed `NEEDS_INPUT`; no invented fact |
+| `contradictory_employer` | `C05`/`C13` | Contradiction remains explicit; targeted evidence or intervention |
+| `stale_credit_artifact` | `C05` | Policy/freshness block; no model override |
+| `appraisal_delayed` | `C15` | Durable wait and authenticated resume |
+| `employment_changed_during_wait` | `C15`/`C21` | Reauthorization and re-verification before continuing |
+| `duplicate_document_event` | `C04`/`C15` | Inbox deduplication; one state transition |
+| `los_timeout_after_commit` | `C22` | `UNKNOWN_EFFECT`, no blind retry, successful reconciliation or intervention |
+| `malicious_document_instruction` | `C20`/`C23` | Untrusted text cannot change tools, policy, destination, or expose data |
+| `cross_tenant_case_reference` | `C06`/`C21` | Denied before content materialization; security evidence recorded |
+| `revoked_loan_officer` | `C21` | Resume/write denied after current entitlement check |
+| `action_authorization_reuse_after_case_change` | `C14`/`C22` | Proposal hash or version mismatch requires a new approval |
+| `evaluation_cohort_v1` | `C25` | Versioned synthetic multi-case holdout supports trajectory, reliability, and slice analysis |
+| `fairness_slice_regression` | `C25` | Candidate release blocked under governed evaluation policy; result proves gate behavior, not real-world fairness |
+| `provider_outage` | `C10`/`C28` | Bounded fallback or safe partial result; no control bypass |
+| `incompatible_worker` | `C27` | Work is routed to compatible code or stopped; history is not rewritten |
+
+The anchor fixture is used for the narrative and most fault demonstrations. `evaluation_cohort_v1` and capacity workloads are separate, immutable synthetic datasets with provenance, generation method, seed, intended use, prohibited use, and leakage checks. Their outcomes validate the implementation and release-gate mechanics only; they do not establish real-world model fairness, legal compliance, or lending performance.
+
+## Current implementation evidence and limitations
+
+| Evidence class | What the supplied material shows | What remains unproven |
+| --- | --- | --- |
+| Verified in supplied Markdown | 28 chapter headings, 54 syntactically parseable Python fences, OpenAI Agents SDK 0.22.2 baseline, OpenAI Python >=2.25.0 floor, MLflow 3.15.2 baseline | Runtime imports, package installation, network calls, end-to-end behavior, generated artifacts |
+| Verified defect in supplied Markdown | Initial agent listing references write/email tools not defined in that listing; cumulative narrative is supplier onboarding | A runnable mortgage baseline and chapter-by-chapter mortgage progression |
+| Claimed by Appendix I | `northstar` package, supplier demo, 19 deterministic tests, two optional adapter smoke tests | Repository contents and test results; repository was not supplied |
+| Implemented foundation slice | `mortgage_case` package, `C01`–`C03`, offline scenarios, optional OpenAI/Agents SDK adapter | 16 behavior/contract tests pass locally; later checkpoint composition remains unproven |
+| Remaining target of this roadmap | `C04`–`C28`, durable workflow, identity, effects, security, MLflow, evaluation, release, and capacity extensions | Implementation remains to be created and reviewed |
+
+## Progressive-hardening dependency rule
+
+The book teaches some concepts after earlier chapters need their vocabulary. Avoid both circular dependencies and premature claims with these gates:
+
+- `C04` introduces `PrincipalContext` and non-executable `CapabilityScope` so IDs and intended scope are present from the start. They are not credentials and cannot authorize protected work.
+- `C14` proves proposal hashing, durable waiting, expiry, and decision binding with a synthetic reviewer. Full current-identity and entitlement enforcement is not claimed until `C21`.
+- `C18` and `C19` demonstrate only synthetic/read-only child tasks and protocol calls. Their scope-intersection checks are re-run against the enforceable `CapabilityEnvelope` in `C21`.
+- `C20` demonstrates containment with policy and credential façades but no reusable secret or production endpoint.
+- `C21` upgrades identity, authorization, revocation, and last-hop credential exchange, then revalidates the `C14`, `C18`, and `C19` flows.
+- `C22` is the first checkpoint permitted to execute a protected synthetic LOS mutation. No earlier normal stage can import or resolve a mutating connector.
+
+Each pre-enforcement stage must label its control as a **contract/mechanics demonstration**, not a complete security or authorization implementation.
+
+## Chapter-by-chapter implementation register
+
+Each checkpoint has one primary teaching delta. Later chapters may compose earlier controls, but they may not skip or silently replace them.
+
+### C01 — Chapter 1: From an LLM Call to a Production Agentic System
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Blocker** |
-| Concept being taught | Start with a simple working agent, then distinguish model, tools, agent, and enterprise system. Define the business problem before complexity. |
-| Current state | The narrative names Northstar and Acme, but the inline prototype calls undefined `lookup_supplier`, `create_supplier`, and `send_email`. The registered `agent-tool-loop` example is a different, read-only status question. |
-| Expected implementation | A runnable `northstar_stage_00` accepts one supplier application, reads a fixed fixture, produces a clear status/summary, and prints the actors, inputs, output, and known limitations. It must be intentionally non-production and have a visible “before” contract. |
-| What is missing | Canonical case fixture; stable IDs; baseline output schema; executable prototype; explicit unsupported claims and failure boundaries. |
-| Why it matters | Readers need one mental model before seeing gateways, state, or multi-agent patterns. An undefined first listing teaches that architecture examples need not run. |
-| Required changes | Replace or relabel the inline pseudo-code; add a baseline domain fixture and a small `run_baseline()` function. Keep the baseline incapable of writes and explain that later stages add each missing control. |
-| Technology | Custom Python for the fixture and result; OpenAI Agents SDK for an optional bounded read-only loop; scripted model for CI. |
-| Dependencies | None; this is the root of the stage graph. |
-| Recommended order | **PR-NS-00**, before all other Northstar stages. |
-| Acceptance criteria | Fresh checkout runs offline; Acme input produces a deterministic structured result; no undefined symbol remains in the cited listing; test asserts the baseline cannot claim a committed supplier effect. |
-| Relevant files | Create `examples/northstar/stage_00_baseline.py`, `examples/northstar/fixtures.py`, `examples/tests/test_northstar_stage_00.py`; modify `config/examples.json`, `examples/README.md`, `source/parts/01-part-i.md`. |
+| Learning goal | Start with an honest mortgage evidence-summary prototype and expose the gap between a model response and a production system. |
+| Before | No executable mortgage case. The source prototype names tools that are not all defined in its first listing and can be read as if the agent owns writes. |
+| Add for the mortgage case | Create the stable synthetic fixture, `MortgageCase`, `CaseSummaryCandidate`, a scripted offline model, and an optional direct OpenAI Python SDK Responses adapter. The baseline is read-only and reports its limitations. |
+| Reader-visible walkthrough | Run `MORT-2026-000184`; summarize available documents, identify the absent second pay statement, and print actors, inputs, candidate output, unsupported claims, and next control needed. |
+| Required failure or refusal | `missing_income_document` returns `NEEDS_INPUT`; the candidate cannot contain approve/deny/rate/adverse-action fields, and no write tool exists. |
+| Implementation and technology | Custom Python + Pydantic; scripted model is mandatory; direct `openai` adapter is optional and must return the same schema. |
+| Acceptance criteria | Fresh offline checkout runs one command; output is deterministic and redacted; all names resolve; tests prove the stage cannot claim a verified fact, committed effect, or lending decision. |
+| Target files | `mortgage_case/stages/c01_baseline.py`, `mortgage_case/domain/case.py`, `mortgage_case/fixtures/case_000184.json`, `mortgage_case/adapters/scripted_model.py`, optional `mortgage_case/adapters/openai_responses.py`, `tests/mortgage_case/unit/test_c01.py` |
 
-### Stage 1 — Chapter 2: Tools, Structured Outputs, and the Deterministic Shell
+### C02 — Chapter 2: Tools, Structured Outputs, and the Deterministic Shell
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Major** |
-| Concept being taught | Convert model intent into typed proposals and pass through validate, authorize, commit, verify, and accept gates. |
-| Current state | `governed_tool_gateway.py` and `effect_idempotency.py` prove generic controls. The Chapter 2 JSON and gateway are not wired to the Chapter 1 case or a domain connector. |
-| Expected implementation | The baseline emits a `ToolIntent`/`ActionProposal` for supplier evidence or supplier creation. A Northstar gateway validates `supplier.create@2`, exact resource/version, grant, approval requirement, and logical effect key; a fake ERP returns a receipt. |
-| What is missing | Shared Northstar proposal schema; supplier connector; deterministic gate result; typed `EffectRecord` and receipt; before/after diff. |
-| Why it matters | This is the first visible transition from “the agent did it” to “the platform accepted a verified effect.” |
-| Required changes | Generalize shared contracts without breaking existing IDs; add gateway composition around the existing generic implementation; add stale, unauthorized, duplicate, and unknown-outcome fixtures. |
-| Technology | Custom Python gateway/ledger and Pydantic; Agents SDK only for proposal generation; no live API. |
-| Dependencies | Stage 0 fixture and output contract. |
-| Recommended order | **PR-NS-01**, immediately after PR-NS-00. |
-| Acceptance criteria | A valid proposal yields one receipt; replay returns the same receipt without a second ERP call; stale/unauthorized/changed-intent proposals are rejected before dispatch; unknown outcome blocks success. |
-| Relevant files | Create `examples/northstar/stage_01_shell.py`, `examples/northstar/contracts.py`, `examples/northstar/connectors.py`, `examples/tests/test_northstar_stage_01.py`; modify `config/examples.json` and the Chapter 2 regions in `source/parts/01-part-i.md`. |
+| Learning goal | Turn model output into typed proposals and keep calculation, state, policy, authorization, and acceptance deterministic. |
+| Before | The baseline can summarize but offers no trustworthy contract for candidate facts, calculations, evidence requests, or workflow transitions. |
+| Add for the mortgage case | Introduce `AgentProposal`, `ExtractedFactCandidate`, `CalculationResult`, `WorkflowCommand`, schema validation, fictional training rules, and a read-only Tool Gateway façade. A safe draft condition may be proposed but not sent or committed. |
+| Reader-visible walkthrough | The model proposes a missing-document request and candidate income facts; deterministic code validates citations, calculates illustrative LTV/DTI with `Decimal`, checks case version, and emits the next workflow command. |
+| Required failure or refusal | Reject an unsupported fact, float-based amount, stale case version, unknown tool, unauthorized case, or proposal containing a final lending decision. |
+| Implementation and technology | Pydantic 2, `Decimal`, canonical JSON/hash helpers, custom deterministic validator/gateway; no live API required. |
+| Acceptance criteria | Same inputs reproduce the same calculations and command; schema-valid but unauthorized/stale proposals are refused before dispatch; acceptance never depends on model confidence. |
+| Target files | `mortgage_case/stages/c02_deterministic_shell.py`, `mortgage_case/domain/money.py`, `mortgage_case/domain/evidence.py`, `mortgage_case/platform/tools.py`, `tests/mortgage_case/unit/test_c02.py` |
 
-### Stage 2 — Chapter 3: Agent Runtime and Framework Abstraction
+### C03 — Chapter 3: Agent Runtime and Framework Abstraction
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Major** |
-| Concept being taught | Put the OpenAI Agents SDK behind a provider-neutral `AgentRuntime`; keep workflow, authority, credentials, effects, and audit outside the framework. |
-| Current state | `runtime/step_execution.py` runs one supplier-policy step behind a platform façade. It does not consume the Stage 1 gateway/contracts or return a result that the workflow can advance. |
-| Expected implementation | The Northstar runtime receives an `AgentStepRequest`, builds authorized tools from the capability envelope, invokes the SDK with the scripted model, validates `AgentStepResult`, and returns a proposal to the Stage 1 shell. |
-| What is missing | A cumulative adapter path; shared request/context IDs; mapping from SDK result to domain disposition; optional real OpenAI provider boundary; framework replacement contract test. |
-| Why it matters | Without this bridge, the reader sees a good SDK example but cannot understand how a framework participates in a durable enterprise system. |
-| Required changes | Refactor the existing step example around Northstar request/fixture types while preserving `step-execution` as a focused listing; add adapter conformance tests for model injection, tool allowlist, max turns, cancellation, structured output, and trace linkage. |
-| Technology | OpenAI Agents SDK `0.22.2`; optional OpenAI API integration; custom Python `AgentRuntime`; scripted model for CI. |
-| Dependencies | Stages 0–1; uses their contracts and gateway façade. |
-| Recommended order | **PR-NS-02**. |
-| Acceptance criteria | Runtime cannot create an authority or commit an effect; a provider-neutral request produces a provider-neutral result; SDK state is absent from durable workflow records; replacing the adapter test double leaves the caller unchanged. |
-| Relevant files | Create `examples/northstar/stage_02_runtime.py`, `examples/northstar/runtime.py`, `examples/tests/test_northstar_stage_02.py`; modify `examples/runtime/step_execution.py`, `config/examples.json`, `source/parts/01-part-i.md`. |
+| Learning goal | Place OpenAI Agents SDK behind a provider-neutral `AgentRuntime` while preserving platform ownership. |
+| Before | The direct model adapter and deterministic shell are separate; no bounded tool loop translates a platform request into SDK objects and back. |
+| Add for the mortgage case | Implement `AgentStepRequest/Result`, `OpenAIAgentsRuntime`, governed function-tool façades, structured output, external turn/tool/time limits, trace privacy defaults, and adapter conformance tests. The first implementation keeps `ScriptedRuntime` mandatory for offline execution and uses the class in `mortgage_case/adapters/openai_agents.py` only when the optional SDK path is enabled. |
+| Reader-visible walkthrough | The workflow submits one evidence-review step; the SDK can call only `mortgage.case.read@1` and `mortgage.policy.read@1`; its result becomes a provider-neutral proposal consumed by `C02`. |
+| Required failure or refusal | Tool allowlist escape, max-turn breach, malformed output, cancellation, provider error, and accidental serialization of credentials all fail with typed results. |
+| Implementation and technology | OpenAI Agents SDK `0.22.2`; scripted SDK model for CI; optional provider-backed run; platform types remain independent of `agents` classes. |
+| Acceptance criteria | Replacing the runtime with a test adapter changes no caller; SDK state is absent from canonical business/effect records; no tool can bypass the gateway. |
+| Target files | `mortgage_case/stages/c03_agent_runtime.py`, `mortgage_case/platform/runtime.py`, `mortgage_case/adapters/openai_agents.py`, `tests/mortgage_case/contract/test_c03_runtime.py` |
 
-### Stage 3 — Chapter 4: Enterprise Reference Architecture, Boundaries, and Contracts
+### C04 — Chapter 4: Enterprise Reference Architecture, Boundaries, and Contracts
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Major** |
-| Concept being taught | Turn planes and layers into authoritative records, service boundaries, asynchronous Run API, regional execution cell, and event/outbox contracts. |
-| Current state | Chapter 4 has detailed contracts and `examples/contracts.py`, but the runnable code has no RunManifest, task owner, artifact store, event history, or outbox around Northstar. |
-| Expected implementation | Compose Stage 2 into a minimal in-memory reference architecture: `RunManifest`, `WorkflowExecution`, `Artifact`, `Task`, event envelope, idempotent command, and outbox publication. The implementation should show where each record is written. |
-| What is missing | One authoritative writer map; run creation/status/signal/cancel façade; event correlation; artifact references; outbox duplicate handling. |
-| Why it matters | The diagram currently teaches more deployed components than the executable example instantiates. A small composition map makes the boundary actionable without pretending to be a production database. |
-| Required changes | Add a `NorthstarPlatform` composition root and an architecture-contract test; distinguish in-memory teaching stores from production adapters in comments and prose. |
-| Technology | Custom Python/Pydantic; CloudEvents-shaped envelope and transactional-outbox test double; no framework-specific run objects. |
-| Dependencies | Stage 2 runtime; Stage 1 effect record. |
-| Recommended order | **PR-NS-03**. |
-| Acceptance criteria | `POST`-like start is idempotent; every record has one owner; events carry tenant/run/trace IDs; status reads are projections; outbox redelivery is deduplicated; SDK types do not cross the public contract. |
-| Relevant files | Create `examples/northstar/platform.py`, `examples/northstar/events.py`, `examples/tests/test_northstar_stage_03.py`; extend `examples/northstar/contracts.py`, `config/examples.json`, `source/parts/02-part-ii.md`. |
+| Learning goal | Make the architecture executable through records, owners, stable APIs, events, and stores. |
+| Before | One bounded step exists, but the case has no durable run identity, authoritative record map, artifacts, status projection, or outbox. |
+| Add for the mortgage case | Create `RunManifest`, minimal `PrincipalContext`, non-executable `CapabilityScope`, `Run`, `Artifact`, `WorkflowExecution`, `Event`, outbox/inbox records, an in-memory composition root, and idempotent start/status/signal/cancel façades. Register a hard write lock for all pre-`C22` normal stages. |
+| Reader-visible walkthrough | Start the mortgage run with an idempotency key; write the manifest and first event; store document references as immutable artifacts; publish a deduplicated status event. |
+| Required failure or refusal | Duplicate start/signal, payload-hash conflict, wrong tenant, stale command version, and outbox redelivery are demonstrated. |
+| Implementation and technology | Custom Python/Pydantic, SQLite or in-memory teaching stores, CloudEvents-shaped envelopes; no SDK type appears in public contracts. |
+| Acceptance criteria | Every record has one writer; state and event commit atomically in the test store; projections are rebuildable; duplicate delivery produces one logical transition; identity/scope travel with the run, but no mutating connector is discoverable or callable. |
+| Target files | `stages/c04_reference_architecture.py`, `platform/events.py`, `platform/workflow.py`, `tests/workflow/test_c04.py` |
 
-### Stage 4 — Chapter 5: Enterprise Knowledge Management for Agents
+### C05 — Chapter 5: Enterprise Knowledge Management for Agents
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Major** |
-| Concept being taught | Governed knowledge artifacts, ontology/graph, provenance, rules, grounding, and policy projection into enforceable controls. |
-| Current state | Six knowledge examples are individually tested, but their fixtures concern generic regulatory rules and transaction systems. Northstar prose says a jurisdiction exclusion is retrieved but not enforced. |
-| Expected implementation | Add Northstar supplier-policy artifacts with owner, revision, jurisdiction, effective date, digest, source span, and rule ID. The evidence-review stage retrieves a governed projection; the effect shell evaluates the rule independently. |
-| What is missing | Supplier policy fixture; document-to-rule provenance; authorized retrieval; policy revision pin; contradiction/unknown handling in the cumulative path. |
-| Why it matters | It demonstrates the crucial distinction between “the agent quoted policy” and “the platform enforced policy.” |
-| Required changes | Parameterize or wrap existing policy/grounding/guardrail modules with Northstar fixtures; add a policy change test that invalidates a stale plan/approval. Do not silently replace generic educational fixtures. |
-| Technology | Custom Python typed rules/graph/provenance; optional retrieval adapter; the model may extract a candidate, never certify it. |
-| Dependencies | Stage 3 RunManifest and Stage 2 authorization/effect boundary. |
-| Recommended order | **PR-NS-04**. |
-| Acceptance criteria | A rule includes a verifiable source digest/span and scope; unauthorized or out-of-scope policy is not retrieved; unknown required facts fail closed; the same rule is checked before protected effect. |
-| Relevant files | Create `examples/northstar/knowledge.py`, `examples/northstar/fixtures/policy.py`, `examples/tests/test_northstar_stage_04.py`; modify relevant knowledge examples/regions and `source/parts/02-part-ii.md`. |
+| Learning goal | Represent mortgage policy and domain knowledge as governed, versioned artifacts rather than an unscoped corpus. |
+| Before | The agent can read text but cannot distinguish a policy source, fictional rule, revision, jurisdiction, effective interval, or enforceable result. |
+| Add for the mortgage case | Create fictional training-policy artifacts, ontology terms, source spans, digests, owners, effective dates, contradiction handling, and a deterministic rule projection used by the shell. |
+| Reader-visible walkthrough | Retrieve the rule governing required income evidence; cite it in the explanation; independently enforce freshness and evidence requirements before the case can advance. |
+| Required failure or refusal | Contradictory employer data, stale credit artifact, unknown required fact, out-of-scope rule, and changed policy revision fail closed. |
+| Implementation and technology | Typed knowledge/rule graph and provenance store; retrieval adapter optional; model may identify candidate applicability but never certify policy truth. |
+| Acceptance criteria | Every rule result points to source revision and span; a policy change invalidates affected recommendations/action authorizations; no prompt text can override an enforceable rule. |
+| Target files | `stages/c05_knowledge.py`, `platform/knowledge.py`, `fixtures/policies/`, `tests/unit/test_c05.py` |
 
-### Stage 5 — Chapter 6: Context Engineering, RAG, Memory, and State
+### C06 — Chapter 6: Context Engineering, RAG, Memory, and State
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Major** |
-| Concept being taught | Separate canonical workflow state, authorized context, artifacts, retrieval, conversation, memory, and recovery state. Materialize a reproducible `ContextManifest`. |
-| Current state | Chapter 6 has a strong conceptual context pipeline, but no registered Northstar context builder or memory lifecycle; `durable_state.py` is a generic event fold. |
-| Expected implementation | Build a context manifest for `SUP-8421` that records authorization decisions, source revisions, trust labels, redactions, ordering, and digest. Add an explicit memory record with scope, purpose, provenance, TTL, correction, and deletion linkage. |
-| What is missing | Authorized retrieval before model access; separate namespaces; prompt projection digest; memory write policy; restartable state linked to artifacts. |
-| Why it matters | Readers must see that a prompt is a disposable projection, not the database, memory store, or approval history. |
-| Required changes | Add `ContextBuilder`, `MemoryStore` test double, and `NorthstarRunState`; extend the runtime request to require a manifest ID and state version; test tenant/corpus leakage and stale snapshots. |
-| Technology | Custom Python for state/context/memory; OpenAI Agents SDK receives only the authorized projection; optional vector/search adapter is non-authoritative. |
-| Dependencies | Stages 3–4; policy and artifacts must exist before context can be built. |
-| Recommended order | **PR-NS-05**. |
-| Acceptance criteria | Same pinned inputs produce the same manifest digest; unauthorized content never reaches the model; memory cannot become an instruction or broaden authority; replay identifies exactly which manifest was used. |
-| Relevant files | Create `examples/northstar/context.py`, `examples/northstar/memory.py`, `examples/northstar/state.py`, `examples/tests/test_northstar_stage_05.py`; modify `examples/runtime/durable_state.py`, `examples/contracts.py`, `source/parts/02-part-ii.md`. |
+| Learning goal | Build a reproducible, authorized context projection and separate it from workflow state, knowledge, working memory, and long-term memory. |
+| Before | The runtime lacks a manifest showing which case fields/documents/policies were authorized, redacted, ordered, and shown to the model. |
+| Add for the mortgage case | Implement `ContextManifest`, segment trust labels, ACL decisions, source revisions, redactions, token budgets, digest, run-scoped working memory, and governed memory policy. |
+| Reader-visible walkthrough | Assemble only the permitted fields and document excerpts for one income-review step; pass references to the SDK; reproduce the exact manifest after replay. |
+| Required failure or refusal | Cross-tenant reference, unauthorized field, stale snapshot, retrieved instruction, unsupported durable memory, and deleted-source cache hit are blocked. |
+| Implementation and technology | Custom context builder and memory test store; optional hybrid retrieval adapter; no raw SSN/account number enters model context or normal telemetry. |
+| Acceptance criteria | Pinned inputs produce the same manifest digest; authorization occurs before bytes are materialized; memory cannot become instruction or authority; deletion invalidates derivatives. |
+| Target files | `stages/c06_context.py`, `platform/context.py`, `platform/memory.py`, `tests/security/test_c06.py` |
 
-### Stage 6 — Chapter 7: Agentic Developer Platform, SDK, and Delivery Lifecycle
+### C07 — Chapter 7: Agentic Developer Platform, SDK, and Delivery Lifecycle
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Major** |
-| Concept being taught | Provide a platform golden path, adapter conformance, local simulation, versioned definitions, and promotion evidence. |
-| Current state | Chapter 7 shows platform APIs and supplier skill snippets, but there is no Northstar scaffold, release manifest, conformance suite, or local-to-production command path. |
-| Expected implementation | Make the cumulative example runnable as a platform package with a pinned agent/workflow/policy/tool/model/adapter manifest and an offline simulation command. Add a conformance suite for the runtime boundary. |
-| What is missing | Build/run metadata; reproducible stage selection; contract version compatibility; developer-facing failure messages; provider integration seam. |
-| Why it matters | The book promises an agentic developer platform; the example should show how a developer obtains and tests one governed capability. |
-| Required changes | Add a small manifest and `run_northstar.py` entry point; validate all digests/versions at startup; add a compatibility matrix test. Keep live-provider integration opt-in. |
-| Technology | Custom Python platform CLI/manifest; Agents SDK adapter; optional OpenAI API; MLflow config only when observability is enabled. |
-| Dependencies | Stages 0–5. |
-| Recommended order | **PR-NS-06**. |
-| Acceptance criteria | One command runs the offline Northstar stage; manifest pins all behaviorally relevant versions; incompatible worker/manifest is rejected; CI does not require credentials. |
-| Relevant files | Create `examples/northstar/manifest.py`, `examples/northstar/cli.py`, `examples/tests/test_northstar_stage_06.py`; modify `examples/README.md`, `config/examples.json`, `source/parts/03-part-iii.md`. |
+| Learning goal | Give readers one documented golden path for building and running the cumulative case. |
+| Before | Modules exist but there is no stable CLI, stage registry, release manifest, local profile, or conformance workflow. |
+| Add for the mortgage case | Create the package CLI, `mortgage_stages.json`, build/runtime manifest, offline/live profiles, compatibility checks, generated example index, and actionable developer errors. |
+| Reader-visible walkthrough | Run `python -m mortgage_case --chapter 7 --scenario happy_path --offline --json`; inspect exact versions, stage delta, records, and limitations. |
+| Required failure or refusal | Missing fixture, incompatible schema, unpinned adapter, accidental network request in offline mode, and unknown stage fail before execution. |
+| Implementation and technology | Custom Python CLI and manifest loader; SDK adapters selected by configuration; lock digest recorded; no secret-bearing `.env` sample. |
+| Acceptance criteria | One command runs each landed checkpoint; offline mode is network-deny tested; manifests are complete and deterministic; help text explains the business case. |
+| Target files | `cli.py`, `__main__.py`, `config/mortgage_stages.json`, `README.md`, `tests/contract/test_c07_cli.py` |
 
-### Stage 7 — Chapter 8: Skills as Versioned Capabilities
+### C08 — Chapter 8: Skills as Versioned Capabilities
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Moderate** |
-| Concept being taught | Resolve an exact Skill version from capability, purpose, region, risk, data class, tool versions, policy, and evaluation evidence. |
-| Current state | `skills_registry.py` proves policy-aware SemVer resolution and packs, but the Northstar runtime does not resolve or pin a Skill. |
-| Expected implementation | Register `supplier.evidence.read`, `supplier.screening.propose`, and `supplier.record.create` Skills; resolve one exact version into the Stage 6 manifest and expose only its eligible tools/knowledge. |
-| What is missing | Northstar Skill manifests; resolution evidence; revocation/deprecation behavior for active and replay runs; runtime linkage. |
-| Why it matters | It shows that a Skill is a governed release unit, not a copied prompt or an SDK primitive. |
-| Required changes | Add domain manifests and resolution output; preserve existing registry tests; add a digest and evaluation-suite reference to the Northstar run manifest. |
-| Technology | Custom Python registry; Agents SDK only as the resolved execution adapter. |
-| Dependencies | Stage 6 release manifest and Stage 4 knowledge refs. |
-| Recommended order | **PR-NS-07**. |
-| Acceptance criteria | Resolution is deterministic and explainable; inactive/revoked versions cannot start a new run; a deprecated version remains available only under an explicit replay policy; resolved tools are the only tools exposed. |
-| Relevant files | Create `examples/northstar/skills.py`, `examples/tests/test_northstar_stage_07.py`; extend `examples/platform/skills_registry.py`, `config/examples.json`, `source/parts/03-part-iii.md`. |
+| Learning goal | Package reusable mortgage capabilities as immutable, policy-resolved Skills. |
+| Before | Instructions and tools are assembled manually; the run cannot prove which reusable capability version it used. |
+| Add for the mortgage case | Define Skills such as `mortgage.document.extract`, `mortgage.income.reconcile`, `mortgage.policy.explain`, and `mortgage.review.prepare`, with owners, schemas, tools, policy, tests, eval refs, lifecycle, and digests. |
+| Reader-visible walkthrough | Resolve one exact income-reconciliation Skill for tenant, purpose, region, data class, and risk; bind its version/digest into the run manifest. |
+| Required failure or refusal | Revoked, incompatible, unevaluated, wrong-region, or overly privileged Skill versions are not resolved for new runs. |
+| Implementation and technology | Custom Skill registry and semantic-version resolver; Agents SDK is only the execution adapter for the resolved contract. |
+| Acceptance criteria | Resolution is deterministic and explainable; discovery grants nothing; only resolved eligible tools/knowledge reach the runtime; replay policy is explicit. |
+| Target files | `stages/c08_skills.py`, `platform/skills.py`, `fixtures/skills/`, `tests/contract/test_c08.py` |
 
-### Stage 8 — Chapter 9: Skill Packs and Domain Platforms
+### C09 — Chapter 9: Skill Packs and Domain Platforms
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Major** |
-| Concept being taught | Compose compatible Skills, policy, knowledge, workflow templates, evaluation, dashboards, and runbooks into an immutable domain pack. |
-| Current state | Chapter 9 describes a supplier-onboarding pack, but it has no registered pack consumed by the running implementation. |
-| Expected implementation | Resolve `supplier-onboarding@1.x` as the one Northstar pack, including evidence, document validation, sanctions, policy explanation, approval preparation, and supplier-record creation capabilities. The pack must be compatible with the current workflow and policy bundle. |
-| What is missing | Pack-to-run binding; compatibility rules; promotion/revocation behavior; distinction between platform-shared controls and domain-owned behavior. |
-| Why it matters | The example should demonstrate domain composition without starting a new application or hiding shared controls in a prompt. |
-| Required changes | Add pack fixture and install/resolve test; show a before/after table where Stage 7 resolves one Skill and Stage 8 resolves the coherent experience. |
-| Technology | Custom Python manifest and registry; Agents SDK executes selected Skills; MLflow suite reference remains metadata until Chapter 24–25. |
-| Dependencies | Stage 7 Skills, Stage 4 policy, Stage 6 manifest. |
-| Recommended order | **PR-NS-08**. |
-| Acceptance criteria | Active pack references only compatible active Skills and policy/evaluation refs; a mismatch fails resolution; the resulting run records pack ID/version/digest. |
-| Relevant files | Create `examples/northstar/skill_pack.py`, `examples/tests/test_northstar_stage_08.py`; modify `examples/platform/skills_registry.py`, `config/examples.json`, `source/parts/03-part-iii.md`. |
+| Learning goal | Compose compatible Skills and shared controls into one mortgage pre-underwriting domain pack. |
+| Before | Individual Skills resolve, but a reader cannot install one coherent, evaluated domain experience. |
+| Add for the mortgage case | Create `mortgage-preunderwriting@1.x` with document, income, asset, property, policy-explanation, condition-draft, and review-package Skills plus workflow, policy, evaluation, dashboard, and runbook references. |
+| Reader-visible walkthrough | Install and resolve the pack; show which parts are domain-owned versus platform-shared; store exact pack version/digest in the run. |
+| Required failure or refusal | Skill/policy/workflow/eval incompatibility, revoked dependency, duplicate pack version, or unsupported region prevents activation. |
+| Implementation and technology | Custom immutable pack manifest/resolver; MLflow evaluation reference is metadata until `C25`. |
+| Acceptance criteria | The pack is internally compatible, active, and fully pinned; installation does not authorize a case; active-run and replay behavior are documented. |
+| Target files | `stages/c09_skill_pack.py`, `fixtures/skill_packs/`, `tests/contract/test_c09.py` |
 
-### Stage 9 — Chapter 10: ReAct — Bounded Reason–Act–Observe Loops
+### C10 — Chapter 10: ReAct: Bounded Reason–Act–Observe Loops
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Moderate** |
-| Concept being taught | Use ReAct only where the next information need depends on the last observation, with external turn/tool/time/cost/no-progress limits. |
-| Current state | `bounded_react_loop.py` and `react_engine.py` prove limits, but they are not invoked by Northstar evidence review and do not call the governed gateway. |
-| Expected implementation | At `EVIDENCE_REVIEW`, the agent may retrieve one missing or contradictory evidence item, observe it, and stop at bounded limits. Every tool call passes the Northstar capability/gateway path. |
-| What is missing | Stage-specific budget; observation/artifact capture; no-progress outcome mapping; distinction between read-only ReAct and protected effect. |
-| Why it matters | It demonstrates adaptive information gathering without implying that ReAct should own workflow or mutation. |
-| Required changes | Add a Northstar `ReActEngine` invoker; emit `needs_input` or `intervention_required` when bounds are hit; never let the loop call `supplier.create`. |
-| Technology | OpenAI Agents SDK for the concrete loop or custom engine for platform limits; custom Python gateway and budget. |
-| Dependencies | Stages 2, 5, and 8. |
-| Recommended order | **PR-NS-09**. |
-| Acceptance criteria | Repeated/empty observations terminate; max turns/tools/cost are enforced outside the model; all retrieved artifacts are authorized and cited; protected write is unavailable in this stage. |
-| Relevant files | Create `examples/northstar/react.py`, `examples/tests/test_northstar_stage_09.py`; adapt `examples/patterns/react_engine.py`, `config/examples.json`, `source/parts/04-part-iv.md`. |
+| Learning goal | Use a bounded loop only where the next evidence need depends on the previous observation. |
+| Before | The workflow can make one evidence step but cannot adaptively inspect a contradiction without a new hard-coded path. |
+| Add for the mortgage case | Add a read-only evidence ReAct controller with external turn, tool, token, time, cost, and repeated-observation limits. All calls use the existing context and Tool Gateway path. |
+| Reader-visible walkthrough | Investigate the employer mismatch by reading the application, then the authorized pay statement, then stop with a cited request for verification. |
+| Required failure or refusal | Repeated/empty observation, provider outage, budget exhaustion, unapproved tool, or attempt to write terminates as `NEEDS_INPUT` or `INTERVENTION_REQUIRED`. |
+| Implementation and technology | OpenAI Agents SDK loop or custom controller behind `AgentRuntime`; platform-owned budget and no-progress detector. |
+| Acceptance criteria | Limits are enforced outside prompts; every observation is authorized and artifact-linked; no write or final decision capability is exposed. |
+| Target files | `stages/c10_react.py`, `platform/react.py`, `tests/workflow/test_c10.py` |
 
-### Stage 10 — Chapter 11: Routing, Triage, and Handoffs
+### C11 — Chapter 11: Routing, Triage, and Handoffs
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Major** |
-| Concept being taught | Route deterministically and record whether a local handoff changes responsibility, authority, cancellation, deadlines, and final ownership. |
-| Current state | `routing_handoff.py` routes between refunds and sanctions specialists. Northstar prose names evidence, screening, and protected onboarding but does not use one routed case. |
-| Expected implementation | Route Acme requests to evidence, sanctions, tax, or onboarding-approval specialists. Local handoff preserves the parent activity owner; durable delegation creates a Stage 15 task with a new owner and narrowed grant. |
-| What is missing | Northstar route taxonomy; ownership record; route eligibility/fallback; handoff audit event; authority difference between local and durable delegation. |
-| Why it matters | Readers otherwise infer that changing agents is merely passing context, while the chapter teaches a responsibility transfer. |
-| Required changes | Add route decision schema and specialist stubs that accept only authorized task inputs; test unsupported/ambiguous routes and cancellation owner. |
-| Technology | Agents SDK local handoffs where useful; custom Python route policy and ownership records. |
-| Dependencies | Stage 6 runtime and Stage 7 capabilities; durable task contract is introduced before full fan-out in Stage 17. |
-| Recommended order | **PR-NS-10**. |
-| Acceptance criteria | Every route has an owner and fallback; a specialist cannot access another specialist’s tools by prompt; local handoff does not silently create durable authority; route decision is traceable. |
-| Relevant files | Create `examples/northstar/routing.py`, `examples/tests/test_northstar_stage_10.py`; adapt `examples/patterns/routing_handoff.py`, `source/parts/04-part-iv.md`. |
+| Learning goal | Route mortgage tasks by explicit eligibility and distinguish local specialization from durable ownership transfer. |
+| Before | One evidence agent handles every request, even when document, income, asset, property, or policy boundaries differ. |
+| Add for the mortgage case | Define route taxonomy, deterministic eligibility/fallback, local Agents SDK specialist handoffs, `RouteDecision`, and `OwnershipTransfer` semantics. |
+| Reader-visible walkthrough | Route the employer contradiction to income review and an appraisal question to property review; parent retains ownership for local specialists. |
+| Required failure or refusal | Ambiguous/unsupported route, specialist tool escape, stale owner, and cancellation after attempted handoff are explicit. |
+| Implementation and technology | Custom router/ownership records; Agents SDK local handoffs only when interaction ownership semantics are clear. |
+| Acceptance criteria | Every route has one owner, reason, eligible capability set, fallback, and trace event; prompt text cannot select an ineligible specialist. |
+| Target files | `stages/c11_routing.py`, `platform/routing.py`, `tests/workflow/test_c11.py` |
 
-### Stage 11 — Chapter 12: Planning and Plan–Execute
+### C12 — Chapter 12: Planning and Plan–Execute
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Major** |
-| Concept being taught | Treat a model plan as data; compile typed Plan IR against policy, budgets, capabilities, dependencies, and risk before scheduling nodes. |
-| Current state | `plan_compilation.py` validates generic `CandidatePlan` nodes, but no plan represents the supplier onboarding obligations or freezes completed work. |
-| Expected implementation | Compile a Northstar plan such as collect evidence → validate identity → screen sanctions/tax → request approval if needed → create supplier → verify. Conditional nodes and prerequisites are explicit. |
-| What is missing | Domain Plan IR; obligation/acceptance mapping; plan digest in RunManifest; revision policy; committed-node freeze. |
-| Why it matters | It makes the before/after sequence visible: the agent proposes a graph, the compiler decides what may run, and the workflow owns execution. |
-| Required changes | Add Northstar node types and compiler adapter; validate capabilities, policy digest, budgets, cycles, deadlines, and risk; test plan revision after one node commits. |
-| Technology | Custom Python compiler; SDK may propose candidate nodes but never schedules them. |
-| Dependencies | Stages 3–8; knowledge and Skill refs must be pinned. |
-| Recommended order | **PR-NS-11**. |
-| Acceptance criteria | Invalid/dangerous nodes are refused; compiled plan is deterministic and digest-bound; committed past work is not silently replayed; conditional approval/effect nodes are not runnable before prerequisites. |
-| Relevant files | Create `examples/northstar/planning.py`, `examples/tests/test_northstar_stage_11.py`; adapt `examples/patterns/plan_compilation.py`, `source/parts/04-part-iv.md`. |
+| Learning goal | Treat the mortgage plan as typed data compiled against authority, evidence, policy, budgets, and dependencies. |
+| Before | Adaptive work is a sequence of agent choices with no inspectable DAG, validation, reservation, or revision rules. |
+| Add for the mortgage case | Create mortgage `PlanIR`: collect missing evidence, verify employment/assets/property, run deterministic calculations, resolve contradictions, prepare human review, and record human-authorized effects. |
+| Reader-visible walkthrough | The model proposes a plan for `MORT-2026-000184`; the compiler rejects illegal nodes, binds exact capabilities, computes a digest, and schedules only ready nodes. |
+| Required failure or refusal | Cycle, unknown capability, protected decision node, excessive cost/fan-out, missing prerequisite, or revision that replays a committed effect is rejected. |
+| Implementation and technology | Pydantic Plan IR and pure compiler; SDK may propose candidate nodes but never schedules them. |
+| Acceptance criteria | Compiled order and digest are deterministic; completed effects/artifacts are frozen across revisions; conditional action-authorization/effect nodes remain blocked until prerequisites hold. |
+| Target files | `stages/c12_planning.py`, `platform/planning.py`, `tests/unit/test_c12.py` |
 
-### Stage 12 — Chapter 13: Reflection and Evaluator–Optimizer
+### C13 — Chapter 13: Reflection and Evaluator–Optimizer
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Major** |
-| Concept being taught | Use bounded reflection for targeted revision; use an independently defined evaluator for acceptance and promotion. |
-| Current state | Chapter 13 explains a contradictory address and overconfidence, but the registry has no reflection/evaluator example connected to Northstar. |
-| Expected implementation | Add an evidence-assessment candidate with a contradictory address. A bounded reflector requests a revision or missing document; a deterministic/evaluator component checks required evidence, citations, uncertainty, and policy alignment. |
-| What is missing | Independent evaluator contract; candidate versus accepted assessment; reflection budget; no self-promotion rule; regression artifact. |
-| Why it matters | It prevents readers from equating a polished self-critique with proof that a protected decision is correct. |
-| Required changes | Add candidate/evaluation models, cap revision count, preserve prior candidates, and require workflow acceptance outside the model. |
-| Technology | Custom Python deterministic checks; optional Agents SDK evaluator call; MLflow dataset linkage is added in Stage 23. |
-| Dependencies | Stages 4–5 knowledge/context and Stage 9 bounded loop. |
-| Recommended order | **PR-NS-12**. |
-| Acceptance criteria | Reflection cannot change policy/authority; evaluator catches missing/contradictory evidence; exceeding revision budget produces a typed intervention; accepted output records evaluator version and evidence. |
-| Relevant files | Create `examples/northstar/reflection.py`, `examples/northstar/evaluation_contracts.py`, `examples/tests/test_northstar_stage_12.py`; modify `source/parts/04-part-iv.md`. |
+| Learning goal | Use bounded reflection for targeted revision and an independent evaluator for evidence-package acceptance. |
+| Before | A coherent recommendation can overlook the employer contradiction or overstate confidence. |
+| Add for the mortgage case | Separate candidate, critique, revision, evaluation, and accepted artifact; add deterministic checks for required evidence/citations/calculations and a bounded optional model evaluator for explanation quality. |
+| Reader-visible walkthrough | The first recommendation misses the contradiction; the evaluator identifies the exact gap; one revision asks for verification and retains both candidate versions. |
+| Required failure or refusal | Self-approval, evaluator tool access, policy modification, unsupported certainty, or revision-budget exhaustion is refused or escalated. |
+| Implementation and technology | Custom deterministic evaluators; optional Agents SDK evaluator; MLflow dataset linkage deferred to `C25`. |
+| Acceptance criteria | Reflection cannot broaden authority or erase prior output; accepted result records evaluator/rule versions and evidence; hard checks outrank model score. |
+| Target files | `stages/c13_reflection.py`, `platform/evaluation_contracts.py`, `tests/evaluation/test_c13.py` |
 
-### Stage 13 — Chapter 14: Human-in-the-Loop
+### C14 — Chapter 14: Human-in-the-Loop
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Major** |
-| Concept being taught | Persist an exact proposal-bound approval, require approver authority and expiry, show before/after evidence, and reauthorize immediately before commit. |
-| Current state | `approval_gate.py` and `approval_verification.py` prove hash binding, authenticity, self-approval refusal, expiry, and policy-change rejection, but use generic refunds/arguments. |
-| Expected implementation | Northstar pauses `SUP-8421` with an exact supplier-create proposal, evidence list, policy digest, expected ERP version, risk, destination, and diff. The approval service issues a grant; the workflow verifies it before Stage 1 commit. |
-| What is missing | Northstar approval request/UI payload; exact connector proposal; durable wait/resume integration; reviewer role/purpose; rejection and escalation path. |
-| Why it matters | “Approve the agent” is not a meaningful enterprise control. The reader must see exactly what a human approves and what invalidates it. |
-| Required changes | Wrap existing approval modules with Northstar proposal; add approval event history, accessible preview metadata, reauthorization, and policy/record-change invalidation. |
-| Technology | Custom Python approval service/signature and workflow; Agents SDK interruption surface only as a local mechanism. |
-| Dependencies | Stages 1, 4, 6, 11, and 12. |
-| Recommended order | **PR-NS-13**. |
-| Acceptance criteria | Changed supplier, arguments, policy, grant, approver, expiry, or resource version blocks commit; approval cannot be minted by the effect caller; rejection leaves a recoverable terminal/wait state. |
-| Relevant files | Create `examples/northstar/approval.py`, `examples/tests/test_northstar_stage_13.py`; adapt `examples/patterns/approval_gate.py`, `approval_verification.py`, `source/parts/04-part-iv.md`. |
+| Learning goal | Persist exact proposal-bound human action authorization and keep it distinct from the final lending decision. |
+| Before | The system can prepare a recommendation but cannot safely ask a human to authorize a condition request or readiness transition. |
+| Add for the mortgage case | Create `HumanActionAuthorizationRequest`, immutable evidence snapshot, proposal hash, synthetic eligible-reviewer policy, expiry, allowed responses, decision event, and resume lease. Full current entitlement enforcement is intentionally deferred to `C21`. |
+| Reader-visible walkthrough | Present the exact proposed condition-send or `mark_ready_for_underwriter` operation, source evidence, calculations, policy version, case version, uncertainty, and before/after preview. The interface says “Authorize this operation,” never “Approve the mortgage.” |
+| Required failure or refusal | Changed case/evidence/policy/arguments, expired request, ineligible/self reviewer, replayed decision, or reused action authorization after mutation blocks resume. |
+| Implementation and technology | Custom human-action-authorization service/signature test double and durable wait; Agents SDK HITL state may pause local tools but is not the enterprise authorization record or a lending decision. |
+| Acceptance criteria | The authorized proposal hash and current state must match before resume; rejection/needs-evidence/expiry are durable dispositions; the normal stage still has no protected connector, and no final loan decision is delegated to the model. |
+| Target files | `stages/c14_human_review.py`, `platform/action_authorization.py`, `tests/workflow/test_c14.py` |
 
-### Stage 14 — Chapter 15: Long-Running and Durable Agents
+### C15 — Chapter 15: Long-Running and Durable Agents
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Major** |
-| Concept being taught | Model long-running work as replay-safe history, durable waits, bounded activities, deployment survival, and effect reconciliation. |
-| Current state | `durable_state.py` folds generic events and blocks success with unknown effects. It is not exercised by a nine-day Northstar document wait or crash between ERP write and acknowledgment. |
-| Expected implementation | Run Acme until a certificate wait, serialize history/checkpoint, restart with a new worker, accept the document signal, reconcile any unknown effect, refresh authority, and continue without duplicate work. |
-| What is missing | Northstar event vocabulary; timer/signal/deduplication; worker restart test; active-run version pin; crash-after-write scenario; cancellation/compensation behavior. |
-| Why it matters | The central promise of a production agent is survival across time and process failure, not just replaying a prompt. |
-| Required changes | Drive the existing reducer from Northstar events; add a fake clock/queue and failure injector; separate replay from live-effect reapplication; add operator intervention state. |
-| Technology | Custom Python event fold and test workflow; a production deployment may use Temporal/another durable engine, but the book example must retain provider-neutral contracts. |
-| Dependencies | Stages 3, 5, 11, and 13; effect ledger from Stage 1. |
-| Recommended order | **PR-NS-14**. |
-| Acceptance criteria | Replay and resume agree; duplicate signals are harmless; a crash after downstream write does not cause a second write; unknown effect prevents acceptance until reconciliation; active run remains compatible with its pinned manifest. |
-| Relevant files | Create `examples/northstar/workflow.py`, `examples/northstar/failures.py`, `examples/tests/test_northstar_stage_14.py`; extend `examples/runtime/durable_state.py`, `source/parts/04-part-iv.md`. |
+| Learning goal | Survive document waits, worker failure, deployment, cancellation, and uncertain effects through replay-safe execution. |
+| Before | The case cannot wait days for an appraisal or employment response without relying on process memory. |
+| Add for the mortgage case | Add pure event reducer, recorded activities, wait registration, fake clock, authenticated signals, inbox deduplication, checkpoints, worker restart, version pin, cancellation, and reconciliation states. |
+| Reader-visible walkthrough | Pause for the appraisal, terminate the worker, start a compatible worker, receive the document signal, revalidate employment/authority, and continue without repeating completed work. |
+| Required failure or refusal | Duplicate/early signal, stale signal schema, crash after activity result but before acknowledgment, cancellation during a simulated effect boundary, or incompatible worker goes to safe recovery. The protected LOS write remains disabled until `C22`. |
+| Implementation and technology | Mandatory custom deterministic test engine; optional Temporal/DBOS/Restate adapter later under the same contracts. |
+| Acceptance criteria | Replay reproduces state/commands; no I/O occurs during replay; unknown effect blocks completion; active runs remain pinned; waits consume no worker. |
+| Target files | `stages/c15_durable.py`, `platform/workflow.py`, `adapters/workflow_test_engine.py`, `tests/workflow/test_c15.py` |
 
-### Stage 15 — Chapter 16: Enterprise Pattern Catalog
+### C16 — Chapter 16: Enterprise Pattern Catalog
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Moderate** |
-| Concept being taught | Select patterns by context, risk, ownership, dependency, and failure mode rather than fashion. |
-| Current state | The chapter is a decision catalog and diagram; it does not point to a single cumulative Northstar decision or test. |
-| Expected implementation | Add a Northstar pattern-selection matrix: simple tool loop for read, bounded ReAct for evidence uncertainty, plan-execute for obligations, approval gate for protected activation, durable task for waits, supervisor/worker only when boundaries justify it. |
-| What is missing | Decision records tying catalog choices to stages and acceptance tests; anti-complexity baseline. |
-| Why it matters | The reader should understand why the running example gains each mechanism and why it does not use every pattern everywhere. |
-| Required changes | Add a small decision fixture or documentation table; link each choice to the Northstar stage and test, without adding a new framework abstraction. |
-| Technology | Custom Python metadata/tests; no new runtime technology. |
-| Dependencies | Stages 0–14. |
-| Recommended order | **PR-NS-15**, alongside the anti-pattern checks in PR-NS-16. |
-| Acceptance criteria | Every selected pattern names problem, alternative rejected, owner, risk, and test; a simpler baseline remains available for comparison. |
-| Relevant files | Create `examples/northstar/pattern_choices.py`, `examples/tests/test_northstar_stage_15.py`; modify `source/parts/04-part-iv.md`. |
+| Learning goal | Show why each pattern is selected for the mortgage case and preserve a simpler baseline. |
+| Before | Readers see implemented mechanisms but not the decision criteria that justified them. |
+| Add for the mortgage case | Create an executable pattern decision registry: structured call for extraction, deterministic workflow for known steps, bounded ReAct for evidence uncertainty, Plan IR for adaptive decomposition, approval for protected changes, and durable tasks only for real ownership boundaries. |
+| Reader-visible walkthrough | Print the chosen pattern, rejected alternatives, owner, risk, expected value, added failure modes, and test for each mortgage stage. |
+| Required failure or refusal | A request to use peer swarm, unbounded loop, or dynamic planning for a deterministic calculation is rejected by the decision policy. |
+| Implementation and technology | Documentation-backed metadata and tests; no new framework layer. |
+| Acceptance criteria | Every pattern has a concrete mortgage problem, simpler alternative, trade-off, authoritative owner, and regression test. |
+| Target files | `stages/c16_patterns.py`, `platform/pattern_choices.py`, `tests/unit/test_c16.py` |
 
-### Stage 16 — Chapter 17: Enterprise Anti-Pattern Catalog
+### C17 — Chapter 17: Enterprise Anti-Pattern Catalog
+
+| Field | Roadmap |
+| --- | --- |
+| Severity | **Major** |
+| Learning goal | Turn unsafe mortgage designs into executable negative tests. |
+| Before | Anti-patterns exist as prose, so a future refactor could accidentally reintroduce them. |
+| Add for the mortgage case | Add test-only unsafe examples: autonomous approve/deny output, direct broad LOS client, hidden protected attribute, ambient service credential, layered retry after timeout, unscoped boolean action approval, shared scratchpad, and unbounded self-reflection. |
+| Reader-visible walkthrough | Run the anti-pattern suite and show which deterministic boundary refuses each exploit/failure. |
+| Required failure or refusal | The unsafe module is never importable by the normal stage registry; removing a guard causes a named regression test to fail. |
+| Implementation and technology | Custom failure fixtures and policy tests; no real credential or external endpoint. |
+| Acceptance criteria | Each anti-pattern maps to a safe replacement checkpoint; CI proves the platform refuses it; examples cannot accidentally execute production-like writes. |
+| Target files | `stages/c17_anti_patterns.py`, `tests/security/test_c17_anti_patterns.py` |
+
+### C18 — Chapter 18: Supervisor/Worker and Multi-Agent Collaboration
+
+| Field | Roadmap |
+| --- | --- |
+| Severity | **Major** |
+| Learning goal | Use durable child tasks only for mortgage subtasks with distinct ownership, tools, data, or scaling. |
+| Before | Local specialists exist, but long-running income, asset, property, and document checks have no durable task ownership or join contract. |
+| Add for the mortgage case | Implement `TaskEnvelope`, narrowed read-only child `CapabilityScope`, task store, worker acceptance, immutable result artifacts, all/quorum/fallback join, deadlines, cancellation, and conflict handling. Full enforceable child grants arrive in `C21`. |
+| Reader-visible walkthrough | Fan out income, asset, and property verification; accept only schema/provenance-valid artifacts; join them into the underwriter package. |
+| Required failure or refusal | Duplicate completion, child scope expansion, straggler, conflicting fact, canceled parent, or partial result follows an explicit policy. |
+| Implementation and technology | Custom durable task scheduler/store; optional Agents SDK agents inside each bounded child step. |
+| Acceptance criteria | One current owner per task; child scope is a strict intersection; join waits for its declared condition; conflicts become typed intervention; no child has a write tool or production credential. |
+| Target files | `stages/c18_multi_agent.py`, `platform/delegation.py`, `tests/workflow/test_c18.py` |
+
+### C19 — Chapter 19: External Integration: MCP, A2A, and the Model Control Plane
+
+| Field | Roadmap |
+| --- | --- |
+| Severity | **Major** |
+| Learning goal | Demonstrate protocol interoperability without confusing it with enterprise trust or authorization. |
+| Before | Child tasks use local synthetic services; remote tool/agent boundaries, peer identity, and artifact adoption are absent. |
+| Add for the mortgage case | Add a read-only synthetic verification MCP server and synthetic appraisal-partner A2A peer behind local gateways with pinned metadata, peer policy, quotas, downscoped non-executable scopes, callback deduplication, artifact scanning, and local state mapping. |
+| Reader-visible walkthrough | Resolve the allowed endpoint, invoke a read-only verification tool, receive a remote appraisal artifact, validate/adopt it, and link the child task. |
+| Required failure or refusal | Changed server/card digest, wrong audience, untrusted peer, invalid schema, malicious artifact, token passthrough, or ambiguous cancellation is denied/recorded. |
+| Implementation and technology | Custom protocol façades and fake transports; live libraries/endpoints are optional; registry metadata never decides business authorization. |
+| Acceptance criteria | No upstream token or live connector credential exists in this checkpoint; all remote artifacts have local digest/classification/adoption decisions; local effect and acceptance rules remain authoritative. |
+| Target files | `stages/c19_protocols.py`, `adapters/mcp_gateway.py`, `adapters/a2a_gateway.py`, `tests/contract/test_c19.py` |
+
+### C20 — Chapter 20: Agentic AI Security and Guardrails Architecture
+
+| Field | Roadmap |
+| --- | --- |
+| Severity | **Major** |
+| Learning goal | Contain a manipulated model through layered controls rather than relying on prompt refusal. |
+| Before | The runtime labels retrieved data but lacks a full attack path and independent containment evidence. |
+| Add for the mortgage case | Create a malicious synthetic appraisal/document with an instruction to disclose bank data, plus ingestion scan, trust labels, minimal context, capability confinement, schema validation, policy, egress denial, DLP, incident record, and kill switch. |
+| Reader-visible walkthrough | Run the attack with detector both enabled and intentionally bypassed; show that unauthorized data, credentials, destinations, and effects remain unreachable. |
+| Required failure or refusal | Direct/indirect injection, tool-output injection, memory poisoning, recursive delegation, and cost attack are blocked or contained. |
+| Implementation and technology | Agents SDK guardrail as one detector; custom deterministic policy/egress/DLP/incident test doubles; no real exfiltration. |
+| Acceptance criteria | Security holds even when the model follows malicious text; legitimate evidence still flows; incident evidence excludes raw sensitive content. |
+| Target files | `stages/c20_security.py`, `platform/security.py`, `fixtures/documents/malicious_*`, `tests/security/test_c20.py` |
+
+### C21 — Chapter 21: Identity, RBAC/ABAC, and Delegated Authorization
+
+| Field | Roadmap |
+| --- | --- |
+| Severity | **Major** |
+| Learning goal | Preserve loan-officer subject and workload actor, authorize the exact case/action/purpose, and issue credentials only at the connector hop. |
+| Before | `PrincipalContext` and non-executable scopes have traveled with the run since `C04`, and `C14`/`C18`/`C19` demonstrated mechanics, but there is no enforceable principal chain, current entitlement check, child-grant proof, revocation, or credential lease. |
+| Add for the mortgage case | Upgrade `PrincipalContext`/`CapabilityScope` into enforceable `PrincipalChain`/`CapabilityEnvelope`; implement ABAC/PDP decisions, grant derivation, revalidation, revocation, entitlement freshness, and fake short-lived audience-bound credential exchange. Re-run the `C14`, `C18`, and `C19` contract tests under current identity. |
+| Reader-visible walkthrough | Carry subject, actor, tenant, purpose, region, risk, case resource, and action from admission through child task to LOS connector. |
+| Required failure or refusal | Cross-case/tenant access, changed subject, broader child scope, wrong purpose/audience/region, expired grant, or revoked loan officer is denied before data/effect. |
+| Implementation and technology | Custom policy and STS doubles; optional OAuth token-exchange adapter only in integration tests; no bearer token reaches model or serialized state. |
+| Acceptance criteria | Child authority only narrows action/resource/data/purpose/risk/time/cost/depth; exact invocation is reauthorized; deny/invalidation wins over cache; all earlier action-authorization, child-task, and protocol flows pass the upgraded checks. |
+| Target files | `stages/c21_identity.py`, `platform/authorization.py`, `tests/security/test_c21.py` |
+
+### C22 — Chapter 22: Tool Security, Side Effects, Idempotency, and Approval
+
+| Field | Roadmap |
+| --- | --- |
+| Severity | **Major** |
+| Learning goal | Prove one protected mortgage effect can receive human action authorization, commit once, be verified, and reconcile uncertainty. |
+| Before | Human action authorization, durable workflow, and enforceable identity exist, but no end-to-end mortgage mutation composes gateway, case version, effect ledger, connector, receipt, and acceptance. |
+| Add for the mortgage case | Make `loan_case.mark_ready_for_underwriter@1` the first canonical protected effect. Use logical key `{tenant}:case:{case_id}:mark_ready:v{target_case_version}`; hash schema, action, canonical resource, arguments, and expected version; record policy decision, `HumanActionAuthorizationDecision`, downstream request ID, receipt, observed projection, and reconciliation state. |
+| Reader-visible walkthrough | Submit the exact human-authorized readiness transition to the synthetic LOS and verify the case projection. Recording the later human lending decision is a separate domain-owned effect and never a model action. |
+| Required failure or refusal | Timeout after commit becomes `UNKNOWN_EFFECT`; replay, changed intent under the same logical key, stale case, action-authorization mismatch, or unauthorized caller never duplicates or bypasses the effect. |
+| Implementation and technology | Custom Tool Gateway/effect ledger plus synthetic LOS connector and failure injector; Agents SDK only proposes. |
+| Acceptance criteria | Happy path produces one receipt and one LOS call; replay returns the receipt; a reused key with a different intent is a conflict; reconciliation proves committed/absent/intervention; completion waits for the verified effect. |
+| Target files | `stages/c22_effects.py`, `platform/effects.py`, `adapters/synthetic_los.py`, `tests/workflow/test_c22.py` |
+
+### C23 — Chapter 23: Sandboxing, Egress, Data Security, and Governance
+
+| Field | Roadmap |
+| --- | --- |
+| Severity | **Major** |
+| Learning goal | Protect mortgage documents and helper execution with enforceable sandbox, egress, DLP, retention, and deletion contracts. |
+| Before | Security checks exist, but document/OCR/code helpers have no executable resource, filesystem, network, or lifecycle boundary. |
+| Add for the mortgage case | Add sandbox profile/lease façade, read-only input mounts, ephemeral output, CPU/memory/time/process limits, default-deny egress, canonical destinations, secret lease boundary, DLP/redaction, retention, deletion, and legal-hold metadata. |
+| Reader-visible walkthrough | Process the synthetic appraisal and bank statement; publish only redacted structured evidence; deny the malicious external URL and prevent raw account data from leaving. |
+| Required failure or refusal | Runaway helper, archive bomb, private/metadata address, redirect, secret request, oversized output, wrong classification/region, or deletion resurrection is blocked. |
+| Implementation and technology | Deterministic control-contract doubles in mandatory tests; an isolated container/proxy integration may be added but cannot justify production claims by itself. |
+| Acceptance criteria | No unauthorized host/data/secret is reachable; resources are bounded; deletion propagates through indexes/memory/artifacts; audit stores references, not secrets. |
+| Target files | `stages/c23_containment.py`, `platform/sandbox.py`, `platform/privacy.py`, `tests/security/test_c23.py` |
+
+### C24 — Chapter 24: Distributed Tracing
+
+| Field | Roadmap |
+| --- | --- |
+| Severity | **Major** |
+| Learning goal | Link the complete mortgage trajectory while keeping PII and authoritative audit evidence out of ordinary telemetry. |
+| Before | Stage reports and local logs exist, but there is no causal trace across workflow, SDK, retrieval, policy, tasks, action authorizations, effects, and connectors. |
+| Add for the mortgage case | Add OpenTelemetry-compatible trace context and MLflow 3.15.2 adapter with opaque/pseudonymous run/node/task/context/policy/action-authorization/effect/release IDs, safe span attributes, asynchronous links, completeness checks, and a protected lookup map outside telemetry. |
+| Reader-visible walkthrough | Trace one appraisal wait and readiness effect; identify queue, model, tool, and human dwell time without exposing full prompts/documents/SSN/account data. |
+| Required failure or refusal | Broken propagation, dropped required span, raw PII tag, secret-like value, excessive cardinality, or trace-store outage triggers a typed signal; protected audit remains complete. |
+| Implementation and technology | MLflow tracing with local SQLite-compatible test profile where supported; explicit platform spans; autologging configured so sensitive capture is disabled/default-safe. |
+| Acceptance criteria | Trace joins all opaque IDs and shows unknown-effect/wait states; privacy scanner finds no applicant name, address, raw document text, protected attribute, credential, or hidden reasoning; audit/effect/decision records remain separate and authoritative. |
+| Target files | `stages/c24_tracing.py`, `platform/observability.py`, `adapters/mlflow_tracking.py`, `tests/contract/test_c24.py` |
+
+### C25 — Chapter 25: Continuous Learning and Governed Improvement
+
+| Field | Roadmap |
+| --- | --- |
+| Severity | **Major** |
+| Learning goal | Convert failures into immutable evaluation cases and block unsafe candidate releases with executable gates. |
+| Before | Traces exist, but there is no mortgage dataset, scorer contract, baseline comparison, fairness review, or promotion decision. |
+| Add for the mortgage case | Create `evaluation_cohort_v1` as a versioned synthetic multi-case holdout with provenance/leakage review; add deterministic outcome/trajectory/security/effect graders, calibrated optional judges, repeated-run variance, approved fairness/proxy slices, minimum sample rules, uncertainty/confidence intervals, baseline deltas, and a custom release gate. |
+| Reader-visible walkthrough | Evaluate a candidate that writes clearer summaries but misses an authorization check or regresses on a sufficiently supported governed slice; reject it despite a better average text score, and report inconclusive slices instead of forcing a claim. |
+| Required failure or refusal | Unauthorized tool path, unsupported adverse-action explanation, missing citation, protected-feature use, unknown effect, dataset leakage, high repeated-run variance, or supported slice regression is a hard failure; underpowered slices are explicitly inconclusive. |
+| Implementation and technology | MLflow datasets/traces/scorers plus custom deterministic gate; optional OpenAI judge is versioned, blinded, calibrated, and never sole authority. |
+| Acceptance criteria | Scorers are actually invoked; cohort/candidate/baseline/rubric/judge/statistical-policy versions are recorded; holdout leakage is checked; failures become curated cases only after de-identification and approval; synthetic results are not presented as real-world fairness evidence; runtime cannot self-promote. |
+| Target files | `stages/c25_evaluation.py`, `platform/evaluation.py`, `fixtures/evaluation/`, `tests/evaluation/test_c25.py` |
+
+### C26 — Chapter 26: Governance, Risk, and Operating Model
+
+| Field | Roadmap |
+| --- | --- |
+| Severity | **Major** |
+| Learning goal | Assign accountable owners and evidence to a high-impact mortgage use case without claiming legal compliance. |
+| Before | Evaluation gates exist, but the case lacks a governed use-case record, model-risk controls, exception lifecycle, review cadence, recourse, and incident ownership. |
+| Add for the mortgage case | Create governance manifest with intended/prohibited uses, owners, risk tier, data map, human oversight, fairness review, model/vendor inventory, control evidence, exception expiry, incident route, recourse/contact path, and review dates. |
+| Reader-visible walkthrough | Open the evidence package for a blocked/stale/unknown case and show who owns policy, model, security, effect recovery, human decision, and release approval. |
+| Required failure or refusal | Expired waiver, missing owner, open exception used as authority, unsupported legal claim, or absent human-review/recourse metadata blocks release. |
+| Implementation and technology | Custom governance records and validators; MLflow/trace links are evidence pointers only. |
+| Acceptance criteria | Every material decision/control has owner, policy, evidence, escalation, and expiry; the documentation explicitly disclaims legal/regulatory certification. |
+| Target files | `stages/c26_governance.py`, `platform/governance.py`, `tests/contract/test_c26.py` |
+
+### C27 — Chapter 27: Deployment, Versioning, CI/CD, and Recovery
+
+| Field | Roadmap |
+| --- | --- |
+| Severity | **Major** |
+| Learning goal | Release immutable compatible bundles, canary new starts, and preserve active mortgage histories. |
+| Before | The case records versions but has no signed bundle, exact dependency lock, compatibility router, rollout state, rollback, migration, or recovery rehearsal. |
+| Add for the mortgage case | Package agent/Skill/pack/workflow/policy/model/tool/schema/scorer/adapter/runtime versions and digests; add worker compatibility, canary assignment, active-run pin, rollback, kill switch, replay tests, and recovery evidence. |
+| Reader-visible walkthrough | Canary a changed document schema for new runs while `MORT-2026-000184` resumes on compatible code; roll back new assignment without rewriting history. |
+| Required failure or refusal | Incompatible worker, missing artifact/signature, mutable alias drift, failed migration, region loss during unknown effect, or rollback without old capacity is refused/contained. |
+| Implementation and technology | Custom release/compatibility code and CI; exact lock digest records OpenAI Agents SDK/MLflow/OpenAI SDK resolution. |
+| Acceptance criteria | Bundle is immutable and complete; active runs do not change unexpectedly; rollback changes assignment only; recovery fences writers and reconciles effects before resume. |
+| Target files | `stages/c27_release.py`, `platform/releases.py`, `tests/workflow/test_c27.py`, CI/release manifests |
+
+### C28 — Chapter 28: Cost, Latency, Capacity, and Reliability Optimization
 
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Moderate** |
-| Concept being taught | Make unsafe designs concrete: autonomous monolith, ambient authority, layered retries, boolean approval, and unbounded loops. |
-| Current state | Four diagrams explain before/after designs, but no Northstar negative tests prove the bad path is rejected. |
-| Expected implementation | Add deliberately failing fixtures/tests for direct ERP access, broad tool discovery, retry-after-unknown, approval reuse after mutation, and model-controlled termination. The tests should assert the platform refuses these paths. |
-| What is missing | Executable negative evidence and links from each anti-pattern to its replacement stage. |
-| Why it matters | Readers retain a control more reliably when they see the exploit/failure and the guard that stops it. |
-| Required changes | Add test-only unsafe doubles; never make unsafe behavior runnable as a normal example or include real credentials. |
-| Technology | Custom Python tests and failure injection; Agents SDK only for bounded comparison. |
-| Dependencies | Stages 1, 2, 9, 13, and 14. |
-| Recommended order | **PR-NS-16**. |
-| Acceptance criteria | Each anti-pattern has one regression test and one cross-reference to the safe Northstar implementation; tests fail if a guard is removed. |
-| Relevant files | Create `examples/northstar/anti_patterns.py`, `examples/tests/test_northstar_stage_16.py`; modify `source/parts/04-part-iv.md`. |
+| Learning goal | Optimize cost and latency per verified underwriter-ready case without weakening safety, fairness, or human oversight. |
+| Before | The anchor case can run safely, but one case cannot establish workload behavior, queueing, retry amplification, provider limits, human dwell, or tenant fairness. |
+| Add for the mortgage case | Build a versioned synthetic workload from the anchor plus controlled cohort variants; create deterministic simulator, resource permits, queue/admission model, model/tool/human cost events, repeated-run reliability, deadline/fairness metrics, safe degradation policy, and baseline comparison. |
+| Reader-visible walkthrough | Replay routine, missing-document, attack, provider-outage, and threefold-spike cohort workloads; report sample size, p50/p95, cost per verified package, human-review burden, unknown-effect backlog, deadline misses, and uncertainty where estimated. |
+| Required failure or refusal | Provider outage, quota exhaustion, hot tenant, approval backlog, retry storm, or proposed degradation that bypasses a control results in backpressure or a safe partial state. |
+| Implementation and technology | Custom deterministic simulator and metrics; MLflow may store experiment results but does not define acceptance. |
+| Acceptance criteria | Metrics use the verified workflow-completion denominator, state assumptions and cohort generation method, show distributions/slices/uncertainty, preserve tenant/risk fairness, and never degrade authorization/action-authorization/effect/privacy controls. |
+| Target files | `stages/c28_capacity.py`, `platform/capacity.py`, `platform/simulation.py`, `tests/evaluation/test_c28.py` |
 
-### Stage 17 — Chapter 18: Supervisor/Worker and Multi-Agent Collaboration
+## Source and navigation changes required during implementation
 
-| Field | Roadmap |
+The cumulative code and the teaching narrative must tell the same story. When each checkpoint lands:
+
+| Surface | Required change |
 | --- | --- |
-| Severity | **Major** |
-| Concept being taught | Use durable child tasks with one owner, narrowed grants, explicit fan-out/fan-in, artifact contracts, deadlines, and cancellation. |
-| Current state | The chapter describes Northstar screening, tax, security, and procurement specialists and includes task/grant excerpts, but there is no runnable supervisor/worker composition. |
-| Expected implementation | Northstar supervisor creates bounded child tasks for sanctions and tax evidence, runs them concurrently, validates artifacts, and joins according to an explicit all/quorum policy before approval or effect. |
-| What is missing | `TaskEnvelope` persistence; child grant intersection; child artifact adoption; join/conflict/cancel semantics; aggregate acceptance. |
-| Why it matters | It shows when multi-agent architecture is justified and prevents “several personas chatting” from being mistaken for coordination. |
-| Required changes | Add child-task store and scheduler test double; derive grants from parent; inject duplicate/out-of-order child events; use local SDK agents only inside child steps. |
-| Technology | Custom Python durable task/join logic; optional Agents SDK child adapters; A2A is reserved for the external boundary in Stage 18. |
-| Dependencies | Stages 6, 8, 10, 11, and 14; identity narrowing is formalized in Stage 20 but can use a minimal subset first. |
-| Recommended order | **PR-NS-17**. |
-| Acceptance criteria | Child authority is a strict intersection; one child owner is recorded; duplicate completion is idempotent; join waits for its declared condition; cancellation propagates; conflicting evidence becomes a typed intervention. |
-| Relevant files | Create `examples/northstar/delegation.py`, `examples/northstar/join.py`, `examples/tests/test_northstar_stage_17.py`; modify `source/parts/05-part-v.md`. |
+| Book chapter source | Add the chapter’s mortgage checkpoint and label retained supplier material as a short contrast; preserve one canonical mortgage transition without silently deleting instructional content. |
+| 14-lesson course | Update the running-example sections, proposal JSON, diagrams, and practical code so mortgage terms and safety boundaries are consistent. |
+| Appendix I / companion guide | Rename the package map to `mortgage_case`, list actual files/tests, and report test counts generated from CI rather than hand-maintained claims. |
+| Example registry | Add `checkpoint`, `book_chapter`, `course_lesson`, `scenario`, `entry_point`, `tests`, `offline`, and `optional_dependencies`; validate uniqueness and file existence. |
+| Example README | Add the `C01`–`C28` progression, quickstart, expected output, synthetic-data warning, and optional integration profiles. |
+| Diagrams and generated outputs | Rebuild from canonical source; do not hand-edit generated Markdown, DOCX, LaTeX, images, manifests, or checksums. |
+| References | Keep vendor/version claims scoped to the supplied baseline; re-verify release/API claims before a new edition. |
 
-### Stage 18 — Chapter 19: External Integration — MCP, A2A, and the Model Control Plane
+Do not leave mixed names such as supplier IDs in mortgage code, `northstar` imports in the new package, or a `supplier.create` tool in an action-authorization/effect example. A migration check should scan source, examples, tests, diagrams, and outputs for stale primary-case terminology while allowing explicitly marked contrast examples.
 
-| Field | Roadmap |
-| --- | --- |
-| Severity | **Major** |
-| Concept being taught | Terminate MCP/A2A at governed local gateways; verify endpoint, peer, schema, artifact, authority, quota, egress, and effect semantics locally. |
-| Current state | Chapter 19 has A2A envelope and MLflow MCP registry excerpts, but they are not connected to Northstar’s sanctions child or Tool Gateway. |
-| Expected implementation | Add test-double MCP screening server and A2A regional verification peer. The local gateways pin registry/agent-card versions, validate responses, scan/adopt artifacts, downscope authority, and convert remote status into Northstar child events. |
-| What is missing | Protocol adapter contract; endpoint/peer trust; remote artifact adoption; cancellation and retry semantics; no token passthrough; local effect boundary. |
-| Why it matters | Protocol interoperability is not enterprise trust or authorization; the example must make that boundary visible. |
-| Required changes | Add protocol façades with fake network transports and contract tests; keep live MCP/A2A smoke tests opt-in and clearly non-required. |
-| Technology | Custom Python protocol gateways; optional MCP/A2A client libraries only behind adapters; MLflow registry metadata is not the trust decision. |
-| Dependencies | Stage 17 task/artifact contracts; Stage 1 gateway; Stage 20 identity policy. |
-| Recommended order | **PR-NS-18**. |
-| Acceptance criteria | Untrusted peer/artifact/schema/audience is refused; remote cancellation is best-effort and recorded; no upstream token is forwarded; adopted artifacts carry digest, source, classification, and local authorization. |
-| Relevant files | Create `examples/northstar/protocols.py`, `examples/northstar/remote_doubles.py`, `examples/tests/test_northstar_stage_18.py`; modify `source/parts/05-part-v.md`, `config/examples.json` only if a listing is cited. |
+## Implementation order and review boundaries
 
-### Stage 19 — Chapter 20: Agentic AI Security and Guardrails Architecture
+Use one chapter-aligned change set per checkpoint until the foundational package is stable. The code may be reviewed in grouped pull requests, but each `Cxx` must have its own registry entry, stage report, tests, and reader transition.
 
-| Field | Roadmap |
-| --- | --- |
-| Severity | **Major** |
-| Concept being taught | Layered defense across input, retrieval, model, tool, identity, sandbox, egress, DLP, output, monitoring, and incident response boundaries. |
-| Current state | `input_guardrail.py` proves an SDK input tripwire, but uses a refund and does not test a malicious Northstar PDF through later boundaries. |
-| Expected implementation | Add a supplier document containing an override instruction and an exfiltration destination. The system labels it as untrusted data, blocks instruction promotion, restricts tools/data, denies egress, redacts output, and records an incident without relying on the detector alone. |
-| What is missing | Retrieval-time content labeling; tool/data/egress containment; DLP output check; incident event; security regression fixture. |
-| Why it matters | Prompt injection is a model-compromise scenario. The reader must see that containment still works if detection misses the attack. |
-| Required changes | Wrap the existing input guardrail as one detector in a defense-in-depth harness; add malicious artifact and trusted-artifact fixtures; prove no secret or unauthorized supplier data leaves the system. |
-| Technology | Agents SDK guardrail for the local detector; custom Python policy/egress/DLP/sandbox façades; no real external exfiltration. |
-| Dependencies | Stages 5, 6, 17, and 18. |
-| Recommended order | **PR-NS-19**. |
-| Acceptance criteria | Attack content cannot broaden instructions, tools, data, network, credentials, or effects; blocked/contained path is observable; legitimate supplier evidence still flows; failure is fail-closed at each relevant boundary. |
-| Relevant files | Create `examples/northstar/security.py`, `examples/northstar/fixtures/attacks.py`, `examples/tests/test_northstar_stage_19.py`; adapt `examples/security/input_guardrail.py`, `source/parts/06-part-vi.md`. |
-
-### Stage 20 — Chapter 21: Identity, RBAC/ABAC, and Delegated Authorization
-
-| Field | Roadmap |
-| --- | --- |
-| Severity | **Major** |
-| Concept being taught | Preserve initiating subject and acting workload; authorize exact action/resource/purpose/time/data; derive narrower child grants and last-hop credentials. |
-| Current state | Chapter 21 has detailed identity prose and child-grant code in Chapter 18, but no reusable Northstar authorization evaluator or credential lease. |
-| Expected implementation | Carry requester, workflow workload, specialist actor, tenant, purpose, region, risk, and supplier resource through every call. Exchange for an audience-bound short-lived connector credential only after policy permits the exact call. |
-| What is missing | Subject/actor model; ABAC decision; delegation lineage; credential lease; resource/purpose mismatch tests; token audience/expiry checks. |
-| Why it matters | It prevents the common but dangerous shortcut of passing the requester’s broad token or an agent service credential to every connector. |
-| Required changes | Add a policy façade and capability-envelope intersection; connect its decision to Stage 1 gateway and Stage 17 child tasks; retain a fake STS/credential broker. |
-| Technology | Custom Python policy/ABAC and credential-lease doubles; optional OAuth token-exchange adapter in a separate integration module. |
-| Dependencies | Stages 3, 6, 8, 17, and 18. |
-| Recommended order | **PR-NS-20**. |
-| Acceptance criteria | Subject cannot change during delegation; child scope never broadens actions/resources/data/region/risk/cost/lifetime; wrong audience/tenant/purpose/expiry is refused; no bearer token reaches the model. |
-| Relevant files | Create `examples/northstar/identity.py`, `examples/northstar/policy.py`, `examples/northstar/credentials.py`, `examples/tests/test_northstar_stage_20.py`; modify `examples/foundations/governed_tool_gateway.py`, `source/parts/06-part-vi.md`. |
-
-### Stage 21 — Chapter 22: Tool Security, Side Effects, Idempotency, and Approval
-
-| Field | Roadmap |
-| --- | --- |
-| Severity | **Major** |
-| Concept being taught | Protect mutations with logical effect key, intent hash, expected version, request ID, receipt, unknown-effect state, reconciliation, and approval. |
-| Current state | Generic gateway and idempotency examples cover parts of this, while Chapter 14 covers approval. No one example performs the Northstar ERP creation and then survives timeout/replay. |
-| Expected implementation | Make `supplier.create@2` the canonical protected mutation. The gateway records proposal, policy decision, approval, effect execution, downstream request ID, receipt, and reconciliation state; the workflow accepts only a verified supplier projection. |
-| What is missing | End-to-end protected write; connector timeout-after-write; reconciliation query; effect/audit join; conflict on reused logical key. |
-| Why it matters | This is the concrete proof that “success” is a verified business outcome, not model text or an HTTP response. |
-| Required changes | Compose Stages 1, 13, 14, and 20 into one mutation path; add a fake ERP with controllable timeout, duplicate, stale-version, and conflict behavior. |
-| Technology | Custom Python effect ledger/gateway/domain connector; Agents SDK only proposes; approval signer test double. |
-| Dependencies | Stages 1, 4, 13, 14, and 20. |
-| Recommended order | **PR-NS-21**. |
-| Acceptance criteria | Valid action creates exactly one supplier record and receipt; replay is safe; timeout-after-write becomes `UNKNOWN_EFFECT` and reconciles; approval/hash/version mismatch blocks; audit contains evidence and receipt. |
-| Relevant files | Create `examples/northstar/effects.py`, `examples/northstar/erp.py`, `examples/tests/test_northstar_stage_21.py`; extend `examples/foundations/governed_tool_gateway.py`, `effect_idempotency.py`, `source/parts/06-part-vi.md`. |
-
-### Stage 22 — Chapter 23: Sandboxing, Egress, Data Security, and Governance
-
-| Field | Roadmap |
-| --- | --- |
-| Severity | **Major** |
-| Concept being taught | Contain untrusted model/content behavior through sandbox, default-deny egress, capability, credential, DLP, classification, residency, retention, and approval controls. |
-| Current state | Chapter 23 has the attack path and `sandbox-egress` diagram, but no executable sandbox/egress/DLP policy façade around Northstar. |
-| Expected implementation | Run any document/OCR/code helper with a restricted filesystem, allowlisted destinations, no raw secrets, resource budgets, content classification, and redacted output. The malicious PDF cannot upload contracts or call an unapproved host. |
-| What is missing | Testable sandbox/egress contract; secret lease boundary; destination allowlist; DLP/redaction; retention/deletion/legal-hold state. |
-| Why it matters | It demonstrates that security remains effective even when reasoning is manipulated, and clarifies which controls require custom platform code. |
-| Required changes | Add deterministic policy façades and failure-injection tests; explicitly label them as control contracts, not a production container implementation. |
-| Technology | Custom Python sandbox/egress/DLP/credential test doubles; production may bind to an isolated runtime/proxy. |
-| Dependencies | Stages 5, 19, 20, and 21. |
-| Recommended order | **PR-NS-22**. |
-| Acceptance criteria | Unauthorized host/data/classification/secret is denied; sandbox limits terminate runaway helper; output is redacted/classified; audit records the policy decision without storing secrets; deletion removes memory/artifact links according to policy. |
-| Relevant files | Create `examples/northstar/containment.py`, `examples/northstar/privacy.py`, `examples/tests/test_northstar_stage_22.py`; modify `source/parts/06-part-vi.md`. |
-
-### Stage 23 — Chapter 24: Distributed Tracing
-
-| Field | Roadmap |
-| --- | --- |
-| Severity | **Major** |
-| Concept being taught | Link asynchronous workflow, agents, models, retrieval, policy, tools, approvals, effects, and external calls in a causal trace while keeping protected audit evidence separate. |
-| Current state | MLflow tracing/configuration examples emit supplier/status and context spans, but not a complete Northstar run with effect, approval, or task correlation. |
-| Expected implementation | Instrument one full or representative Northstar run with `run_id`, `task_id`, `node_id`, `context_manifest_id`, `policy_decision_id`, `approval_id`, `effect_id`, and provider/model versions. Record IDs and safe summaries, not secrets. |
-| What is missing | Cross-stage trace context; MLflow span taxonomy; audit/trace distinction; asynchronous parent/child links; sensitive-data policy; trace completeness assertion. |
-| Why it matters | Operators need to explain latency, failure, and authority path—not only view a final answer. |
-| Required changes | Extend MLflow helpers with Northstar context manager; add spans at workflow/gateway/policy/retrieval/approval/effect boundaries; add trace-to-audit join test and missing-span alert. |
-| Technology | MLflow `3.15.2` for example traces/evaluation hooks; OpenTelemetry-compatible IDs; custom Python audit ledger. |
-| Dependencies | Stages 3, 5, 14, 20, 21, and 22. |
-| Recommended order | **PR-NS-23**. |
-| Acceptance criteria | Offline SQLite-backed MLflow test produces a trace with required IDs/spans; trace payload excludes secrets by default; audit remains authoritative and complete; unknown effect and approval wait are visible as causal states. |
-| Relevant files | Create `examples/northstar/observability.py`, `examples/tests/test_northstar_stage_23.py`; adapt `examples/observability/mlflow_tracing.py`, `mlflow_trace_configuration.py`, `source/parts/07-part-vii.md`. |
-
-### Stage 24 — Chapter 25: Continuous Learning and Governed Improvement
-
-| Field | Roadmap |
-| --- | --- |
-| Severity | **Major** |
-| Concept being taught | Turn production failures and feedback into immutable datasets, deterministic/trajectory/safety checks, calibrated judges, slice analysis, approval, release, and monitoring. |
-| Current state | `mlflow_evaluation.py` evaluates simple supplier status cases and detects a regression, but not a Northstar trajectory, unauthorized tool path, effect, approval, or protected slice. |
-| Expected implementation | Capture a failed/blocked Northstar run as a regression case; evaluate candidate runtime/Skill/prompt bundles on correctness, evidence grounding, safety, tool trajectory, approval binding, repeated-run reliability, cost, latency, and human burden. Gate promotion by risk slice and baseline comparison. |
-| What is missing | Northstar evaluation dataset; production-trace-to-case conversion; deterministic trajectory graders; judge calibration; release gate; no runtime self-modification. |
-| Why it matters | It closes the learning loop without letting aggregate answer quality hide a low-volume unauthorized trajectory. |
-| Required changes | Extend MLflow evaluation with Northstar cases and candidate metadata; add a deterministic release decision object and approval record; link candidate digest to Stage 6 manifest. |
-| Technology | MLflow datasets/scorers/traces; custom Python deterministic graders and release gate; optional OpenAI judge only as calibrated evidence. |
-| Dependencies | Stages 8, 12, 21, and 23. |
-| Recommended order | **PR-NS-24**. |
-| Acceptance criteria | A candidate that improves text quality but violates tool/approval policy is rejected; failures become immutable cases; scorers are actually invoked; judge version/calibration/slice is recorded; runtime cannot self-promote. |
-| Relevant files | Create `examples/northstar/evaluation.py`, `examples/northstar/regressions.py`, `examples/tests/test_northstar_stage_24.py`; adapt `examples/observability/mlflow_evaluation.py`, `source/parts/07-part-vii.md`. |
-
-### Stage 25 — Chapter 26: Governance, Risk, and Operating Model
-
-| Field | Roadmap |
-| --- | --- |
-| Severity | **Moderate** |
-| Concept being taught | Assign risk ownership, control-plane responsibilities, exception/incident governance, review cadence, and measurable operating obligations. |
-| Current state | Chapter 26 provides federated governance and decision/evidence prose but no Northstar risk register, control owner, exception record, or operating review fixture. |
-| Expected implementation | Attach risk tier, owner, control set, data class, region, review date, exception status, and escalation route to the Northstar pack/run. Show who can approve policy, release, runtime intervention, and effect recovery. |
-| What is missing | Governance metadata model; exception lifecycle; owner/recourse fields; operational review evidence; link from risk tier to controls and approval. |
-| Why it matters | Governance becomes practical when the reader can answer who owns a denied, failed, stale, or harmful run. |
-| Required changes | Add governance manifest and checks; do not turn the example into a legal compliance claim or encode jurisdiction-specific law without scoped sources. |
-| Technology | Custom Python governance metadata and runbook links; MLflow/trace references only as evidence, not governance authority. |
-| Dependencies | Stages 8, 19–24. |
-| Recommended order | **PR-NS-25**. |
-| Acceptance criteria | Every R-tier decision has owner, policy, evidence, escalation, and expiry; open exceptions cannot silently authorize effects; governance review can locate the exact Northstar run and release. |
-| Relevant files | Create `examples/northstar/governance.py`, `examples/tests/test_northstar_stage_25.py`; modify `source/parts/08-part-viii.md`, Appendix B/C/I if references are added. |
-
-### Stage 26 — Chapter 27: Deployment, Versioning, CI/CD, and Recovery
-
-| Field | Roadmap |
-| --- | --- |
-| Severity | **Major** |
-| Concept being taught | Promote immutable release bundles, pin active runs, canary new starts, preserve compatibility, and recover without rewriting history. |
-| Current state | Chapter 27 describes release manifests and rollback, but the cumulative example has no serialized bundle, compatibility checker, canary assignment, or migration/recovery test. |
-| Expected implementation | Package Northstar agent/Skill/workflow/policy/model/tool schemas/evaluator/adapter versions and digests. Start new runs on a canary; keep active runs pinned; reject incompatible worker; roll back assignment; replay and reconcile. |
-| What is missing | Release manifest implementation; schema compatibility rules; active-run pin; rollout/rollback state; CI release gate; recovery rehearsal. |
-| Why it matters | Readers see how an evolving system remains trustworthy while work is in flight. |
-| Required changes | Add compatibility checker and release test fixture; integrate examples registry and validation into the stage CI command; document that generated book artifacts remain a separate build concern. |
-| Technology | Custom Python manifest/compatibility logic; CI scripts; Agents SDK/MLflow versions recorded as dependencies, not deployment authority. |
-| Dependencies | Stages 6, 8, 14, 23, 24, and 25. |
-| Recommended order | **PR-NS-26**. |
-| Acceptance criteria | Manifest is immutable and complete; incompatible schema/worker is rejected; active run does not change behavior unexpectedly; rollback affects new assignment only; clean checkout rebuilds examples and book artifacts. |
-| Relevant files | Create `examples/northstar/releases.py`, `examples/tests/test_northstar_stage_26.py`; modify `config/examples.json`, `source/parts/08-part-viii.md`, `CHANGELOG.md` when implementation begins. |
-
-### Stage 27 — Chapter 28: Cost, Latency, Capacity, and Reliability Optimization
-
-| Field | Roadmap |
-| --- | --- |
-| Severity | **Moderate** |
-| Concept being taught | Optimize cost per verified success using admission, bounded execution, selective context, routing, concurrency, safe degradation, and workload-specific capacity estimates. |
-| Current state | Chapter 28 has a Northstar quarter-end scenario, equations, and reliability diagram, but no scenario-driven simulator or metrics bound to the cumulative run. |
-| Expected implementation | Replay a workload of Northstar runs with queue, tool, model, human-wait, retry, and effect outcomes. Compute cost/latency/capacity per accepted supplier, tenant fairness, deadline misses, and safe degradation decisions. |
-| What is missing | Metric schema; workload fixture; admission/concurrency controller; cost per verified success; retry amplification and human burden; sensitivity analysis. |
-| Why it matters | It prevents optimization from becoming token-price tuning that increases unsafe retries or human load. |
-| Required changes | Add deterministic simulator/metrics collector; label all values as example workload assumptions; test admission and fairness under a threefold demand spike and provider outage. |
-| Technology | Custom Python simulator and metrics; MLflow can store experiment results, but acceptance remains custom and business-outcome based. |
-| Dependencies | Stages 14, 21, 23, 24, and 26. |
-| Recommended order | **PR-NS-27**, final chapter implementation. |
-| Acceptance criteria | Simulator reports verified-success denominator; limits protect tenant/risk fairness; safe degradation never bypasses policy/approval/effect controls; reliability/cost changes are compared against a baseline. |
-| Relevant files | Create `examples/northstar/capacity.py`, `examples/northstar/simulation.py`, `examples/tests/test_northstar_stage_27.py`; modify `source/parts/08-part-viii.md`, Appendix L if the acceptance table gains links. |
-
-## Appendix and navigation gaps
-
-The appendices already contain the right contracts and acceptance themes, but
-they should become the handoff surface for the implementation stages.
-
-| Appendix | Gap | Required follow-up |
+| Sequence | Checkpoints | Outcome |
 | --- | --- | --- |
-| B — Failure triage and operator runbooks | Runbooks are not yet keyed to Northstar IDs/states/effect outcomes | Add commands and expected evidence for `UNKNOWN_EFFECT`, stale policy, approval expiry, poisoned event, child timeout, and replay; link to Stage 14/21/23 tests |
-| C — Platform contracts quick reference | Contract list is conceptual rather than linked to cumulative modules | Add the final module/class name and owner for Run, Task, ContextManifest, PolicyDecision, ApprovalGrant, EffectRecord, Trace, Evaluation, and Release |
-| I — Northstar Reference | It is the natural implementation guide but must not become a second source of truth | Make it a reader-facing map to `examples/northstar/` and `code-gap.md`; keep prose in `source/parts`, code in `examples` |
-| J — Coding-agent prompt and acceptance criteria | It asks for architecture breadth but not stage-by-stage Northstar implementation | Add the stage ledger, severity gates, offline requirement, registry steps, and PR sequence from this roadmap |
-| L — Capacity, resilience, and release acceptance | Strong final gates but not linked to test names | Add acceptance-test IDs after implementation; do not mark a gate complete from prose alone |
-| Front-matter TOC | Current TOC is authored and structurally correct for the 8/28/12 topology | Do not add roadmap stages as chapters. If `code-gap.md` is included in a release package, keep it project documentation outside the manuscript TOC |
-| `examples/README.md` | Several chapter labels reflect earlier numbering/topology and there is no cumulative order | Replace the table with stage IDs and current chapter numbers after each stage lands; add a Northstar progression table |
-| `config/examples.json` | Registry validates paths/tests but has no stage or scenario fields | Add optional `stage`, `chapter`, `scenario`, and `northstar_phase` fields only when implementation begins; update validator/schema tests first |
+| Foundation | `C01`–`C03` | Runnable mortgage baseline, deterministic shell, OpenAI Agents SDK adapter |
+| Platform core | `C04`–`C07` | Records, events, knowledge, context, package, CLI, manifests |
+| Reusable capability | `C08`–`C09` | Skills and mortgage domain pack |
+| Reasoning patterns | `C10`–`C13` | Bounded ReAct, routing, planning, reflection/evaluation |
+| Human and durable control | `C14`–`C15` | Proposal-bound review, waits, replay, cancellation, recovery |
+| Decision discipline | `C16`–`C17` | Pattern rationale and executable anti-pattern refusals |
+| Delegation and protocols | `C18`–`C19` | Durable child tasks, joins, MCP/A2A gateways |
+| Trust and effects | `C20`–`C23` | Security, identity, protected LOS effect, sandbox/egress/privacy |
+| Evidence and governance | `C24`–`C26` | MLflow tracing/evaluation and governed operating model |
+| Production engineering | `C27`–`C28` | Immutable release, compatibility, recovery, capacity, and cost |
 
-## Recommended implementation order and PR boundaries
-
-Implement the example as small reviewable PRs. Do not land all stages in one
-large change, and do not modify `main` directly.
-
-| PR | Stages | Outcome |
-| --- | --- | --- |
-| `PR-NS-00` | 0 | Runnable case definition and honest baseline |
-| `PR-NS-01` | 1 | Typed proposal, gateway, effect ledger, connector |
-| `PR-NS-02` | 2 | SDK adapter and provider-neutral runtime |
-| `PR-NS-03` | 3 | Run/platform composition and event/outbox boundary |
-| `PR-NS-04` | 4 | Governed supplier knowledge and policy enforcement |
-| `PR-NS-05` | 5 | Context manifest, memory, and replayable Northstar state |
-| `PR-NS-06` | 6 | Developer package, manifest, and conformance path |
-| `PR-NS-07`–`PR-NS-08` | 7–8 | Versioned Skills and supplier domain pack |
-| `PR-NS-09`–`PR-NS-12` | 9–12 | ReAct, routing, planning, reflection |
-| `PR-NS-13`–`PR-NS-16` | 13–16 | Approval, durability, pattern decisions, anti-pattern regression tests |
-| `PR-NS-17`–`PR-NS-18` | 17–18 | Supervisor/worker and external protocol gateways |
-| `PR-NS-19`–`PR-NS-22` | 19–22 | Defense in depth, identity, protected effects, containment |
-| `PR-NS-23`–`PR-NS-24` | 23–24 | Causal traces and governed learning/evaluation |
-| `PR-NS-25`–`PR-NS-27` | 25–27 | Governance, release recovery, capacity/reliability |
-
-Each PR must contain only the stage implementation, its behavioral tests,
-registry entries, exact book listing markers, and the relevant chapter
-before/after transition. It must update the PR description with architectural
-decisions, tests, risks, and generated-artifact status. A PR may depend on the
-previous PR, but it must not silently reimplement earlier contracts.
+A change set must not silently reimplement earlier contracts. If a shared contract changes, update compatibility tests and every affected earlier checkpoint in the same review.
 
 ## Agent-executable implementation protocol
 
-For every stage:
+For every checkpoint:
 
-1. Read the complete affected Part, previous/next chapter transitions,
-   `AGENTS.md`, the design system, and the current stage entries in this file.
-2. Inspect the existing examples, tests, registry, and source markers before
-   creating a new module. Reuse stable contracts where semantics match.
-3. Write the **before** test or fixture first. It should demonstrate the
-   capability missing at the chapter boundary.
-4. Implement the smallest **added** capability in `examples/northstar/` and
-   keep business truth/custom controls outside the Agents SDK.
-5. Write the **after** test, including at least one refusal, failure, replay, or
-   recovery case appropriate to the stage.
-6. Register every listing in `config/examples.json`, cite it from the canonical
-   `source/parts/*.md`, and update `examples/README.md`. Never paste a second
-   copy of executable code into the manuscript.
-7. Add or update a transition table with: previous state, new capability, why,
-   new records, new failure modes, and next chapter dependency.
-8. Run the narrow example tests, then `make examples`, `make examples-run`,
-   `make assemble`, `make build`, and `make validate` as appropriate. Use the
-   repository’s pinned `.venv-examples`/`.venv` rather than an unpinned global
-   interpreter.
-9. For changes to source or generated artifacts, rebuild Markdown, DOCX,
-   LaTeX, diagrams, manifests, checksums, and release package according to
-   `AGENTS.md`; never hand-edit generated outputs.
-10. Open a dedicated PR, complete `.github/pull_request_template.md`, assign
-    the author and Copilot when available, address review comments with
-    additional commits, and leave the PR open for the author to merge.
+1. Read the complete affected book chapter, mapped course lesson, previous/next transition, repository instructions, current contracts, and this checkpoint entry.
+2. Inspect existing code/tests/registry before creating a module. Reuse a contract only when semantics and authority match.
+3. Write the **before** behavioral test showing the inherited limitation.
+4. Implement the smallest **added** capability while keeping lending decisions, business state, policy, credentials, effects, and audit outside the model/SDK.
+5. Add the **after** happy path and at least one failure/refusal/replay/recovery test.
+6. Produce a deterministic redacted `StageReport` and update the chapter’s `Cxx.md` code tour.
+7. Register the entry point, scenarios, tests, chapter/lesson mapping, and optional dependencies. Validate that referenced files exist.
+8. Run syntax, type/lint if configured, unit, contract, workflow, security, stage-registry, and offline CLI checks before optional live integrations.
+9. For OpenAI/Agents/MLflow changes, run adapter conformance against the exact lock and verify no secret or sensitive fixture value appears in serialized state or telemetry.
+10. Rebuild manuscript and generated artifacts from canonical source, then validate headings, links, diagrams, code extraction, package map, test counts, and checksums.
+11. Record architecture decision, risk, tests, release evidence, and unresolved limitations in the review description. Do not claim production readiness from teaching doubles.
 
-## Full-book acceptance gates
+## Required validation profiles
 
-The roadmap is complete only when a new reader can follow one executable
-Northstar run from Stage 0 through Stage 27 and the following are true:
+### Mandatory offline profile
 
-- Every chapter says what the example looked like before, what is added, why it
-  is needed, and what it looks like after.
-- Every registered Northstar listing has a behavioral test and runs offline.
-- An optional OpenAI API path is clearly separated from the deterministic CI
-  path and does not own enterprise truth.
-- Agents SDK versions, MLflow versions, model routes, Skills, policies, tools,
-  schemas, evaluators, and workflow releases are pinned in the run/release
-  manifest.
-- No model output directly transitions protected state, grants authority,
-  commits an effect, certifies evidence, or promotes a release.
-- Context retrieval enforces tenant/source ACLs before model exposure; memory
-  has explicit type, scope, provenance, TTL, correction, and deletion policy.
-- Delegation carries subject and actor identity, narrows authority, and records
-  ownership, budget, cancellation, and join semantics.
-- Approval is bound to exact proposal/evidence/resource version/policy,
-  expires, and is reauthorized immediately before commit.
-- Duplicate delivery, stale state, provider outage, timeout-after-write,
-  unknown effect, poison event, cancellation, approval expiry, child failure,
-  prompt injection, and compatibility mismatch have executable tests and an
-  operator action.
-- MLflow/trace evidence joins to platform IDs while the audit/effect ledger
-  remains separate and authoritative.
-- Evaluation covers business outcome, evidence/grounding, trajectory/tool use,
-  safety, repeated-run reliability, cost, latency, and human burden, with
-  slice-aware release gates.
-- The book’s TOC, examples registry, source markers, diagrams, tables, code,
-  generated Markdown/DOCX/LaTeX, manifests, checksums, and release package are
-  synchronized after implementation.
+```bash
+python -m compileall -q mortgage_case tests/mortgage_case
+python -m unittest discover -s tests/mortgage_case -v
+python -m mortgage_case --chapter 1 --scenario missing_income_document --offline
+python -m mortgage_case --chapter 28 --scenario happy_path --offline
+python tools/validate_mortgage_stage_registry.py
+python tools/scan_example_output.py --deny-sensitive-fixture-values
+```
 
-Until those gates are met, the book may describe the architecture, but it must
-not claim that the Northstar implementation is production-ready.
+These commands are target commands; add them only when their files exist. CI must fail if the stage registry cites a missing entry point/test, an offline run attempts network access, a normal stage imports an unsafe anti-pattern module, or a sensitive fixture value appears in output.
+
+### Optional integration profiles
+
+| Profile | Purpose | Gate |
+| --- | --- | --- |
+| Direct OpenAI Python SDK | Verify `C01` structured response adapter | Explicit environment flag, bounded cost, synthetic prompt, no effect tools |
+| OpenAI Agents SDK | Verify real package imports, tool schemas, structured output, HITL serialization, trace privacy, and cancellation | Exact lock, synthetic context, gateway doubles, no real LOS |
+| MLflow | Verify traces, datasets, scorers, and comparisons in local or configured tracking backend | Redaction scan, no raw document content, audit separation |
+| Durable engine | Verify activity/replay/signal/cancel/build compatibility | Same provider-neutral workflow/effect contracts and fault suite |
+| MCP/A2A | Verify protocol adapter conformance | Synthetic endpoint/peer, pinned metadata, no inbound-token passthrough |
+
+Optional jobs may skip cleanly when dependencies or credentials are absent, but their skipped status must be visible. A skipped optional job cannot satisfy a mandatory architecture or safety gate.
+
+## Full-course acceptance gates
+
+The roadmap is complete only when a new reader can follow `MORT-2026-000184` from `C01` through `C28` and all of the following are true:
+
+- Every chapter and mapped course lesson states **before**, **added**, **after**, remaining limitations, and the next dependency.
+- The same synthetic tenant, anchor case, applicant, document lineage, and purpose remain recognizable across all checkpoints; controlled variants/cohorts are separately versioned and cannot replace the anchor narrative.
+- Every checkpoint has one offline command, deterministic expected output, named tests, and at least one appropriate failure/refusal/recovery case.
+- No listing references an undefined symbol or an unstated external service; snippets cited as executable are extracted from tested source.
+- Direct OpenAI Python SDK and OpenAI Agents SDK responsibilities are named accurately and isolated behind provider/platform contracts.
+- Exact package locks, model routes, prompts/Skills, policies, schemas, tools, workflow builds, datasets, scorers, and release digests are recorded.
+- A model cannot approve/deny credit, set authoritative terms, calculate authoritative financial ratios, generate unsupported adverse-action reasons, grant authority, commit effects, certify evidence, or promote a release.
+- All financial calculations use deterministic code, documented inputs, `Decimal`, explicit rounding, formula version, and recomputation tests.
+- Runtime decision paths do not use protected characteristics as decision features; governed fairness/proxy evaluation is isolated, approved, privacy-reviewed, statistically qualified, and release-gating. Synthetic results are labeled as mechanism tests, not real-world fairness evidence.
+- Authorization filters tenant/case/field/source/purpose before document bytes reach the model; context and memory have provenance, trust, retention, correction, and deletion rules.
+- Delegation preserves subject identity, records actor/owner, narrows authority/budget/time/depth, and defines cancellation/join behavior.
+- Human action authorization binds the exact operational proposal, evidence, policy, case version, reviewer, and expiry; material change requires a new authorization. The separate `LendingDecision` remains human/domain-owned.
+- Protected LOS effects use idempotency, intent hash, optimistic precondition, receipt, unknown state, reconciliation, and one retry owner.
+- Duplicate delivery, stale state, provider outage, timeout-after-write, cancellation, revoked access, action-authorization expiry, child failure, prompt injection, cross-tenant access, PII leakage, incompatible worker, and fairness regression have executable tests and an operator disposition.
+- MLflow and OpenTelemetry evidence joins to platform IDs while raw sensitive content is excluded by default and authoritative audit/effect/approval records remain separate.
+- Evaluation covers evidence accuracy, calculations, trajectory/tool use, authorization, safety, fairness, repeated-run reliability, latency, cost, human burden, and worst slices with executable release gates.
+- The book/course source, example registry, README, diagrams, code, tests, generated artifacts, manifests, checksums, and release package agree after each release.
+- The documentation clearly states that synthetic teaching code is not legal advice, a credit policy, a production security control, or a system authorized to make lending decisions.
+
+Until these gates are met, the material may describe the target architecture, but it must not claim that the mortgage implementation is production-ready or suitable for real lending decisions.

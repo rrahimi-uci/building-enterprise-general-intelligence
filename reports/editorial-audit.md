@@ -59,6 +59,53 @@ publication artifacts remain valid for the current v2.1.0 source; the cumulative
 example should be treated as an explicit next-workstream until the full-book
 acceptance gates in `code-gap.md` pass.
 
+## Addendum — Mortgage foundation implementation slice
+
+**Reviewed:** 2026-09-16
+**Implementation scope:** `C01`–`C03` only
+
+The first implementation slice establishes the reviewed plan without deleting
+the original instructional material. It adds a synthetic Harborlight mortgage
+case, an explicit business/actor/input/output contract, a missing-evidence
+bottleneck, before/added/after transitions, a portrait-friendly lifecycle
+diagram, and a tested cumulative code façade. Existing supplier passages remain
+in the manuscript as labeled contrast material while later checkpoint PRs
+extend the mortgage path through workflow, authorization, effects, observability,
+evaluation, and operations.
+
+### Evidence added
+
+- `mortgage_case/` provides `C01` read-only summary, `C02` typed deterministic
+  shell, and `C03` provider-neutral runtime contracts.
+- `config/mortgage_stages.json` preserves the exact `C01`–`C28` chapter mapping;
+  only `C01`–`C03` are marked implemented.
+- `tests/mortgage_case/` covers synthetic-fixture invariants, missing evidence,
+  Decimal LTV/DTI calculations, stale proposals, protected-decision rejection,
+  tool allowlist enforcement, and the actual optional Agents SDK translation.
+- `examples/mortgage/cumulative_case.py` is registered and cited from the three
+  Part I checkpoint sections, so the book listing is sourced from tested code.
+- `assets/diagrams/src/mortgage-case-lifecycle.gv` is the editable source for
+  the new registered vector/raster figure.
+
+### Residual risks
+
+- The cumulative implementation is intentionally incomplete after `C03`; it
+  does not yet provide durable workflow, identity, approval, protected LOS
+  effects, MLflow tracing/evaluation, or production capacity controls.
+- Part I now introduces the mortgage anchor, but supplier material remains in
+  later chapters until their checkpoint-aligned migration PRs land. A full-book
+  stale-term and preservation review is required after each subsequent slice.
+- The checked-in v2.1.0 output is synchronized and structurally valid, but DOCX
+  pagination QA still requires LibreOffice/`soffice` in the validation
+  environment.
+
+### Recommendation
+
+Accept this as the foundation PR only when its generated artifacts and tests
+remain synchronized. Do not describe the mortgage implementation as
+production-ready until `C04`–`C28` and the full-book acceptance gates in
+`code-gap.md` are complete.
+
 ## Scope and evidence
 
 This audit records the full-book response to the supplied review document:

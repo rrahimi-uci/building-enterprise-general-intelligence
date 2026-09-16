@@ -12,6 +12,56 @@ Foundations establish the vocabulary and deterministic boundaries that every lat
 | --- |
 | **DESIGN DECISION**  Start Northstar as a governed distributed application with one bounded reasoning component, not as an autonomous chatbot. |
 
+## The mortgage case that will grow with the book
+
+The book keeps its original Northstar material and examples because they make
+the architectural principles concrete. Alongside that material, the cumulative
+implementation now follows one fictional mortgage case so the reader can see
+the same system acquire each capability without jumping to a new application.
+This is an additive teaching thread, not a deletion of the supplier narrative.
+
+**Harborlight Home Finance** is a fictional lender preparing an underwriter-ready
+package for a synthetic purchase application. The anchor case is
+`MORT-2026-000184` in tenant `harborlight-us-west`, for synthetic applicant Alex
+Morgan and a fictional property. The target is to prepare a review package
+within one business day for routine synthetic cases while preserving identity,
+privacy, evidence, policy, human oversight, audit, and recovery controls. The
+target is an illustrative design objective, not a benchmark.
+
+| Contract | Initial mortgage case |
+| --- | --- |
+| Business problem | Loan teams spend days collecting and reconciling application evidence before an authorized underwriter can review it. |
+| Actors | Applicant supplies documents; loan officer initiates work; evidence agent summarizes; deterministic services verify and calculate; underwriter owns the lending decision. |
+| Inputs | Synthetic application metadata, consent, pay-statement references, purchase agreement reference, tenant, purpose, policy version, and case version. |
+| Expected output | A redacted evidence summary, explicit missing or conflicting evidence, and the next safe workflow step. |
+| Workflow | Receive → identify missing evidence → verify → calculate → review → authorize operational effects → reconcile → accept or escalate. |
+| Constraints | No model-owned approval/denial, no invented income, no raw document bytes in traces, no cross-tenant access, no protected write before its chapter-owned controls exist. |
+| Success criteria | Every claim has an evidence reference or is labeled a candidate; every bottleneck has an owner; every later effect has an approval, idempotency key, receipt, and recovery path. |
+
+The first bottleneck is deliberately ordinary: the initial file has an
+application, one pay statement, and a purchase agreement, but the second pay
+statement needed for income verification is missing. The first checkpoint can
+identify that gap. It cannot infer the missing income, calculate an authoritative
+debt-to-income ratio, approve or deny the loan, or update a loan-origination
+system.
+
+[[DIAGRAM:mortgage-case-lifecycle|Figure 1-2 — The mortgage case starts with a missing-evidence bottleneck and adds verification, calculation, and human-owned review one control at a time]]
+
+| Before | Bottleneck exposed | After the first checkpoint |
+| --- | --- | --- |
+| No cumulative mortgage implementation | Missing evidence is easy to confuse with a complete file; model confidence can hide the gap | A read-only candidate summary names the available evidence, the missing pay statement, and the next control; the unresolved work remains visible |
+
+The executable checkpoint is kept in the repository rather than copied into the
+manuscript. It is intentionally small enough to run before any SDK or external
+service is introduced:
+
+[[EXAMPLE:mortgage-cumulative-case#c01]]
+
+The supplier sections that follow remain useful contrasts: they show the same
+durability, authority, evidence, and release bottlenecks in a different
+enterprise domain. Later implementation checkpoints map both narratives to the
+same platform contracts; the mortgage case is the cumulative code path.
+
 ## Where this starts: a demo that works
 
 Almost every enterprise agent begins as a script that works on the first try. It
@@ -331,7 +381,7 @@ catalogs this failure as AP-01, together with fifteen relatives.
 Everything the rest of this book builds is one picture. Read it once now, before
 any of it is justified, so that each Part has somewhere to land.
 
-[[DIAGRAM:system-overview|Figure 1-2 — The whole system at a thousand feet: the bands, the descent from proposal to committed effect, and the two concerns that cross them all]]
+[[DIAGRAM:system-overview|Figure 1-3 — The whole system at a thousand feet: the bands, the descent from proposal to committed effect, and the two concerns that cross them all]]
 
 The Roman numerals are the reading map. Each band is one Part's subject, and the
 book descends through them in order: the shape first, then the layers, then the
@@ -357,7 +407,7 @@ which is why the figure draws it as a spine beside the stack rather than a layer
 within it, and why it gets a Part of its own. The platform that builds,
 releases and runs the system is drawn the same way and for the same reason.
 
-Figure 1-2 is this same picture at higher resolution: every band there opens
+Figure 1-3 is this same picture at higher resolution: every band there opens
 into the components it owns. The notation carries over — a solid path is the
 request, dashed is control, dotted is evidence — so nothing new has to be
 learned to read it.
@@ -367,7 +417,7 @@ learned to read it.
 The architecture has several gateways, and they are routinely confused because
 the word is the same. They are not alternatives, and none replaces another.
 
-[[DIAGRAM:gateway-roles|Figure 1-3 — Control points and the questions they answer]]
+[[DIAGRAM:gateway-roles|Figure 1-4 — Control points and the questions they answer]]
 
 | Control point | The question it answers | What it does not decide |
 | --- | --- | --- |
@@ -458,7 +508,20 @@ Evidence anchors: NIST-GAI; REACT. Full URLs, authority, version, and scope appe
 
 With the system boundary established, Chapter 2 converts model intent into typed, validated tool proposals and a deterministic commit path.
 
+The mortgage checkpoint ends with a useful but limited summary: the missing
+income document is visible, while verification, deterministic calculation, and
+workflow commands are not yet part of the case. Chapter 2 adds those contracts
+and shows why a well-formed proposal is still not permission to act.
+
 # 02 — Tools, Structured Outputs, and the Deterministic Shell
+
+|  |
+| --- |
+| **MORTGAGE CASE AT THIS POINT**  `C01` can summarize `MORT-2026-000184` and identify the missing second pay statement. It cannot yet distinguish a model candidate from verified evidence or express the next step as a typed command. |
+
+|  |
+| --- |
+| **BOTTLENECK**  The case is now understandable but not yet executable: a malformed, stale, or over-authorized model output could still be mistaken for a valid workflow instruction. |
 
 |  |
 | --- |
@@ -648,6 +711,21 @@ The model proposes ToolIntent; the Tool Gateway validates the exact tool version
 
 ## Implementation reference
 
+### Mortgage checkpoint: a proposal, not a decision
+
+The cumulative mortgage case extends the read-only summary with the smallest
+useful deterministic shell. The model may suggest that another pay statement is
+needed and may identify candidate fields from the purchase agreement. The shell
+validates the case version and evidence references, computes the illustrative
+LTV with `Decimal`, and emits a read-only workflow command. It does not send the
+request, verify income, or produce a lending decision.
+
+| Before | Added | After |
+| --- | --- | --- |
+| `C01` returns a candidate summary and a visible missing-document bottleneck. | `C02` adds typed candidate facts, deterministic calculation metadata, and a case-scoped workflow command. | The next step is reproducible and rejectable; stale state, unknown evidence, unsupported fields, and protected effects stop before dispatch. |
+
+[[EXAMPLE:mortgage-cumulative-case#c02]]
+
 
 [[EXAMPLE:agent-tool-loop]]
 
@@ -702,6 +780,10 @@ production persists these transitions atomically with the downstream effect.
 
 With tools bounded, Chapter 3 defines the runtime contract that keeps applications portable across agent frameworks and model providers.
 
+For the mortgage case, the remaining bottleneck is the execution seam: the
+typed shell needs one bounded evidence-review activity, but the framework must
+not become the owner of the case, policy, approval, or effect records.
+
 # 03 — Agent Runtime and Framework Abstraction
 
 > **Evidence note.** Concrete adapter examples use OpenAI Agents SDK v0.22.2 and its documented agent, tool, guardrail, handoff, result, and tracing surfaces; the platform contracts remain framework-neutral. [R29][R30]
@@ -721,6 +803,20 @@ With tools bounded, Chapter 3 defines the runtime contract that keeps applicatio
 Use OpenAI Agents SDK 0.22.2 as a bounded, replaceable runtime adapter rather than the enterprise control plane. By the end of the chapter, the reader should be able to identify which facts belong to the local reasoning loop, which facts must survive outside it, and how an enterprise request crosses the boundary safely.
 
 ## Start with a concrete scenario
+
+### Mortgage checkpoint: the runtime seam
+
+At `C03`, the mortgage workflow submits one bounded evidence-review step for
+`MORT-2026-000184`. The framework may reason over the authorized projection and
+request `mortgage.case.read@1` or `mortgage.policy.read@1`; it cannot request a
+loan-origination write. The platform receives an `AgentStepResult`, not an SDK
+session, and uses that result as a proposal for the deterministic shell.
+
+| Before | Added | After |
+| --- | --- | --- |
+| `C02` validates proposals but has no replaceable runtime contract. | `C03` adds `AgentStepRequest`, `AgentStepResult`, an offline bounded runtime, and an optional OpenAI Agents SDK adapter. | The provider can change behind the seam; an allowlist escape fails before execution and SDK state cannot become mortgage workflow truth. |
+
+[[EXAMPLE:mortgage-cumulative-case#c03]]
 
 Consider Northstar supplier `SUP-8421`, Acme Industrial GmbH. The supplier-onboarding workflow receives an application, collects legal and beneficial-ownership evidence, screens sanctions, requests missing documents, obtains any required approval, creates the supplier record, and accepts the run only when its obligations are discharged.
 

@@ -70,6 +70,32 @@ resolves `RunConfig.model` with an `isinstance` check, so a structurally
 compatible class that does not inherit from it is silently ignored and the run
 falls through to the real OpenAI provider.
 
+## Cumulative mortgage case
+
+The book’s new anchor implementation is a synthetic Harborlight mortgage intake.
+It is intentionally additive: the focused examples below remain available for
+their individual architectural lessons, while the cumulative case connects the
+lessons across chapters.
+
+| Checkpoint | Chapter | Capability added | Bottleneck made visible |
+|---|---:|---|---|
+| `C01` | 1 | Read-only evidence summary | Missing documents and the false confidence of a model answer |
+| `C02` | 2 | Typed proposal, Decimal calculation, read-only command | Schema validity is not authorization or verified evidence |
+| `C03` | 3 | Provider-neutral runtime boundary | SDK tool allowlists and framework state must not own enterprise truth |
+
+Run the current foundation from the repository root with the examples
+environment:
+
+```bash
+.venv-examples/bin/python -m mortgage_case --chapter 1 --scenario missing_income_document --offline
+.venv-examples/bin/python -m mortgage_case --chapter 2 --scenario stale_case_version --offline
+.venv-examples/bin/python -m mortgage_case --chapter 3 --scenario tool_allowlist_escape --offline
+```
+
+Every fixture is marked `SYNTHETIC TRAINING DATA — NOT FOR CREDIT DECISIONS`.
+The example prepares evidence and proposes next work; it never approves or
+denies credit and never writes to a real loan-origination system.
+
 ## What is here
 
 | Example | Chapter | Exercises |
@@ -91,6 +117,7 @@ falls through to the real OpenAI provider.
 | `patterns/approval_verification.py` | 12 | Grant binding, self-approval, expiry |
 | `runtime/durable_state.py` | 13 | Run state as a replayable event fold |
 | `runtime/step_execution.py` | 03 | Platform-owned adapter around the SDK |
+| `mortgage/cumulative_case.py` | 01–03 | Cumulative synthetic mortgage checkpoints (`C01`–`C03`) |
 
 ## Adding an example
 

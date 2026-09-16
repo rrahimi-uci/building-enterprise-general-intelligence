@@ -124,7 +124,12 @@ def main() -> int:
     tests_passed = None
     imports_passed = None
     if args.run and not errors:
-        cmd = [args.python, "-m", "pytest", "examples/tests", "-q"]
+        test_files = sorted({
+            test
+            for entry in entries
+            for test in entry.get("tests", [])
+        })
+        cmd = [args.python, "-m", "pytest", *test_files, "-q"]
         proc = subprocess.run(cmd, cwd=root, capture_output=True, text=True)
         tests_passed = proc.returncode == 0
         sys.stderr.write(proc.stdout[-4000:])
@@ -157,6 +162,7 @@ def main() -> int:
         "rendered_lines": rendered,
         "tests_executed": bool(args.run),
         "tests_passed": tests_passed,
+        "test_files": test_files if args.run else [],
         "import_mode_entries": sum(1 for e in entries if e.get("verify") == "import"),
         "imports_passed": imports_passed,
         "errors": errors,

@@ -1,4 +1,4 @@
-// Figure 1-3 — Control points and the questions they answer.
+// Figure 1-4 — Control points and the questions they answer.
 // Message: these are not alternatives and none replaces another. An MCP tool
 // call still passes the Tool Gateway, because MCP does not decide authority.
 digraph gateway_roles {

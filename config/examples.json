@@ -309,6 +309,29 @@
         "examples/tests/test_capability_catalog.py"
       ],
       "libraries": []
+    },
+    {
+      "id": "mortgage-cumulative-case",
+      "path": "examples/mortgage/cumulative_case.py",
+      "language": "python",
+      "title": "Cumulative synthetic mortgage case across Chapters 1-3",
+      "verify": "test",
+      "tests": [
+        "tests/mortgage_case/unit/test_c01.py",
+        "tests/mortgage_case/unit/test_c02.py",
+        "tests/mortgage_case/contract/test_c03_runtime.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ],
+      "regions": {
+        "c01": "Read-only mortgage intake summary",
+        "c02": "Typed proposal and deterministic shell",
+        "c03": "Provider-neutral runtime boundary"
+      },
+      "checkpoint": "C01-C03",
+      "book_chapters": [1, 2, 3],
+      "offline": true
     }
   ]
 }
