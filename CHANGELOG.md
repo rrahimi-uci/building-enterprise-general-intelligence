@@ -4,6 +4,25 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Full-book end-to-end review and mortgage narrative reconciliation
+
+- Added `full-book-review-plan.md`, a complete review plan covering content,
+  technical accuracy, chapter structure, narrative flow, education,
+  consistency, examples, diagrams, references, formatting, and reader
+  experience.
+- Reconciled the primary narrative and chapter transitions around the
+  Harborlight mortgage case `MORT-2026-000184`, while preserving broader
+  enterprise scenarios as labeled comparative examples.
+- Aligned primary examples, exercises, security/effect walkthroughs, and
+  Appendix I with the mortgage implementation and clarified the distinction
+  between human action authorization and an underwriter-owned lending decision.
+- Regenerated the four edited diagrams and updated the diagram registry
+  checksums; removed stale manual figure captions and historical fixed counts
+  from the style contract.
+- Removed duplicate imports in validation/package tooling and rebuilt the
+  synchronized Markdown, DOCX, LaTeX, QA, manifest, checksum, and package
+  artifacts.
+
 ### Align all book code with the mortgage case
 
 - Migrated the domain-specific runnable examples, tests, and inline code

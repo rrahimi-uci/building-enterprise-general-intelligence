@@ -8,7 +8,7 @@ This Part makes behaviour measurable. It covers the distributed trace that expla
 
 |  |
 | --- |
-| **NORTHSTAR AT THIS POINT**  A run completes slowly and expensively. Operators can see a final answer but cannot tell whether the delay came from queues, retrieval, policy, model turns, retries, human dwell, or a slow connector. Northstar links the entire trajectory. |
+| **MORTGAGE CASE AT THIS POINT**  An evidence review completes slowly and expensively. Operators can see a final summary but cannot tell whether the delay came from queues, retrieval, policy, model turns, retries, human dwell, or a slow connector. Harborlight links the entire trajectory. |
 
 |  |
 | --- |
@@ -55,16 +55,16 @@ Raw prompts, retrieved documents, credentials, and protected tool payloads do no
 
 Start with the violated outcome or SLO, identify the critical path, then find the first divergent state transition or decision. Distinguish queue time, execution time, human dwell, retry delay, and reconciliation time. Compare the run manifest and context/evidence versions before comparing final prose.
 
-### Worked example — diagnosing a slow refund
+### Worked example — diagnosing a slow mortgage-evidence review
 
-Northstar reports that a customer refund took twelve minutes. The final answer
-looks plausible, so a request log alone would make the incident appear closed.
-The causal trace instead shows a three-minute queue wait, two retrieval
-attempts caused by a stale index, a four-minute approval wait, and a connector
-timeout whose effect record is **Unknown**. The operator now has a safe next
-step: reconcile the payment system before retrying, then decide whether the
-latency problem belongs to capacity, retrieval freshness, human workflow, or
-effect recovery.
+Harborlight reports that a mortgage evidence review took twelve minutes. The
+summary looks plausible, so a request log alone would make the incident appear
+closed. The causal trace instead shows a three-minute queue wait, two retrieval
+attempts caused by a stale index, a four-minute human authorization wait, and a
+loan-origination connector timeout whose effect record is **Unknown**. The
+operator now has a safe next step: reconcile the LOS before retrying, then
+decide whether the latency problem belongs to capacity, retrieval freshness,
+human workflow, or effect recovery.
 
 | **Trace segment** | **What the operator learns** | **Action or evidence** |
 | --- | --- | --- |
@@ -72,7 +72,7 @@ effect recovery.
 | Retrieval | The first context snapshot was stale and a second attempt ran | Index snapshot, ACL-filter count, freshness, query hash |
 | Approval | Human dwell dominated model latency | Proposal hash, approver role, wait and expiry timestamps |
 | Connector | The downstream call timed out after dispatch | Tool span, idempotency key, downstream request ID |
-| Effect ledger | The refund cannot yet be called successful or declined | Receipt or reconciliation case; no blind retry |
+| Effect ledger | The mortgage document request cannot yet be called successful or declined | LOS receipt or reconciliation case; no blind retry |
 
 This example also shows why “trace everything” is not a sufficient design. The
 trace needs the identifiers and state transitions that explain the run, while
@@ -89,7 +89,7 @@ with an authorized reference.
 | Recommended architecture | Emit one distributed trace per run with spans for every model, retrieval, policy, tool, workflow, handoff, approval, and effect. Separate operational telemetry from immutable audit. Build eval datasets from representative, adversarial, and production-failure cases; score both outcomes and trajectories. |
 | Trade-offs | Rich traces improve diagnosis but increase storage, privacy, and access-control burden. Content capture must be selective, redacted, encrypted, and role restricted. |
 | Failure scenarios | Trace breaks at an A2A boundary; model prompts leak secrets; average success hides long-tail failures; LLM judge rewards style over correctness; replay repeats a live side effect. |
-| Enterprise example | A support platform traces intent routing, knowledge citations, tool arguments, policy decisions, approval latency, and CRM effects; a failed refund becomes a regression fixture and sandbox replay. |
+| Enterprise example | A mortgage platform traces evidence routing, knowledge citations, tool arguments, policy decisions, authorization latency, and LOS effects; a failed document request becomes a regression fixture and sandbox replay. |
 
 ### Trace model
 
@@ -194,7 +194,7 @@ integration and redaction mechanics without claiming a live provider call.
 
 ## Exercises
 
-1. Define the canonical trace attributes for Northstar.
+1. Define the canonical trace attributes for the Harborlight mortgage platform.
 2. Create a dashboard that separates machine latency from human dwell.
 
 ## Technical review questions
@@ -217,7 +217,7 @@ Tracing explains what happened; Chapter 25 determines whether the trajectory and
 
 |  |
 | --- |
-| **NORTHSTAR AT THIS POINT**  A prompt change improves average answer quality but introduces one unauthorized tool trajectory in a low-volume region. Aggregate accuracy hides the regression; slice-aware trajectory evaluation blocks the release. |
+| **MORTGAGE CASE AT THIS POINT**  A prompt change improves average evidence-summary quality but introduces one unauthorized tool trajectory in a low-volume region. Aggregate accuracy hides the regression; slice-aware trajectory evaluation blocks the release. |
 
 |  |
 | --- |
@@ -306,18 +306,18 @@ Use deterministic validators as the gold standard where possible. LLM-as-judge i
 
 ### Worked example — average improvement, protected-slice regression
 
-Suppose a Northstar prompt revision makes routine support answers clearer, but
-one low-volume region now produces an unauthorized CRM lookup in a simulated
-trajectory. The aggregate score is better, yet the candidate is not a safe
-release. Slice-aware evaluation makes the disagreement visible and gives the
-release owner a concrete decision record.
+Suppose a Harborlight prompt revision makes routine evidence summaries clearer,
+but one low-volume region now produces an unauthorized LOS lookup in a
+simulated trajectory. The aggregate score is better, yet the candidate is not a
+safe release. Slice-aware evaluation makes the disagreement visible and gives
+the release owner a concrete decision record.
 
 | **Evidence** | **Candidate result** | **Release interpretation** |
 | --- | --- | --- |
 | Routine answer quality | Improved against the baseline | Useful quality evidence, not sufficient for promotion |
 | Protected-action trajectory | One forbidden lookup appears | Deterministic safety regression; block the candidate |
 | Region/risk slice | Regression is low volume but high consequence | Volume cannot dilute the risk tier |
-| Diagnosis | New context or routing path selects the CRM tool | Compare trace, policy decision, context manifest, and release graph |
+| Diagnosis | New context or routing path selects the LOS tool | Compare trace, policy decision, context manifest, and release graph |
 | Next candidate | Narrow retrieval/tool eligibility and add the case to the regression set | Re-run held-out, adversarial, and protected-effect checks |
 
 The important habit is to preserve the failing trace as a versioned case after

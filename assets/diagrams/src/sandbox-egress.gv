@@ -6,7 +6,7 @@ digraph sandbox_egress {
   graph [ranksep=0.34, nodesep=0.28]
   node [width=1.85, fontsize=11]
 
-  artifact [label="Supplier document\nuntrusted content", fillcolor="#FCECEC", color="#A62C2C"]
+  artifact [label="Mortgage document\nuntrusted content", fillcolor="#FCECEC", color="#A62C2C"]
   inspect [label="Content inspection\nlabel + provenance + taint", fillcolor="#E6F5F9", color="#0B6076"]
   capability [label="Capability policy\ntool · data · purpose · risk", shape=diamond,
               fillcolor="#FFF4DF", color="#8A5600", width=2.1]

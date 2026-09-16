@@ -154,7 +154,7 @@ read, so a kind cannot mean one thing in DOCX and another in the PDF.
 
 ### Narrative and evidence callouts
 
-- **Northstar at this point:** where the running case study now stands.
+- **Mortgage case at this point:** where the Harborlight running case now stands.
 - **North-star rule:** a durable design principle.
 - **Design decision:** a choice with explicit consequences.
 - **Evidence caveat / Source discipline:** what a source supports and does not.
