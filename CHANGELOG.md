@@ -4,6 +4,18 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Northstar cumulative-example implementation roadmap
+
+- Added `code-gap.md`, a chapter-by-chapter implementation roadmap for evolving
+  one runnable Northstar supplier-onboarding example from a simple bounded agent
+  into a production-grade enterprise agentic system.
+- Recorded the current gap between the book’s cumulative prose narrative and
+  its 23 isolated, tested examples; defined the canonical case, technology
+  ownership, stage dependencies, PR order, failure scenarios, acceptance gates,
+  and relevant implementation modules.
+- Added a full-book editorial-audit addendum that keeps the current publication
+  artifacts separate from the future cumulative-example implementation work.
+
 ### Chapter 3 review reconciliation and cross-book consistency
 
 - Rebuilt Chapter 3 around the Northstar supplier-onboarding scenario, carrying one concrete execution path from durable workflow request through bounded agent reasoning, gateway authorization, approval, business effect, receipt, and audit evidence.
