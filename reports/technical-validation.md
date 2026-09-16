@@ -46,8 +46,8 @@ See the current generated evidence:
 - `reports/citation-audit.md`
 - `reports/latex-validation.md`
 - `reports/editorial-audit.md`
-- `reports/release-package.json` — 388-entry release ZIP, 140,553,588 bytes,
-  SHA-256 `eecdaec618f0a994da0ad42a6b48929caee4cb0da865deac0ad552fff9457497`.
+- `reports/release-package.json` — final 388-entry release ZIP, with its byte
+  count and SHA-256 recorded by the package tool.
 - `CHECKSUMS.sha256`
 - `RELEASE-MANIFEST.json`
 

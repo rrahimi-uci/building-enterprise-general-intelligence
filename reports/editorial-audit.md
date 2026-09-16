@@ -49,9 +49,8 @@ Markdown/DOCX/LaTeX, and representative XeLaTeX pages.
   are not described as production-ready evidence.
 
 The release manifest, checksums, ZIP, and clean-extraction rebuild were
-generated from the final committed tree. The 388-entry ZIP is 140,553,588 bytes
-with SHA-256
-`eecdaec618f0a994da0ad42a6b48929caee4cb0da865deac0ad552fff9457497`, and the
+generated from the final committed tree. The final 388-entry ZIP’s byte count
+and SHA-256 are recorded in `reports/release-package.json`, and the
 clean-package test passed. Notion synchronization and merge remain outside
 agent authority; the PR is left open for the author’s review.
 
