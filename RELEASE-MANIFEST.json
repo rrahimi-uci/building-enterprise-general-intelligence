@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 386,
+  "file_count": 411,
   "files": [
     {
       "path": ".gitattributes",
@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 32324,
-      "sha256": "ae9164f6504d03b49d1b9b98b10de3622fbb56b8097743adc21f24b8f075d042"
+      "bytes": 32916,
+      "sha256": "1f111e80defd979abbb6f79b025f557c86fa3f7cacb5f91ce478ec3dc54e53df"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -821,8 +821,8 @@
     },
     {
       "path": "book/manuscript.md",
-      "bytes": 675153,
-      "sha256": "e8677f9664797918e7045e06e8fd0c421f75dcce410262585ccc09b90cfe2959"
+      "bytes": 676612,
+      "sha256": "1c53199a5a870fa08066ab5753aea4838a159ca19e057fde3c207f2a8adff516"
     },
     {
       "path": "code-gap.md",
@@ -871,13 +871,13 @@
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v2.1.0.docx",
-      "bytes": 24429452,
-      "sha256": "20ec15f831eac02d2445203111409b158fb079ea02fa5bd4262148195f4537e7"
+      "bytes": 24430189,
+      "sha256": "97a1470974a525929536455380a0b7e51bee3a1bf4f65fb0d906ea771b949113"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v2.1.0.md",
-      "bytes": 675153,
-      "sha256": "e8677f9664797918e7045e06e8fd0c421f75dcce410262585ccc09b90cfe2959"
+      "bytes": 676612,
+      "sha256": "1c53199a5a870fa08066ab5753aea4838a159ca19e057fde3c207f2a8adff516"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v2.1.0.tex",
@@ -1200,6 +1200,11 @@
       "sha256": "3f6249a868479592e725530a98e41c2583fdd47921d5c6c88654b45787058904"
     },
     {
+      "path": "full-book-review-plan.md",
+      "bytes": 23602,
+      "sha256": "d39581976a83c17848ae2123845ba9bfc34ca0d97a3a8da4ce6c7a4fb98b8cf5"
+    },
+    {
       "path": "latex/Enterprise-General-Intelligence-v2.1.0.tex",
       "bytes": 551,
       "sha256": "a33c7b93c23d54ab107d5d7c8e29070cd0f85d52260d840c962c28a790fa2732"
@@ -1221,8 +1226,8 @@
     },
     {
       "path": "latex/content/book-content.tex",
-      "bytes": 812201,
-      "sha256": "262ab3427b3820cf5d82ae710a061929d81c359676a3a02def5e5582bc89d2b0"
+      "bytes": 813997,
+      "sha256": "a4418fb35f8afa5c62cd35a2a6ad5f1e1760aa8f4550a73714e01732c006f4fb"
     },
     {
       "path": "latex/fonts/LICENSE-SIL-OFL-1.1.txt",
@@ -1380,14 +1385,134 @@
       "sha256": "ec2e2d6a2da31794f474fee9b6887d28437a757d2c79926c6afcacbbd59e5ca9"
     },
     {
+      "path": "mortgage_case/platform/action_authorization.py",
+      "bytes": 336,
+      "sha256": "8835af2408a13d7e05bce824e49ec9d9c6050aec971d72e429aae227981245f7"
+    },
+    {
+      "path": "mortgage_case/platform/authorization.py",
+      "bytes": 236,
+      "sha256": "19c9138edd1a29927bc5d6081b8de7e46a0352b4b28e44d7cbfca6354b72eb47"
+    },
+    {
+      "path": "mortgage_case/platform/capacity.py",
+      "bytes": 155,
+      "sha256": "b87e9fbd593bc765b82e13e0b9330fe3eee1079409ad7e77dfdf4053ebe129e8"
+    },
+    {
+      "path": "mortgage_case/platform/context.py",
+      "bytes": 183,
+      "sha256": "1cf32e5736bc70a2ae45d214b235129d41a499366dce1e40fe7097460eab37f9"
+    },
+    {
+      "path": "mortgage_case/platform/contracts.py",
+      "bytes": 483,
+      "sha256": "d1476b73426fd6a029f5863f21fafb14111c6cfe9c7c3e82e1827fbd4f22b6e1"
+    },
+    {
+      "path": "mortgage_case/platform/delegation.py",
+      "bytes": 175,
+      "sha256": "060c67f544fd2040d25cfd3260b2ac8201b18c9e8aec29bcf94ae51455d6a398"
+    },
+    {
+      "path": "mortgage_case/platform/effects.py",
+      "bytes": 185,
+      "sha256": "b84b789e575e01094ddb36070b1f58ccf7ad2566aecc5e961a96b92f84353dec"
+    },
+    {
+      "path": "mortgage_case/platform/enterprise.py",
+      "bytes": 32483,
+      "sha256": "ae621b63093b53fc8bbed3bdeaf728f57179843ebe38a486e9a11f623a700a07"
+    },
+    {
+      "path": "mortgage_case/platform/evaluation.py",
+      "bytes": 207,
+      "sha256": "b2a3b032c8b7b1310b44ea3e930033c2c46c6e645923d78c3c1ccac6926be22d"
+    },
+    {
+      "path": "mortgage_case/platform/events.py",
+      "bytes": 176,
+      "sha256": "745c134a4ca838b6c1f58fc9c5a2a895fcd53a64247fbec315e1b61722a5f5f7"
+    },
+    {
+      "path": "mortgage_case/platform/governance.py",
+      "bytes": 151,
+      "sha256": "0fda54fe6713bd1b8be70506208f1fa7071eee2ad6af3c6c936b2c679ce7bb99"
+    },
+    {
+      "path": "mortgage_case/platform/knowledge.py",
+      "bytes": 178,
+      "sha256": "72bf8e137b869268a63a646831654d311e408b10d662641a9c14628f534789de"
+    },
+    {
+      "path": "mortgage_case/platform/observability.py",
+      "bytes": 167,
+      "sha256": "cf3542050e12be6ea94ac13639b7fc078cfec7d1bb2fab8de0179cfd620a8ea3"
+    },
+    {
+      "path": "mortgage_case/platform/planning.py",
+      "bytes": 167,
+      "sha256": "42eb3d27c4ab1a4d183c53780e5ea2e8376258a037b1c98449fc3aa1caf585eb"
+    },
+    {
+      "path": "mortgage_case/platform/privacy.py",
+      "bytes": 105,
+      "sha256": "e2373e953c5e83546b4805327c32e86d28785e6dad8b365f5d3734d04df85445"
+    },
+    {
+      "path": "mortgage_case/platform/protocols.py",
+      "bytes": 117,
+      "sha256": "041ba4022d701686f3b7b216262ca6d004fed4587eeef122337ea6038364aea7"
+    },
+    {
+      "path": "mortgage_case/platform/react.py",
+      "bytes": 125,
+      "sha256": "b49d6e0738e5e04e310b603b6ed900a0a20b24224dcbba118b290b473ffdf10d"
+    },
+    {
+      "path": "mortgage_case/platform/releases.py",
+      "bytes": 158,
+      "sha256": "c16bade4b2b8526cdf6994e99eb00a27d485bf371e92ed25d9038fec1fac53df"
+    },
+    {
+      "path": "mortgage_case/platform/routing.py",
+      "bytes": 164,
+      "sha256": "583c55240bfb6c0959a6743b4b06791ec9272fb6b94d5d811cf12ce97029715d"
+    },
+    {
       "path": "mortgage_case/platform/runtime.py",
       "bytes": 2674,
       "sha256": "abf8342c5847e0fa45419ab36c2149810ed8cfad9724455aa6f8712ce6b63133"
     },
     {
+      "path": "mortgage_case/platform/sandbox.py",
+      "bytes": 146,
+      "sha256": "e1eee8021feb8e303cfb1e26ae4f4c1e3efe7a036a0144c4f937f8102424031b"
+    },
+    {
+      "path": "mortgage_case/platform/security.py",
+      "bytes": 167,
+      "sha256": "6d3f03a0dd96c18fd64f9d5f55153e517a88d6e0cf76c89b4c44277092f8c02b"
+    },
+    {
+      "path": "mortgage_case/platform/simulation.py",
+      "bytes": 159,
+      "sha256": "d122be279e6ce73c9fb1cea242c9af5ebe1697e7f33df953157046994a41992c"
+    },
+    {
+      "path": "mortgage_case/platform/skills.py",
+      "bytes": 177,
+      "sha256": "8c326bfc92703657ccff7108c7f037c03d29294431b2370b2784948ac8acc000"
+    },
+    {
       "path": "mortgage_case/platform/tools.py",
       "bytes": 2068,
       "sha256": "7cf8870458c62c67a786a8aafdcb995b17356ef8dab47cd5bebed81d8acc522a"
+    },
+    {
+      "path": "mortgage_case/platform/workflow.py",
+      "bytes": 664,
+      "sha256": "a43247efe0dee610fcd05f945ba86373d0c9d93430944d8726b771c23f98fa83"
     },
     {
       "path": "mortgage_case/stage_report.py",
@@ -1457,37 +1582,37 @@
     {
       "path": "qa/build-report.json",
       "bytes": 309,
-      "sha256": "524f7a7aedb67d6e15660ff39c1b6809037e2711cd2dc189a6a3406e82bc8575"
+      "sha256": "86eedfa15188eb5a4cc0b8b6805e73430aaf41aaa5a001a64b06ad7e14fcd356"
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 24429452,
-      "sha256": "20ec15f831eac02d2445203111409b158fb079ea02fa5bd4262148195f4537e7"
+      "bytes": 24430189,
+      "sha256": "97a1470974a525929536455380a0b7e51bee3a1bf4f65fb0d906ea771b949113"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 24429452,
-      "sha256": "20ec15f831eac02d2445203111409b158fb079ea02fa5bd4262148195f4537e7"
+      "bytes": 24430189,
+      "sha256": "97a1470974a525929536455380a0b7e51bee3a1bf4f65fb0d906ea771b949113"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "3e17f5a88ea2aa72cfbce39d314dfef74367fa00feb83c51cd00f7f16ca6f08a"
+      "sha256": "4bef5c91a437ad65ab3f3cfd713468e67c9b2f1128351053005c99ae8874bd26"
     },
     {
       "path": "qa/latex-validation-report.json",
       "bytes": 12051,
-      "sha256": "4c1a26d29236aeb0fd0214188e298fbadf4d154f027f1663ea3d5a3896f71f1e"
+      "sha256": "02ec773e8968cfcc89bbffee3123669b41329f9d32cde718103c8c3cbff50621"
     },
     {
       "path": "qa/validation-report.json",
       "bytes": 875,
-      "sha256": "38625281ea4ed15de095fa7f7874bfd0d72cee22ae5b3845cf490b861f9f3149"
+      "sha256": "e3d10cd641c4fdffa78b6c55ad8fc5dd5ce5a057cab5ed92ade326c84c40ce5b"
     },
     {
       "path": "reports/assembly-report.json",
       "bytes": 1189,
-      "sha256": "dcdcce835509c30e387f21215b22cec5ad7fa1af9303f0f30dfdcbcd40d6258d"
+      "sha256": "7c964c2eb9364a9933ae135ea8bb121378fb5af8981e33466ebc6ed94de3857e"
     },
     {
       "path": "reports/chapter-insert-map.json",
@@ -1532,12 +1657,12 @@
     {
       "path": "reports/latex-build-report.json",
       "bytes": 2403,
-      "sha256": "1305fa69cac396ead7024ceece88342f29a3eb91d1822034d0f189873030f5b9"
+      "sha256": "9622c9475aea7eaac04ac156ade97b4f3ea0001ee26f90bd8421ee8eec968dae"
     },
     {
       "path": "reports/latex-validation.md",
       "bytes": 723,
-      "sha256": "9d67ab45129628bf6ec8777c5d2993d58fa2eab8eec872ef7151f18f5461b3fe"
+      "sha256": "8700664a60f2bae23d90ced3b1dcc4275faf5a1e654d1b72928159ed1b74f9e7"
     },
     {
       "path": "reports/part-visuals-report.json",
@@ -1546,8 +1671,8 @@
     },
     {
       "path": "reports/release-notes.md",
-      "bytes": 1155,
-      "sha256": "045e3ef9ecaeaf8dc87f6c188da139567c4d3f640a8c2c137d86f13a07c083f1"
+      "bytes": 1391,
+      "sha256": "1240ebf1a451b0de988829bed36a22434018a8de17bdeb3e8582f5703cb6add5"
     },
     {
       "path": "reports/restructure-map.json",
@@ -1556,13 +1681,13 @@
     },
     {
       "path": "reports/technical-validation.md",
-      "bytes": 1892,
-      "sha256": "93e0b1a278dd5fbc59886afcb0988407f70b53a8e9a152a8fb6e668e1b6a6144"
+      "bytes": 2327,
+      "sha256": "84aa4e31f502609ae0c94bf2c5d79f91d42fb99a862ae79f1d5c1b580ea40e51"
     },
     {
       "path": "reports/validation-summary.md",
       "bytes": 864,
-      "sha256": "9e0d79a12be6824bc8962c32faddad434c0e645cbf1f529a92af05ad90c80045"
+      "sha256": "178c26c2d1be6850f1785515b92804134dfe98bba660b5844a32d5bf69967e4c"
     },
     {
       "path": "requirements.txt",
@@ -1706,13 +1831,13 @@
     },
     {
       "path": "source/parts/00-front-matter.md",
-      "bytes": 9818,
-      "sha256": "8f4903e40e24cf83b5cc3f9a471c5b2bf49e4e675504ba86146f53d37800ae3d"
+      "bytes": 11011,
+      "sha256": "5b6d09bf34b05fc5e647987da7fdcde756bf05596f13fc7ffc1359d78e713fac"
     },
     {
       "path": "source/parts/01-part-i.md",
-      "bytes": 83885,
-      "sha256": "452775bb23245b388362826cd399bc0c71d2d97a6e6a07761e1b69c2aecb0f52"
+      "bytes": 84151,
+      "sha256": "12f8469b3429a7c2cefec5c96cf3367fab28f16b9e9574b1eb867c547c2af8c1"
     },
     {
       "path": "source/parts/02-part-ii.md",

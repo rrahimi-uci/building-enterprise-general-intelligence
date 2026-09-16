@@ -328,3 +328,23 @@ IDs, changed files, unresolved findings, commands and outcomes, generated
 artifact status (Markdown, DOCX, LaTeX, and PDF separately), and the next exit
 condition. This keeps a later PR review from confusing a validated source
 change with a merely planned follow-up.
+
+## Slice 1 handoff — Front matter and Part I — 2026-09-16
+
+| ID | Status | Severity | Finding and decision | Evidence and regression check |
+|---|---|---|---|---|
+| `FB-front-01` | `fix` | moderate | The front matter and Part I opening made Harborlight sound like an additive case while Northstar callouts still looked like the implementation anchor. Make Harborlight/C01–C03 the explicit cumulative path and label Northstar as comparative architecture evidence. | `source/parts/00-front-matter.md`, `source/parts/01-part-i.md`; `make validate`, `make pdf`, and page-22/page-33/page-34 XeLaTeX inspection passed. |
+| `FB-part1-01` | `fix` | editorial | Wrapped numbered-list items were emitted as three separate LaTeX lists, rendering `1, 1, 1` and exposing literal emphasis markers in the third item. Keep each item contiguous in canonical Markdown so the generated list renders as `1, 2, 3`. | `source/parts/01-part-i.md` production-problem questions; `make pdf` and page-33 XeLaTeX inspection passed. |
+
+Changed canonical files are `source/parts/00-front-matter.md` and
+`source/parts/01-part-i.md`. Synchronized outputs and evidence are the
+assembled Markdown, distributable Markdown, DOCX, LaTeX content, validation
+reports, technical validation record, changelog, and release notes. The local
+XeLaTeX PDF was rebuilt at 286 pages but remains a regenerable, uncommitted
+artifact. DOCX pagination QA remains `defer` because `soffice` is unavailable;
+package validity and deterministic DOCX checks are not substitutes for that
+gate. Notion synchronization is out of scope until all release gates pass.
+
+Next exit condition: begin the Parts II–III slice by auditing knowledge
+provenance, context/state ownership, provider-neutral contracts, capability
+resolution, and the C04–C09 roadmap against their registries and tests.
