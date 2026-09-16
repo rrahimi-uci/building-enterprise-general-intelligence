@@ -1,4 +1,63 @@
-# Editorial Audit — Review Through Page 30
+# Editorial Audit — Full-Book Review and Running-Example Gap Audit
+
+## Addendum — Cumulative Northstar implementation review
+
+**Reviewed:** 2026-09-16
+**Roadmap:** [code-gap.md](../code-gap.md)
+
+### Scope and finding
+
+The earlier editorial reconciliation generalized the supplied first-30-page
+review across the manuscript. This addendum audits a different learning-system
+property: whether the Northstar supplier-onboarding example is one executable
+system that grows chapter by chapter. The full book was inspected at the Part,
+chapter-opening, transition, implementation-reference, appendix, registry,
+example, and test levels.
+
+The primary finding is **one blocker and multiple major integration gaps**: the
+book has a strong cumulative prose narrative, but its 23 registered examples are
+mostly isolated pattern demonstrations. The Chapter 1 prototype references
+undefined tools, and no canonical Northstar fixture, workflow composition,
+domain connector, approval/effect path, or end-to-end trace/evaluation joins
+the examples. Existing code is valuable evidence for individual controls, but it
+does not yet let a reader run the system described across the chapters.
+
+### Resolutions for this audit
+
+- Created [code-gap.md](../code-gap.md) as the implementation roadmap rather
+  than making a speculative large code change in this review PR.
+- Defined one canonical Northstar case, actors, inputs, outputs, state machine,
+  constraints, success criteria, technology ownership, and cumulative
+  architecture.
+- Mapped all 28 chapters to a before/add/after implementation contract with
+  severity, dependencies, PR order, acceptance criteria, and relevant files.
+- Distinguished OpenAI API, OpenAI Agents SDK, MLflow, custom Python, and test
+  doubles so framework mechanics do not become enterprise truth.
+- Preserved the existing focused examples as reusable pattern evidence while
+  identifying the Northstar modules and tests required to connect them.
+- Added explicit offline, failure-injection, trace/audit separation, registry,
+  generated-artifact, PR, and full-book acceptance gates.
+
+### Residual risks
+
+- The roadmap is not implementation. Until its staged PRs land, the example
+  remains partly narrative and the Chapter 1 inline listing remains unsuitable
+  as a runnable source unless relabeled or replaced.
+- Current examples and chapter labels may reflect different historical chapter
+  numbers; the examples README and registry should gain stage metadata during
+  the first implementation PR.
+- Pagination QA remains unavailable without LibreOffice/`soffice`, as recorded
+  below. This roadmap adds no manuscript prose or diagram assets, so no new
+  visual claim is made here.
+
+### Release recommendation
+
+**Do not call the running example production-ready yet.** Accept this PR as the
+implementation plan, then implement PR-NS-00 through PR-NS-27 incrementally,
+with each PR independently reviewed and validated. The manuscript’s existing
+publication artifacts remain valid for the current v2.1.0 source; the cumulative
+example should be treated as an explicit next-workstream until the full-book
+acceptance gates in `code-gap.md` pass.
 
 ## Scope and evidence
 
