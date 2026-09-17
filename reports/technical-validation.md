@@ -21,6 +21,9 @@
 - LaTeX source validation passed for 45 diagrams, bundled fonts, contrast, citations, and cross-format contracts.
 - XeLaTeX is expected to retain non-fatal overfull/underfull box warnings in dense tables and long labels; these remain a typography follow-up item for visual inspection.
 - Example execution: 26 examples and 123 tests passed with no warnings.
+- Mortgage platform-extension execution: 11 offline contract tests passed;
+  these tests cover the partial `mortgage_case/platform/` slice and are not
+  counted in the registered-example total above.
 - Representative XeLaTeX pages remain the visual evidence for this environment;
   DOCX pagination QA is pending because LibreOffice/soffice is not installed.
 - This slice's changed pages were visually inspected in the XeLaTeX PDF:

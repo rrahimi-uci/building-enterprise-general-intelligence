@@ -17,6 +17,10 @@ All notable changes follow semantic versioning and are recorded here.
   and the remaining C04–C28 implementation roadmap boundary.
 - Regenerated source-derived Markdown, DOCX, LaTeX, diagram renders, QA
   reports, and final release evidence from the canonical source.
+- Added and tested the previously untracked offline platform-contract slice
+  under `mortgage_case/platform/`, wired its mortgage tests into
+  `make examples-run` and CI, and documented that it is partial C04–C28
+  evidence rather than complete stage-registered checkpoint implementation.
 
 ### Make the cumulative Harborlight path explicit in the foundations
 

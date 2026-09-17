@@ -18,10 +18,12 @@ pages) pass. `make qa-pdf` remains explicitly deferred because LibreOffice /
 clean detached worktree; its byte count and SHA-256 are recorded in
 `reports/release-package.json`, and the clean-extraction rebuild passed.
 
-The cumulative mortgage implementation is intentionally limited to executable
-C01–C03 evidence. C04–C28 remain the separately tracked implementation roadmap
-in `code-gap.md`; this closeout does not claim production readiness for those
-unimplemented checkpoints.
+The cumulative mortgage implementation has stage-registered executable
+evidence for C01–C03. This PR also includes a tested offline platform-contract
+slice under `mortgage_case/platform/` spanning the later architecture, but C04–
+C28 remain the separately tracked checkpoint-integration roadmap in
+`code-gap.md`; this closeout does not claim production readiness for those
+incomplete checkpoints.
 
 This release combines the canonical Markdown source with synchronized DOCX and XeLaTeX representations, editable cover and diagram sources, machine-readable registries, deterministic builders, validators, PDF/visual QA, templates, reusable maintenance skills, a design system, cross-format contract, contribution guidance, release checklist, manifest, and checksums.
 

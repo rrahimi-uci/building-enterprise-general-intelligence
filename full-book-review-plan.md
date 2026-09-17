@@ -103,7 +103,8 @@ appendices, and registries:
   with no explanation. Add the smallest coherent mortgage extension or label the
   material explicitly as pseudocode/illustration.
 - Confirm the code-gap roadmap is consistent with actual implementation status
-  and does not imply that C04–C28 are already implemented.
+  and distinguishes the new partial offline platform-contract slice from fully
+  implemented C04–C28 checkpoints.
 
 ### 6. Diagrams, tables, and visual communication
 
@@ -258,7 +259,7 @@ not treated as proof that an unrun local gate has passed.
 | Topology and structural contracts | `pass` | `reports/validation-summary.md` records 8 Parts, 28 chapters, 12 appendices, 45 registered diagrams, 48 references, and 107 citation occurrences with no validation errors. |
 | Canonical/generated synchronization | `pass` | The same report records byte-identical canonical and distributable Markdown, a valid DOCX package, and synchronized generated reports/manifests/checksums. |
 | Mortgage narrative and terminology | `pass with evidence` | `reports/technical-validation.md` records Harborlight Mortgage continuity and consistent `HumanActionAuthorizationRequest` / `HumanActionAuthorizationDecision` vocabulary. Recheck any future source edits against this contract. |
-| Example and implementation reconciliation | `pass with evidence` | The technical validation record reports 26 examples and 123 tests passed. The next implementation pass must keep C04–C28 labelled as target work unless executable evidence is added. |
+| Example and implementation reconciliation | `pass with evidence` | The technical validation record reports 26 examples and 123 example tests passed; the platform-extension suite adds 11 offline contract tests. C04–C28 remain target checkpoints because stage entry points, CLI scenarios, and per-checkpoint release evidence are not yet complete. |
 | References and claim scope | `pass` | `reports/citation-audit.md` records 48 registry entries, 107 occurrences, and no unknown or uncited IDs. Living sources and caveats remain release-time re-verification obligations. |
 | XeLaTeX and source visual inspection | `pass with caveat` | Genuine XeLaTeX completed at 287 pages; source validation and representative XeLaTeX pages passed. Dense-table and long-label overfull warnings remain typography follow-up items. |
 | DOCX pagination QA | `defer` | `make qa-pdf` is not complete because LibreOffice/`soffice` is absent. Do not promote this to `pass` from DOCX package validity or XeLaTeX inspection. |
@@ -355,9 +356,10 @@ resolution, and the C04–C09 roadmap against their registries and tests.
 ## Final closeout — full-book review plan — 2026-09-16
 
 The review, reconciliation, and cross-format closeout are complete for the
-current v2.1.0 publication source. This PR is one coherent closeout of the
-remaining review-plan work; it does not silently claim that the separate
-`code-gap.md` roadmap has implemented every C04–C28 runtime checkpoint.
+current v2.1.0 publication source. This PR also incorporates and tests the
+previously untracked platform-contract slice. It does not silently claim that
+the separate `code-gap.md` roadmap has implemented every C04–C28 runtime
+checkpoint.
 
 ### Matrix finding records
 
@@ -443,11 +445,12 @@ local assumption.
 
 ### Remaining implementation boundary
 
-The full-book review and publication consistency work is complete, but the
-separate cumulative runtime roadmap remains intentionally bounded: only C01–C03
-have executable mortgage implementation evidence in this repository. C04–C28
-remain explicit target work in `code-gap.md`, with the exit condition that each
-checkpoint gains its registry entry, implementation modules, offline behavioral
-tests, source/diagram/generated-artifact evidence, and release-gate evidence in
-its own reviewed change. This PR does not claim production readiness for the
-unfinished cumulative runtime.
+The full-book review and publication consistency work is complete, and this PR
+adds a tested offline platform-contract slice for the later architecture. The
+complete cumulative checkpoint evidence remains intentionally bounded: only
+C01–C03 have stage-registered executable mortgage implementations. C04–C28
+remain explicit target work in `code-gap.md`; their exit condition is a stage
+registry entry, CLI scenario, offline behavioral tests, source/diagram/
+generated-artifact evidence, and release-gate evidence for each checkpoint.
+This PR does not claim production readiness for the unfinished cumulative
+runtime.
