@@ -4,6 +4,20 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Full-book style, tone, and readability pass
+
+- Reworked the front matter, Part orientations, all 28 chapter titles, and the
+  appendix titles in a clearer practitioner voice while preserving the
+  eight-Part / 28-chapter / 12-appendix topology.
+- Replaced repetitive specification-like section labels with reader-facing
+  headings and gave every chapter a concise explanation of why its boundary
+  matters, when it becomes important, and what can fail without it.
+- Expanded the chapter openings and transitions so the Harborlight case and
+  the architecture story remain connected from model output through operation.
+- Synchronized the title registry and implementation roadmap with the revised
+  chapter names; no citations, diagram identifiers, contracts, or code-example
+  identifiers were changed.
+
 ### Complete the full-book review and publication closeout
 
 - Reconciled human action authorization terminology across the primary source,

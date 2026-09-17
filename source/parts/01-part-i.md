@@ -1,8 +1,11 @@
 # PART I — FOUNDATIONS
 
-Foundations establish the vocabulary and deterministic boundaries that every later Part depends on.
+This is the starting point for the whole book. We name the pieces, draw the
+boundary around the model, and show how a useful prototype becomes a system
+that can survive retries, waiting, failure, and scrutiny. The later Parts add
+capabilities to this foundation; they do not replace it.
 
-# 01 — From an LLM Call to a Production Agentic System
+# 01 — What Turns an LLM Call into a Production System
 
 |  |
 | --- |
@@ -137,11 +140,16 @@ the book is organized the way it is.
 | --- |
 | **COMMON PITFALL**  The most expensive misconception in enterprise agent projects is that the prototype is 80% of the system and the rest is hardening. The prototype is the reasoning component. Durability, authority, effect semantics, evidence and release control are not hardening — they are the other components, and they are most of the work. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Explain why an agentic application is a distributed system and assign every authoritative decision to the correct component.
+An LLM can look useful after a single call. Production work has to survive a
+restart, a duplicate message, an untrusted document, a long human wait, and an
+audit request months later. This chapter gives you the mental model for that
+gap: the model supplies bounded reasoning, while the surrounding system owns
+state, authority, effects, evidence, and recovery. That distinction matters
+as soon as an answer can start a workflow or change a business record.
 
-## Solution blueprint
+## The system boundary
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -477,7 +485,7 @@ for the request-time control points above.
 | **ARCHITECTURE GUIDANCE**  Do not rename the Tool Gateway after a protocol. A tool invoked over MCP still passes the Tool Gateway, because MCP describes how a tool is discovered and called — not who may call it, whether the effect is idempotent, or what evidence is recorded. Naming a control boundary after today's protocol is how the boundary disappears when the protocol is replaced. |
 
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -485,20 +493,20 @@ for the request-time control points above.
 
 Evidence anchors: NIST-GAI; REACT. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 
 ### Provider-neutral agent-step contracts
 
 [[EXAMPLE:contracts#step]]
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Trace one request across model, workflow, tool, human, and record owners.
 2. Find any place where prompt text is being treated as authoritative state.
 3. Reproduce one partial failure and identify the missing durable fact.
 
-## Production checklist
+## Before you ship
 
 **✓** The model is a bounded reasoning component—not the owner of workflow state.
 
@@ -510,12 +518,12 @@ Evidence anchors: NIST-GAI; REACT. Full URLs, authority, version, and scope appe
 
 **✓** Operators can reconstruct the run from versions, evidence, decisions, and receipts.
 
-## Exercises
+## Try it yourself
 
 1. Draw the minimum production architecture for Northstar and label every authoritative store.
 2. Convert a chatbot feature list into measurable outcome, authority, duration, data, and effect requirements.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -525,7 +533,7 @@ Evidence anchors: NIST-GAI; REACT. Full URLs, authority, version, and scope appe
 | Which records must remain authoritative outside the model and prompt? | Run and workflow state, identity, policy decisions, budgets, approvals, business records, effect receipts, release versions, and audit evidence. |
 | What would you require before calling an agent production-ready? | Evaluated outcomes and trajectories, bounded limits, delegated authorization, idempotent effects, recovery paths, observability, audit, release pinning, and operational controls. |
 
-## Transition to Chapter 2
+## Why Chapter 2 comes next
 
 With the system boundary established, Chapter 2 converts model intent into typed, validated tool proposals and a deterministic commit path.
 
@@ -534,7 +542,7 @@ income document is visible, while verification, deterministic calculation, and
 workflow commands are not yet part of the case. Chapter 2 adds those contracts
 and shows why a well-formed proposal is still not permission to act.
 
-# 02 — Tools, Structured Outputs, and the Deterministic Shell
+# 02 — From Model Output to Safe Action
 
 |  |
 | --- |
@@ -552,11 +560,15 @@ and shows why a well-formed proposal is still not permission to act.
 | --- |
 | **DESIGN DECISION**  Treat every model output as a typed proposal; validate, authorize, commit, verify, and accept outside the model. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Turn model output into typed proposals and place validation, authorization, effects, and acceptance behind deterministic boundaries.
+Once a model can call tools, its output starts to look like an instruction. It
+is still only a proposal. This chapter follows one proposal through validation,
+authorization, commit, verification, and acceptance, so you can see what each
+boundary protects and what goes wrong when a well-formed JSON object is allowed
+to act as permission.
 
-## Solution blueprint
+## Six gates before anything changes
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -685,7 +697,7 @@ autonomy increases**.
 | --- |
 | **COMMON PITFALL**  Treating schema validity as correctness. A response that parses cleanly can still name a stale record, a resource the caller cannot see, or an amount nobody approved. Schema validation rejects malformed proposals; it says nothing about whether the proposal should be allowed. Keep the two checks separate and run both. |
 
-## Pattern reference — Tool Use
+## Putting it into practice: Tool Use
 
 |  |
 | --- |
@@ -729,7 +741,7 @@ The model proposes ToolIntent; the Tool Gateway validates the exact tool version
 * latency and retries
 * effect state and receipt
 
-## Implementation reference
+## A practical starting point
 
 ### Mortgage checkpoint: a proposal, not a decision
 
@@ -759,7 +771,7 @@ production persists these transitions atomically with the downstream effect.
 
 [[EXAMPLE:governed-tool-gateway]]
 
-## Debugging playbook
+## When the system misbehaves
 
 * Trace the intent-to-execution path. Compare the model’s raw proposal with the
   validated command, identifying any rejected, modified, or defaulted fields.
@@ -769,7 +781,7 @@ production persists these transitions atomically with the downstream effect.
 * Test idempotency. Replay the same logical mutation and confirm that it
   produces no duplicate side effect and resolves to the same durable receipt.
 
-## Production checklist
+## Before you ship
 
 **✓** Every model output is classified as a proposal by default.
 
@@ -781,12 +793,12 @@ production persists these transitions atomically with the downstream effect.
 
 **✓** Completion uses deterministic acceptance criteria.
 
-## Exercises
+## Try it yourself
 
 1. Define a typed proposal and deterministic acceptance function for mortgage evidence review.
 2. Write five invariants that must be true before a mortgage document request can commit.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -796,7 +808,7 @@ production persists these transitions atomically with the downstream effect.
 | Where should completion be decided? | In an acceptance engine or workflow guard using required artifacts, effect states, policy obligations, and domain invariants—not from a model’s “done” message. |
 | What is the trade-off of a stronger deterministic shell? | More contracts and platform complexity, but improved safety, replayability, testing, provider portability, incident recovery, and auditability. |
 
-## Transition to Chapter 3
+## Why Chapter 3 comes next
 
 With tools bounded, Chapter 3 defines the runtime contract that keeps applications portable across agent frameworks and model providers.
 
@@ -804,7 +816,7 @@ For the mortgage case, the remaining bottleneck is the execution seam: the
 typed shell needs one bounded evidence-review activity, but the framework must
 not become the owner of the case, policy, approval, or effect records.
 
-# 03 — Agent Runtime and Framework Abstraction
+# 03 — Keep the Framework in Its Lane
 
 > **Evidence note.** Concrete adapter examples use OpenAI Agents SDK v0.22.2 and its documented agent, tool, guardrail, handoff, result, and tracing surfaces; the platform contracts remain framework-neutral. [R29][R30]
 
@@ -818,9 +830,14 @@ not become the owner of the case, policy, approval, or effect records.
 | --- |
 | **DESIGN DECISION**  Place the OpenAI Agents SDK behind AgentRuntime; pin 0.22.2 and keep workflow, authority, credentials, effects, and audit platform-owned. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Use OpenAI Agents SDK 0.22.2 as a bounded, replaceable runtime adapter rather than the enterprise control plane. By the end of the chapter, the reader should be able to identify which facts belong to the local reasoning loop, which facts must survive outside it, and how an enterprise request crosses the boundary safely.
+Frameworks make the local reasoning loop pleasant to write, but they are not
+the place to hide workflow truth or enterprise authority. This chapter shows
+how to use OpenAI Agents SDK 0.22.2 as a replaceable adapter, what belongs
+inside that adapter, and what must remain durable outside it. The boundary
+becomes important when a framework changes, a run pauses, or a connector needs
+to prove who authorized an effect.
 
 ## Start with a concrete scenario
 
@@ -1167,7 +1184,7 @@ The division of responsibility can now be summarized as a set of non-negotiable 
 
 Where both layers participate, the platform gives the runtime an explicit contract and the runtime returns evidence about what it did. Shared participation is not shared authority: the platform remains the owner of enterprise meaning.
 
-## Production checklist
+## Before you ship
 
 Before allowing a framework adapter into production, verify:
 
@@ -1182,7 +1199,7 @@ Before allowing a framework adapter into production, verify:
 - Handoffs have explicit ownership, budget, cancellation, deadline, and adoption semantics.
 - Adapter conformance tests cover structured output, tools, tracing, interruptions, errors, usage, cancellation, and upgrades.
 
-## Debugging playbook
+## When the system misbehaves
 
 When execution behaves unexpectedly, debug the boundary in order:
 
@@ -1203,7 +1220,7 @@ The durable test is simple. Northstar should be able to stop every agent worker,
 
 That is the difference between running an agent and operating an enterprise agentic system.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -1215,6 +1232,6 @@ That is the difference between running an agent and operating an enterprise agen
 | When is a handoff actually a new task? | When work needs independent ownership, authority, budget, waits, retries, deadlines, cancellation, scaling, or a cross-service trust boundary; use a durable `TaskEnvelope` and child workflow. |
 | How should SDK upgrades be released? | As behavioral changes: run adapter and schema tests, replay traces, test approval/resume and cancellation, evaluate, load-test, canary, and retain versions in the `RunManifest`. |
 
-## Transition to Chapter 4
+## Why Chapter 4 comes next
 
 The runtime boundary is now explicit: a framework runs one bounded reasoning step, while the platform owns durable truth, authority, effects, and accountability. Chapter 4 places that boundary inside the complete enterprise reference architecture.

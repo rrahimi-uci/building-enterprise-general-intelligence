@@ -26,126 +26,126 @@
   "structure": {
     "parts": [
       {"id": "I", "title": "Foundations"},
-      {"id": "II", "title": "Enterprise Architecture & Knowledge"},
-      {"id": "III", "title": "Agentic Developer Platform & SDK"},
-      {"id": "IV", "title": "Patterns and Anti-Patterns"},
-      {"id": "V", "title": "Multi-Agent Systems & External Integration"},
-      {"id": "VI", "title": "Security, Identity & Guardrails"},
-      {"id": "VII", "title": "Observability, Evaluation & Learning"},
-      {"id": "VIII", "title": "Governance & Production Operations"}
+      {"id": "II", "title": "Architecture, Knowledge, and Context"},
+      {"id": "III", "title": "The Developer Platform"},
+      {"id": "IV", "title": "Patterns That Work—and Those That Fail"},
+      {"id": "V", "title": "Working Together Across Boundaries"},
+      {"id": "VI", "title": "Security, Identity, and Control"},
+      {"id": "VII", "title": "Evidence, Evaluation, and Improvement"},
+      {"id": "VIII", "title": "Running the System in the Real World"}
     ],
     "chapters": [
       {
         "number": 1,
-        "title": "From an LLM Call to a Production Agentic System"
+        "title": "What Turns an LLM Call into a Production System"
       },
       {
         "number": 2,
-        "title": "Tools, Structured Outputs, and the Deterministic Shell"
+        "title": "From Model Output to Safe Action"
       },
       {
         "number": 3,
-        "title": "Agent Runtime and Framework Abstraction"
+        "title": "Keep the Framework in Its Lane"
       },
       {
         "number": 4,
-        "title": "Enterprise Reference Architecture, Boundaries, and Contracts"
+        "title": "The Architecture Around the Model"
       },
       {
         "number": 5,
-        "title": "Enterprise Knowledge Management for Agents"
+        "title": "Give Knowledge an Owner"
       },
       {
         "number": 6,
-        "title": "Context Engineering, RAG, Memory, and State"
+        "title": "Build Context Without Losing the Plot"
       },
       {
         "number": 7,
-        "title": "Agentic Developer Platform, SDK, and Delivery Lifecycle"
+        "title": "Build the Paved Road for Agent Teams"
       },
       {
         "number": 8,
-        "title": "Skills as Versioned Capabilities"
+        "title": "Package Capabilities as Versioned Skills"
       },
       {
         "number": 9,
-        "title": "Skill Packs and Domain Platforms"
+        "title": "From Skills to a Domain Platform"
       },
       {
         "number": 10,
-        "title": "ReAct: Bounded Reason\u2013Act\u2013Observe Loops"
+        "title": "ReAct Without the Runaway Loop"
       },
       {
         "number": 11,
-        "title": "Routing, Triage, and Handoffs"
+        "title": "Route the Work—and Transfer Ownership"
       },
       {
         "number": 12,
-        "title": "Planning and Plan\u2013Execute"
+        "title": "Plans Are Proposals Until the System Compiles Them"
       },
       {
         "number": 13,
-        "title": "Reflection and Evaluator\u2013Optimizer"
+        "title": "Use Critique to Improve, Not to Self-Approve"
       },
       {
         "number": 14,
-        "title": "Human-in-the-Loop"
+        "title": "Put People Where Judgment Matters"
       },
       {
         "number": 15,
-        "title": "Long-Running and Durable Agents"
+        "title": "Keep Work Alive Across Time and Failure"
       },
       {
         "number": 16,
-        "title": "Enterprise Pattern Catalog"
+        "title": "Patterns for Real Enterprise Work"
       },
       {
         "number": 17,
-        "title": "Enterprise Anti-Pattern Catalog"
+        "title": "The Shapes That Fail in Production"
       },
       {
         "number": 18,
-        "title": "Supervisor/Worker and Multi-Agent Collaboration"
+        "title": "Coordinate Specialists Without Losing Control"
       },
       {
         "number": 19,
-        "title": "External Integration: MCP, A2A, and the Model Control Plane"
+        "title": "Crossing the Boundary: MCP, A2A, and Local Control"
       },
       {
         "number": 20,
-        "title": "Agentic AI Security and Guardrails Architecture"
+        "title": "Security Starts Beyond the Prompt"
       },
       {
         "number": 21,
-        "title": "Identity, RBAC/ABAC, and Delegated Authorization"
+        "title": "Carry Identity and Narrow Authority"
       },
       {
         "number": 22,
-        "title": "Tool Security, Side Effects, Idempotency, and Approval"
+        "title": "Make Effects Safe to Retry"
       },
       {
         "number": 23,
-        "title": "Sandboxing, Egress, Data Security, and Governance"
+        "title": "Contain a Manipulated Model"
       },
       {
         "number": 24,
-        "title": "Distributed Tracing"
+        "title": "Follow One Run from Request to Receipt"
       },
       {
         "number": 25,
-        "title": "Continuous Learning and Governed Improvement"
+        "title": "Improve the System Without Losing Control"
       },
       {
         "number": 26,
-        "title": "Governance, Risk, and Operating Model"
+        "title": "Make Governance an Operating System"
       },
       {
         "number": 27,
-        "title": "Deployment, Versioning, CI/CD, and Recovery"
+        "title": "Release Without Breaking Work in Flight"
       },
       {
         "number": 28,
-        "title": "Cost, Latency, Capacity, and Reliability Optimization"
+        "title": "Make Performance a Business Decision"
       }
     ],
     "appendices": [

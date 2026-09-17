@@ -1,6 +1,10 @@
-# PART VI — SECURITY, IDENTITY & GUARDRAILS
+# PART VI — SECURITY, IDENTITY, AND CONTROL
 
-This Part applies defense in depth to untrusted content, identity, delegated authority, tools, code, data, memory, multi-agent traffic, MCP servers, and the software supply chain. Each control is tied to a trust boundary, runtime decision, detection signal, and recovery path.
+This Part asks what happens when the model is wrong, manipulated, or simply
+given more reach than it needs. It applies defense in depth to content,
+identity, delegated authority, tools, code, data, memory, remote agents, and
+the software supply chain. Every control is tied to a boundary, a decision, a
+signal, and a recovery path so “security” remains an engineering property.
 
 The order matters. Authentication establishes who is present; authorization decides
 what that subject and workload may do; guardrails inspect risky input and output;
@@ -9,13 +13,17 @@ committed. These controls reinforce one another, but none can stand in for the
 others. The model may propose an action, while deterministic services decide
 whether the action is eligible, safe to execute, and complete enough to report.
 
-# 20 — Agentic AI Security and Guardrails Architecture
+# 20 — Security Starts Beyond the Prompt
 
 > **Evidence note.** The threat catalog is cross-checked against OWASP agentic-security guidance, while the trust-boundary model follows zero-trust principles that require explicit policy decisions around protected resources. [R11][R15][R16]
 
-## What this chapter delivers
+## Why this chapter matters
 
-Place guardrails at every boundary an agentic system crosses, and prove each one with a decision record rather than an instruction in a prompt.
+Security cannot be reduced to a prompt telling the model to be careful. A
+manipulated model may still be useful if the surrounding system limits what it
+can read, where it can connect, which credentials it can receive, and which
+effects can commit. This chapter places detection, policy, and enforcement at
+those boundaries and shows what evidence proves that the controls actually ran.
 
 ## A guardrail is not the security boundary
 
@@ -42,7 +50,7 @@ control above this one is fooled, and which deterministic control contains it?*
 | Where is harm contained? | At the credential, sandbox, egress, and effect boundaries, each with a bounded grant |
 | What proves the result? | Decision records, sanitized trace links, receipts, and reconciled effect state |
 
-## Solution blueprint
+## A security architecture with depth
 
 The blueprint is a set of ownership and containment decisions, not a single
 security product. Policy and guardrail services own decisions; the effect
@@ -341,7 +349,7 @@ successful manipulation did not expand authority. Detection improves the user
 experience and reduces investigation cost; containment preserves the security
 property when detection is incomplete.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -349,7 +357,7 @@ property when detection is incomplete.
 
 Evidence anchors: R11; R15; R16. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 [[EXAMPLE:input-guardrail]]
 
@@ -375,7 +383,7 @@ signing keys, and trust. Reconcile which effects actually occurred; never infer
 from the model's final message. Restore a known release and authoritative state,
 then create privacy-reviewed regression cases.
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Name the boundary the failure crossed — input, context or memory, model or output, agent or workflow, identity or policy, tool or effect, execution or egress, supply chain — before forming any hypothesis.
 2. Pull that boundary's decision record: classifier and version, PolicyDecision, ContextManifest, HumanActionAuthorizationDecision, or egress decision.
@@ -383,7 +391,7 @@ then create privacy-reviewed regression cases.
 4. Reconcile effects against the ledger. Never conclude from the model's final message that nothing committed.
 5. Convert the incident into a privacy-reviewed regression case pinned to the exact versions that failed.
 
-## Production checklist
+## Before you ship
 
 **✓** Every trust-boundary crossing revalidates identity, authority, content, and data policy; nothing is inherited through a chain.
 
@@ -397,12 +405,12 @@ then create privacy-reviewed regression cases.
 
 **✓** Incident response follows Detect → Contain → Revoke → Reconcile → Eradicate → Recover → Learn, with owners named before the incident.
 
-## Exercises
+## Try it yourself
 
 1. Take one threat card and trace it across the nine defence layers: which layer detects it, which contains it, and which would leave no evidence at all.
 2. Plant instructions in an authorized retrieval source and verify that tool eligibility does not change. If it does, the guardrail is reading content rather than policy.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -412,11 +420,11 @@ then create privacy-reviewed regression cases.
 | What evidence proves an effect did or did not commit? | The effect ledger and the downstream receipt, reconciled. A successful HTTP response proves transport, and the model's final message proves nothing. |
 | Why does the threat catalog not replace the boundary architecture? | The catalog enumerates known classes and will always lag new surfaces. Boundaries that revalidate identity, authority, content, and data policy contain threats that were never enumerated. |
 
-## Transition to Chapter 21
+## Why Chapter 21 comes next
 
 The guardrail architecture establishes defence in depth; Chapter 21 makes it enforceable per caller by binding every action to an authenticated identity and a delegated grant.
 
-# 21 — Identity, RBAC/ABAC, and Delegated Authorization
+# 21 — Carry Identity and Narrow Authority
 
 > **Evidence note.** The delegated-authority examples use OAuth token exchange, resource indicators, and protected-resource metadata as protocol building blocks; deployment still requires workload-specific issuer, audience, proof, revocation, and policy controls. [R08][R09][R10]
 
@@ -428,11 +436,15 @@ The guardrail architecture establishes defence in depth; Chapter 21 makes it enf
 | --- |
 | **DESIGN DECISION**  Carry subject plus actor identity; exchange for short-lived last-hop credentials only after exact resource authorization. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Carry subject and actor identity end to end and prove that every delegated grant is narrower.
+The person who starts a run and the workload that performs its next step are
+not the same actor. If that distinction disappears, a helpful assistant can
+quietly become a privilege-escalation path. This chapter carries subject and
+actor identity together, then derives short-lived grants that are narrower than
+the authority that created them.
 
-## Solution blueprint
+## Subject, actor, and delegated grants
 
 The central distinction is between *who initiated the request* and *which
 workload is performing the work*. Authentication answers who presented a valid
@@ -515,9 +527,9 @@ becoming a new source of authority.
 * Run the policy decision point independently from the LLM. OPA/Rego, Cedar/Verified Permissions, or a comparable engine can express RBAC/ABAC and emit replayable decision logs.
 * Treat document-level ACL changes as index invalidation events. Never assume a vector store filter alone is sufficient if the source of truth denies access.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 | **Component** | **Responsibility** |
 | --- | --- |
@@ -529,7 +541,7 @@ becoming a new source of authority.
 | Entitlement Indexer | Convert source ACL/group changes into queryable snapshots and invalidation events |
 | Data Access Broker | Run policy-filtered search/query against sources and return provenance-rich references |
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -558,7 +570,7 @@ JSON · implementation excerpt
 }
 ```
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -590,7 +602,7 @@ JSON · implementation excerpt
 | --- |
 | **SECURITY AND GOVERNANCE**  Delegation must narrow monotonically. A sub-agent may act for a different actor, but never for a broader subject, resource set, or action set than its parent held. Prove the narrowing in code at each handoff; a chain that can widen anywhere can widen everywhere. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -598,7 +610,7 @@ JSON · implementation excerpt
 
 Evidence anchors: RFC8693; RFC8707. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 
 ### Capability-envelope subset proof
@@ -674,13 +686,13 @@ def derive_child(
     return child
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Trace subject, actor, purpose, grant, policy version, and credential lease end to end.
 2. Canonicalize the exact resource and recompute child subset checks.
 3. Simulate role revocation during a wait and verify post-wait denial.
 
-## Production checklist
+## Before you ship
 
 **✓** Both initiating subject and acting workload cross every protected boundary.
 
@@ -692,12 +704,12 @@ def derive_child(
 
 **✓** Revocation, freshness, cache invalidation, post-wait revalidation, and tenant isolation are first-class.
 
-## Exercises
+## Try it yourself
 
 1. Create a capability envelope for a read-only specialist task.
 2. Write tests that attempt purpose, resource, region, risk, and time escalation.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -707,11 +719,11 @@ def derive_child(
 | Why reauthorize after a long wait? | User roles, ACLs, policy, resource state, risk, and credentials may have changed; original admission is not perpetual authority. |
 | Where must authorization occur in retrieval? | Before content reaches the model, with tenant and source routing, exact resource and field checks, freshness, redaction obligations, and provenance. |
 
-## Transition to Chapter 22
+## Why Chapter 22 comes next
 
 Identity and delegated authority answer who may ask; Chapter 22 proves whether a specific tool effect may execute, commit, retry, or recover.
 
-# 22 — Tool Security, Side Effects, Idempotency, and Approval
+# 22 — Make Effects Safe to Retry
 
 |  |
 | --- |
@@ -721,11 +733,15 @@ Identity and delegated authority answer who may ask; Chapter 22 proves whether a
 | --- |
 | **DESIGN DECISION**  Use one logical effect key, intent hash, expected version, downstream request ID, receipt, and reconciliation state per mutation. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Make external writes replay-safe through manifests, exact authorization, logical effect keys, preconditions, receipts, and reconciliation.
+Reads can usually be repeated; writes can create duplicates, send messages, or
+change money. This chapter makes that difference concrete with one logical
+effect key, an intent hash, preconditions, receipts, and reconciliation for the
+unknown case. The result is a write path that can be retried because its
+meaning—not just its network request—is recorded.
 
-## Solution blueprint
+## The effect path
 
 Tools are where a model proposal meets a system that can change the world. The
 gateway therefore has two jobs that are easy to confuse: it protects the
@@ -797,9 +813,9 @@ required result.
 
 Use MCP as an interoperability surface for tools and resources, not as the authorization authority. The gateway must validate audience-bound tokens, prohibit token passthrough, isolate untrusted servers, and apply enterprise policy independently of protocol-level OAuth.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 | **Component** | **Responsibility** |
 | --- | --- |
@@ -812,7 +828,7 @@ Use MCP as an interoperability surface for tools and resources, not as the autho
 | Effect Service | Allocate logical effect IDs, deduplicate, store receipts, reconcile, and compensate |
 | Health/Quota Service | Track provider limits, latency, error state, breaker status, and queue pressure |
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -832,7 +848,7 @@ Invocation behavior:
 * Return 202 plus an operation URL for long-running, queued, browser/code, or mutating work.
 * Return a typed policy denial, validation error, capacity response, dependency error, or effect\_unknown; do not collapse every failure into free-form text.
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -865,7 +881,7 @@ inside the model loop:
 The model can request a new proposal after a denial or stale-version conflict,
 but it cannot skip a stage by changing the wording of its next message.
 
-### Scalability and operations
+### What changes at scale
 
 * Keep registry/discovery/gateway front ends stateless. Cache immutable manifests by digest and distribute them regionally; always perform a current authorization check at invocation.
 * Partition invocation and effect records by tenant + tool, but route all uses of one logical idempotency key to the same consistency domain.
@@ -917,13 +933,13 @@ but it cannot skip a stage by changing the wording of its next message.
 * **Circuit breaking:** break by provider/tool/tenant/risk class; expose health to the planner so it selects only evaluated alternatives.
 * **Graceful degradation:** degrade from write → draft, deep analysis → partial evidence, premium model → approved fallback, live data → clearly labeled cached data. Never degrade authorization, tenant isolation, or audit.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 The workflow engine owns retry timing and saga order; the Effect Service owns idempotency and external outcome state; Outbox/Inbox adapters own atomic publication and consumer deduplication; the Reconciliation Service resolves unknown outcomes; the Compensation Executor performs domain reversals; the Dependency Health Service owns breakers; and the Exception Service owns manual intervention cases.
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -937,7 +953,7 @@ The workflow engine owns retry timing and saga order; the Effect Service owns id
 | POST /v1/exceptions | Open idempotent operator case with run/effect, evidence, severity, owner, and prohibited automatic actions |
 | POST /v1/dlq/{message\_id}:redrive | Redrive only after schema/policy/version checks; produces a new delivery attempt linked to the quarantine record |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -968,7 +984,7 @@ business effect and never erases the original receipt.
 * A workflow transition that depends on an effect reads the Effect Service’s verified state; a model/tool return string is not sufficient proof.
 * Compensation is separately authorized against current state and may itself be idempotent, fail, or require human approval.
 
-### Scalability and resilience
+### What changes at scale
 
 * Partition effect/outbox/inbox data by tenant + logical target/tool. Maintain the idempotency unique index in the same shard that accepts begin.
 * Stream outbox records by monotonically increasing shard cursor; avoid a single global publisher. Track oldest unpublished age and backlog bytes as primary SLOs.
@@ -983,7 +999,7 @@ business effect and never erases the original receipt.
 | --- |
 | **SECURITY AND GOVERNANCE**  Authorize at invocation, against the end user's grant — never against the agent's own identity. A service account broad enough for every tool is a confused deputy waiting for a prompt injection. Narrow the grant per run, pass it explicitly, and re-check it at the tool boundary rather than at the start of the conversation. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -991,7 +1007,7 @@ business effect and never erases the original receipt.
 
 Evidence anchors: OUTBOX; CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 
 [[EXAMPLE:effect-idempotency]]
@@ -1055,13 +1071,13 @@ class InMemoryEffectLedger:
     def get(self,key:str)->EffectRecord:return self._records[key]
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Locate the logical effect key, intent hash, expected version, and downstream request ID.
 2. Classify the current state as reserved, executing, committed, absent, partial, or unknown.
 3. Block dependent actions until reconciliation produces evidence.
 
-## Production checklist
+## Before you ship
 
 **✓** Commands and facts are distinct and events use versioned envelopes.
 
@@ -1073,12 +1089,12 @@ class InMemoryEffectLedger:
 
 **✓** Discovery is minimal and exact resource authorization happens at invocation.
 
-## Exercises
+## Try it yourself
 
 1. Extend the effect ledger with partial and compensated states.
 2. Design a reconciliation algorithm for an API without native idempotency keys.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -1088,11 +1104,11 @@ class InMemoryEffectLedger:
 | How should approval be bound to an action? | Persist the exact canonical proposal, preview, destination, evidence, risk, and hash; authorize the approver; reject expiry, supersession, hash mismatch, or stale resource state. |
 | Why are both idempotency and optimistic concurrency needed? | Idempotency prevents duplicate logical intent; expected versions prevent an otherwise valid action from overwriting newer state. |
 
-## Transition to Chapter 23
+## Why Chapter 23 comes next
 
 Protected effects are governed; Chapter 23 contains the remaining execution, egress, data, privacy, and supply-chain blast radius.
 
-# 23 — Sandboxing, Egress, Data Security, and Governance
+# 23 — Contain a Manipulated Model
 
 > **Evidence note.** SBOM inventory and SLSA build provenance answer different supply-chain questions. Privacy obligations depend on jurisdiction; the GDPR source is cited only for EU legal context, not as universal legal advice. [R17][R18][R39]
 
@@ -1104,11 +1120,16 @@ Protected effects are governed; Chapter 23 contains the remaining execution, egr
 | --- |
 | **DESIGN DECISION**  Design so prompt injection may manipulate reasoning but cannot reach unauthorized data, credentials, network destinations, or effects. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Contain a manipulated model with capability, credential, execution, network, supply-chain, and governance controls.
+Assume the model will eventually be manipulated by a user, document, tool
+result, or dependency. The practical question is not whether the model can be
+made perfectly obedient; it is what the manipulated plan can reach. This
+chapter layers capability, credential, execution, network, data, supply-chain,
+and governance controls so a reasoning failure does not become an enterprise
+effect.
 
-## Solution blueprint
+## Layers that contain blast radius
 
 This chapter asks a narrower question than “is the model safe?”: if the model is
 manipulated, what can it reach, and what prevents that reach from becoming harm?
@@ -1176,13 +1197,13 @@ derived copies.
 
 Security must be tested against the current OWASP agentic threat taxonomy and organization-specific abuse cases, but compliance with a list is not proof of safety. Prompt-injection defenses remain probabilistic; architecture must limit what a successfully manipulated model can see and do.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 The Content Security Gateway scans/classifies inbound and retrieved content; policy enforcement points mediate each trust boundary; the Secret/Credential Broker prevents secret exposure; the Sandbox Control Plane attests and leases isolated execution; the Egress Gateway resolves and filters outbound destinations; DLP inspects structured and unstructured payloads; the Peer/Tool Trust Registry validates supply-chain identity; and the Kill-Switch Service revokes capabilities independently of agent code.
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -1196,7 +1217,7 @@ The Content Security Gateway scans/classifies inbound and retrieved content; pol
 | POST /v1/kill-switches | Disable model route, agent/tool/version, peer, destination, tenant action, or risk class and emit immediate invalidation events |
 | POST /v1/security/incidents/{id}:contain | Revoke grants, stop dispatch, isolate sandboxes, block egress, checkpoint runs, and preserve evidence |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -1238,7 +1259,7 @@ connector.
 * Inject secrets at the last possible hop through memory/file descriptor/sidecar mechanisms and redact process/environment dumps. The model and generated code receive capability handles, not secret values.
 * Scan outputs and derived artifacts before memory writes, model reuse, cross-agent transfer, or publication; untrusted tool/peer responses remain tainted.
 
-### Scalability and availability
+### What changes at scale
 
 * Place lightweight PEPs, kill-switch caches, and signed policy bundles close to gateways/workers. Keep central policy/control writes low volume and strongly audited; distribute invalidations through a high-priority channel.
 * Stateless content/DLP workers scale by bytes and document complexity, with separate pools for archive expansion, OCR, code, images, and low-latency request checks. Set decompression and recursion limits.
@@ -1248,7 +1269,7 @@ connector.
 * Use bounded caches only for immutable attestations and low-risk allow decisions. Revocation, high-risk actions, secrets, and external publication require current checks.
 * Quarantine suspect peers/tools/artifacts by digest so healthy versions continue operating. Kill switches target the narrowest safe scope and are tested as part of disaster exercises.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -1257,7 +1278,7 @@ connector.
 
 Evidence anchors: OWASP-AGENT; NIST-IR; NIST-RMF; ISO42001; EU-AI-ACT. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 
 ### Default-deny URL authorization
@@ -1334,13 +1355,13 @@ class RecoveryObjectives(BaseModel):
     minimum_safe_capabilities: frozenset[str]
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Follow the tainted content to every capability and network boundary.
 2. Verify no credentials entered prompt, generated code, logs, or sandbox files.
 3. Review DLP, redirect, DNS, egress, artifact, and kill-switch evidence.
 
-## Production checklist
+## Before you ship
 
 **✓** The design remains safe even if the model follows a malicious instruction.
 
@@ -1352,12 +1373,12 @@ class RecoveryObjectives(BaseModel):
 
 **✓** Targeted emergency denies, revocation, isolation, quarantine, and incident evidence are available.
 
-## Exercises
+## Try it yourself
 
 1. Threat-model an injected mortgage PDF using an attack tree.
 2. Write a default-deny egress policy for the code-execution sandbox.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -1367,6 +1388,6 @@ class RecoveryObjectives(BaseModel):
 | How should credentials reach a tool? | Validate subject and actor policy, exchange for a short-lived audience, action, and resource-bound lease, inject at the connector’s final hop, and never expose the secret to prompts or generated code. |
 | What makes a useful kill-switch design? | Narrow scopes, emergency-deny precedence, independent high-priority distribution, measurable propagation, governed issuer and rollback, workflow checkpointing, and evidence preservation. |
 
-## Transition to Chapter 24
+## Why Chapter 24 comes next
 
 Security controls now produce events and evidence; Chapter 24 turns those signals into end-to-end traces that operators can reconstruct.

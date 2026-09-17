@@ -1,8 +1,12 @@
-# PART VII — OBSERVABILITY, EVALUATION & LEARNING
+# PART VII — EVIDENCE, EVALUATION, AND IMPROVEMENT
 
-This Part makes behaviour measurable. It covers the distributed trace that explains a run, the evaluation that decides whether a change is an improvement, and the governed learning loop that turns production evidence into a safer, better system.
+You cannot improve a system you cannot explain, and you cannot call a change an
+improvement by looking only at its average score. This Part connects causal
+traces, evaluation, slices, regression cases, and governed learning. The aim is
+not more telemetry for its own sake; it is evidence that helps a team decide
+what to fix, what to release, and what to leave alone.
 
-# 24 — Distributed Tracing
+# 24 — Follow One Run from Request to Receipt
 
 > **Evidence note.** OpenTelemetry GenAI semantic conventions remain in Development and have moved to a dedicated repository; isolate them behind an internal mapping layer. Phoenix is one implementation option for OpenInference/OTel-based tracing and evaluation. [R19][R23]
 
@@ -14,11 +18,15 @@ This Part makes behaviour measurable. It covers the distributed trace that expla
 | --- |
 | **DESIGN DECISION**  Adopt OpenTelemetry-compatible causal traces and MLflow 3.15.x for diagnostics; retain complete protected audit evidence separately. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Connect workflow, agent, model, retrieval, policy, tool, approval, effect, and human activity into one causal trajectory.
+A final answer tells you what the user saw; it rarely tells you why the system
+got there. When a mortgage review is slow, expensive, or wrong, the useful
+question is causal: which queue, retrieval, model turn, retry, approval, or
+connector created the outcome? This chapter builds one trace across those
+boundaries while keeping protected audit evidence in its proper store.
 
-## Solution blueprint
+## A trace that explains the run
 
 Observability answers two different questions. Diagnostics ask, “Why was this
 run slow, wrong, or expensive?” Audit asks, “Which protected decision and effect
@@ -128,7 +136,7 @@ Do not treat hidden chain-of-thought as required observability. Record concise d
 * Operational replay reuses recorded activity outputs and cannot create live effects. A fork with changed model/prompt/tool is a new run and explicitly mocks or reauthorizes external access.
 * Deterministic correctness checks outrank model graders. Store grader prompt/model/version, raw score evidence, and inter-rater calibration so a later drift analysis is possible.
 
-### Scalability, retention, and cost
+### What changes at scale
 
 * Decouple application latency from backend analytics with regional collectors, bounded queues, batching, compression, retry, and encrypted spill. Protected effect/audit events follow a loss-intolerant path distinct from sampled diagnostics.
 * Partition trace storage by tenant + time; index only operationally useful low-cardinality fields. Put high-cardinality attributes and content in columnar/object storage with controlled query paths.
@@ -143,7 +151,7 @@ Do not treat hidden chain-of-thought as required observability. Record concise d
 | --- |
 | **OBSERVABILITY TIP**  Trace the decision, not only the call. Latency and token counts tell you a run was slow; they never tell you why it was wrong. Record which context manifest was authorized, which policy applied, and which branch was taken — those attributes are what let a trace answer a question weeks later. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -155,7 +163,7 @@ Evidence anchors: OTEL-GENAI; MLFLOW-TRACE. Full URLs, authority, version, and s
 | --- |
 | **OBSERVABILITY TIP**  Tag every trace with the identifiers your system of record uses — run, tenant, risk class. A trace that cannot be joined to the business record it affected is a performance artifact, not an audit trail. |
 
-## Implementation reference
+## A practical starting point
 
 
 [[EXAMPLE:mlflow-tracing]]
@@ -174,13 +182,13 @@ integration and redaction mechanics without claiming a live provider call.
 
 [[EXAMPLE:mortgage-agents-mlflow]]
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Start at the SLO violation and walk the critical path span by span.
 2. Correlate queue, workflow, model, retrieval, tool, approval, and effect timing.
 3. Compare diagnostic trace completeness with required audit evidence.
 
-## Production checklist
+## Before you ship
 
 **✓** Run, workflow, agent, model, retrieval, policy, tool, approval, effect, and human spans share stable causal identifiers.
 
@@ -192,12 +200,12 @@ integration and redaction mechanics without claiming a live provider call.
 
 **✓** SLOs expose critical-path latency, cost, errors, retries, human dwell, and unknown effects.
 
-## Exercises
+## Try it yourself
 
 1. Define the canonical trace attributes for the Harborlight mortgage platform.
 2. Create a dashboard that separates machine latency from human dwell.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -207,11 +215,11 @@ integration and redaction mechanics without claiming a live provider call.
 | How do traces support debugging? | They expose critical path, state transitions, versions, policy decisions, retries, cost, evidence lineage, and the first divergent step. |
 | Why keep audit separate? | Audit has stronger completeness, integrity, access, and retention obligations than sampled diagnostic telemetry. |
 
-## Transition to Chapter 25
+## Why Chapter 25 comes next
 
 Tracing explains what happened; Chapter 25 determines whether the trajectory and outcome were acceptable and whether a change is safe to ship.
 
-# 25 — Continuous Learning and Governed Improvement
+# 25 — Improve the System Without Losing Control
 
 > **Evidence note.** The evaluation architecture maps to current capabilities documented by MLflow, DeepEval, Ragas, LangSmith, and OpenAI. Tool names and APIs are examples; the durable contract is dataset + release graph + scorer versions + trace/effect evidence. [R20][R21][R22][R24][R25][R26]
 
@@ -223,11 +231,15 @@ Tracing explains what happened; Chapter 25 determines whether the trajectory and
 | --- |
 | **DESIGN DECISION**  Gate releases on immutable datasets, executable trajectory checks, calibrated judges, slices, failures, and baseline comparisons. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Turn production evidence into governed improvement by evaluating outcomes and trajectories, diagnosing failures, validating candidates, and promoting only release bundles that satisfy deterministic safety and acceptance gates.
+Production evidence is only useful if it can change the system safely. This
+chapter follows a failure from trace to evaluation case to candidate release,
+and keeps outcome quality separate from trajectory safety. The distinction
+matters when an average score improves while a small tenant, language, or tool
+path becomes less safe.
 
-## Solution blueprint
+## The improvement loop
 
 An evaluation compares a candidate against an explicit contract, a baseline,
 and the slices where failure matters. The candidate is not just a prompt: it is
@@ -324,9 +336,9 @@ The important habit is to preserve the failing trace as a versioned case after
 privacy and purpose review. Otherwise the next improvement can repeat the same
 failure while the dashboard reports only the improved average.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 | **Component** | **Responsibility** |
 | --- | --- |
@@ -339,7 +351,7 @@ failure while the dashboard reports only the improved average.
 | Replay/Fork Service | Reconstruct a safe sandbox run from manifest, history, artifacts, and recorded effects |
 | Failure Mining Service | Cluster traces/incidents and propose curated regression cases for human review |
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -352,7 +364,7 @@ failure while the dashboard reports only the improved average.
 | POST /v1/runs/{run\_id}:forkReplay | Create a sandbox fork at checkpoint; external effects are mocked/read-only unless separately authorized |
 | POST /v1/regression-cases:propose | Submit a production failure/cluster for de-identification, labeling, leakage review, and dataset approval |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -421,7 +433,7 @@ Measure task success and deterministic acceptance, correctness, faithfulness, ha
 
 Every material failure/correction becomes a candidate case after privacy/security/purpose review. Reduce to smallest reproducible cause, define expected outcome/invariants/trajectory/cost/latency, version dataset/evaluator, and run in CI, staging, shadow, and canary. Automate capture, approved redaction/scoring, anomaly detection, clustering, draft recommendations, tests, sandbox/canary, halt, and rollback within envelope. Require human governance for permission/policy/data/memory purpose/protected effects/model allowlist/topology/architecture/evaluator truth/training data/exceptions/wider promotion. Prohibit expanding authority, disabling controls, editing audit evidence, changing approval requirements, or promoting self-authored behavior.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -434,7 +446,7 @@ Evidence anchors: MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Full URLs, authority, vers
 | --- |
 | **COMMON PITFALL**  Trusting an LLM judge you have not calibrated against human labels. A judge is a model with its own failure modes and its own drift. Measure its agreement with human raters on a held-out set, re-measure when you change the judge's model, and report the agreement alongside any score it produces. |
 
-## Implementation reference
+## A practical starting point
 
 
 [[EXAMPLE:mlflow-evaluation]]
@@ -443,13 +455,13 @@ Evidence anchors: MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Full URLs, authority, vers
 
 [[EXAMPLE:mlflow-trajectory-evaluation]]
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Reproduce the failing trace with exact dataset, release, model route, tool, and policy versions.
 2. Find the first divergent decision rather than only comparing final text.
 3. Slice scores by risk, region, tool, failure mode, and tenant class.
 
-## Production checklist
+## Before you ship
 
 **✓** All run components link into one causal trajectory.
 
@@ -461,12 +473,12 @@ Evidence anchors: MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Full URLs, authority, vers
 
 **✓** Use-case inventory names owners, authority, data, vendors, controls, exceptions, incidents, review dates, and evidence.
 
-## Exercises
+## Try it yourself
 
 1. Create a five-case immutable evaluation dataset with trajectory expectations.
 2. Implement a deterministic scorer that rejects unknown effects and missing approvals.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -476,6 +488,6 @@ Evidence anchors: MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Full URLs, authority, vers
 | What belongs in a release bundle? | Agent and prompt, runtime adapter, workflow build, model route and fallbacks, tool and policy versions, schemas, images, knowledge strategy, evaluations, rollout, and rollback policy. |
 | How do you roll back without breaking active runs? | Stop new assignment, restore the prior environment binding, keep build-compatible workers for pinned histories, reconcile side effects, and migrate only through an explicit tested plan. |
 
-## Transition to Chapter 26
+## Why Chapter 26 comes next
 
 The improvement loop proposes and validates change; Chapter 26 assigns decision rights, risk tiers, approvals, exceptions, and accountability.

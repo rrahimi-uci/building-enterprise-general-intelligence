@@ -8,13 +8,26 @@ Book v2.1.0 · Publication Release · September 2026
 
 A practical, structured enterprise reference for architects, platform engineers, DevOps engineers, and SREs.
 
-# Preface to Book v2.1.0
+# Preface: A Practical Way to Read This Book
 
-Book v2.1.0 is the publication baseline for this guide and the canonical starting point for all future editions. It treats an agentic application as a governed distributed system: models may propose, while deterministic services own authority, state, effects, evidence, acceptance, and release.
+This edition starts from a deliberately unfashionable premise: an agentic
+application is still a distributed system. The model may propose a useful next
+step, but deterministic services must own authority, state, effects, evidence,
+acceptance, and release. That is the line between a convincing demo and a
+system people can safely depend on.
 
-The narrative follows a clear progression from foundations to production. It begins with the core principles and deterministic controls that make agentic systems predictable and governable. The reference architecture then defines the major components and their responsibilities, while the platform team turns these architectural principles into reusable capabilities for engineering teams through SDKs.
+The book follows that idea from the first model call to a system that has to run
+for years. We begin with the boundaries that make an agent predictable, then
+define the architecture and turn it into reusable platform capabilities. From
+there, the chapters work through the patterns, security controls, evidence,
+governance, and operating decisions that appear once real people, real data,
+and real consequences enter the picture.
 
-From there, patterns and anti-patterns guide how agents, tools, and workflows should be designed and connected. Gateways and security controls establish safe boundaries around models, data, tools, and external systems. Observability and evaluation provide the evidence needed to understand system behavior, quality, cost, and reliability. That evidence feeds into continuous learning, where improvements are introduced through controlled and governed processes. Finally, production operations ensure that the entire system remains reliable, scalable, secure, and cost-efficient over time.
+The examples use a fictional Harborlight mortgage case as a thread. It is not a
+claim that mortgage underwriting can be delegated to a model; it is a useful
+stress test because the case has sensitive evidence, human judgment, policy,
+long waits, and protected effects. Comparative Northstar examples show how the
+same contracts travel to supplier onboarding and other domains.
 
 ## Scope and claim discipline
 
@@ -36,9 +49,14 @@ The Markdown file is the primary source of truth. When updating the book—wheth
 
 The package README explains how to build, validate, and release a new version of the book. Following this workflow ensures that future contributors and AI agents can extend the book without breaking its established structure, style, or quality.
 
-# How to use this guide
+# How to Use the Book
 
-This guide is organized as one architecture story rather than a collection of independent topics. Read the executive map, then follow the lane that matches the decision. Every major chapter moves from problem and boundaries to architecture, implementation, failure modes, metrics, trade-offs, and review questions.
+Read this as one architecture story, not as a stack of unrelated technology
+surveys. Start with the map, then choose the reader path that matches your
+decision. Each major chapter moves from a concrete problem through boundaries,
+architecture, implementation, failure modes, measurement, and trade-offs; you
+can use the review questions to test whether the idea survives contact with
+your own system.
 
 The cumulative implementation path follows one synthetic Harborlight Home
 Finance case so the architecture grows without changing applications between
@@ -69,7 +87,7 @@ Harborlight mortgage case is the cumulative runnable path.
 
 [[DIAGRAM:book-map|Figure 0-1 — Narrative map from foundations to production operations]]
 
-## Reference-guide contract
+## The Contract Behind the Architecture
 
 The architectures and practices in this book are built around a small set of principles for operating agentic systems safely and reliably in production:
 
@@ -82,80 +100,83 @@ The architectures and practices in this book are built around a small set of pri
 
 Together, these principles establish a simple operating contract: agents provide intelligence and flexibility, while deterministic controls provide authority, safety, traceability, and reliability.
 
-# Hierarchical Table of Contents
+# Find Your Way Through the Book
 
 ## Part I — Foundations
 
-01. From an LLM Call to a Production Agentic System
-02. Tools, Structured Outputs, and the Deterministic Shell
-03. Agent Runtime and Framework Abstraction
+01. What Turns an LLM Call into a Production System
+02. From Model Output to Safe Action
+03. Keep the Framework in Its Lane
 
-## Part II — Enterprise Architecture & Knowledge
+## Part II — Architecture, Knowledge, and Context
 
-04. Enterprise Reference Architecture, Boundaries, and Contracts
-05. Enterprise Knowledge Management for Agents
-06. Context Engineering, RAG, Memory, and State
+04. The Architecture Around the Model
+05. Give Knowledge an Owner
+06. Build Context Without Losing the Plot
 
-## Part III — Agentic Developer Platform & SDK
+## Part III — The Developer Platform
 
-07. Agentic Developer Platform, SDK, and Delivery Lifecycle
-08. Skills as Versioned Capabilities
-09. Skill Packs and Domain Platforms
+07. Build the Paved Road for Agent Teams
+08. Package Capabilities as Versioned Skills
+09. From Skills to a Domain Platform
 
-## Part IV — Patterns and Anti-Patterns
+## Part IV — Patterns That Work—and Those That Fail
 
-10. ReAct: Bounded Reason–Act–Observe Loops
-11. Routing, Triage, and Handoffs
-12. Planning and Plan–Execute
-13. Reflection and Evaluator–Optimizer
-14. Human-in-the-Loop
-15. Long-Running and Durable Agents
-16. Enterprise Pattern Catalog
-17. Enterprise Anti-Pattern Catalog
+10. ReAct Without the Runaway Loop
+11. Route the Work—and Transfer Ownership
+12. Plans Are Proposals Until the System Compiles Them
+13. Use Critique to Improve, Not to Self-Approve
+14. Put People Where Judgment Matters
+15. Keep Work Alive Across Time and Failure
+16. Patterns for Real Enterprise Work
+17. The Shapes That Fail in Production
 
-## Part V — Multi-Agent Systems & External Integration
+## Part V — Working Together Across Boundaries
 
-18. Supervisor/Worker and Multi-Agent Collaboration
-19. External Integration: MCP, A2A, and the Model Control Plane
+18. Coordinate Specialists Without Losing Control
+19. Crossing the Boundary: MCP, A2A, and Local Control
 
-## Part VI — Security, Identity & Guardrails
+## Part VI — Security, Identity, and Control
 
-20. Agentic AI Security and Guardrails Architecture
-21. Identity, RBAC/ABAC, and Delegated Authorization
-22. Tool Security, Side Effects, Idempotency, and Approval
-23. Sandboxing, Egress, Data Security, and Governance
+20. Security Starts Beyond the Prompt
+21. Carry Identity and Narrow Authority
+22. Make Effects Safe to Retry
+23. Contain a Manipulated Model
 
-## Part VII — Observability, Evaluation & Learning
+## Part VII — Evidence, Evaluation, and Improvement
 
-24. Distributed Tracing
-25. Continuous Learning and Governed Improvement
+24. Follow One Run from Request to Receipt
+25. Improve the System Without Losing Control
 
-## Part VIII — Governance & Production Operations
+## Part VIII — Running the System in the Real World
 
-26. Governance, Risk, and Operating Model
-27. Deployment, Versioning, CI/CD, and Recovery
-28. Cost, Latency, Capacity, and Reliability Optimization
+26. Make Governance an Operating System
+27. Release Without Breaking Work in Flight
+28. Make Performance a Business Decision
 
 ## Appendices
 
-- A. Pattern Selection Decision Tree and Catalog Index
-- B. Failure triage and operator runbooks
-- C. Platform contracts quick reference
-- D. Framework landscape
-- E. Research implications
-- F. Known limits and enforced mitigations
-- G. Enterprise adoption roadmap
+- A. Choosing a Pattern: Decision Tree and Catalog
+- B. When Things Go Wrong: Triage and Runbooks
+- C. Platform Contracts at a Glance
+- D. Choosing a Framework
+- E. What This Architecture Means for Research
+- F. Known Limits—and the Controls That Contain Them
+- G. A Practical Enterprise Adoption Roadmap
 - H. Glossary
-- I. Companion Implementation Guide: Harborlight Mortgage Reference
-- J. Coding-agent prompt and acceptance criteria
-- K. References
+- I. Companion Implementation Guide: Harborlight Mortgage
+- J. Coding-Agent Prompt and Acceptance Criteria
+- K. References and Evidence Scope
 - L. Capacity, resilience, and release acceptance
 
 # PART I — FOUNDATIONS
 
-Foundations establish the vocabulary and deterministic boundaries that every later Part depends on.
+This is the starting point for the whole book. We name the pieces, draw the
+boundary around the model, and show how a useful prototype becomes a system
+that can survive retries, waiting, failure, and scrutiny. The later Parts add
+capabilities to this foundation; they do not replace it.
 
-# 01 — From an LLM Call to a Production Agentic System
+# 01 — What Turns an LLM Call into a Production System
 
 |  |
 | --- |
@@ -297,11 +318,16 @@ the book is organized the way it is.
 | --- |
 | **COMMON PITFALL**  The most expensive misconception in enterprise agent projects is that the prototype is 80% of the system and the rest is hardening. The prototype is the reasoning component. Durability, authority, effect semantics, evidence and release control are not hardening — they are the other components, and they are most of the work. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Explain why an agentic application is a distributed system and assign every authoritative decision to the correct component.
+An LLM can look useful after a single call. Production work has to survive a
+restart, a duplicate message, an untrusted document, a long human wait, and an
+audit request months later. This chapter gives you the mental model for that
+gap: the model supplies bounded reasoning, while the surrounding system owns
+state, authority, effects, evidence, and recovery. That distinction matters
+as soon as an answer can start a workflow or change a business record.
 
-## Solution blueprint
+## The system boundary
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -637,7 +663,7 @@ for the request-time control points above.
 | **ARCHITECTURE GUIDANCE**  Do not rename the Tool Gateway after a protocol. A tool invoked over MCP still passes the Tool Gateway, because MCP describes how a tool is discovered and called — not who may call it, whether the effect is idempotent, or what evidence is recorded. Naming a control boundary after today's protocol is how the boundary disappears when the protocol is replaced. |
 
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -645,7 +671,7 @@ for the request-time control points above.
 
 Evidence anchors: NIST-GAI; REACT. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 
 ### Provider-neutral agent-step contracts
@@ -689,13 +715,13 @@ class AgentStepResult(BaseModel):
     error_code: str | None = None
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Trace one request across model, workflow, tool, human, and record owners.
 2. Find any place where prompt text is being treated as authoritative state.
 3. Reproduce one partial failure and identify the missing durable fact.
 
-## Production checklist
+## Before you ship
 
 **✓** The model is a bounded reasoning component—not the owner of workflow state.
 
@@ -707,12 +733,12 @@ class AgentStepResult(BaseModel):
 
 **✓** Operators can reconstruct the run from versions, evidence, decisions, and receipts.
 
-## Exercises
+## Try it yourself
 
 1. Draw the minimum production architecture for Northstar and label every authoritative store.
 2. Convert a chatbot feature list into measurable outcome, authority, duration, data, and effect requirements.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -722,7 +748,7 @@ class AgentStepResult(BaseModel):
 | Which records must remain authoritative outside the model and prompt? | Run and workflow state, identity, policy decisions, budgets, approvals, business records, effect receipts, release versions, and audit evidence. |
 | What would you require before calling an agent production-ready? | Evaluated outcomes and trajectories, bounded limits, delegated authorization, idempotent effects, recovery paths, observability, audit, release pinning, and operational controls. |
 
-## Transition to Chapter 2
+## Why Chapter 2 comes next
 
 With the system boundary established, Chapter 2 converts model intent into typed, validated tool proposals and a deterministic commit path.
 
@@ -731,7 +757,7 @@ income document is visible, while verification, deterministic calculation, and
 workflow commands are not yet part of the case. Chapter 2 adds those contracts
 and shows why a well-formed proposal is still not permission to act.
 
-# 02 — Tools, Structured Outputs, and the Deterministic Shell
+# 02 — From Model Output to Safe Action
 
 |  |
 | --- |
@@ -749,11 +775,15 @@ and shows why a well-formed proposal is still not permission to act.
 | --- |
 | **DESIGN DECISION**  Treat every model output as a typed proposal; validate, authorize, commit, verify, and accept outside the model. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Turn model output into typed proposals and place validation, authorization, effects, and acceptance behind deterministic boundaries.
+Once a model can call tools, its output starts to look like an instruction. It
+is still only a proposal. This chapter follows one proposal through validation,
+authorization, commit, verification, and acceptance, so you can see what each
+boundary protects and what goes wrong when a well-formed JSON object is allowed
+to act as permission.
 
-## Solution blueprint
+## Six gates before anything changes
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -882,7 +912,7 @@ autonomy increases**.
 | --- |
 | **COMMON PITFALL**  Treating schema validity as correctness. A response that parses cleanly can still name a stale record, a resource the caller cannot see, or an amount nobody approved. Schema validation rejects malformed proposals; it says nothing about whether the proposal should be allowed. Keep the two checks separate and run both. |
 
-## Pattern reference — Tool Use
+## Putting it into practice: Tool Use
 
 |  |
 | --- |
@@ -926,7 +956,7 @@ The model proposes ToolIntent; the Tool Gateway validates the exact tool version
 * latency and retries
 * effect state and receipt
 
-## Implementation reference
+## A practical starting point
 
 ### Mortgage checkpoint: a proposal, not a decision
 
@@ -1244,7 +1274,7 @@ class ToolGateway:
         )
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 * Trace the intent-to-execution path. Compare the model’s raw proposal with the
   validated command, identifying any rejected, modified, or defaulted fields.
@@ -1254,7 +1284,7 @@ class ToolGateway:
 * Test idempotency. Replay the same logical mutation and confirm that it
   produces no duplicate side effect and resolves to the same durable receipt.
 
-## Production checklist
+## Before you ship
 
 **✓** Every model output is classified as a proposal by default.
 
@@ -1266,12 +1296,12 @@ class ToolGateway:
 
 **✓** Completion uses deterministic acceptance criteria.
 
-## Exercises
+## Try it yourself
 
 1. Define a typed proposal and deterministic acceptance function for mortgage evidence review.
 2. Write five invariants that must be true before a mortgage document request can commit.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -1281,7 +1311,7 @@ class ToolGateway:
 | Where should completion be decided? | In an acceptance engine or workflow guard using required artifacts, effect states, policy obligations, and domain invariants—not from a model’s “done” message. |
 | What is the trade-off of a stronger deterministic shell? | More contracts and platform complexity, but improved safety, replayability, testing, provider portability, incident recovery, and auditability. |
 
-## Transition to Chapter 3
+## Why Chapter 3 comes next
 
 With tools bounded, Chapter 3 defines the runtime contract that keeps applications portable across agent frameworks and model providers.
 
@@ -1289,7 +1319,7 @@ For the mortgage case, the remaining bottleneck is the execution seam: the
 typed shell needs one bounded evidence-review activity, but the framework must
 not become the owner of the case, policy, approval, or effect records.
 
-# 03 — Agent Runtime and Framework Abstraction
+# 03 — Keep the Framework in Its Lane
 
 > **Evidence note.** Concrete adapter examples use OpenAI Agents SDK v0.22.2 and its documented agent, tool, guardrail, handoff, result, and tracing surfaces; the platform contracts remain framework-neutral. [R29][R30]
 
@@ -1303,9 +1333,14 @@ not become the owner of the case, policy, approval, or effect records.
 | --- |
 | **DESIGN DECISION**  Place the OpenAI Agents SDK behind AgentRuntime; pin 0.22.2 and keep workflow, authority, credentials, effects, and audit platform-owned. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Use OpenAI Agents SDK 0.22.2 as a bounded, replaceable runtime adapter rather than the enterprise control plane. By the end of the chapter, the reader should be able to identify which facts belong to the local reasoning loop, which facts must survive outside it, and how an enterprise request crosses the boundary safely.
+Frameworks make the local reasoning loop pleasant to write, but they are not
+the place to hide workflow truth or enterprise authority. This chapter shows
+how to use OpenAI Agents SDK 0.22.2 as a replaceable adapter, what belongs
+inside that adapter, and what must remain durable outside it. The boundary
+becomes important when a framework changes, a run pauses, or a connector needs
+to prove who authorized an effect.
 
 ## Start with a concrete scenario
 
@@ -1691,7 +1726,7 @@ The division of responsibility can now be summarized as a set of non-negotiable 
 
 Where both layers participate, the platform gives the runtime an explicit contract and the runtime returns evidence about what it did. Shared participation is not shared authority: the platform remains the owner of enterprise meaning.
 
-## Production checklist
+## Before you ship
 
 Before allowing a framework adapter into production, verify:
 
@@ -1706,7 +1741,7 @@ Before allowing a framework adapter into production, verify:
 - Handoffs have explicit ownership, budget, cancellation, deadline, and adoption semantics.
 - Adapter conformance tests cover structured output, tools, tracing, interruptions, errors, usage, cancellation, and upgrades.
 
-## Debugging playbook
+## When the system misbehaves
 
 When execution behaves unexpectedly, debug the boundary in order:
 
@@ -1727,7 +1762,7 @@ The durable test is simple. Northstar should be able to stop every agent worker,
 
 That is the difference between running an agent and operating an enterprise agentic system.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -1739,21 +1774,30 @@ That is the difference between running an agent and operating an enterprise agen
 | When is a handoff actually a new task? | When work needs independent ownership, authority, budget, waits, retries, deadlines, cancellation, scaling, or a cross-service trust boundary; use a durable `TaskEnvelope` and child workflow. |
 | How should SDK upgrades be released? | As behavioral changes: run adapter and schema tests, replay traces, test approval/resume and cancellation, evaluate, load-test, canary, and retain versions in the `RunManifest`. |
 
-## Transition to Chapter 4
+## Why Chapter 4 comes next
 
 The runtime boundary is now explicit: a framework runs one bounded reasoning step, while the platform owns durable truth, authority, effects, and accountability. Chapter 4 places that boundary inside the complete enterprise reference architecture.
 
-# PART II — ENTERPRISE ARCHITECTURE & KNOWLEDGE
+# PART II — ARCHITECTURE, KNOWLEDGE, AND CONTEXT
 
-This Part converts the foundational invariants into an enterprise system of record, then fills the knowledge plane it names. It assigns ownership across experience, application, runtime, knowledge, gateway, security, governance, and operations planes; defines the governed knowledge layer agents retrieve, reason over, are constrained by, and act through; and closes with how a single run assembles the context it is entitled to.
+The first Part established that the model is not the system of record. This Part
+draws the system around it: who owns each fact, where policy is enforced, how
+knowledge stays current, and how one run receives only the context it is
+allowed to see. By the end, “the agent knows” has become a set of inspectable
+contracts rather than a vague claim about a prompt.
 
-# 04 — Enterprise Reference Architecture, Boundaries, and Contracts
+# 04 — The Architecture Around the Model
 
-## What this chapter delivers
+## Why this chapter matters
 
-Translate principles into planes, services, contracts, stores, consistency boundaries, and regional cells.
+Principles become useful when they tell a team where a fact lives, who may
+change it, and what happens when a dependency fails. This chapter turns the
+book's boundary rules into an architecture of planes, services, contracts,
+stores, and regional cells. It is the chapter to return to when a design review
+has too many boxes with overlapping authority—or when nobody can say which
+service owns the truth.
 
-## Solution blueprint
+## The planes and the ownership map
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
@@ -1975,7 +2019,7 @@ JSON · implementation excerpt
 
 A vector database is an index, not the source of truth; an agent transcript is not workflow state; a trace store is not the audit ledger; and a queue is not a business transaction. Keeping these responsibilities separate prevents attractive shortcuts from becoming systemic risks.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -1983,7 +2027,7 @@ A vector database is an index, not the source of truth; an agent transcript is n
 
 Evidence anchors: CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 ### Core platform data contracts
 
@@ -2114,13 +2158,13 @@ def deduplication_key(event: CloudEvent) -> tuple[str, str]:
     return event.source, event.id
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Trace one API command through stores, queues, services, and contracts.
 2. Find any record with two authoritative writers.
 3. Map a cell failure to its intended containment boundary.
 
-## Production checklist
+## Before you ship
 
 **✓** Every record and transition has one authoritative owner.
 
@@ -2132,12 +2176,12 @@ def deduplication_key(event: CloudEvent) -> tuple[str, str]:
 
 **✓** Cells, queues, and local dependencies bound failure domains.
 
-## Exercises
+## Try it yourself
 
 1. Define Run, Task, Tool, Approval, Effect, Artifact, and Release contracts.
 2. Select a store and consistency model for each authoritative record.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -2147,11 +2191,11 @@ def deduplication_key(event: CloudEvent) -> tuple[str, str]:
 | Why use cell-based deployment? | Additive scale, tenant placement, residency, bounded blast radius, independent canaries, and predictable stateful-service limits. |
 | How should execution behave during a control-plane outage? | Continue compatible in-flight work on pinned last-known-good bundles, apply local denies and kill switches, and restrict high-risk admission when freshness cannot be established. |
 
-## Transition to Chapter 5
+## Why Chapter 5 comes next
 
 The reference architecture names a knowledge plane but does not say what fills it; Chapter 5 defines the governed knowledge layer agents retrieve, reason over, are constrained by, and act through.
 
-# 05 — Enterprise Knowledge Management for Agents
+# 05 — Give Knowledge an Owner
 
 |  |
 | --- |
@@ -2161,11 +2205,16 @@ The reference architecture names a knowledge plane but does not say what fills i
 | --- |
 | **DESIGN DECISION**  Treat institutional knowledge as governed artifacts with owners, versions, scope, and provenance — not as a corpus. Retrieval becomes one consumer of that layer rather than the layer itself. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Separate the four things an agent does with what the organization knows, and give each one a representation it can actually use. An agent retrieves to understand a situation, reasons to decide what should happen, checks constraints to learn what it may do, and consults capabilities to act. These are four responsibilities with four failure modes, and an architecture that serves all four from one semantic index has not separated them — it has hidden them.
+Teams often say “put the knowledge in a vector store” when they really mean
+four different jobs: retrieve evidence, reason about it, enforce constraints,
+and discover a capability. Those jobs have different owners and different
+failure modes. This chapter separates them and uses the Harborlight case to
+show why a single semantic index cannot be the source of truth, the policy
+engine, and the tool catalog at the same time.
 
-## Solution blueprint
+## Treat knowledge as a set of products
 
 [[DIAGRAM:knowledge-fabric|Figure 5-1 — The enterprise knowledge fabric and its four consumption modes]]
 
@@ -2660,7 +2709,7 @@ The document digest deserves emphasis. Without it, a rule extracted from last ye
 | --- |
 | **SECURITY AND GOVERNANCE**  Permissions belong to the knowledge artifact, enforced at the resolution boundary. Filtering retrieved passages after the model has seen them is not access control; it is redaction after disclosure. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -2669,7 +2718,7 @@ The document digest deserves emphasis. Without it, a rule extracted from last ye
 
 Evidence anchors: R44; R45; R46; R47; R48. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 The examples above are the reference implementation, and each is executed in continuous integration. Composed, they show the shape of a knowledge hub: a rule extracted with provenance, verified against its corpus, placed in a graph, reconciled against a second source, and finally enforced at the effect boundary.
 
@@ -2692,7 +2741,7 @@ One query surface sits above all six. Permissions are enforced there, attributio
 | --- |
 | **PRODUCTION CONSIDERATION**  Version the knowledge layer alongside the agent. An agent release pinned to a policy version is reproducible; one that resolves against "current" changes behaviour when a document changes, with no deployment and no trace. |
 
-## Debugging playbook
+## When the system misbehaves
 
 | Symptom | Likely cause | First check |
 | --- | --- | --- |
@@ -2703,7 +2752,7 @@ One query surface sits above all six. Permissions are enforced there, attributio
 | An agent selects a mutating tool for a read | Capability discovery filters on names, not effects | Does the catalog carry an effect class, and is it filtered on? |
 | Provenance points at text that does not support the rule | Citation trusted rather than verified | Is verification rebuilding evidence from the corpus? |
 
-## Production checklist
+## Before you ship
 
 * Every knowledge artifact has an owner, a version, an effective range, and a provenance reference that resolves.
 * Retrieval results carry authority and currency metadata, not just a similarity score.
@@ -2714,14 +2763,14 @@ One query surface sits above all six. Permissions are enforced there, attributio
 * The knowledge version used by a run is recorded in its manifest.
 * Permissions are enforced at the resolution boundary, not after the model has seen the passage.
 
-## Exercises
+## Try it yourself
 
 1. Take one policy sentence from your own organization and express it as a typed rule with scope and provenance. Note every field you cannot fill from the sentence alone.
 2. Find a question your retrieval system answers plausibly and wrongly. Identify which of the four consumption modes it actually needed.
 3. Compute the intersection of two overlapping policy sets in your domain. Inspect the differences before the union.
 4. Take a rule your agents are expected to follow and make it refuse an effect in a test.
 
-## Technical review questions
+## Questions for design review
 
 | Question | What a good answer demonstrates |
 | --- | --- |
@@ -2732,11 +2781,11 @@ One query surface sits above all six. Permissions are enforced there, attributio
 | What does the system do when a required input is missing? | Unknown is not silently treated as permitted |
 | Can you reproduce a decision made six months ago? | Knowledge is versioned and pinned per run |
 
-## Transition to Chapter 6
+## Why Chapter 6 comes next
 
 The knowledge layer defines what the organization knows and what agents may do with it. Chapter 6 turns to the run itself: how context is assembled, how memory and workflow state differ, and how a single request gets exactly the knowledge it needs and nothing more.
 
-# 06 — Context Engineering, RAG, Memory, and State
+# 06 — Build Context Without Losing the Plot
 
 |  |
 | --- |
@@ -2746,11 +2795,16 @@ The knowledge layer defines what the organization knows and what agents may do w
 | --- |
 | **DESIGN DECISION**  Treat prompts as disposable authorized projections; keep canonical state, knowledge, artifacts, and memory in distinct stores. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Assemble authorized context from distinct state and knowledge domains and govern reusable memory as a data product.
+The prompt is the model's working view, not the system's memory. It may contain
+conversation, workflow state, retrieved evidence, summaries, and preferences,
+all with different authority and retention rules. This chapter shows how to
+assemble that view deliberately, how to keep memory from becoming an
+unreviewed shadow database, and why these distinctions matter when context is
+large, sensitive, stale, or later challenged in an audit.
 
-## Solution blueprint
+## What the model is allowed to see
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -2845,13 +2899,13 @@ One store in this pipeline behaves differently from the rest. Retrieval reads; m
 7. Label each segment as instruction, user\_input, enterprise\_data, tool\_result, or memory; the model must not promote data into instructions.
 8. Record a context-manifest hash on the model span so the call can be reconstructed without logging sensitive plaintext by default.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 The Conversation Service owns turns; the Workflow Projection Service owns canonical run state; the Context Assembler creates an ephemeral model-input projection; the Retrieval Broker queries governed knowledge; the Memory Service owns approved cross-run memory; the Provenance Service tracks lineage; and the Compaction Service produces source-linked summaries. No component can silently promote a conversation statement into workflow truth or long-term memory.
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -2865,7 +2919,7 @@ The Conversation Service owns turns; the Workflow Projection Service owns canoni
 | DELETE /v1/memories/{memory\_id} | Create deletion tombstone and enqueue removal from indexes, caches, summaries, and derived artifacts |
 | POST /v1/context:compact | Produce a source-linked summary/checkpoint under a target token budget; never overwrites source turns |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -2921,7 +2975,7 @@ JSON · implementation excerpt
 | --- |
 | **PERFORMANCE AND COST**  Retrieve less, and cite what you retrieved. Context is the dominant cost in most agentic systems and the dominant cause of distraction. Record a context manifest identifier rather than the context body, and measure answer quality against context size — most systems are past the point where more retrieval helps. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -2929,7 +2983,7 @@ JSON · implementation excerpt
 
 Evidence anchors: NIST-GAI; GDPR. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Pattern reference — Memory
+## Putting it into practice: Memory
 
 |  |
 | --- |
@@ -2973,7 +3027,7 @@ Working memory is run-scoped; long-term memory is a governed write with subject,
 * confidence and TTL
 * retrieval and deletion events
 
-## Implementation reference
+## A practical starting point
 
 
 ### Auditable context projection
@@ -3054,13 +3108,13 @@ def authorize_artifact_adoption(
         raise PermissionError("artifact expired")
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Reconstruct one ContextManifest without relying on logged plaintext.
 2. Compare canonical state with summaries and working memory.
 3. Trace a corrected or deleted fact through indexes, cache, memory, and artifacts.
 
-## Production checklist
+## Before you ship
 
 **✓** Conversation, workflow state, working memory, long-term memory, knowledge, artifacts, telemetry, and audit are separate domains.
 
@@ -3072,12 +3126,12 @@ def authorize_artifact_adoption(
 
 **✓ Final implementation and deletion propagate through indexes, caches, summaries, memories, contexts, and artifacts.**
 
-## Exercises
+## Try it yourself
 
 1. Design a token budget across instructions, state, evidence, memory, and reserve.
 2. Define the lifecycle of a reusable mortgage evidence-review preference memory.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -3087,23 +3141,31 @@ def authorize_artifact_adoption(
 | How should retrieved instructions be handled? | As untrusted data with provenance and taint; they cannot alter system instructions, tool eligibility, policy, credentials, or destination grants. |
 | How do you delete a fact from an agentic system? | Tombstone and revoke the source, remove derived indexes, invalidate caches, rebuild summaries and contexts, clean governed memory and affected artifacts, and preserve permitted audit evidence. |
 
-## Transition to Chapter 7
+## Why Chapter 7 comes next
 
 Context assembly completes the knowledge Part. Chapter 7 turns from what agents know to how teams build with it, defining the reusable developer platform and SDK.
 
-# PART III — AGENTIC DEVELOPER PLATFORM & SDK
+# PART III — THE DEVELOPER PLATFORM
 
-This Part turns the reference architecture into a paved road for delivery teams. It separates reusable platform capabilities from domain logic, defines portable SDK contracts, and shows how Skills and domain packs move through local development, evaluation, promotion, deployment, and support.
+Good architecture is not enough if every delivery team has to reconstruct it
+from scratch. This Part turns the reference design into a paved road: reusable
+contracts, adapters, Skills, domain packs, and a lifecycle that carries them
+from a developer laptop to production. The platform stays opinionated about
+safety and evidence while leaving domain teams room to build something useful.
 
-# 07 — Agentic Developer Platform, SDK, and Delivery Lifecycle
+# 07 — Build the Paved Road for Agent Teams
 
 > **Evidence note.** The portability layer is informed by current public agent abstractions from OpenAI, Microsoft, and Google; capability parity is not assumed and must be proven by adapter conformance tests. [R29][R31][R32]
 
-## What this chapter delivers
+## Why this chapter matters
 
-Define the reusable paved road — contracts, adapters, and a delivery lifecycle — that lets teams ship differentiated agents without rebuilding identity, policy, tool safety, tracing, evaluation, durable execution, and release infrastructure.
+Without a platform, every team rebuilds the same dangerous plumbing and every
+fix arrives at a different speed. This chapter describes a paved road made of
+contracts, adapters, and delivery practices. The goal is not to force every
+application into one monolith; it is to make the safe path easier to reuse
+than the clever shortcut.
 
-## Solution blueprint
+## The platform pieces
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
@@ -3213,7 +3275,7 @@ agentctl rollback mortgage-evidence-review@0.1.0 --to 0.0.9
 
 Use one immutable artifact across environments; bind endpoints, identities, secrets, sources, quotas, regions, and review queues at deployment. Pin SDKs, adapters, model aliases, tool schemas, Skills, MCP servers, policy bundles, evaluators, and knowledge snapshots. A model/provider swap is a behavior change—not harmless configuration.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -3221,14 +3283,14 @@ Use one immutable artifact across environments; bind endpoints, identities, secr
 
 Evidence anchors: R29; R31; R32. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Start from the accepted business outcome and walk backward through the causal run graph.
 2. Find the first divergent span: input classification, source or freshness, prompt, route, model, tool, arguments, policy, effect, approval, or acceptance.
 3. Diff the failing run against the nearest accepted run — prompt, context manifest, and every pinned version — before changing anything.
 4. Do not edit the prompt until the evidence locates the failing responsibility. A prompt change that hides a policy or contract defect removes the signal without removing the fault.
 
-## Production checklist
+## Before you ship
 
 **✓** One immutable artifact crosses every environment; endpoints, identities, secrets, sources, quotas, regions, and review queues bind at deployment.
 
@@ -3240,12 +3302,12 @@ Evidence anchors: R29; R31; R32. Full URLs, authority, version, and scope appear
 
 **✓** Every golden-path stage emits its evidence artifact; a stage that produces no evidence is not complete.
 
-## Exercises
+## Try it yourself
 
 1. Take one existing agent and list which of the sixteen platform capabilities it reimplements locally. Estimate the cost of removing each.
 2. Write an adapter conformance test that fails when a framework silently drops cancellation mid-run.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -3255,11 +3317,11 @@ Evidence anchors: R29; R31; R32. Full URLs, authority, version, and scope appear
 | What does the golden path make visible that a convenient SDK hides? | Authority, versions, risk, evidence, and cost. An SDK that hides them does not remove the complexity; it relocates it to production incidents. |
 | When is framework portability proven? | Only when adapter conformance tests pass across cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behaviour. Parity is never inferred from documentation. |
 
-## Transition to Chapter 8
+## Why Chapter 8 comes next
 
 The delivery path is established; Chapter 8 packages repeatable behavior as versioned Skills with explicit contracts and lifecycle controls.
 
-# 08 — Skills as Versioned Capabilities
+# 08 — Package Capabilities as Versioned Skills
 
 |  |
 | --- |
@@ -3269,11 +3331,15 @@ The delivery path is established; Chapter 8 packages repeatable behavior as vers
 | --- |
 | **DESIGN DECISION**  Make the Skill manifest the versioned capability contract and resolve exact releases through policy and evaluation evidence. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Define Skills as governed packages of instructions, tools, knowledge, policy, workflows, tests, and operations metadata.
+Prompts and tool wrappers become hard to govern as soon as several teams copy
+them. A Skill gives a meaningful capability an owner, an interface, a release,
+and evidence that it was tested. This chapter explains what belongs in that
+package and when versioning the whole capability is more useful than versioning
+an instruction string by itself.
 
-## Solution blueprint
+## Inside a Skill
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -3324,7 +3390,7 @@ decided by evidence, not by a reviewer's judgement on the day.
 
 Skills separate reuse from copy-and-paste. An application requests a capability such as `mortgage.evidence.read`; it does not embed a specific prompt and connector.
 
-### Discovery is not resolution
+### Discovery is not permission
 
 This is the distinction the chapter turns on, and conflating the two is how
 governed capability quietly becomes ungoverned.
@@ -3378,7 +3444,7 @@ Certification includes contract, unit, simulation, trajectory, threat, failure-i
 
 The registry scales as a read-heavy control-plane service with immutable manifests, version indexes, cached eligibility metadata, and regional last-known-good replicas. Runtime execution remains in regional cells.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -3386,7 +3452,7 @@ The registry scales as a read-heavy control-plane service with immutable manifes
 
 Evidence anchors: SLSA; MCP-2026. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 
 ### Skill manifest and resolver
@@ -3457,13 +3523,13 @@ class SkillRegistry:
         return skills
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Resolve a Skill version from the recorded requirement and compare registry evidence.
 2. Diff Skill manifests across a regression.
 3. Verify no hidden tool, knowledge, or policy dependency exists outside the manifest.
 
-## Production checklist
+## Before you ship
 
 **✓** Every Skill has an owner, immutable version, digest, lifecycle, and support window.
 
@@ -3475,12 +3541,12 @@ class SkillRegistry:
 
 **✓** Contract, trajectory, threat, failure, and load evidence gate promotion.
 
-## Exercises
+## Try it yourself
 
 1. Author a Skill manifest for mortgage evidence retrieval.
 2. Define a certification suite that catches a cross-tenant retrieval defect.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -3490,11 +3556,11 @@ class SkillRegistry:
 | How should a Skill be tested? | Contract, deterministic unit, simulation, trajectory, threat, data-boundary, failure-injection, regression, load, and canary tests. |
 | When should behavior remain application-specific? | When it encodes one product transaction, unstable workflow, private data boundary, or ownership model that should not be generalized. |
 
-## Transition to Chapter 9
+## Why Chapter 9 comes next
 
 Individual Skills are governable; Chapter 9 composes them into domain packs without dissolving ownership or compatibility boundaries.
 
-# 09 — Skill Packs and Domain Platforms
+# 09 — From Skills to a Domain Platform
 
 |  |
 | --- |
@@ -3504,11 +3570,16 @@ Individual Skills are governable; Chapter 9 composes them into domain packs with
 | --- |
 | **DESIGN DECISION**  Ship domain behavior as immutable Skill Packs with compatibility, policy, evaluation, and promotion metadata. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Compose compatible Skills into certified, distributable domain capability releases.
+One Skill can be useful; a domain workflow needs several Skills to agree about
+schemas, policy, terminology, evaluation, and operations. This chapter shows
+how to compose those pieces into a Skill Pack that can be promoted as one
+release. The payoff is visible during change: a mortgage team can roll out a
+compatible capability bundle instead of discovering incompatibilities in
+production one agent at a time.
 
-## Solution blueprint
+## The pack as a release boundary
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -3557,7 +3628,7 @@ Packs move through signed releases and aliases such as development, staging, and
 * **Software delivery:** repository context, test planning, code change, review, deployment evidence.
 * **Financial close:** reconciliation, variance explanation, exception routing, controlled posting.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -3565,7 +3636,7 @@ Packs move through signed releases and aliases such as development, staging, and
 
 Evidence anchors: SLSA; OWASP-CHEAT. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 
 ### Skill Pack contract
@@ -3598,13 +3669,13 @@ class SkillPackManifest(BaseModel):
         return value
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Expand the pack dependency graph and locate the incompatible version.
 2. Compare pack alias history with active run manifests.
 3. Run the pack-level evaluation suite on the failing tenant slice.
 
-## Production checklist
+## Before you ship
 
 **✓** The pack manifest pins exact compatible Skill and dependency versions.
 
@@ -3616,12 +3687,12 @@ class SkillPackManifest(BaseModel):
 
 **✓** Pack-level failures can be isolated without disabling unrelated capabilities.
 
-## Exercises
+## Try it yourself
 
 1. Compose a mortgage-evidence Skill Pack and define compatibility rules.
 2. Design a deprecation plan for one Skill without breaking the pack.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -3631,15 +3702,19 @@ class SkillPackManifest(BaseModel):
 | How should packs be promoted? | As signed immutable releases through dev, staging, shadow, canary, production, and rollback aliases backed by evaluation evidence. |
 | What is the main pack anti-pattern? | A monolithic prompt-and-tools bundle with hidden dependencies, no owner, no tests, and no independent versioning. |
 
-## Transition to Chapter 10
+## Why Chapter 10 comes next
 
 The platform and capability model are complete; Chapter 10 begins the pattern sequence with the smallest bounded reasoning loop.
 
-# PART IV — PATTERNS AND ANTI-PATTERNS
+# PART IV — PATTERNS THAT WORK—AND THOSE THAT FAIL
 
-This Part is the working catalogue. It moves from the loop shapes that solve real problems to the architecture shapes that quietly create them, and pairs every failure with a measurable replacement.
+Patterns are shortcuts for thinking, but they are only helpful when their
+boundaries are visible. This Part starts with the loop shapes teams reach for,
+then follows routing, planning, reflection, human review, and durable work. It
+ends with a catalogue of patterns and failure shapes so a design review can ask
+not only “what could work?” but also “how would this fail in production?”
 
-# 10 — ReAct: Bounded Reason–Act–Observe Loops
+# 10 — ReAct Without the Runaway Loop
 
 > **Evidence note.** ReAct was introduced as a prompting paradigm that interleaves reasoning and action; its reported benchmark results motivate the loop, not an assertion that unrestricted production autonomy is safe. [R01]
 
@@ -3651,11 +3726,14 @@ This Part is the working catalogue. It moves from the loop shapes that solve rea
 | --- |
 | **DESIGN DECISION**  Use ReAct only for information-dependent next steps and impose external turn, tool, time, cost, and no-progress limits. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Implement ReAct with external budgets, governed tools, no-progress detection, and deterministic acceptance.
+ReAct is valuable when the next question depends on the last observation. It
+is dangerous when the loop is allowed to decide its own limits or call tools
+without a clear stopping rule. This chapter keeps the useful feedback loop and
+puts turns, tools, time, cost, progress, and acceptance under external control.
 
-## Solution blueprint
+## A bounded feedback loop
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -3684,7 +3762,7 @@ Plan capacity in turns per successful outcome, not only requests per second. Tra
 | --- |
 | **PERFORMANCE AND COST**  A ReAct loop's cost is set by its trajectory, not its prompt. Each observation re-enters the context, so an n-step loop is roughly quadratic in tokens. Cap the step count, summarize observations before they re-enter, and measure cost per *completed task* rather than per call — a cheap call that loops eight times is not cheap. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 |  |
 | --- |
@@ -3696,7 +3774,7 @@ Evidence anchors: REACT; NIST-GAI. Full URLs, authority, version, and scope appe
 | --- |
 | **COMMON PITFALL**  Unbounded retries disguised as reasoning. When a tool fails and the model is free to try again, the loop can burn its whole budget rediscovering the same error. Return failures as typed data the model can read, cap attempts per tool, and make the cap a run-level budget rather than a per-call one. |
 
-## Pattern reference — ReAct
+## Putting it into practice: ReAct
 
 |  |
 | --- |
@@ -3741,7 +3819,7 @@ A bounded controller alternates model decision and governed tool invocation. The
 * remaining budgets
 * stop reason
 
-## Implementation reference
+## A practical starting point
 
 
 🐍 · Bounded ReAct loop with an explicit run budget
@@ -3873,13 +3951,13 @@ class ReActEngine:
         raise RuntimeError("ReAct turn limit exceeded")
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. List every turn with normalized action, observation, token, time, and cost deltas.
 2. Identify the first repeated action-observation signature.
 3. Check whether the stop decision came from acceptance criteria or model wording.
 
-## Production checklist
+## Before you ship
 
 **✓** The information need truly requires iterative observation.
 
@@ -3891,12 +3969,12 @@ class ReActEngine:
 
 **✓** Unknown effects or budget exhaustion terminate safely.
 
-## Exercises
+## Try it yourself
 
 1. Add information-gain and repeat-signature stopping to the reference ReAct loop.
 2. Compare a one-shot retrieval design with ReAct for the same mortgage-evidence question.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -3906,11 +3984,11 @@ class ReActEngine:
 | What should an observation contain? | A typed, sanitized result or artifact reference with provenance, version, classification, and explicit error semantics. |
 | When should ReAct not be used? | For a known workflow, a single retrieval, a protected transaction, or a task whose acceptance can be computed directly. |
 
-## Transition to Chapter 11
+## Why Chapter 11 comes next
 
 A bounded reason–act loop handles local uncertainty; Chapter 11 adds routing and handoff when known paths or specialists should own the work.
 
-# 11 — Routing, Triage, and Handoffs
+# 11 — Route the Work—and Transfer Ownership
 
 |  |
 | --- |
@@ -3920,11 +3998,15 @@ A bounded reason–act loop handles local uncertainty; Chapter 11 adds routing a
 | --- |
 | **DESIGN DECISION**  Use deterministic route eligibility and fallback; record handoff as an explicit ownership transition. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Distinguish route selection from ownership transfer and design confidence, fallback, and authority semantics.
+Routing sounds like a classification problem until a real request is late,
+ambiguous, or already halfway through a workflow. This chapter separates the
+choice of a specialist from the transfer of responsibility, then makes
+fallbacks, deadlines, authority, and the final response explicit. That is what
+prevents a handoff from becoming a message that nobody owns.
 
-## Solution blueprint
+## Routing with an owner attached
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -3950,7 +4032,7 @@ Confidence is calibrated on a versioned domain dataset. Below a threshold, the r
 * **Privilege through selection:** showing a model an admin route and treating its selection as authorization.
 * **No fallback:** forcing a best guess even when the request is out of distribution.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 |  |
 | --- |
@@ -3958,7 +4040,7 @@ Confidence is calibrated on a versioned domain dataset. Below a threshold, the r
 
 Evidence anchors: OAI-TOOLS; A2A-101. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Pattern reference — Routing
+## Putting it into practice: Routing
 
 |  |
 | --- |
@@ -4002,7 +4084,7 @@ A classifier proposes a route from a precomputed eligible catalog. A determinist
 * fallback
 * route outcome
 
-## Pattern reference — Handoffs
+## Putting it into practice: Handoffs
 
 |  |
 | --- |
@@ -4046,7 +4128,7 @@ The current owner creates a typed transfer containing state references, unresolv
 * acknowledgment
 * deadline and cancellation
 
-## Implementation reference
+## A practical starting point
 
 
 🐍 · Routing by handoff: transferring ownership, not context
@@ -4120,13 +4202,13 @@ class DeterministicRouter:
         return route
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Recompute the eligible route set from recorded purpose, authority, health, and risk.
 2. Inspect the confidence threshold and fallback actually used.
 3. Verify ownership and cancellation after a handoff.
 
-## Production checklist
+## Before you ship
 
 **✓** The eligible route set is computed before model selection.
 
@@ -4138,12 +4220,12 @@ class DeterministicRouter:
 
 **✓** Route decisions and outcomes are measured by slice.
 
-## Exercises
+## Try it yourself
 
 1. Design a route contract with confidence, reason codes, fallback, and version.
 2. Model a handoff that transfers a task without broadening authority.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -4153,11 +4235,11 @@ class DeterministicRouter:
 | How do you make routing debuggable? | Record candidates, eligibility filters, proposed route, confidence, validator decision, fallback, version, latency, and outcome. |
 | When is a static router better? | When classes are stable, risk is high, compliance requires predictability, or a simple rule already separates the work. |
 
-## Transition to Chapter 12
+## Why Chapter 12 comes next
 
 Routing selects among known capabilities; Chapter 12 addresses tasks whose decomposition must itself be proposed and validated.
 
-# 12 — Planning and Plan–Execute
+# 12 — Plans Are Proposals Until the System Compiles Them
 
 > **Evidence note.** Published engineering guidance distinguishes predefined workflows from model-directed agents and recommends adding complexity only when simpler compositions are insufficient. [R27]
 
@@ -4169,11 +4251,16 @@ Routing selects among known capabilities; Chapter 12 addresses tasks whose decom
 | --- |
 | **DESIGN DECISION**  Use a typed Plan IR and deterministic compiler; freeze committed past work across plan revisions. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Compile model-proposed plans into authorized, resource-feasible, replayable execution graphs.
+Planning earns its complexity only when the work cannot be known in advance.
+Even then, a model-proposed plan is not permission to run arbitrary steps. This
+chapter treats the plan as an intermediate representation: validate it,
+authorize it, compile it into executable nodes, and freeze the work that has
+already committed. The distinction matters whenever the plan changes halfway
+through a long-running case.
 
-## Solution blueprint
+## From candidate plan to executable work
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -4249,9 +4336,9 @@ JSON · implementation excerpt
 
 A deterministic compiler rejects cycles unless explicitly permitted, missing schemas, unbounded loops, unauthorized capabilities, budget overflow, inconsistent data classification, and unhandled terminal paths. A dynamic node may choose among an allowlisted capability set; it cannot call arbitrary network endpoints.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 | **Component** | **Responsibility** |
 | --- | --- |
@@ -4263,7 +4350,7 @@ A deterministic compiler rejects cycles unless explicitly permitted, missing sch
 | Replan Controller | Decide when replanning is allowed and define the unchanged/reusable subgraph |
 | Acceptance Engine | Run deterministic checks and policy-approved model graders before satisfying nodes/goals |
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -4275,7 +4362,7 @@ A deterministic compiler rejects cycles unless explicitly permitted, missing sch
 | GET /v1/runs/{run\_id}/ready-nodes | Operator/debug view of satisfied dependencies, blockers, reservations, and dispatch state |
 | POST /v1/nodes/{node\_execution\_id}:accept | Apply acceptance checks to outputs and transition only if expected node version still matches |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -4320,7 +4407,7 @@ A deterministic compiler rejects cycles unless explicitly permitted, missing sch
 | --- |
 | **ARCHITECTURE GUIDANCE**  Separate the plan from its execution. A plan is data: persist it, version it, and let it be inspected and approved before any step commits an effect. Once execution is a separate pass over a stored plan, replay, partial resume, and human amendment all become ordinary operations instead of special cases. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 |  |
 | --- |
@@ -4328,7 +4415,7 @@ A deterministic compiler rejects cycles unless explicitly permitted, missing sch
 
 Evidence anchors: TEMPORAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Pattern reference — Planning
+## Putting it into practice: Planning
 
 |  |
 | --- |
@@ -4372,7 +4459,7 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 * critical path
 * replan diff and reason
 
-## Implementation reference
+## A practical starting point
 
 
 ### Plan IR compiler
@@ -4445,13 +4532,13 @@ def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, objec
     }
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Re-run the plan compiler against the exact release and policy versions.
 2. Find the first node whose capability, budget, or schema became invalid.
 3. Compare plan revisions and ensure committed facts did not change.
 
-## Production checklist
+## Before you ship
 
 **✓** Model planning is used only for genuine semantic uncertainty.
 
@@ -4463,12 +4550,12 @@ def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, objec
 
 **✓** Revisions, loops, fan-out, depth, time, cost, and no-progress behavior are bounded.
 
-## Exercises
+## Try it yourself
 
 1. Extend the Plan IR with deadlines and fallback paths.
 2. Construct a plan that passes schema validation but must fail authority validation.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -4478,11 +4565,11 @@ def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, objec
 | How should replanning handle completed work? | Treat committed effects and accepted artifacts as immutable facts; revise only the affected future horizon and append a new version with rationale and diff. |
 | How do you prevent plausible but endless planning? | External revision, loop, step, cost, time, delegation, and no-progress limits plus deterministic acceptance and terminal transitions. |
 
-## Transition to Chapter 13
+## Why Chapter 13 comes next
 
 Planning creates an executable structure; Chapter 13 adds independent evaluation and bounded revision without self-certification.
 
-# 13 — Reflection and Evaluator–Optimizer
+# 13 — Use Critique to Improve, Not to Self-Approve
 
 |  |
 | --- |
@@ -4492,11 +4579,15 @@ Planning creates an executable structure; Chapter 13 adds independent evaluation
 | --- |
 | **DESIGN DECISION**  Use reflection for targeted revision and independent, calibrated acceptance for protected outcomes. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Use critique and evaluation to improve outputs without self-certification, unbounded loops, or hidden cost.
+Critique can make a draft better, but a generator should not be allowed to
+grade and approve its own work. This chapter gives reflection a bounded job—
+find a targeted defect and propose a revision—while an independently defined
+evaluator and acceptance gate decide whether the result is good enough. That
+separation controls both false confidence and runaway evaluation cost.
 
-## Solution blueprint
+## A separate path for judgment
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -4515,7 +4606,7 @@ Qualitative criteria—clarity, completeness, grounded synthesis, or policy-expl
 
 Each revision targets structured feedback and carries a diff. The loop stops on pass, maximum revisions, maximum spend, deadline, or no-progress. If the evaluator and generator repeatedly disagree, the workflow escalates with both artifacts rather than silently choosing the more persuasive prose.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 |  |
 | --- |
@@ -4523,7 +4614,7 @@ Each revision targets structured feedback and carries a diff. The loop stops on 
 
 Evidence anchors: MLFLOW-EVAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Pattern reference — Reflection
+## Putting it into practice: Reflection
 
 |  |
 | --- |
@@ -4567,7 +4658,7 @@ A reflector reviews a candidate against explicit evidence and rubric, emits stru
 * quality delta
 * stop reason
 
-## Pattern reference — Evaluator–Optimizer
+## Putting it into practice: Evaluator–Optimizer
 
 |  |
 | --- |
@@ -4611,7 +4702,7 @@ A generator creates candidates; deterministic scorers and calibrated evaluators 
 * variance
 * acceptance decision
 
-## Implementation reference
+## A practical starting point
 
 
 ### Bounded evaluator–optimizer
@@ -4650,13 +4741,13 @@ class EvaluatorOptimizer:
         raise RuntimeError("candidate did not pass bounded evaluation")
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Compare generator and evaluator evidence to detect shared blind spots.
 2. Inspect score variance across repeated judge runs and slices.
 3. Detect revisions that change wording but not the failing invariant.
 
-## Production checklist
+## Before you ship
 
 **✓** Generator and evaluator roles, prompts, models, and evidence are distinguishable.
 
@@ -4668,12 +4759,12 @@ class EvaluatorOptimizer:
 
 **✓** Failed candidates and feedback enter a regression corpus.
 
-## Exercises
+## Try it yourself
 
 1. Implement a bounded evaluator-optimizer with one deterministic and one qualitative scorer.
 2. Create a case where reflection worsens a correct answer and define the stop rule.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -4683,11 +4774,11 @@ class EvaluatorOptimizer:
 | What should always be checked deterministically? | Schema, policy, authority, evidence presence, effect state, resource versions, arithmetic, and other computable invariants. |
 | When should you not add reflection? | When the first result already meets an executable specification, latency is critical, or critique adds no measured improvement. |
 
-## Transition to Chapter 14
+## Why Chapter 14 comes next
 
 Automated evaluation can improve candidates; Chapter 14 identifies decisions that require explicit human authority, correction, or recourse.
 
-# 14 — Human-in-the-Loop
+# 14 — Put People Where Judgment Matters
 
 > **Evidence note.** Human-review interfaces should be tested against WCAG 2.2 accessibility criteria; accessibility conformance does not by itself eliminate automation bias or establish decision fairness. [R41]
 
@@ -4699,11 +4790,15 @@ Automated evaluation can improve candidates; Chapter 14 identifies decisions tha
 | --- |
 | **DESIGN DECISION**  Persist proposal-bound approvals as durable workflow events and reauthorize immediately before commit. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Bind approval and intervention to immutable proposals and durable state transitions.
+Human review is most useful when it resolves a decision the system cannot or
+should not make alone. It becomes theater when the reviewer sees a summary
+that can change after approval, or when a click is detached from the effect it
+authorizes. This chapter binds intervention to an immutable proposal,
+evidence, identity, expiry, and a durable state transition.
 
-## Solution blueprint
+## Approval as a state transition
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -4745,9 +4840,9 @@ HumanActionAuthorizationRequest contains: proposal/artifact hash, exact action a
 * Immutable operator identity, reason, timestamp, before/after state, and linked ticket on every override.
 * SLA timers and escalation paths; a timed-out approval follows explicit policy, never implicit approval.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 | **Component** | **Responsibility** |
 | --- | --- |
@@ -4759,7 +4854,7 @@ HumanActionAuthorizationRequest contains: proposal/artifact hash, exact action a
 | Operator Control Service | Perform authorized pause, cancel, retry, plan patch, budget, and compensation commands |
 | Override Journal | Append operator actions and linked incident/change records to immutable evidence |
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -4772,7 +4867,7 @@ HumanActionAuthorizationRequest contains: proposal/artifact hash, exact action a
 | GET /v1/approval-queues/{queue\_id}/items | Cursor query by skill/role, priority, age, risk, tenant, value, and region; no unauthorized evidence leakage |
 | POST /v1/runs/{run\_id}:operatorAction | Pause, cancel, safe-retry, patch plan, extend budget, trigger reconciliation/compensation, or fork replay with reason and expected state |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -4795,7 +4890,7 @@ A decision is valid only when the presented proposal hash equals the current pro
 5. The workflow receives the event, revalidates policy/current resource version, and commits only the proposal hash that was approved.
 6. If the resource, amount, recipient, scope, or policy changed materially, the workflow supersedes the approval and generates a fresh preview.
 
-### Scalability and operations
+### What changes at scale
 
 * Partition approvals by tenant + business queue/region while keeping a direct index by approval/run ID. Strongly serialize decisions for one approval; scale independently across approvals.
 * Use workflow timers or a durable timer service for SLA/escalation—never scan an approvals table each minute at enterprise scale.
@@ -4810,7 +4905,7 @@ A decision is valid only when the presented proposal hash equals the current pro
 | --- |
 | **PRODUCTION CONSIDERATION**  Design the wait, not just the prompt. A run paused for approval may sit for days across deploys, token expiry, and staff changes. Persist the full decision context with the pause, expire it explicitly, and define what happens when it lapses — an approval request with no expiry becomes an approval nobody can safely grant. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -4818,7 +4913,7 @@ A decision is valid only when the presented proposal hash equals the current pro
 
 Evidence anchors: OAI-HITL; OWASP-AGENT; WCAG22. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Pattern reference — Human-in-the-Loop
+## Putting it into practice: Human-in-the-Loop
 
 |  |
 | --- |
@@ -4862,7 +4957,7 @@ The workflow persists a proposal-bound HumanActionAuthorizationRequest or Interv
 * decision and reason
 * commit receipt
 
-## Implementation reference
+## A practical starting point
 
 
 🐍 · A human action-authorization gate that survives the wait
@@ -5051,13 +5146,13 @@ def verify_action_authorization(
         raise PermissionError("resource changed after authorization")
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Recompute the proposal hash and expected resource version.
 2. Verify approver authority, expiry, and separation-of-duty policy.
 3. Trace the approval event through commit and effect receipt.
 
-## Production checklist
+## Before you ship
 
 **✓** Every capability has an immutable manifest covering interface, security, risk, effects, runtime, ownership, and lifecycle.
 
@@ -5069,12 +5164,12 @@ def verify_action_authorization(
 
 **✓** Reconciliation, compensation, pause, cancel, and intervention are governed commands.
 
-## Exercises
+## Try it yourself
 
 1. Design a human action authorization object for a protected mortgage-case operation.
 2. Define how edits, policy changes, and expired grants invalidate approval.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -5084,11 +5179,11 @@ def verify_action_authorization(
 | Why are both idempotency and optimistic concurrency needed? | Idempotency prevents duplicate logical intent; expected versions prevent an otherwise valid action from overwriting newer state. |
 | What should happen when a mutating tool times out? | Mark the effect unknown, block dependent work and blind retry, reconcile using downstream identifiers or observed state, then conclude committed, absent, partial, or intervention required. |
 
-## Transition to Chapter 15
+## Why Chapter 15 comes next
 
 Human control introduces waits and resumptions; Chapter 15 makes those waits durable and gives long-running work explicit state and recovery.
 
-# 15 — Long-Running and Durable Agents
+# 15 — Keep Work Alive Across Time and Failure
 
 > **Evidence note.** Durable-execution systems preserve workflow progress across failures and long waits; concrete integrations and replay semantics vary by backend. [R02][R36][R38]
 
@@ -5100,11 +5195,15 @@ Human control introduces waits and resumptions; Chapter 15 makes those waits dur
 | --- |
 | **DESIGN DECISION**  Represent long-running work as replay-safe workflow history plus bounded activities, durable waits, and reconciliation. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Preserve weeks-long work across waits, failures, deployments, retries, cancellations, and uncertain effects.
+An agent that must wait for a document, a person, or a downstream system is no
+longer a request/response handler. Its state has to outlive processes,
+deployments, retries, and partial effects. This chapter shows how to model that
+work as durable execution, and why recovery is part of the design rather than
+an operations add-on.
 
-## Solution blueprint
+## Durable work has a shape
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -5171,13 +5270,13 @@ Checkpoint after every irreversible or externally visible effect, before long wa
 
 Use a CloudEvents-compatible envelope with id, source, type, subject, time, dataschema, tenant\_id, correlation\_id, causation\_id, traceparent, and a payload reference. Keep sensitive or large content in an access-controlled object store; events carry references and hashes. Use transactional outbox on producers and inbox/deduplication on consumers. A dead-letter queue is quarantine and diagnosis—not a substitute for domain compensation.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 The Run API persists intent and returns quickly; the durable workflow owns lifecycle; activity workers perform model/tool I/O; Event Ingress authenticates external facts; the Correlator maps those facts to waiting runs; Timer/Signal services wake workflows; and a Version Router keeps compatible workflow builds available for in-flight histories.
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and contract** |
 | --- | --- |
@@ -5191,7 +5290,7 @@ The Run API persists intent and returns quickly; the durable workflow owns lifec
 | POST /v1/runs/{run\_id}:migrate | Apply an approved deterministic state/code migration with dry-run report and rollback boundary |
 | GET /v1/runs/{run\_id}/history?cursor=... | Paginated, role-redacted event history; content is referenced rather than embedded |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Key fields and invariants** |
 | --- | --- |
@@ -5226,7 +5325,7 @@ The Run API persists intent and returns quickly; the durable workflow owns lifec
 | --- |
 | **PRODUCTION CONSIDERATION**  Assume at-least-once delivery and make effects idempotent. Exactly-once is not available end to end; a dispatch that times out leaves the outcome genuinely unknown. Give every logical effect a stable key, record its receipt, and reconcile rather than retrying blind. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -5238,7 +5337,7 @@ Evidence anchors: TEMPORAL; CLOUDEVENTS. Full URLs, authority, version, and scop
 | --- |
 | **COMMON PITFALL**  Storing conversation history and calling it durable state. Transcripts record what was said, not what was decided or committed. Persist decisions, approvals, and effect receipts as first-class records; a run must be resumable from them even if every message is discarded. |
 
-## Pattern reference — Long-Running Agents
+## Putting it into practice: Long-Running Agents
 
 |  |
 | --- |
@@ -5283,7 +5382,7 @@ A durable workflow records deterministic decisions and schedules bounded activit
 * effect reconciliation
 * terminal reason
 
-## Implementation reference
+## A practical starting point
 
 
 ### Replay-safe workflow reducer
@@ -5350,13 +5449,13 @@ def replay(history: list[WorkflowEvent]) -> RunState:
     return state
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Replay workflow history with the pinned build and locate nondeterminism.
 2. Inspect pending timers, signals, activities, and child tasks.
 3. Resolve unknown effects before replaying dependent commands.
 
-## Production checklist
+## Before you ship
 
 **✓** Workflow decisions are replay-safe; I/O, clocks, randomness, models, and tools are recorded activities.
 
@@ -5368,12 +5467,12 @@ def replay(history: list[WorkflowEvent]) -> RunState:
 
 **✓** Workflow tasks, activities, timers, waits, history writes, and reconciliation are capacity-planned separately.
 
-## Exercises
+## Try it yourself
 
 1. Model a ten-day wait with role revocation and policy change.
 2. Design cancellation semantics for a run with a possibly committed external write.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -5383,11 +5482,20 @@ def replay(history: list[WorkflowEvent]) -> RunState:
 | What happens if cancellation arrives while a write may have committed? | Persist cancellation intent, stop new work, mark the effect unknown if needed, reconcile the source system, then compensate or require intervention before closing. |
 | How do you deploy new workflow code safely? | Preserve compatible workers, use explicit version markers, test replay, migrate deterministically when supported, or start a new linked generation when semantics cannot be preserved. |
 
-## Transition to Chapter 16
+## Why Chapter 16 comes next
 
 The core patterns are now defined; Chapter 16 compares them across uncertainty, authority, latency, evidence, and operating cost.
 
-# 16 — Enterprise Pattern Catalog
+# 16 — Patterns for Real Enterprise Work
+
+## Why this chapter matters
+
+Pattern names are useful only when they help a team make a safer decision. In
+real design reviews, the same words can describe very different obligations:
+one workflow may need adaptive evidence gathering, while another needs a
+durable process with explicit ownership and compensation. This chapter gives
+you a practical way to choose among the patterns, what each one buys you, and
+where its cost or failure boundary appears.
 
 ## How to use the cards
 
@@ -5635,11 +5743,19 @@ Choose by hidden obligation, uncertainty, and risk—not fashionable terminology
 
 **Trade-offs.** Abstraction may lag novel features; allow negotiated extensions.
 
-## Transition to Chapter 17
+## Why Chapter 17 comes next
 
 Pattern selection is easier when failure shapes are visible; Chapter 17 recasts recurring anti-patterns as measurable replacement decisions.
 
-# 17 — Enterprise Anti-Pattern Catalog
+# 17 — The Shapes That Fail in Production
+
+## Why this chapter matters
+
+Production failures rarely arrive wearing the name of an anti-pattern. They
+look like duplicate writes, missing approvals, unexplained cost, or a run that
+cannot be reconstructed. This chapter turns those symptoms into recognizable
+system shapes, then connects each shape to the boundary that should replace it
+so the diagnosis leads to a design correction rather than another patch.
 
 ## Field-guide method
 
@@ -5649,7 +5765,7 @@ Anti-patterns are recurring system shapes, not isolated defects. Almost every ca
 
 Cards are grouped by the boundary they violate rather than by the technology involved, so that two candidates competing for the same fix sit next to each other. Every card carries the same eight fields, which makes them comparable without re-reading prose.
 
-### Catalog index
+### Find the failure by its first symptom
 
 | **ID** | **Anti-pattern** | **First symptom you will see** | **Boundary it violates** |
 | --- | --- | --- | --- |
@@ -6129,15 +6245,19 @@ Both cards describe the same instinct — change should be fast — applied wher
 | --- |
 | **COMMON PITFALL**  The most expensive anti-patterns in this catalog are not the exotic ones. AP-04, AP-05, and AP-06 produce duplicate payments, duplicate records, and unauthorized effects, and all three look like ordinary engineering diligence while they are being built. Audit those three first. |
 
-## Transition to Chapter 18
+## Why Chapter 18 comes next
 
 After removing unsafe local architectures, Chapter 18 considers when multiple agents add justified specialization rather than accidental complexity.
 
-# PART V — MULTI-AGENT SYSTEMS & EXTERNAL INTEGRATION
+# PART V — WORKING TOGETHER ACROSS BOUNDARIES
 
-This Part crosses the process boundary. It covers how agents divide work among themselves, how they reach systems and agents they do not own, and how model access itself becomes a governed control plane.
+Once a system has more than one worker—or reaches beyond its own process—the
+conversation becomes a distributed protocol. This Part makes the ownership,
+authority, cancellation, and artifact rules explicit for internal specialists
+and external peers alike. It also keeps a useful distinction in view: a
+protocol can move a message without granting permission to act.
 
-# 18 — Supervisor/Worker and Multi-Agent Collaboration
+# 18 — Coordinate Specialists Without Losing Control
 
 > **Evidence note.** Public multi-agent implementation reports describe supervisor/specialist designs and substantial token/context trade-offs; these observations justify explicit topology and cost tests rather than universal multi-agent adoption. [R28][R33]
 
@@ -6149,11 +6269,16 @@ This Part crosses the process boundary. It covers how agents divide work among t
 | --- |
 | **DESIGN DECISION**  Give one component ownership of each task, derive narrower child authority, and define explicit join and cancellation semantics. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Give each task one owner, narrow authority on delegation, and make fan-out, fan-in, cancellation, and conflicts explicit.
+Multiple agents can shorten a workflow, but conversation alone does not tell
+you who owns a task, who may cancel it, or which result wins when specialists
+disagree. This chapter makes collaboration a durable state machine with one
+owner per task, narrowed child authority, explicit joins, and visible conflict
+handling. Use it when parallelism is buying real value—not simply because more
+agents make a diagram look sophisticated.
 
-## Solution blueprint
+## The collaboration contract
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -6205,9 +6330,9 @@ Nested delegation multiplies cost and risk. Northstar caps depth, children, conc
 * **Termination:** terminal states are deterministic—acceptance criteria satisfied, user canceled, policy denied, budget/time/step limit reached, or unrecoverable error. The model may recommend completion but cannot invent the terminal transition.
 * **Plan changes:** append a versioned plan revision with rationale and diff; validate new nodes against the original authority envelope. Materially broader scope requires new consent or approval.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 | **Component** | **Owns** | **Does not own** |
 | --- | --- | --- |
@@ -6218,7 +6343,7 @@ Nested delegation multiplies cost and risk. Northstar caps depth, children, conc
 | Router | Ranked eligible agents/tools using manifest, health, policy, cost, and locality | Authorization or unrestricted discovery |
 | Join/Aggregation Service | Readiness, quorum, schema validation, conflict policy, accepted result | Free-form “consensus” without evidence |
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -6251,7 +6376,7 @@ JSON · implementation excerpt
 }
 ```
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -6274,7 +6399,7 @@ JSON · implementation excerpt
 * Mitigate “hot runs” by batching status events, limiting concurrent ready nodes, and applying per-run semaphores. A single run should not require more coordinator throughput than its bounded fan-out permits.
 * Idempotent task creation and completion make queue redelivery safe. Task terminal state plus accepted artifact hash is immutable; corrections create a new revision/task rather than reopening history.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -6282,7 +6407,7 @@ JSON · implementation excerpt
 
 Evidence anchors: MULTIAGENT; A2A-101. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Pattern reference — Supervisor/Worker
+## Putting it into practice: Supervisor/Worker
 
 |  |
 | --- |
@@ -6326,7 +6451,7 @@ The supervisor creates typed child tasks with narrower grants and acceptance cri
 * join condition
 * conflicts and resolution
 
-## Pattern reference — Multi-Agent Collaboration
+## Putting it into practice: Multi-Agent Collaboration
 
 |  |
 | --- |
@@ -6370,7 +6495,7 @@ Collaboration uses durable TaskEnvelope, message, status, artifact, cancellation
 * artifact lineage
 * deadline, cancellation, and join outcome
 
-## Implementation reference
+## A practical starting point
 
 
 ### Durable child-task contract
@@ -6470,13 +6595,13 @@ def derive_child(
     return child
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Build the durable task tree and identify the current owner of every node.
 2. Verify each child grant is a subset of the parent grant.
 3. Inspect join semantics, missing artifacts, duplicates, and conflicts.
 
-## Production checklist
+## Before you ship
 
 **✓** Another agent exists only when expertise, tools, data, trust, ownership, SLO, or scaling truly differs.
 
@@ -6488,12 +6613,12 @@ def derive_child(
 
 **✓** MCP and A2A pass through gateways that verify peers, schemas, artifacts, quotas, and cancellation.
 
-## Exercises
+## Try it yourself
 
 1. Design supervisor/worker fan-out with quorum and a deterministic conflict rule.
 2. Model cascading cancellation across two local agents and one remote task.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -6503,11 +6628,11 @@ def derive_child(
 | How should fan-in be implemented? | Persist child states and artifacts, wait for an explicit join condition, then validate schemas, provenance, conflicts, quality, and policy deterministically. |
 | What does an A2A or MCP protocol not solve? | Business authorization, peer trust, quality, tenant isolation, effect semantics, artifact safety, cancellation guarantees, and audit remain local platform responsibilities. |
 
-## Transition to Chapter 19
+## Why Chapter 19 comes next
 
 Multi-agent collaboration inside one platform is only part of the problem; Chapter 19 governs cross-platform tools, agents, APIs, and events.
 
-# 19 — External Integration: MCP, A2A, and the Model Control Plane
+# 19 — Crossing the Boundary: MCP, A2A, and Local Control
 
 > **Evidence note.** MCP 2026-07-28 defines a stateless, self-contained protocol core for resources, prompts, and tools, while A2A v1.0.1 defines agent cards and task/message/artifact exchange. Neither protocol transfers application authorization or business acceptance automatically. [R05][R06][R07]
 
@@ -6519,11 +6644,15 @@ Multi-agent collaboration inside one platform is only part of the problem; Chapt
 | --- |
 | **DESIGN DECISION**  Terminate MCP and A2A at governed local gateways; verify endpoints, artifacts, authority, quotas, and effect semantics locally. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Federate tools and agents through locally governed gateways, registries, task protocols, and artifact adoption controls.
+External protocols make it easier to discover and exchange work with tools and
+agents outside your boundary. They do not make those endpoints trustworthy, or
+their artifacts safe to adopt. This chapter follows an MCP call and an A2A
+task through local gateways, where identity, policy, quotas, provenance, and
+effect semantics are re-established before anything is used.
 
-## Solution blueprint
+## Local control at the protocol edge
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -6609,13 +6738,13 @@ A2A’s task/message/artifact model and async operations are useful at remote-ag
 * Aggregators validate schema, provenance, duplicate claims, evidence quality, and conflict policy. They do not concatenate prose and call it consensus.
 * Shared mutable state is prohibited across trust domains. Exchange immutable artifacts or versioned patches; use optimistic concurrency for authorized updates.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 The Agent Directory stores validated cards and endpoint metadata; the Peer Trust Registry stores organizational trust and allowed purposes; the A2A Gateway terminates authentication and protocol bindings; the Task Bridge maps remote tasks to internal child workflows; the Artifact Broker exchanges immutable references; the Subscription Dispatcher handles push/status delivery; and the Trace Bridge links remote and local causal graphs.
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -6631,7 +6760,7 @@ The Agent Directory stores validated cards and endpoint metadata; the Peer Trust
 
 At an open boundary, expose the standard A2A agent-card and task/message operations. Internally, normalize every binding to the platform’s task state, identity, artifact, error, and audit contracts.
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -6709,7 +6838,7 @@ Record candidate routes, exclusions/reasons, selected provider/model/version/reg
 
 Measure route distribution and eligibility, task success/quality by route, schema/tool correctness, refusal/safety, p50/p95/p99 latency, queue/retry amplification, cache hits and unsafe-key rejection, tokens/cost per accepted outcome, policy denials, PII/secrets detections, provider error/fallback, alias/version drift, and trace completeness. Centralization adds latency and blast-radius risk; deploy regionally, isolate tenants/risk classes, use bulkheads, and retain platform-owned contracts even when buying a gateway.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -6719,7 +6848,7 @@ Measure route distribution and eligibility, task success/quality by route, schem
 
 Evidence anchors: MCP-2026; MCP-AUTH; A2A-101. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 
 ### A2A task envelope
@@ -6780,13 +6909,13 @@ def resolve_production_mcp_server():
     )
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Verify the registry version, endpoint identity, protocol profile, and trust material.
 2. Inspect local authorization and quota decisions for one remote call.
 3. Validate the returned artifact hash, schema, classification, provenance, and scan result.
 
-## Production checklist
+## Before you ship
 
 **✓** MCP and A2A endpoints terminate at authenticated governed gateways.
 
@@ -6798,12 +6927,12 @@ def resolve_production_mcp_server():
 
 **✓** Cancellation, retries, idempotency, effects, and audit have local semantics.
 
-## Exercises
+## Try it yourself
 
 1. Wrap an MCP tool with a local Tool Gateway policy.
 2. Define an A2A TaskEnvelope with status, cancellation, and artifact adoption semantics.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -6813,13 +6942,17 @@ def resolve_production_mcp_server():
 | How should a remote artifact be adopted? | Authenticate the source, validate schema and hash, scan content, enforce classification and provenance, then copy or reference under local policy. |
 | How do you version external capabilities? | Pin registry entry, endpoint, protocol profile, schemas, trust material, tool or agent version, and tested compatibility in the release manifest. |
 
-## Transition to Chapter 20
+## Why Chapter 20 comes next
 
 The gateway controls model access, but not the entire attack surface; Chapter 20 introduces defense in depth across all agentic trust boundaries.
 
-# PART VI — SECURITY, IDENTITY & GUARDRAILS
+# PART VI — SECURITY, IDENTITY, AND CONTROL
 
-This Part applies defense in depth to untrusted content, identity, delegated authority, tools, code, data, memory, multi-agent traffic, MCP servers, and the software supply chain. Each control is tied to a trust boundary, runtime decision, detection signal, and recovery path.
+This Part asks what happens when the model is wrong, manipulated, or simply
+given more reach than it needs. It applies defense in depth to content,
+identity, delegated authority, tools, code, data, memory, remote agents, and
+the software supply chain. Every control is tied to a boundary, a decision, a
+signal, and a recovery path so “security” remains an engineering property.
 
 The order matters. Authentication establishes who is present; authorization decides
 what that subject and workload may do; guardrails inspect risky input and output;
@@ -6828,13 +6961,17 @@ committed. These controls reinforce one another, but none can stand in for the
 others. The model may propose an action, while deterministic services decide
 whether the action is eligible, safe to execute, and complete enough to report.
 
-# 20 — Agentic AI Security and Guardrails Architecture
+# 20 — Security Starts Beyond the Prompt
 
 > **Evidence note.** The threat catalog is cross-checked against OWASP agentic-security guidance, while the trust-boundary model follows zero-trust principles that require explicit policy decisions around protected resources. [R11][R15][R16]
 
-## What this chapter delivers
+## Why this chapter matters
 
-Place guardrails at every boundary an agentic system crosses, and prove each one with a decision record rather than an instruction in a prompt.
+Security cannot be reduced to a prompt telling the model to be careful. A
+manipulated model may still be useful if the surrounding system limits what it
+can read, where it can connect, which credentials it can receive, and which
+effects can commit. This chapter places detection, policy, and enforcement at
+those boundaries and shows what evidence proves that the controls actually ran.
 
 ## A guardrail is not the security boundary
 
@@ -6861,7 +6998,7 @@ control above this one is fooled, and which deterministic control contains it?*
 | Where is harm contained? | At the credential, sandbox, egress, and effect boundaries, each with a bounded grant |
 | What proves the result? | Decision records, sanitized trace links, receipts, and reconciled effect state |
 
-## Solution blueprint
+## A security architecture with depth
 
 The blueprint is a set of ownership and containment decisions, not a single
 security product. Policy and guardrail services own decisions; the effect
@@ -7160,7 +7297,7 @@ successful manipulation did not expand authority. Detection improves the user
 experience and reduces investigation cost; containment preserves the security
 property when detection is incomplete.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -7168,7 +7305,7 @@ property when detection is incomplete.
 
 Evidence anchors: R11; R15; R16. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 🐍 · An input guardrail that trips before any tool runs
 
@@ -7243,7 +7380,7 @@ signing keys, and trust. Reconcile which effects actually occurred; never infer
 from the model's final message. Restore a known release and authoritative state,
 then create privacy-reviewed regression cases.
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Name the boundary the failure crossed — input, context or memory, model or output, agent or workflow, identity or policy, tool or effect, execution or egress, supply chain — before forming any hypothesis.
 2. Pull that boundary's decision record: classifier and version, PolicyDecision, ContextManifest, HumanActionAuthorizationDecision, or egress decision.
@@ -7251,7 +7388,7 @@ then create privacy-reviewed regression cases.
 4. Reconcile effects against the ledger. Never conclude from the model's final message that nothing committed.
 5. Convert the incident into a privacy-reviewed regression case pinned to the exact versions that failed.
 
-## Production checklist
+## Before you ship
 
 **✓** Every trust-boundary crossing revalidates identity, authority, content, and data policy; nothing is inherited through a chain.
 
@@ -7265,12 +7402,12 @@ then create privacy-reviewed regression cases.
 
 **✓** Incident response follows Detect → Contain → Revoke → Reconcile → Eradicate → Recover → Learn, with owners named before the incident.
 
-## Exercises
+## Try it yourself
 
 1. Take one threat card and trace it across the nine defence layers: which layer detects it, which contains it, and which would leave no evidence at all.
 2. Plant instructions in an authorized retrieval source and verify that tool eligibility does not change. If it does, the guardrail is reading content rather than policy.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -7280,11 +7417,11 @@ then create privacy-reviewed regression cases.
 | What evidence proves an effect did or did not commit? | The effect ledger and the downstream receipt, reconciled. A successful HTTP response proves transport, and the model's final message proves nothing. |
 | Why does the threat catalog not replace the boundary architecture? | The catalog enumerates known classes and will always lag new surfaces. Boundaries that revalidate identity, authority, content, and data policy contain threats that were never enumerated. |
 
-## Transition to Chapter 21
+## Why Chapter 21 comes next
 
 The guardrail architecture establishes defence in depth; Chapter 21 makes it enforceable per caller by binding every action to an authenticated identity and a delegated grant.
 
-# 21 — Identity, RBAC/ABAC, and Delegated Authorization
+# 21 — Carry Identity and Narrow Authority
 
 > **Evidence note.** The delegated-authority examples use OAuth token exchange, resource indicators, and protected-resource metadata as protocol building blocks; deployment still requires workload-specific issuer, audience, proof, revocation, and policy controls. [R08][R09][R10]
 
@@ -7296,11 +7433,15 @@ The guardrail architecture establishes defence in depth; Chapter 21 makes it enf
 | --- |
 | **DESIGN DECISION**  Carry subject plus actor identity; exchange for short-lived last-hop credentials only after exact resource authorization. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Carry subject and actor identity end to end and prove that every delegated grant is narrower.
+The person who starts a run and the workload that performs its next step are
+not the same actor. If that distinction disappears, a helpful assistant can
+quietly become a privilege-escalation path. This chapter carries subject and
+actor identity together, then derives short-lived grants that are narrower than
+the authority that created them.
 
-## Solution blueprint
+## Subject, actor, and delegated grants
 
 The central distinction is between *who initiated the request* and *which
 workload is performing the work*. Authentication answers who presented a valid
@@ -7383,9 +7524,9 @@ becoming a new source of authority.
 * Run the policy decision point independently from the LLM. OPA/Rego, Cedar/Verified Permissions, or a comparable engine can express RBAC/ABAC and emit replayable decision logs.
 * Treat document-level ACL changes as index invalidation events. Never assume a vector store filter alone is sufficient if the source of truth denies access.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 | **Component** | **Responsibility** |
 | --- | --- |
@@ -7397,7 +7538,7 @@ becoming a new source of authority.
 | Entitlement Indexer | Convert source ACL/group changes into queryable snapshots and invalidation events |
 | Data Access Broker | Run policy-filtered search/query against sources and return provenance-rich references |
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -7426,7 +7567,7 @@ JSON · implementation excerpt
 }
 ```
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -7458,7 +7599,7 @@ JSON · implementation excerpt
 | --- |
 | **SECURITY AND GOVERNANCE**  Delegation must narrow monotonically. A sub-agent may act for a different actor, but never for a broader subject, resource set, or action set than its parent held. Prove the narrowing in code at each handoff; a chain that can widen anywhere can widen everywhere. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -7466,7 +7607,7 @@ JSON · implementation excerpt
 
 Evidence anchors: RFC8693; RFC8707. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 
 ### Capability-envelope subset proof
@@ -7542,13 +7683,13 @@ def derive_child(
     return child
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Trace subject, actor, purpose, grant, policy version, and credential lease end to end.
 2. Canonicalize the exact resource and recompute child subset checks.
 3. Simulate role revocation during a wait and verify post-wait denial.
 
-## Production checklist
+## Before you ship
 
 **✓** Both initiating subject and acting workload cross every protected boundary.
 
@@ -7560,12 +7701,12 @@ def derive_child(
 
 **✓** Revocation, freshness, cache invalidation, post-wait revalidation, and tenant isolation are first-class.
 
-## Exercises
+## Try it yourself
 
 1. Create a capability envelope for a read-only specialist task.
 2. Write tests that attempt purpose, resource, region, risk, and time escalation.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -7575,11 +7716,11 @@ def derive_child(
 | Why reauthorize after a long wait? | User roles, ACLs, policy, resource state, risk, and credentials may have changed; original admission is not perpetual authority. |
 | Where must authorization occur in retrieval? | Before content reaches the model, with tenant and source routing, exact resource and field checks, freshness, redaction obligations, and provenance. |
 
-## Transition to Chapter 22
+## Why Chapter 22 comes next
 
 Identity and delegated authority answer who may ask; Chapter 22 proves whether a specific tool effect may execute, commit, retry, or recover.
 
-# 22 — Tool Security, Side Effects, Idempotency, and Approval
+# 22 — Make Effects Safe to Retry
 
 |  |
 | --- |
@@ -7589,11 +7730,15 @@ Identity and delegated authority answer who may ask; Chapter 22 proves whether a
 | --- |
 | **DESIGN DECISION**  Use one logical effect key, intent hash, expected version, downstream request ID, receipt, and reconciliation state per mutation. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Make external writes replay-safe through manifests, exact authorization, logical effect keys, preconditions, receipts, and reconciliation.
+Reads can usually be repeated; writes can create duplicates, send messages, or
+change money. This chapter makes that difference concrete with one logical
+effect key, an intent hash, preconditions, receipts, and reconciliation for the
+unknown case. The result is a write path that can be retried because its
+meaning—not just its network request—is recorded.
 
-## Solution blueprint
+## The effect path
 
 Tools are where a model proposal meets a system that can change the world. The
 gateway therefore has two jobs that are easy to confuse: it protects the
@@ -7665,9 +7810,9 @@ required result.
 
 Use MCP as an interoperability surface for tools and resources, not as the authorization authority. The gateway must validate audience-bound tokens, prohibit token passthrough, isolate untrusted servers, and apply enterprise policy independently of protocol-level OAuth.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 | **Component** | **Responsibility** |
 | --- | --- |
@@ -7680,7 +7825,7 @@ Use MCP as an interoperability surface for tools and resources, not as the autho
 | Effect Service | Allocate logical effect IDs, deduplicate, store receipts, reconcile, and compensate |
 | Health/Quota Service | Track provider limits, latency, error state, breaker status, and queue pressure |
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -7700,7 +7845,7 @@ Invocation behavior:
 * Return 202 plus an operation URL for long-running, queued, browser/code, or mutating work.
 * Return a typed policy denial, validation error, capacity response, dependency error, or effect\_unknown; do not collapse every failure into free-form text.
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -7733,7 +7878,7 @@ inside the model loop:
 The model can request a new proposal after a denial or stale-version conflict,
 but it cannot skip a stage by changing the wording of its next message.
 
-### Scalability and operations
+### What changes at scale
 
 * Keep registry/discovery/gateway front ends stateless. Cache immutable manifests by digest and distribute them regionally; always perform a current authorization check at invocation.
 * Partition invocation and effect records by tenant + tool, but route all uses of one logical idempotency key to the same consistency domain.
@@ -7785,13 +7930,13 @@ but it cannot skip a stage by changing the wording of its next message.
 * **Circuit breaking:** break by provider/tool/tenant/risk class; expose health to the planner so it selects only evaluated alternatives.
 * **Graceful degradation:** degrade from write → draft, deep analysis → partial evidence, premium model → approved fallback, live data → clearly labeled cached data. Never degrade authorization, tenant isolation, or audit.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 The workflow engine owns retry timing and saga order; the Effect Service owns idempotency and external outcome state; Outbox/Inbox adapters own atomic publication and consumer deduplication; the Reconciliation Service resolves unknown outcomes; the Compensation Executor performs domain reversals; the Dependency Health Service owns breakers; and the Exception Service owns manual intervention cases.
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -7805,7 +7950,7 @@ The workflow engine owns retry timing and saga order; the Effect Service owns id
 | POST /v1/exceptions | Open idempotent operator case with run/effect, evidence, severity, owner, and prohibited automatic actions |
 | POST /v1/dlq/{message\_id}:redrive | Redrive only after schema/policy/version checks; produces a new delivery attempt linked to the quarantine record |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -7836,7 +7981,7 @@ business effect and never erases the original receipt.
 * A workflow transition that depends on an effect reads the Effect Service’s verified state; a model/tool return string is not sufficient proof.
 * Compensation is separately authorized against current state and may itself be idempotent, fail, or require human approval.
 
-### Scalability and resilience
+### What changes at scale
 
 * Partition effect/outbox/inbox data by tenant + logical target/tool. Maintain the idempotency unique index in the same shard that accepts begin.
 * Stream outbox records by monotonically increasing shard cursor; avoid a single global publisher. Track oldest unpublished age and backlog bytes as primary SLOs.
@@ -7851,7 +7996,7 @@ business effect and never erases the original receipt.
 | --- |
 | **SECURITY AND GOVERNANCE**  Authorize at invocation, against the end user's grant — never against the agent's own identity. A service account broad enough for every tool is a confused deputy waiting for a prompt injection. Narrow the grant per run, pass it explicitly, and re-check it at the tool boundary rather than at the start of the conversation. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -7859,7 +8004,7 @@ business effect and never erases the original receipt.
 
 Evidence anchors: OUTBOX; CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 
 🐍 · Effect-level idempotency ledger
@@ -7951,13 +8096,13 @@ class InMemoryEffectLedger:
     def get(self,key:str)->EffectRecord:return self._records[key]
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Locate the logical effect key, intent hash, expected version, and downstream request ID.
 2. Classify the current state as reserved, executing, committed, absent, partial, or unknown.
 3. Block dependent actions until reconciliation produces evidence.
 
-## Production checklist
+## Before you ship
 
 **✓** Commands and facts are distinct and events use versioned envelopes.
 
@@ -7969,12 +8114,12 @@ class InMemoryEffectLedger:
 
 **✓** Discovery is minimal and exact resource authorization happens at invocation.
 
-## Exercises
+## Try it yourself
 
 1. Extend the effect ledger with partial and compensated states.
 2. Design a reconciliation algorithm for an API without native idempotency keys.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -7984,11 +8129,11 @@ class InMemoryEffectLedger:
 | How should approval be bound to an action? | Persist the exact canonical proposal, preview, destination, evidence, risk, and hash; authorize the approver; reject expiry, supersession, hash mismatch, or stale resource state. |
 | Why are both idempotency and optimistic concurrency needed? | Idempotency prevents duplicate logical intent; expected versions prevent an otherwise valid action from overwriting newer state. |
 
-## Transition to Chapter 23
+## Why Chapter 23 comes next
 
 Protected effects are governed; Chapter 23 contains the remaining execution, egress, data, privacy, and supply-chain blast radius.
 
-# 23 — Sandboxing, Egress, Data Security, and Governance
+# 23 — Contain a Manipulated Model
 
 > **Evidence note.** SBOM inventory and SLSA build provenance answer different supply-chain questions. Privacy obligations depend on jurisdiction; the GDPR source is cited only for EU legal context, not as universal legal advice. [R17][R18][R39]
 
@@ -8000,11 +8145,16 @@ Protected effects are governed; Chapter 23 contains the remaining execution, egr
 | --- |
 | **DESIGN DECISION**  Design so prompt injection may manipulate reasoning but cannot reach unauthorized data, credentials, network destinations, or effects. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Contain a manipulated model with capability, credential, execution, network, supply-chain, and governance controls.
+Assume the model will eventually be manipulated by a user, document, tool
+result, or dependency. The practical question is not whether the model can be
+made perfectly obedient; it is what the manipulated plan can reach. This
+chapter layers capability, credential, execution, network, data, supply-chain,
+and governance controls so a reasoning failure does not become an enterprise
+effect.
 
-## Solution blueprint
+## Layers that contain blast radius
 
 This chapter asks a narrower question than “is the model safe?”: if the model is
 manipulated, what can it reach, and what prevents that reach from becoming harm?
@@ -8072,13 +8222,13 @@ derived copies.
 
 Security must be tested against the current OWASP agentic threat taxonomy and organization-specific abuse cases, but compliance with a list is not proof of safety. Prompt-injection defenses remain probabilistic; architecture must limit what a successfully manipulated model can see and do.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 The Content Security Gateway scans/classifies inbound and retrieved content; policy enforcement points mediate each trust boundary; the Secret/Credential Broker prevents secret exposure; the Sandbox Control Plane attests and leases isolated execution; the Egress Gateway resolves and filters outbound destinations; DLP inspects structured and unstructured payloads; the Peer/Tool Trust Registry validates supply-chain identity; and the Kill-Switch Service revokes capabilities independently of agent code.
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -8092,7 +8242,7 @@ The Content Security Gateway scans/classifies inbound and retrieved content; pol
 | POST /v1/kill-switches | Disable model route, agent/tool/version, peer, destination, tenant action, or risk class and emit immediate invalidation events |
 | POST /v1/security/incidents/{id}:contain | Revoke grants, stop dispatch, isolate sandboxes, block egress, checkpoint runs, and preserve evidence |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -8134,7 +8284,7 @@ connector.
 * Inject secrets at the last possible hop through memory/file descriptor/sidecar mechanisms and redact process/environment dumps. The model and generated code receive capability handles, not secret values.
 * Scan outputs and derived artifacts before memory writes, model reuse, cross-agent transfer, or publication; untrusted tool/peer responses remain tainted.
 
-### Scalability and availability
+### What changes at scale
 
 * Place lightweight PEPs, kill-switch caches, and signed policy bundles close to gateways/workers. Keep central policy/control writes low volume and strongly audited; distribute invalidations through a high-priority channel.
 * Stateless content/DLP workers scale by bytes and document complexity, with separate pools for archive expansion, OCR, code, images, and low-latency request checks. Set decompression and recursion limits.
@@ -8144,7 +8294,7 @@ connector.
 * Use bounded caches only for immutable attestations and low-risk allow decisions. Revocation, high-risk actions, secrets, and external publication require current checks.
 * Quarantine suspect peers/tools/artifacts by digest so healthy versions continue operating. Kill switches target the narrowest safe scope and are tested as part of disaster exercises.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -8153,7 +8303,7 @@ connector.
 
 Evidence anchors: OWASP-AGENT; NIST-IR; NIST-RMF; ISO42001; EU-AI-ACT. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 
 ### Default-deny URL authorization
@@ -8230,13 +8380,13 @@ class RecoveryObjectives(BaseModel):
     minimum_safe_capabilities: frozenset[str]
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Follow the tainted content to every capability and network boundary.
 2. Verify no credentials entered prompt, generated code, logs, or sandbox files.
 3. Review DLP, redirect, DNS, egress, artifact, and kill-switch evidence.
 
-## Production checklist
+## Before you ship
 
 **✓** The design remains safe even if the model follows a malicious instruction.
 
@@ -8248,12 +8398,12 @@ class RecoveryObjectives(BaseModel):
 
 **✓** Targeted emergency denies, revocation, isolation, quarantine, and incident evidence are available.
 
-## Exercises
+## Try it yourself
 
 1. Threat-model an injected mortgage PDF using an attack tree.
 2. Write a default-deny egress policy for the code-execution sandbox.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -8263,15 +8413,19 @@ class RecoveryObjectives(BaseModel):
 | How should credentials reach a tool? | Validate subject and actor policy, exchange for a short-lived audience, action, and resource-bound lease, inject at the connector’s final hop, and never expose the secret to prompts or generated code. |
 | What makes a useful kill-switch design? | Narrow scopes, emergency-deny precedence, independent high-priority distribution, measurable propagation, governed issuer and rollback, workflow checkpointing, and evidence preservation. |
 
-## Transition to Chapter 24
+## Why Chapter 24 comes next
 
 Security controls now produce events and evidence; Chapter 24 turns those signals into end-to-end traces that operators can reconstruct.
 
-# PART VII — OBSERVABILITY, EVALUATION & LEARNING
+# PART VII — EVIDENCE, EVALUATION, AND IMPROVEMENT
 
-This Part makes behaviour measurable. It covers the distributed trace that explains a run, the evaluation that decides whether a change is an improvement, and the governed learning loop that turns production evidence into a safer, better system.
+You cannot improve a system you cannot explain, and you cannot call a change an
+improvement by looking only at its average score. This Part connects causal
+traces, evaluation, slices, regression cases, and governed learning. The aim is
+not more telemetry for its own sake; it is evidence that helps a team decide
+what to fix, what to release, and what to leave alone.
 
-# 24 — Distributed Tracing
+# 24 — Follow One Run from Request to Receipt
 
 > **Evidence note.** OpenTelemetry GenAI semantic conventions remain in Development and have moved to a dedicated repository; isolate them behind an internal mapping layer. Phoenix is one implementation option for OpenInference/OTel-based tracing and evaluation. [R19][R23]
 
@@ -8283,11 +8437,15 @@ This Part makes behaviour measurable. It covers the distributed trace that expla
 | --- |
 | **DESIGN DECISION**  Adopt OpenTelemetry-compatible causal traces and MLflow 3.15.x for diagnostics; retain complete protected audit evidence separately. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Connect workflow, agent, model, retrieval, policy, tool, approval, effect, and human activity into one causal trajectory.
+A final answer tells you what the user saw; it rarely tells you why the system
+got there. When a mortgage review is slow, expensive, or wrong, the useful
+question is causal: which queue, retrieval, model turn, retry, approval, or
+connector created the outcome? This chapter builds one trace across those
+boundaries while keeping protected audit evidence in its proper store.
 
-## Solution blueprint
+## A trace that explains the run
 
 Observability answers two different questions. Diagnostics ask, “Why was this
 run slow, wrong, or expensive?” Audit asks, “Which protected decision and effect
@@ -8397,7 +8555,7 @@ Do not treat hidden chain-of-thought as required observability. Record concise d
 * Operational replay reuses recorded activity outputs and cannot create live effects. A fork with changed model/prompt/tool is a new run and explicitly mocks or reauthorizes external access.
 * Deterministic correctness checks outrank model graders. Store grader prompt/model/version, raw score evidence, and inter-rater calibration so a later drift analysis is possible.
 
-### Scalability, retention, and cost
+### What changes at scale
 
 * Decouple application latency from backend analytics with regional collectors, bounded queues, batching, compression, retry, and encrypted spill. Protected effect/audit events follow a loss-intolerant path distinct from sampled diagnostics.
 * Partition trace storage by tenant + time; index only operationally useful low-cardinality fields. Put high-cardinality attributes and content in columnar/object storage with controlled query paths.
@@ -8412,7 +8570,7 @@ Do not treat hidden chain-of-thought as required observability. Record concise d
 | --- |
 | **OBSERVABILITY TIP**  Trace the decision, not only the call. Latency and token counts tell you a run was slow; they never tell you why it was wrong. Record which context manifest was authorized, which policy applied, and which branch was taken — those attributes are what let a trace answer a question weeks later. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -8424,7 +8582,7 @@ Evidence anchors: OTEL-GENAI; MLFLOW-TRACE. Full URLs, authority, version, and s
 | --- |
 | **OBSERVABILITY TIP**  Tag every trace with the identifiers your system of record uses — run, tenant, risk class. A trace that cannot be joined to the business record it affected is a performance artifact, not an audit trail. |
 
-## Implementation reference
+## A practical starting point
 
 
 🐍 · Manually tracing agent and tool boundaries with MLflow
@@ -8577,13 +8735,13 @@ def run_mortgage_review() -> dict[str, object]:
     }
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Start at the SLO violation and walk the critical path span by span.
 2. Correlate queue, workflow, model, retrieval, tool, approval, and effect timing.
 3. Compare diagnostic trace completeness with required audit evidence.
 
-## Production checklist
+## Before you ship
 
 **✓** Run, workflow, agent, model, retrieval, policy, tool, approval, effect, and human spans share stable causal identifiers.
 
@@ -8595,12 +8753,12 @@ def run_mortgage_review() -> dict[str, object]:
 
 **✓** SLOs expose critical-path latency, cost, errors, retries, human dwell, and unknown effects.
 
-## Exercises
+## Try it yourself
 
 1. Define the canonical trace attributes for the Harborlight mortgage platform.
 2. Create a dashboard that separates machine latency from human dwell.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -8610,11 +8768,11 @@ def run_mortgage_review() -> dict[str, object]:
 | How do traces support debugging? | They expose critical path, state transitions, versions, policy decisions, retries, cost, evidence lineage, and the first divergent step. |
 | Why keep audit separate? | Audit has stronger completeness, integrity, access, and retention obligations than sampled diagnostic telemetry. |
 
-## Transition to Chapter 25
+## Why Chapter 25 comes next
 
 Tracing explains what happened; Chapter 25 determines whether the trajectory and outcome were acceptable and whether a change is safe to ship.
 
-# 25 — Continuous Learning and Governed Improvement
+# 25 — Improve the System Without Losing Control
 
 > **Evidence note.** The evaluation architecture maps to current capabilities documented by MLflow, DeepEval, Ragas, LangSmith, and OpenAI. Tool names and APIs are examples; the durable contract is dataset + release graph + scorer versions + trace/effect evidence. [R20][R21][R22][R24][R25][R26]
 
@@ -8626,11 +8784,15 @@ Tracing explains what happened; Chapter 25 determines whether the trajectory and
 | --- |
 | **DESIGN DECISION**  Gate releases on immutable datasets, executable trajectory checks, calibrated judges, slices, failures, and baseline comparisons. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Turn production evidence into governed improvement by evaluating outcomes and trajectories, diagnosing failures, validating candidates, and promoting only release bundles that satisfy deterministic safety and acceptance gates.
+Production evidence is only useful if it can change the system safely. This
+chapter follows a failure from trace to evaluation case to candidate release,
+and keeps outcome quality separate from trajectory safety. The distinction
+matters when an average score improves while a small tenant, language, or tool
+path becomes less safe.
 
-## Solution blueprint
+## The improvement loop
 
 An evaluation compares a candidate against an explicit contract, a baseline,
 and the slices where failure matters. The candidate is not just a prompt: it is
@@ -8727,9 +8889,9 @@ The important habit is to preserve the failing trace as a versioned case after
 privacy and purpose review. Otherwise the next improvement can repeat the same
 failure while the dashboard reports only the improved average.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 | **Component** | **Responsibility** |
 | --- | --- |
@@ -8742,7 +8904,7 @@ failure while the dashboard reports only the improved average.
 | Replay/Fork Service | Reconstruct a safe sandbox run from manifest, history, artifacts, and recorded effects |
 | Failure Mining Service | Cluster traces/incidents and propose curated regression cases for human review |
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -8755,7 +8917,7 @@ failure while the dashboard reports only the improved average.
 | POST /v1/runs/{run\_id}:forkReplay | Create a sandbox fork at checkpoint; external effects are mocked/read-only unless separately authorized |
 | POST /v1/regression-cases:propose | Submit a production failure/cluster for de-identification, labeling, leakage review, and dataset approval |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -8824,7 +8986,7 @@ Measure task success and deterministic acceptance, correctness, faithfulness, ha
 
 Every material failure/correction becomes a candidate case after privacy/security/purpose review. Reduce to smallest reproducible cause, define expected outcome/invariants/trajectory/cost/latency, version dataset/evaluator, and run in CI, staging, shadow, and canary. Automate capture, approved redaction/scoring, anomaly detection, clustering, draft recommendations, tests, sandbox/canary, halt, and rollback within envelope. Require human governance for permission/policy/data/memory purpose/protected effects/model allowlist/topology/architecture/evaluator truth/training data/exceptions/wider promotion. Prohibit expanding authority, disabling controls, editing audit evidence, changing approval requirements, or promoting self-authored behavior.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -8837,7 +8999,7 @@ Evidence anchors: MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Full URLs, authority, vers
 | --- |
 | **COMMON PITFALL**  Trusting an LLM judge you have not calibrated against human labels. A judge is a model with its own failure modes and its own drift. Measure its agreement with human raters on a held-out set, re-measure when you change the judge's model, and report the agreement alongside any score it produces. |
 
-## Implementation reference
+## A practical starting point
 
 
 🐍 · Evaluating an agent against a dataset with MLflow
@@ -8953,13 +9115,13 @@ def evaluate_agent(predict_fn, dataset: list[dict[str, object]]):
     )
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Reproduce the failing trace with exact dataset, release, model route, tool, and policy versions.
 2. Find the first divergent decision rather than only comparing final text.
 3. Slice scores by risk, region, tool, failure mode, and tenant class.
 
-## Production checklist
+## Before you ship
 
 **✓** All run components link into one causal trajectory.
 
@@ -8971,12 +9133,12 @@ def evaluate_agent(predict_fn, dataset: list[dict[str, object]]):
 
 **✓** Use-case inventory names owners, authority, data, vendors, controls, exceptions, incidents, review dates, and evidence.
 
-## Exercises
+## Try it yourself
 
 1. Create a five-case immutable evaluation dataset with trajectory expectations.
 2. Implement a deterministic scorer that rejects unknown effects and missing approvals.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -8986,23 +9148,31 @@ def evaluate_agent(predict_fn, dataset: list[dict[str, object]]):
 | What belongs in a release bundle? | Agent and prompt, runtime adapter, workflow build, model route and fallbacks, tool and policy versions, schemas, images, knowledge strategy, evaluations, rollout, and rollback policy. |
 | How do you roll back without breaking active runs? | Stop new assignment, restore the prior environment binding, keep build-compatible workers for pinned histories, reconcile side effects, and migrate only through an explicit tested plan. |
 
-## Transition to Chapter 26
+## Why Chapter 26 comes next
 
 The improvement loop proposes and validates change; Chapter 26 assigns decision rights, risk tiers, approvals, exceptions, and accountability.
 
-# PART VIII — GOVERNANCE & PRODUCTION OPERATIONS
+# PART VIII — RUNNING THE SYSTEM IN THE REAL WORLD
 
-This Part is about running the system for years rather than shipping it once. It covers the operating model that assigns accountability, the release machinery that makes change reversible, and the economics that decide whether the system survives its own success.
+Shipping the first version is the easy milestone. The hard work is operating
+the system when usage grows, people change roles, vendors drift, and a run is
+still active during a deployment. This Part connects governance, release and
+recovery, capacity, reliability, and cost so the platform remains usable after
+the demo has become a dependency.
 
-# 26 — Governance, Risk, and Operating Model
+# 26 — Make Governance an Operating System
 
 > **Evidence note.** NIST AI RMF and its Generative AI Profile are voluntary risk guidance; ISO/IEC 42001 specifies an AI management system; the EU AI Act source provides official implementation context. Applicability and legal obligations require qualified jurisdiction-specific review. [R12][R13][R14][R40]
 
-## What this chapter delivers
+## Why this chapter matters
 
-Make governance decisions explicit, proportional, owned, and reversible, so that risk control accelerates delivery instead of queueing it behind a committee.
+Governance works when it changes what teams do, not when it produces another
+committee packet. This chapter turns risk appetite into named decisions,
+proportional controls, evidence, exceptions, and review cadence. It becomes
+especially important when several teams share a platform and no single team
+can see the full consequence of a release.
 
-## Solution blueprint
+## Decisions, owners, and evidence
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
@@ -9057,7 +9227,7 @@ Principles define non-negotiable outcomes; standards define reusable contracts; 
 
 Operate per run (admission/policy/effects/acceptance), daily/weekly (SLO, quality, safety, cost, incidents, evaluator health), per release (classification, regression, security/privacy, compatibility, canary/rollback), quarterly (portfolio value/risk and platform roadmap), and annually/material change (policy, law, threat, recovery, independent assurance).
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -9065,7 +9235,7 @@ Operate per run (admission/policy/effects/acceptance), daily/weekly (SLO, qualit
 
 Evidence anchors: R12; R13; R14; R40. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Debugging playbook
+## When the system misbehaves
 
 Governance fails as queues and exceptions rather than as stack traces. Diagnose it the same way.
 
@@ -9074,7 +9244,7 @@ Governance fails as queues and exceptions rather than as stack traces. Diagnose 
 3. When risk tier and control effort disagree, re-score impact, reversibility, and human detectability before changing the tier.
 4. When review takes longer than delivery, check whether evidence is produced by the pipeline or assembled by hand. Hand-assembled evidence is the usual cause.
 
-## Production checklist
+## Before you ship
 
 **✓** Every decision class in the accountability table has one named owner and one required evidence artifact.
 
@@ -9086,12 +9256,12 @@ Governance fails as queues and exceptions rather than as stack traces. Diagnose 
 
 **✓** Each cadence — per run, daily or weekly, per release, quarterly, annually — has a named owner and a defined input.
 
-## Exercises
+## Try it yourself
 
 1. Classify three current use cases into risk tiers and list the minimum governance each one triggers. Where two people disagree, the tier definition is the defect.
 2. Take one standing exception and write either its expiry date or the standard that would retire it permanently.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -9101,11 +9271,11 @@ Governance fails as queues and exceptions rather than as stack traces. Diagnose 
 | What separates principles, standards, policy-as-code, and configuration? | Principles state non-negotiable outcomes; standards define reusable contracts; policy-as-code decides what is eligible at runtime; configuration selects within that envelope. Only the first two are argued; the last two are executed. |
 | How do you know governance is accelerating delivery? | Time from evidence-complete to approved is falling, exceptions are trending down as standards absorb them, and the same evidence serves engineering review, risk review, and audit without rework. |
 
-## Transition to Chapter 27
+## Why Chapter 27 comes next
 
 Governance defines who may release change; Chapter 27 makes releases immutable, promotable, observable, reversible, and recoverable.
 
-# 27 — Deployment, Versioning, CI/CD, and Recovery
+# 27 — Release Without Breaking Work in Flight
 
 > **Evidence note.** The incident lifecycle aligns with NIST SP 800-61 Rev. 3’s integration of incident response into cybersecurity risk management; agent-specific containment and recovery remain workload-defined. [R42]
 
@@ -9117,11 +9287,15 @@ Governance defines who may release change; Chapter 27 makes releases immutable, 
 | --- |
 | **DESIGN DECISION**  Release immutable bundles with compatibility evidence; roll back new assignment while active runs remain pinned to compatible code. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Ship immutable release bundles through compatibility checks, canaries, workflow-aware rollback, and regional recovery.
+An agentic release changes more than application code: it can change prompts,
+tools, policies, model routes, schemas, and the behavior of work already in
+flight. This chapter shows how to package those changes, prove compatibility,
+canary new work, and recover without rewriting history or abandoning active
+runs.
 
-## Solution blueprint
+## Immutable releases and compatible workers
 
 [[DIAGRAM:release-recovery|Figure 27-1 — Immutable release promotion and recovery without rewriting active history]]
 
@@ -9157,7 +9331,7 @@ This is why “roll back the model” is usually incomplete. If the prompt, tool
 
 ## Deployment architecture
 
-### Recommended production topology
+### A production topology to start with
 
 The topology has two different jobs. The control plane decides what may run and which immutable bundle a run receives; regional execution planes do the work within that decision. Keeping those jobs separate lets a release be globally described while state, queues, credentials, and model endpoints remain inside the required residency and failure boundary.
 
@@ -9249,9 +9423,9 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 * Document explanations at the right level: evidence and rules for business decisions; trajectory summaries for operations; model internals are neither necessary nor sufficient.
 * Never auto-train or rewrite production policies/prompts directly from live conversations. Curate, de-identify, review, evaluate, and promote changes through the same lifecycle.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 | **Component** | **Responsibility** |
 | --- | --- |
@@ -9264,7 +9438,7 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 | Governance Inventory | Track use case, owners, data, autonomy, controls, evidence, exceptions, retention, and regulatory mapping |
 | Emergency Control | Kill switch, deny policy, credential revocation, and safe rollback independent of normal release cadence |
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -9278,7 +9452,7 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 | POST /v1/governance/exceptions | Create time-bounded, scoped waiver with compensating controls, approvers, owner, evidence, and renewal prohibition/default |
 | GET /v1/governance/inventory | Query deployed agents/use cases by owner, risk, autonomy, data class, region, vendor, controls, incidents, and review date |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -9315,7 +9489,7 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 | --- |
 | **PRODUCTION CONSIDERATION**  Version the prompt, the model pin, the tool manifests, and the policy as one release artifact. Rolling back an agent means restoring all four together; a deployment that can change the model without changing the recorded version has no rollback, only a guess. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -9323,7 +9497,7 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 
 Evidence anchors: SLSA; CISA-SBOM. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 
 ### Release compatibility check
@@ -9399,13 +9573,13 @@ def verify_release_artifact(
         raise ValueError("SBOM and provenance are required")
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Resolve the exact release manifest and worker compatibility for the run.
 2. Replay history before migrating workflow code.
 3. Verify rollback stopped new assignment without changing active history.
 
-## Production checklist
+## Before you ship
 
 **✓** Client and workflow contracts remain stable across SDKs, providers, engines, and connectors.
 
@@ -9417,12 +9591,12 @@ def verify_release_artifact(
 
 **✓** Compatibility, schema migration, fencing, regional recovery, and effect reconciliation are designed before deployment.
 
-## Exercises
+## Try it yourself
 
 1. Design CI/CD gates for an agent, Skill Pack, policy, and workflow release.
 2. Write a regional recovery sequence that fences the old writer and reconciles effects.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -9432,11 +9606,11 @@ def verify_release_artifact(
 | Why use workload queues and regional cells? | Isolate risk and latency classes, control noisy neighbors, scale additively, enforce residency, bound blast radius, and keep critical execution dependencies local. |
 | Describe safe regional failover during an external write. | Stop admission, fence the old writer, restore compatible durable state, reconcile executing and unknown effects and signals, atomically advance placement, then resume by risk tier. |
 
-## Transition to Chapter 28
+## Why Chapter 28 comes next
 
 The release lifecycle is controlled; Chapter 28 sizes the system and optimizes cost, latency, capacity, and reliability around verified outcomes.
 
-# 28 — Cost, Latency, Capacity, and Reliability Optimization
+# 28 — Make Performance a Business Decision
 
 > **Evidence note.** Little’s Law relates average items in a stable system to arrival rate and average time in system. The capacity equations in this chapter are planning approximations and must be calibrated by load tests. [R43]
 
@@ -9448,11 +9622,15 @@ The release lifecycle is controlled; Chapter 28 sizes the system and optimizes c
 | --- |
 | **DESIGN DECISION**  Optimize cost per verified success through shorter trajectories, selective context, deliberate routing, bounded concurrency, and safe degradation. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Optimize verified outcome quality, latency, cost, and capacity without weakening safety or evidence.
+The cheapest token is not a cheap outcome if it creates a rework loop, a human
+queue, or an unverified effect. This chapter connects latency, cost, capacity,
+fairness, reliability, and verified business success, then uses that model to
+choose routing, context, concurrency, and degradation strategies. It is where
+the architecture meets the operating budget.
 
-## Solution blueprint
+## Optimize the whole journey
 
 [[DIAGRAM:reliability-economics|Figure 28-1 — Admission, bounded execution, and outcome-based operating feedback]]
 
@@ -9551,13 +9729,13 @@ This layered view prevents a common operational mistake: treating worker count a
 9. **Use spend-aware planning:** each plan estimates cost and reserves budget; report marginal value of optional branches.
 10. **Measure cost per accepted outcome:** token price alone ignores retries, human review, failed trajectories, and tool charges.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 The Admission Controller predicts resource/risk and accepts, defers, or rejects work; the Hierarchical Quota Service owns organization-to-run limits; the Queue/Scheduler owns priority and fairness; the Worker Lease Service owns assignment/heartbeat; Provider Limiters translate external quotas into dispatch permits; the Capacity Controller scales pools; and the Usage/Cost Ledger attributes reserved and actual resources.
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -9571,7 +9749,7 @@ The Admission Controller predicts resource/risk and accepts, defers, or rejects 
 | GET /v1/capacity | Return region/pool/provider availability, queue age, reserved capacity, health, and planning hints |
 | GET /v1/runs/{run\_id}/cost | Return reserved/actual/forecast cost by node, agent, model, tool, retry, tenant, and outcome |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -9622,7 +9800,7 @@ These are policy shapes, not universal numbers. Determine actual limits from tas
 | --- |
 | **PERFORMANCE AND COST**  Route on policy first, then on price. Model choice is a governance decision before it is an economic one: data residency, retention, and approved use constrain the candidate set, and only then does cost per verified outcome pick from what remains. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -9634,7 +9812,7 @@ Evidence anchors: QUEUEING; MLFLOW-TRACE. Full URLs, authority, version, and sco
 | --- |
 | **BEST PRACTICE**  Measure cost per verified successful outcome, not per token or per request. Tokens are an input; the business pays for completed work. A change that halves token spend while pushing five percent more runs into human review has almost certainly cost money. |
 
-## Implementation reference
+## A practical starting point
 
 
 ### Admission and capacity permit
@@ -9670,13 +9848,13 @@ def admit(requested: CapacityPermit, available: CapacityPermit) -> CapacityPermi
     return requested
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Decompose end-to-end p95 into queue, workflow, model, retrieval, tool, and human components.
 2. Measure turns, calls, tokens, retries, and escalations per verified success.
 3. Inspect tenant fairness, queue age, and safe-degradation decisions under load.
 
-## Production checklist
+## Before you ship
 
 **✓** The objective is cost and latency per verified success, not token price alone.
 
@@ -9688,12 +9866,12 @@ def admit(requested: CapacityPermit, available: CapacityPermit) -> CapacityPermi
 
 **✓** Every optimization is evaluated, canaried, reversible, and constrained by safety gates.
 
-## Exercises
+## Try it yourself
 
 1. Build a capacity model for 10,000 daily runs with burst and tenant quotas.
 2. Design an experiment that reduces context cost without regressing groundedness.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -9703,17 +9881,20 @@ def admit(requested: CapacityPermit, available: CapacityPermit) -> CapacityPermi
 | How should overload degrade? | Reject or defer early, protect durable state, reduce optional context, switch to approved bounded routes, produce drafts, and preserve audit. |
 | Why can the cheapest model be more expensive? | Lower reliability may cause more turns, retries, escalations, human work, and failed outcomes, increasing total cost per success. |
 
-## Transition to the appendices
+## Why the appendices matter next
 
 The architecture narrative is complete. The appendices provide decision aids, runbooks, contracts, framework evidence, references, maintenance criteria, and production acceptance checks for implementation and future editions.
 
-# PART REFERENCE — APPENDICES
+# PART REFERENCE — APPENDICES: FIELD GUIDE AND REFERENCE
 
-The appendices are working reference material: selection aids, runbooks, contracts, and the citation registry that the chapters draw on.
+The appendices are meant to be used at the desk, not admired at the end of the
+book. They collect decision aids, runbooks, contracts, framework notes, a
+glossary, the Harborlight implementation guide, and the evidence registry that
+keeps the main argument honest.
 
-# Appendix A — Pattern Selection Decision Tree and Catalog Index
+# Appendix A — Choosing a Pattern: Decision Tree and Catalog
 
-## Selection sequence
+## Start with the obligation
 
 1. Known path: deterministic workflow; add a bounded semantic node only where ambiguity remains.
 2. Next step depends on observation: bounded ReAct with budgets and executable acceptance.
@@ -9723,7 +9904,7 @@ The appendices are working reference material: selection aids, runbooks, contrac
 6. Side effect: proposal/authorize/commit, idempotency, reconciliation, acceptance.
 7. Post-deployment improvement: governed learning; never self-certification.
 
-## Catalog index
+## Find the matching pattern
 
 | **Category** | **Recommended pattern** | **Anti-pattern** | **Primary chapters** |
 | --- | --- | --- | --- |
@@ -9734,13 +9915,13 @@ The appendices are working reference material: selection aids, runbooks, contrac
 | Tools | P-05 proposal–commit façade | AP-12 ungated discovery | 17, 24 |
 | Multi-agent | P-06 typed tasks/join | AP-08 chat workflow | 17–19 |
 | Security | P-07 capability envelope | AP-03 ambient authority; AP-10 judge gate | 17, 21, 23–25 |
-| Reliability | P-08 effect reconciliation | AP-04 retry everywhere; AP-05 timeout=failure | 15, 17, 24, 30–31 |
+| Reliability | P-08 effect reconciliation | AP-04 retry everywhere; AP-05 timeout=failure | 15, 17, 24, 27–28 |
 | Observability | P-09 causal run graph | AP-07 model says done; AP-14 unlinked telemetry | 17, 26–28 |
-| Governance | P-10 risk-tiered gates | AP-06 Boolean approval | 14, 17, 29 |
-| Operations | P-11 durable runtime/backpressure | AP-16 in-place change | 15, 17, 30–31 |
+| Governance | P-10 risk-tiered gates | AP-06 Boolean approval | 14, 17, 26 |
+| Operations | P-11 durable runtime/backpressure | AP-16 in-place change | 15, 17, 27–28 |
 | Architecture | P-12 portable contracts/adapters | AP-15 provider swap as config | 4–7, 17, 20 |
 
-# Appendix B — Failure triage and operator runbooks
+# Appendix B — When Things Go Wrong: Triage and Runbooks
 
 | **Symptom** | **Inspect first** | **Safe response** |
 | --- | --- | --- |
@@ -9764,7 +9945,7 @@ The appendices are working reference material: selection aids, runbooks, contrac
 5. Record evidence; accept, retry safely, compensate, or move to InterventionRequired.
 6. Add the failure to simulation and release regression tests.
 
-# Appendix C — Platform contracts quick reference
+# Appendix C — Platform Contracts at a Glance
 
 | **Contract** | **Owner** | **Key fields** |
 | --- | --- | --- |
@@ -9780,7 +9961,7 @@ The appendices are working reference material: selection aids, runbooks, contrac
 | Artifact | Artifact Service | schema, hash, provenance, classification, retention, version |
 | ReleaseManifest | Release Registry | agents, Skills, SDK, workflow, models, tools, policy, schemas, evals |
 
-# Appendix D — Framework landscape
+# Appendix D — Choosing a Framework
 
 > **Evidence note.** The landscape summary is based on current framework documentation for OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Amazon Bedrock multi-agent collaboration, LangGraph, LlamaIndex Workflows, PydanticAI durable execution, Dapr Agents, and DBOS. It records declared capabilities, not a comparative production certification. [R29][R31][R32][R33][R34][R35][R36][R37][R38]
 
@@ -9795,7 +9976,7 @@ The appendices are working reference material: selection aids, runbooks, contrac
 | DBOS | Durable workflows integrated with Python and database-backed execution. | Evaluate operational model, scale envelope, ecosystem maturity, and regional recovery requirements. | Useful when application teams want code-centric durability with a simpler operational footprint. |
 | MLflow 3.15.x | OpenTelemetry-compatible GenAI tracing, evaluation, scorers, feedback, and experimental MCP Registry surfaces. | Tracing is not audit; model judges need calibration; MCP Registry features require version pinning and maturity review. | Diagnostics and evaluation baseline pinned to 3.15.2 in this edition. |
 
-## Final assessment of the current framework landscape
+## What the framework landscape means
 
 |  |
 | --- |
@@ -9831,7 +10012,7 @@ The appendices are working reference material: selection aids, runbooks, contrac
 
 Choose the smallest harness that expresses the agent behavior, the strongest durable engine that matches the run’s consequences, and enterprise-owned gateways for identity, policy, tools, models, telemetry, and artifacts. Do not force one framework to own all three layers.
 
-# Appendix E — Research implications
+# Appendix E — What This Architecture Means for Research
 
 ## Research and benchmark implications
 
@@ -9848,7 +10029,7 @@ Choose the smallest harness that expresses the agent behavior, the strongest dur
 
 The common lesson is not that “more agents” is state of the art. It is that useful agent behavior comes from environment grounding, specialized interfaces, explicit state, executable verification, and bounded iteration. Long trajectories amplify even modest per-step error; therefore architecture must create shorter verified segments and durable recovery points.
 
-# Appendix F — Known limits and enforced mitigations
+# Appendix F — Known Limits—and the Controls That Contain Them
 
 ## Known architectural limits and required mitigations
 
@@ -9876,7 +10057,7 @@ The common lesson is not that “more agents” is state of the art. It is that 
 
 **12. Human accountability is implemented as an operating model, not a button. Required mitigation: define roles and separation of duties, accessible evidence-first previews, training, review-time budgets, fatigue metrics, recourse, and explicit exception ownership.**
 
-# Appendix G — Enterprise adoption roadmap
+# Appendix G — A Practical Enterprise Adoption Roadmap
 
 ## Enterprise adoption roadmap
 
@@ -9889,7 +10070,7 @@ The common lesson is not that “more agents” is state of the art. It is that 
 | 4 — Cross-agent ecosystem | A2A gateway, signed manifests, cross-team contracts, delegated token exchange, federated traces | Interoperability, cancellation, identity, schema, failure, and audit contract tests pass |
 | 5 — Continuous optimization | Failure mining, incremental execution, model/tool substitution, automated rollback, governance reporting | Improvements are evidence-driven; no self-modifying production behavior outside release controls |
 
-### Minimum viable production bar
+### The minimum bar before a write
 
 Before an agent can mutate an enterprise system, require all of the following:
 
@@ -9924,12 +10105,12 @@ Before an agent can mutate an enterprise system, require all of the following:
 | Subject | Principal whose delegated authority initiates a protected action. |
 | Unknown effect | Mutation whose outcome cannot be proven and must be reconciled. |
 
-# Appendix I — Companion Implementation Guide: Harborlight Mortgage Reference
+# Appendix I — Companion Implementation Guide: Harborlight Mortgage
 
 
 Companion code for the book **Building Enterprise General Intelligence Platform**.
 
-## Version baseline
+## Versions used in this guide
 
 * Python 3.11+
 * OpenAI Agents SDK 0.22.2
@@ -9962,7 +10143,7 @@ uses the scripted Agents SDK model and a synthetic gateway, while the MLflow
 example uses a local SQLite tracking URI. No command in the offline profile
 requires credentials or a network connection.
 
-## Package map
+## What the package contains
 
 * `mortgage_case/domain/` — synthetic case, evidence, proposal, and money contracts
 * `mortgage_case/platform/` — provider-neutral runtime and gateway boundaries
@@ -9974,7 +10155,7 @@ requires credentials or a network connection.
 * `examples/observability/mlflow_evaluation.py` — `mlflow.genai.evaluate` dataset/scorer orchestration
 * `code-gap.md` — chapter-by-chapter C04–C28 implementation roadmap
 
-## Final-edition corrections and closure record
+## Corrections and closure notes
 
 * SDK HITL now returns a structured RunResult; it no longer throws serialized run state in an exception.
 * The protected write tool is actually registered, and it carries an enterprise approval ID and proposal hash to the gateway.
@@ -9995,7 +10176,7 @@ explicit integration test, not as evidence supplied by the offline suite. Treat
 the book's Skill and SkillPack as platform-owned packaging patterns, not as
 aliases for A2A AgentSkill metadata or the optional Skills-over-MCP extension.
 
-## Validation commands
+## Rebuild and verify
 
 BASH · implementation excerpt
 
@@ -10005,7 +10186,7 @@ make examples-run
 .venv-examples/bin/python -m mortgage_case --chapter 3 --scenario happy_path --offline --json
 ```
 
-# Appendix J — Coding-agent prompt and acceptance criteria
+# Appendix J — Coding-Agent Prompt and Acceptance Criteria
 
 ## Deep-research coding-agent prompt
 
@@ -10296,7 +10477,7 @@ This matrix defines exactly what each citation is permitted to support. It preve
 | R47 | standard | Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only. | Verified 2026-09-14; re-check living sources before use. |
 | R48 | framework documentation | Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction. | Verified 2026-09-14; re-check living sources before use. |
 
-# Appendix L — Capacity, resilience, and release acceptance
+# Appendix L — Capacity, Resilience, and Release Acceptance
 
 ## Quantitative sizing method
 
@@ -10309,7 +10490,7 @@ This matrix defines exactly what each citation is permitted to support. It preve
 | Token demand | requests × (input + cached-input + output + tool-schema tokens) | Track by model route and ContextManifest policy. |
 | Verified-success cost | total model + tool + compute + human-review cost / accepted outcomes | Include failed, abandoned, and reconciled runs. |
 
-## Production acceptance evidence
+## Evidence for production acceptance
 
 | **Gate** | **Minimum evidence** |
 | --- | --- |
@@ -10322,7 +10503,7 @@ This matrix defines exactly what each citation is permitted to support. It preve
 | Supply chain | Lock digest, SBOM, signed provenance, trusted builder/signer, release manifest, revocation exercise |
 | Human factors | Accessible approval test, preview fidelity, reviewer calibration, fatigue/override metrics, recourse path |
 
-# Closing perspective
+# A Closing Perspective
 
 |  |
 | --- |

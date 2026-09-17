@@ -490,7 +490,7 @@ Each pre-enforcement stage must label its control as a **contract/mechanics demo
 
 Each checkpoint has one primary teaching delta. Later chapters may compose earlier controls, but they may not skip or silently replace them.
 
-### C01 — Chapter 1: From an LLM Call to a Production Agentic System
+### C01 — Chapter 1: What Turns an LLM Call into a Production System
 
 | Field | Roadmap |
 | --- | --- |
@@ -504,7 +504,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Fresh offline checkout runs one command; output is deterministic and redacted; all names resolve; tests prove the stage cannot claim a verified fact, committed effect, or lending decision. |
 | Target files | `mortgage_case/stages/c01_baseline.py`, `mortgage_case/domain/case.py`, `mortgage_case/fixtures/case_000184.json`, `mortgage_case/adapters/scripted_model.py`, optional `mortgage_case/adapters/openai_responses.py`, `tests/mortgage_case/unit/test_c01.py` |
 
-### C02 — Chapter 2: Tools, Structured Outputs, and the Deterministic Shell
+### C02 — Chapter 2: From Model Output to Safe Action
 
 | Field | Roadmap |
 | --- | --- |
@@ -518,7 +518,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Same inputs reproduce the same calculations and command; schema-valid but unauthorized/stale proposals are refused before dispatch; acceptance never depends on model confidence. |
 | Target files | `mortgage_case/stages/c02_deterministic_shell.py`, `mortgage_case/domain/money.py`, `mortgage_case/domain/evidence.py`, `mortgage_case/platform/tools.py`, `tests/mortgage_case/unit/test_c02.py` |
 
-### C03 — Chapter 3: Agent Runtime and Framework Abstraction
+### C03 — Chapter 3: Keep the Framework in Its Lane
 
 | Field | Roadmap |
 | --- | --- |
@@ -532,7 +532,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Replacing the runtime with a test adapter changes no caller; SDK state is absent from canonical business/effect records; no tool can bypass the gateway. |
 | Target files | `mortgage_case/stages/c03_agent_runtime.py`, `mortgage_case/platform/runtime.py`, `mortgage_case/adapters/openai_agents.py`, `tests/mortgage_case/contract/test_c03_runtime.py` |
 
-### C04 — Chapter 4: Enterprise Reference Architecture, Boundaries, and Contracts
+### C04 — Chapter 4: The Architecture Around the Model
 
 | Field | Roadmap |
 | --- | --- |
@@ -546,7 +546,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Every record has one writer; state and event commit atomically in the test store; projections are rebuildable; duplicate delivery produces one logical transition; identity/scope travel with the run, but no mutating connector is discoverable or callable. |
 | Target files | `stages/c04_reference_architecture.py`, `platform/events.py`, `platform/workflow.py`, `tests/workflow/test_c04.py` |
 
-### C05 — Chapter 5: Enterprise Knowledge Management for Agents
+### C05 — Chapter 5: Give Knowledge an Owner
 
 | Field | Roadmap |
 | --- | --- |
@@ -560,7 +560,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Every rule result points to source revision and span; a policy change invalidates affected recommendations/action authorizations; no prompt text can override an enforceable rule. |
 | Target files | `stages/c05_knowledge.py`, `platform/knowledge.py`, `fixtures/policies/`, `tests/unit/test_c05.py` |
 
-### C06 — Chapter 6: Context Engineering, RAG, Memory, and State
+### C06 — Chapter 6: Build Context Without Losing the Plot
 
 | Field | Roadmap |
 | --- | --- |
@@ -574,7 +574,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Pinned inputs produce the same manifest digest; authorization occurs before bytes are materialized; memory cannot become instruction or authority; deletion invalidates derivatives. |
 | Target files | `stages/c06_context.py`, `platform/context.py`, `platform/memory.py`, `tests/security/test_c06.py` |
 
-### C07 — Chapter 7: Agentic Developer Platform, SDK, and Delivery Lifecycle
+### C07 — Chapter 7: Build the Paved Road for Agent Teams
 
 | Field | Roadmap |
 | --- | --- |
@@ -588,7 +588,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | One command runs each landed checkpoint; offline mode is network-deny tested; manifests are complete and deterministic; help text explains the business case. |
 | Target files | `cli.py`, `__main__.py`, `config/mortgage_stages.json`, `README.md`, `tests/contract/test_c07_cli.py` |
 
-### C08 — Chapter 8: Skills as Versioned Capabilities
+### C08 — Chapter 8: Package Capabilities as Versioned Skills
 
 | Field | Roadmap |
 | --- | --- |
@@ -602,7 +602,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Resolution is deterministic and explainable; discovery grants nothing; only resolved eligible tools/knowledge reach the runtime; replay policy is explicit. |
 | Target files | `stages/c08_skills.py`, `platform/skills.py`, `fixtures/skills/`, `tests/contract/test_c08.py` |
 
-### C09 — Chapter 9: Skill Packs and Domain Platforms
+### C09 — Chapter 9: From Skills to a Domain Platform
 
 | Field | Roadmap |
 | --- | --- |
@@ -616,7 +616,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | The pack is internally compatible, active, and fully pinned; installation does not authorize a case; active-run and replay behavior are documented. |
 | Target files | `stages/c09_skill_pack.py`, `fixtures/skill_packs/`, `tests/contract/test_c09.py` |
 
-### C10 — Chapter 10: ReAct: Bounded Reason–Act–Observe Loops
+### C10 — Chapter 10: ReAct Without the Runaway Loop
 
 | Field | Roadmap |
 | --- | --- |
@@ -630,7 +630,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Limits are enforced outside prompts; every observation is authorized and artifact-linked; no write or final decision capability is exposed. |
 | Target files | `stages/c10_react.py`, `platform/react.py`, `tests/workflow/test_c10.py` |
 
-### C11 — Chapter 11: Routing, Triage, and Handoffs
+### C11 — Chapter 11: Route the Work—and Transfer Ownership
 
 | Field | Roadmap |
 | --- | --- |
@@ -644,7 +644,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Every route has one owner, reason, eligible capability set, fallback, and trace event; prompt text cannot select an ineligible specialist. |
 | Target files | `stages/c11_routing.py`, `platform/routing.py`, `tests/workflow/test_c11.py` |
 
-### C12 — Chapter 12: Planning and Plan–Execute
+### C12 — Chapter 12: Plans Are Proposals Until the System Compiles Them
 
 | Field | Roadmap |
 | --- | --- |
@@ -658,7 +658,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Compiled order and digest are deterministic; completed effects/artifacts are frozen across revisions; conditional action-authorization/effect nodes remain blocked until prerequisites hold. |
 | Target files | `stages/c12_planning.py`, `platform/planning.py`, `tests/unit/test_c12.py` |
 
-### C13 — Chapter 13: Reflection and Evaluator–Optimizer
+### C13 — Chapter 13: Use Critique to Improve, Not to Self-Approve
 
 | Field | Roadmap |
 | --- | --- |
@@ -672,7 +672,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Reflection cannot broaden authority or erase prior output; accepted result records evaluator/rule versions and evidence; hard checks outrank model score. |
 | Target files | `stages/c13_reflection.py`, `platform/evaluation_contracts.py`, `tests/evaluation/test_c13.py` |
 
-### C14 — Chapter 14: Human-in-the-Loop
+### C14 — Chapter 14: Put People Where Judgment Matters
 
 | Field | Roadmap |
 | --- | --- |
@@ -686,7 +686,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | The authorized proposal hash and current state must match before resume; rejection/needs-evidence/expiry are durable dispositions; the normal stage still has no protected connector, and no final loan decision is delegated to the model. |
 | Target files | `stages/c14_human_review.py`, `platform/action_authorization.py`, `tests/workflow/test_c14.py` |
 
-### C15 — Chapter 15: Long-Running and Durable Agents
+### C15 — Chapter 15: Keep Work Alive Across Time and Failure
 
 | Field | Roadmap |
 | --- | --- |
@@ -700,7 +700,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Replay reproduces state/commands; no I/O occurs during replay; unknown effect blocks completion; active runs remain pinned; waits consume no worker. |
 | Target files | `stages/c15_durable.py`, `platform/workflow.py`, `adapters/workflow_test_engine.py`, `tests/workflow/test_c15.py` |
 
-### C16 — Chapter 16: Enterprise Pattern Catalog
+### C16 — Chapter 16: Patterns for Real Enterprise Work
 
 | Field | Roadmap |
 | --- | --- |
@@ -714,7 +714,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Every pattern has a concrete mortgage problem, simpler alternative, trade-off, authoritative owner, and regression test. |
 | Target files | `stages/c16_patterns.py`, `platform/pattern_choices.py`, `tests/unit/test_c16.py` |
 
-### C17 — Chapter 17: Enterprise Anti-Pattern Catalog
+### C17 — Chapter 17: The Shapes That Fail in Production
 
 | Field | Roadmap |
 | --- | --- |
@@ -728,7 +728,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Each anti-pattern maps to a safe replacement checkpoint; CI proves the platform refuses it; examples cannot accidentally execute production-like writes. |
 | Target files | `stages/c17_anti_patterns.py`, `tests/security/test_c17_anti_patterns.py` |
 
-### C18 — Chapter 18: Supervisor/Worker and Multi-Agent Collaboration
+### C18 — Chapter 18: Coordinate Specialists Without Losing Control
 
 | Field | Roadmap |
 | --- | --- |
@@ -742,7 +742,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | One current owner per task; child scope is a strict intersection; join waits for its declared condition; conflicts become typed intervention; no child has a write tool or production credential. |
 | Target files | `stages/c18_multi_agent.py`, `platform/delegation.py`, `tests/workflow/test_c18.py` |
 
-### C19 — Chapter 19: External Integration: MCP, A2A, and the Model Control Plane
+### C19 — Chapter 19: Crossing the Boundary: MCP, A2A, and Local Control
 
 | Field | Roadmap |
 | --- | --- |
@@ -756,7 +756,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | No upstream token or live connector credential exists in this checkpoint; all remote artifacts have local digest/classification/adoption decisions; local effect and acceptance rules remain authoritative. |
 | Target files | `stages/c19_protocols.py`, `adapters/mcp_gateway.py`, `adapters/a2a_gateway.py`, `tests/contract/test_c19.py` |
 
-### C20 — Chapter 20: Agentic AI Security and Guardrails Architecture
+### C20 — Chapter 20: Security Starts Beyond the Prompt
 
 | Field | Roadmap |
 | --- | --- |
@@ -770,7 +770,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Security holds even when the model follows malicious text; legitimate evidence still flows; incident evidence excludes raw sensitive content. |
 | Target files | `stages/c20_security.py`, `platform/security.py`, `fixtures/documents/malicious_*`, `tests/security/test_c20.py` |
 
-### C21 — Chapter 21: Identity, RBAC/ABAC, and Delegated Authorization
+### C21 — Chapter 21: Carry Identity and Narrow Authority
 
 | Field | Roadmap |
 | --- | --- |
@@ -784,7 +784,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Child authority only narrows action/resource/data/purpose/risk/time/cost/depth; exact invocation is reauthorized; deny/invalidation wins over cache; all earlier action-authorization, child-task, and protocol flows pass the upgraded checks. |
 | Target files | `stages/c21_identity.py`, `platform/authorization.py`, `tests/security/test_c21.py` |
 
-### C22 — Chapter 22: Tool Security, Side Effects, Idempotency, and Approval
+### C22 — Chapter 22: Make Effects Safe to Retry
 
 | Field | Roadmap |
 | --- | --- |
@@ -798,7 +798,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Happy path produces one receipt and one LOS call; replay returns the receipt; a reused key with a different intent is a conflict; reconciliation proves committed/absent/intervention; completion waits for the verified effect. |
 | Target files | `stages/c22_effects.py`, `platform/effects.py`, `adapters/synthetic_los.py`, `tests/workflow/test_c22.py` |
 
-### C23 — Chapter 23: Sandboxing, Egress, Data Security, and Governance
+### C23 — Chapter 23: Contain a Manipulated Model
 
 | Field | Roadmap |
 | --- | --- |
@@ -812,7 +812,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | No unauthorized host/data/secret is reachable; resources are bounded; deletion propagates through indexes/memory/artifacts; audit stores references, not secrets. |
 | Target files | `stages/c23_containment.py`, `platform/sandbox.py`, `platform/privacy.py`, `tests/security/test_c23.py` |
 
-### C24 — Chapter 24: Distributed Tracing
+### C24 — Chapter 24: Follow One Run from Request to Receipt
 
 | Field | Roadmap |
 | --- | --- |
@@ -826,7 +826,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Trace joins all opaque IDs and shows unknown-effect/wait states; privacy scanner finds no applicant name, address, raw document text, protected attribute, credential, or hidden reasoning; audit/effect/decision records remain separate and authoritative. |
 | Target files | `stages/c24_tracing.py`, `platform/observability.py`, `adapters/mlflow_tracking.py`, `tests/contract/test_c24.py` |
 
-### C25 — Chapter 25: Continuous Learning and Governed Improvement
+### C25 — Chapter 25: Improve the System Without Losing Control
 
 | Field | Roadmap |
 | --- | --- |
@@ -840,7 +840,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Scorers are actually invoked; cohort/candidate/baseline/rubric/judge/statistical-policy versions are recorded; holdout leakage is checked; failures become curated cases only after de-identification and approval; synthetic results are not presented as real-world fairness evidence; runtime cannot self-promote. |
 | Target files | `stages/c25_evaluation.py`, `platform/evaluation.py`, `fixtures/evaluation/`, `tests/evaluation/test_c25.py` |
 
-### C26 — Chapter 26: Governance, Risk, and Operating Model
+### C26 — Chapter 26: Make Governance an Operating System
 
 | Field | Roadmap |
 | --- | --- |
@@ -854,7 +854,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Every material decision/control has owner, policy, evidence, escalation, and expiry; the documentation explicitly disclaims legal/regulatory certification. |
 | Target files | `stages/c26_governance.py`, `platform/governance.py`, `tests/contract/test_c26.py` |
 
-### C27 — Chapter 27: Deployment, Versioning, CI/CD, and Recovery
+### C27 — Chapter 27: Release Without Breaking Work in Flight
 
 | Field | Roadmap |
 | --- | --- |
@@ -868,7 +868,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Acceptance criteria | Bundle is immutable and complete; active runs do not change unexpectedly; rollback changes assignment only; recovery fences writers and reconciles effects before resume. |
 | Target files | `stages/c27_release.py`, `platform/releases.py`, `tests/workflow/test_c27.py`, CI/release manifests |
 
-### C28 — Chapter 28: Cost, Latency, Capacity, and Reliability Optimization
+### C28 — Chapter 28: Make Performance a Business Decision
 
 | Field | Roadmap |
 | --- | --- |

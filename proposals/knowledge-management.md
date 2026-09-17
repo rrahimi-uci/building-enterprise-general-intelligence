@@ -1,4 +1,4 @@
-# Chapter proposal — Enterprise Knowledge Management for Agents
+# Chapter proposal — Give Knowledge an Owner
 
 **Status:** proposal, not yet written
 **Proposed for:** Book v2.1.0
@@ -29,8 +29,8 @@ The claim that carries the chapter:
 
 ## 2. Why this chapter, and why now
 
-The book already covers retrieval. Chapter 19 (*Context Engineering, RAG,
-Memory, and State*) builds the context window and owns the retrieval pipeline.
+The book already covers retrieval. Chapter 06 (*Build Context Without Losing
+the Plot*) builds the context window and owns the retrieval pipeline.
 What the book does not yet have is the layer **above** retrieval: the
 organization's own semantics, rules, processes, data definitions, and
 capability contracts as first-class, governed, machine-consumable artifacts.
@@ -78,13 +78,13 @@ chapter 19; if it is versioned, owned, and audited, it is this chapter.**
 Adjacent chapters to cross-reference rather than re-explain:
 
 - **04** — the platform contracts this layer plugs into
-- **06** (*Skills as Versioned Capabilities*) — the capability catalog is the
+- **08** (*Package Capabilities as Versioned Skills*) — the capability catalog is the
   knowledge-side view of the same artifact; do not define Skills twice
-- **20** (*Identity, RBAC/ABAC, and Delegated Authorization*) — permissions on
+- **21** (*Carry Identity and Narrow Authority*) — permissions on
   knowledge are enforced there, described here
-- **21** (*Tool Security, Effects, Idempotency, and Approval*) — guardrail
+- **22** (*Make Effects Safe to Retry*) — guardrail
   enforcement at the effect boundary
-- **25** (*Governance, Risk, and Operating Model*) — who owns knowledge
+- **26** (*Make Governance an Operating System*) — who owns knowledge
   artifacts organizationally
 
 ---
@@ -316,20 +316,20 @@ subject needs.
 
 | § | Section | Substance |
 |---|---|---|
-| 1 | What this chapter delivers | The four consumption modes, stated as the chapter's contract |
-| 2 | Solution blueprint | The Knowledge Fabric layer diagram |
+| 1 | Why this chapter matters | The four consumption modes, stated as the chapter's contract |
+| 2 | The shape of the solution | The Knowledge Fabric layer diagram |
 | 3 | Why RAG is not a knowledge architecture | The argument, with the failure modes of each consumption mode |
 | 4 | The knowledge fabric layers | §6.1–6.5 |
 | 5 | Standards that already exist | §6.6 — BPMN, DMN, CMMN, SBVR, evaluated not evangelized |
 | 6 | From policy text to enforceable logic | §8.2 — Extract / Prove / Project |
 | 7 | Knowledge algebra | §7 — union, intersection, difference, contradiction |
 | 8 | Governance and provenance | §6.7 |
-| 9 | Grounding, corrections, and evidence boundary | Per book convention |
-| 10 | Implementation reference | Verified examples (§11) |
+| 9 | What the evidence supports | Per book convention |
+| 10 | A practical starting point | Verified examples (§11) |
 | 11 | Reference architecture: the Enterprise Knowledge Hub | §10 |
-| 12 | Debugging playbook | Stale authority, ontology drift, silent contradiction, catalog rot |
-| 13 | Production checklist | — |
-| 14 | Exercises / Technical review questions | Per book convention |
+| 12 | When the system misbehaves | Stale authority, ontology drift, silent contradiction, catalog rot |
+| 13 | Before you ship | — |
+| 14 | Try it yourself / Questions for design review | Per book convention |
 | 15 | Transition | Into the developer platform Part |
 
 Target length **3,000–3,600 words**, placing it among the book's substantial
