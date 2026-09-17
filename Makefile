@@ -113,6 +113,7 @@ examples:
 ## examples-run: actually executes the examples. Needs the examples venv.
 examples-run:
 	$(PYTHON) tools/check_examples.py --root "$(ROOT)" --run --python "$(PYTHON_EXAMPLES)"
+	$(PYTHON_EXAMPLES) -m pytest tests/mortgage_case -q
 
 latex-validate: latex
 	$(PYTHON) tools/validate_latex.py --root "$(ROOT)"

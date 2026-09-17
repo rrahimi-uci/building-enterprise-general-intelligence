@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 386,
+  "file_count": 411,
   "files": [
     {
       "path": ".gitattributes",
@@ -26,8 +26,8 @@
     },
     {
       "path": ".github/workflows/examples.yml",
-      "bytes": 1025,
-      "sha256": "e6ea63c265cc0b6bbde025254f819daff8c7d3b414794bda114d508e008795c7"
+      "bytes": 1136,
+      "sha256": "7b968afe1cfd05b33f625e8a981ec1ddf1f9f8391cf30a53130f7d4e9ac344f1"
     },
     {
       "path": ".github/workflows/latex.yml",
@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 34807,
-      "sha256": "fcb73d5f74875138d103e5b0c0ea08b19ada0d8dcc4351e4da783e3c307d0b70"
+      "bytes": 35098,
+      "sha256": "fca7a6fb868d5138cbd4cc486d45bc8f62e762dc4b12937bfb3c401e5265ffd9"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -71,8 +71,8 @@
     },
     {
       "path": "Makefile",
-      "bytes": 6103,
-      "sha256": "f84c331d95051dbfa47b4a77b760af5191e22a6408537faff49f6ac3129b4042"
+      "bytes": 6156,
+      "sha256": "07dba39410a1dfe9c229ca72cb1e5b0e3daa5fbb57e93e4b31aa8c5cd76328e6"
     },
     {
       "path": "README.md",
@@ -826,8 +826,8 @@
     },
     {
       "path": "code-gap.md",
-      "bytes": 98674,
-      "sha256": "df90d067640905053791b5eedeefc35b13561c1e40eb810200126a888e149d3c"
+      "bytes": 99489,
+      "sha256": "9adb461b22ae48e5962b210a97f931697e053a272227f72f29db16b704fdb7a6"
     },
     {
       "path": "config/book.json",
@@ -1201,8 +1201,8 @@
     },
     {
       "path": "full-book-review-plan.md",
-      "bytes": 37630,
-      "sha256": "8a4dc3b29e442fa691079cf94130bccd33c1e63892251caa3d27db88dcc8ab8b"
+      "bytes": 37836,
+      "sha256": "38f04d7842023522613ebe9144c673a29dbcffcd0b88742350738c36e763d40e"
     },
     {
       "path": "latex/Enterprise-General-Intelligence-v2.1.0.tex",
@@ -1380,14 +1380,134 @@
       "sha256": "ec2e2d6a2da31794f474fee9b6887d28437a757d2c79926c6afcacbbd59e5ca9"
     },
     {
+      "path": "mortgage_case/platform/action_authorization.py",
+      "bytes": 336,
+      "sha256": "8835af2408a13d7e05bce824e49ec9d9c6050aec971d72e429aae227981245f7"
+    },
+    {
+      "path": "mortgage_case/platform/authorization.py",
+      "bytes": 236,
+      "sha256": "19c9138edd1a29927bc5d6081b8de7e46a0352b4b28e44d7cbfca6354b72eb47"
+    },
+    {
+      "path": "mortgage_case/platform/capacity.py",
+      "bytes": 155,
+      "sha256": "b87e9fbd593bc765b82e13e0b9330fe3eee1079409ad7e77dfdf4053ebe129e8"
+    },
+    {
+      "path": "mortgage_case/platform/context.py",
+      "bytes": 183,
+      "sha256": "1cf32e5736bc70a2ae45d214b235129d41a499366dce1e40fe7097460eab37f9"
+    },
+    {
+      "path": "mortgage_case/platform/contracts.py",
+      "bytes": 483,
+      "sha256": "d1476b73426fd6a029f5863f21fafb14111c6cfe9c7c3e82e1827fbd4f22b6e1"
+    },
+    {
+      "path": "mortgage_case/platform/delegation.py",
+      "bytes": 175,
+      "sha256": "060c67f544fd2040d25cfd3260b2ac8201b18c9e8aec29bcf94ae51455d6a398"
+    },
+    {
+      "path": "mortgage_case/platform/effects.py",
+      "bytes": 185,
+      "sha256": "b84b789e575e01094ddb36070b1f58ccf7ad2566aecc5e961a96b92f84353dec"
+    },
+    {
+      "path": "mortgage_case/platform/enterprise.py",
+      "bytes": 35286,
+      "sha256": "b999a061d02aa1c8e089d8ee39e88b855b09d445ba5c47cfa9fb205f0e7ce969"
+    },
+    {
+      "path": "mortgage_case/platform/evaluation.py",
+      "bytes": 207,
+      "sha256": "b2a3b032c8b7b1310b44ea3e930033c2c46c6e645923d78c3c1ccac6926be22d"
+    },
+    {
+      "path": "mortgage_case/platform/events.py",
+      "bytes": 176,
+      "sha256": "745c134a4ca838b6c1f58fc9c5a2a895fcd53a64247fbec315e1b61722a5f5f7"
+    },
+    {
+      "path": "mortgage_case/platform/governance.py",
+      "bytes": 151,
+      "sha256": "0fda54fe6713bd1b8be70506208f1fa7071eee2ad6af3c6c936b2c679ce7bb99"
+    },
+    {
+      "path": "mortgage_case/platform/knowledge.py",
+      "bytes": 178,
+      "sha256": "72bf8e137b869268a63a646831654d311e408b10d662641a9c14628f534789de"
+    },
+    {
+      "path": "mortgage_case/platform/observability.py",
+      "bytes": 167,
+      "sha256": "cf3542050e12be6ea94ac13639b7fc078cfec7d1bb2fab8de0179cfd620a8ea3"
+    },
+    {
+      "path": "mortgage_case/platform/planning.py",
+      "bytes": 167,
+      "sha256": "42eb3d27c4ab1a4d183c53780e5ea2e8376258a037b1c98449fc3aa1caf585eb"
+    },
+    {
+      "path": "mortgage_case/platform/privacy.py",
+      "bytes": 105,
+      "sha256": "e2373e953c5e83546b4805327c32e86d28785e6dad8b365f5d3734d04df85445"
+    },
+    {
+      "path": "mortgage_case/platform/protocols.py",
+      "bytes": 117,
+      "sha256": "041ba4022d701686f3b7b216262ca6d004fed4587eeef122337ea6038364aea7"
+    },
+    {
+      "path": "mortgage_case/platform/react.py",
+      "bytes": 125,
+      "sha256": "b49d6e0738e5e04e310b603b6ed900a0a20b24224dcbba118b290b473ffdf10d"
+    },
+    {
+      "path": "mortgage_case/platform/releases.py",
+      "bytes": 158,
+      "sha256": "c16bade4b2b8526cdf6994e99eb00a27d485bf371e92ed25d9038fec1fac53df"
+    },
+    {
+      "path": "mortgage_case/platform/routing.py",
+      "bytes": 164,
+      "sha256": "583c55240bfb6c0959a6743b4b06791ec9272fb6b94d5d811cf12ce97029715d"
+    },
+    {
       "path": "mortgage_case/platform/runtime.py",
       "bytes": 2674,
       "sha256": "abf8342c5847e0fa45419ab36c2149810ed8cfad9724455aa6f8712ce6b63133"
     },
     {
+      "path": "mortgage_case/platform/sandbox.py",
+      "bytes": 146,
+      "sha256": "e1eee8021feb8e303cfb1e26ae4f4c1e3efe7a036a0144c4f937f8102424031b"
+    },
+    {
+      "path": "mortgage_case/platform/security.py",
+      "bytes": 167,
+      "sha256": "6d3f03a0dd96c18fd64f9d5f55153e517a88d6e0cf76c89b4c44277092f8c02b"
+    },
+    {
+      "path": "mortgage_case/platform/simulation.py",
+      "bytes": 159,
+      "sha256": "d122be279e6ce73c9fb1cea242c9af5ebe1697e7f33df953157046994a41992c"
+    },
+    {
+      "path": "mortgage_case/platform/skills.py",
+      "bytes": 177,
+      "sha256": "8c326bfc92703657ccff7108c7f037c03d29294431b2370b2784948ac8acc000"
+    },
+    {
       "path": "mortgage_case/platform/tools.py",
       "bytes": 2068,
       "sha256": "7cf8870458c62c67a786a8aafdcb995b17356ef8dab47cd5bebed81d8acc522a"
+    },
+    {
+      "path": "mortgage_case/platform/workflow.py",
+      "bytes": 664,
+      "sha256": "a43247efe0dee610fcd05f945ba86373d0c9d93430944d8726b771c23f98fa83"
     },
     {
       "path": "mortgage_case/stage_report.py",
@@ -1456,8 +1576,8 @@
     },
     {
       "path": "qa/build-report.json",
-      "bytes": 288,
-      "sha256": "0a1093aaaeeb2033988aa2bf4bf80a663ce0e212851cca2963367e94b9987123"
+      "bytes": 309,
+      "sha256": "a0c7a7b6ff3ba4f1fb53de5992686b023753ab08c9e4b10a5ef9123d78beda9f"
     },
     {
       "path": "qa/determinism/build-a.docx",
@@ -1511,8 +1631,8 @@
     },
     {
       "path": "reports/editorial-audit.md",
-      "bytes": 15963,
-      "sha256": "fa9087b7ff501d74613daf8d7bf1cfe0a40f3b3c6685ca4846286afa42d44695"
+      "bytes": 16102,
+      "sha256": "825b1e82c51cf5d22356e356e0e7892592c86e95b828f9f39cbbb2e12f03b81e"
     },
     {
       "path": "reports/editorial-transformation.json",
@@ -1546,8 +1666,8 @@
     },
     {
       "path": "reports/release-notes.md",
-      "bytes": 2587,
-      "sha256": "b2aa790cb4c8cd3c2bd531a21939168e74a7a999e70c3cd4f026f4e65fbbbf4f"
+      "bytes": 2722,
+      "sha256": "0db5cb181582660e0688bb47e6694bab7cf8363e54a3e7ad06b2d7c10a9eb8e8"
     },
     {
       "path": "reports/restructure-map.json",
@@ -1556,8 +1676,8 @@
     },
     {
       "path": "reports/technical-validation.md",
-      "bytes": 3900,
-      "sha256": "0aa751651876e3fc3ebf12aeddff4fe992ce97447f2cb5e40f78ff3dab965cac"
+      "bytes": 4100,
+      "sha256": "3464ea4f8aa311580ec4fca83d87a1c5ac45f2bdd0be38937404d1c94a6d7f0c"
     },
     {
       "path": "reports/validation-summary.md",
@@ -1848,6 +1968,11 @@
       "path": "tests/mortgage_case/unit/test_c02.py",
       "bytes": 2105,
       "sha256": "378e93f2957c389b837b3bb82eac5a3d039d68c4d91474222838b8f087aeae73"
+    },
+    {
+      "path": "tests/mortgage_case/unit/test_platform_extensions.py",
+      "bytes": 14953,
+      "sha256": "28eb9a8018fc0515b81ed4d432f18c57f68ab53a874a212309235d962c368f41"
     },
     {
       "path": "tools/assemble_manuscript.py",

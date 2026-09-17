@@ -5,7 +5,7 @@
 **Course alignment:** *Building Enterprise-Grade Agentic Systems — Course*, 14 lessons
 **Scope:** one cumulative mortgage case across Book Chapters 1–28, cross-mapped to the 14 course lessons
 **Audit date:** 2026-09-16
-**Status:** corrected implementation roadmap; the foundation slice for `C01`–`C03` and the targeted C24 OpenAI/Agents SDK/MLflow grounding slice are implemented on this branch, while the remaining C04–C28 capabilities remain planned
+**Status:** corrected implementation roadmap; the foundation slice for `C01`–`C03`, the targeted C24 OpenAI/Agents SDK/MLflow grounding slice, and an offline platform-contract slice spanning C04–C28 are implemented on this branch. Full chapter-integrated checkpoint execution, CLI wiring, and release evidence for C04–C28 remain planned.
 
 > **Version resolution.** The request names v2.0.1, but the attached source identifies itself throughout as Book v2.1.0. This revision treats the supplied v2.1.0 file as the authoritative baseline. If v2.0.1 was intentional, compare that source before implementation and update this roadmap rather than assuming the editions are equivalent.
 
@@ -470,7 +470,8 @@ The anchor fixture is used for the narrative and most fault demonstrations. `eva
 | Verified defect in supplied Markdown | Initial agent listing references write/email tools not defined in that listing; cumulative narrative is supplier onboarding | A runnable mortgage baseline and chapter-by-chapter mortgage progression |
 | Corrected implementation baseline | `mortgage_case` package, `C01`–`C03`, offline scenarios, direct OpenAI Responses contract, OpenAI Agents SDK runtime, and MLflow Agent tracing/evaluation examples | Live provider calls, later checkpoint composition, and production tracking deployment remain unproven |
 | Implemented foundation slice | `mortgage_case` package, `C01`–`C03`, offline scenarios, optional OpenAI/Agents SDK adapters | 19 focused mortgage tests and the registered example suite are validated locally on this branch; later checkpoint composition remains unproven |
-| Remaining target of this roadmap | `C04`–`C28`, durable workflow, identity, effects, security, MLflow, evaluation, release, and capacity extensions | Implementation remains to be created and reviewed |
+| Implemented platform-contract slice | `mortgage_case/platform/enterprise.py`, 24 focused facades, and `tests/mortgage_case/unit/test_platform_extensions.py` cover deterministic contracts for events, context, plans, delegation, authorization, effects, security, tracing, evaluation, release, and capacity | 11 offline tests cover the slice; it is not yet wired into chapter stage entry points, `StageReport`, the CLI, or per-checkpoint generated evidence |
+| Remaining full-checkpoint target | `C04`–`C28` chapter-integrated execution, durable workflow composition, registry entries, CLI scenarios, reader transitions, and release evidence | The platform-contract slice is partial evidence; complete checkpoint implementation remains to be created and reviewed |
 
 ## Progressive-hardening dependency rule
 
@@ -904,8 +905,8 @@ Use one chapter-aligned change set per checkpoint until the foundational package
 | Sequence | Checkpoints | Outcome |
 | --- | --- | --- |
 | Foundation | `C01`–`C03` | Runnable mortgage baseline, deterministic shell, OpenAI Agents SDK adapter |
-| Platform core | `C04`–`C07` | Records, events, knowledge, context, package, CLI, manifests |
-| Reusable capability | `C08`–`C09` | Skills and mortgage domain pack |
+| Platform core | `C04`–`C07` | Records, events, knowledge, context, package, CLI, manifests; offline contract doubles are present, chapter entry-point integration remains |
+| Reusable capability | `C08`–`C09` | Skills and mortgage domain pack; offline registry contracts are present, chapter integration remains |
 | Reasoning patterns | `C10`–`C13` | Bounded ReAct, routing, planning, reflection/evaluation |
 | Human and durable control | `C14`–`C15` | Proposal-bound review, waits, replay, cancellation, recovery |
 | Decision discipline | `C16`–`C17` | Pattern rationale and executable anti-pattern refusals |

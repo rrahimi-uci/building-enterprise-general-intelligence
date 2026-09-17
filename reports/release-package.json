@@ -1,7 +1,7 @@
 {
-  "zip": "/private/tmp/Enterprise-General-Intelligence-v2.1.0-final3.zip",
-  "bytes": 140559539,
-  "sha256": "bbfa2a6191bea21f88025e388779b46c9db3998d053b15ea3dd44de33dfe81d6",
-  "entries": 388,
-  "manifest_files": 388
+  "zip": "/private/tmp/Enterprise-General-Intelligence-v2.1.0-platform.zip",
+  "bytes": 140573367,
+  "sha256": "f4183d28ee695c9a1e8379f213d57d533f5d0d0e49593d8147a18869f6efe0d6",
+  "entries": 413,
+  "manifest_files": 413
 }

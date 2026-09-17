@@ -294,9 +294,11 @@ use the mortgage case.
 - The current source registers 45 diagrams, 71 code blocks, 48 references, and
   107 citation occurrences; the validators derive these counts rather than
   relying on historical fixed totals.
-- The canonical mortgage implementation remains intentionally limited to
-  `C01`–`C03`; `code-gap.md` remains the roadmap for later checkpoint code and
-  no production-readiness claim is made for the incomplete cumulative runtime.
+- The canonical mortgage implementation has stage-registered evidence only for
+  `C01`–`C03`. This PR also adds a tested offline platform-contract slice under
+  `mortgage_case/platform/`; `code-gap.md` remains the roadmap for wiring those
+  contracts into later checkpoint entry points, and no production-readiness
+  claim is made for the incomplete cumulative runtime.
 - Source, generated Markdown, DOCX, LaTeX source, diagrams, registries, and QA
   reports were rebuilt from the canonical source. DOCX pagination QA remains an
   environment-gated release check when LibreOffice/`soffice` is unavailable.
