@@ -5554,7 +5554,7 @@ Choose by hidden obligation, uncertainty, and risk—not fashionable terminology
 
 **A better design.** A safer design looks like this: Manifest source, ACL, snapshot, provenance, rank, freshness, token allocation. The runtime flow is: Planner → retrieval → policy → ranking/dedup → manifest → model. Contract review receives clauses from authorized agreements and effective policy.
 
-**What to watch.** Track ACL rejects, freshness, recall/precision, lost-position, unsupported claims. The cost is real: snapshotting adds storage and latency.
+**What to watch.** Track aCL rejects, freshness, recall/precision, lost-position, unsupported claims. The cost is real: snapshotting adds storage and latency.
 
 ## Memory
 
@@ -6940,7 +6940,7 @@ checklists; they are lenses over one runtime path.
 
 ### T-14 — Unsafe code execution
 
-**How the attack develops.** Generated/retrieved code runs with host, network, secret, or persistence access. The business risk is RCE, theft, lateral movement, resource abuse.
+**How the attack develops.** Generated/retrieved code runs with host, network, secret, or persistence access. The business risk is rCE, theft, lateral movement, resource abuse.
 
 **How to detect and prevent it.** Look for unexpected syscall/egress/file, resource spike, prohibited import, escape signal. Reduce the likelihood with these measures: Avoid when possible; ephemeral sandbox, read-only base, no secrets, allowlists, signed deps.
 

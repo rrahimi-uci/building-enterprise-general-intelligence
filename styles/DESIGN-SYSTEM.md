@@ -54,7 +54,7 @@ Primary font: Arial. Monospace font: Courier New. If unavailable, use a metric-c
 | H2 | 16 pt | bold, Blue | 9 / 5 pt |
 | H3 | 12 pt | bold, Navy 2 | 7 / 4 pt |
 | H4 | 10 pt | bold, Teal | 5 / 3 pt |
-| Body | 9.6 pt | Ink | 5 pt after, 1.06 line spacing |
+| Body | 10 pt | Ink | 6 pt after, 1.1667 line spacing |
 | Caption | 8.5 pt | italic, slate | 2 / 6 pt |
 | Inline code | 8.7 pt | Courier New, slate | inline |
 | Code | 7.25 pt | Courier New | line-numbered panel |

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "release": "2.1.0",
-  "title": "Building Enterprise General Intelligence Platform",
+  "title": "Building an Enterprise General Intelligence Platform",
   "author": "Reza Rahimi, PhD",
   "release_date": "2026-09-13",
   "canonical_source": "source/parts/*.md",
@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 36532,
-      "sha256": "ff59bc51f1872b7e5eeb76886bb1bf98574b85b476d32a23b7c2cc6a9819eeeb"
+      "bytes": 36804,
+      "sha256": "c34ddcac55e038c6cc222c4d250924d69dabc4d460d34942b91a7a6c0906e728"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -76,8 +76,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 14877,
-      "sha256": "14c00e353df5f44fa5dace52dbfbe039163c2c54b49a4cd7152077899192f4e5"
+      "bytes": 14880,
+      "sha256": "c7040cb88d10600a349cebd48ef160f23b84d6f4fe81536ab6164559aae7afdb"
     },
     {
       "path": "RELEASE-CHECKLIST.md",
@@ -91,8 +91,8 @@
     },
     {
       "path": "assets/cover/cover-v2.1.0.png",
-      "bytes": 5122616,
-      "sha256": "66d23a7663b8d9f1fdff1d17ea4bfd341f84859d0127bf627f694cb56558d162"
+      "bytes": 5125259,
+      "sha256": "601aa4c053879fbaf2883beaa3f3c2e41494f6cb4075dc95141bc7e98d2fd736"
     },
     {
       "path": "assets/diagrams/anti-ambient-authority.pdf",
@@ -822,17 +822,17 @@
     {
       "path": "book/manuscript.md",
       "bytes": 708624,
-      "sha256": "020f72c8a5b36aadc3952767c07c23860654ec88af9a8b95a4da87fa65f4263f"
+      "sha256": "27f418de33f2df705b75fd544790f2695101e11dbb7b848c165e84117d561853"
     },
     {
       "path": "code-gap.md",
-      "bytes": 99362,
-      "sha256": "8f8fea1bc9ffd1d91db7079f01b3b6c423188e9c5b117d0a90e6a3561fb5e257"
+      "bytes": 99365,
+      "sha256": "cde3e2eb82ae0a797878b31602726ae8b42c46a9e86ba442e7a62b2265bf6e29"
     },
     {
       "path": "config/book.json",
-      "bytes": 4780,
-      "sha256": "bd2b42ee9309c569b809f72b6a88373251709bbf58de4019f5e55cb7b60273a9"
+      "bytes": 4786,
+      "sha256": "ae7ebf19e59f15b1592a237e716fd25f944547eee01e0433c606ccdecd541e6e"
     },
     {
       "path": "config/diagrams.json",
@@ -871,18 +871,18 @@
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v2.1.0.docx",
-      "bytes": 24420441,
-      "sha256": "1cd22f734dd81959c2c3858d405d68beea43956adc2ed4c9876a40bab74b0599"
+      "bytes": 24423378,
+      "sha256": "f44675c4bc457c25b3c1c92fdae484a2186ab6e6aa2c11ee912f29177f2acd0e"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v2.1.0.md",
       "bytes": 708624,
-      "sha256": "020f72c8a5b36aadc3952767c07c23860654ec88af9a8b95a4da87fa65f4263f"
+      "sha256": "27f418de33f2df705b75fd544790f2695101e11dbb7b848c165e84117d561853"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v2.1.0.tex",
-      "bytes": 551,
-      "sha256": "a33c7b93c23d54ab107d5d7c8e29070cd0f85d52260d840c962c28a790fa2732"
+      "bytes": 554,
+      "sha256": "37b9dbbd1abd8d0c66eb6f20e61eaedbc253e951f556a8d7a523b8458b5cdd2a"
     },
     {
       "path": "examples/README.md",
@@ -1206,18 +1206,18 @@
     },
     {
       "path": "latex/Enterprise-General-Intelligence-v2.1.0.tex",
-      "bytes": 551,
-      "sha256": "a33c7b93c23d54ab107d5d7c8e29070cd0f85d52260d840c962c28a790fa2732"
+      "bytes": 554,
+      "sha256": "37b9dbbd1abd8d0c66eb6f20e61eaedbc253e951f556a8d7a523b8458b5cdd2a"
     },
     {
       "path": "latex/README.md",
-      "bytes": 5316,
-      "sha256": "7131f00ddf20ca13df3bc3fd8ae1cddd13149dded49ce518591b8727ba1a5b07"
+      "bytes": 5319,
+      "sha256": "1d72331eb57306170a041e30b634907d32d2b18f54b2ad55d21cdba7eafac351"
     },
     {
       "path": "latex/bookstyle.sty",
-      "bytes": 14404,
-      "sha256": "2ced77988fb7b87ccae527f1c42092f73a634c39b40b7a3ce60ae20e14a53641"
+      "bytes": 14391,
+      "sha256": "5da6e75458e0435caa0d9a1040642324bcbbafb1f9df53322707528d92ea0e30"
     },
     {
       "path": "latex/compile.sh",
@@ -1226,8 +1226,8 @@
     },
     {
       "path": "latex/content/book-content.tex",
-      "bytes": 844521,
-      "sha256": "bec23004dcf40cf17173b7239fc58fa82a1669afd03aba9b417bc222c998dbab"
+      "bytes": 844229,
+      "sha256": "d8689f8fabbe8627f963438bbe609bd06eb4d093928816594db0dde171c34a28"
     },
     {
       "path": "latex/fonts/LICENSE-SIL-OFL-1.1.txt",
@@ -1576,43 +1576,43 @@
     },
     {
       "path": "pyproject.toml",
-      "bytes": 666,
-      "sha256": "09b4e8461cd3d19f928c84c21b272f7e452303b689469b95febe6c645c3cecd3"
+      "bytes": 669,
+      "sha256": "8f7b0a06ddb12a0a1658532052e7c7bc13da59b862f1cc56e023a341353ca9dd"
     },
     {
       "path": "qa/build-report.json",
       "bytes": 309,
-      "sha256": "2bf5d84b13922bcc89b6033e51dde7b573e1915b5daf6f135baf85572fa5d78c"
+      "sha256": "eec48d4a7a469121168d7aaac8888bcbd7082e07535f2acc06cf6c70e0402624"
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 24420441,
-      "sha256": "1cd22f734dd81959c2c3858d405d68beea43956adc2ed4c9876a40bab74b0599"
+      "bytes": 24423378,
+      "sha256": "f44675c4bc457c25b3c1c92fdae484a2186ab6e6aa2c11ee912f29177f2acd0e"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 24420441,
-      "sha256": "1cd22f734dd81959c2c3858d405d68beea43956adc2ed4c9876a40bab74b0599"
+      "bytes": 24423378,
+      "sha256": "f44675c4bc457c25b3c1c92fdae484a2186ab6e6aa2c11ee912f29177f2acd0e"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "22ff3841bc8e3a0e667401c3d913b3cf9bca8641ee6519c8090f18be87777df9"
+      "sha256": "3b2ee8b2827fe0655ab38dbc42b2fc36b0bad748492e9fef459e55af7ff53f92"
     },
     {
       "path": "qa/latex-validation-report.json",
       "bytes": 12051,
-      "sha256": "126450bfe40042e6ab51628442949c665d1bc6cf01fa0d282c470c4eb1591d71"
+      "sha256": "1b17603a89bb8b8638706b811d292d23dd6cbd4a2d063954c98def4976578097"
     },
     {
       "path": "qa/validation-report.json",
       "bytes": 875,
-      "sha256": "dca29e0fe95c145433f7448d197c1e7eae4694e6c45df0366296a5c9417a2e79"
+      "sha256": "2aca6b3483a64db23f85e10d5da10cc5018795b2a3cec31781e80a4d180d7e1d"
     },
     {
       "path": "reports/assembly-report.json",
       "bytes": 1189,
-      "sha256": "bfafcd4c38076f619bbcb191cd230e2fac8007d2251453d4fe86fb968e90d92e"
+      "sha256": "7772a73f7cf68749eafa24569cfec9d21681f3ca93fe4522f857d8028bfe76d0"
     },
     {
       "path": "reports/chapter-insert-map.json",
@@ -1636,8 +1636,8 @@
     },
     {
       "path": "reports/editorial-audit.md",
-      "bytes": 18896,
-      "sha256": "449f8c27ddd9a99510b6413213d296364cd331f8464897cc5511e108c8b5483b"
+      "bytes": 18899,
+      "sha256": "10d10b60fc94769802e800893056e3557b3fc666633e5c66c2568609e7cb64c7"
     },
     {
       "path": "reports/editorial-transformation.json",
@@ -1657,7 +1657,7 @@
     {
       "path": "reports/latex-build-report.json",
       "bytes": 2403,
-      "sha256": "df230cdaaf6cff7fbae34e03a620c09eae6b5dc06c1417367848d6efaa2e0e42"
+      "sha256": "aca8c02ab5627d69f5153aaa45d9169d074c43d7d1dbb40b61accf5771674dc2"
     },
     {
       "path": "reports/latex-validation.md",
@@ -1671,8 +1671,8 @@
     },
     {
       "path": "reports/release-notes.md",
-      "bytes": 4755,
-      "sha256": "d83fa0afe91956ba7a873608a70cab1396b6d782d15f370b00c6d794aee3a705"
+      "bytes": 4940,
+      "sha256": "28ce6c4de86d01b8c35fe014c1c79aff8340276e69623c34bbd877520ed07004"
     },
     {
       "path": "reports/restructure-map.json",
@@ -1687,7 +1687,7 @@
     {
       "path": "reports/validation-summary.md",
       "bytes": 864,
-      "sha256": "fab5f08311ac3cb9192788b7f027375d095d0da765648b2809555ec93f8bf6a4"
+      "sha256": "078246cfc3da733f143714879a47cc779ca2a011988beecc9dbc71f303b7e4c1"
     },
     {
       "path": "requirements.txt",
@@ -1852,7 +1852,7 @@
     {
       "path": "source/parts/04-part-iv.md",
       "bytes": 134133,
-      "sha256": "acb632733a631edebfb52c2d0a9c515abbfda636b841193d7b21cc253c81abe8"
+      "sha256": "a8c66185e58aa0ce9b6c3f52d416fd48f675c995de488254a62e68762e902e90"
     },
     {
       "path": "source/parts/05-part-v.md",
@@ -1862,7 +1862,7 @@
     {
       "path": "source/parts/06-part-vi.md",
       "bytes": 99784,
-      "sha256": "80bdcc61d4dd1cf1a88fc20284f580ae90cb7a469505958051bf9075cd1ac936"
+      "sha256": "805a339d8f0bad35974a3eb3cde25f23d8893ee46fdfc467c791fd05a5c51a22"
     },
     {
       "path": "source/parts/07-part-vii.md",
@@ -1886,13 +1886,13 @@
     },
     {
       "path": "styles/DESIGN-SYSTEM.md",
-      "bytes": 13240,
-      "sha256": "b9d5c89a8269b3917c9e4b556534024f110423b7c9b06a26e33efa9c80af3c95"
+      "bytes": 13241,
+      "sha256": "108c5b6732ee779689524fbb426d6f89eeb059d667972ca9cbf5fcd20df1086e"
     },
     {
       "path": "styles/DOCX-STYLES.md",
-      "bytes": 1274,
-      "sha256": "f3b3a6e73da2c9de7b0fbcb7cb4b56a0cdf08347c888ac876cd85358f4c99d4b"
+      "bytes": 1438,
+      "sha256": "d2530399279994104437777aa2c434b46ec9aec62821c92f8c1fec1e97574558"
     },
     {
       "path": "styles/LATEX-STYLES.md",
@@ -1901,8 +1901,8 @@
     },
     {
       "path": "templates/book-style-template.docx",
-      "bytes": 40409,
-      "sha256": "0e985c09269c61a0eaacdcbdf9d746d53080a3ff8d6cde3200b1d7396817d6a2"
+      "bytes": 40395,
+      "sha256": "645b97f1a5c7caa0b700a8d753972456f5f51c05fea6ddaff0327698498d5314"
     },
     {
       "path": "templates/chapter.template.md",
@@ -1991,8 +1991,8 @@
     },
     {
       "path": "tools/build_book.py",
-      "bytes": 22419,
-      "sha256": "fdabd981d86520c0f797871f8fbc9d6f412f3c119b2c1e91829d1500bd974479"
+      "bytes": 24159,
+      "sha256": "7094e909b36d613cb1348e9bbbf014b15cff22704d86f9cf2a34a131d20929c4"
     },
     {
       "path": "tools/build_latex.py",
@@ -2061,8 +2061,8 @@
     },
     {
       "path": "tools/validate_book.py",
-      "bytes": 14220,
-      "sha256": "da7ca0e94b066758689140371ebddb714f9e14d271eb19929f5c739eccfda8b1"
+      "bytes": 14183,
+      "sha256": "b6bffdebee68b608befa00e4359c3c9964f4facaac209c6108792188e600c886"
     },
     {
       "path": "tools/validate_latex.py",

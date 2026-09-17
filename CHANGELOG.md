@@ -6,6 +6,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 ### Apply the reviewed v2.1.0 DOCX edits across publication formats
 
+- Reconciled the latest reviewed DOCX's title metadata and cover wording
+  (`Building an...` / `BUILDING AN...`), matched its 10 pt body typography and
+  heading-lead pagination behavior, and restored the two reviewed spellings in
+  the canonical prose (`aCL` and `rCE`).
 - Reconciled the reviewed DOCX wording into the canonical Markdown parts and
   regenerated the distributable Markdown, DOCX, and XeLaTeX source while
   preserving the 8-Part / 28-chapter / 12-appendix topology.

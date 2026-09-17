@@ -211,7 +211,7 @@ checklists; they are lenses over one runtime path.
 
 ### T-14 — Unsafe code execution
 
-**How the attack develops.** Generated/retrieved code runs with host, network, secret, or persistence access. The business risk is RCE, theft, lateral movement, resource abuse.
+**How the attack develops.** Generated/retrieved code runs with host, network, secret, or persistence access. The business risk is rCE, theft, lateral movement, resource abuse.
 
 **How to detect and prevent it.** Look for unexpected syscall/egress/file, resource spike, prohibited import, escape signal. Reduce the likelihood with these measures: Avoid when possible; ephemeral sandbox, read-only base, no secrets, allowlists, signed deps.
 

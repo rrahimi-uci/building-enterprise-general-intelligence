@@ -1,7 +1,7 @@
 # Mortgage Running Example — Code Gap and Implementation Roadmap
 
 **Requested baseline:** v2.0.1
-**Source actually supplied and reviewed:** *Building Enterprise General Intelligence Platform*, Book v2.1.0, September 2026
+**Source actually supplied and reviewed:** *Building an Enterprise General Intelligence Platform*, Book v2.1.0, September 2026
 **Course alignment:** *Building Enterprise-Grade Agentic Systems — Course*, 14 lessons
 **Scope:** one cumulative mortgage case across Book Chapters 1–28, cross-mapped to the 14 course lessons
 **Audit date:** 2026-09-16

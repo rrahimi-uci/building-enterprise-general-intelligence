@@ -1,4 +1,4 @@
-# Building Enterprise General Intelligence Platform
+# Building an Enterprise General Intelligence Platform
 
 **Book v2.1.0 development system**  
 Author: **Reza Rahimi, PhD**  
