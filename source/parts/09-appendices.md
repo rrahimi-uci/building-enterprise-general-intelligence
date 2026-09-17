@@ -1,10 +1,13 @@
-# PART REFERENCE — APPENDICES
+# PART REFERENCE — APPENDICES: FIELD GUIDE AND REFERENCE
 
-The appendices are working reference material: selection aids, runbooks, contracts, and the citation registry that the chapters draw on.
+The appendices are meant to be used at the desk, not admired at the end of the
+book. They collect decision aids, runbooks, contracts, framework notes, a
+glossary, the Harborlight implementation guide, and the evidence registry that
+keeps the main argument honest.
 
-# Appendix A — Pattern Selection Decision Tree and Catalog Index
+# Appendix A — Choosing a Pattern: Decision Tree and Catalog
 
-## Selection sequence
+## Start with the obligation
 
 1. Known path: deterministic workflow; add a bounded semantic node only where ambiguity remains.
 2. Next step depends on observation: bounded ReAct with budgets and executable acceptance.
@@ -14,7 +17,7 @@ The appendices are working reference material: selection aids, runbooks, contrac
 6. Side effect: proposal/authorize/commit, idempotency, reconciliation, acceptance.
 7. Post-deployment improvement: governed learning; never self-certification.
 
-## Catalog index
+## Find the matching pattern
 
 | **Category** | **Recommended pattern** | **Anti-pattern** | **Primary chapters** |
 | --- | --- | --- | --- |
@@ -25,13 +28,13 @@ The appendices are working reference material: selection aids, runbooks, contrac
 | Tools | P-05 proposal–commit façade | AP-12 ungated discovery | 17, 24 |
 | Multi-agent | P-06 typed tasks/join | AP-08 chat workflow | 17–19 |
 | Security | P-07 capability envelope | AP-03 ambient authority; AP-10 judge gate | 17, 21, 23–25 |
-| Reliability | P-08 effect reconciliation | AP-04 retry everywhere; AP-05 timeout=failure | 15, 17, 24, 30–31 |
+| Reliability | P-08 effect reconciliation | AP-04 retry everywhere; AP-05 timeout=failure | 15, 17, 24, 27–28 |
 | Observability | P-09 causal run graph | AP-07 model says done; AP-14 unlinked telemetry | 17, 26–28 |
-| Governance | P-10 risk-tiered gates | AP-06 Boolean approval | 14, 17, 29 |
-| Operations | P-11 durable runtime/backpressure | AP-16 in-place change | 15, 17, 30–31 |
+| Governance | P-10 risk-tiered gates | AP-06 Boolean approval | 14, 17, 26 |
+| Operations | P-11 durable runtime/backpressure | AP-16 in-place change | 15, 17, 27–28 |
 | Architecture | P-12 portable contracts/adapters | AP-15 provider swap as config | 4–7, 17, 20 |
 
-# Appendix B — Failure triage and operator runbooks
+# Appendix B — When Things Go Wrong: Triage and Runbooks
 
 | **Symptom** | **Inspect first** | **Safe response** |
 | --- | --- | --- |
@@ -55,7 +58,7 @@ The appendices are working reference material: selection aids, runbooks, contrac
 5. Record evidence; accept, retry safely, compensate, or move to InterventionRequired.
 6. Add the failure to simulation and release regression tests.
 
-# Appendix C — Platform contracts quick reference
+# Appendix C — Platform Contracts at a Glance
 
 | **Contract** | **Owner** | **Key fields** |
 | --- | --- | --- |
@@ -71,7 +74,7 @@ The appendices are working reference material: selection aids, runbooks, contrac
 | Artifact | Artifact Service | schema, hash, provenance, classification, retention, version |
 | ReleaseManifest | Release Registry | agents, Skills, SDK, workflow, models, tools, policy, schemas, evals |
 
-# Appendix D — Framework landscape
+# Appendix D — Choosing a Framework
 
 > **Evidence note.** The landscape summary is based on current framework documentation for OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Amazon Bedrock multi-agent collaboration, LangGraph, LlamaIndex Workflows, PydanticAI durable execution, Dapr Agents, and DBOS. It records declared capabilities, not a comparative production certification. [R29][R31][R32][R33][R34][R35][R36][R37][R38]
 
@@ -86,7 +89,7 @@ The appendices are working reference material: selection aids, runbooks, contrac
 | DBOS | Durable workflows integrated with Python and database-backed execution. | Evaluate operational model, scale envelope, ecosystem maturity, and regional recovery requirements. | Useful when application teams want code-centric durability with a simpler operational footprint. |
 | MLflow 3.15.x | OpenTelemetry-compatible GenAI tracing, evaluation, scorers, feedback, and experimental MCP Registry surfaces. | Tracing is not audit; model judges need calibration; MCP Registry features require version pinning and maturity review. | Diagnostics and evaluation baseline pinned to 3.15.2 in this edition. |
 
-## Final assessment of the current framework landscape
+## What the framework landscape means
 
 |  |
 | --- |
@@ -122,7 +125,7 @@ The appendices are working reference material: selection aids, runbooks, contrac
 
 Choose the smallest harness that expresses the agent behavior, the strongest durable engine that matches the run’s consequences, and enterprise-owned gateways for identity, policy, tools, models, telemetry, and artifacts. Do not force one framework to own all three layers.
 
-# Appendix E — Research implications
+# Appendix E — What This Architecture Means for Research
 
 ## Research and benchmark implications
 
@@ -139,7 +142,7 @@ Choose the smallest harness that expresses the agent behavior, the strongest dur
 
 The common lesson is not that “more agents” is state of the art. It is that useful agent behavior comes from environment grounding, specialized interfaces, explicit state, executable verification, and bounded iteration. Long trajectories amplify even modest per-step error; therefore architecture must create shorter verified segments and durable recovery points.
 
-# Appendix F — Known limits and enforced mitigations
+# Appendix F — Known Limits—and the Controls That Contain Them
 
 ## Known architectural limits and required mitigations
 
@@ -167,7 +170,7 @@ The common lesson is not that “more agents” is state of the art. It is that 
 
 **12. Human accountability is implemented as an operating model, not a button. Required mitigation: define roles and separation of duties, accessible evidence-first previews, training, review-time budgets, fatigue metrics, recourse, and explicit exception ownership.**
 
-# Appendix G — Enterprise adoption roadmap
+# Appendix G — A Practical Enterprise Adoption Roadmap
 
 ## Enterprise adoption roadmap
 
@@ -180,7 +183,7 @@ The common lesson is not that “more agents” is state of the art. It is that 
 | 4 — Cross-agent ecosystem | A2A gateway, signed manifests, cross-team contracts, delegated token exchange, federated traces | Interoperability, cancellation, identity, schema, failure, and audit contract tests pass |
 | 5 — Continuous optimization | Failure mining, incremental execution, model/tool substitution, automated rollback, governance reporting | Improvements are evidence-driven; no self-modifying production behavior outside release controls |
 
-### Minimum viable production bar
+### The minimum bar before a write
 
 Before an agent can mutate an enterprise system, require all of the following:
 
@@ -215,12 +218,12 @@ Before an agent can mutate an enterprise system, require all of the following:
 | Subject | Principal whose delegated authority initiates a protected action. |
 | Unknown effect | Mutation whose outcome cannot be proven and must be reconciled. |
 
-# Appendix I — Companion Implementation Guide: Harborlight Mortgage Reference
+# Appendix I — Companion Implementation Guide: Harborlight Mortgage
 
 
 Companion code for the book **Building Enterprise General Intelligence Platform**.
 
-## Version baseline
+## Versions used in this guide
 
 * Python 3.11+
 * OpenAI Agents SDK 0.22.2
@@ -253,7 +256,7 @@ uses the scripted Agents SDK model and a synthetic gateway, while the MLflow
 example uses a local SQLite tracking URI. No command in the offline profile
 requires credentials or a network connection.
 
-## Package map
+## What the package contains
 
 * `mortgage_case/domain/` — synthetic case, evidence, proposal, and money contracts
 * `mortgage_case/platform/` — provider-neutral runtime and gateway boundaries
@@ -265,7 +268,7 @@ requires credentials or a network connection.
 * `examples/observability/mlflow_evaluation.py` — `mlflow.genai.evaluate` dataset/scorer orchestration
 * `code-gap.md` — chapter-by-chapter C04–C28 implementation roadmap
 
-## Final-edition corrections and closure record
+## Corrections and closure notes
 
 * SDK HITL now returns a structured RunResult; it no longer throws serialized run state in an exception.
 * The protected write tool is actually registered, and it carries an enterprise approval ID and proposal hash to the gateway.
@@ -286,7 +289,7 @@ explicit integration test, not as evidence supplied by the offline suite. Treat
 the book's Skill and SkillPack as platform-owned packaging patterns, not as
 aliases for A2A AgentSkill metadata or the optional Skills-over-MCP extension.
 
-## Validation commands
+## Rebuild and verify
 
 BASH · implementation excerpt
 
@@ -296,7 +299,7 @@ make examples-run
 .venv-examples/bin/python -m mortgage_case --chapter 3 --scenario happy_path --offline --json
 ```
 
-# Appendix J — Coding-agent prompt and acceptance criteria
+# Appendix J — Coding-Agent Prompt and Acceptance Criteria
 
 ## Deep-research coding-agent prompt
 
@@ -466,7 +469,7 @@ A submission is accepted only if all are true:
 * Include failure paths and operator actions, not only happy paths.
 * End with a prioritized 30/60/90-day plan, staffing/ownership model, and list of decisions that require enterprise-specific input.
 
-# Appendix K — References
+# Appendix K — References and Evidence Scope
 
 ## Citation policy
 
@@ -527,7 +530,7 @@ References are numbered by stable registry identifier. Each citation supports on
 * **[R37]** Dapr (2026). *Dapr Agents*. Current documentation. [Primary or authoritative source](https://docs.dapr.io/developing-ai/dapr-agents). Accessed 13 September 2026. **Supports:** Documents Dapr agent integration with workflows, actors, state, messaging, resiliency, and telemetry.
 * **[R38]** DBOS (2026). *DBOS AI Quickstart*. Current documentation. [Primary or authoritative source](https://docs.dbos.dev/ai/ai-quickstart). Accessed 13 September 2026. **Supports:** Documents durable long-running agent workflows, queues, waits, and framework integrations.
 
-# Appendix L — Capacity, resilience, and release acceptance
+# Appendix L — Capacity, Resilience, and Release Acceptance
 
 ## Quantitative sizing method
 
@@ -540,7 +543,7 @@ References are numbered by stable registry identifier. Each citation supports on
 | Token demand | requests × (input + cached-input + output + tool-schema tokens) | Track by model route and ContextManifest policy. |
 | Verified-success cost | total model + tool + compute + human-review cost / accepted outcomes | Include failed, abandoned, and reconciled runs. |
 
-## Production acceptance evidence
+## Evidence for production acceptance
 
 | **Gate** | **Minimum evidence** |
 | --- | --- |
@@ -553,7 +556,7 @@ References are numbered by stable registry identifier. Each citation supports on
 | Supply chain | Lock digest, SBOM, signed provenance, trusted builder/signer, release manifest, revocation exercise |
 | Human factors | Accessible approval test, preview fidelity, reviewer calibration, fatigue/override metrics, recourse path |
 
-# Closing perspective
+# A Closing Perspective
 
 |  |
 | --- |

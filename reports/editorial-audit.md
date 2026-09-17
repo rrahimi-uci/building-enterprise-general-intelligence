@@ -1,5 +1,53 @@
 # Final closeout — full-book review plan
 
+## Addendum — Practitioner voice and readability pass
+
+**Reviewed:** 2026-09-16
+**Scope:** Front matter, all eight Part orientations, Chapters 1–28, Appendices
+A–L, chapter transitions, title metadata, and the implementation roadmap.
+
+### Findings
+
+The architecture and control contracts were already detailed, but the reading
+experience was uneven. Many chapters opened with the same delivery-template
+labels, several titles described an inventory of technologies rather than the
+reader's decision, and the densest sections moved from a table to a checklist
+without explaining why the boundary mattered in practice. Those patterns made
+the book feel closer to a specification than to an experienced practitioner
+walking a reader through a design.
+
+### Resolutions
+
+- Rewrote the front matter and Part orientations around the reader's journey
+  from a convincing model call to a system that can survive real operation.
+- Retitled all 28 chapters and the appendices with clear, decision-oriented
+  language; updated `config/book.json`, the Harborlight implementation
+  roadmap, and the front-matter map together.
+- Replaced repeated mechanical headings with headings that explain the job of
+  the section: the system boundary, the effect path, a trace that explains the
+  run, decisions and evidence, and similar chapter-specific signposts.
+- Added short, chapter-specific explanations of motivation, timing, failure
+  modes, and practical payoff before each architecture summary. The technical
+  contracts, formulas, security boundaries, examples, citations, diagrams,
+  and stable identifiers remain unchanged.
+- Re-read the chapter transitions after the title changes and corrected the
+  Appendix A references that still pointed to the pre-v2.1.0 chapter numbers.
+
+### Final handoff status
+
+- The pass improves the narrative entry points and headings; dense contract
+  tables and checklists remain intentionally compact where they serve as
+  implementation references.
+- Canonical Markdown, distributable Markdown, DOCX, and XeLaTeX source were
+  rebuilt after the edits. The genuine XeLaTeX build completed at 288
+  Letter-size pages, and representative pages were inspected for hierarchy,
+  wrapping, tables, diagrams, and glyph integrity.
+- The document renderer could not produce DOCX page images because this
+  environment has neither LibreOffice/`soffice` nor the renderer's `pdf2image`
+  dependency. `make qa-pdf` independently records the primary gate as
+  DEFERRED because `soffice` is unavailable; no DOCX pagination pass is being
+  inferred from the XeLaTeX PDF.
+
 **Reviewed:** 2026-09-16
 **Result:** PASS for the editorial and cross-format review scope; DOCX
 pagination QA DEFERRED; C04–C28 cumulative runtime implementation remains
@@ -31,16 +79,20 @@ Markdown/DOCX/LaTeX, and representative XeLaTeX pages.
 
 ## Final evidence
 
-- `make validate`: PASS — 8 Parts, 28 chapters, 12 appendices, 45 diagrams,
-  71 code blocks, 48 references, 107 citation occurrences, valid DOCX, and no
-  validation errors or warnings.
-- `make examples-run`: PASS — 123 tests across 26 examples.
+- `make assemble`: PASS — 686,327 bytes; SHA-256
+  `6104217ad6984ee28226fc74f7eea3e7e27a392e43d1b6373ca92a5cbd3f3bd2`;
+  8 Parts, 28 chapters, 12 appendices, 107 citations, and 29 expanded
+  examples.
+- `make validate`: PASS — references, examples registry, LaTeX source, and
+  structural invariants all pass with no validation errors or warnings.
+- `make examples-run`: PASS — 123 tests across 26 examples, plus 30 mortgage
+  case tests.
 - `make deterministic`: PASS — the two DOCX builds are byte-identical at
-  SHA-256 `da4877d5dbaf09ab04fef3923779b370c11ad0400897b82db0122aec43679d5a`.
-- `make pdf`: PASS — genuine XeLaTeX, 287 Letter-size pages. Cover, Part I,
-  Chapter 14, changed authorization/diagram pages, and closing page were
-  rendered and visually inspected without clipping, overlap, missing glyphs,
-  or hierarchy defects.
+  SHA-256 `144e0ed90fe9ebae1fc9ae2e0c42978166c21ed02e064ae4295baf1bab038590`.
+- `make pdf`: PASS — genuine XeLaTeX, 288 Letter-size pages. Representative
+  cover, contents, chapter, code, diagram, appendix, and closing pages were
+  inspected without visible clipping, overlap, missing glyphs, or hierarchy
+  defects.
 - `make qa-pdf`: DEFERRED — the local environment has no LibreOffice/`soffice`.
   DOCX package validity and XeLaTeX inspection are not being used as a proxy
   for DOCX pagination QA.
@@ -48,11 +100,12 @@ Markdown/DOCX/LaTeX, and representative XeLaTeX pages.
   present. C04–C28 remain explicit implementation targets in `code-gap.md` and
   are not described as production-ready evidence.
 
-The release manifest, checksums, ZIP, and clean-extraction rebuild were
-generated from the final committed tree. The final 388-entry ZIP’s byte count
-and SHA-256 are recorded in `reports/release-package.json`, and the
-clean-package test passed. Notion synchronization and merge remain outside
-agent authority; the PR is left open for the author’s review.
+The release manifest, checksums, and 414-entry ZIP were generated from this
+final source tree. Its byte count and SHA-256 are recorded in
+`reports/release-package.json`; clean extraction followed by `make validate`
+passed using the repository's pinned Python environment. Notion
+synchronization and merge remain outside agent authority; the PR will be left
+open for the author's review.
 
 # Editorial Audit — Full-Book Review and Running-Example Gap Audit
 

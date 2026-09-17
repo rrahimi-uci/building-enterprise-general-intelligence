@@ -8,13 +8,26 @@ Book v2.1.0 · Publication Release · September 2026
 
 A practical, structured enterprise reference for architects, platform engineers, DevOps engineers, and SREs.
 
-# Preface to Book v2.1.0
+# Preface: A Practical Way to Read This Book
 
-Book v2.1.0 is the publication baseline for this guide and the canonical starting point for all future editions. It treats an agentic application as a governed distributed system: models may propose, while deterministic services own authority, state, effects, evidence, acceptance, and release.
+This edition starts from a deliberately unfashionable premise: an agentic
+application is still a distributed system. The model may propose a useful next
+step, but deterministic services must own authority, state, effects, evidence,
+acceptance, and release. That is the line between a convincing demo and a
+system people can safely depend on.
 
-The narrative follows a clear progression from foundations to production. It begins with the core principles and deterministic controls that make agentic systems predictable and governable. The reference architecture then defines the major components and their responsibilities, while the platform team turns these architectural principles into reusable capabilities for engineering teams through SDKs.
+The book follows that idea from the first model call to a system that has to run
+for years. We begin with the boundaries that make an agent predictable, then
+define the architecture and turn it into reusable platform capabilities. From
+there, the chapters work through the patterns, security controls, evidence,
+governance, and operating decisions that appear once real people, real data,
+and real consequences enter the picture.
 
-From there, patterns and anti-patterns guide how agents, tools, and workflows should be designed and connected. Gateways and security controls establish safe boundaries around models, data, tools, and external systems. Observability and evaluation provide the evidence needed to understand system behavior, quality, cost, and reliability. That evidence feeds into continuous learning, where improvements are introduced through controlled and governed processes. Finally, production operations ensure that the entire system remains reliable, scalable, secure, and cost-efficient over time.
+The examples use a fictional Harborlight mortgage case as a thread. It is not a
+claim that mortgage underwriting can be delegated to a model; it is a useful
+stress test because the case has sensitive evidence, human judgment, policy,
+long waits, and protected effects. Comparative Northstar examples show how the
+same contracts travel to supplier onboarding and other domains.
 
 ## Scope and claim discipline
 
@@ -36,9 +49,14 @@ The Markdown file is the primary source of truth. When updating the book—wheth
 
 The package README explains how to build, validate, and release a new version of the book. Following this workflow ensures that future contributors and AI agents can extend the book without breaking its established structure, style, or quality.
 
-# How to use this guide
+# How to Use the Book
 
-This guide is organized as one architecture story rather than a collection of independent topics. Read the executive map, then follow the lane that matches the decision. Every major chapter moves from problem and boundaries to architecture, implementation, failure modes, metrics, trade-offs, and review questions.
+Read this as one architecture story, not as a stack of unrelated technology
+surveys. Start with the map, then choose the reader path that matches your
+decision. Each major chapter moves from a concrete problem through boundaries,
+architecture, implementation, failure modes, measurement, and trade-offs; you
+can use the review questions to test whether the idea survives contact with
+your own system.
 
 The cumulative implementation path follows one synthetic Harborlight Home
 Finance case so the architecture grows without changing applications between
@@ -69,7 +87,7 @@ Harborlight mortgage case is the cumulative runnable path.
 
 [[DIAGRAM:book-map|Figure 0-1 — Narrative map from foundations to production operations]]
 
-## Reference-guide contract
+## The Contract Behind the Architecture
 
 The architectures and practices in this book are built around a small set of principles for operating agentic systems safely and reliably in production:
 
@@ -82,71 +100,71 @@ The architectures and practices in this book are built around a small set of pri
 
 Together, these principles establish a simple operating contract: agents provide intelligence and flexibility, while deterministic controls provide authority, safety, traceability, and reliability.
 
-# Hierarchical Table of Contents
+# Find Your Way Through the Book
 
 ## Part I — Foundations
 
-01. From an LLM Call to a Production Agentic System
-02. Tools, Structured Outputs, and the Deterministic Shell
-03. Agent Runtime and Framework Abstraction
+01. What Turns an LLM Call into a Production System
+02. From Model Output to Safe Action
+03. Keep the Framework in Its Lane
 
-## Part II — Enterprise Architecture & Knowledge
+## Part II — Architecture, Knowledge, and Context
 
-04. Enterprise Reference Architecture, Boundaries, and Contracts
-05. Enterprise Knowledge Management for Agents
-06. Context Engineering, RAG, Memory, and State
+04. The Architecture Around the Model
+05. Give Knowledge an Owner
+06. Build Context Without Losing the Plot
 
-## Part III — Agentic Developer Platform & SDK
+## Part III — The Developer Platform
 
-07. Agentic Developer Platform, SDK, and Delivery Lifecycle
-08. Skills as Versioned Capabilities
-09. Skill Packs and Domain Platforms
+07. Build the Paved Road for Agent Teams
+08. Package Capabilities as Versioned Skills
+09. From Skills to a Domain Platform
 
-## Part IV — Patterns and Anti-Patterns
+## Part IV — Patterns That Work—and Those That Fail
 
-10. ReAct: Bounded Reason–Act–Observe Loops
-11. Routing, Triage, and Handoffs
-12. Planning and Plan–Execute
-13. Reflection and Evaluator–Optimizer
-14. Human-in-the-Loop
-15. Long-Running and Durable Agents
-16. Enterprise Pattern Catalog
-17. Enterprise Anti-Pattern Catalog
+10. ReAct Without the Runaway Loop
+11. Route the Work—and Transfer Ownership
+12. Plans Are Proposals Until the System Compiles Them
+13. Use Critique to Improve, Not to Self-Approve
+14. Put People Where Judgment Matters
+15. Keep Work Alive Across Time and Failure
+16. Patterns for Real Enterprise Work
+17. The Shapes That Fail in Production
 
-## Part V — Multi-Agent Systems & External Integration
+## Part V — Working Together Across Boundaries
 
-18. Supervisor/Worker and Multi-Agent Collaboration
-19. External Integration: MCP, A2A, and the Model Control Plane
+18. Coordinate Specialists Without Losing Control
+19. Crossing the Boundary: MCP, A2A, and Local Control
 
-## Part VI — Security, Identity & Guardrails
+## Part VI — Security, Identity, and Control
 
-20. Agentic AI Security and Guardrails Architecture
-21. Identity, RBAC/ABAC, and Delegated Authorization
-22. Tool Security, Side Effects, Idempotency, and Approval
-23. Sandboxing, Egress, Data Security, and Governance
+20. Security Starts Beyond the Prompt
+21. Carry Identity and Narrow Authority
+22. Make Effects Safe to Retry
+23. Contain a Manipulated Model
 
-## Part VII — Observability, Evaluation & Learning
+## Part VII — Evidence, Evaluation, and Improvement
 
-24. Distributed Tracing
-25. Continuous Learning and Governed Improvement
+24. Follow One Run from Request to Receipt
+25. Improve the System Without Losing Control
 
-## Part VIII — Governance & Production Operations
+## Part VIII — Running the System in the Real World
 
-26. Governance, Risk, and Operating Model
-27. Deployment, Versioning, CI/CD, and Recovery
-28. Cost, Latency, Capacity, and Reliability Optimization
+26. Make Governance an Operating System
+27. Release Without Breaking Work in Flight
+28. Make Performance a Business Decision
 
 ## Appendices
 
-- A. Pattern Selection Decision Tree and Catalog Index
-- B. Failure triage and operator runbooks
-- C. Platform contracts quick reference
-- D. Framework landscape
-- E. Research implications
-- F. Known limits and enforced mitigations
-- G. Enterprise adoption roadmap
+- A. Choosing a Pattern: Decision Tree and Catalog
+- B. When Things Go Wrong: Triage and Runbooks
+- C. Platform Contracts at a Glance
+- D. Choosing a Framework
+- E. What This Architecture Means for Research
+- F. Known Limits—and the Controls That Contain Them
+- G. A Practical Enterprise Adoption Roadmap
 - H. Glossary
-- I. Companion Implementation Guide: Harborlight Mortgage Reference
-- J. Coding-agent prompt and acceptance criteria
-- K. References
+- I. Companion Implementation Guide: Harborlight Mortgage
+- J. Coding-Agent Prompt and Acceptance Criteria
+- K. References and Evidence Scope
 - L. Capacity, resilience, and release acceptance

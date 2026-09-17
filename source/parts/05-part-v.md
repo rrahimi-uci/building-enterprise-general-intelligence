@@ -1,8 +1,12 @@
-# PART V — MULTI-AGENT SYSTEMS & EXTERNAL INTEGRATION
+# PART V — WORKING TOGETHER ACROSS BOUNDARIES
 
-This Part crosses the process boundary. It covers how agents divide work among themselves, how they reach systems and agents they do not own, and how model access itself becomes a governed control plane.
+Once a system has more than one worker—or reaches beyond its own process—the
+conversation becomes a distributed protocol. This Part makes the ownership,
+authority, cancellation, and artifact rules explicit for internal specialists
+and external peers alike. It also keeps a useful distinction in view: a
+protocol can move a message without granting permission to act.
 
-# 18 — Supervisor/Worker and Multi-Agent Collaboration
+# 18 — Coordinate Specialists Without Losing Control
 
 > **Evidence note.** Public multi-agent implementation reports describe supervisor/specialist designs and substantial token/context trade-offs; these observations justify explicit topology and cost tests rather than universal multi-agent adoption. [R28][R33]
 
@@ -14,11 +18,16 @@ This Part crosses the process boundary. It covers how agents divide work among t
 | --- |
 | **DESIGN DECISION**  Give one component ownership of each task, derive narrower child authority, and define explicit join and cancellation semantics. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Give each task one owner, narrow authority on delegation, and make fan-out, fan-in, cancellation, and conflicts explicit.
+Multiple agents can shorten a workflow, but conversation alone does not tell
+you who owns a task, who may cancel it, or which result wins when specialists
+disagree. This chapter makes collaboration a durable state machine with one
+owner per task, narrowed child authority, explicit joins, and visible conflict
+handling. Use it when parallelism is buying real value—not simply because more
+agents make a diagram look sophisticated.
 
-## Solution blueprint
+## The collaboration contract
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -70,9 +79,9 @@ Nested delegation multiplies cost and risk. Northstar caps depth, children, conc
 * **Termination:** terminal states are deterministic—acceptance criteria satisfied, user canceled, policy denied, budget/time/step limit reached, or unrecoverable error. The model may recommend completion but cannot invent the terminal transition.
 * **Plan changes:** append a versioned plan revision with rationale and diff; validate new nodes against the original authority envelope. Materially broader scope requires new consent or approval.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 | **Component** | **Owns** | **Does not own** |
 | --- | --- | --- |
@@ -83,7 +92,7 @@ Nested delegation multiplies cost and risk. Northstar caps depth, children, conc
 | Router | Ranked eligible agents/tools using manifest, health, policy, cost, and locality | Authorization or unrestricted discovery |
 | Join/Aggregation Service | Readiness, quorum, schema validation, conflict policy, accepted result | Free-form “consensus” without evidence |
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -116,7 +125,7 @@ JSON · implementation excerpt
 }
 ```
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -139,7 +148,7 @@ JSON · implementation excerpt
 * Mitigate “hot runs” by batching status events, limiting concurrent ready nodes, and applying per-run semaphores. A single run should not require more coordinator throughput than its bounded fan-out permits.
 * Idempotent task creation and completion make queue redelivery safe. Task terminal state plus accepted artifact hash is immutable; corrections create a new revision/task rather than reopening history.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -147,7 +156,7 @@ JSON · implementation excerpt
 
 Evidence anchors: MULTIAGENT; A2A-101. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Pattern reference — Supervisor/Worker
+## Putting it into practice: Supervisor/Worker
 
 |  |
 | --- |
@@ -191,7 +200,7 @@ The supervisor creates typed child tasks with narrower grants and acceptance cri
 * join condition
 * conflicts and resolution
 
-## Pattern reference — Multi-Agent Collaboration
+## Putting it into practice: Multi-Agent Collaboration
 
 |  |
 | --- |
@@ -235,7 +244,7 @@ Collaboration uses durable TaskEnvelope, message, status, artifact, cancellation
 * artifact lineage
 * deadline, cancellation, and join outcome
 
-## Implementation reference
+## A practical starting point
 
 
 ### Durable child-task contract
@@ -335,13 +344,13 @@ def derive_child(
     return child
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Build the durable task tree and identify the current owner of every node.
 2. Verify each child grant is a subset of the parent grant.
 3. Inspect join semantics, missing artifacts, duplicates, and conflicts.
 
-## Production checklist
+## Before you ship
 
 **✓** Another agent exists only when expertise, tools, data, trust, ownership, SLO, or scaling truly differs.
 
@@ -353,12 +362,12 @@ def derive_child(
 
 **✓** MCP and A2A pass through gateways that verify peers, schemas, artifacts, quotas, and cancellation.
 
-## Exercises
+## Try it yourself
 
 1. Design supervisor/worker fan-out with quorum and a deterministic conflict rule.
 2. Model cascading cancellation across two local agents and one remote task.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -368,11 +377,11 @@ def derive_child(
 | How should fan-in be implemented? | Persist child states and artifacts, wait for an explicit join condition, then validate schemas, provenance, conflicts, quality, and policy deterministically. |
 | What does an A2A or MCP protocol not solve? | Business authorization, peer trust, quality, tenant isolation, effect semantics, artifact safety, cancellation guarantees, and audit remain local platform responsibilities. |
 
-## Transition to Chapter 19
+## Why Chapter 19 comes next
 
 Multi-agent collaboration inside one platform is only part of the problem; Chapter 19 governs cross-platform tools, agents, APIs, and events.
 
-# 19 — External Integration: MCP, A2A, and the Model Control Plane
+# 19 — Crossing the Boundary: MCP, A2A, and Local Control
 
 > **Evidence note.** MCP 2026-07-28 defines a stateless, self-contained protocol core for resources, prompts, and tools, while A2A v1.0.1 defines agent cards and task/message/artifact exchange. Neither protocol transfers application authorization or business acceptance automatically. [R05][R06][R07]
 
@@ -384,11 +393,15 @@ Multi-agent collaboration inside one platform is only part of the problem; Chapt
 | --- |
 | **DESIGN DECISION**  Terminate MCP and A2A at governed local gateways; verify endpoints, artifacts, authority, quotas, and effect semantics locally. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Federate tools and agents through locally governed gateways, registries, task protocols, and artifact adoption controls.
+External protocols make it easier to discover and exchange work with tools and
+agents outside your boundary. They do not make those endpoints trustworthy, or
+their artifacts safe to adopt. This chapter follows an MCP call and an A2A
+task through local gateways, where identity, policy, quotas, provenance, and
+effect semantics are re-established before anything is used.
 
-## Solution blueprint
+## Local control at the protocol edge
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -474,13 +487,13 @@ A2A’s task/message/artifact model and async operations are useful at remote-ag
 * Aggregators validate schema, provenance, duplicate claims, evidence quality, and conflict policy. They do not concatenate prose and call it consensus.
 * Shared mutable state is prohibited across trust domains. Exchange immutable artifacts or versioned patches; use optimistic concurrency for authorized updates.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 The Agent Directory stores validated cards and endpoint metadata; the Peer Trust Registry stores organizational trust and allowed purposes; the A2A Gateway terminates authentication and protocol bindings; the Task Bridge maps remote tasks to internal child workflows; the Artifact Broker exchanges immutable references; the Subscription Dispatcher handles push/status delivery; and the Trace Bridge links remote and local causal graphs.
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -496,7 +509,7 @@ The Agent Directory stores validated cards and endpoint metadata; the Peer Trust
 
 At an open boundary, expose the standard A2A agent-card and task/message operations. Internally, normalize every binding to the platform’s task state, identity, artifact, error, and audit contracts.
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -574,7 +587,7 @@ Record candidate routes, exclusions/reasons, selected provider/model/version/reg
 
 Measure route distribution and eligibility, task success/quality by route, schema/tool correctness, refusal/safety, p50/p95/p99 latency, queue/retry amplification, cache hits and unsafe-key rejection, tokens/cost per accepted outcome, policy denials, PII/secrets detections, provider error/fallback, alias/version drift, and trace completeness. Centralization adds latency and blast-radius risk; deploy regionally, isolate tenants/risk classes, use bulkheads, and retain platform-owned contracts even when buying a gateway.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -584,7 +597,7 @@ Measure route distribution and eligibility, task success/quality by route, schem
 
 Evidence anchors: MCP-2026; MCP-AUTH; A2A-101. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 
 ### A2A task envelope
@@ -645,13 +658,13 @@ def resolve_production_mcp_server():
     )
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Verify the registry version, endpoint identity, protocol profile, and trust material.
 2. Inspect local authorization and quota decisions for one remote call.
 3. Validate the returned artifact hash, schema, classification, provenance, and scan result.
 
-## Production checklist
+## Before you ship
 
 **✓** MCP and A2A endpoints terminate at authenticated governed gateways.
 
@@ -663,12 +676,12 @@ def resolve_production_mcp_server():
 
 **✓** Cancellation, retries, idempotency, effects, and audit have local semantics.
 
-## Exercises
+## Try it yourself
 
 1. Wrap an MCP tool with a local Tool Gateway policy.
 2. Define an A2A TaskEnvelope with status, cancellation, and artifact adoption semantics.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -678,6 +691,6 @@ def resolve_production_mcp_server():
 | How should a remote artifact be adopted? | Authenticate the source, validate schema and hash, scan content, enforce classification and provenance, then copy or reference under local policy. |
 | How do you version external capabilities? | Pin registry entry, endpoint, protocol profile, schemas, trust material, tool or agent version, and tested compatibility in the release manifest. |
 
-## Transition to Chapter 20
+## Why Chapter 20 comes next
 
 The gateway controls model access, but not the entire attack surface; Chapter 20 introduces defense in depth across all agentic trust boundaries.

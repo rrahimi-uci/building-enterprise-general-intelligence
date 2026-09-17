@@ -2,6 +2,25 @@
 
 Book v2.1.0 is the canonical foundation for *Building Enterprise General Intelligence Platform* by Reza Rahimi, PhD.
 
+## Full-book style and readability pass — 2026-09-16
+
+This publication-wide editorial pass rewrites the reader-facing layer of the
+book without weakening its contracts. It gives the front matter, Part
+orientations, all 28 chapter titles, and the appendices a clearer practitioner
+voice; replaces repeated specification-like headings with meaningful signposts;
+and adds concise explanations of why each boundary matters, when it becomes
+important, and what can fail without it. The technical architecture,
+identifiers, citations, diagrams, examples, and 8-Part / 28-chapter /
+12-appendix topology remain intact.
+
+The canonical source and derived Markdown, DOCX, and XeLaTeX source were
+rebuilt. `make validate`, the 123-example test suite plus 30 mortgage-case
+tests, and deterministic DOCX comparison pass. Genuine XeLaTeX compilation
+passes at 288 Letter-size pages, with representative pages visually
+inspected. DOCX pagination QA remains deferred because LibreOffice / `soffice`
+is not installed; the XeLaTeX result is not treated as a substitute for that
+gate.
+
 ## Full-book review closeout — 2026-09-16
 
 The remaining review-plan items are complete in one coherent source and

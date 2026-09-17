@@ -1,8 +1,12 @@
-# PART IV — PATTERNS AND ANTI-PATTERNS
+# PART IV — PATTERNS THAT WORK—AND THOSE THAT FAIL
 
-This Part is the working catalogue. It moves from the loop shapes that solve real problems to the architecture shapes that quietly create them, and pairs every failure with a measurable replacement.
+Patterns are shortcuts for thinking, but they are only helpful when their
+boundaries are visible. This Part starts with the loop shapes teams reach for,
+then follows routing, planning, reflection, human review, and durable work. It
+ends with a catalogue of patterns and failure shapes so a design review can ask
+not only “what could work?” but also “how would this fail in production?”
 
-# 10 — ReAct: Bounded Reason–Act–Observe Loops
+# 10 — ReAct Without the Runaway Loop
 
 > **Evidence note.** ReAct was introduced as a prompting paradigm that interleaves reasoning and action; its reported benchmark results motivate the loop, not an assertion that unrestricted production autonomy is safe. [R01]
 
@@ -14,11 +18,14 @@ This Part is the working catalogue. It moves from the loop shapes that solve rea
 | --- |
 | **DESIGN DECISION**  Use ReAct only for information-dependent next steps and impose external turn, tool, time, cost, and no-progress limits. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Implement ReAct with external budgets, governed tools, no-progress detection, and deterministic acceptance.
+ReAct is valuable when the next question depends on the last observation. It
+is dangerous when the loop is allowed to decide its own limits or call tools
+without a clear stopping rule. This chapter keeps the useful feedback loop and
+puts turns, tools, time, cost, progress, and acceptance under external control.
 
-## Solution blueprint
+## A bounded feedback loop
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -47,7 +54,7 @@ Plan capacity in turns per successful outcome, not only requests per second. Tra
 | --- |
 | **PERFORMANCE AND COST**  A ReAct loop's cost is set by its trajectory, not its prompt. Each observation re-enters the context, so an n-step loop is roughly quadratic in tokens. Cap the step count, summarize observations before they re-enter, and measure cost per *completed task* rather than per call — a cheap call that loops eight times is not cheap. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 |  |
 | --- |
@@ -59,7 +66,7 @@ Evidence anchors: REACT; NIST-GAI. Full URLs, authority, version, and scope appe
 | --- |
 | **COMMON PITFALL**  Unbounded retries disguised as reasoning. When a tool fails and the model is free to try again, the loop can burn its whole budget rediscovering the same error. Return failures as typed data the model can read, cap attempts per tool, and make the cap a run-level budget rather than a per-call one. |
 
-## Pattern reference — ReAct
+## Putting it into practice: ReAct
 
 |  |
 | --- |
@@ -104,7 +111,7 @@ A bounded controller alternates model decision and governed tool invocation. The
 * remaining budgets
 * stop reason
 
-## Implementation reference
+## A practical starting point
 
 
 [[EXAMPLE:bounded-react-loop]]
@@ -113,13 +120,13 @@ A bounded controller alternates model decision and governed tool invocation. The
 
 [[EXAMPLE:react-engine#core]]
 
-## Debugging playbook
+## When the system misbehaves
 
 1. List every turn with normalized action, observation, token, time, and cost deltas.
 2. Identify the first repeated action-observation signature.
 3. Check whether the stop decision came from acceptance criteria or model wording.
 
-## Production checklist
+## Before you ship
 
 **✓** The information need truly requires iterative observation.
 
@@ -131,12 +138,12 @@ A bounded controller alternates model decision and governed tool invocation. The
 
 **✓** Unknown effects or budget exhaustion terminate safely.
 
-## Exercises
+## Try it yourself
 
 1. Add information-gain and repeat-signature stopping to the reference ReAct loop.
 2. Compare a one-shot retrieval design with ReAct for the same mortgage-evidence question.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -146,11 +153,11 @@ A bounded controller alternates model decision and governed tool invocation. The
 | What should an observation contain? | A typed, sanitized result or artifact reference with provenance, version, classification, and explicit error semantics. |
 | When should ReAct not be used? | For a known workflow, a single retrieval, a protected transaction, or a task whose acceptance can be computed directly. |
 
-## Transition to Chapter 11
+## Why Chapter 11 comes next
 
 A bounded reason–act loop handles local uncertainty; Chapter 11 adds routing and handoff when known paths or specialists should own the work.
 
-# 11 — Routing, Triage, and Handoffs
+# 11 — Route the Work—and Transfer Ownership
 
 |  |
 | --- |
@@ -160,11 +167,15 @@ A bounded reason–act loop handles local uncertainty; Chapter 11 adds routing a
 | --- |
 | **DESIGN DECISION**  Use deterministic route eligibility and fallback; record handoff as an explicit ownership transition. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Distinguish route selection from ownership transfer and design confidence, fallback, and authority semantics.
+Routing sounds like a classification problem until a real request is late,
+ambiguous, or already halfway through a workflow. This chapter separates the
+choice of a specialist from the transfer of responsibility, then makes
+fallbacks, deadlines, authority, and the final response explicit. That is what
+prevents a handoff from becoming a message that nobody owns.
 
-## Solution blueprint
+## Routing with an owner attached
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -190,7 +201,7 @@ Confidence is calibrated on a versioned domain dataset. Below a threshold, the r
 * **Privilege through selection:** showing a model an admin route and treating its selection as authorization.
 * **No fallback:** forcing a best guess even when the request is out of distribution.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 |  |
 | --- |
@@ -198,7 +209,7 @@ Confidence is calibrated on a versioned domain dataset. Below a threshold, the r
 
 Evidence anchors: OAI-TOOLS; A2A-101. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Pattern reference — Routing
+## Putting it into practice: Routing
 
 |  |
 | --- |
@@ -242,7 +253,7 @@ A classifier proposes a route from a precomputed eligible catalog. A determinist
 * fallback
 * route outcome
 
-## Pattern reference — Handoffs
+## Putting it into practice: Handoffs
 
 |  |
 | --- |
@@ -286,7 +297,7 @@ The current owner creates a typed transfer containing state references, unresolv
 * acknowledgment
 * deadline and cancellation
 
-## Implementation reference
+## A practical starting point
 
 
 [[EXAMPLE:routing-handoff]]
@@ -321,13 +332,13 @@ class DeterministicRouter:
         return route
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Recompute the eligible route set from recorded purpose, authority, health, and risk.
 2. Inspect the confidence threshold and fallback actually used.
 3. Verify ownership and cancellation after a handoff.
 
-## Production checklist
+## Before you ship
 
 **✓** The eligible route set is computed before model selection.
 
@@ -339,12 +350,12 @@ class DeterministicRouter:
 
 **✓** Route decisions and outcomes are measured by slice.
 
-## Exercises
+## Try it yourself
 
 1. Design a route contract with confidence, reason codes, fallback, and version.
 2. Model a handoff that transfers a task without broadening authority.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -354,11 +365,11 @@ class DeterministicRouter:
 | How do you make routing debuggable? | Record candidates, eligibility filters, proposed route, confidence, validator decision, fallback, version, latency, and outcome. |
 | When is a static router better? | When classes are stable, risk is high, compliance requires predictability, or a simple rule already separates the work. |
 
-## Transition to Chapter 12
+## Why Chapter 12 comes next
 
 Routing selects among known capabilities; Chapter 12 addresses tasks whose decomposition must itself be proposed and validated.
 
-# 12 — Planning and Plan–Execute
+# 12 — Plans Are Proposals Until the System Compiles Them
 
 > **Evidence note.** Published engineering guidance distinguishes predefined workflows from model-directed agents and recommends adding complexity only when simpler compositions are insufficient. [R27]
 
@@ -370,11 +381,16 @@ Routing selects among known capabilities; Chapter 12 addresses tasks whose decom
 | --- |
 | **DESIGN DECISION**  Use a typed Plan IR and deterministic compiler; freeze committed past work across plan revisions. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Compile model-proposed plans into authorized, resource-feasible, replayable execution graphs.
+Planning earns its complexity only when the work cannot be known in advance.
+Even then, a model-proposed plan is not permission to run arbitrary steps. This
+chapter treats the plan as an intermediate representation: validate it,
+authorize it, compile it into executable nodes, and freeze the work that has
+already committed. The distinction matters whenever the plan changes halfway
+through a long-running case.
 
-## Solution blueprint
+## From candidate plan to executable work
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -450,9 +466,9 @@ JSON · implementation excerpt
 
 A deterministic compiler rejects cycles unless explicitly permitted, missing schemas, unbounded loops, unauthorized capabilities, budget overflow, inconsistent data classification, and unhandled terminal paths. A dynamic node may choose among an allowlisted capability set; it cannot call arbitrary network endpoints.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 | **Component** | **Responsibility** |
 | --- | --- |
@@ -464,7 +480,7 @@ A deterministic compiler rejects cycles unless explicitly permitted, missing sch
 | Replan Controller | Decide when replanning is allowed and define the unchanged/reusable subgraph |
 | Acceptance Engine | Run deterministic checks and policy-approved model graders before satisfying nodes/goals |
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -476,7 +492,7 @@ A deterministic compiler rejects cycles unless explicitly permitted, missing sch
 | GET /v1/runs/{run\_id}/ready-nodes | Operator/debug view of satisfied dependencies, blockers, reservations, and dispatch state |
 | POST /v1/nodes/{node\_execution\_id}:accept | Apply acceptance checks to outputs and transition only if expected node version still matches |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -521,7 +537,7 @@ A deterministic compiler rejects cycles unless explicitly permitted, missing sch
 | --- |
 | **ARCHITECTURE GUIDANCE**  Separate the plan from its execution. A plan is data: persist it, version it, and let it be inspected and approved before any step commits an effect. Once execution is a separate pass over a stored plan, replay, partial resume, and human amendment all become ordinary operations instead of special cases. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 |  |
 | --- |
@@ -529,7 +545,7 @@ A deterministic compiler rejects cycles unless explicitly permitted, missing sch
 
 Evidence anchors: TEMPORAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Pattern reference — Planning
+## Putting it into practice: Planning
 
 |  |
 | --- |
@@ -573,20 +589,20 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 * critical path
 * replan diff and reason
 
-## Implementation reference
+## A practical starting point
 
 
 ### Plan IR compiler
 
 [[EXAMPLE:plan-compilation#core]]
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Re-run the plan compiler against the exact release and policy versions.
 2. Find the first node whose capability, budget, or schema became invalid.
 3. Compare plan revisions and ensure committed facts did not change.
 
-## Production checklist
+## Before you ship
 
 **✓** Model planning is used only for genuine semantic uncertainty.
 
@@ -598,12 +614,12 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 
 **✓** Revisions, loops, fan-out, depth, time, cost, and no-progress behavior are bounded.
 
-## Exercises
+## Try it yourself
 
 1. Extend the Plan IR with deadlines and fallback paths.
 2. Construct a plan that passes schema validation but must fail authority validation.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -613,11 +629,11 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 | How should replanning handle completed work? | Treat committed effects and accepted artifacts as immutable facts; revise only the affected future horizon and append a new version with rationale and diff. |
 | How do you prevent plausible but endless planning? | External revision, loop, step, cost, time, delegation, and no-progress limits plus deterministic acceptance and terminal transitions. |
 
-## Transition to Chapter 13
+## Why Chapter 13 comes next
 
 Planning creates an executable structure; Chapter 13 adds independent evaluation and bounded revision without self-certification.
 
-# 13 — Reflection and Evaluator–Optimizer
+# 13 — Use Critique to Improve, Not to Self-Approve
 
 |  |
 | --- |
@@ -627,11 +643,15 @@ Planning creates an executable structure; Chapter 13 adds independent evaluation
 | --- |
 | **DESIGN DECISION**  Use reflection for targeted revision and independent, calibrated acceptance for protected outcomes. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Use critique and evaluation to improve outputs without self-certification, unbounded loops, or hidden cost.
+Critique can make a draft better, but a generator should not be allowed to
+grade and approve its own work. This chapter gives reflection a bounded job—
+find a targeted defect and propose a revision—while an independently defined
+evaluator and acceptance gate decide whether the result is good enough. That
+separation controls both false confidence and runaway evaluation cost.
 
-## Solution blueprint
+## A separate path for judgment
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -650,7 +670,7 @@ Qualitative criteria—clarity, completeness, grounded synthesis, or policy-expl
 
 Each revision targets structured feedback and carries a diff. The loop stops on pass, maximum revisions, maximum spend, deadline, or no-progress. If the evaluator and generator repeatedly disagree, the workflow escalates with both artifacts rather than silently choosing the more persuasive prose.
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 |  |
 | --- |
@@ -658,7 +678,7 @@ Each revision targets structured feedback and carries a diff. The loop stops on 
 
 Evidence anchors: MLFLOW-EVAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Pattern reference — Reflection
+## Putting it into practice: Reflection
 
 |  |
 | --- |
@@ -702,7 +722,7 @@ A reflector reviews a candidate against explicit evidence and rubric, emits stru
 * quality delta
 * stop reason
 
-## Pattern reference — Evaluator–Optimizer
+## Putting it into practice: Evaluator–Optimizer
 
 |  |
 | --- |
@@ -746,7 +766,7 @@ A generator creates candidates; deterministic scorers and calibrated evaluators 
 * variance
 * acceptance decision
 
-## Implementation reference
+## A practical starting point
 
 
 ### Bounded evaluator–optimizer
@@ -785,13 +805,13 @@ class EvaluatorOptimizer:
         raise RuntimeError("candidate did not pass bounded evaluation")
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Compare generator and evaluator evidence to detect shared blind spots.
 2. Inspect score variance across repeated judge runs and slices.
 3. Detect revisions that change wording but not the failing invariant.
 
-## Production checklist
+## Before you ship
 
 **✓** Generator and evaluator roles, prompts, models, and evidence are distinguishable.
 
@@ -803,12 +823,12 @@ class EvaluatorOptimizer:
 
 **✓** Failed candidates and feedback enter a regression corpus.
 
-## Exercises
+## Try it yourself
 
 1. Implement a bounded evaluator-optimizer with one deterministic and one qualitative scorer.
 2. Create a case where reflection worsens a correct answer and define the stop rule.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -818,11 +838,11 @@ class EvaluatorOptimizer:
 | What should always be checked deterministically? | Schema, policy, authority, evidence presence, effect state, resource versions, arithmetic, and other computable invariants. |
 | When should you not add reflection? | When the first result already meets an executable specification, latency is critical, or critique adds no measured improvement. |
 
-## Transition to Chapter 14
+## Why Chapter 14 comes next
 
 Automated evaluation can improve candidates; Chapter 14 identifies decisions that require explicit human authority, correction, or recourse.
 
-# 14 — Human-in-the-Loop
+# 14 — Put People Where Judgment Matters
 
 > **Evidence note.** Human-review interfaces should be tested against WCAG 2.2 accessibility criteria; accessibility conformance does not by itself eliminate automation bias or establish decision fairness. [R41]
 
@@ -834,11 +854,15 @@ Automated evaluation can improve candidates; Chapter 14 identifies decisions tha
 | --- |
 | **DESIGN DECISION**  Persist proposal-bound approvals as durable workflow events and reauthorize immediately before commit. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Bind approval and intervention to immutable proposals and durable state transitions.
+Human review is most useful when it resolves a decision the system cannot or
+should not make alone. It becomes theater when the reviewer sees a summary
+that can change after approval, or when a click is detached from the effect it
+authorizes. This chapter binds intervention to an immutable proposal,
+evidence, identity, expiry, and a durable state transition.
 
-## Solution blueprint
+## Approval as a state transition
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -880,9 +904,9 @@ HumanActionAuthorizationRequest contains: proposal/artifact hash, exact action a
 * Immutable operator identity, reason, timestamp, before/after state, and linked ticket on every override.
 * SLA timers and escalation paths; a timed-out approval follows explicit policy, never implicit approval.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 | **Component** | **Responsibility** |
 | --- | --- |
@@ -894,7 +918,7 @@ HumanActionAuthorizationRequest contains: proposal/artifact hash, exact action a
 | Operator Control Service | Perform authorized pause, cancel, retry, plan patch, budget, and compensation commands |
 | Override Journal | Append operator actions and linked incident/change records to immutable evidence |
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -907,7 +931,7 @@ HumanActionAuthorizationRequest contains: proposal/artifact hash, exact action a
 | GET /v1/approval-queues/{queue\_id}/items | Cursor query by skill/role, priority, age, risk, tenant, value, and region; no unauthorized evidence leakage |
 | POST /v1/runs/{run\_id}:operatorAction | Pause, cancel, safe-retry, patch plan, extend budget, trigger reconciliation/compensation, or fork replay with reason and expected state |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -930,7 +954,7 @@ A decision is valid only when the presented proposal hash equals the current pro
 5. The workflow receives the event, revalidates policy/current resource version, and commits only the proposal hash that was approved.
 6. If the resource, amount, recipient, scope, or policy changed materially, the workflow supersedes the approval and generates a fresh preview.
 
-### Scalability and operations
+### What changes at scale
 
 * Partition approvals by tenant + business queue/region while keeping a direct index by approval/run ID. Strongly serialize decisions for one approval; scale independently across approvals.
 * Use workflow timers or a durable timer service for SLA/escalation—never scan an approvals table each minute at enterprise scale.
@@ -945,7 +969,7 @@ A decision is valid only when the presented proposal hash equals the current pro
 | --- |
 | **PRODUCTION CONSIDERATION**  Design the wait, not just the prompt. A run paused for approval may sit for days across deploys, token expiry, and staff changes. Persist the full decision context with the pause, expire it explicitly, and define what happens when it lapses — an approval request with no expiry becomes an approval nobody can safely grant. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -953,7 +977,7 @@ A decision is valid only when the presented proposal hash equals the current pro
 
 Evidence anchors: OAI-HITL; OWASP-AGENT; WCAG22. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Pattern reference — Human-in-the-Loop
+## Putting it into practice: Human-in-the-Loop
 
 |  |
 | --- |
@@ -997,7 +1021,7 @@ The workflow persists a proposal-bound HumanActionAuthorizationRequest or Interv
 * decision and reason
 * commit receipt
 
-## Implementation reference
+## A practical starting point
 
 
 [[EXAMPLE:approval-gate]]
@@ -1047,13 +1071,13 @@ def proposal_hash(action: str, destination: str,
 
 [[EXAMPLE:approval-verification#core]]
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Recompute the proposal hash and expected resource version.
 2. Verify approver authority, expiry, and separation-of-duty policy.
 3. Trace the approval event through commit and effect receipt.
 
-## Production checklist
+## Before you ship
 
 **✓** Every capability has an immutable manifest covering interface, security, risk, effects, runtime, ownership, and lifecycle.
 
@@ -1065,12 +1089,12 @@ def proposal_hash(action: str, destination: str,
 
 **✓** Reconciliation, compensation, pause, cancel, and intervention are governed commands.
 
-## Exercises
+## Try it yourself
 
 1. Design a human action authorization object for a protected mortgage-case operation.
 2. Define how edits, policy changes, and expired grants invalidate approval.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -1080,11 +1104,11 @@ def proposal_hash(action: str, destination: str,
 | Why are both idempotency and optimistic concurrency needed? | Idempotency prevents duplicate logical intent; expected versions prevent an otherwise valid action from overwriting newer state. |
 | What should happen when a mutating tool times out? | Mark the effect unknown, block dependent work and blind retry, reconcile using downstream identifiers or observed state, then conclude committed, absent, partial, or intervention required. |
 
-## Transition to Chapter 15
+## Why Chapter 15 comes next
 
 Human control introduces waits and resumptions; Chapter 15 makes those waits durable and gives long-running work explicit state and recovery.
 
-# 15 — Long-Running and Durable Agents
+# 15 — Keep Work Alive Across Time and Failure
 
 > **Evidence note.** Durable-execution systems preserve workflow progress across failures and long waits; concrete integrations and replay semantics vary by backend. [R02][R36][R38]
 
@@ -1096,11 +1120,15 @@ Human control introduces waits and resumptions; Chapter 15 makes those waits dur
 | --- |
 | **DESIGN DECISION**  Represent long-running work as replay-safe workflow history plus bounded activities, durable waits, and reconciliation. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Preserve weeks-long work across waits, failures, deployments, retries, cancellations, and uncertain effects.
+An agent that must wait for a document, a person, or a downstream system is no
+longer a request/response handler. Its state has to outlive processes,
+deployments, retries, and partial effects. This chapter shows how to model that
+work as durable execution, and why recovery is part of the design rather than
+an operations add-on.
 
-## Solution blueprint
+## Durable work has a shape
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -1167,13 +1195,13 @@ Checkpoint after every irreversible or externally visible effect, before long wa
 
 Use a CloudEvents-compatible envelope with id, source, type, subject, time, dataschema, tenant\_id, correlation\_id, causation\_id, traceparent, and a payload reference. Keep sensitive or large content in an access-controlled object store; events carry references and hashes. Use transactional outbox on producers and inbox/deduplication on consumers. A dead-letter queue is quarantine and diagnosis—not a substitute for domain compensation.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 The Run API persists intent and returns quickly; the durable workflow owns lifecycle; activity workers perform model/tool I/O; Event Ingress authenticates external facts; the Correlator maps those facts to waiting runs; Timer/Signal services wake workflows; and a Version Router keeps compatible workflow builds available for in-flight histories.
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and contract** |
 | --- | --- |
@@ -1187,7 +1215,7 @@ The Run API persists intent and returns quickly; the durable workflow owns lifec
 | POST /v1/runs/{run\_id}:migrate | Apply an approved deterministic state/code migration with dry-run report and rollback boundary |
 | GET /v1/runs/{run\_id}/history?cursor=... | Paginated, role-redacted event history; content is referenced rather than embedded |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Key fields and invariants** |
 | --- | --- |
@@ -1222,7 +1250,7 @@ The Run API persists intent and returns quickly; the durable workflow owns lifec
 | --- |
 | **PRODUCTION CONSIDERATION**  Assume at-least-once delivery and make effects idempotent. Exactly-once is not available end to end; a dispatch that times out leaves the outcome genuinely unknown. Give every logical effect a stable key, record its receipt, and reconcile rather than retrying blind. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -1234,7 +1262,7 @@ Evidence anchors: TEMPORAL; CLOUDEVENTS. Full URLs, authority, version, and scop
 | --- |
 | **COMMON PITFALL**  Storing conversation history and calling it durable state. Transcripts record what was said, not what was decided or committed. Persist decisions, approvals, and effect receipts as first-class records; a run must be resumable from them even if every message is discarded. |
 
-## Pattern reference — Long-Running Agents
+## Putting it into practice: Long-Running Agents
 
 |  |
 | --- |
@@ -1279,20 +1307,20 @@ A durable workflow records deterministic decisions and schedules bounded activit
 * effect reconciliation
 * terminal reason
 
-## Implementation reference
+## A practical starting point
 
 
 ### Replay-safe workflow reducer
 
 [[EXAMPLE:durable-state#core]]
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Replay workflow history with the pinned build and locate nondeterminism.
 2. Inspect pending timers, signals, activities, and child tasks.
 3. Resolve unknown effects before replaying dependent commands.
 
-## Production checklist
+## Before you ship
 
 **✓** Workflow decisions are replay-safe; I/O, clocks, randomness, models, and tools are recorded activities.
 
@@ -1304,12 +1332,12 @@ A durable workflow records deterministic decisions and schedules bounded activit
 
 **✓** Workflow tasks, activities, timers, waits, history writes, and reconciliation are capacity-planned separately.
 
-## Exercises
+## Try it yourself
 
 1. Model a ten-day wait with role revocation and policy change.
 2. Design cancellation semantics for a run with a possibly committed external write.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -1319,11 +1347,20 @@ A durable workflow records deterministic decisions and schedules bounded activit
 | What happens if cancellation arrives while a write may have committed? | Persist cancellation intent, stop new work, mark the effect unknown if needed, reconcile the source system, then compensate or require intervention before closing. |
 | How do you deploy new workflow code safely? | Preserve compatible workers, use explicit version markers, test replay, migrate deterministically when supported, or start a new linked generation when semantics cannot be preserved. |
 
-## Transition to Chapter 16
+## Why Chapter 16 comes next
 
 The core patterns are now defined; Chapter 16 compares them across uncertainty, authority, latency, evidence, and operating cost.
 
-# 16 — Enterprise Pattern Catalog
+# 16 — Patterns for Real Enterprise Work
+
+## Why this chapter matters
+
+Pattern names are useful only when they help a team make a safer decision. In
+real design reviews, the same words can describe very different obligations:
+one workflow may need adaptive evidence gathering, while another needs a
+durable process with explicit ownership and compensation. This chapter gives
+you a practical way to choose among the patterns, what each one buys you, and
+where its cost or failure boundary appears.
 
 ## How to use the cards
 
@@ -1571,11 +1608,19 @@ Choose by hidden obligation, uncertainty, and risk—not fashionable terminology
 
 **Trade-offs.** Abstraction may lag novel features; allow negotiated extensions.
 
-## Transition to Chapter 17
+## Why Chapter 17 comes next
 
 Pattern selection is easier when failure shapes are visible; Chapter 17 recasts recurring anti-patterns as measurable replacement decisions.
 
-# 17 — Enterprise Anti-Pattern Catalog
+# 17 — The Shapes That Fail in Production
+
+## Why this chapter matters
+
+Production failures rarely arrive wearing the name of an anti-pattern. They
+look like duplicate writes, missing approvals, unexplained cost, or a run that
+cannot be reconstructed. This chapter turns those symptoms into recognizable
+system shapes, then connects each shape to the boundary that should replace it
+so the diagnosis leads to a design correction rather than another patch.
 
 ## Field-guide method
 
@@ -1585,7 +1630,7 @@ Anti-patterns are recurring system shapes, not isolated defects. Almost every ca
 
 Cards are grouped by the boundary they violate rather than by the technology involved, so that two candidates competing for the same fix sit next to each other. Every card carries the same eight fields, which makes them comparable without re-reading prose.
 
-### Catalog index
+### Find the failure by its first symptom
 
 | **ID** | **Anti-pattern** | **First symptom you will see** | **Boundary it violates** |
 | --- | --- | --- | --- |
@@ -2065,6 +2110,6 @@ Both cards describe the same instinct — change should be fast — applied wher
 | --- |
 | **COMMON PITFALL**  The most expensive anti-patterns in this catalog are not the exotic ones. AP-04, AP-05, and AP-06 produce duplicate payments, duplicate records, and unauthorized effects, and all three look like ordinary engineering diligence while they are being built. Audit those three first. |
 
-## Transition to Chapter 18
+## Why Chapter 18 comes next
 
 After removing unsafe local architectures, Chapter 18 considers when multiple agents add justified specialization rather than accidental complexity.

@@ -1,16 +1,24 @@
-# PART VIII — GOVERNANCE & PRODUCTION OPERATIONS
+# PART VIII — RUNNING THE SYSTEM IN THE REAL WORLD
 
-This Part is about running the system for years rather than shipping it once. It covers the operating model that assigns accountability, the release machinery that makes change reversible, and the economics that decide whether the system survives its own success.
+Shipping the first version is the easy milestone. The hard work is operating
+the system when usage grows, people change roles, vendors drift, and a run is
+still active during a deployment. This Part connects governance, release and
+recovery, capacity, reliability, and cost so the platform remains usable after
+the demo has become a dependency.
 
-# 26 — Governance, Risk, and Operating Model
+# 26 — Make Governance an Operating System
 
 > **Evidence note.** NIST AI RMF and its Generative AI Profile are voluntary risk guidance; ISO/IEC 42001 specifies an AI management system; the EU AI Act source provides official implementation context. Applicability and legal obligations require qualified jurisdiction-specific review. [R12][R13][R14][R40]
 
-## What this chapter delivers
+## Why this chapter matters
 
-Make governance decisions explicit, proportional, owned, and reversible, so that risk control accelerates delivery instead of queueing it behind a committee.
+Governance works when it changes what teams do, not when it produces another
+committee packet. This chapter turns risk appetite into named decisions,
+proportional controls, evidence, exceptions, and review cadence. It becomes
+especially important when several teams share a platform and no single team
+can see the full consequence of a release.
 
-## Solution blueprint
+## Decisions, owners, and evidence
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
@@ -65,7 +73,7 @@ Principles define non-negotiable outcomes; standards define reusable contracts; 
 
 Operate per run (admission/policy/effects/acceptance), daily/weekly (SLO, quality, safety, cost, incidents, evaluator health), per release (classification, regression, security/privacy, compatibility, canary/rollback), quarterly (portfolio value/risk and platform roadmap), and annually/material change (policy, law, threat, recovery, independent assurance).
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -73,7 +81,7 @@ Operate per run (admission/policy/effects/acceptance), daily/weekly (SLO, qualit
 
 Evidence anchors: R12; R13; R14; R40. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Debugging playbook
+## When the system misbehaves
 
 Governance fails as queues and exceptions rather than as stack traces. Diagnose it the same way.
 
@@ -82,7 +90,7 @@ Governance fails as queues and exceptions rather than as stack traces. Diagnose 
 3. When risk tier and control effort disagree, re-score impact, reversibility, and human detectability before changing the tier.
 4. When review takes longer than delivery, check whether evidence is produced by the pipeline or assembled by hand. Hand-assembled evidence is the usual cause.
 
-## Production checklist
+## Before you ship
 
 **✓** Every decision class in the accountability table has one named owner and one required evidence artifact.
 
@@ -94,12 +102,12 @@ Governance fails as queues and exceptions rather than as stack traces. Diagnose 
 
 **✓** Each cadence — per run, daily or weekly, per release, quarterly, annually — has a named owner and a defined input.
 
-## Exercises
+## Try it yourself
 
 1. Classify three current use cases into risk tiers and list the minimum governance each one triggers. Where two people disagree, the tier definition is the defect.
 2. Take one standing exception and write either its expiry date or the standard that would retire it permanently.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -109,11 +117,11 @@ Governance fails as queues and exceptions rather than as stack traces. Diagnose 
 | What separates principles, standards, policy-as-code, and configuration? | Principles state non-negotiable outcomes; standards define reusable contracts; policy-as-code decides what is eligible at runtime; configuration selects within that envelope. Only the first two are argued; the last two are executed. |
 | How do you know governance is accelerating delivery? | Time from evidence-complete to approved is falling, exceptions are trending down as standards absorb them, and the same evidence serves engineering review, risk review, and audit without rework. |
 
-## Transition to Chapter 27
+## Why Chapter 27 comes next
 
 Governance defines who may release change; Chapter 27 makes releases immutable, promotable, observable, reversible, and recoverable.
 
-# 27 — Deployment, Versioning, CI/CD, and Recovery
+# 27 — Release Without Breaking Work in Flight
 
 > **Evidence note.** The incident lifecycle aligns with NIST SP 800-61 Rev. 3’s integration of incident response into cybersecurity risk management; agent-specific containment and recovery remain workload-defined. [R42]
 
@@ -125,11 +133,15 @@ Governance defines who may release change; Chapter 27 makes releases immutable, 
 | --- |
 | **DESIGN DECISION**  Release immutable bundles with compatibility evidence; roll back new assignment while active runs remain pinned to compatible code. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Ship immutable release bundles through compatibility checks, canaries, workflow-aware rollback, and regional recovery.
+An agentic release changes more than application code: it can change prompts,
+tools, policies, model routes, schemas, and the behavior of work already in
+flight. This chapter shows how to package those changes, prove compatibility,
+canary new work, and recover without rewriting history or abandoning active
+runs.
 
-## Solution blueprint
+## Immutable releases and compatible workers
 
 [[DIAGRAM:release-recovery|Figure 27-1 — Immutable release promotion and recovery without rewriting active history]]
 
@@ -165,7 +177,7 @@ This is why “roll back the model” is usually incomplete. If the prompt, tool
 
 ## Deployment architecture
 
-### Recommended production topology
+### A production topology to start with
 
 The topology has two different jobs. The control plane decides what may run and which immutable bundle a run receives; regional execution planes do the work within that decision. Keeping those jobs separate lets a release be globally described while state, queues, credentials, and model endpoints remain inside the required residency and failure boundary.
 
@@ -257,9 +269,9 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 * Document explanations at the right level: evidence and rules for business decisions; trajectory summaries for operations; model internals are neither necessary nor sufficient.
 * Never auto-train or rewrite production policies/prompts directly from live conversations. Curate, de-identify, review, evaluate, and promote changes through the same lifecycle.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 | **Component** | **Responsibility** |
 | --- | --- |
@@ -272,7 +284,7 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 | Governance Inventory | Track use case, owners, data, autonomy, controls, evidence, exceptions, retention, and regulatory mapping |
 | Emergency Control | Kill switch, deny policy, credential revocation, and safe rollback independent of normal release cadence |
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -286,7 +298,7 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 | POST /v1/governance/exceptions | Create time-bounded, scoped waiver with compensating controls, approvers, owner, evidence, and renewal prohibition/default |
 | GET /v1/governance/inventory | Query deployed agents/use cases by owner, risk, autonomy, data class, region, vendor, controls, incidents, and review date |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -323,7 +335,7 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 | --- |
 | **PRODUCTION CONSIDERATION**  Version the prompt, the model pin, the tool manifests, and the policy as one release artifact. Rolling back an agent means restoring all four together; a deployment that can change the model without changing the recorded version has no rollback, only a guess. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -331,7 +343,7 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 
 Evidence anchors: SLSA; CISA-SBOM. Full URLs, authority, version, and scope appear in Appendix K.
 
-## Implementation reference
+## A practical starting point
 
 
 ### Release compatibility check
@@ -407,13 +419,13 @@ def verify_release_artifact(
         raise ValueError("SBOM and provenance are required")
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Resolve the exact release manifest and worker compatibility for the run.
 2. Replay history before migrating workflow code.
 3. Verify rollback stopped new assignment without changing active history.
 
-## Production checklist
+## Before you ship
 
 **✓** Client and workflow contracts remain stable across SDKs, providers, engines, and connectors.
 
@@ -425,12 +437,12 @@ def verify_release_artifact(
 
 **✓** Compatibility, schema migration, fencing, regional recovery, and effect reconciliation are designed before deployment.
 
-## Exercises
+## Try it yourself
 
 1. Design CI/CD gates for an agent, Skill Pack, policy, and workflow release.
 2. Write a regional recovery sequence that fences the old writer and reconciles effects.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -440,11 +452,11 @@ def verify_release_artifact(
 | Why use workload queues and regional cells? | Isolate risk and latency classes, control noisy neighbors, scale additively, enforce residency, bound blast radius, and keep critical execution dependencies local. |
 | Describe safe regional failover during an external write. | Stop admission, fence the old writer, restore compatible durable state, reconcile executing and unknown effects and signals, atomically advance placement, then resume by risk tier. |
 
-## Transition to Chapter 28
+## Why Chapter 28 comes next
 
 The release lifecycle is controlled; Chapter 28 sizes the system and optimizes cost, latency, capacity, and reliability around verified outcomes.
 
-# 28 — Cost, Latency, Capacity, and Reliability Optimization
+# 28 — Make Performance a Business Decision
 
 > **Evidence note.** Little’s Law relates average items in a stable system to arrival rate and average time in system. The capacity equations in this chapter are planning approximations and must be calibrated by load tests. [R43]
 
@@ -456,11 +468,15 @@ The release lifecycle is controlled; Chapter 28 sizes the system and optimizes c
 | --- |
 | **DESIGN DECISION**  Optimize cost per verified success through shorter trajectories, selective context, deliberate routing, bounded concurrency, and safe degradation. |
 
-## What this chapter delivers
+## Why this chapter matters
 
-Optimize verified outcome quality, latency, cost, and capacity without weakening safety or evidence.
+The cheapest token is not a cheap outcome if it creates a rework loop, a human
+queue, or an unverified effect. This chapter connects latency, cost, capacity,
+fairness, reliability, and verified business success, then uses that model to
+choose routing, context, concurrency, and degradation strategies. It is where
+the architecture meets the operating budget.
 
-## Solution blueprint
+## Optimize the whole journey
 
 [[DIAGRAM:reliability-economics|Figure 28-1 — Admission, bounded execution, and outcome-based operating feedback]]
 
@@ -559,13 +575,13 @@ This layered view prevents a common operational mistake: treating worker count a
 9. **Use spend-aware planning:** each plan estimates cost and reserves budget; report marginal value of optional branches.
 10. **Measure cost per accepted outcome:** token price alone ignores retries, human review, failed trajectories, and tool charges.
 
-### Detailed design — APIs, data model, and scalability
+### How to build it
 
-### Component boundaries
+### Who owns what
 
 The Admission Controller predicts resource/risk and accepts, defers, or rejects work; the Hierarchical Quota Service owns organization-to-run limits; the Queue/Scheduler owns priority and fairness; the Worker Lease Service owns assignment/heartbeat; Provider Limiters translate external quotas into dispatch permits; the Capacity Controller scales pools; and the Usage/Cost Ledger attributes reserved and actual resources.
 
-### High-level APIs
+### The interfaces
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -579,7 +595,7 @@ The Admission Controller predicts resource/risk and accepts, defers, or rejects 
 | GET /v1/capacity | Return region/pool/provider availability, queue age, reserved capacity, health, and planning hints |
 | GET /v1/runs/{run\_id}/cost | Return reserved/actual/forecast cost by node, agent, model, tool, retry, tenant, and outcome |
 
-### Core data model
+### The records that matter
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -630,7 +646,7 @@ These are policy shapes, not universal numbers. Determine actual limits from tas
 | --- |
 | **PERFORMANCE AND COST**  Route on policy first, then on price. Model choice is a governance decision before it is an economic one: data residency, retention, and approved use constrain the candidate set, and only then does cost per verified outcome pick from what remains. |
 
-## Grounding, corrections, and evidence boundary
+## What the evidence supports
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
@@ -642,7 +658,7 @@ Evidence anchors: QUEUEING; MLFLOW-TRACE. Full URLs, authority, version, and sco
 | --- |
 | **BEST PRACTICE**  Measure cost per verified successful outcome, not per token or per request. Tokens are an input; the business pays for completed work. A change that halves token spend while pushing five percent more runs into human review has almost certainly cost money. |
 
-## Implementation reference
+## A practical starting point
 
 
 ### Admission and capacity permit
@@ -678,13 +694,13 @@ def admit(requested: CapacityPermit, available: CapacityPermit) -> CapacityPermi
     return requested
 ```
 
-## Debugging playbook
+## When the system misbehaves
 
 1. Decompose end-to-end p95 into queue, workflow, model, retrieval, tool, and human components.
 2. Measure turns, calls, tokens, retries, and escalations per verified success.
 3. Inspect tenant fairness, queue age, and safe-degradation decisions under load.
 
-## Production checklist
+## Before you ship
 
 **✓** The objective is cost and latency per verified success, not token price alone.
 
@@ -696,12 +712,12 @@ def admit(requested: CapacityPermit, available: CapacityPermit) -> CapacityPermi
 
 **✓** Every optimization is evaluated, canaried, reversible, and constrained by safety gates.
 
-## Exercises
+## Try it yourself
 
 1. Build a capacity model for 10,000 daily runs with burst and tenant quotas.
 2. Design an experiment that reduces context cost without regressing groundedness.
 
-## Technical review questions
+## Questions for design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -711,6 +727,6 @@ def admit(requested: CapacityPermit, available: CapacityPermit) -> CapacityPermi
 | How should overload degrade? | Reject or defer early, protect durable state, reduce optional context, switch to approved bounded routes, produce drafts, and preserve audit. |
 | Why can the cheapest model be more expensive? | Lower reliability may cause more turns, retries, escalations, human work, and failed outcomes, increasing total cost per success. |
 
-## Transition to the appendices
+## Why the appendices matter next
 
 The architecture narrative is complete. The appendices provide decision aids, runbooks, contracts, framework evidence, references, maintenance criteria, and production acceptance checks for implementation and future editions.
