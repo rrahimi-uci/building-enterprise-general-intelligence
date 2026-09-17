@@ -53,7 +53,7 @@ def main() -> int:
     if uncited: errors.append(f"Uncited registry entries: {uncited}")
     if manuscript.count("# Appendix K — References")!=1: errors.append("Appendix K References heading must occur exactly once")
     # v2.1.0 folded the traceability matrix into Appendix K, next to the entries it scopes.
-    if manuscript.count("## Claim traceability matrix")!=1: errors.append("Claim traceability matrix must occur exactly once inside Appendix K")
+    if manuscript.count("## Where each claim is supported")!=1: errors.append("Where each claim is supported must occur exactly once inside Appendix K")
     online=[]
     if args.online:
         for r in refs:

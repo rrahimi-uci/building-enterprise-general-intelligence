@@ -53,7 +53,7 @@ def render_reference_sections(text: str, references: list[dict]) -> str:
     # made sense next to the entries it scopes, and splitting them meant a reader
     # checking a citation had to hold two appendix letters in their head.
     ref_lines += [
-        "## Claim traceability matrix", "",
+        "## Where each claim is supported", "",
         "This matrix defines exactly what each citation is permitted to support. It prevents a source from being stretched beyond its evidence. Book-authored patterns, metrics, formulas, examples, and architecture recommendations remain design guidance unless a source explicitly covers them.", "",
         "| ID | Source class | Permitted claim scope | Verification note |", "|---|---|---|---|",
     ]

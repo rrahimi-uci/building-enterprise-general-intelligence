@@ -6,9 +6,9 @@ knowledge stays current, and how one run receives only the context it is
 allowed to see. By the end, “the agent knows” has become a set of inspectable
 contracts rather than a vague claim about a prompt.
 
-# 04 — The Architecture Around the Model
+# 04 — Design the Architecture Around the Model
 
-## Why this chapter matters
+## Why the model cannot own the architecture
 
 Principles become useful when they tell a team where a fact lives, who may
 change it, and what happens when a dependency fails. This chapter turns the
@@ -19,11 +19,13 @@ service owns the truth.
 
 ## The planes and the ownership map
 
+The planes and layers are two views of the same system. Planes tell you who owns a class of decisions—identity, policy, execution, knowledge, or operations. Layers show the path a request follows. A model gateway may sit on every request path, but it should not own business workflow simply because every call passes through it. Without a clear line, central components accumulate authority they were never designed to hold.
+
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Each platform service owns one authoritative record | global control plane to regional execution cell | tenant · queue · partition · cell | one service/cell | Run · Task · Tool · Artifact · Release APIs |
 
-## Purpose and principles
+## What the architecture is trying to protect
 
 The enterprise architecture places probabilistic reasoning inside explicit experience, runtime, workflow, knowledge, integration, security, evaluation, and operations planes. The agent is a decision component—not the workflow, authorization service, database, policy engine, or proof of completion.
 
@@ -54,7 +56,7 @@ Read the figure downward: each layer names the components the plane owns, and th
 7. Determine accepted, blocked, needs-input, failed, or unknown-effect using executable business criteria.
 8. Join traces, evaluations, human feedback, cost, latency, incidents, and outcomes for controlled improvement.
 
-## Systems of record
+## Where truth lives
 
 | **Concern** | **Owner** | **Model may** | **Model may not** |
 | --- | --- | --- | --- |
@@ -66,11 +68,11 @@ Read the figure downward: each layer names the components the plane owns, and th
 | Knowledge | Governed source/snapshot catalog | Synthesize evidence | Treat similarity as truth or freshness |
 | Learning | Evaluation, dataset, release services | Recommend a candidate | Self-certify or self-deploy |
 
-## Architecture decisions
+## The decisions that shape the system
 
 Centralize identity, policy, gateways, tool/effect contracts, telemetry schemas, evaluation infrastructure, release evidence, and incident controls. Federate domain prompts, accepted outcomes, tools, Skills, knowledge, datasets, and SLOs to accountable owners. Standardize interfaces and evidence—not every framework implementation.
 
-> **Evidence note.** CloudEvents defines the portable event envelope used here, while the transactional-outbox source supports atomic state/event publication and warns that consumers still require duplicate handling. [R03][R04]
+> **Evidence context:** CloudEvents defines the portable event envelope used here, while the transactional-outbox source supports atomic state/event publication and warns that consumers still require duplicate handling. **[R03][R04]**
 
 |  |
 | --- |
@@ -78,9 +80,9 @@ Centralize identity, policy, gateways, tool/effect contracts, telemetry schemas,
 
 |  |
 | --- |
-| **DESIGN DECISION**  Deploy global definitions and governance into regional execution cells connected through stable provider-neutral contracts. |
+| **THE DESIGN CHOICE** Deploy global definitions and governance into regional execution cells connected through stable provider-neutral contracts. |
 
-## From boxes to contracts
+## Turn the diagram into enforceable contracts
 
 A reference architecture becomes implementable when every arrow has an API or event contract and every record has one authoritative writer. Northstar separates a global definition and governance plane from regional execution cells. Cells contain run control, durable workflow, bounded agent workers, model and Tool Gateways, context services, effect ledger, artifact store, and regional telemetry/audit pipelines.
 
@@ -92,7 +94,7 @@ RunManifest, WorkflowExecution, TaskEnvelope, AgentStep, ContextManifest, Capabi
 
 Scale stateless APIs horizontally, partition state by tenant and run, shard workflow history and trace indexes, and isolate workload classes through queues and concurrency pools. Cell placement enforces region and residency while bounding blast radius.
 
-## Recommended reference architecture
+## A practical reference architecture
 
 ### Seven planes, eleven layers — which is which
 
@@ -152,7 +154,7 @@ to serve it.
 | Platform → model vendor | Prompts, retrieved content, telemetry | Redaction, residency policy, retention controls, vendor allowlist |
 | Result → destination | Reports, emails, records, deployments | Output classification, provenance, approval, destination authorization |
 
-## Core platform APIs and contracts
+## The contracts that hold the platform together
 
 ### Run API
 
@@ -223,7 +225,7 @@ JSON · implementation excerpt
 }
 ```
 
-## Storage architecture
+## Where each kind of state belongs
 
 | **Store** | **Recommended contents** | **Consistency and controls** |
 | --- | --- | --- |
@@ -239,15 +241,15 @@ JSON · implementation excerpt
 
 A vector database is an index, not the source of truth; an agent transcript is not workflow state; a trace store is not the audit ledger; and a queue is not a business transaction. Keeping these responsibilities separate prevents attractive shortcuts from becoming systemic risks.
 
-## What the evidence supports
+## What the evidence lets us conclude
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | Event contract | Use a CloudEvents 1.0-compatible envelope for interoperability, but keep domain semantics and delivery guarantees in versioned event contracts. Source plus ID supports deduplication; large or sensitive artifacts should be referenced rather than embedded. | CLOUDEVENTS |
 
-Evidence anchors: CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix K.
+The discussion above draws on CLOUDEVENTS. Appendix K lists the complete sources and records their authority, version, and scope.
 
-## A practical starting point
+## A sensible place to start
 
 ### Core platform data contracts
 
@@ -300,13 +302,13 @@ def deduplication_key(event: CloudEvent) -> tuple[str, str]:
     return event.source, event.id
 ```
 
-## When the system misbehaves
+## If this fails in production
 
 1. Trace one API command through stores, queues, services, and contracts.
 2. Find any record with two authoritative writers.
 3. Map a cell failure to its intended containment boundary.
 
-## Before you ship
+## What to verify before production
 
 **✓** Every record and transition has one authoritative owner.
 
@@ -318,12 +320,12 @@ def deduplication_key(event: CloudEvent) -> tuple[str, str]:
 
 **✓** Cells, queues, and local dependencies bound failure domains.
 
-## Try it yourself
+## Put the idea to work
 
 1. Define Run, Task, Tool, Approval, Effect, Artifact, and Release contracts.
 2. Select a store and consistency model for each authoritative record.
 
-## Questions for design review
+## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -333,7 +335,7 @@ def deduplication_key(event: CloudEvent) -> tuple[str, str]:
 | Why use cell-based deployment? | Additive scale, tenant placement, residency, bounded blast radius, independent canaries, and predictable stateful-service limits. |
 | How should execution behave during a control-plane outage? | Continue compatible in-flight work on pinned last-known-good bundles, apply local denies and kill switches, and restrict high-risk admission when freshness cannot be established. |
 
-## Why Chapter 5 comes next
+## Where this leads next
 
 The reference architecture names a knowledge plane but does not say what fills it; Chapter 5 defines the governed knowledge layer agents retrieve, reason over, are constrained by, and act through.
 
@@ -341,13 +343,13 @@ The reference architecture names a knowledge plane but does not say what fills i
 
 |  |
 | --- |
-| **MORTGAGE CASE AT THIS POINT**  Harborlight's evidence agent can retrieve the underwriting policy and quote it accurately. It still recommends proceeding with an application whose property or income profile the policy excludes, because retrieving a sentence is not the same as being bound by it. The platform team stops adding documents to the index and starts building a knowledge layer. |
+| **WHERE THE MORTGAGE CASE STANDS** Harborlight's evidence agent can retrieve the underwriting policy and quote it accurately. It still recommends proceeding with an application whose property or income profile the policy excludes, because retrieving a sentence is not the same as being bound by it. The platform team stops adding documents to the index and starts building a knowledge layer. |
 
 |  |
 | --- |
-| **DESIGN DECISION**  Treat institutional knowledge as governed artifacts with owners, versions, scope, and provenance — not as a corpus. Retrieval becomes one consumer of that layer rather than the layer itself. |
+| **THE DESIGN CHOICE** Treat institutional knowledge as governed artifacts with owners, versions, scope, and provenance — not as a corpus. Retrieval becomes one consumer of that layer rather than the layer itself. |
 
-## Why this chapter matters
+## Why retrieval alone is not a knowledge strategy
 
 Teams often say “put the knowledge in a vector store” when they really mean
 four different jobs: retrieve evidence, reason about it, enforce constraints,
@@ -364,7 +366,7 @@ engine, and the tool catalog at the same time.
 | --- | --- | --- | --- | --- |
 | Knowledge Hub and its registries | authored source to governed artifact | artifact · domain · tenant | one artifact version | KnowledgeArtifact · Rule · Capability · ResolutionQuery |
 
-## Why retrieval is not a knowledge architecture
+## Why retrieval alone cannot tell you what to trust
 
 Retrieval-augmented generation answers one question well: *what text is relevant to this?* Enterprises then ask it three questions it was never designed for.
 
@@ -379,9 +381,11 @@ The fourth column is the argument. Each mode fails differently, so each needs di
 
 The clearest case is the one Harborlight hit. An underwriting policy excludes a property or income condition. Retrieval returns the policy, the model quotes it, and the agent proceeds anyway, because nothing in the pipeline was responsible for *enforcing* the exclusion. The document was context. Nobody made it a constraint.
 
-## The knowledge fabric
+## How enterprise knowledge becomes usable
 
-Seven representations, each derived from the one above it and carrying provenance back to it. A guardrail that cannot name the sentence it came from is an opinion.
+Consider a policy sentence that says a pay statement is acceptable only within a particular age window. The source document is authoritative, but the runtime cannot safely enforce prose. The platform extracts a candidate rule, preserves the exact source span, has an eligible owner verify the interpretation, compiles the approved rule, and records the version used for each case. Skip a link in that chain and the system may enforce a rule nobody can explain or prove is current.
+
+The knowledge fabric uses seven representations, each derived from—and traceable back to—the source above it. That lineage lets an engineer explain why a rule exists, detect when the source changed, and rebuild every derived artifact. A guardrail that cannot point to the sentence or decision behind it is not an enforceable policy; it is an opinion encoded in software.
 
 ### Semantic knowledge
 
@@ -438,7 +442,7 @@ Four OMG standards already describe what most enterprises are otherwise inventin
 
 DMN earns its place fastest. A decision table with a declared hit policy is the one artifact that turns a class of judgement calls into a lookup, and a lookup can be tested. BPMN pays off where the sequence is genuinely fixed and the cost of skipping a step is high. CMMN and SBVR are narrower; adopt them when case work or vocabulary ambiguity is the actual problem, not because the set is incomplete without them.
 
-## From policy text to enforceable logic
+## Turn policy prose into logic the system can enforce
 
 Extraction is probabilistic. Verification must not be. The pipeline that works separates the two and refuses to let the first vouch for itself.
 
@@ -458,7 +462,7 @@ A model that invents a rule will invent a plausible citation for it, so checking
 | --- |
 | **COMMON PITFALL**  Treating extraction confidence as grounding. A high-confidence rule with a fabricated citation is more dangerous than a low-confidence one, because it will pass review. Verify against the corpus, not against the model's own certainty. |
 
-## Knowledge algebra
+## Combine knowledge without flattening its differences
 
 An enterprise never has one knowledge base. It has a regulator's and its own, last quarter's and this quarter's, one business unit's and another's. Agents must operate across them, and that requires defined operations rather than a merge.
 
@@ -483,7 +487,7 @@ Three properties are worth stating as rules of the architecture.
 | --- |
 | **ARCHITECTURE GUIDANCE**  Define these operations over typed rules with declared scope, not over documents. Two documents cannot be intersected; two rule sets can. If your knowledge base cannot support the algebra, it is a corpus with a search box. |
 
-## Governance and provenance
+## Why provenance determines what you can trust
 
 Every representation above is only as good as the metadata that says whether to believe it.
 
@@ -504,16 +508,16 @@ The document digest deserves emphasis. Without it, a rule extracted from last ye
 | --- |
 | **SECURITY AND GOVERNANCE**  Permissions belong to the knowledge artifact, enforced at the resolution boundary. Filtering retrieved passages after the model has seen them is not access control; it is redaction after disclosure. |
 
-## What the evidence supports
+## What the evidence lets us conclude
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | Standards scope | BPMN, DMN, CMMN, and SBVR are OMG specifications; each citation supports the existence and semantics of its own standard and nothing about its suitability for agentic systems. That assessment is book-authored. | R44; R45; R46; R47 |
 | Verification measurement | The 44% rejection figure is one run of one compliance pipeline on one corpus, reported by its authors. It is evidence that independent verification finds real errors, not a general error rate for extraction. | R48 |
 
-Evidence anchors: R44; R45; R46; R47; R48. Full URLs, authority, version, and scope appear in Appendix K.
+The discussion above draws on R44; R45; R46; R47; R48. Appendix K lists the complete sources and records their authority, version, and scope.
 
-## A practical starting point
+## A sensible place to start
 
 The examples above are the reference implementation, and each is executed in continuous integration. Composed, they show the shape of a knowledge hub: a rule extracted with provenance, verified against its corpus, placed in a graph, reconciled against a second source, and finally enforced at the effect boundary.
 
@@ -536,7 +540,7 @@ One query surface sits above all six. Permissions are enforced there, attributio
 | --- |
 | **PRODUCTION CONSIDERATION**  Version the knowledge layer alongside the agent. An agent release pinned to a policy version is reproducible; one that resolves against "current" changes behaviour when a document changes, with no deployment and no trace. |
 
-## When the system misbehaves
+## If this fails in production
 
 | Symptom | Likely cause | First check |
 | --- | --- | --- |
@@ -547,7 +551,7 @@ One query surface sits above all six. Permissions are enforced there, attributio
 | An agent selects a mutating tool for a read | Capability discovery filters on names, not effects | Does the catalog carry an effect class, and is it filtered on? |
 | Provenance points at text that does not support the rule | Citation trusted rather than verified | Is verification rebuilding evidence from the corpus? |
 
-## Before you ship
+## What to verify before production
 
 * Every knowledge artifact has an owner, a version, an effective range, and a provenance reference that resolves.
 * Retrieval results carry authority and currency metadata, not just a similarity score.
@@ -558,14 +562,14 @@ One query surface sits above all six. Permissions are enforced there, attributio
 * The knowledge version used by a run is recorded in its manifest.
 * Permissions are enforced at the resolution boundary, not after the model has seen the passage.
 
-## Try it yourself
+## Put the idea to work
 
 1. Take one policy sentence from your own organization and express it as a typed rule with scope and provenance. Note every field you cannot fill from the sentence alone.
 2. Find a question your retrieval system answers plausibly and wrongly. Identify which of the four consumption modes it actually needed.
 3. Compute the intersection of two overlapping policy sets in your domain. Inspect the differences before the union.
 4. Take a rule your agents are expected to follow and make it refuse an effect in a test.
 
-## Questions for design review
+## Questions to bring to design review
 
 | Question | What a good answer demonstrates |
 | --- | --- |
@@ -576,7 +580,7 @@ One query surface sits above all six. Permissions are enforced there, attributio
 | What does the system do when a required input is missing? | Unknown is not silently treated as permitted |
 | Can you reproduce a decision made six months ago? | Knowledge is versioned and pinned per run |
 
-## Why Chapter 6 comes next
+## Where this leads next
 
 The knowledge layer defines what the organization knows and what agents may do with it. Chapter 6 turns to the run itself: how context is assembled, how memory and workflow state differ, and how a single request gets exactly the knowledge it needs and nothing more.
 
@@ -588,9 +592,9 @@ The knowledge layer defines what the organization knows and what agents may do w
 
 |  |
 | --- |
-| **DESIGN DECISION**  Treat prompts as disposable authorized projections; keep canonical state, knowledge, artifacts, and memory in distinct stores. |
+| **THE DESIGN CHOICE** Treat prompts as disposable authorized projections; keep canonical state, knowledge, artifacts, and memory in distinct stores. |
 
-## Why this chapter matters
+## Why context needs an architecture of its own
 
 The prompt is the model's working view, not the system's memory. It may contain
 conversation, workflow state, retrieved evidence, summaries, and preferences,
@@ -606,7 +610,7 @@ large, sensitive, stale, or later challenged in an audit.
 | --- | --- | --- | --- | --- |
 | Context Service; workflow remains canonical | authorized sources to model prompt | tenant · source · context budget | one context projection | ContextManifest · MemoryRecord · EvidenceRef |
 
-## The context build pipeline
+## How context is assembled
 
 Everything the model sees on a given step is produced by a pipeline, and the
 order of its stages is a security property rather than an implementation
@@ -658,7 +662,9 @@ containable problem rather than an open one.
 
 One store in this pipeline behaves differently from the rest. Retrieval reads; memory *writes*, and a write that outlives the run is a protected data effect rather than a caching convenience. Creating long-term memory therefore carries the same obligations as any other durable write: an owner, a scope, provenance, a confidence, the policy basis that permitted it, a TTL, and a correction and deletion path. And when a remembered summary disagrees with canonical business state, canonical state wins — always, and without the model being asked to adjudicate. Chapter 17 catalogs the alternative as AP-13.
 
-## Context, workflow state, memory, and enterprise knowledge
+## Four kinds of state that should not be collapsed into one store
+
+These categories often appear together in a prompt, which makes it tempting to store them together. They have different jobs. Workflow state says what must happen next and must survive a restart. Enterprise knowledge supplies governed facts and rules. Memory carries reusable observations or preferences under its own retention policy. Context is only the temporary projection assembled for this model step. Mixing them makes deletion, authorization, freshness, and recovery ambiguous—and turns prompt history into an accidental source of truth.
 
 | **Required analysis** | **Design conclusion** |
 | --- | --- |
@@ -694,13 +700,13 @@ One store in this pipeline behaves differently from the rest. Retrieval reads; m
 7. Label each segment as instruction, user\_input, enterprise\_data, tool\_result, or memory; the model must not promote data into instructions.
 8. Record a context-manifest hash on the model span so the call can be reconstructed without logging sensitive plaintext by default.
 
-### How to build it
+### A workable implementation
 
-### Who owns what
+### Who should own each decision
 
 The Conversation Service owns turns; the Workflow Projection Service owns canonical run state; the Context Assembler creates an ephemeral model-input projection; the Retrieval Broker queries governed knowledge; the Memory Service owns approved cross-run memory; the Provenance Service tracks lineage; and the Compaction Service produces source-linked summaries. No component can silently promote a conversation statement into workflow truth or long-term memory.
 
-### The interfaces
+### The contracts between components
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -714,7 +720,7 @@ The Conversation Service owns turns; the Workflow Projection Service owns canoni
 | DELETE /v1/memories/{memory\_id} | Create deletion tombstone and enqueue removal from indexes, caches, summaries, and derived artifacts |
 | POST /v1/context:compact | Produce a source-linked summary/checkpoint under a target token budget; never overwrites source turns |
 
-### The records that matter
+### Records worth preserving
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -770,21 +776,21 @@ JSON · implementation excerpt
 | --- |
 | **PERFORMANCE AND COST**  Retrieve less, and cite what you retrieved. Context is the dominant cost in most agentic systems and the dominant cause of distraction. Record a context manifest identifier rather than the context body, and measure answer quality against context size — most systems are past the point where more retrieval helps. |
 
-## What the evidence supports
+## What the evidence lets us conclude
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | Privacy lifecycle | Context and memory need purpose limitation, consent or other legal basis where applicable, data-subject request handling, deletion propagation, legal-hold precedence, residency, provider retention controls, and proof that derived summaries/indexes were handled too. | NIST-GAI; GDPR |
 
-Evidence anchors: NIST-GAI; GDPR. Full URLs, authority, version, and scope appear in Appendix K.
+The discussion above draws on NIST-GAI; GDPR. Appendix K lists the complete sources and records their authority, version, and scope.
 
-## Putting it into practice: Memory
+## How Memory works in practice
 
 |  |
 | --- |
-| **PROBLEM**  The system should reuse useful information across turns or runs without confusing stale summaries with canonical truth or retaining data indefinitely. |
+| **THE ENGINEERING PROBLEM** The system should reuse useful information across turns or runs without confusing stale summaries with canonical truth or retaining data indefinitely. |
 
-### Architecture and flow
+### How the pattern works
 
 Working memory is run-scoped; long-term memory is a governed write with subject, scope, provenance, confidence, policy basis, TTL, correction, deletion, and retrieval authorization.
 
@@ -798,14 +804,14 @@ Working memory is run-scoped; long-term memory is a governed write with subject,
 | --- | --- |
 | Use for stable preferences, repeated domain facts, or learned operational hints with clear value and governance. | Do not persist transient chain-of-thought, secrets, unverified hypotheses, protected data without basis, or facts already authoritative elsewhere. |
 
-### Trade-offs
+### Where it helps—and what it costs
 
 | **Choice** | **Consequence** |
 | --- | --- |
 | Continuity | Creates privacy, staleness, correction, and deletion obligations. |
 | Reduced context cost | May lose nuance or introduce summary drift. |
 
-### Failures and controls
+### Where it can fail—and how to contain it
 
 | **Failure** | **Control** |
 | --- | --- |
@@ -813,7 +819,7 @@ Working memory is run-scoped; long-term memory is a governed write with subject,
 | Cross-tenant leakage | Tenant-partitioned keys and authorization before retrieval. |
 | Deletion gaps | Lineage graph, tombstones, cache invalidation, and rebuild. |
 
-### Minimum observability
+### What you need to see in production
 
 * memory ID and version
 * source provenance
@@ -822,7 +828,7 @@ Working memory is run-scoped; long-term memory is a governed write with subject,
 * confidence and TTL
 * retrieval and deletion events
 
-## A practical starting point
+## A sensible place to start
 
 
 ### Auditable context projection
@@ -903,13 +909,13 @@ def authorize_artifact_adoption(
         raise PermissionError("artifact expired")
 ```
 
-## When the system misbehaves
+## If this fails in production
 
 1. Reconstruct one ContextManifest without relying on logged plaintext.
 2. Compare canonical state with summaries and working memory.
 3. Trace a corrected or deleted fact through indexes, cache, memory, and artifacts.
 
-## Before you ship
+## What to verify before production
 
 **✓** Conversation, workflow state, working memory, long-term memory, knowledge, artifacts, telemetry, and audit are separate domains.
 
@@ -921,12 +927,12 @@ def authorize_artifact_adoption(
 
 **✓ Final implementation and deletion propagate through indexes, caches, summaries, memories, contexts, and artifacts.**
 
-## Try it yourself
+## Put the idea to work
 
 1. Design a token budget across instructions, state, evidence, memory, and reserve.
 2. Define the lifecycle of a reusable mortgage evidence-review preference memory.
 
-## Questions for design review
+## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -936,6 +942,6 @@ def authorize_artifact_adoption(
 | How should retrieved instructions be handled? | As untrusted data with provenance and taint; they cannot alter system instructions, tool eligibility, policy, credentials, or destination grants. |
 | How do you delete a fact from an agentic system? | Tombstone and revoke the source, remove derived indexes, invalidate caches, rebuild summaries and contexts, clean governed memory and affected artifacts, and preserve permitted audit evidence. |
 
-## Why Chapter 7 comes next
+## Where this leads next
 
 Context assembly completes the knowledge Part. Chapter 7 turns from what agents know to how teams build with it, defining the reusable developer platform and SDK.
