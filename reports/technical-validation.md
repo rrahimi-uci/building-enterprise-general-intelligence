@@ -9,9 +9,13 @@
 - 45 registered architecture diagrams; 54 DOCX inline images including cover.
 - 71 fenced code blocks; 423 DOCX tables.
 - 48 registered references; 107 citation occurrences; no unknown or uncited IDs.
-- Canonical and distributable Markdown are byte-identical.
+- Canonical and distributable Markdown are byte-identical; canonical SHA-256 is
+  `a6eeecae6532350b7493f5eb1071fedfa551c6770276ef304165bf5ffa48f4e8`
+  (678,999 bytes).
 - DOCX package opens successfully and contains required named styles and metadata.
-- DOCX builds twice to the same SHA-256 hash.
+- DOCX builds twice to the same SHA-256 hash
+  `3d3b55ce27baeb83e403130b6938c1538ff886d77c17396d4a7ab82e40c54745`
+  (24,409,801 bytes).
 - Genuine XeLaTeX compile: 287 pages.
 - 40 chapter/appendix headings are structurally represented in the current source and generated artifacts; the DOCX validator found 28 chapter and 12 appendix headings.
 - LaTeX source validation passed for 45 diagrams, bundled fonts, contrast, citations, and cross-format contracts.
@@ -42,8 +46,15 @@ See the current generated evidence:
 - `reports/citation-audit.md`
 - `reports/latex-validation.md`
 - `reports/editorial-audit.md`
+- `reports/release-package.json` — final 388-entry release ZIP, with its byte
+  count and SHA-256 recorded by the package tool.
 - `CHECKSUMS.sha256`
 - `RELEASE-MANIFEST.json`
+
+The final ZIP was generated from a clean detached worktree so unrelated local
+untracked files were excluded. `tools/clean_package_test.py` extracted that ZIP
+and passed assembly, DOCX/LaTeX rebuild, reference checks, structural
+validation, LaTeX validation, and deterministic-build checks.
 
 ## Full-book review evidence
 

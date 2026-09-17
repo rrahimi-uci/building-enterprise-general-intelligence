@@ -4,7 +4,7 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "a33c7b93c23d54ab107d5d7c8e29070cd0f85d52260d840c962c28a790fa2732",
-    "content_tex_sha256": "f3daad378857554104ef415a391b78247d475b3c9fc644c6295ad6feb5fc9971",
+    "content_tex_sha256": "e0d10be7fd0d802dabf27cf78f0265e9479805e1f42c899a0d60a34c4258d0c2",
     "style_sha256": "2ced77988fb7b87ccae527f1c42092f73a634c39b40b7a3ce60ae20e14a53641",
     "narrative_parts": 8,
     "appendix_dividers": 1,
@@ -256,10 +256,10 @@
       {
         "file": "assets/diagrams/anti-approval-binding.png",
         "pixels": [
-          2439,
-          2370
+          2420,
+          2250
         ],
-        "effective_dpi": 345.5
+        "effective_dpi": 342.8
       },
       {
         "file": "assets/diagrams/supervisor-worker.png",

@@ -1,13 +1,14 @@
-"""A human approval gate that survives the wait.
+"""A human action-authorization gate that survives the wait.
 
 The book's position is that the pause is the design problem, not the prompt: a
-run held for approval may sit for days across deploys and token expiry. So the
-decision context is persisted with the pause, the grant is bound to the exact
-proposal, and an expired grant is a refusal rather than a warning.
+run held for action authorization may sit for days across deploys and token
+expiry. So the decision context is persisted with the pause, the authorization
+decision is bound to the exact proposal, and an expired decision is a refusal.
 
-The grant is also *issued* rather than constructed. A plain dataclass any caller
-can build is not an approval: it lets the code that wants the effect mint its own
-permission for it. Here the approval service signs, and the gate verifies.
+The authorization decision is also *issued* rather than constructed. A plain
+dataclass any caller can build is not authorization: it lets the code that wants
+the effect mint its own permission for it. Here the authorization service signs,
+and the gate verifies.
 """
 from __future__ import annotations
 
@@ -22,33 +23,33 @@ from datetime import datetime, timedelta, timezone
 
 
 def proposal_hash(action: str, arguments: dict) -> str:
-    """Bind a grant to one exact proposal, not to an intent."""
+    """Bind an authorization decision to one exact proposal, not to an intent."""
     payload = json.dumps({"action": action, "arguments": arguments}, sort_keys=True)
     return hashlib.sha256(payload.encode()).hexdigest()
 
 
 @dataclass(frozen=True)
-class ApprovalGrant:
+class HumanActionAuthorizationDecision:
     proposal_hash: str
     approver_id: str
     expires_at: datetime
     signature: str
 
 
-class ApprovalExpired(Exception):
-    """The grant lapsed before the effect committed."""
+class HumanActionAuthorizationExpired(Exception):
+    """The authorization decision lapsed before the effect committed."""
 
 
-class ProposalMismatch(Exception):
+class HumanActionAuthorizationMismatch(Exception):
     """The proposal changed after it was approved."""
 
 
-class GrantNotAuthentic(Exception):
-    """The grant was not issued by the approval service."""
+class HumanActionAuthorizationNotAuthentic(Exception):
+    """The authorization decision was not issued by the authorization service."""
 
 
-class ApprovalService:
-    """Issues signed grants. Only this component speaks for a human approver."""
+class HumanActionAuthorizationService:
+    """Issues signed decisions. Only this component speaks for a human reviewer."""
 
     def __init__(self, secret: bytes) -> None:
         self._secret = secret
@@ -57,24 +58,24 @@ class ApprovalService:
         payload = f"{proposal_hash}|{approver_id}|{expires_at.isoformat()}".encode()
         return hmac.new(self._secret, payload, hashlib.sha256).hexdigest()
 
-    def issue(self, proposal_hash: str, approver_id: str, expires_at: datetime) -> ApprovalGrant:
-        return ApprovalGrant(
+    def issue(self, proposal_hash: str, approver_id: str, expires_at: datetime) -> HumanActionAuthorizationDecision:
+        return HumanActionAuthorizationDecision(
             proposal_hash=proposal_hash, approver_id=approver_id, expires_at=expires_at,
             signature=self._signature(proposal_hash, approver_id, expires_at),
         )
 
-    def verify(self, grant: ApprovalGrant) -> None:
-        expected = self._signature(grant.proposal_hash, grant.approver_id, grant.expires_at)
+    def verify(self, decision: HumanActionAuthorizationDecision) -> None:
+        expected = self._signature(decision.proposal_hash, decision.approver_id, decision.expires_at)
         # compare_digest, not ==: an equality check on a signature leaks timing.
-        if not hmac.compare_digest(expected, grant.signature):
-            raise GrantNotAuthentic("grant was not issued by the approval service")
+        if not hmac.compare_digest(expected, decision.signature):
+            raise HumanActionAuthorizationNotAuthentic("decision was not issued by the authorization service")
 
 
 @dataclass
 class PendingApprovals:
     """Persisted pauses. A real system stores these in the workflow database."""
 
-    service: ApprovalService
+    service: HumanActionAuthorizationService
     pending: dict[str, dict] = field(default_factory=dict)
 
     def pause(self, run_id: str, action: str, arguments: dict, ttl: timedelta) -> str:
@@ -92,21 +93,21 @@ class PendingApprovals:
         }
         return self.pending[run_id]["digest"]
 
-    def commit(self, run_id: str, grant: ApprovalGrant, now: datetime | None = None) -> str:
+    def commit(self, run_id: str, decision: HumanActionAuthorizationDecision, now: datetime | None = None) -> str:
         record = self.pending[run_id]
         now = now or datetime.now(timezone.utc)
-        # Authenticity first: an unsigned grant is not an approval, so there is
+        # Authenticity first: an unsigned decision is not authorization, so there is
         # nothing to compare it against.
-        self.service.verify(grant)
+        self.service.verify(decision)
         # Recompute from the stored proposal rather than trusting the stored
         # digest, so tampering with the pending record is caught too.
         current = proposal_hash(record["action"], record["arguments"])
-        if grant.proposal_hash != current:
-            raise ProposalMismatch("the approved proposal is not the one being committed")
-        if now >= grant.expires_at or now >= record["expires_at"]:
-            raise ApprovalExpired("approval lapsed; re-request rather than assume consent")
+        if decision.proposal_hash != current:
+            raise HumanActionAuthorizationMismatch("the authorized proposal is not the one being committed")
+        if now >= decision.expires_at or now >= record["expires_at"]:
+            raise HumanActionAuthorizationExpired("authorization lapsed; request it again")
         del self.pending[run_id]
-        return f"committed {record['action']} approved by {grant.approver_id}"
+        return f"committed {record['action']} authorized by {decision.approver_id}"
 
 
 # --8<-- example:end

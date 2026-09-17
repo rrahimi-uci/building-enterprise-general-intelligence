@@ -1,3 +1,59 @@
+# Final closeout — full-book review plan
+
+**Reviewed:** 2026-09-16
+**Result:** PASS for the editorial and cross-format review scope; DOCX
+pagination QA DEFERRED; C04–C28 cumulative runtime implementation remains
+roadmap-owned.
+
+This section supersedes older addenda below whenever their measurements,
+recommendations, or running-example labels differ. The final review covered
+the canonical source, all 8 Parts, 28 chapters, 12 appendices, registered
+examples and tests, diagram sources and renders, tables, references, generated
+Markdown/DOCX/LaTeX, and representative XeLaTeX pages.
+
+## Final corrections and consistency decisions
+
+- Harborlight Home Finance and synthetic case `MORT-2026-000184` are the
+  cumulative mortgage path. Northstar is retained only as comparative material
+  or as the architecture codename used for that platform boundary; it is not a
+  second running business case.
+- Human action authorization is distinct from the underwriter-owned
+  `LendingDecision`. The canonical request/decision names now propagate through
+  the primary source contracts, Appendix C, runnable authorization examples,
+  tests, and the proposal-binding diagram.
+- Example registry metadata and `examples/README.md` now use the actual
+  chapter topology, including the later chapter numbers for authorization,
+  effect, Skills, tracing, and evaluation examples.
+- Appendix I uses the exact current book title. The closing perspective
+  distinguishes the Northstar architecture codename from the Harborlight case.
+- The anti-approval diagram source, rendered PDF/PNG, and registry checksum are
+  synchronized. All diagrams remain generated from editable sources.
+
+## Final evidence
+
+- `make validate`: PASS — 8 Parts, 28 chapters, 12 appendices, 45 diagrams,
+  71 code blocks, 48 references, 107 citation occurrences, valid DOCX, and no
+  validation errors or warnings.
+- `make examples-run`: PASS — 123 tests across 26 examples.
+- `make deterministic`: PASS — the two DOCX builds are byte-identical at
+  SHA-256 `da4877d5dbaf09ab04fef3923779b370c11ad0400897b82db0122aec43679d5a`.
+- `make pdf`: PASS — genuine XeLaTeX, 287 Letter-size pages. Cover, Part I,
+  Chapter 14, changed authorization/diagram pages, and closing page were
+  rendered and visually inspected without clipping, overlap, missing glyphs,
+  or hierarchy defects.
+- `make qa-pdf`: DEFERRED — the local environment has no LibreOffice/`soffice`.
+  DOCX package validity and XeLaTeX inspection are not being used as a proxy
+  for DOCX pagination QA.
+- C01–C03 are the only executable cumulative mortgage checkpoints currently
+  present. C04–C28 remain explicit implementation targets in `code-gap.md` and
+  are not described as production-ready evidence.
+
+The release manifest, checksums, ZIP, and clean-extraction rebuild were
+generated from the final committed tree. The final 388-entry ZIP’s byte count
+and SHA-256 are recorded in `reports/release-package.json`, and the
+clean-package test passed. Notion synchronization and merge remain outside
+agent authority; the PR is left open for the author’s review.
+
 # Editorial Audit — Full-Book Review and Running-Example Gap Audit
 
 ## Addendum — Cumulative Northstar implementation review

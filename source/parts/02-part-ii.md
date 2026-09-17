@@ -29,7 +29,7 @@ Read the figure downward: each layer names the components the plane owns, and th
 | Runtime and workflow | Run graph, deadlines, budgets, retries, cancellation, checkpoints, joins | Run and TaskEnvelope state | Transcript is evidence, not execution state |
 | Context, RAG, memory, Skills | Authorized evidence, provenance, snapshots, governed persistence | ContextManifest, MemoryRecord, Skill manifest | Retrieved text remains untrusted data |
 | Gateways and integration | LLM routing, tool façades, MCP/A2A, APIs, events | RoutingDecision, ToolCall, protocol envelope | Revalidate identity, policy, schema, and tenancy |
-| Security and governance | Identity, least privilege, RBAC/ABAC, guardrails, approval, DLP, audit | PolicyDecision, CapabilityEnvelope, ApprovalGrant | Protected actions fail closed; ambiguous effects become unknown |
+| Security and governance | Identity, least privilege, RBAC/ABAC, guardrails, action authorization, DLP, audit | PolicyDecision, CapabilityEnvelope, HumanActionAuthorizationRequest/Decision | Protected actions fail closed; ambiguous effects become unknown |
 | Evaluation and operations | Tracing, evaluation, SLOs, incidents, release, capacity, learning | Trace graph, EvaluationResult, ChangeBundle, ReleaseManifest | Monitoring cannot self-promote behavior change |
 
 ## End-to-end responsibility flow
@@ -40,7 +40,7 @@ Read the figure downward: each layer names the components the plane owns, and th
 2. Admit a run and pin all behavior, policy, data, evaluator, and dependency versions.
 3. Build an authorized ContextManifest; preserve provenance and untrusted-content labels.
 4. Let the model propose a typed decision. Policy determines eligible models, tools, data, and actions.
-5. Bind protected changes to an ActionProposal and exact, expiring ApprovalGrant.
+5. Bind protected changes to an exact, expiring HumanActionAuthorizationRequest and HumanActionAuthorizationDecision.
 6. Commit through a tool façade with short-lived credentials, idempotency, EffectRecord, and reconciliation.
 7. Determine accepted, blocked, needs-input, failed, or unknown-effect using executable business criteria.
 8. Join traces, evaluations, human feedback, cost, latency, incidents, and outcomes for controlled improvement.
@@ -53,7 +53,7 @@ Read the figure downward: each layer names the components the plane owns, and th
 | Authorization | Identity and policy services | Explain requested scope | Grant or expand authority |
 | Business truth | Domain system | Read an authorized projection | Replace truth with a summary |
 | Effects | Tool/effect service and downstream receipt | Propose arguments | Assert a mutation completed |
-| Approval | Proposal and approval service | Generate rationale and preview | Reuse Boolean or stale conversational consent |
+| Human action authorization | Proposal and human action authorization service | Generate rationale and preview | Reuse Boolean or stale conversational consent |
 | Knowledge | Governed source/snapshot catalog | Synthesize evidence | Treat similarity as truth or freshness |
 | Learning | Evaluation, dataset, release services | Recommend a candidate | Self-certify or self-deploy |
 
@@ -121,7 +121,7 @@ to serve it.
 | Experience | Chat/UI, API clients, event subscriptions, operator console | Intent capture, progress, approvals, cancel/override |
 | Edge and admission | API gateway, WAF, tenant router, request validator | Authentication, quotas, schema validation, risk classification |
 | Agent control plane | Registry, policy bundles, prompt/skill catalog, release manager | Define, version, approve, discover, and deploy capabilities |
-| Run control plane | Run API, planner, coordinator, budget manager, approval service | Own task lifecycle and deterministic transition decisions |
+| Run control plane | Run API, planner, coordinator, budget manager, human action authorization service | Own task lifecycle and deterministic transition decisions |
 | Durable execution | Workflow engine, timers, signal handlers, checkpoint/event store | Crash recovery, pause/resume, retries, compensation, replay |
 | Model plane | Model gateway, router, prompt assembler, structured-output validator | Provider abstraction, routing, caching, quotas, redaction |
 | Capability plane | Tool gateway, MCP clients/servers, A2A gateway, connectors | Discovery, authorization, invocation, isolation, versioning |

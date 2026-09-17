@@ -2,6 +2,27 @@
 
 Book v2.1.0 is the canonical foundation for *Building Enterprise General Intelligence Platform* by Reza Rahimi, PhD.
 
+## Full-book review closeout — 2026-09-16
+
+The remaining review-plan items are complete in one coherent source and
+publication closeout. The final pass reconciled the Harborlight mortgage
+narrative, human action authorization vocabulary, example-to-chapter metadata,
+diagram source/render/checksum state, Appendix I title, and Northstar/Harborlight
+distinction. Canonical Markdown, distributable Markdown, DOCX, LaTeX source,
+diagrams, and QA reports were regenerated.
+
+Local evidence: `make validate`, `make examples-run` (123 tests / 26 examples),
+`make deterministic`, `make diagrams`, and genuine `make pdf` (287 Letter-size
+pages) pass. `make qa-pdf` remains explicitly deferred because LibreOffice /
+`soffice` is unavailable. The final 388-entry release ZIP was generated from a
+clean detached worktree; its byte count and SHA-256 are recorded in
+`reports/release-package.json`, and the clean-extraction rebuild passed.
+
+The cumulative mortgage implementation is intentionally limited to executable
+C01–C03 evidence. C04–C28 remain the separately tracked implementation roadmap
+in `code-gap.md`; this closeout does not claim production readiness for those
+unimplemented checkpoints.
+
 This release combines the canonical Markdown source with synchronized DOCX and XeLaTeX representations, editable cover and diagram sources, machine-readable registries, deterministic builders, validators, PDF/visual QA, templates, reusable maintenance skills, a design system, cross-format contract, contribution guidance, release checklist, manifest, and checksums.
 
 The book is organized as eight Parts, 28 chapters, and 12 appendices. It is edited by changing `source/parts/*.md`, configuration, and assets, then regenerating every derivative. Manual editing of the final DOCX, distributable Markdown, or Notion copy is prohibited because it creates drift.

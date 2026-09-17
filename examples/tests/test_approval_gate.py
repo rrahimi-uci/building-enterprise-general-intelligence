@@ -5,22 +5,23 @@ from datetime import datetime, timedelta, timezone
 import pytest
 
 from examples.patterns.approval_gate import (
-    ApprovalExpired, ApprovalGrant, ApprovalService, GrantNotAuthentic,
-    PendingApprovals, ProposalMismatch, proposal_hash,
+    HumanActionAuthorizationDecision, HumanActionAuthorizationExpired,
+    HumanActionAuthorizationMismatch, HumanActionAuthorizationNotAuthentic,
+    HumanActionAuthorizationService, PendingApprovals, proposal_hash,
 )
 
 NOW = datetime(2026, 9, 13, 12, 0, tzinfo=timezone.utc)
 
 
-def service() -> ApprovalService:
-    return ApprovalService(secret=b"approval-service-key")
+def service() -> HumanActionAuthorizationService:
+    return HumanActionAuthorizationService(secret=b"authorization-service-key")
 
 
 def store() -> PendingApprovals:
     return PendingApprovals(service=service())
 
 
-def grant(svc: ApprovalService, digest: str, *, approver="u-7", expires=None) -> ApprovalGrant:
+def decision(svc: HumanActionAuthorizationService, digest: str, *, approver="u-7", expires=None) -> HumanActionAuthorizationDecision:
     return svc.issue(digest, approver, expires or NOW + timedelta(hours=1))
 
 
@@ -29,7 +30,7 @@ def test_approved_proposal_commits_once():
     digest = s.pause("r1", "request_mortgage_document", {
         "case_id": "MORT-2026-000184", "document_kind": "employment_verification"
     }, timedelta(days=2))
-    result = s.commit("r1", grant(s.service, digest), now=NOW)
+    result = s.commit("r1", decision(s.service, digest), now=NOW)
     assert result.startswith("committed request_mortgage_document")
     assert "r1" not in s.pending, "a committed pause must not remain pending"
 
@@ -43,41 +44,41 @@ def test_document_kind_changed_after_approval_is_refused():
     tampered = proposal_hash("request_mortgage_document", {
         "case_id": "MORT-2026-000184", "document_kind": "tax_return"
     })
-    with pytest.raises(ProposalMismatch):
-        s.commit("r1", grant(s.service, tampered), now=NOW)
+    with pytest.raises(HumanActionAuthorizationMismatch):
+        s.commit("r1", decision(s.service, tampered), now=NOW)
 
 
-def test_expired_grant_is_a_refusal_not_a_warning():
+def test_expired_authorization_is_a_refusal_not_a_warning():
     s = store()
     digest = s.pause("r1", "request_mortgage_document", {
         "case_id": "MORT-2026-000184", "document_kind": "employment_verification"
     }, timedelta(days=2))
-    with pytest.raises(ApprovalExpired):
-        s.commit("r1", grant(s.service, digest), now=NOW + timedelta(hours=2))
+    with pytest.raises(HumanActionAuthorizationExpired):
+        s.commit("r1", decision(s.service, digest), now=NOW + timedelta(hours=2))
     assert "r1" in s.pending, "a lapsed approval leaves the run paused, not committed"
 
 
-def test_a_fabricated_grant_cannot_authorize_anything():
+def test_a_fabricated_decision_cannot_authorize_anything():
     s = store()
     digest = s.pause("r1", "request_mortgage_document", {
         "case_id": "MORT-2026-000184", "document_kind": "employment_verification"
     }, timedelta(days=2))
     # The code that wants the effect mints its own permission for it.
-    forged = ApprovalGrant(proposal_hash=digest, approver_id="cfo",
+    forged = HumanActionAuthorizationDecision(proposal_hash=digest, approver_id="cfo",
                            expires_at=NOW + timedelta(hours=1), signature="0" * 64)
-    with pytest.raises(GrantNotAuthentic):
+    with pytest.raises(HumanActionAuthorizationNotAuthentic):
         s.commit("r1", forged, now=NOW)
     assert "r1" in s.pending
 
 
-def test_a_grant_from_a_different_service_is_refused():
+def test_a_decision_from_a_different_service_is_refused():
     s = store()
     digest = s.pause("r1", "request_mortgage_document", {
         "case_id": "MORT-2026-000184", "document_kind": "employment_verification"
     }, timedelta(days=2))
-    other = ApprovalService(secret=b"some-other-key")
-    with pytest.raises(GrantNotAuthentic):
-        s.commit("r1", grant(other, digest), now=NOW)
+    other = HumanActionAuthorizationService(secret=b"some-other-key")
+    with pytest.raises(HumanActionAuthorizationNotAuthentic):
+        s.commit("r1", decision(other, digest), now=NOW)
 
 
 def test_mutating_the_caller_dict_after_pausing_cannot_change_the_record():
@@ -89,7 +90,7 @@ def test_mutating_the_caller_dict_after_pausing_cannot_change_the_record():
     arguments["meta"]["note"] = "urgent"   # including a nested value
     assert s.pending["r1"]["arguments"]["document_kind"] == "employment_verification"
     assert s.pending["r1"]["arguments"]["meta"]["note"] == "ok"
-    assert s.commit("r1", grant(s.service, digest), now=NOW).startswith("committed")
+    assert s.commit("r1", decision(s.service, digest), now=NOW).startswith("committed")
 
 
 def test_tampering_with_the_pending_record_is_caught_at_commit():
@@ -97,12 +98,12 @@ def test_tampering_with_the_pending_record_is_caught_at_commit():
     digest = s.pause("r1", "request_mortgage_document", {
         "case_id": "MORT-2026-000184", "document_kind": "employment_verification"
     }, timedelta(days=2))
-    g = grant(s.service, digest)
+    authorization = decision(s.service, digest)
     # Commit recomputes from the stored proposal, so editing the record -- and
     # even its cached digest -- does not make the effect authorized.
     s.pending["r1"]["arguments"]["document_kind"] = "tax_return"
     s.pending["r1"]["digest"] = proposal_hash("request_mortgage_document", {
         "case_id": "MORT-2026-000184", "document_kind": "tax_return"
     })
-    with pytest.raises(ProposalMismatch):
-        s.commit("r1", g, now=NOW)
+    with pytest.raises(HumanActionAuthorizationMismatch):
+        s.commit("r1", authorization, now=NOW)

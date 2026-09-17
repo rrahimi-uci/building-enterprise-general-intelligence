@@ -843,15 +843,15 @@ Bind approval and intervention to immutable proposals and durable state transiti
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
-| Workflow plus Approval Service | machine proposal to human authority | approval queue · risk class · tenant | one immutable proposal | HumanActionAuthorizationRequest · HumanActionAuthorizationDecision · EffectReceipt |
+| Workflow plus Human Action Authorization Service | machine proposal to human authority | authorization queue · risk class · tenant | one immutable proposal | HumanActionAuthorizationRequest · HumanActionAuthorizationDecision · EffectReceipt |
 
 ## Two distinct human controls
 
 [[DIAGRAM:pattern-hitl|Figure 14-1 — Approval and intervention: different triggers, different authority, different evidence]]
 
-**Approval** authorizes one proposed effect. **Intervention** asks a person to diagnose, correct, supply information, or choose among unresolved alternatives. Combining them creates audit ambiguity. Northstar uses separate queues, roles, forms, SLOs, and terminal semantics.
+**Human action authorization** authorizes one proposed effect. **Intervention** asks a person to diagnose, correct, supply information, or choose among unresolved alternatives. Combining them creates audit ambiguity. Northstar uses separate queues, roles, forms, SLOs, and terminal semantics.
 
-The Approval Service stores a canonical proposal, human-readable preview, destination, evidence and policy references, risk, expected resource version, expiry, and proposal hash. Approval becomes invalid when any protected field changes. A commit path rechecks approver authority, separation of duties, current policy, grant freshness, and resource version.
+The Human Action Authorization Service stores a canonical proposal, human-readable preview, destination, evidence and policy references, risk, expected resource version, expiry, and proposal hash. Human action authorization becomes invalid when any protected field changes. A commit path rechecks approver authority, separation of duties, current policy, authorization freshness, and resource version.
 
 Human capacity is finite. Queue age, dwell, abandonment, reassignment, disagreement, and after-hours coverage are production metrics. A system that requires routine approval for low-risk deterministic work may be less safe because reviewers become fatigued.
 
@@ -862,7 +862,7 @@ Human capacity is finite. Queue age, dwell, abandonment, reassignment, disagreem
 | Problem | Humans must understand, approve, correct, or stop consequential work without becoming a rubber stamp or breaking run integrity. |
 | Why it is difficult | Too many approvals cause fatigue; too little context prevents informed decisions; approvals can go stale as data or plans change; edits must be attributable and replayable. |
 | Design alternatives | Confirm every tool call; risk-based approvals; maker-checker; sampled review; exception-only review; fully manual commit. |
-| Recommended architecture | Use policy-triggered gates based on risk, novelty, confidence, value, data sensitivity, reversibility, and destination. Present a concise preview, evidence, alternatives, changed fields, policy rationale, and blast radius. Approval authorizes a specific immutable proposal for a limited time. |
+| Recommended architecture | Use policy-triggered gates based on risk, novelty, confidence, value, data sensitivity, reversibility, and destination. Present a concise preview, evidence, alternatives, changed fields, policy rationale, and blast radius. A HumanActionAuthorizationDecision authorizes a specific immutable proposal for a limited time. |
 | Trade-offs | Human review adds latency and staffing cost but provides judgment and accountability where automation evidence is insufficient. Poor UX converts the control into theater. |
 | Failure scenarios | Approval applies to a changed plan; approver lacks authority; agent hides uncertainty; request times out; two operators issue conflicting overrides; “approve all” becomes normal. |
 | Enterprise example | A mortgage agent drafts a request to obtain missing employment evidence. The underwriter sees the policy basis, case evidence, requested document, downstream effect, and alternatives; any case, document, or destination change invalidates the authorization. |
@@ -887,7 +887,7 @@ HumanActionAuthorizationRequest contains: proposal/artifact hash, exact action a
 | **Component** | **Responsibility** |
 | --- | --- |
 | Approval Policy Router | Convert policy obligations, risk, value, novelty, and confidence into approval requirements |
-| Approval Service | Persist immutable proposal snapshots and authoritative decision state |
+| Human Action Authorization Service | Persist immutable proposal snapshots and authoritative decision state |
 | Assignment/Queue Service | Resolve eligible approvers, maker-checker rules, claim/reassign, priority, and SLA |
 | Evidence Renderer | Produce role-redacted diff, sources, rationale, alternatives, uncertainty, and blast radius |
 | Notification Service | Deliver idempotent channel notifications and deep links; it never owns the decision |
@@ -924,7 +924,7 @@ A decision is valid only when the presented proposal hash equals the current pro
 ### Workflow integration
 
 1. The workflow commits the proposed effect and evidence snapshot, then creates the approval.
-2. The Approval Service registers durable SLA/expiry timers and returns a wait correlation ID.
+2. The Human Action Authorization Service registers durable SLA/expiry timers and returns a wait correlation ID.
 3. Assignment and notifications may retry independently; the workflow remains suspended without a worker.
 4. A decision transaction records the immutable decision and emits an outbox event.
 5. The workflow receives the event, revalidates policy/current resource version, and commits only the proposal hash that was approved.
@@ -1918,7 +1918,7 @@ except TimeoutError:
 
 Both cards here concern the moment a system decides that something is allowed, or that something is finished. In each, a cheap signal — a Boolean, a sentence of model output — was allowed to carry a decision that the enterprise will later be asked to defend. The correction is to make the decision an artifact: something with a hash, an owner, an expiry, and an independent check.
 
-[[DIAGRAM:anti-approval-binding|Figure 17-4 — Boolean consent versus a proposal-bound, expiring approval grant]]
+[[DIAGRAM:anti-approval-binding|Figure 17-4 — Boolean consent versus proposal-bound, expiring human action authorization]]
 
 ### AP-06 — Boolean or conversational approval
 
@@ -1930,9 +1930,9 @@ Both cards here concern the moment a system decides that something is allowed, o
 
 **Enterprise Example.** An approval given for a $10,000 payment is reused, entirely within policy as implemented, for a $100,000 one.
 
-**Recommended Pattern.** An immutable proposal, hashed over the exact effect, with an ApprovalGrant bound to that hash, scoped to one action, and carrying an expiry. Revalidate immediately before commit.
+**Recommended Pattern.** An immutable proposal, hashed over the exact effect, with a HumanActionAuthorizationDecision bound to that hash, scoped to one action, and carrying an expiry. Revalidate immediately before commit.
 
-**Architecture.** `approved=true` becomes proposal hash → grant → revalidate → commit.
+**Architecture.** `approved=true` becomes proposal hash → HumanActionAuthorizationDecision → revalidate → commit.
 
 🐍 · anti-pattern and correction
 
@@ -1941,27 +1941,27 @@ Both cards here concern the moment a system decides that something is allowed, o
 if run.approved:
     await underwriting.submit_evidence_package(case_id=current.case_id)
 
-# Correction: the grant is bound to a hash of the exact proposal and cannot
+# Correction: the decision is bound to a hash of the exact proposal and cannot
 # authorize a payload the approver never saw.
 proposal = Proposal(
     action="underwriting.submit_evidence_package",
     args=args,
     policy_version=policy.version,
 )
-grant = await approvals.await_grant(proposal.digest(), ttl_s=900)
+decision = await human_action_authorization.await_decision(proposal.digest(), ttl_s=900)
 
-if grant.digest != proposal.digest():      # arguments moved since approval
-    raise ApprovalMismatch(proposal.digest(), grant.digest)
-if grant.expired(now()):                   # consent has a shelf life
-    raise ApprovalExpired(grant.id)
+if decision.proposal_hash != proposal.digest():  # arguments moved since authorization
+    raise HumanActionAuthorizationMismatch(proposal.digest(), decision.proposal_hash)
+if decision.expires_at <= now():                 # authorization has a shelf life
+    raise HumanActionAuthorizationExpired(decision.authorization_id)
 await underwriting.submit_evidence_package(
     **proposal.args, idempotency_key=proposal.digest()
 )
 ```
 
-**Detection Metrics.** Proposal-hash mismatches at commit, grant reuse attempts, expiry rate, and incidents occurring after a recorded approval.
+**Detection Metrics.** Proposal-hash mismatches at commit, authorization reuse attempts, expiry rate, and incidents occurring after a recorded decision.
 
-**Trade-offs.** Benign changes force reapproval, which approvers experience as friction. Tune by making the diff visible — showing what changed is cheaper than widening the grant.
+**Trade-offs.** Benign changes force reauthorization, which reviewers experience as friction. Tune by making the diff visible — showing what changed is cheaper than widening the authorization.
 
 ### AP-07 — Model says done
 

@@ -11,6 +11,7 @@
   "examples": [
     {
       "id": "contracts",
+      "book_chapters": [1, 4],
       "path": "examples/contracts.py",
       "language": "python",
       "title": "Provider-neutral agent-step and platform contracts",
@@ -27,6 +28,7 @@
     },
     {
       "id": "agent-tool-loop",
+      "book_chapters": [2],
       "path": "examples/foundations/agent_tool_loop.py",
       "language": "python",
       "title": "Bounded agent loop with a typed tool",
@@ -42,6 +44,7 @@
     },
     {
       "id": "governed-tool-gateway",
+      "book_chapters": [2],
       "path": "examples/foundations/governed_tool_gateway.py",
       "language": "python",
       "title": "A readable Tool Gateway with validation, authorization, and effect idempotency",
@@ -53,6 +56,7 @@
     },
     {
       "id": "effect-idempotency",
+      "book_chapters": [22],
       "path": "examples/foundations/effect_idempotency.py",
       "language": "python",
       "title": "Effect-level idempotency ledger",
@@ -64,6 +68,7 @@
     },
     {
       "id": "mlflow-tracing",
+      "book_chapters": [24],
       "path": "examples/observability/mlflow_tracing.py",
       "language": "python",
       "title": "Manually tracing agent and tool boundaries with MLflow",
@@ -77,6 +82,7 @@
     },
     {
       "id": "mlflow-trace-configuration",
+      "book_chapters": [24],
       "path": "examples/observability/mlflow_trace_configuration.py",
       "language": "python",
       "title": "Configuring MLflow tracing around a governed agent step",
@@ -92,6 +98,7 @@
     },
     {
       "id": "bounded-react-loop",
+      "book_chapters": [10],
       "path": "examples/patterns/bounded_react_loop.py",
       "language": "python",
       "title": "Bounded ReAct loop with an explicit run budget",
@@ -106,6 +113,7 @@
     },
     {
       "id": "routing-handoff",
+      "book_chapters": [11],
       "path": "examples/patterns/routing_handoff.py",
       "language": "python",
       "title": "Routing by handoff: transferring ownership, not context",
@@ -120,9 +128,10 @@
     },
     {
       "id": "approval-gate",
+      "book_chapters": [14],
       "path": "examples/patterns/approval_gate.py",
       "language": "python",
-      "title": "A human approval gate that survives the wait",
+      "title": "A human action-authorization gate that survives the wait",
       "verify": "test",
       "tests": [
         "examples/tests/test_approval_gate.py"
@@ -131,6 +140,7 @@
     },
     {
       "id": "input-guardrail",
+      "book_chapters": [20],
       "path": "examples/security/input_guardrail.py",
       "language": "python",
       "title": "An input guardrail that trips before any tool runs",
@@ -145,6 +155,7 @@
     },
     {
       "id": "mlflow-evaluation",
+      "book_chapters": [25],
       "path": "examples/observability/mlflow_evaluation.py",
       "language": "python",
       "title": "Evaluating an agent against a dataset with MLflow",
@@ -193,6 +204,7 @@
     },
     {
       "id": "skills-registry",
+      "book_chapters": [8],
       "path": "examples/platform/skills_registry.py",
       "language": "python",
       "title": "Resolving a skill version under policy and SemVer precedence",
@@ -209,6 +221,7 @@
     },
     {
       "id": "plan-compilation",
+      "book_chapters": [12],
       "path": "examples/patterns/plan_compilation.py",
       "language": "python",
       "title": "Compiling an approved plan into a budget-bounded envelope",
@@ -225,9 +238,10 @@
     },
     {
       "id": "approval-verification",
+      "book_chapters": [14],
       "path": "examples/patterns/approval_verification.py",
       "language": "python",
-      "title": "Verifying an approval grant against this exact proposal",
+      "title": "Verifying human action authorization against this exact proposal",
       "verify": "test",
       "tests": [
         "examples/tests/test_approval_verification.py"
@@ -241,6 +255,7 @@
     },
     {
       "id": "step-execution",
+      "book_chapters": [3],
       "path": "examples/runtime/step_execution.py",
       "language": "python",
       "title": "One bounded agent step behind a platform-owned adapter",
@@ -259,6 +274,7 @@
     },
     {
       "id": "durable-state",
+      "book_chapters": [15],
       "path": "examples/runtime/durable_state.py",
       "language": "python",
       "title": "Durable run state as a replayable event fold",
@@ -273,6 +289,7 @@
     },
     {
       "id": "react-engine",
+      "book_chapters": [10],
       "path": "examples/patterns/react_engine.py",
       "language": "python",
       "title": "A ReAct controller that owns the budgets",
@@ -289,6 +306,7 @@
     },
     {
       "id": "policy-to-rule",
+      "book_chapters": [5],
       "path": "examples/knowledge/policy_to_rule.py",
       "language": "python",
       "title": "A policy sentence as a typed, scoped rule with provenance",
@@ -300,6 +318,7 @@
     },
     {
       "id": "grounding-verifier",
+      "book_chapters": [5],
       "path": "examples/knowledge/grounding_verifier.py",
       "language": "python",
       "title": "Rebuilding a claim's evidence instead of trusting its citation",
@@ -311,6 +330,7 @@
     },
     {
       "id": "knowledge-graph",
+      "book_chapters": [5],
       "path": "examples/knowledge/knowledge_graph.py",
       "language": "python",
       "title": "Traversal answering a question similarity cannot",
@@ -322,6 +342,7 @@
     },
     {
       "id": "rule-as-guardrail",
+      "book_chapters": [5],
       "path": "examples/knowledge/rule_as_guardrail.py",
       "language": "python",
       "title": "A policy rule enforced at the effect boundary",
@@ -333,6 +354,7 @@
     },
     {
       "id": "set-operations",
+      "book_chapters": [5],
       "path": "examples/knowledge/set_operations.py",
       "language": "python",
       "title": "Union, intersection, difference and contradiction over rule sets",
@@ -344,6 +366,7 @@
     },
     {
       "id": "capability-catalog",
+      "book_chapters": [5],
       "path": "examples/knowledge/capability_catalog.py",
       "language": "python",
       "title": "Discovering a capability with its effects and prerequisites",

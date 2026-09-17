@@ -463,7 +463,7 @@ it may use. That is a real and necessary job, and it is a different job.
 The **human approval gate** is a control point for protected proposals, not a
 replacement for authorization or effect verification. It presents the exact
 proposal, evidence, expected resource version, and consequences to an eligible
-reviewer. The resulting grant is bound to that proposal and expires; the Tool
+reviewer. The resulting human action authorization decision is bound to that proposal and expires; the Tool
 Gateway still reauthorizes the request and records the effect receipt.
 
 Two lifecycle controls are related but deliberately named separately. The
@@ -630,7 +630,7 @@ state.
 
 ### Deterministic acceptance
 
-Acceptance is not the model saying “done.” Harborlight declares evidence preparation complete only when required artifacts exist, income and property checks are fresh, approvals cover the exact proposal, all protected effects are committed with receipts, no unknown effect remains, and the mortgage case satisfies its domain invariants.
+Acceptance is not the model saying “done.” Harborlight declares evidence preparation complete only when required artifacts exist, income and property checks are fresh, human action authorizations cover the exact proposal, all protected effects are committed with receipts, no unknown effect remains, and the mortgage case satisfies its domain invariants.
 
 ### Scaling the shell
 
@@ -838,7 +838,7 @@ session, and uses that result as a proposal for the deterministic shell.
 
 [[EXAMPLE:mortgage-cumulative-case#c03]]
 
-Consider Harborlight mortgage case `MORT-2026-000184`, a synthetic purchase application for Alex Morgan. The mortgage-evidence workflow receives the application, collects income and property evidence, checks for contradictions, requests missing documents, obtains any required approval, and accepts the run only when its obligations are discharged.
+Consider Harborlight mortgage case `MORT-2026-000184`, a synthetic purchase application for Alex Morgan. The mortgage-evidence workflow receives the application, collects income and property evidence, checks for contradictions, requests missing documents, obtains any required human action authorization, and accepts the run only when its obligations are discharged.
 
 The durable workflow owns the business sequence:
 
@@ -850,7 +850,7 @@ The durable workflow owns the business sequence:
 6. Commit any protected mortgage-case change through the Tool Gateway.
 7. Verify the effect and evaluate the run’s acceptance criteria.
 
-Most of those facts are not reasoning problems. Before an agent runs, the platform already knows the mortgage case identifier, tenant, initiating subject, workflow node, applicable policy revision, evidence permissions, previously committed effects, approval status, deadlines, and the exact conditions for acceptance.
+Most of those facts are not reasoning problems. Before an agent runs, the platform already knows the mortgage case identifier, tenant, initiating subject, workflow node, applicable policy revision, evidence permissions, previously committed effects, action-authorization status, deadlines, and the exact conditions for acceptance.
 
 The agent can help with a narrower task: examine the authorized evidence for `MORT-2026-000184` and return a structured assessment of whether it is sufficient, insufficient, or requires additional evidence, together with the evidence references supporting that assessment. The agent interprets evidence; it does not become the workflow, grant access, approve or deny the loan, or declare the case complete.
 
@@ -1028,7 +1028,7 @@ Framework state can help resume an agent. Platform state must recover the busine
 
 ## The restart test
 
-Imagine that all agent workers crash at 2:00 a.m. Then imagine that Northstar replaces the SDK and deploys a new adapter. The organization must still know that `MORT-2026-000184` exists, evidence review is incomplete, the document request is pending, approval `AP-718` is pending, policy `mortgage-policy@2026.09` applied, and effect receipt `RCPT-MORT-000184` records the committed action.
+Imagine that all agent workers crash at 2:00 a.m. Then imagine that Northstar replaces the SDK and deploys a new adapter. The organization must still know that `MORT-2026-000184` exists, evidence review is incomplete, the document request is pending, human action authorization `HAA-718` is pending, policy `mortgage-policy@2026.09` applied, and effect receipt `RCPT-MORT-000184` records the committed action.
 
 None of those facts should require reconstructing an SDK session object. If losing framework state means losing the business process, the framework owns too much. This test should be applied to every proposed framework feature, serialization format, and persistence shortcut.
 
@@ -1036,7 +1036,7 @@ None of those facts should require reconstructing an SDK session object. If losi
 
 An SDK may pause execution when a protected tool call needs a human response. That interruption is useful runtime control, but it is not by itself an enterprise approval.
 
-The durable platform should create a `HumanActionAuthorizationRequest` containing the authorization ID, run and workflow IDs, exact action and resource, proposal hash, evidence references, expected resource version, requested actor, risk class, expiry, and allowed responses. The workflow waits. An eligible reviewer grants or rejects the proposal. Before resuming, the platform verifies that the grant is unexpired, the actor and purpose still match, the policy still permits the action, the resource version is still current, and the proposal hash is unchanged.
+The durable platform should create a `HumanActionAuthorizationRequest` containing the authorization ID, run and workflow IDs, exact action and resource, proposal hash, evidence references, expected resource version, requested actor, risk class, expiry, and allowed responses. The workflow waits. An eligible reviewer authorizes or rejects the proposal. Before resuming, the platform verifies that the decision is unexpired, the actor and purpose still match, the policy still permits the action, the resource version is still current, and the proposal hash is unchanged.
 
 The distinction is:
 
