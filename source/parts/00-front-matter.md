@@ -1,14 +1,14 @@
 [[COVER]]
 
-# Building Enterprise General Intelligence Platform
+# Building an Enterprise General Intelligence Platform
 
 Book v2.1.0 · Publication Release · September 2026
 
 **Reza Rahimi, PhD**
 
-A practical, structured enterprise reference for architects, platform engineers, DevOps engineers, and SREs.
+A practitioner’s guide for architects, platform engineers, DevOps engineers, and SREs building dependable agentic systems.
 
-# Preface: A Practical Way to Read This Book
+# Preface: The Engineering Perspective Behind This Book
 
 This edition starts from a deliberately unfashionable premise: an agentic
 application is still a distributed system. The model may propose a useful next
@@ -29,25 +29,25 @@ stress test because the case has sensitive evidence, human judgment, policy,
 long waits, and protected effects. Comparative Northstar examples show how the
 same contracts travel to supplier onboarding and other domains.
 
-## Scope and claim discipline
+## How to read the claims in this book
 
-Throughout this book, claims about external facts, technologies, standards, research, and regulations are supported by numbered references such as [R05].
+When this book relies on an external fact—about a technology, standard, research finding, or regulation—the claim is tied to a numbered reference such as [R05].
 
-The architectural recommendations in this book are grounded in the author’s practical experience designing and building real-world enterprise AI and agentic platforms for mortgage and financial systems, combined with established industry best practices. They reflect lessons learned from working with systems where reliability, security, compliance, auditability, scalability, and cost are production requirements rather than theoretical concerns.
+The architectural recommendations come from practical work on enterprise AI and agentic platforms in mortgage and financial environments, combined with established industry practice. They are shaped by systems in which reliability, security, compliance, auditability, scalability, and cost are constraints the design has to meet every day—not qualities that can be added after the prototype works.
 
-When an architectural recommendation does not include a citation, treat it as experience-based guidance, not a universal rule. Every enterprise environment is different. Validate these recommendations against your own workloads, security requirements, regulatory environment, threat model, technology providers, and operational constraints.
+Recommendations without citations are experience-based guidance, not universal laws. Test them against your workloads, security requirements, regulatory environment, threat model, providers, and operating constraints. A sound pattern in one organization can be the wrong trade-off in another.
 
-References should also be understood within their scope. Vendor documentation explains what a technology supports, but does not prove that it is suitable for your production environment. Community best practices provide useful guidance, but are not laws or regulations. Benchmarks demonstrate performance under specific conditions, but do not guarantee the same results in your environment.
+The sources have limits too. Vendor documentation can tell you what a technology supports; it cannot prove that the technology is right for your environment. Community guidance is useful, but it is not law. A benchmark describes a result under particular conditions, not a promise that your workload will behave the same way.
 
-In short, this book combines published evidence, industry best practices, and lessons from building real enterprise platforms. Use them as a foundation, then adapt and validate the architecture for your own organization.
+Use the book as an engineering foundation rather than a prescription. Take the evidence, patterns, and hard-earned lessons, then adapt and validate them where your system will actually run.
 
-## Reproducible edition
+## How this edition is maintained
 
-This book is designed to be reproducible, maintainable, and easy to extend. The accompanying Book v2.1.0 development package contains everything needed to rebuild and update the book consistently, including the canonical Markdown source, generated DOCX, diagrams, cover assets, references, style definitions, templates, skills, build tools, validation tools, and release evidence.
+A book about governed systems should be maintainable in the same disciplined way. The accompanying Book v2.1.0 package includes the canonical Markdown, generated DOCX, diagrams, cover assets, references, styles, templates, build and validation tools, and release evidence needed to reproduce this edition.
 
-The Markdown file is the primary source of truth. When updating the book—whether manually or with an AI agent—changes should be made to the Markdown source and the relevant registries first. The DOCX should then be regenerated through the provided build process rather than edited or formatted manually. This helps prevent inconsistencies in formatting, references, diagrams, and document structure.
+The canonical Markdown is the source of truth. Make substantive changes there and in the relevant registries, then regenerate the DOCX through the build process. That keeps references, diagrams, formatting, and structure aligned—even when people and AI agents both contribute.
 
-The package README explains how to build, validate, and release a new version of the book. Following this workflow ensures that future contributors and AI agents can extend the book without breaking its established structure, style, or quality.
+The package README walks through build, validation, and release. Following it gives future contributors a safe way to extend the book without quietly breaking its structure, style, or evidence trail.
 
 # How to Use the Book
 
@@ -83,11 +83,15 @@ Harborlight mortgage case is the cumulative runnable path.
 | Security / risk / privacy | Parts II, VI, VIII and Appendices F, K | Knowledge governance, threat controls, evidence, approvals, exceptions, and assurance |
 | SRE / operations | Parts VII, VIII and Appendices B, L | SLOs, incidents, recovery, capacity, and verified-success economics |
 
-## Architecture at a glance
+## The architecture in one view
+
+Treat the architecture below as a map of responsibilities, not a prescribed product stack. Read it from the outside in: requests enter through controlled boundaries, reasoning happens inside explicit limits, and every durable decision or external effect returns to a system that can authorize it, record it, and recover it. The value of the diagram is not the number of boxes; it is the clarity of the ownership lines between them.
 
 [[DIAGRAM:book-map|Figure 0-1 — Narrative map from foundations to production operations]]
 
-## The Contract Behind the Architecture
+## The engineering contract behind the architecture
+
+The book returns to a small engineering contract again and again. Models may interpret ambiguity and propose a next step. Deterministic services decide whether the step is allowed, commit it exactly once, and preserve enough evidence to explain the outcome later. Each framework, tool, protocol, and model has to fit inside that contract rather than quietly redefine it.
 
 The architectures and practices in this book are built around a small set of principles for operating agentic systems safely and reliably in production:
 
@@ -106,53 +110,53 @@ Together, these principles establish a simple operating contract: agents provide
 
 01. What Turns an LLM Call into a Production System
 02. From Model Output to Safe Action
-03. Keep the Framework in Its Lane
+03. Keep the Agent Framework in Its Lane
 
 ## Part II — Architecture, Knowledge, and Context
 
-04. The Architecture Around the Model
+04. Design the Architecture Around the Model
 05. Give Knowledge an Owner
 06. Build Context Without Losing the Plot
 
 ## Part III — The Developer Platform
 
-07. Build the Paved Road for Agent Teams
+07. Build a Paved Road for Agent Teams
 08. Package Capabilities as Versioned Skills
-09. From Skills to a Domain Platform
+09. Turn Skills into a Coherent Domain Platform
 
 ## Part IV — Patterns That Work—and Those That Fail
 
-10. ReAct Without the Runaway Loop
-11. Route the Work—and Transfer Ownership
-12. Plans Are Proposals Until the System Compiles Them
-13. Use Critique to Improve, Not to Self-Approve
-14. Put People Where Judgment Matters
-15. Keep Work Alive Across Time and Failure
-16. Patterns for Real Enterprise Work
-17. The Shapes That Fail in Production
+10. Use ReAct Without Creating a Runaway Loop
+11. Route the Work Without Losing Ownership
+12. Turn Proposed Plans into Safe, Executable Work
+13. Use Critique to Improve—Never to Self-Approve
+14. Put People Where Their Judgment Matters
+15. Keep Long-Running Work Alive Through Failure
+16. Choose Patterns That Fit Real Enterprise Work
+17. Architecture Patterns That Fail in Production
 
 ## Part V — Working Together Across Boundaries
 
 18. Coordinate Specialists Without Losing Control
-19. Crossing the Boundary: MCP, A2A, and Local Control
+19. Crossing System Boundaries: MCP, A2A, and Local Control
 
 ## Part VI — Security, Identity, and Control
 
-20. Security Starts Beyond the Prompt
-21. Carry Identity and Narrow Authority
-22. Make Effects Safe to Retry
-23. Contain a Manipulated Model
+20. Security Starts Outside the Prompt
+21. Carry Identity, Narrow Authority
+22. Make External Effects Safe to Retry
+23. Contain the Damage When a Model Is Manipulated
 
 ## Part VII — Evidence, Evaluation, and Improvement
 
-24. Follow One Run from Request to Receipt
-25. Improve the System Without Losing Control
+24. Follow a Run from Request to Verified Outcome
+25. Improve the System Without Handing It Control
 
 ## Part VIII — Running the System in the Real World
 
-26. Make Governance an Operating System
-27. Release Without Breaking Work in Flight
-28. Make Performance a Business Decision
+26. Make Governance Part of How the Platform Runs
+27. Release New Behavior Without Breaking Work in Flight
+28. Treat Performance as a Business Decision
 
 ## Appendices
 

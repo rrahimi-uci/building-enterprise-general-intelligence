@@ -3,9 +3,9 @@
   "validated_on": "2026-09-13",
   "format": "XeLaTeX",
   "measurements": {
-    "main_tex_sha256": "a33c7b93c23d54ab107d5d7c8e29070cd0f85d52260d840c962c28a790fa2732",
-    "content_tex_sha256": "9f3d000a2289a03c3f5a669a4ebb4b86e5bde0723ffccdaf532defe7dd5806c7",
-    "style_sha256": "2ced77988fb7b87ccae527f1c42092f73a634c39b40b7a3ce60ae20e14a53641",
+    "main_tex_sha256": "37b9dbbd1abd8d0c66eb6f20e61eaedbc253e951f556a8d7a523b8458b5cdd2a",
+    "content_tex_sha256": "d8689f8fabbe8627f963438bbe609bd06eb4d093928816594db0dde171c34a28",
+    "style_sha256": "5da6e75458e0435caa0d9a1040642324bcbbafb1f9df53322707528d92ea0e30",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,

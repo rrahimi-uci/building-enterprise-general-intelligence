@@ -232,7 +232,7 @@ documentation.
 
 ### Reader promise and front matter
 
-- The title is now **Building Enterprise General Intelligence Platform**.
+- The title is now **Building an Enterprise General Intelligence Platform**.
 - The audience line names architects, platform engineers, DevOps engineers, and
   SREs.
 - The Preface now presents a clear progression from model call to governed

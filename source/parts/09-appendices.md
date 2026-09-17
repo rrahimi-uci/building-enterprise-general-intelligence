@@ -5,9 +5,9 @@ book. They collect decision aids, runbooks, contracts, framework notes, a
 glossary, the Harborlight implementation guide, and the evidence registry that
 keeps the main argument honest.
 
-# Appendix A — Choosing a Pattern: Decision Tree and Catalog
+# Appendix A — Choosing the Right Pattern: A Decision Guide
 
-## Start with the obligation
+## Start with the outcome the system must protect
 
 1. Known path: deterministic workflow; add a bounded semantic node only where ambiguity remains.
 2. Next step depends on observation: bounded ReAct with budgets and executable acceptance.
@@ -17,7 +17,7 @@ keeps the main argument honest.
 6. Side effect: proposal/authorize/commit, idempotency, reconciliation, acceptance.
 7. Post-deployment improvement: governed learning; never self-certification.
 
-## Find the matching pattern
+## Match the obligation to a pattern
 
 | **Category** | **Recommended pattern** | **Anti-pattern** | **Primary chapters** |
 | --- | --- | --- | --- |
@@ -49,7 +49,7 @@ keeps the main argument honest.
 | Judge passes security failure | Scorer precedence | Hard deterministic failure blocks release |
 | Unsafe remote artifact | Peer, grant, schema/hash/classification/scan | Reject adoption; quarantine; review trust profile |
 
-## Unknown-effect runbook
+## When an effect may have happened but no receipt returned
 
 1. Stop dependent work and preserve cancellation intent.
 2. Load EffectRecord, intent hash, expected version, downstream request ID, and trace.
@@ -58,7 +58,7 @@ keeps the main argument honest.
 5. Record evidence; accept, retry safely, compensate, or move to InterventionRequired.
 6. Add the failure to simulation and release regression tests.
 
-# Appendix C — Platform Contracts at a Glance
+# Appendix C — Core Platform Contracts at a Glance
 
 | **Contract** | **Owner** | **Key fields** |
 | --- | --- | --- |
@@ -74,9 +74,9 @@ keeps the main argument honest.
 | Artifact | Artifact Service | schema, hash, provenance, classification, retention, version |
 | ReleaseManifest | Release Registry | agents, Skills, SDK, workflow, models, tools, policy, schemas, evals |
 
-# Appendix D — Choosing a Framework
+# Appendix D — Choosing an Agent Framework
 
-> **Evidence note.** The landscape summary is based on current framework documentation for OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Amazon Bedrock multi-agent collaboration, LangGraph, LlamaIndex Workflows, PydanticAI durable execution, Dapr Agents, and DBOS. It records declared capabilities, not a comparative production certification. [R29][R31][R32][R33][R34][R35][R36][R37][R38]
+> **Evidence context:** The landscape summary is based on current framework documentation for OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Amazon Bedrock multi-agent collaboration, LangGraph, LlamaIndex Workflows, PydanticAI durable execution, Dapr Agents, and DBOS. It records declared capabilities, not a comparative production certification. **[R29][R31][R32][R33][R34][R35][R36][R37][R38]**
 
 | **Framework** | **Strength** | **Enterprise caution** | **Recommended placement** |
 | --- | --- | --- | --- |
@@ -111,7 +111,7 @@ keeps the main argument honest.
 | MCP | Broad tool/resource interoperability with standardized transports and OAuth-based HTTP authorization | Authorization is optional at protocol level; token passthrough/confused-deputy risks; tool trust, risk classification, tenancy, and business policy are out of scope | Tool interoperability behind a controlled gateway—not direct unrestricted production access |
 | OpenTelemetry GenAI conventions | Emerging common vocabulary for model, agent, MCP, span, metric, and event telemetry | Conventions are evolving; full prompt/tool content creates privacy risk; semantic interoperability does not guarantee causal completeness | Canonical instrumentation base plus organization-specific run/effect/policy attributes |
 
-### Overall industry direction
+### Where the industry is heading
 
 1. **From chains to explicit state:** graph and workflow abstractions are replacing invisible prompt loops.
 2. **From synchronous chat to sessions/tasks:** managed runtimes and A2A now model asynchronous, interruptible, long-running work.
@@ -121,13 +121,13 @@ keeps the main argument honest.
 6. **From prompt safeguards to capability security:** OWASP’s agentic focus reflects that the central risk is privileged action under manipulated context.
 7. **From “autonomy” to bounded agency:** the strongest public guidance recommends simple composable patterns, explicit workflows, and greater autonomy only where measurable value justifies it.
 
-### Practical selection rule
+### A practical way to choose
 
 Choose the smallest harness that expresses the agent behavior, the strongest durable engine that matches the run’s consequences, and enterprise-owned gateways for identity, policy, tools, models, telemetry, and artifacts. Do not force one framework to own all three layers.
 
 # Appendix E — What This Architecture Means for Research
 
-## Research and benchmark implications
+## What researchers and benchmark designers should test
 
 | **Research or benchmark** | **What it established** | **Architectural implication** |
 | --- | --- | --- |
@@ -142,9 +142,9 @@ Choose the smallest harness that expresses the agent behavior, the strongest dur
 
 The common lesson is not that “more agents” is state of the art. It is that useful agent behavior comes from environment grounding, specialized interfaces, explicit state, executable verification, and bounded iteration. Long trajectories amplify even modest per-step error; therefore architecture must create shorter verified segments and durable recovery points.
 
-# Appendix F — Known Limits—and the Controls That Contain Them
+# Appendix F — Known Limits and the Controls That Contain Them
 
-## Known architectural limits and required mitigations
+## Known limits—and how to contain them
 
 **1. Prompt injection is not assumed solved. Required mitigation: treat retrieved content as untrusted, remove ambient credentials, minimize capabilities, and enforce identity, policy, schema, sandbox, egress, and effect controls outside the model.**
 
@@ -170,9 +170,9 @@ The common lesson is not that “more agents” is state of the art. It is that 
 
 **12. Human accountability is implemented as an operating model, not a button. Required mitigation: define roles and separation of duties, accessible evidence-first previews, training, review-time budgets, fatigue metrics, recourse, and explicit exception ownership.**
 
-# Appendix G — A Practical Enterprise Adoption Roadmap
+# Appendix G — A Practical Roadmap for Enterprise Adoption
 
-## Enterprise adoption roadmap
+## A staged path to enterprise adoption
 
 | **Phase** | **Build** | **Exit criteria** |
 | --- | --- | --- |
@@ -183,7 +183,7 @@ The common lesson is not that “more agents” is state of the art. It is that 
 | 4 — Cross-agent ecosystem | A2A gateway, signed manifests, cross-team contracts, delegated token exchange, federated traces | Interoperability, cancellation, identity, schema, failure, and audit contract tests pass |
 | 5 — Continuous optimization | Failure mining, incremental execution, model/tool substitution, automated rollback, governance reporting | Improvements are evidence-driven; no self-modifying production behavior outside release controls |
 
-### The minimum bar before a write
+### The minimum bar before an agent can write
 
 Before an agent can mutate an enterprise system, require all of the following:
 
@@ -221,7 +221,7 @@ Before an agent can mutate an enterprise system, require all of the following:
 # Appendix I — Companion Implementation Guide: Harborlight Mortgage
 
 
-Companion code for the book **Building Enterprise General Intelligence Platform**.
+Companion code for the book Building an Enterprise General Intelligence Platform.
 
 ## Versions used in this guide
 
@@ -256,7 +256,7 @@ uses the scripted Agents SDK model and a synthetic gateway, while the MLflow
 example uses a local SQLite tracking URI. No command in the offline profile
 requires credentials or a network connection.
 
-## What the package contains
+## What is included
 
 * `mortgage_case/domain/` — synthetic case, evidence, proposal, and money contracts
 * `mortgage_case/platform/` — provider-neutral runtime and gateway boundaries
@@ -299,7 +299,7 @@ make examples-run
 .venv-examples/bin/python -m mortgage_case --chapter 3 --scenario happy_path --offline --json
 ```
 
-# Appendix J — Coding-Agent Prompt and Acceptance Criteria
+# Appendix J — Prompt and Acceptance Criteria for a Coding Agent
 
 ## Deep-research coding-agent prompt
 
@@ -556,7 +556,7 @@ References are numbered by stable registry identifier. Each citation supports on
 | Supply chain | Lock digest, SBOM, signed provenance, trusted builder/signer, release manifest, revocation exercise |
 | Human factors | Accessible approval test, preview fidelity, reviewer calibration, fatigue/override metrics, recourse path |
 
-# A Closing Perspective
+# Closing Perspective: What Production-Grade Intelligence Requires
 
 |  |
 | --- |

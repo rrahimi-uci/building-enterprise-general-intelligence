@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "book": {
-    "title": "Building Enterprise General Intelligence Platform",
+    "title": "Building an Enterprise General Intelligence Platform",
     "short_title": "Enterprise General Intelligence Platform",
     "version": "2.1.0",
     "release_date": "2026-09-13",
@@ -12,7 +12,7 @@
     "cover": {
       "eyebrow": "ENTERPRISE SYSTEMS REFERENCE",
       "title_lines": [
-        "BUILDING",
+        "BUILDING AN",
         "ENTERPRISE",
         "GENERAL",
         "INTELLIGENCE",

@@ -6,33 +6,35 @@ then follows routing, planning, reflection, human review, and durable work. It
 ends with a catalogue of patterns and failure shapes so a design review can ask
 not only “what could work?” but also “how would this fail in production?”
 
-# 10 — ReAct Without the Runaway Loop
+# 10 — Use ReAct Without Creating a Runaway Loop
 
-> **Evidence note.** ReAct was introduced as a prompting paradigm that interleaves reasoning and action; its reported benchmark results motivate the loop, not an assertion that unrestricted production autonomy is safe. [R01]
-
-|  |
-| --- |
-| **MORTGAGE CASE AT THIS POINT**  A loan officer asks why a mortgage case is not ready for underwriting. One retrieval is insufficient: the system may need the application projection, an income-verification artifact, and a policy explanation. A bounded ReAct loop is appropriate because the next information need depends on the previous observation. |
+> **Evidence context:** ReAct was introduced as a prompting paradigm that interleaves reasoning and action; its reported benchmark results motivate the loop, not an assertion that unrestricted production autonomy is safe. **[R01]**
 
 |  |
 | --- |
-| **DESIGN DECISION**  Use ReAct only for information-dependent next steps and impose external turn, tool, time, cost, and no-progress limits. |
+| **WHERE THE MORTGAGE CASE STANDS** A loan officer asks why a mortgage case is not ready for underwriting. One retrieval is insufficient: the system may need the application projection, an income-verification artifact, and a policy explanation. A bounded ReAct loop is appropriate because the next information need depends on the previous observation. |
 
-## Why this chapter matters
+|  |
+| --- |
+| **THE DESIGN CHOICE** Use ReAct only for information-dependent next steps and impose external turn, tool, time, cost, and no-progress limits. |
+
+## Why useful reasoning loops still need hard limits
 
 ReAct is valuable when the next question depends on the last observation. It
 is dangerous when the loop is allowed to decide its own limits or call tools
 without a clear stopping rule. This chapter keeps the useful feedback loop and
 puts turns, tools, time, cost, progress, and acceptance under external control.
 
-## A bounded feedback loop
+## Keep the feedback loop inside explicit limits
+
+Use ReAct when a new observation can genuinely change the next useful question. If the sequence is already known—read the case, validate required fields, calculate a ratio, request approval—a durable workflow is clearer and usually cheaper. That avoids paying a model to rediscover a process the organization already understands. Even when ReAct is justified, the controller should stop when the loop repeats, exhausts its budget, or cannot obtain missing evidence.
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | External loop controller and acceptance engine | observation/model and model/tool | turn · tool permit · run budget | one bounded loop | AgentDecision · Observation · ReActLimits |
 
-## Why ReAct is useful—and expensive
+## Use ReAct only when each observation can change the next step
 
 [[DIAGRAM:pattern-react|Figure 10-1 — Bounded ReAct: the loop is inside, the limits are outside]]
 
@@ -54,25 +56,25 @@ Plan capacity in turns per successful outcome, not only requests per second. Tra
 | --- |
 | **PERFORMANCE AND COST**  A ReAct loop's cost is set by its trajectory, not its prompt. Each observation re-enters the context, so an n-step loop is roughly quadratic in tokens. Cap the step count, summarize observations before they re-enter, and measure cost per *completed task* rather than per call — a cheap call that loops eight times is not cheap. |
 
-## What the evidence supports
+## What the evidence lets us conclude
 
 |  |
 | --- |
 | **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
 
-Evidence anchors: REACT; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.
+The discussion above draws on REACT; NIST-GAI. Appendix K lists the complete sources and records their authority, version, and scope.
 
 |  |
 | --- |
 | **COMMON PITFALL**  Unbounded retries disguised as reasoning. When a tool fails and the model is free to try again, the loop can burn its whole budget rediscovering the same error. Return failures as typed data the model can read, cap attempts per tool, and make the cap a run-level budget rather than a per-call one. |
 
-## Putting it into practice: ReAct
+## How ReAct works in practice
 
 |  |
 | --- |
-| **PROBLEM**  The system cannot know every information-gathering step in advance because the next action depends on the previous observation. |
+| **THE ENGINEERING PROBLEM** The system cannot know every information-gathering step in advance because the next action depends on the previous observation. |
 
-### Architecture and flow
+### How the pattern works
 
 A bounded controller alternates model decision and governed tool invocation. The controller—not the model—owns turns, budgets, state, repeated-action detection, and acceptance.
 
@@ -86,14 +88,14 @@ A bounded controller alternates model decision and governed tool invocation. The
 | --- | --- |
 | Use for exploratory retrieval, diagnosis, or research with a small eligible tool set and measurable stop conditions. | Avoid for known workflows, single retrievals, protected commits, or open-ended browsing without meaningful limits. |
 
-### Trade-offs
+### Where it helps—and what it costs
 
 | **Choice** | **Consequence** |
 | --- | --- |
 | Adaptivity | Handles unknown paths; increases latency, cost, and trajectory variance. |
 | Intermediate observations | Improves grounding; increases attack surface and context pressure. |
 
-### Failures and controls
+### Where it can fail—and how to contain it
 
 | **Failure** | **Control** |
 | --- | --- |
@@ -101,7 +103,7 @@ A bounded controller alternates model decision and governed tool invocation. The
 | Context poisoning | Treat observations as untrusted, provenance-labeled data. |
 | Budget exhaustion | External turn, call, token, time, and cost enforcement. |
 
-### Minimum observability
+### What you need to see in production
 
 * turn index
 * decision type
@@ -111,7 +113,7 @@ A bounded controller alternates model decision and governed tool invocation. The
 * remaining budgets
 * stop reason
 
-## A practical starting point
+## A sensible place to start
 
 
 [[EXAMPLE:bounded-react-loop]]
@@ -120,13 +122,13 @@ A bounded controller alternates model decision and governed tool invocation. The
 
 [[EXAMPLE:react-engine#core]]
 
-## When the system misbehaves
+## If this fails in production
 
 1. List every turn with normalized action, observation, token, time, and cost deltas.
 2. Identify the first repeated action-observation signature.
 3. Check whether the stop decision came from acceptance criteria or model wording.
 
-## Before you ship
+## What to verify before production
 
 **✓** The information need truly requires iterative observation.
 
@@ -138,12 +140,12 @@ A bounded controller alternates model decision and governed tool invocation. The
 
 **✓** Unknown effects or budget exhaustion terminate safely.
 
-## Try it yourself
+## Put the idea to work
 
 1. Add information-gain and repeat-signature stopping to the reference ReAct loop.
 2. Compare a one-shot retrieval design with ReAct for the same mortgage-evidence question.
 
-## Questions for design review
+## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -153,21 +155,21 @@ A bounded controller alternates model decision and governed tool invocation. The
 | What should an observation contain? | A typed, sanitized result or artifact reference with provenance, version, classification, and explicit error semantics. |
 | When should ReAct not be used? | For a known workflow, a single retrieval, a protected transaction, or a task whose acceptance can be computed directly. |
 
-## Why Chapter 11 comes next
+## Where this leads next
 
 A bounded reason–act loop handles local uncertainty; Chapter 11 adds routing and handoff when known paths or specialists should own the work.
 
-# 11 — Route the Work—and Transfer Ownership
+# 11 — Route the Work Without Losing Ownership
 
 |  |
 | --- |
-| **MORTGAGE CASE AT THIS POINT**  Some requests are policy questions, others are document defects, evidence disputes, or protected mortgage-case actions. Harborlight needs routing, but it also needs to know when responsibility actually transfers and who owns cancellation, deadlines, and the final response. |
+| **WHERE THE MORTGAGE CASE STANDS** Some requests are policy questions, others are document defects, evidence disputes, or protected mortgage-case actions. Harborlight needs routing, but it also needs to know when responsibility actually transfers and who owns cancellation, deadlines, and the final response. |
 
 |  |
 | --- |
-| **DESIGN DECISION**  Use deterministic route eligibility and fallback; record handoff as an explicit ownership transition. |
+| **THE DESIGN CHOICE** Use deterministic route eligibility and fallback; record handoff as an explicit ownership transition. |
 
-## Why this chapter matters
+## Why choosing a worker is different from handing off responsibility
 
 Routing sounds like a classification problem until a real request is late,
 ambiguous, or already halfway through a workflow. This chapter separates the
@@ -175,14 +177,16 @@ choice of a specialist from the transfer of responsibility, then makes
 fallbacks, deadlines, authority, and the final response explicit. That is what
 prevents a handoff from becoming a message that nobody owns.
 
-## Routing with an owner attached
+## Route the work without losing ownership
+
+A routing decision answers “who is best placed to do this?” A handoff answers “who is now accountable for finishing it?” Those are not the same event. If a specialist never acknowledges the task, the original coordinator still owns the deadline and user response. Recording the transfer prevents work from disappearing into a queue while every component assumes someone else has it.
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Route service and workflow ownership record | classifier to privileged route; owner transfer | route class · specialist queue | one route or handoff | RouteDecision · Handoff · CapabilityEnvelope |
 
-## Selection is not authority
+## A routing decision cannot grant permission
 
 [[DIAGRAM:pattern-routing|Figure 11-1 — Routing selects a specialist; policy decides whether it may act]]
 
@@ -201,21 +205,21 @@ Confidence is calibrated on a versioned domain dataset. Below a threshold, the r
 * **Privilege through selection:** showing a model an admin route and treating its selection as authorization.
 * **No fallback:** forcing a best guess even when the request is out of distribution.
 
-## What the evidence supports
+## What the evidence lets us conclude
 
 |  |
 | --- |
 | **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
 
-Evidence anchors: OAI-TOOLS; A2A-101. Full URLs, authority, version, and scope appear in Appendix K.
+The discussion above draws on OAI-TOOLS; A2A-101. Appendix K lists the complete sources and records their authority, version, and scope.
 
-## Putting it into practice: Routing
+## How Routing works in practice
 
 |  |
 | --- |
-| **PROBLEM**  Different requests need different workflows, models, Skills, agents, risk controls, or human queues. |
+| **THE ENGINEERING PROBLEM** Different requests need different workflows, models, Skills, agents, risk controls, or human queues. |
 
-### Architecture and flow
+### How the pattern works
 
 A classifier proposes a route from a precomputed eligible catalog. A deterministic validator checks confidence, policy, health, capacity, and fallback before selection.
 
@@ -229,14 +233,14 @@ A classifier proposes a route from a precomputed eligible catalog. A determinist
 | --- | --- |
 | Use when candidate paths have materially different capabilities, owners, SLOs, cost, or risk. | Avoid model routing when a stable deterministic rule is sufficient or misrouting has unacceptable consequences. |
 
-### Trade-offs
+### Where it helps—and what it costs
 
 | **Choice** | **Consequence** |
 | --- | --- |
 | Specialization | Can improve quality and cost; creates taxonomy, calibration, and drift work. |
 | Learned classification | Handles semantic ambiguity; requires fallback and monitoring. |
 
-### Failures and controls
+### Where it can fail—and how to contain it
 
 | **Failure** | **Control** |
 | --- | --- |
@@ -244,7 +248,7 @@ A classifier proposes a route from a precomputed eligible catalog. A determinist
 | Route drift | Versioned datasets and confusion-matrix monitoring. |
 | Privileged route selection | Eligibility before classification and exact authorization after selection. |
 
-### Minimum observability
+### What you need to see in production
 
 * candidate routes
 * eligibility removals
@@ -253,13 +257,13 @@ A classifier proposes a route from a precomputed eligible catalog. A determinist
 * fallback
 * route outcome
 
-## Putting it into practice: Handoffs
+## How Handoffs works in practice
 
 |  |
 | --- |
-| **PROBLEM**  Another agent or human must become the current interaction or task owner rather than merely provide an answer to the original controller. |
+| **THE ENGINEERING PROBLEM** Another agent or human must become the current interaction or task owner rather than merely provide an answer to the original controller. |
 
-### Architecture and flow
+### How the pattern works
 
 The current owner creates a typed transfer containing state references, unresolved obligations, narrowed authority, deadline, cancellation lineage, and acceptance contract.
 
@@ -273,14 +277,14 @@ The current owner creates a typed transfer containing state references, unresolv
 | --- | --- |
 | Use for explicit responsibility transfer across specialist, trust, organizational, or channel boundaries. | Use an agent-as-tool when the parent still owns the outcome; use a durable child task when independent recovery is required without conversational transfer. |
 
-### Trade-offs
+### Where it helps—and what it costs
 
 | **Choice** | **Consequence** |
 | --- | --- |
 | Clear specialization | Introduces ownership transitions and context-transfer risk. |
 | Independent interaction | Reduces supervisor bottlenecks; complicates cancellation and accountability. |
 
-### Failures and controls
+### Where it can fail—and how to contain it
 
 | **Failure** | **Control** |
 | --- | --- |
@@ -288,7 +292,7 @@ The current owner creates a typed transfer containing state references, unresolv
 | Authority expansion | Child grant intersection and exact reauthorization. |
 | Context loss | Typed artifact and obligation references instead of transcript copying. |
 
-### Minimum observability
+### What you need to see in production
 
 * old and new owner
 * handoff reason
@@ -297,7 +301,7 @@ The current owner creates a typed transfer containing state references, unresolv
 * acknowledgment
 * deadline and cancellation
 
-## A practical starting point
+## A sensible place to start
 
 
 [[EXAMPLE:routing-handoff]]
@@ -332,13 +336,13 @@ class DeterministicRouter:
         return route
 ```
 
-## When the system misbehaves
+## If this fails in production
 
 1. Recompute the eligible route set from recorded purpose, authority, health, and risk.
 2. Inspect the confidence threshold and fallback actually used.
 3. Verify ownership and cancellation after a handoff.
 
-## Before you ship
+## What to verify before production
 
 **✓** The eligible route set is computed before model selection.
 
@@ -350,12 +354,12 @@ class DeterministicRouter:
 
 **✓** Route decisions and outcomes are measured by slice.
 
-## Try it yourself
+## Put the idea to work
 
 1. Design a route contract with confidence, reason codes, fallback, and version.
 2. Model a handoff that transfers a task without broadening authority.
 
-## Questions for design review
+## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -365,23 +369,23 @@ class DeterministicRouter:
 | How do you make routing debuggable? | Record candidates, eligibility filters, proposed route, confidence, validator decision, fallback, version, latency, and outcome. |
 | When is a static router better? | When classes are stable, risk is high, compliance requires predictability, or a simple rule already separates the work. |
 
-## Why Chapter 12 comes next
+## Where this leads next
 
 Routing selects among known capabilities; Chapter 12 addresses tasks whose decomposition must itself be proposed and validated.
 
-# 12 — Plans Are Proposals Until the System Compiles Them
+# 12 — Turn Proposed Plans into Safe, Executable Work
 
-> **Evidence note.** Published engineering guidance distinguishes predefined workflows from model-directed agents and recommends adding complexity only when simpler compositions are insufficient. [R27]
-
-|  |
-| --- |
-| **MORTGAGE CASE AT THIS POINT**  A mortgage application with missing employment evidence, an asset discrepancy, and a property check requires adaptive sequencing. Harborlight lets a planner propose a graph but compiles that graph before any node becomes schedulable. |
+> **Evidence context:** Published engineering guidance distinguishes predefined workflows from model-directed agents and recommends adding complexity only when simpler compositions are insufficient. **[R27]**
 
 |  |
 | --- |
-| **DESIGN DECISION**  Use a typed Plan IR and deterministic compiler; freeze committed past work across plan revisions. |
+| **WHERE THE MORTGAGE CASE STANDS** A mortgage application with missing employment evidence, an asset discrepancy, and a property check requires adaptive sequencing. Harborlight lets a planner propose a graph but compiles that graph before any node becomes schedulable. |
 
-## Why this chapter matters
+|  |
+| --- |
+| **THE DESIGN CHOICE** Use a typed Plan IR and deterministic compiler; freeze committed past work across plan revisions. |
+
+## Why a plausible plan still needs to be compiled
 
 Planning earns its complexity only when the work cannot be known in advance.
 Even then, a model-proposed plan is not permission to run arbitrary steps. This
@@ -397,7 +401,9 @@ through a long-running case.
 | --- | --- | --- | --- | --- |
 | Plan Service and durable workflow | planner proposal to deterministic compiler | plan node · workload queue | one node and one plan revision | CandidatePlan · CompiledPlan · PlanRevision |
 
-## Planning is compilation, not permission
+## Treat planning like compilation—not authorization
+
+The compiler analogy is useful because a plan has the same gap as source code: it may express a sensible intention and still be unsafe or impossible to execute. The plan compiler resolves capabilities, checks dependencies, rejects cycles, attaches budgets and deadlines, and verifies that each step stays inside the run’s authority. Runtime checks still matter because a case version, policy decision, or approval can become stale before a later step begins.
 
 [[DIAGRAM:pattern-planning|Figure 12-1 — A candidate plan becomes typed IR and is validated before any step runs]]
 
@@ -466,9 +472,9 @@ JSON · implementation excerpt
 
 A deterministic compiler rejects cycles unless explicitly permitted, missing schemas, unbounded loops, unauthorized capabilities, budget overflow, inconsistent data classification, and unhandled terminal paths. A dynamic node may choose among an allowlisted capability set; it cannot call arbitrary network endpoints.
 
-### How to build it
+### A workable implementation
 
-### Who owns what
+### Who should own each decision
 
 | **Component** | **Responsibility** |
 | --- | --- |
@@ -480,7 +486,7 @@ A deterministic compiler rejects cycles unless explicitly permitted, missing sch
 | Replan Controller | Decide when replanning is allowed and define the unchanged/reusable subgraph |
 | Acceptance Engine | Run deterministic checks and policy-approved model graders before satisfying nodes/goals |
 
-### The interfaces
+### The contracts between components
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -492,7 +498,7 @@ A deterministic compiler rejects cycles unless explicitly permitted, missing sch
 | GET /v1/runs/{run\_id}/ready-nodes | Operator/debug view of satisfied dependencies, blockers, reservations, and dispatch state |
 | POST /v1/nodes/{node\_execution\_id}:accept | Apply acceptance checks to outputs and transition only if expected node version still matches |
 
-### The records that matter
+### Records worth preserving
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -537,21 +543,21 @@ A deterministic compiler rejects cycles unless explicitly permitted, missing sch
 | --- |
 | **ARCHITECTURE GUIDANCE**  Separate the plan from its execution. A plan is data: persist it, version it, and let it be inspected and approved before any step commits an effect. Once execution is a separate pass over a stored plan, replay, partial resume, and human amendment all become ordinary operations instead of special cases. |
 
-## What the evidence supports
+## What the evidence lets us conclude
 
 |  |
 | --- |
 | **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
 
-Evidence anchors: TEMPORAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.
+The discussion above draws on TEMPORAL; NIST-GAI. Appendix K lists the complete sources and records their authority, version, and scope.
 
-## Putting it into practice: Planning
+## How Planning works in practice
 
 |  |
 | --- |
-| **PROBLEM**  The task requires adaptive decomposition or dependency ordering that cannot be fully encoded upfront. |
+| **THE ENGINEERING PROBLEM** The task requires adaptive decomposition or dependency ordering that cannot be fully encoded upfront. |
 
-### Architecture and flow
+### How the pattern works
 
 A planner emits a typed Plan IR. A deterministic compiler validates graph integrity, capabilities, schemas, risk, effects, budgets, resources, and terminal paths before the workflow schedules nodes.
 
@@ -565,14 +571,14 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 | --- | --- |
 | Use for heterogeneous, dependency-rich tasks where semantic decomposition provides measurable value. | Avoid for known processes, short tasks, or high-risk paths that should be encoded as deterministic workflows. |
 
-### Trade-offs
+### Where it helps—and what it costs
 
 | **Choice** | **Consequence** |
 | --- | --- |
 | Flexible decomposition | More validation, recovery, and evaluation complexity. |
 | Parallel execution | Lower latency; higher resource use and conflict risk. |
 
-### Failures and controls
+### Where it can fail—and how to contain it
 
 | **Failure** | **Control** |
 | --- | --- |
@@ -580,7 +586,7 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 | Invented authority | Capability and grant subset checks. |
 | Plan churn | Revision, no-progress, and cost limits; freeze committed facts. |
 
-### Minimum observability
+### What you need to see in production
 
 * plan digest and revision
 * compiler decisions
@@ -589,20 +595,20 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 * critical path
 * replan diff and reason
 
-## A practical starting point
+## A sensible place to start
 
 
 ### Plan IR compiler
 
 [[EXAMPLE:plan-compilation#core]]
 
-## When the system misbehaves
+## If this fails in production
 
 1. Re-run the plan compiler against the exact release and policy versions.
 2. Find the first node whose capability, budget, or schema became invalid.
 3. Compare plan revisions and ensure committed facts did not change.
 
-## Before you ship
+## What to verify before production
 
 **✓** Model planning is used only for genuine semantic uncertainty.
 
@@ -614,12 +620,12 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 
 **✓** Revisions, loops, fan-out, depth, time, cost, and no-progress behavior are bounded.
 
-## Try it yourself
+## Put the idea to work
 
 1. Extend the Plan IR with deadlines and fallback paths.
 2. Construct a plan that passes schema validation but must fail authority validation.
 
-## Questions for design review
+## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -629,11 +635,11 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 | How should replanning handle completed work? | Treat committed effects and accepted artifacts as immutable facts; revise only the affected future horizon and append a new version with rationale and diff. |
 | How do you prevent plausible but endless planning? | External revision, loop, step, cost, time, delegation, and no-progress limits plus deterministic acceptance and terminal transitions. |
 
-## Why Chapter 13 comes next
+## Where this leads next
 
 Planning creates an executable structure; Chapter 13 adds independent evaluation and bounded revision without self-certification.
 
-# 13 — Use Critique to Improve, Not to Self-Approve
+# 13 — Use Critique to Improve—Never to Self-Approve
 
 |  |
 | --- |
@@ -641,9 +647,9 @@ Planning creates an executable structure; Chapter 13 adds independent evaluation
 
 |  |
 | --- |
-| **DESIGN DECISION**  Use reflection for targeted revision and independent, calibrated acceptance for protected outcomes. |
+| **THE DESIGN CHOICE** Use reflection for targeted revision and independent, calibrated acceptance for protected outcomes. |
 
-## Why this chapter matters
+## Why critique cannot certify its own answer
 
 Critique can make a draft better, but a generator should not be allowed to
 grade and approve its own work. This chapter gives reflection a bounded job—
@@ -651,14 +657,16 @@ find a targeted defect and propose a revision—while an independently defined
 evaluator and acceptance gate decide whether the result is good enough. That
 separation controls both false confidence and runaway evaluation cost.
 
-## A separate path for judgment
+## Give evaluation its own independent path
+
+Independent evaluation does not mean asking the same model to reread its answer and declare it better. Generator and evaluator can share the same blind spot, especially when they use the same model family, context, or assumptions. Start with deterministic checks for schema validity, evidence coverage, policy constraints, and arithmetic. Use calibrated model judges only for genuinely qualitative questions, and treat their scores as evidence for a decision made elsewhere.
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Acceptance Engine | generator/evaluator and evaluator/commit | candidate · scorer pool · slice | one revision cycle | EvaluationResult · Rubric · AcceptanceDecision |
 
-## Improvement without self-certification
+## Improve the answer without letting the system certify itself
 
 [[DIAGRAM:pattern-reflection|Figure 13-1 — A bounded revise loop whose verdict is advisory; promotion happens outside it]]
 
@@ -670,21 +678,21 @@ Qualitative criteria—clarity, completeness, grounded synthesis, or policy-expl
 
 Each revision targets structured feedback and carries a diff. The loop stops on pass, maximum revisions, maximum spend, deadline, or no-progress. If the evaluator and generator repeatedly disagree, the workflow escalates with both artifacts rather than silently choosing the more persuasive prose.
 
-## What the evidence supports
+## What the evidence lets us conclude
 
 |  |
 | --- |
 | **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
 
-Evidence anchors: MLFLOW-EVAL; NIST-GAI. Full URLs, authority, version, and scope appear in Appendix K.
+The discussion above draws on MLFLOW-EVAL; NIST-GAI. Appendix K lists the complete sources and records their authority, version, and scope.
 
-## Putting it into practice: Reflection
+## How Reflection works in practice
 
 |  |
 | --- |
-| **PROBLEM**  A first candidate may contain omissions, contradictions, or weak reasoning that targeted critique can expose. |
+| **THE ENGINEERING PROBLEM** A first candidate may contain omissions, contradictions, or weak reasoning that targeted critique can expose. |
 
-### Architecture and flow
+### How the pattern works
 
 A reflector reviews a candidate against explicit evidence and rubric, emits structured defects, and proposes a bounded revision. It does not commit or certify protected outcomes.
 
@@ -698,14 +706,14 @@ A reflector reviews a candidate against explicit evidence and rubric, emits stru
 | --- | --- |
 | Use when measured offline results show critique improves a specific quality dimension. | Avoid if correctness is executable, the first pass already meets it, or added latency has no measured benefit. |
 
-### Trade-offs
+### Where it helps—and what it costs
 
 | **Choice** | **Consequence** |
 | --- | --- |
 | Better completeness | Additional model calls, correlated errors, and longer latency. |
 | Structured critique | More debuggable; requires defect taxonomy and evaluation. |
 
-### Failures and controls
+### Where it can fail—and how to contain it
 
 | **Failure** | **Control** |
 | --- | --- |
@@ -713,7 +721,7 @@ A reflector reviews a candidate against explicit evidence and rubric, emits stru
 | Stylistic churn | Diff limits and no-progress detection. |
 | Evidence invention | Require evidence references and reject unsupported additions. |
 
-### Minimum observability
+### What you need to see in production
 
 * candidate version
 * defect taxonomy
@@ -722,13 +730,13 @@ A reflector reviews a candidate against explicit evidence and rubric, emits stru
 * quality delta
 * stop reason
 
-## Putting it into practice: Evaluator–Optimizer
+## How Evaluator–Optimizer works in practice
 
 |  |
 | --- |
-| **PROBLEM**  A generated artifact must reach a quality threshold that mixes executable and semantic criteria. |
+| **THE ENGINEERING PROBLEM** A generated artifact must reach a quality threshold that mixes executable and semantic criteria. |
 
-### Architecture and flow
+### How the pattern works
 
 A generator creates candidates; deterministic scorers and calibrated evaluators produce typed feedback; an optimizer revises within a strict iteration budget; an acceptance engine decides.
 
@@ -742,14 +750,14 @@ A generator creates candidates; deterministic scorers and calibrated evaluators 
 | --- | --- |
 | Use for documents, plans, code, or analyses where iterative quality gain is measurable and latency permits. | Do not use a model judge as sole authority for permissions, transaction success, security, or computable correctness. |
 
-### Trade-offs
+### Where it helps—and what it costs
 
 | **Choice** | **Consequence** |
 | --- | --- |
 | Higher quality | Higher cost and latency, plus evaluator calibration work. |
 | Explicit rubric | Improves governance; can overfit to benchmark or judge preferences. |
 
-### Failures and controls
+### Where it can fail—and how to contain it
 
 | **Failure** | **Control** |
 | --- | --- |
@@ -757,7 +765,7 @@ A generator creates candidates; deterministic scorers and calibrated evaluators 
 | Judge variance | Repeated runs, confidence intervals, ensembles, and thresholds. |
 | Endless revision | Maximum revisions, cost, time, and no-progress stop. |
 
-### Minimum observability
+### What you need to see in production
 
 * scorer versions
 * per-criterion scores
@@ -766,7 +774,7 @@ A generator creates candidates; deterministic scorers and calibrated evaluators 
 * variance
 * acceptance decision
 
-## A practical starting point
+## A sensible place to start
 
 
 ### Bounded evaluator–optimizer
@@ -805,13 +813,13 @@ class EvaluatorOptimizer:
         raise RuntimeError("candidate did not pass bounded evaluation")
 ```
 
-## When the system misbehaves
+## If this fails in production
 
 1. Compare generator and evaluator evidence to detect shared blind spots.
 2. Inspect score variance across repeated judge runs and slices.
 3. Detect revisions that change wording but not the failing invariant.
 
-## Before you ship
+## What to verify before production
 
 **✓** Generator and evaluator roles, prompts, models, and evidence are distinguishable.
 
@@ -823,12 +831,12 @@ class EvaluatorOptimizer:
 
 **✓** Failed candidates and feedback enter a regression corpus.
 
-## Try it yourself
+## Put the idea to work
 
 1. Implement a bounded evaluator-optimizer with one deterministic and one qualitative scorer.
 2. Create a case where reflection worsens a correct answer and define the stop rule.
 
-## Questions for design review
+## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -838,23 +846,23 @@ class EvaluatorOptimizer:
 | What should always be checked deterministically? | Schema, policy, authority, evidence presence, effect state, resource versions, arithmetic, and other computable invariants. |
 | When should you not add reflection? | When the first result already meets an executable specification, latency is critical, or critique adds no measured improvement. |
 
-## Why Chapter 14 comes next
+## Where this leads next
 
 Automated evaluation can improve candidates; Chapter 14 identifies decisions that require explicit human authority, correction, or recourse.
 
-# 14 — Put People Where Judgment Matters
+# 14 — Put People Where Their Judgment Matters
 
-> **Evidence note.** Human-review interfaces should be tested against WCAG 2.2 accessibility criteria; accessibility conformance does not by itself eliminate automation bias or establish decision fairness. [R41]
-
-|  |
-| --- |
-| **MORTGAGE CASE AT THIS POINT**  A protected mortgage-case operation requires human action authorization. The reviewer must see the exact operation, destination, evidence, expected resource version, and risk—not a vague request to “approve the mortgage.” |
+> **Evidence context:** Human-review interfaces should be tested against WCAG 2.2 accessibility criteria; accessibility conformance does not by itself eliminate automation bias or establish decision fairness. **[R41]**
 
 |  |
 | --- |
-| **DESIGN DECISION**  Persist proposal-bound approvals as durable workflow events and reauthorize immediately before commit. |
+| **WHERE THE MORTGAGE CASE STANDS** A protected mortgage-case operation requires human action authorization. The reviewer must see the exact operation, destination, evidence, expected resource version, and risk—not a vague request to “approve the mortgage.” |
 
-## Why this chapter matters
+|  |
+| --- |
+| **THE DESIGN CHOICE** Persist proposal-bound approvals as durable workflow events and reauthorize immediately before commit. |
+
+## Why human review must change system state
 
 Human review is most useful when it resolves a decision the system cannot or
 should not make alone. It becomes theater when the reviewer sees a summary
@@ -862,14 +870,16 @@ that can change after approval, or when a click is detached from the effect it
 authorizes. This chapter binds intervention to an immutable proposal,
 evidence, identity, expiry, and a durable state transition.
 
-## Approval as a state transition
+## An approval should change durable state
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Workflow plus Human Action Authorization Service | machine proposal to human authority | authorization queue · risk class · tenant | one immutable proposal | HumanActionAuthorizationRequest · HumanActionAuthorizationDecision · EffectReceipt |
 
-## Two distinct human controls
+## Separate authorization from intervention
+
+Authorization and intervention place different demands on a reviewer. Authorization asks whether one exact effect may proceed; the interface should show the immutable proposal, evidence, consequences, and expiry. Intervention asks a person to supply missing judgment or correct a run; the interface must expose uncertainty and viable alternatives. Combining them into one generic approval queue encourages rubber-stamping and makes the audit record difficult to interpret.
 
 [[DIAGRAM:pattern-hitl|Figure 14-1 — Approval and intervention: different triggers, different authority, different evidence]]
 
@@ -879,7 +889,7 @@ The Human Action Authorization Service stores a canonical proposal, human-readab
 
 Human capacity is finite. Queue age, dwell, abandonment, reassignment, disagreement, and after-hours coverage are production metrics. A system that requires routine approval for low-risk deterministic work may be less safe because reviewers become fatigued.
 
-## Human-in-the-loop and operational control
+## Design human review as part of the system
 
 | **Required analysis** | **Design conclusion** |
 | --- | --- |
@@ -904,9 +914,9 @@ HumanActionAuthorizationRequest contains: proposal/artifact hash, exact action a
 * Immutable operator identity, reason, timestamp, before/after state, and linked ticket on every override.
 * SLA timers and escalation paths; a timed-out approval follows explicit policy, never implicit approval.
 
-### How to build it
+### A workable implementation
 
-### Who owns what
+### Who should own each decision
 
 | **Component** | **Responsibility** |
 | --- | --- |
@@ -918,7 +928,7 @@ HumanActionAuthorizationRequest contains: proposal/artifact hash, exact action a
 | Operator Control Service | Perform authorized pause, cancel, retry, plan patch, budget, and compensation commands |
 | Override Journal | Append operator actions and linked incident/change records to immutable evidence |
 
-### The interfaces
+### The contracts between components
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -931,7 +941,7 @@ HumanActionAuthorizationRequest contains: proposal/artifact hash, exact action a
 | GET /v1/approval-queues/{queue\_id}/items | Cursor query by skill/role, priority, age, risk, tenant, value, and region; no unauthorized evidence leakage |
 | POST /v1/runs/{run\_id}:operatorAction | Pause, cancel, safe-retry, patch plan, extend budget, trigger reconciliation/compensation, or fork replay with reason and expected state |
 
-### The records that matter
+### Records worth preserving
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -954,7 +964,7 @@ A decision is valid only when the presented proposal hash equals the current pro
 5. The workflow receives the event, revalidates policy/current resource version, and commits only the proposal hash that was approved.
 6. If the resource, amount, recipient, scope, or policy changed materially, the workflow supersedes the approval and generates a fresh preview.
 
-### What changes at scale
+### What changes as usage grows
 
 * Partition approvals by tenant + business queue/region while keeping a direct index by approval/run ID. Strongly serialize decisions for one approval; scale independently across approvals.
 * Use workflow timers or a durable timer service for SLA/escalation—never scan an approvals table each minute at enterprise scale.
@@ -969,21 +979,21 @@ A decision is valid only when the presented proposal hash equals the current pro
 | --- |
 | **PRODUCTION CONSIDERATION**  Design the wait, not just the prompt. A run paused for approval may sit for days across deploys, token expiry, and staff changes. Persist the full decision context with the pause, expire it explicitly, and define what happens when it lapses — an approval request with no expiry becomes an approval nobody can safely grant. |
 
-## What the evidence supports
+## What the evidence lets us conclude
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | Approval integrity | Approve the exact canonical proposal, not a natural-language summary. Revalidate policy, authority, proposal hash, expiry, destination, and resource version immediately before commit. Never transport serialized run state inside exception text or ordinary logs. | OAI-HITL; OWASP-AGENT |
 
-Evidence anchors: OAI-HITL; OWASP-AGENT; WCAG22. Full URLs, authority, version, and scope appear in Appendix K.
+The discussion above draws on OAI-HITL; OWASP-AGENT; WCAG22. Appendix K lists the complete sources and records their authority, version, and scope.
 
-## Putting it into practice: Human-in-the-Loop
+## How Human-in-the-Loop works in practice
 
 |  |
 | --- |
-| **PROBLEM**  A person must authorize, correct, or resolve work whose risk or ambiguity exceeds autonomous authority. |
+| **THE ENGINEERING PROBLEM** A person must authorize, correct, or resolve work whose risk or ambiguity exceeds autonomous authority. |
 
-### Architecture and flow
+### How the pattern works
 
 The workflow persists a proposal-bound HumanActionAuthorizationRequest or InterventionTask, pauses, receives an authenticated decision, revalidates current authority and resource state, then commits or replans.
 
@@ -997,14 +1007,14 @@ The workflow persists a proposal-bound HumanActionAuthorizationRequest or Interv
 | --- | --- |
 | Use for high-risk, irreversible, regulated, ambiguous, or policy-exception decisions. | Do not add a cosmetic click for already-automated low-risk steps or ask a human to review unreadable raw model traces. |
 
-### Trade-offs
+### Where it helps—and what it costs
 
 | **Choice** | **Consequence** |
 | --- | --- |
 | Risk control | Adds dwell time, queues, fatigue, and staffing requirements. |
 | Human judgment | Handles ambiguity; can be inconsistent and needs calibration. |
 
-### Failures and controls
+### Where it can fail—and how to contain it
 
 | **Failure** | **Control** |
 | --- | --- |
@@ -1012,7 +1022,7 @@ The workflow persists a proposal-bound HumanActionAuthorizationRequest or Interv
 | Wrong approver | RBAC/ABAC and separation of duties. |
 | Queue abandonment | SLA, escalation, reassignment, cancellation, and safe timeout. |
 
-### Minimum observability
+### What you need to see in production
 
 * proposal hash
 * risk and policy basis
@@ -1021,7 +1031,7 @@ The workflow persists a proposal-bound HumanActionAuthorizationRequest or Interv
 * decision and reason
 * commit receipt
 
-## A practical starting point
+## A sensible place to start
 
 
 [[EXAMPLE:approval-gate]]
@@ -1071,13 +1081,13 @@ def proposal_hash(action: str, destination: str,
 
 [[EXAMPLE:approval-verification#core]]
 
-## When the system misbehaves
+## If this fails in production
 
 1. Recompute the proposal hash and expected resource version.
 2. Verify approver authority, expiry, and separation-of-duty policy.
 3. Trace the approval event through commit and effect receipt.
 
-## Before you ship
+## What to verify before production
 
 **✓** Every capability has an immutable manifest covering interface, security, risk, effects, runtime, ownership, and lifecycle.
 
@@ -1089,12 +1099,12 @@ def proposal_hash(action: str, destination: str,
 
 **✓** Reconciliation, compensation, pause, cancel, and intervention are governed commands.
 
-## Try it yourself
+## Put the idea to work
 
 1. Design a human action authorization object for a protected mortgage-case operation.
 2. Define how edits, policy changes, and expired grants invalidate approval.
 
-## Questions for design review
+## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -1104,23 +1114,23 @@ def proposal_hash(action: str, destination: str,
 | Why are both idempotency and optimistic concurrency needed? | Idempotency prevents duplicate logical intent; expected versions prevent an otherwise valid action from overwriting newer state. |
 | What should happen when a mutating tool times out? | Mark the effect unknown, block dependent work and blind retry, reconcile using downstream identifiers or observed state, then conclude committed, absent, partial, or intervention required. |
 
-## Why Chapter 15 comes next
+## Where this leads next
 
 Human control introduces waits and resumptions; Chapter 15 makes those waits durable and gives long-running work explicit state and recovery.
 
-# 15 — Keep Work Alive Across Time and Failure
+# 15 — Keep Long-Running Work Alive Through Failure
 
-> **Evidence note.** Durable-execution systems preserve workflow progress across failures and long waits; concrete integrations and replay semantics vary by backend. [R02][R36][R38]
-
-|  |
-| --- |
-| **MORTGAGE CASE AT THIS POINT**  The applicant waits nine days to upload an employment document. During the wait, workers deploy twice, policy changes, the loan officer loses a role, and one earlier request times out. The run must resume safely rather than restart from a prompt transcript. |
+> **Evidence context:** Durable-execution systems preserve workflow progress across failures and long waits; concrete integrations and replay semantics vary by backend. **[R02][R36][R38]**
 
 |  |
 | --- |
-| **DESIGN DECISION**  Represent long-running work as replay-safe workflow history plus bounded activities, durable waits, and reconciliation. |
+| **WHERE THE MORTGAGE CASE STANDS** The applicant waits nine days to upload an employment document. During the wait, workers deploy twice, policy changes, the loan officer loses a role, and one earlier request times out. The run must resume safely rather than restart from a prompt transcript. |
 
-## Why this chapter matters
+|  |
+| --- |
+| **THE DESIGN CHOICE** Represent long-running work as replay-safe workflow history plus bounded activities, durable waits, and reconciliation. |
+
+## Why long-running work needs durable state
 
 An agent that must wait for a document, a person, or a downstream system is no
 longer a request/response handler. Its state has to outlive processes,
@@ -1128,7 +1138,9 @@ deployments, retries, and partial effects. This chapter shows how to model that
 work as durable execution, and why recovery is part of the design rather than
 an operations add-on.
 
-## Durable work has a shape
+## Model long-running work explicitly
+
+Durability is not achieved by serializing an in-memory agent object. The platform needs a stable account of intent, state transitions, pending obligations, timers, child tasks, approvals, and external effects. Workers can then disappear and return without becoming the owners of truth. This matters as soon as a run lasts longer than a process lifetime—or waits on a person whose response arrives after several deployments and policy changes.
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -1147,7 +1159,7 @@ The workflow reducer must be deterministic. It cannot read the clock, call a mod
 
 A run reaches Succeeded only through executable acceptance. A canceled run with a possibly committed write does not simply disappear; it moves through reconciliation and possibly compensation. If correctness cannot be established automatically, InterventionRequired is a valid terminal operational state.
 
-## Execution lifecycle
+## The lifecycle of a durable run
 
 ### Canonical run state machine
 
@@ -1164,7 +1176,7 @@ A run reaches Succeeded only through executable acceptance. A canceled run with 
 9. **Complete.** Produce a typed result, evidence bundle, final cost/quality metrics, retention class, and terminal event.
 10. **Learn safely.** Feed de-identified traces and failures into curated datasets; never let production memory or prompts self-modify without review.
 
-## Long-running agents and event-driven execution
+## Let events resume work without losing control
 
 | **Required analysis** | **Design conclusion** |
 | --- | --- |
@@ -1195,13 +1207,13 @@ Checkpoint after every irreversible or externally visible effect, before long wa
 
 Use a CloudEvents-compatible envelope with id, source, type, subject, time, dataschema, tenant\_id, correlation\_id, causation\_id, traceparent, and a payload reference. Keep sensitive or large content in an access-controlled object store; events carry references and hashes. Use transactional outbox on producers and inbox/deduplication on consumers. A dead-letter queue is quarantine and diagnosis—not a substitute for domain compensation.
 
-### How to build it
+### A workable implementation
 
-### Who owns what
+### Who should own each decision
 
 The Run API persists intent and returns quickly; the durable workflow owns lifecycle; activity workers perform model/tool I/O; Event Ingress authenticates external facts; the Correlator maps those facts to waiting runs; Timer/Signal services wake workflows; and a Version Router keeps compatible workflow builds available for in-flight histories.
 
-### The interfaces
+### The contracts between components
 
 | **API** | **Purpose and contract** |
 | --- | --- |
@@ -1215,7 +1227,7 @@ The Run API persists intent and returns quickly; the durable workflow owns lifec
 | POST /v1/runs/{run\_id}:migrate | Apply an approved deterministic state/code migration with dry-run report and rollback boundary |
 | GET /v1/runs/{run\_id}/history?cursor=... | Paginated, role-redacted event history; content is referenced rather than embedded |
 
-### The records that matter
+### Records worth preserving
 
 | **Entity** | **Key fields and invariants** |
 | --- | --- |
@@ -1250,25 +1262,25 @@ The Run API persists intent and returns quickly; the durable workflow owns lifec
 | --- |
 | **PRODUCTION CONSIDERATION**  Assume at-least-once delivery and make effects idempotent. Exactly-once is not available end to end; a dispatch that times out leaves the outcome genuinely unknown. Give every logical effect a stable key, record its receipt, and reconcile rather than retrying blind. |
 
-## What the evidence supports
+## What the evidence lets us conclude
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | Recovery objective | Durability is incomplete without measured RTO/RPO, compatible worker availability, backup restoration, region failover, and explicit treatment of pending approvals and unknown effects during disaster recovery. | TEMPORAL; CLOUDEVENTS |
 
-Evidence anchors: TEMPORAL; CLOUDEVENTS. Full URLs, authority, version, and scope appear in Appendix K.
+The discussion above draws on TEMPORAL; CLOUDEVENTS. Appendix K lists the complete sources and records their authority, version, and scope.
 
 |  |
 | --- |
 | **COMMON PITFALL**  Storing conversation history and calling it durable state. Transcripts record what was said, not what was decided or committed. Persist decisions, approvals, and effect receipts as first-class records; a run must be resumable from them even if every message is discarded. |
 
-## Putting it into practice: Long-Running Agents
+## How Long-Running Agents works in practice
 
 |  |
 | --- |
-| **PROBLEM**  Business work lasts longer than a process lifetime and must survive waits, worker loss, retries, deployments, and partial external failures. |
+| **THE ENGINEERING PROBLEM** Business work lasts longer than a process lifetime and must survive waits, worker loss, retries, deployments, and partial external failures. |
 
-### Architecture and flow
+### How the pattern works
 
 A durable workflow records deterministic decisions and schedules bounded activities. Timers, signals, children, approvals, effects, and release pins are durable history.
 
@@ -1282,14 +1294,14 @@ A durable workflow records deterministic decisions and schedules bounded activit
 | --- | --- |
 | Use for work with waits, multiple systems, protected effects, independent failures, or duration beyond one request. | Avoid a workflow engine for a single short idempotent read with no recovery or coordination requirement. |
 
-### Trade-offs
+### Where it helps—and what it costs
 
 | **Choice** | **Consequence** |
 | --- | --- |
 | Failure recovery | Requires deterministic workflow discipline and history compatibility. |
 | Long waits | Preserves state; creates lifecycle, retention, and migration obligations. |
 
-### Failures and controls
+### Where it can fail—and how to contain it
 
 | **Failure** | **Control** |
 | --- | --- |
@@ -1297,7 +1309,7 @@ A durable workflow records deterministic decisions and schedules bounded activit
 | Stuck wait | Durable deadline, accepted signal sources, escalation, and visibility. |
 | Unknown mutation | Freeze dependents and reconcile before retry or close. |
 
-### Minimum observability
+### What you need to see in production
 
 * workflow build
 * history event
@@ -1307,20 +1319,20 @@ A durable workflow records deterministic decisions and schedules bounded activit
 * effect reconciliation
 * terminal reason
 
-## A practical starting point
+## A sensible place to start
 
 
 ### Replay-safe workflow reducer
 
 [[EXAMPLE:durable-state#core]]
 
-## When the system misbehaves
+## If this fails in production
 
 1. Replay workflow history with the pinned build and locate nondeterminism.
 2. Inspect pending timers, signals, activities, and child tasks.
 3. Resolve unknown effects before replaying dependent commands.
 
-## Before you ship
+## What to verify before production
 
 **✓** Workflow decisions are replay-safe; I/O, clocks, randomness, models, and tools are recorded activities.
 
@@ -1332,12 +1344,12 @@ A durable workflow records deterministic decisions and schedules bounded activit
 
 **✓** Workflow tasks, activities, timers, waits, history writes, and reconciliation are capacity-planned separately.
 
-## Try it yourself
+## Put the idea to work
 
 1. Model a ten-day wait with role revocation and policy change.
 2. Design cancellation semantics for a run with a possibly committed external write.
 
-## Questions for design review
+## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -1347,13 +1359,13 @@ A durable workflow records deterministic decisions and schedules bounded activit
 | What happens if cancellation arrives while a write may have committed? | Persist cancellation intent, stop new work, mark the effect unknown if needed, reconcile the source system, then compensate or require intervention before closing. |
 | How do you deploy new workflow code safely? | Preserve compatible workers, use explicit version markers, test replay, migrate deterministically when supported, or start a new linked generation when semantics cannot be preserved. |
 
-## Why Chapter 16 comes next
+## Where this leads next
 
 The core patterns are now defined; Chapter 16 compares them across uncertainty, authority, latency, evidence, and operating cost.
 
-# 16 — Patterns for Real Enterprise Work
+# 16 — Choose Patterns That Fit Real Enterprise Work
 
-## Why this chapter matters
+## How to choose a pattern for the problem you actually have
 
 Pattern names are useful only when they help a team make a safer decision. In
 real design reviews, the same words can describe very different obligations:
@@ -1362,7 +1374,9 @@ durable process with explicit ownership and compensation. This chapter gives
 you a practical way to choose among the patterns, what each one buys you, and
 where its cost or failure boundary appears.
 
-## How to use the cards
+## How to use these patterns without turning them into recipes
+
+The patterns are decision aids, not recipes. Start with the obligation the system cannot violate: perhaps an external write must be exactly-once from the business perspective, or a task must survive a ten-day wait. Then choose the smallest pattern that protects that obligation. Combining every pattern produces ceremony and cost; choosing by fashion leaves the real failure mode exposed. The trade-off in each pattern is therefore as important as the recommended design.
 
 Choose by hidden obligation, uncertainty, and risk—not fashionable terminology. Every card uses one review sequence so teams can compare alternatives consistently.
 
@@ -1372,249 +1386,129 @@ Choose by hidden obligation, uncertainty, and risk—not fashionable terminology
 
 ### P-01 — Bounded ReAct
 
-**Problem.** Adaptive evidence is needed.
+**When it helps.** Adaptive evidence is needed. The tempting shortcut is “Unbounded think–act loop.” That fails because the model owns stopping, budget, and success.
 
-**Anti-Pattern.** Unbounded think–act loop.
+**A better design.** A safer design looks like this: Bound ReAct with step/time/token/tool/evidence limits and deterministic acceptance. The runtime flow is: Run Service → reason → eligible tool → observation → stop/accept. Mortgage evidence review queries two approved sources, asks once for the missing employment document, then stops.
 
-**Why It Fails.** The model owns stopping, budget, and success.
-
-**Recommended Pattern.** Bound ReAct with step/time/token/tool/evidence limits and deterministic acceptance.
-
-**Architecture.** Run Service → reason → eligible tool → observation → stop/accept.
-
-**Enterprise Example.** Mortgage evidence review queries two approved sources, asks once for the missing employment document, then stops.
-
-**Detection Metrics.** Steps, no-progress loops, repeat queries, budget exhaustion, evidence coverage.
-
-**Trade-offs.** Bounds can stop useful exploration; tune by risk.
+**What to watch.** Track steps, no-progress loops, repeat queries, budget exhaustion, evidence coverage. The cost is real: bounds can stop useful exploration; tune by risk.
 
 ## Orchestration
 
 ### P-02 — Deterministic spine with semantic nodes
 
-**Problem.** Known obligations include a few judgment points.
+**When it helps.** Known obligations include a few judgment points. The tempting shortcut is “A conversational agent owns the process.” That fails because retries, waits, joins, approval, and compensation become ambiguous.
 
-**Anti-Pattern.** A conversational agent owns the process.
+**A better design.** A safer design looks like this: Durable workflow with bounded semantic nodes. The runtime flow is: Workflow state → semantic task → typed result → deterministic transition. Onboarding always validates, screens, approves, creates, and notifies.
 
-**Why It Fails.** Retries, waits, joins, approval, and compensation become ambiguous.
-
-**Recommended Pattern.** Durable workflow with bounded semantic nodes.
-
-**Architecture.** Workflow state → semantic task → typed result → deterministic transition.
-
-**Enterprise Example.** Onboarding always validates, screens, approves, creates, and notifies.
-
-**Detection Metrics.** Transcript-only state, orphan tasks, duplicate effects, recovery time.
-
-**Trade-offs.** Workflow modeling adds upfront cost.
+**What to watch.** Track transcript-only state, orphan tasks, duplicate effects, recovery time. The cost is real: workflow modeling adds upfront cost.
 
 ## Context engineering
 
 ### P-03 — Typed ContextManifest
 
-**Problem.** The model needs authorized fresh evidence under budget.
+**When it helps.** The model needs authorized fresh evidence under budget. The tempting shortcut is “Dump top-k and chat history into the prompt.” That fails because selection, ACL, freshness, poisoning, and truncation are not reproducible.
 
-**Anti-Pattern.** Dump top-k and chat history into the prompt.
+**A better design.** A safer design looks like this: Manifest source, ACL, snapshot, provenance, rank, freshness, token allocation. The runtime flow is: Planner → retrieval → policy → ranking/dedup → manifest → model. Contract review receives clauses from authorized agreements and effective policy.
 
-**Why It Fails.** Selection, ACL, freshness, poisoning, and truncation are not reproducible.
-
-**Recommended Pattern.** Manifest source, ACL, snapshot, provenance, rank, freshness, token allocation.
-
-**Architecture.** Planner → retrieval → policy → ranking/dedup → manifest → model.
-
-**Enterprise Example.** Contract review receives clauses from authorized agreements and effective policy.
-
-**Detection Metrics.** ACL rejects, freshness, recall/precision, lost-position, unsupported claims.
-
-**Trade-offs.** Snapshotting adds storage and latency.
+**What to watch.** Track aCL rejects, freshness, recall/precision, lost-position, unsupported claims. The cost is real: snapshotting adds storage and latency.
 
 ## Memory
 
 ### P-04 — Provenance-bound tiered memory
 
-**Problem.** Useful facts must persist safely.
+**When it helps.** Useful facts must persist safely. The tempting shortcut is “Write every interaction to one vector store.” That fails because errors, secrets, stale facts, and injected instructions persist.
 
-**Anti-Pattern.** Write every interaction to one vector store.
+**A better design.** A safer design looks like this: Separate working/episodic/semantic/profile memory with purpose, scope, TTL, provenance, verification, deletion. The runtime flow is: Candidate → gate → MemoryRecord → scoped retrieval → revalidation. Store a verified communication preference, not inferred sensitive identity.
 
-**Why It Fails.** Errors, secrets, stale facts, and injected instructions persist.
-
-**Recommended Pattern.** Separate working/episodic/semantic/profile memory with purpose, scope, TTL, provenance, verification, deletion.
-
-**Architecture.** Candidate → gate → MemoryRecord → scoped retrieval → revalidation.
-
-**Enterprise Example.** Store a verified communication preference, not inferred sensitive identity.
-
-**Detection Metrics.** Write acceptance, stale retrieval, corrections, cross-scope access, memory failures.
-
-**Trade-offs.** Strict eligibility reduces personalization.
+**What to watch.** Track write acceptance, stale retrieval, corrections, cross-scope access, memory failures. The cost is real: strict eligibility reduces personalization.
 
 ## Tools
 
 ### P-05 — Proposal–authorize–commit tool façade
 
-**Problem.** An agent must cause a business effect.
+**When it helps.** An agent must cause a business effect. The tempting shortcut is “Direct broad CRUD call with ambient credentials.” That fails because language becomes authorization and retries duplicate work.
 
-**Anti-Pattern.** Direct broad CRUD call with ambient credentials.
+**A better design.** A safer design looks like this: Typed tool, least privilege, policy, proposal/grant, idempotency, reconciliation. The runtime flow is: Proposal → policy/approval → façade → effect → receipt → acceptance. A mortgage document-request proposal binds the case, document kind, policy, expiry, and case version.
 
-**Why It Fails.** Language becomes authorization and retries duplicate work.
-
-**Recommended Pattern.** Typed tool, least privilege, policy, proposal/grant, idempotency, reconciliation.
-
-**Architecture.** Proposal → policy/approval → façade → effect → receipt → acceptance.
-
-**Enterprise Example.** A mortgage document-request proposal binds the case, document kind, policy, expiry, and case version.
-
-**Detection Metrics.** Denials, invalid args, grant mismatch, duplicates, unknown effects.
-
-**Trade-offs.** Controls add latency; automate low-risk checks.
+**What to watch.** Track denials, invalid args, grant mismatch, duplicates, unknown effects. The cost is real: controls add latency; automate low-risk checks.
 
 ## Multi-agent collaboration
 
 ### P-06 — Typed task ownership and join
 
-**Problem.** Specialists collaborate under one outcome.
+**When it helps.** Specialists collaborate under one outcome. The tempting shortcut is “Free-form agent chat owns work.” That fails because duplicate owners, cycles, lost artifacts, premature completion.
 
-**Anti-Pattern.** Free-form agent chat owns work.
+**A better design.** A safer design looks like this: TaskEnvelope, one owner, authority, deadline, artifacts, cancellation, deterministic join. The runtime flow is: Supervisor → task service → specialists → accepted artifacts → join. Finance, legal, and security deliver required due-diligence artifacts.
 
-**Why It Fails.** Duplicate owners, cycles, lost artifacts, premature completion.
-
-**Recommended Pattern.** TaskEnvelope, one owner, authority, deadline, artifacts, cancellation, deterministic join.
-
-**Architecture.** Supervisor → task service → specialists → accepted artifacts → join.
-
-**Enterprise Example.** Finance, legal, and security deliver required due-diligence artifacts.
-
-**Detection Metrics.** Orphans, owner conflicts, fan-out, join age, late effects.
-
-**Trade-offs.** Formal tasks reduce spontaneity.
+**What to watch.** Track orphans, owner conflicts, fan-out, join age, late effects. The cost is real: formal tasks reduce spontaneity.
 
 ## Security
 
 ### P-07 — Least-privilege capability envelope
 
-**Problem.** Agents need sensitive access.
+**When it helps.** Agents need sensitive access. The tempting shortcut is “One reusable token follows the chain.” That fails because injection or compromise gains broad authority.
 
-**Anti-Pattern.** One reusable token follows the chain.
+**A better design.** A safer design looks like this: Subject+workload identity and short-lived audience/purpose/resource/spend/time scope. The runtime flow is: Identity → policy → capability lease → gateway/tool enforcement. A loan officer may read an authorized mortgage case and propose a document request, but cannot authorize the operation or make the lending decision.
 
-**Why It Fails.** Injection or compromise gains broad authority.
-
-**Recommended Pattern.** Subject+workload identity and short-lived audience/purpose/resource/spend/time scope.
-
-**Architecture.** Identity → policy → capability lease → gateway/tool enforcement.
-
-**Enterprise Example.** A loan officer may read an authorized mortgage case and propose a document request, but cannot authorize the operation or make the lending decision.
-
-**Detection Metrics.** Scope/age, expansion, cross-tenant attempts, denials.
-
-**Trade-offs.** Fine-grained policy needs templates/simulation.
+**What to watch.** Track scope/age, expansion, cross-tenant attempts, denials. The cost is real: fine-grained policy needs templates/simulation.
 
 ## Reliability
 
 ### P-08 — Effect ledger and reconciliation
 
-**Problem.** Timeout may follow a committed external effect.
+**When it helps.** Timeout may follow a committed external effect. The tempting shortcut is “Timeout means failure and retry.” That fails because logical effect can execute twice.
 
-**Anti-Pattern.** Timeout means failure and retry.
+**A better design.** A safer design looks like this: Prepared EffectRecord, stable key, unknown terminal, authoritative reconciliation. The runtime flow is: Prepare → dispatch → receipt/unknown → reconcile → accept. Mortgage document-request timeout is queried by idempotency key before retry.
 
-**Why It Fails.** Logical effect can execute twice.
-
-**Recommended Pattern.** Prepared EffectRecord, stable key, unknown terminal, authoritative reconciliation.
-
-**Architecture.** Prepare → dispatch → receipt/unknown → reconcile → accept.
-
-**Enterprise Example.** Mortgage document-request timeout is queried by idempotency key before retry.
-
-**Detection Metrics.** Unknown rate/age, duplicate effects, reconcile latency.
-
-**Trade-offs.** Requires downstream receipts/query.
+**What to watch.** Track unknown rate/age, duplicate effects, reconcile latency. The cost is real: requires downstream receipts/query.
 
 ## Observability
 
 ### P-09 — Causal run graph
 
-**Problem.** Diagnosis spans model, context, policy, tools, humans, effects.
+**When it helps.** Diagnosis spans model, context, policy, tools, humans, effects. The tempting shortcut is “Independent logs and transcripts.” That fails because first divergence and outcome/cost attribution are lost.
 
-**Anti-Pattern.** Independent logs and transcripts.
+**A better design.** A safer design looks like this: Correlated graph linking request, release, context, decisions, effects, acceptance, outcome. The runtime flow is: Trace IDs + domain IDs → spans/events → evidence/evaluation join. Trace reveals stale retrieval before a correct but misinformed tool call.
 
-**Why It Fails.** First divergence and outcome/cost attribution are lost.
-
-**Recommended Pattern.** Correlated graph linking request, release, context, decisions, effects, acceptance, outcome.
-
-**Architecture.** Trace IDs + domain IDs → spans/events → evidence/evaluation join.
-
-**Enterprise Example.** Trace reveals stale retrieval before a correct but misinformed tool call.
-
-**Detection Metrics.** Unlinked spans, missing versions, outcome join, diagnosis time.
-
-**Trade-offs.** Capture is costly/sensitive; sample and reference payloads.
+**What to watch.** Track unlinked spans, missing versions, outcome join, diagnosis time. The cost is real: capture is costly/sensitive; sample and reference payloads.
 
 ## Governance
 
 ### P-10 — Risk-tiered evidence gates
 
-**Problem.** Behavior changes often but review is finite.
+**When it helps.** Behavior changes often but review is finite. The tempting shortcut is “Manual-review everything or auto-deploy from one score.” That fails because fatigue or self-certification hides risk.
 
-**Anti-Pattern.** Manual-review everything or auto-deploy from one score.
+**A better design.** A safer design looks like this: Classify risk and require proportional tests, reviewers, canary, rollback. The runtime flow is: ChangeBundle → risk → validation → approval → staged release. Typo auto-promotes; hiring memory/model changes require domain/privacy/risk approval.
 
-**Why It Fails.** Fatigue or self-certification hides risk.
-
-**Recommended Pattern.** Classify risk and require proportional tests, reviewers, canary, rollback.
-
-**Architecture.** ChangeBundle → risk → validation → approval → staged release.
-
-**Enterprise Example.** Typo auto-promotes; hiring memory/model changes require domain/privacy/risk approval.
-
-**Detection Metrics.** Bypass, fatigue, exception age, regression escape.
-
-**Trade-offs.** Risk classification needs calibration.
+**What to watch.** Track bypass, fatigue, exception age, regression escape. The cost is real: risk classification needs calibration.
 
 ## Operations
 
 ### P-11 — Durable runtime with backpressure
 
-**Problem.** Runs face bursts, waits, humans, unreliable dependencies.
+**When it helps.** Runs face bursts, waits, humans, unreliable dependencies. The tempting shortcut is “Synchronous workers retry locally.” That fails because state is lost and outages amplify queues/retries.
 
-**Anti-Pattern.** Synchronous workers retry locally.
+**A better design.** A safer design looks like this: Durable state, leases, timers, bounded retries, permits, quotas, circuits, degraded mode. The runtime flow is: Ingress → admission → durable queue/workflow → bounded workers → bulkheads. During registry degradation, protected writes pause and queues stay bounded.
 
-**Why It Fails.** State is lost and outages amplify queues/retries.
-
-**Recommended Pattern.** Durable state, leases, timers, bounded retries, permits, quotas, circuits, degraded mode.
-
-**Architecture.** Ingress → admission → durable queue/workflow → bounded workers → bulkheads.
-
-**Enterprise Example.** During registry degradation, protected writes pause and queues stay bounded.
-
-**Detection Metrics.** Queue age, permits, retry amplification, saturation, recovery.
-
-**Trade-offs.** Durability adds operational complexity.
+**What to watch.** Track queue age, permits, retry amplification, saturation, recovery. The cost is real: durability adds operational complexity.
 
 ## System architecture
 
 ### P-12 — Portable contracts and adapters
 
-**Problem.** Multiple frameworks/providers must coexist.
+**When it helps.** Multiple frameworks/providers must coexist. The tempting shortcut is “App code depends on provider-native objects.” That fails because migration rewrites apps and controls diverge.
 
-**Anti-Pattern.** App code depends on provider-native objects.
+**A better design.** A safer design looks like this: Platform-owned contracts and normalized events with conformance-tested adapters. The runtime flow is: Application contracts → adapters → shared services → providers/protocols. Framework migration preserves tools, policy, traces, evaluation, release.
 
-**Why It Fails.** Migration rewrites apps and controls diverge.
+**What to watch.** Track native leakage, conformance failures, migration effort. The cost is real: abstraction may lag novel features; allow negotiated extensions.
 
-**Recommended Pattern.** Platform-owned contracts and normalized events with conformance-tested adapters.
-
-**Architecture.** Application contracts → adapters → shared services → providers/protocols.
-
-**Enterprise Example.** Framework migration preserves tools, policy, traces, evaluation, release.
-
-**Detection Metrics.** Native leakage, conformance failures, migration effort.
-
-**Trade-offs.** Abstraction may lag novel features; allow negotiated extensions.
-
-## Why Chapter 17 comes next
+## Where this leads next
 
 Pattern selection is easier when failure shapes are visible; Chapter 17 recasts recurring anti-patterns as measurable replacement decisions.
 
-# 17 — The Shapes That Fail in Production
+# 17 — Architecture Patterns That Fail in Production
 
-## Why this chapter matters
+## Why failure patterns are easier to recognize than design rules
 
 Production failures rarely arrive wearing the name of an anti-pattern. They
 look like duplicate writes, missing approvals, unexplained cost, or a run that
@@ -1622,7 +1516,9 @@ cannot be reconstructed. This chapter turns those symptoms into recognizable
 system shapes, then connects each shape to the boundary that should replace it
 so the diagnosis leads to a design correction rather than another patch.
 
-## Field-guide method
+## Start with the first visible symptom
+
+In an incident, teams rarely begin with a clean architecture label. They see a duplicate email, a case that nobody owns, a confident answer with no evidence, or a run that cannot be resumed. Start with that symptom and trace backward to the missing ownership or state boundary. The anti-pattern name is useful only if it leads to a concrete replacement and a metric that shows whether the repair worked.
 
 Anti-patterns are recurring system shapes, not isolated defects. Almost every card below is one mistake wearing different clothes: a probabilistic component was handed a job that belongs to deterministic infrastructure. Diagnose the failed responsibility boundary rather than the symptom, because fixing the symptom — a better prompt, one more retry, a stricter classifier — leaves the boundary intact and the failure returns under a new name.
 
@@ -1663,35 +1559,21 @@ These two failures share a root cause: the model is allowed to decide when to st
 
 ### AP-01 — Autonomous monolith
 
-**Problem.** A prototype that worked convincingly in a notebook is promoted toward production. It mixes reasoning, run state, credentials, tool invocation, retries, approval, and its own completion signal in a single process, because nothing in the prototype phase forced those concerns apart.
+**How this failure starts.** A prototype that worked convincingly in a notebook is promoted toward production. It mixes reasoning, run state, credentials, tool invocation, retries, approval, and its own completion signal in a single process, because nothing in the prototype phase forced those concerns apart. The tempting shortcut is “One unconstrained agent owns end-to-end control. The loop decides what to do, does it, and then declares the outcome.” It breaks down because probabilistic behaviour becomes the control plane. There is no boundary at which a failure can be isolated, so a flawed reasoning step and a failed database write are indistinguishable from outside the process. Run state lives in memory, so a restart loses work that has already had external effects. Nothing can be replayed, because nothing durable was recorded — the transcript is a narrative, not a ledger.
 
-**Anti-Pattern.** One unconstrained agent owns end-to-end control. The loop decides what to do, does it, and then declares the outcome.
+**What it looks like in practice.** Mortgage evidence review restarts after a routine deploy and sends the same document request twice, because the only record of the first request was the agent's conversation history.
 
-**Why It Fails.** Probabilistic behaviour becomes the control plane. There is no boundary at which a failure can be isolated, so a flawed reasoning step and a failed database write are indistinguishable from outside the process. Run state lives in memory, so a restart loses work that has already had external effects. Nothing can be replayed, because nothing durable was recorded — the transcript is a narrative, not a ledger.
+**How to replace it.** The replacement is explicit: A bounded runtime inside a durable workflow, with policy, tool and effect, and acceptance services each owning their decision. The migration path is clear: Monolith → direct tools → "done" becomes workflow → semantic nodes → governed effects → acceptance.
 
-**Enterprise Example.** Mortgage evidence review restarts after a routine deploy and sends the same document request twice, because the only record of the first request was the agent's conversation history.
-
-**Recommended Pattern.** A bounded runtime inside a durable workflow, with policy, tool and effect, and acceptance services each owning their decision.
-
-**Architecture.** Monolith → direct tools → "done" becomes workflow → semantic nodes → governed effects → acceptance.
-
-**Detection Metrics.** Protected calls that bypass the gateway, work lost per restart, false-completion rate, and the number of distinct responsibilities living in one process.
-
-**Trade-offs.** Decomposition adds interfaces, deployment surface, and latency. Decompose around the highest-risk effects first; a read-only assistant does not need the full split.
+**How to know the repair worked.** Track protected calls that bypass the gateway, work lost per restart, false-completion rate, and the number of distinct responsibilities living in one process. The price of the safer design is clear: decomposition adds interfaces, deployment surface, and latency. Decompose around the highest-risk effects first; a read-only assistant does not need the full split.
 
 ### AP-11 — Unbounded loops and recursive delegation
 
-**Problem.** Work varies in complexity, and a fixed step count either truncates hard cases or wastes budget on easy ones, so the team lets the agent iterate and delegate as needed.
+**How this failure starts.** Work varies in complexity, and a fixed step count either truncates hard cases or wastes budget on easy ones, so the team lets the agent iterate and delegate as needed. The tempting shortcut is “Agents iterate and spawn children with per-call limits but no global ceiling. Each individual decision looks reasonable.” It breaks down because local limits do not compose. A depth limit of five with a fan-out of five is 3,125 leaf tasks, and each child inherits a fresh budget rather than a share of the parent's. Delegation graphs become cyclic when two specialists can each call the other, and no participant can detect the cycle from inside it. Queue saturation then degrades unrelated tenants, which is how one runaway research task becomes a platform incident.
 
-**Anti-Pattern.** Agents iterate and spawn children with per-call limits but no global ceiling. Each individual decision looks reasonable.
+**What it looks like in practice.** A research supervisor spawns fact-checkers that themselves spawn fact-checkers; the run consumes a day of tenant quota before a human notices, and every individual agent behaved exactly as instructed.
 
-**Why It Fails.** Local limits do not compose. A depth limit of five with a fan-out of five is 3,125 leaf tasks, and each child inherits a fresh budget rather than a share of the parent's. Delegation graphs become cyclic when two specialists can each call the other, and no participant can detect the cycle from inside it. Queue saturation then degrades unrelated tenants, which is how one runaway research task becomes a platform incident.
-
-**Enterprise Example.** A research supervisor spawns fact-checkers that themselves spawn fact-checkers; the run consumes a day of tenant quota before a human notices, and every individual agent behaved exactly as instructed.
-
-**Recommended Pattern.** Global budgets that decrease monotonically across delegation, an acyclic ownership graph, and explicit depth, fan-out, and no-progress limits enforced by the runtime rather than by instructions.
-
-**Architecture.** Recursion becomes a runtime-governed task graph.
+**How to replace it.** The replacement is explicit: Global budgets that decrease monotonically across delegation, an acyclic ownership graph, and explicit depth, fan-out, and no-progress limits enforced by the runtime rather than by instructions. The migration path is clear: Recursion becomes a runtime-governed task graph.
 
 🐍 · anti-pattern and correction
 
@@ -1714,9 +1596,7 @@ async def delegate(task, parent: Budget):
     return await worker.run(task, budget=child)
 ```
 
-**Detection Metrics.** Delegation depth and fan-out distributions, repeated state signatures, no-progress step count, and budget-exhaustion rate by tenant.
-
-**Trade-offs.** Caps truncate genuinely hard work. Set them from observed distributions rather than intuition, and make exhaustion a visible, escalatable terminal rather than a silent stop.
+**How to know the repair worked.** Track delegation depth and fan-out distributions, repeated state signatures, no-progress step count, and budget-exhaustion rate by tenant. The price of the safer design is clear: caps truncate genuinely hard work. Set them from observed distributions rather than intuition, and make exhaustion a visible, escalatable terminal rather than a silent stop.
 
 ## Context, knowledge and memory
 
@@ -1724,17 +1604,11 @@ Everything an agent believes arrives through one of these three channels, and al
 
 ### AP-02 — Prompt as database
 
-**Problem.** Business state has to survive across turns, restarts, and handoffs, and the conversation already contains it.
+**How this failure starts.** Business state has to survive across turns, restarts, and handoffs, and the conversation already contains it. The tempting shortcut is “Chat history, or a rolling summary of it, is treated as the authoritative record of what has happened.” It breaks down because every mechanism that keeps a context window viable is lossy. Truncation drops the oldest facts, which are often the decisions; summarization paraphrases, and a paraphrase of "legal approved with conditions" is not a legal approval. There is no concurrency control, so two turns that both update a value silently diverge. There is no schema, so nothing detects that a field went missing. And there is no audit trail an investigator can read.
 
-**Anti-Pattern.** Chat history, or a rolling summary of it, is treated as the authoritative record of what has happened.
+**What it looks like in practice.** A contract renewal forgets that legal approved with conditions, because the approval was three summarization rounds ago and the summary kept the outcome but dropped the conditions.
 
-**Why It Fails.** Every mechanism that keeps a context window viable is lossy. Truncation drops the oldest facts, which are often the decisions; summarization paraphrases, and a paraphrase of "legal approved with conditions" is not a legal approval. There is no concurrency control, so two turns that both update a value silently diverge. There is no schema, so nothing detects that a field went missing. And there is no audit trail an investigator can read.
-
-**Enterprise Example.** A contract renewal forgets that legal approved with conditions, because the approval was three summarization rounds ago and the summary kept the outcome but dropped the conditions.
-
-**Recommended Pattern.** Canonical typed state in a service that owns it, with the prompt receiving a ContextManifest projection built fresh from that state on every step.
-
-**Architecture.** Transcript-as-state becomes State Service → snapshot → prompt.
+**How to replace it.** The replacement is explicit: Canonical typed state in a service that owns it, with the prompt receiving a ContextManifest projection built fresh from that state on every step. The migration path is clear: Transcript-as-state becomes State Service → snapshot → prompt.
 
 🐍 · anti-pattern and correction
 
@@ -1755,41 +1629,25 @@ await state.record(ApprovalEvent(
 context = ContextManifest.project(await state.snapshot(run.id), budget=4_000)
 ```
 
-**Detection Metrics.** Facts lost across compaction boundaries, disagreement between summary and store, and state mismatches discovered on recovery.
-
-**Trade-offs.** Typed state requires schema design and migration discipline. The cost lands early and visibly, which is precisely why it gets deferred.
+**How to know the repair worked.** Track facts lost across compaction boundaries, disagreement between summary and store, and state mismatches discovered on recovery. The price of the safer design is clear: typed state requires schema design and migration discipline. The cost lands early and visibly, which is precisely why it gets deferred.
 
 ### AP-09 — Vector store as source of truth
 
-**Problem.** Relevant knowledge has to be found across a corpus too large to pass into a prompt.
+**How this failure starts.** Relevant knowledge has to be found across a corpus too large to pass into a prompt. The tempting shortcut is “A similarity hit is treated as a current, authorized, authoritative fact.” It breaks down because similarity measures resemblance, not currency, authority, or permission. An index contains what was ingested, including superseded policies, duplicated drafts, documents the caller may not read, and anything an attacker managed to insert. Nothing in a cosine score distinguishes the approved policy from its withdrawn predecessor, and a confident citation of the wrong document is more damaging than no citation at all.
 
-**Anti-Pattern.** A similarity hit is treated as a current, authorized, authoritative fact.
+**What it looks like in practice.** An obsolete policy chunk applies a superseded spending limit, and the answer cites the document by name, which is what makes the reviewer believe it.
 
-**Why It Fails.** Similarity measures resemblance, not currency, authority, or permission. An index contains what was ingested, including superseded policies, duplicated drafts, documents the caller may not read, and anything an attacker managed to insert. Nothing in a cosine score distinguishes the approved policy from its withdrawn predecessor, and a confident citation of the wrong document is more damaging than no citation at all.
+**How to replace it.** The replacement is explicit: Governed sources and snapshots hold authority; the index is a derived locator whose hits are verified for ACL, freshness, and supersession before the content reaches the model. The migration path is clear: Vector hit → action becomes source + ACL + snapshot → evidence → decision.
 
-**Enterprise Example.** An obsolete policy chunk applies a superseded spending limit, and the answer cites the document by name, which is what makes the reviewer believe it.
-
-**Recommended Pattern.** Governed sources and snapshots hold authority; the index is a derived locator whose hits are verified for ACL, freshness, and supersession before the content reaches the model.
-
-**Architecture.** Vector hit → action becomes source + ACL + snapshot → evidence → decision.
-
-**Detection Metrics.** Evidence age at decision time, source disagreement rate, ACL mismatches at retrieval, and citations pointing at superseded revisions.
-
-**Trade-offs.** Authoritative lookup adds latency to every retrieval. Apply it in proportion to what the answer will be used for; drafting assistance and payment authorization do not need the same guarantee.
+**How to know the repair worked.** Track evidence age at decision time, source disagreement rate, ACL mismatches at retrieval, and citations pointing at superseded revisions. The price of the safer design is clear: authoritative lookup adds latency to every retrieval. Apply it in proportion to what the answer will be used for; drafting assistance and payment authorization do not need the same guarantee.
 
 ### AP-13 — Memory write by default
 
-**Problem.** Personalization is genuinely valuable, and the cheapest way to get it is to remember everything.
+**How this failure starts.** Personalization is genuinely valuable, and the cheapest way to get it is to remember everything. The tempting shortcut is “Every interaction, or a summary of it, becomes a durable memory record.” It breaks down because writing by default means writing without provenance, purpose, or verification. Secrets get persisted. Model errors get persisted and then retrieved as established fact, which is how one hallucination becomes a standing belief. Injected instructions from a document become durable instructions. And because nothing recorded why a memory was written, nothing can decide when it should expire or who may delete it — which turns a retention obligation into an archaeology project.
 
-**Anti-Pattern.** Every interaction, or a summary of it, becomes a durable memory record.
+**What it looks like in practice.** A malicious mortgage document is processed, and the bank account it contains is stored as an applicant fact. Every subsequent run retrieves it as if it were verified evidence for the mortgage case.
 
-**Why It Fails.** Writing by default means writing without provenance, purpose, or verification. Secrets get persisted. Model errors get persisted and then retrieved as established fact, which is how one hallucination becomes a standing belief. Injected instructions from a document become durable instructions. And because nothing recorded why a memory was written, nothing can decide when it should expire or who may delete it — which turns a retention obligation into an archaeology project.
-
-**Enterprise Example.** A malicious mortgage document is processed, and the bank account it contains is stored as an applicant fact. Every subsequent run retrieves it as if it were verified evidence for the mortgage case.
-
-**Recommended Pattern.** Memory writes are candidates, not side effects: purpose-bound, carrying provenance, verified before promotion, scoped to a tenant and subject, with a TTL and a deletion path.
-
-**Architecture.** Transcript → memory becomes candidate → gate → typed record.
+**How to replace it.** The replacement is explicit: Memory writes are candidates, not side effects: purpose-bound, carrying provenance, verified before promotion, scoped to a tenant and subject, with a TTL and a deletion path. The migration path is clear: Transcript → memory becomes candidate → gate → typed record.
 
 🐍 · anti-pattern and correction
 
@@ -1812,9 +1670,7 @@ else:
     audit.rejected(candidate, reason=gate.reason)
 ```
 
-**Detection Metrics.** Sensitive-data writes caught by DLP, retrieval of stale records, correction and deletion rates, and incidents traceable to a single memory record.
-
-**Trade-offs.** A strict write path reduces the perceived magic of personalization and requires someone to own purpose definitions. The alternative is an unowned database of unverified claims about your customers.
+**How to know the repair worked.** Track sensitive-data writes caught by DLP, retrieval of stale records, correction and deletion rates, and incidents traceable to a single memory record. The price of the safer design is clear: a strict write path reduces the perceived magic of personalization and requires someone to own purpose definitions. The alternative is an unowned database of unverified claims about your customers.
 
 ## Security and delegated authority
 
@@ -1824,57 +1680,33 @@ The three cards here are the difference between *can* and *may*. An agent that c
 
 ### AP-03 — Ambient authority
 
-**Problem.** Agents need access to enterprise systems, and provisioning narrow credentials for every task and tenant is laborious.
+**How this failure starts.** Agents need access to enterprise systems, and provisioning narrow credentials for every task and tenant is laborious. The tempting shortcut is “Workers receive broad, long-lived, reusable credentials — often a service account that predates the agent and was already over-scoped.” It breaks down because the credential's scope, not the task's need, defines the blast radius. Any compromise — prompt injection, a malicious tool, a leaked log — yields durable authority over everything the credential can reach. Because the same credential serves every run, nothing in the audit trail distinguishes which subject's work caused which effect, so attribution fails exactly when it is needed. And a credential that never expires cannot be revoked faster than someone notices.
 
-**Anti-Pattern.** Workers receive broad, long-lived, reusable credentials — often a service account that predates the agent and was already over-scoped.
+**What it looks like in practice.** The support agent's token can export the full customer table. Nothing in the onboarding task requires it; the token was reused because it already existed.
 
-**Why It Fails.** The credential's scope, not the task's need, defines the blast radius. Any compromise — prompt injection, a malicious tool, a leaked log — yields durable authority over everything the credential can reach. Because the same credential serves every run, nothing in the audit trail distinguishes which subject's work caused which effect, so attribution fails exactly when it is needed. And a credential that never expires cannot be revoked faster than someone notices.
+**How to replace it.** The replacement is explicit: Preserve both subject and workload identity, derive a capability envelope by intersection, and mint a short-lived, audience-bound credential lease at the moment of use. The migration path is clear: Broad token becomes policy → scoped lease → enforcement at the resource.
 
-**Enterprise Example.** The support agent's token can export the full customer table. Nothing in the onboarding task requires it; the token was reused because it already existed.
-
-**Recommended Pattern.** Preserve both subject and workload identity, derive a capability envelope by intersection, and mint a short-lived, audience-bound credential lease at the moment of use.
-
-**Architecture.** Broad token becomes policy → scoped lease → enforcement at the resource.
-
-**Detection Metrics.** Credential scope and age distributions, granted-but-unused privilege, scope-expansion attempts, and cross-tenant access denials.
-
-**Trade-offs.** Fine-grained policy adds design effort and a policy-decision hop per call. The hop is cacheable; the design effort is not, and it is the part teams underestimate.
+**How to know the repair worked.** Track credential scope and age distributions, granted-but-unused privilege, scope-expansion attempts, and cross-tenant access denials. The price of the safer design is clear: fine-grained policy adds design effort and a policy-decision hop per call. The hop is cacheable; the design effort is not, and it is the part teams underestimate.
 
 ### AP-10 — LLM judge as security gate
 
-**Problem.** Some content is genuinely ambiguous, and a model is better than a regular expression at recognising nuance.
+**How this failure starts.** Some content is genuinely ambiguous, and a model is better than a regular expression at recognising nuance. The tempting shortcut is “A model-produced score alone authorizes a protected action — if risk_score < 0.3: execute().” It breaks down because a judge is an injectable, nondeterministic component being asked to make a binding decision. The same input can score differently across runs, so the gate is not reproducible and an incident cannot be explained. The content being judged can address the judge directly, which makes the attacker a participant in their own authorization. And judge behaviour drifts with model updates, silently moving the threshold without any release event.
 
-**Anti-Pattern.** A model-produced score alone authorizes a protected action — `if risk_score < 0.3: execute()`.
+**What it looks like in practice.** The judge classifies an unusually large payment as low risk because the request text explains, persuasively, why it is routine.
 
-**Why It Fails.** A judge is an injectable, nondeterministic component being asked to make a binding decision. The same input can score differently across runs, so the gate is not reproducible and an incident cannot be explained. The content being judged can address the judge directly, which makes the attacker a participant in their own authorization. And judge behaviour drifts with model updates, silently moving the threshold without any release event.
+**How to replace it.** The replacement is explicit: A deterministic policy and invariant gate makes the decision. The judge triages, prioritizes, and supplies evidence for a human — it never holds the authorization. The migration path is clear: score > threshold → execute becomes policy → optional judge → human escalation.
 
-**Enterprise Example.** The judge classifies an unusually large payment as low risk because the request text explains, persuasively, why it is routine.
-
-**Recommended Pattern.** A deterministic policy and invariant gate makes the decision. The judge triages, prioritizes, and supplies evidence for a human — it never holds the authorization.
-
-**Architecture.** `score > threshold → execute` becomes policy → optional judge → human escalation.
-
-**Detection Metrics.** Disagreement rate across repeated runs of identical input, gate bypass attempts, false negatives found downstream, and human override frequency.
-
-**Trade-offs.** Deterministic rules genuinely cannot express every nuance, and some legitimate work will be escalated unnecessarily. That is the correct direction to fail.
+**How to know the repair worked.** Track disagreement rate across repeated runs of identical input, gate bypass attempts, false negatives found downstream, and human override frequency. The price of the safer design is clear: deterministic rules genuinely cannot express every nuance, and some legitimate work will be escalated unnecessarily. That is the correct direction to fail.
 
 ### AP-12 — Ungated tool discovery and catalog dumping
 
-**Problem.** A mature platform has many tools, and the agent cannot use what it cannot see.
+**How this failure starts.** A mature platform has many tools, and the agent cannot use what it cannot see. The tempting shortcut is “Every discovered tool and its full schema is placed into the prompt, often straight from an MCP server's advertised catalog.” It breaks down because discovery is being used as authorization. Selection accuracy falls as the catalog grows, because the model is choosing among near-neighbours it has no basis to distinguish. Schemas consume context that evidence should occupy. Worse, tool descriptions are untrusted text from a third party, so a malicious server can write a description engineered to attract calls — the agent is reading attacker-controlled instructions and treating them as a menu.
 
-**Anti-Pattern.** Every discovered tool and its full schema is placed into the prompt, often straight from an MCP server's advertised catalog.
+**What it looks like in practice.** A reporting agent discovers an administrative delete tool, because the catalog was filtered by connectivity rather than by the caller's authority.
 
-**Why It Fails.** Discovery is being used as authorization. Selection accuracy falls as the catalog grows, because the model is choosing among near-neighbours it has no basis to distinguish. Schemas consume context that evidence should occupy. Worse, tool descriptions are untrusted text from a third party, so a malicious server can write a description engineered to attract calls — the agent is reading attacker-controlled instructions and treating them as a menu.
+**How to replace it.** The replacement is explicit: Registry → eligibility and policy evaluation → task-specific shortlist → schema validation at call time. Eligibility is computed from the subject, purpose, tenant, and risk tier, never from what the server happens to advertise. The migration path is clear: Full MCP catalog becomes an approved tool slice bound to a lease.
 
-**Enterprise Example.** A reporting agent discovers an administrative delete tool, because the catalog was filtered by connectivity rather than by the caller's authority.
-
-**Recommended Pattern.** Registry → eligibility and policy evaluation → task-specific shortlist → schema validation at call time. Eligibility is computed from the subject, purpose, tenant, and risk tier, never from what the server happens to advertise.
-
-**Architecture.** Full MCP catalog becomes an approved tool slice bound to a lease.
-
-**Detection Metrics.** Tools exposed versus eligible versus actually used, selection-confusion rate, schema token overhead per run, and unauthorized discovery attempts.
-
-**Trade-offs.** A narrow shortlist will sometimes omit a tool that would have helped. Make the omission observable so the shortlist can be improved deliberately, rather than widening it by default.
+**How to know the repair worked.** Track tools exposed versus eligible versus actually used, selection-confusion rate, schema token overhead per run, and unauthorized discovery attempts. The price of the safer design is clear: a narrow shortlist will sometimes omit a tool that would have helped. Make the omission observable so the shortlist can be improved deliberately, rather than widening it by default.
 
 ## Effects, retries and recovery
 
@@ -1884,17 +1716,11 @@ These two cards are the most expensive in the catalog, because they produce dupl
 
 ### AP-04 — Retry everywhere
 
-**Problem.** Transient failures are real and common, and every layer in the stack offers a retry setting that looks like diligence.
+**How this failure starts.** Transient failures are real and common, and every layer in the stack offers a retry setting that looks like diligence. The tempting shortcut is “The SDK, the gateway, the workflow engine, the connector, and the tool each retry independently.” It breaks down because retries compose multiplicatively, not additively. Three layers at 3, 3, and 2 attempts produce eighteen calls for one logical operation, and each layer believes it made a modest choice. The amplification arrives precisely when a dependency is already degraded, converting a slow dependency into an outage. If any layer retries a non-idempotent call, the duplicates are permanent.
 
-**Anti-Pattern.** The SDK, the gateway, the workflow engine, the connector, and the tool each retry independently.
+**What it looks like in practice.** A single mortgage evidence review produces eighteen calls to an employment-verification source, and the provider rate-limits the lender for the rest of the day.
 
-**Why It Fails.** Retries compose multiplicatively, not additively. Three layers at 3, 3, and 2 attempts produce eighteen calls for one logical operation, and each layer believes it made a modest choice. The amplification arrives precisely when a dependency is already degraded, converting a slow dependency into an outage. If any layer retries a non-idempotent call, the duplicates are permanent.
-
-**Enterprise Example.** A single mortgage evidence review produces eighteen calls to an employment-verification source, and the provider rate-limits the lender for the rest of the day.
-
-**Recommended Pattern.** One retry owner per failure class, with a shared attempt and deadline budget that every layer reads and no layer resets.
-
-**Architecture.** Nested retries become classified failure → one schedule → terminal.
+**How to replace it.** The replacement is explicit: One retry owner per failure class, with a shared attempt and deadline budget that every layer reads and no layer resets. The migration path is clear: Nested retries become classified failure → one schedule → terminal.
 
 🐍 · anti-pattern and correction
 
@@ -1916,23 +1742,15 @@ workflow.call(gateway, retry_policy=RetryPolicy(
 ))
 ```
 
-**Detection Metrics.** Attempts per logical operation, amplification factor against dependencies, duplicate effect keys, and deadline overruns caused by retry time.
-
-**Trade-offs.** A single central policy is necessarily more conservative than a hand-tuned one per call site. Express the variation as failure classes rather than as per-layer settings.
+**How to know the repair worked.** Track attempts per logical operation, amplification factor against dependencies, duplicate effect keys, and deadline overruns caused by retry time. The price of the safer design is clear: a single central policy is necessarily more conservative than a hand-tuned one per call site. Express the variation as failure classes rather than as per-layer settings.
 
 ### AP-05 — Timeout means failure
 
-**Problem.** A response is lost after a request was dispatched, and the run has to decide what to do next.
+**How this failure starts.** A response is lost after a request was dispatched, and the run has to decide what to do next. The tempting shortcut is “The call is marked failed and retried immediately.” It breaks down because a timeout describes the response, not the effect. The first call may have committed, may be committing, or may never have arrived, and the caller cannot distinguish these from the outside. Treating that state as failure asserts knowledge the system does not have, and the retry then creates the duplicate that the timeout only made possible.
 
-**Anti-Pattern.** The call is marked failed and retried immediately.
+**What it looks like in practice.** The mortgage document request is recorded twice: the first call committed just after the client gave up waiting.
 
-**Why It Fails.** A timeout describes the response, not the effect. The first call may have committed, may be committing, or may never have arrived, and the caller cannot distinguish these from the outside. Treating that state as failure asserts knowledge the system does not have, and the retry then creates the duplicate that the timeout only made possible.
-
-**Enterprise Example.** The mortgage document request is recorded twice: the first call committed just after the client gave up waiting.
-
-**Recommended Pattern.** An explicit unknown-effect terminal that blocks retry until reconciliation resolves it against the downstream system of record.
-
-**Architecture.** timeout → failed → retry becomes timeout → unknown → lookup → decide.
+**How to replace it.** The replacement is explicit: An explicit unknown-effect terminal that blocks retry until reconciliation resolves it against the downstream system of record. The migration path is clear: timeout → failed → retry becomes timeout → unknown → lookup → decide.
 
 🐍 · anti-pattern and correction
 
@@ -1955,9 +1773,7 @@ except TimeoutError:
     return effect.resolve(committed=None)        # genuinely absent; now safe to retry
 ```
 
-**Detection Metrics.** Count and age of unresolved unknown effects, duplicate idempotency keys observed downstream, and conflicts discovered after a timeout.
-
-**Trade-offs.** Unknown terminals delay completion and need somewhere to go when reconciliation cannot resolve them. That queue is the price of not creating duplicate financial records.
+**How to know the repair worked.** Track count and age of unresolved unknown effects, duplicate idempotency keys observed downstream, and conflicts discovered after a timeout. The price of the safer design is clear: unknown terminals delay completion and need somewhere to go when reconciliation cannot resolve them. That queue is the price of not creating duplicate financial records.
 
 ## Approval, acceptance and governance
 
@@ -1967,17 +1783,11 @@ Both cards here concern the moment a system decides that something is allowed, o
 
 ### AP-06 — Boolean or conversational approval
 
-**Problem.** Humans must approve protected actions, and a chat interface makes approval feel natural.
+**How this failure starts.** Humans must approve protected actions, and a chat interface makes approval feel natural. The tempting shortcut is “A Boolean flag or a chat message — "yes, go ahead" — authorizes whatever the arguments happen to be at execution time.” It breaks down because approval is being bound to a conversation rather than to an effect. Between consent and commit, the amount, the recipient, the policy version, the acting workload, or the underlying record can all change, and nothing detects it. The approver reviewed a description; the system executes a payload. A Boolean also cannot express scope or expiry, so a single "yes" silently authorizes later, larger, and unrelated actions.
 
-**Anti-Pattern.** A Boolean flag or a chat message — "yes, go ahead" — authorizes whatever the arguments happen to be at execution time.
+**What it looks like in practice.** An approval given for a $10,000 payment is reused, entirely within policy as implemented, for a $100,000 one.
 
-**Why It Fails.** Approval is being bound to a conversation rather than to an effect. Between consent and commit, the amount, the recipient, the policy version, the acting workload, or the underlying record can all change, and nothing detects it. The approver reviewed a description; the system executes a payload. A Boolean also cannot express scope or expiry, so a single "yes" silently authorizes later, larger, and unrelated actions.
-
-**Enterprise Example.** An approval given for a $10,000 payment is reused, entirely within policy as implemented, for a $100,000 one.
-
-**Recommended Pattern.** An immutable proposal, hashed over the exact effect, with a HumanActionAuthorizationDecision bound to that hash, scoped to one action, and carrying an expiry. Revalidate immediately before commit.
-
-**Architecture.** `approved=true` becomes proposal hash → HumanActionAuthorizationDecision → revalidate → commit.
+**How to replace it.** The replacement is explicit: An immutable proposal, hashed over the exact effect, with a HumanActionAuthorizationDecision bound to that hash, scoped to one action, and carrying an expiry. Revalidate immediately before commit. The migration path is clear: approved=true becomes proposal hash → HumanActionAuthorizationDecision → revalidate → commit.
 
 🐍 · anti-pattern and correction
 
@@ -2004,67 +1814,41 @@ await underwriting.submit_evidence_package(
 )
 ```
 
-**Detection Metrics.** Proposal-hash mismatches at commit, authorization reuse attempts, expiry rate, and incidents occurring after a recorded decision.
-
-**Trade-offs.** Benign changes force reauthorization, which reviewers experience as friction. Tune by making the diff visible — showing what changed is cheaper than widening the authorization.
+**How to know the repair worked.** Track proposal-hash mismatches at commit, authorization reuse attempts, expiry rate, and incidents occurring after a recorded decision. The price of the safer design is clear: benign changes force reauthorization, which reviewers experience as friction. Tune by making the diff visible — showing what changed is cheaper than widening the authorization.
 
 ### AP-07 — Model says done
 
-**Problem.** A run needs a completion signal, and the model produces a confident, well-formed one for free.
+**How this failure starts.** A run needs a completion signal, and the model produces a confident, well-formed one for free. The tempting shortcut is “The model's assertion sets the run to success.” It breaks down because the model is reporting on its own work using the same faculty that produced it. A missing evidence artifact, a skipped approval, an uncommitted effect, or an unmet obligation all present as success, because none of them changes what the model believes it did. Failures therefore surface downstream — in reconciliation, in audit, or in a customer complaint — long after the trace has aged out.
 
-**Anti-Pattern.** The model's assertion sets the run to success.
+**What it looks like in practice.** Onboarding reports complete while the sanctions screening is stale, because the model saw a screening result in context and did not evaluate its freshness.
 
-**Why It Fails.** The model is reporting on its own work using the same faculty that produced it. A missing evidence artifact, a skipped approval, an uncommitted effect, or an unmet obligation all present as success, because none of them changes what the model believes it did. Failures therefore surface downstream — in reconciliation, in audit, or in a customer complaint — long after the trace has aged out.
+**How to replace it.** The replacement is explicit: An independent, executable acceptance check evaluated over authoritative state, returning accepted, blocked, needs-input, failed, or unknown-effect. The model may propose completion; it may not declare it. The migration path is clear: Model text → success becomes AcceptanceEngine → typed terminal.
 
-**Enterprise Example.** Onboarding reports complete while the sanctions screening is stale, because the model saw a screening result in context and did not evaluate its freshness.
-
-**Recommended Pattern.** An independent, executable acceptance check evaluated over authoritative state, returning accepted, blocked, needs-input, failed, or unknown-effect. The model may propose completion; it may not declare it.
-
-**Architecture.** Model text → success becomes AcceptanceEngine → typed terminal.
-
-**Detection Metrics.** False-completion rate found by audit, reopen rate, and runs closed with missing artifacts or uncommitted effects.
-
-**Trade-offs.** Executable acceptance criteria need domain ownership and maintenance. Without them the completion signal has no author, which is worse and merely less visible.
+**How to know the repair worked.** Track false-completion rate found by audit, reopen rate, and runs closed with missing artifacts or uncommitted effects. The price of the safer design is clear: executable acceptance criteria need domain ownership and maintenance. Without them the completion signal has no author, which is worse and merely less visible.
 
 ## Multi-agent collaboration
 
 ### AP-08 — Multi-agent chat as workflow
 
-**Problem.** Specialists need to coordinate, and a shared conversation is the fastest coordination mechanism to build.
+**How this failure starts.** Specialists need to coordinate, and a shared conversation is the fastest coordination mechanism to build. The tempting shortcut is “Free-form messages between agents own state, work assignment, deadlines, and completion.” It breaks down because a conversation has no notion of ownership, so two agents can both believe the other is acting — or both act. It has no join semantics, so nothing knows when parallel work has finished. Cancellation cannot propagate, because there is no structure to propagate through, and artifacts produced mid-conversation are lost when the window compacts. The system behaves like a meeting with no chair and no minutes.
 
-**Anti-Pattern.** Free-form messages between agents own state, work assignment, deadlines, and completion.
+**What it looks like in practice.** Finance and legal each wait for the other to approve. The run sits open for three days and neither agent is wrong.
 
-**Why It Fails.** A conversation has no notion of ownership, so two agents can both believe the other is acting — or both act. It has no join semantics, so nothing knows when parallel work has finished. Cancellation cannot propagate, because there is no structure to propagate through, and artifacts produced mid-conversation are lost when the window compacts. The system behaves like a meeting with no chair and no minutes.
+**How to replace it.** The replacement is explicit: A typed TaskEnvelope with exactly one accountable owner, explicit child tasks, artifacts stored by reference, and a deterministic join evaluated by the coordinator rather than inferred from messages. The migration path is clear: Chat mesh becomes supervisor workflow plus task service.
 
-**Enterprise Example.** Finance and legal each wait for the other to approve. The run sits open for three days and neither agent is wrong.
-
-**Recommended Pattern.** A typed TaskEnvelope with exactly one accountable owner, explicit child tasks, artifacts stored by reference, and a deterministic join evaluated by the coordinator rather than inferred from messages.
-
-**Architecture.** Chat mesh becomes supervisor workflow plus task service.
-
-**Detection Metrics.** Orphaned tasks, conflicting concurrent effects, delegation depth, join wait age, and effects landing after a run was considered complete.
-
-**Trade-offs.** Formal task envelopes reduce the fluidity that makes agent conversations appealing to demonstrate. The fluidity is what fails in production.
+**How to know the repair worked.** Track orphaned tasks, conflicting concurrent effects, delegation depth, join wait age, and effects landing after a run was considered complete. The price of the safer design is clear: formal task envelopes reduce the fluidity that makes agent conversations appealing to demonstrate. The fluidity is what fails in production.
 
 ## Observability and evidence
 
 ### AP-14 — Telemetry without causal or effect lineage
 
-**Problem.** Teams instrument what they own, and each component's dashboard looks healthy.
+**How this failure starts.** Teams instrument what they own, and each component's dashboard looks healthy. The tempting shortcut is “Logs, metrics, and traces cannot be joined to versions, policy decisions, effects, acceptance, or business outcome.” It breaks down because without a join key, every measurement is local. A component can improve on its own metric while degrading the outcome, and nothing in the telemetry can express the relationship. Cost cannot be attributed to a tenant, a release, or a decision, so optimization targets whatever is easiest to measure. When an incident happens, the investigation has to reconstruct causality by hand from timestamps.
 
-**Anti-Pattern.** Logs, metrics, and traces cannot be joined to versions, policy decisions, effects, acceptance, or business outcome.
+**What it looks like in practice.** A model swap lowers median latency by 15%, which the dashboard celebrates, while retries rise and task completion falls. Both facts are true and neither dashboard contains both.
 
-**Why It Fails.** Without a join key, every measurement is local. A component can improve on its own metric while degrading the outcome, and nothing in the telemetry can express the relationship. Cost cannot be attributed to a tenant, a release, or a decision, so optimization targets whatever is easiest to measure. When an incident happens, the investigation has to reconstruct causality by hand from timestamps.
+**How to replace it.** The replacement is explicit: One causal run graph joining release version, context manifest, model and policy decisions, tool effects, acceptance terminal, business outcome, and cost. The migration path is clear: Separate dashboards become one correlated graph.
 
-**Enterprise Example.** A model swap lowers median latency by 15%, which the dashboard celebrates, while retries rise and task completion falls. Both facts are true and neither dashboard contains both.
-
-**Recommended Pattern.** One causal run graph joining release version, context manifest, model and policy decisions, tool effects, acceptance terminal, business outcome, and cost.
-
-**Architecture.** Separate dashboards become one correlated graph.
-
-**Detection Metrics.** Percentage of runs joinable to a business outcome, spans missing parent or version identifiers, and unattributed spend.
-
-**Trade-offs.** Correlation requires disciplined identifier propagation across every component and raises the governance burden on telemetry, including redaction. Retrofitting it after an incident costs considerably more.
+**How to know the repair worked.** Track percentage of runs joinable to a business outcome, spans missing parent or version identifiers, and unattributed spend. The price of the safer design is clear: correlation requires disciplined identifier propagation across every component and raises the governance burden on telemetry, including redaction. Retrofitting it after an incident costs considerably more.
 
 ## Platform, release and operations
 
@@ -2072,44 +1856,28 @@ Both cards describe the same instinct — change should be fast — applied wher
 
 ### AP-15 — Model or provider swap as configuration
 
-**Problem.** Teams want better cost or quality, and the routing layer makes the change a one-line edit.
+**How this failure starts.** Teams want better cost or quality, and the routing layer makes the change a one-line edit. The tempting shortcut is “A model alias is repointed without behavioural validation, because no application code changed.” It breaks down because the model is the behaviour. Tool-calling reliability, schema adherence, refusal boundaries, safety posture, latency distribution, and cost per task all shift together, and they shift unevenly across slices — a change that is neutral in aggregate can be severe for one language, one document type, or one tenant. Because no release event was recorded, the resulting regression has no obvious cause and cannot be rolled back precisely.
 
-**Anti-Pattern.** A model alias is repointed without behavioural validation, because no application code changed.
+**What it looks like in practice.** A cheaper model drops tool arguments for one language only. Aggregate evaluation stays green; that market's completion rate halves.
 
-**Why It Fails.** The model is the behaviour. Tool-calling reliability, schema adherence, refusal boundaries, safety posture, latency distribution, and cost per task all shift together, and they shift unevenly across slices — a change that is neutral in aggregate can be severe for one language, one document type, or one tenant. Because no release event was recorded, the resulting regression has no obvious cause and cannot be rolled back precisely.
+**How to replace it.** The replacement is explicit: A versioned ChangeBundle carrying evaluation across slices, security testing, load testing, canary exposure, and a named rollback target. The migration path is clear: Edit alias becomes immutable route policy → replay → approval → canary.
 
-**Enterprise Example.** A cheaper model drops tool arguments for one language only. Aggregate evaluation stays green; that market's completion rate halves.
-
-**Recommended Pattern.** A versioned ChangeBundle carrying evaluation across slices, security testing, load testing, canary exposure, and a named rollback target.
-
-**Architecture.** Edit alias becomes immutable route policy → replay → approval → canary.
-
-**Detection Metrics.** Schema and tool-call regression rate, refusal-rate shift, per-slice quality drift, and fallback-route activation.
-
-**Trade-offs.** Validation slows experimentation, so make the fast path cheap: pre-built replay sets and automated slice reports, rather than an approval meeting.
+**How to know the repair worked.** Track schema and tool-call regression rate, refusal-rate shift, per-slice quality drift, and fallback-route activation. The price of the safer design is clear: validation slows experimentation, so make the fast path cheap: pre-built replay sets and automated slice reports, rather than an approval meeting.
 
 ### AP-16 — In-place change and test after release
 
-**Problem.** A production issue needs a fix now, and the console offers an edit box.
+**How this failure starts.** A production issue needs a fix now, and the console offers an edit box. The tempting shortcut is “Prompts, Skills, tool definitions, policy, and routes are mutated directly in production.” It breaks down because a run can no longer be reproduced, because the artifacts it used no longer exist in the form it used them. Attribution fails, since two runs a minute apart may have used different behaviour with no record of the boundary. Rollback becomes guesswork about what the previous state was. And the edit itself is untested by construction — the test is the production traffic.
 
-**Anti-Pattern.** Prompts, Skills, tool definitions, policy, and routes are mutated directly in production.
+**What it looks like in practice.** A prompt edit intended to reduce verbosity increases data leakage. Neither the previous prompt nor the exact leak conditions can be reconstructed.
 
-**Why It Fails.** A run can no longer be reproduced, because the artifacts it used no longer exist in the form it used them. Attribution fails, since two runs a minute apart may have used different behaviour with no record of the boundary. Rollback becomes guesswork about what the previous state was. And the edit itself is untested by construction — the test is the production traffic.
-
-**Enterprise Example.** A prompt edit intended to reduce verbosity increases data leakage. Neither the previous prompt nor the exact leak conditions can be reconstructed.
-
-**Recommended Pattern.** Immutable artifacts, a ReleaseManifest that pins everything a run resolves, pre-promotion tests, signed promotion, canary exposure, and a rollback target that is verified rather than assumed.
-
-**Architecture.** Mutable console becomes build → validate → approve → promote → monitor.
-
-**Detection Metrics.** Runs executing unversioned artifacts, out-of-band edit events, and rollback rehearsal failures.
-
-**Trade-offs.** Immutability needs genuinely good tooling, or people will route around it under pressure. If the emergency path is slower than the console, the console wins — so make the fast path immutable rather than making immutability optional.
+**How to replace it.** The replacement is explicit: Immutable artifacts, a ReleaseManifest that pins everything a run resolves, pre-promotion tests, signed promotion, canary exposure, and a rollback target that is verified rather than assumed. The migration path is clear: Mutable console becomes build → validate → approve → promote → monitor.
 
 |  |
 | --- |
 | **COMMON PITFALL**  The most expensive anti-patterns in this catalog are not the exotic ones. AP-04, AP-05, and AP-06 produce duplicate payments, duplicate records, and unauthorized effects, and all three look like ordinary engineering diligence while they are being built. Audit those three first. |
 
-## Why Chapter 18 comes next
+**How to know the repair worked.** Track runs executing unversioned artifacts, out-of-band edit events, and rollback rehearsal failures. The price of the safer design is clear: immutability needs genuinely good tooling, or people will route around it under pressure. If the emergency path is slower than the console, the console wins — so make the fast path immutable rather than making immutability optional.
+
+## Where this leads next
 
 After removing unsafe local architectures, Chapter 18 considers when multiple agents add justified specialization rather than accidental complexity.

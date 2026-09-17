@@ -4,6 +4,22 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Apply the reviewed v2.1.0 DOCX edits across publication formats
+
+- Reconciled the latest reviewed DOCX's title metadata and cover wording
+  (`Building an...` / `BUILDING AN...`), matched its 10 pt body typography and
+  heading-lead pagination behavior, and restored the two reviewed spellings in
+  the canonical prose (`aCL` and `rCE`).
+- Reconciled the reviewed DOCX wording into the canonical Markdown parts and
+  regenerated the distributable Markdown, DOCX, and XeLaTeX source while
+  preserving the 8-Part / 28-chapter / 12-appendix topology.
+- Applied the reviewed reader-facing headings, evidence callouts, chapter and
+  appendix transitions, pattern catalog, and threat catalog consistently
+  across the book.
+- Updated the generated claim-traceability heading and its structural
+  validator contract; preserved code listings, diagrams, citations, examples,
+  and stable identifiers.
+
 ### Full-book style, tone, and readability pass
 
 - Reworked the front matter, Part orientations, all 28 chapter titles, and the

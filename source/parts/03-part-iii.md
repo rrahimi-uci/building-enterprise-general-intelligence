@@ -6,11 +6,11 @@ contracts, adapters, Skills, domain packs, and a lifecycle that carries them
 from a developer laptop to production. The platform stays opinionated about
 safety and evidence while leaving domain teams room to build something useful.
 
-# 07 — Build the Paved Road for Agent Teams
+# 07 — Build a Paved Road for Agent Teams
 
-> **Evidence note.** The portability layer is informed by current public agent abstractions from OpenAI, Microsoft, and Google; capability parity is not assumed and must be proven by adapter conformance tests. [R29][R31][R32]
+> **Evidence context:** The portability layer is informed by current public agent abstractions from OpenAI, Microsoft, and Google; capability parity is not assumed and must be proven by adapter conformance tests. **[R29][R31][R32]**
 
-## Why this chapter matters
+## Why every team should not rebuild the safety layer
 
 Without a platform, every team rebuilds the same dangerous plumbing and every
 fix arrives at a different speed. This chapter describes a paved road made of
@@ -18,13 +18,15 @@ contracts, adapters, and delivery practices. The goal is not to force every
 application into one monolith; it is to make the safe path easier to reuse
 than the clever shortcut.
 
-## The platform pieces
+## What the paved road actually provides
+
+The need for a paved road becomes obvious after the second or third team ships. One team retries inside its SDK wrapper, another records only transcripts, and a third gives tools a broad service credential. Each local choice looks reasonable, but the organization now has three incompatible meanings of failure, audit, and authorization. A platform earns its place by making those cross-cutting decisions once and leaving product teams free to build differentiated domain behavior.
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Platform services own contracts and evidence; applications own domain behaviour | application code to platform-owned control planes | template · adapter · release artifact | one application release | AgentSpec · RunContext · ToolSpec · ReleaseManifest |
 
-## Platform promise
+## What teams should be able to rely on
 
 The developer platform is a reusable paved road that lets teams build differentiated agents without repeatedly rebuilding identity, policy, tool safety, tracing, evaluation, durable execution, and delivery infrastructure. It is not a mandatory monolith: applications use platform-owned contracts and replaceable adapters.
 
@@ -49,13 +51,13 @@ The developer platform is a reusable paved road that lets teams build differenti
 | Human-in-the-Loop | Proposal, preview, grants, queues, SLAs, recourse | Reviewer policy, domain evidence, decision rights |
 | Deployment & Versioning | Packaging, manifests, environments, gates, canary, rollback | Application release and risk sign-off |
 
-## Portable contracts and multi-framework support
+## Keep contracts stable while frameworks change
 
 [[DIAGRAM:portability|Figure 7-2 — Platform contracts with replaceable framework and provider adapters]]
 
 Use AgentSpec, RunContext, TaskEnvelope, ToolSpec/ToolCall, ContextManifest, MemoryRecord, EvaluationResult, and ReleaseManifest as stable contracts. Compile them into framework/provider adapters. Standardized contracts, MCP, APIs, events, agent-to-agent protocols, gateways, and shared platform services provide interoperability without leaking vendor-native message objects into applications. Compatibility suites verify cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.
 
-## Developer lifecycle
+## How a capability moves from idea to production
 
 [[DIAGRAM:developer-lifecycle|Figure 7-3 — Local-to-production agent lifecycle]]
 
@@ -88,7 +90,7 @@ adapter boundary. The fluent API is convenience. The compiled contracts,
 policy decisions, tool/effect evidence, traces, and release manifest are the
 stable interface.
 
-## Golden path
+## Make the safe path the easy path
 
 Developer experience should compress setup and diagnosis time while making authority, versions, risk, evidence, and cost visible. A convenient SDK that hides those concerns transfers complexity to production incidents.
 
@@ -105,7 +107,7 @@ Developer experience should compress setup and diagnosis time while making autho
 | Operate | Observe SLO, quality, safety, cost | Alerts, runbooks, reconciliation, incident tools | On-call and operational ownership |
 | Improve | Build ChangeBundle from evidence | Trace mining, dataset curation, experiment workflow | Causal hypothesis, tests, approval, learning record |
 
-## Testing and simulation pyramid
+## Test the contracts before you test the model
 
 [[DIAGRAM:test-pyramid|Figure 7-5 — Testing and simulation pyramid]]
 
@@ -128,22 +130,22 @@ agentctl rollback mortgage-evidence-review@0.1.0 --to 0.0.9
 
 Use one immutable artifact across environments; bind endpoints, identities, secrets, sources, quotas, regions, and review queues at deployment. Pin SDKs, adapters, model aliases, tool schemas, Skills, MCP servers, policy bundles, evaluators, and knowledge snapshots. A model/provider swap is a behavior change—not harmless configuration.
 
-## What the evidence supports
+## What the evidence lets us conclude
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | Framework portability | Public agent SDKs differ in cancellation, streaming, tool, approval, and error semantics. A shared contract does not make them interchangeable; only adapter conformance tests demonstrate parity, and any gap must be recorded as a known limitation rather than assumed away. | R29; R31; R32 |
 
-Evidence anchors: R29; R31; R32. Full URLs, authority, version, and scope appear in Appendix K.
+The discussion above draws on R29; R31; R32. Appendix K lists the complete sources and records their authority, version, and scope.
 
-## When the system misbehaves
+## If this fails in production
 
 1. Start from the accepted business outcome and walk backward through the causal run graph.
 2. Find the first divergent span: input classification, source or freshness, prompt, route, model, tool, arguments, policy, effect, approval, or acceptance.
 3. Diff the failing run against the nearest accepted run — prompt, context manifest, and every pinned version — before changing anything.
 4. Do not edit the prompt until the evidence locates the failing responsibility. A prompt change that hides a policy or contract defect removes the signal without removing the fault.
 
-## Before you ship
+## What to verify before production
 
 **✓** One immutable artifact crosses every environment; endpoints, identities, secrets, sources, quotas, regions, and review queues bind at deployment.
 
@@ -155,12 +157,12 @@ Evidence anchors: R29; R31; R32. Full URLs, authority, version, and scope appear
 
 **✓** Every golden-path stage emits its evidence artifact; a stage that produces no evidence is not complete.
 
-## Try it yourself
+## Put the idea to work
 
 1. Take one existing agent and list which of the sixteen platform capabilities it reimplements locally. Estimate the cost of removing each.
 2. Write an adapter conformance test that fails when a framework silently drops cancellation mid-run.
 
-## Questions for design review
+## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -170,7 +172,7 @@ Evidence anchors: R29; R31; R32. Full URLs, authority, version, and scope appear
 | What does the golden path make visible that a convenient SDK hides? | Authority, versions, risk, evidence, and cost. An SDK that hides them does not remove the complexity; it relocates it to production incidents. |
 | When is framework portability proven? | Only when adapter conformance tests pass across cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behaviour. Parity is never inferred from documentation. |
 
-## Why Chapter 8 comes next
+## Where this leads next
 
 The delivery path is established; Chapter 8 packages repeatable behavior as versioned Skills with explicit contracts and lifecycle controls.
 
@@ -182,9 +184,9 @@ The delivery path is established; Chapter 8 packages repeatable behavior as vers
 
 |  |
 | --- |
-| **DESIGN DECISION**  Make the Skill manifest the versioned capability contract and resolve exact releases through policy and evaluation evidence. |
+| **THE DESIGN CHOICE** Make the Skill manifest the versioned capability contract and resolve exact releases through policy and evaluation evidence. |
 
-## Why this chapter matters
+## Why a prompt is not a reusable capability
 
 Prompts and tool wrappers become hard to govern as soon as several teams copy
 them. A Skill gives a meaningful capability an owner, an interface, a release,
@@ -192,14 +194,16 @@ and evidence that it was tested. This chapter explains what belongs in that
 package and when versioning the whole capability is more useful than versioning
 an instruction string by itself.
 
-## Inside a Skill
+## What belongs inside a Skill
+
+A Skill is useful when it can be reviewed, tested, versioned, and retired as a coherent capability. The prompt is only one part. The package also needs to say what inputs it accepts, what evidence it may read, which tools it can propose, what outputs it guarantees, how risk is classified, and how operators will know it is healthy. A small prompt edit can alter tool selection, data exposure, or output shape even though no application code changed.
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Skill Registry and resolver | semantic discovery to policy-bound resolution | skill family · registry partition | one skill version | SkillManifest · SkillRequirement · SkillRelease |
 
-## Skill anatomy
+## A Skill is more than its prompt
 
 A Skill is the smallest independently owned and versioned package that lets an agent perform a meaningful capability. Its manifest names interface schemas, instructions, eligible tools, knowledge sources, optional workflow template, policy constraints, side-effect class, observability fields, evaluation suite, owner, lifecycle, and immutable digest.
 
@@ -297,28 +301,28 @@ Certification includes contract, unit, simulation, trajectory, threat, failure-i
 
 The registry scales as a read-heavy control-plane service with immutable manifests, version indexes, cached eligibility metadata, and regional last-known-good replicas. Runtime execution remains in regional cells.
 
-## What the evidence supports
+## What the evidence lets us conclude
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | Terminology | Skill is a platform-owned package in this book. It is not an OpenAI Agents SDK primitive and is not identical to A2A AgentSkill metadata or Skills over MCP. Interchange requires an explicit adapter and loss analysis. | A2A-101; MCP-2026 |
 
-Evidence anchors: SLSA; MCP-2026. Full URLs, authority, version, and scope appear in Appendix K.
+The discussion above draws on SLSA; MCP-2026. Appendix K lists the complete sources and records their authority, version, and scope.
 
-## A practical starting point
+## A sensible place to start
 
 
 ### Skill manifest and resolver
 
 [[EXAMPLE:skills-registry#resolution]]
 
-## When the system misbehaves
+## If this fails in production
 
 1. Resolve a Skill version from the recorded requirement and compare registry evidence.
 2. Diff Skill manifests across a regression.
 3. Verify no hidden tool, knowledge, or policy dependency exists outside the manifest.
 
-## Before you ship
+## What to verify before production
 
 **✓** Every Skill has an owner, immutable version, digest, lifecycle, and support window.
 
@@ -330,12 +334,12 @@ Evidence anchors: SLSA; MCP-2026. Full URLs, authority, version, and scope appea
 
 **✓** Contract, trajectory, threat, failure, and load evidence gate promotion.
 
-## Try it yourself
+## Put the idea to work
 
 1. Author a Skill manifest for mortgage evidence retrieval.
 2. Define a certification suite that catches a cross-tenant retrieval defect.
 
-## Questions for design review
+## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -345,21 +349,21 @@ Evidence anchors: SLSA; MCP-2026. Full URLs, authority, version, and scope appea
 | How should a Skill be tested? | Contract, deterministic unit, simulation, trajectory, threat, data-boundary, failure-injection, regression, load, and canary tests. |
 | When should behavior remain application-specific? | When it encodes one product transaction, unstable workflow, private data boundary, or ownership model that should not be generalized. |
 
-## Why Chapter 9 comes next
+## Where this leads next
 
 Individual Skills are governable; Chapter 9 composes them into domain packs without dissolving ownership or compatibility boundaries.
 
-# 09 — From Skills to a Domain Platform
+# 09 — Turn Skills into a Coherent Domain Platform
 
 |  |
 | --- |
-| **MORTGAGE CASE AT THIS POINT**  Harborlight needs a complete domain experience, not isolated Skills. Evidence retrieval, document validation, income and property checks, policy explanation, and underwriter-package preparation must ship as a compatible, evaluated pack. |
+| **WHERE THE MORTGAGE CASE STANDS** Harborlight needs a complete domain experience, not isolated Skills. Evidence retrieval, document validation, income and property checks, policy explanation, and underwriter-package preparation must ship as a compatible, evaluated pack. |
 
 |  |
 | --- |
-| **DESIGN DECISION**  Ship domain behavior as immutable Skill Packs with compatibility, policy, evaluation, and promotion metadata. |
+| **THE DESIGN CHOICE** Ship domain behavior as immutable Skill Packs with compatibility, policy, evaluation, and promotion metadata. |
 
-## Why this chapter matters
+## Why domain capabilities need to ship together
 
 One Skill can be useful; a domain workflow needs several Skills to agree about
 schemas, policy, terminology, evaluation, and operations. This chapter shows
@@ -368,14 +372,16 @@ release. The payoff is visible during change: a mortgage team can roll out a
 compatible capability bundle instead of discovering incompatibilities in
 production one agent at a time.
 
-## The pack as a release boundary
+## Why the pack should ship as one unit
+
+Shipping related Skills together is less about convenience than compatibility. Suppose document validation begins returning a new evidence schema while income verification still expects the old one. Independent releases can leave a run in the gap between them. A pack pins versions known to work together, tests shared workflow and policy as one behavior, and gives operators one unit to promote or roll back.
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Skill Pack Registry and release pipeline | pack authoring to tenant/runtime use | domain pack · tenant rollout cohort | one pack release | SkillPackManifest · CompatibilityReport · EvaluationSuite |
 
-## From individual capability to domain platform
+## From one capability to a coherent domain experience
 
 A Skill Pack composes a coherent domain experience. Harborlight’s mortgage-evidence pack pins evidence retrieval, document validation, income and property checks, policy explanation, underwriter-package preparation, and document-request Skills. It also pins shared policy, taxonomy, knowledge strategy, workflow templates, evaluation datasets, dashboards, and runbooks.
 
@@ -417,15 +423,15 @@ Packs move through signed releases and aliases such as development, staging, and
 * **Software delivery:** repository context, test planning, code change, review, deployment evidence.
 * **Financial close:** reconciliation, variance explanation, exception routing, controlled posting.
 
-## What the evidence supports
+## What the evidence lets us conclude
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | Distribution security | A Skill Pack is executable supply chain: pin dependencies and tool schemas, produce SBOM and signed provenance, scan transitive content and binaries, enforce publisher trust, and support revocation without rewriting historical runs. | SLSA; OWASP-CHEAT |
 
-Evidence anchors: SLSA; OWASP-CHEAT. Full URLs, authority, version, and scope appear in Appendix K.
+The discussion above draws on SLSA; OWASP-CHEAT. Appendix K lists the complete sources and records their authority, version, and scope.
 
-## A practical starting point
+## A sensible place to start
 
 
 ### Skill Pack contract
@@ -458,13 +464,13 @@ class SkillPackManifest(BaseModel):
         return value
 ```
 
-## When the system misbehaves
+## If this fails in production
 
 1. Expand the pack dependency graph and locate the incompatible version.
 2. Compare pack alias history with active run manifests.
 3. Run the pack-level evaluation suite on the failing tenant slice.
 
-## Before you ship
+## What to verify before production
 
 **✓** The pack manifest pins exact compatible Skill and dependency versions.
 
@@ -476,12 +482,12 @@ class SkillPackManifest(BaseModel):
 
 **✓** Pack-level failures can be isolated without disabling unrelated capabilities.
 
-## Try it yourself
+## Put the idea to work
 
 1. Compose a mortgage-evidence Skill Pack and define compatibility rules.
 2. Design a deprecation plan for one Skill without breaking the pack.
 
-## Questions for design review
+## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -491,6 +497,6 @@ class SkillPackManifest(BaseModel):
 | How should packs be promoted? | As signed immutable releases through dev, staging, shadow, canary, production, and rollback aliases backed by evaluation evidence. |
 | What is the main pack anti-pattern? | A monolithic prompt-and-tools bundle with hidden dependencies, no owner, no tests, and no independent versioning. |
 
-## Why Chapter 10 comes next
+## Where this leads next
 
 The platform and capability model are complete; Chapter 10 begins the pattern sequence with the smallest bounded reasoning loop.

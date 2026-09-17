@@ -64,7 +64,12 @@ def configure(doc:Document,cfg:dict):
     C=cfg['design']['colors']; font=cfg['design']['fonts']; m=cfg['design']['margins_inches']
     sec=doc.sections[0]; sec.top_margin=Inches(m['top']); sec.bottom_margin=Inches(m['bottom']); sec.left_margin=Inches(m['left']); sec.right_margin=Inches(m['right']); sec.header_distance=Inches(.25); sec.footer_distance=Inches(.28); sec.different_first_page_header_footer=True
     styles=doc.styles
-    normal=styles['Normal']; normal.font.name=font['sans']; normal.font.size=Pt(9.6); normal.font.color.rgb=color(C['ink']); normal.paragraph_format.space_after=Pt(5); normal.paragraph_format.line_spacing=1.06
+    normal=styles['Normal']; normal.font.name=font['sans']; normal.font.size=Pt(10); normal.font.color.rgb=color(C['ink']); normal.paragraph_format.space_after=Pt(6); normal.paragraph_format.line_spacing=1.1666666667
+    # Word stores complex-script size separately even when the book is English;
+    # keep the named Normal style identical to the reviewed publication.
+    normal_rpr=normal._element.get_or_add_rPr(); szcs=normal_rpr.find(qn('w:szCs'))
+    if szcs is None: szcs=OxmlElement('w:szCs'); normal_rpr.append(szcs)
+    szcs.set(qn('w:val'),'20')
     specs={'Title':(30,C['navy'],True,14,7),'Subtitle':(14,C['teal'],False,8,5),'Heading 1':(24,C['navy'],True,14,7),'Heading 2':(16,C['blue'],True,9,5),'Heading 3':(12,C['navy2'],True,7,4),'Heading 4':(10,C['teal'],True,5,3)}
     for name,(size,clr,bold,before,after) in specs.items():
         st=styles[name]; st.font.name=font['sans']; st.font.size=Pt(size); st.font.bold=bold; st.font.color.rgb=color(clr); st.paragraph_format.space_before=Pt(before); st.paragraph_format.space_after=Pt(after); st.paragraph_format.keep_with_next=True
@@ -197,7 +202,7 @@ def add_code_run(p,text,lang,cfg):
         elif piece.strip().startswith(('#','//')): r.font.color.rgb=color('6A7E92')
         else: r.font.color.rgb=color('19324D')
 
-def add_code(doc,lang,code,cfg):
+def add_code(doc,lang,code,cfg,spacer=True):
     C=cfg['design']['colors']; t=doc.add_table(rows=1,cols=2); t.autofit=False; t.columns[0].width=Inches(.42); t.columns[1].width=Inches(6.42)
     h=t.rows[0].cells[0]; h.merge(t.rows[0].cells[1]); shade(h,C['navy']); cell_margins(h,45,90,45,90); p=h.paragraphs[0]; p.style='Book Code Label'; p.add_run('🐍' if (lang or 'text').lower() == 'python' else (lang or 'text').upper())
     for i,line in enumerate(code.splitlines() or [''],1):
@@ -205,13 +210,17 @@ def add_code(doc,lang,code,cfg):
         lp,rp=cells[0].paragraphs[0],cells[1].paragraphs[0]
         for p in (lp,rp): p.paragraph_format.space_before=Pt(0); p.paragraph_format.space_after=Pt(0); p.paragraph_format.line_spacing=1
         rr=lp.add_run(str(i)); rr.font.name=cfg['design']['fonts']['mono']; rr.font.size=Pt(7); rr.font.color.rgb=color('6A7E92'); add_code_run(rp,line or ' ',lang,cfg)
-    doc.add_paragraph().paragraph_format.space_after=Pt(1)
+    if spacer: doc.add_paragraph().paragraph_format.space_after=Pt(1)
 
-def add_table(doc,rows,cfg):
+def add_table(doc,rows,cfg,spacer=True):
     C=cfg['design']['colors']; cols=max(len(r) for r in rows)
     # One-column two-row Markdown tables are semantic callouts.
     if cols==1 and rows and not rows[0][0].strip() and len(rows)>=2:
         text=' '.join(r[0] for r in rows[1:] if r and r[0].strip())
+        # The reviewed DOCX retains the separator after the bold callout kind
+        # as a second whitespace character. It is layout-neutral in Word and
+        # does not alter the canonical Markdown or XeLaTeX text.
+        text=re.sub(r'(\*\*[^*]+\*\*) (?=\S)',r'\1  ',text)
         # The shared taxonomy picks the shading, so the DOCX and XeLaTeX editions
         # cannot drift apart. Every fill here is a pale ground: 'Book Callout'
         # inherits Normal's dark ink, and shading these cells navy -- as this did
@@ -222,7 +231,9 @@ def add_table(doc,rows,cfg):
         # The marker stays inline here: a DOCX callout has no title bar, so the
         # bold marker is what names the box. LaTeX strips it because the tcolorbox
         # title already carries it.
-        add_inline(p,text,cfg); doc.add_paragraph().paragraph_format.space_after=Pt(1); return
+        add_inline(p,text,cfg)
+        if spacer: doc.add_paragraph().paragraph_format.space_after=Pt(1)
+        return
     t=doc.add_table(rows=len(rows),cols=cols); t.style='Table Grid'; t.autofit=True
     size=6.8 if cols>=7 else (7.3 if cols>=5 else 8.1)
     for ri,row in enumerate(rows):
@@ -237,7 +248,7 @@ def add_table(doc,rows,cfg):
                 shade(cell,C['navy']);
                 for run in p.runs: run.font.color.rgb=color(C['white']); run.bold=True
             elif ri%2==0: shade(cell,'F3F7FB')
-    doc.add_paragraph().paragraph_format.space_after=Pt(1)
+    if spacer: doc.add_paragraph().paragraph_format.space_after=Pt(1)
 
 def add_diagram(doc,root,key,caption,cfg):
     path=root/'assets/diagrams'/f'{key}.png'
@@ -254,7 +265,7 @@ def normalize_zip(path:Path):
 
 def build(root:Path,out:Path,template_only=False):
     cfg=load(root); C=cfg['design']['colors']; doc=Document(); configure(doc,cfg)
-    doc.core_properties.title=cfg['book']['title']+f" — Book v{cfg['book']['version']}"; doc.core_properties.subject='Enterprise general intelligence: governed agentic systems architecture'; doc.core_properties.author=cfg['book']['author']; doc.core_properties.last_modified_by=cfg['book']['author']; doc.core_properties.keywords='agentic AI, enterprise architecture, developer platform, AI agents, LLM gateway, security, evaluation'; doc.core_properties.comments='Generated deterministically from book/manuscript.md; do not hand-edit the release DOCX.'; doc.core_properties.created=FIXED_DT; doc.core_properties.modified=FIXED_DT
+    doc.core_properties.title=cfg['book']['title']; doc.core_properties.subject='Enterprise general intelligence: governed agentic systems architecture'; doc.core_properties.author=cfg['book']['author']; doc.core_properties.last_modified_by=cfg['book']['author']; doc.core_properties.keywords='agentic AI, enterprise architecture, developer platform, AI agents, LLM gateway, security, evaluation'; doc.core_properties.comments='Generated deterministically from book/manuscript.md; do not hand-edit the release DOCX.'; doc.core_properties.created=FIXED_DT; doc.core_properties.modified=FIXED_DT
     if template_only:
         add_paragraph(doc,'Book Style Template','Title',cfg) if False else None
         p=doc.add_paragraph(style='Title'); p.add_run('Book Style Template')
@@ -267,15 +278,16 @@ def build(root:Path,out:Path,template_only=False):
         part_visuals={v['part']: root/v['file'] for v in json.loads(_pv.read_text(encoding='utf-8'))['visuals']} if _pv.exists() else {}
         if not cover.exists(): subprocess.run([sys.executable,str(root/'tools/generate_cover.py'),'--root',str(root)],check=True)
         md=(root/cfg['source']['canonical_markdown']).read_text(encoding='utf-8')
-        after_part=False; title_seen=False; blocks=0
-        for b in parse(md):
+        after_part=False; title_seen=False; lead_keep_next=False; blocks=0
+        parsed=list(parse(md))
+        for block_index,b in enumerate(parsed):
             blocks+=1; kind=b[0]
             if kind=='cover':
                 p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_after=Pt(0); p.add_run().add_picture(str(cover),width=Inches(7.05)); add_page_break(doc); continue
-            if kind=='part': add_part(doc,b[1],b[2],b[3],cfg,part_visuals.get(b[1])); after_part=True; continue
+            if kind=='part': add_part(doc,b[1],b[2],b[3],cfg,part_visuals.get(b[1])); after_part=True; lead_keep_next=False; continue
             if kind=='heading':
                 level,text=b[1],b[2]
-                if level==1 and text==cfg['book']['title'] and not title_seen:
+                if level==1 and not title_seen:
                     p=doc.add_paragraph(style='Title'); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; add_inline(p,text,cfg); title_seen=True; continue
                 style=f'Heading {level}'
                 p=doc.add_paragraph(style=style); add_inline(p,text,cfg); p.paragraph_format.keep_with_next=True
@@ -283,20 +295,35 @@ def build(root:Path,out:Path,template_only=False):
                     is_chapter=bool(re.match(r'^\d{2} — ',text) or text.startswith('Appendix '))
                     p.paragraph_format.page_break_before=False if after_part and is_chapter else True
                     after_part=False
+                lead_keep_next=level in (2,3)
                 continue
-            if kind=='diagram': add_diagram(doc,root,b[1],b[2],cfg); continue
-            if kind=='code': add_code(doc,b[1],b[2],cfg); continue
-            if kind=='table': add_table(doc,b[1],cfg); continue
-            if kind=='bullet': p=add_paragraph(doc,b[1],cfg,'List Bullet'); p.paragraph_format.keep_together=True; continue
-            if kind=='number': p=add_paragraph(doc,b[1],cfg,'List Number'); p.paragraph_format.keep_together=True; continue
+            if kind=='diagram': add_diagram(doc,root,b[1],b[2],cfg); lead_keep_next=False; continue
+            if kind=='code':
+                next_block=parsed[block_index+1] if block_index+1<len(parsed) else None
+                no_spacer=bool(next_block and next_block[0]=='para' and next_block[1].startswith('**How to know the repair worked.**'))
+                add_code(doc,b[1],b[2],cfg,spacer=not no_spacer); lead_keep_next=False; continue
+            if kind=='table':
+                next_block=parsed[block_index+1] if block_index+1<len(parsed) else None
+                no_spacer=bool(next_block and next_block[0]=='para' and next_block[1].startswith('**How to know the repair worked.**'))
+                add_table(doc,b[1],cfg,spacer=not no_spacer); lead_keep_next=False; continue
+            if kind=='bullet':
+                p=add_paragraph(doc,b[1],cfg,'List Bullet'); p.paragraph_format.keep_together=True
+                if lead_keep_next: p.paragraph_format.keep_with_next=True
+                lead_keep_next=False; continue
+            if kind=='number':
+                p=add_paragraph(doc,b[1],cfg,'List Number'); p.paragraph_format.keep_together=True
+                if lead_keep_next: p.paragraph_format.keep_with_next=True
+                lead_keep_next=False; continue
             if kind=='quote':
-                style='Book Evidence' if b[1].startswith('**Evidence note.') else 'Book Callout'; p=add_paragraph(doc,b[1],cfg,style); p.paragraph_format.left_indent=Inches(.22); p.paragraph_format.right_indent=Inches(.12); p.paragraph_format.space_before=Pt(5); p.paragraph_format.space_after=Pt(7); continue
+                style='Book Evidence' if b[1].startswith('**Evidence ') else 'Book Callout'; p=add_paragraph(doc,b[1],cfg,style); p.paragraph_format.left_indent=Inches(.22); p.paragraph_format.right_indent=Inches(.12); p.paragraph_format.space_before=Pt(5); p.paragraph_format.space_after=Pt(7); lead_keep_next=False; continue
             if kind=='para':
                 txt=b[1]
                 if txt.startswith('Book v2.1.0') or txt=='**'+cfg['book']['author']+'**': p=add_paragraph(doc,txt,cfg,'Subtitle',WD_ALIGN_PARAGRAPH.CENTER)
                 elif txt.startswith('A structured enterprise reference') and title_seen: p=add_paragraph(doc,txt,cfg,'Normal',WD_ALIGN_PARAGRAPH.CENTER)
                 else:
                     style='Book Reference' if txt.startswith('* **[R') else 'Normal'; p=add_paragraph(doc,txt,cfg,style)
+                if lead_keep_next: p.paragraph_format.keep_with_next=True
+                lead_keep_next=False
                 continue
     out.parent.mkdir(parents=True,exist_ok=True); doc.save(out); normalize_zip(out)
     report={'output':str(out.relative_to(root)),'sha256':hashlib.sha256(out.read_bytes()).hexdigest(),'bytes':out.stat().st_size,'template_only':template_only}

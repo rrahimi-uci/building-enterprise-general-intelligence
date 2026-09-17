@@ -6,11 +6,11 @@ still active during a deployment. This Part connects governance, release and
 recovery, capacity, reliability, and cost so the platform remains usable after
 the demo has become a dependency.
 
-# 26 — Make Governance an Operating System
+# 26 — Make Governance Part of How the Platform Runs
 
-> **Evidence note.** NIST AI RMF and its Generative AI Profile are voluntary risk guidance; ISO/IEC 42001 specifies an AI management system; the EU AI Act source provides official implementation context. Applicability and legal obligations require qualified jurisdiction-specific review. [R12][R13][R14][R40]
+> **Evidence context:** NIST AI RMF and its Generative AI Profile are voluntary risk guidance; ISO/IEC 42001 specifies an AI management system; the EU AI Act source provides official implementation context. Applicability and legal obligations require qualified jurisdiction-specific review. **[R12][R13][R14][R40]**
 
-## Why this chapter matters
+## Why governance belongs in the operating model
 
 Governance works when it changes what teams do, not when it produces another
 committee packet. This chapter turns risk appetite into named decisions,
@@ -18,7 +18,9 @@ proportional controls, evidence, exceptions, and review cadence. It becomes
 especially important when several teams share a platform and no single team
 can see the full consequence of a release.
 
-## Decisions, owners, and evidence
+## Governance starts with clear decisions and owners
+
+Good governance should make routine, low-risk change faster because teams know the path in advance. It becomes bureaucracy when every change enters the same queue or exceptions have no owner or expiry. Start by naming the decision, the accountable role, the evidence needed, and the time boundary. Then scale review to the risk. The operating model is working when people can predict how a change will be evaluated and see who must act next.
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
@@ -37,7 +39,7 @@ Consider Harborlight's mortgage-evidence assistant. The domain owner may accept 
 
 This framing also explains why a central board alone scales poorly. A board can set the risk vocabulary and approve high-consequence boundaries, but it cannot supply the local knowledge needed for every data source, business effect, or acceptance criterion. Central services make decisions consistent; domain owners make them meaningful.
 
-## Federated operating model
+## Share responsibility without losing accountability
 
 Governance makes decisions explicit, proportional, evidence-based, and reversible. It accelerates safe delivery with reusable risk tiers, policy, review paths, and evidence rather than sending every prompt edit to one committee.
 
@@ -55,7 +57,7 @@ Governance makes decisions explicit, proportional, evidence-based, and reversibl
 | Production promotion | Release owner | ValidationReport, required approvals, canary, rollback |
 | Exception | Named risk authority | Scope, rationale, compensating controls, expiry, monitoring |
 
-## Risk tiers
+## Match the control to the risk
 
 | **Tier** | **Typical use** | **Minimum governance** |
 | --- | --- | --- |
@@ -67,21 +69,21 @@ Governance makes decisions explicit, proportional, evidence-based, and reversibl
 
 Assess incorrect-outcome impact, sensitive data, protected effects, legal relevance, autonomy, exposure, scale, reversibility, multi-agent/tool complexity, and human detectability. Risk is not the model name.
 
-## Policy, review, and cadence
+## Make review predictable and proportional
 
 Principles define non-negotiable outcomes; standards define reusable contracts; policy-as-code decides eligible models, data, tools, actions, budgets, and approvals; application configuration selects within the envelope; exceptions are scoped, monitored, owned, and expiring. Review outcome/acceptance, deterministic boundary, state/effect ownership, identity/delegation, context/memory, tool/MCP/A2A trust, threats, evaluation truth, observability/privacy, recovery, release, capacity/cost, human oversight, and portability.
 
 Operate per run (admission/policy/effects/acceptance), daily/weekly (SLO, quality, safety, cost, incidents, evaluator health), per release (classification, regression, security/privacy, compatibility, canary/rollback), quarterly (portfolio value/risk and platform roadmap), and annually/material change (policy, law, threat, recovery, independent assurance).
 
-## What the evidence supports
+## What the evidence lets us conclude
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | Regulatory applicability | NIST AI RMF and its Generative AI Profile are voluntary guidance; ISO/IEC 42001 specifies a management system; the EU AI Act creates binding obligations that vary by risk category and by whether the enterprise acts as provider or deployer. Mapping a control in this book to a clause is engineering evidence, not legal advice, and qualified jurisdiction-specific review remains required. | R12; R13; R14; R40 |
 
-Evidence anchors: R12; R13; R14; R40. Full URLs, authority, version, and scope appear in Appendix K.
+The discussion above draws on R12; R13; R14; R40. Appendix K lists the complete sources and records their authority, version, and scope.
 
-## When the system misbehaves
+## If this fails in production
 
 Governance fails as queues and exceptions rather than as stack traces. Diagnose it the same way.
 
@@ -90,7 +92,7 @@ Governance fails as queues and exceptions rather than as stack traces. Diagnose 
 3. When risk tier and control effort disagree, re-score impact, reversibility, and human detectability before changing the tier.
 4. When review takes longer than delivery, check whether evidence is produced by the pipeline or assembled by hand. Hand-assembled evidence is the usual cause.
 
-## Before you ship
+## What to verify before production
 
 **✓** Every decision class in the accountability table has one named owner and one required evidence artifact.
 
@@ -102,12 +104,12 @@ Governance fails as queues and exceptions rather than as stack traces. Diagnose 
 
 **✓** Each cadence — per run, daily or weekly, per release, quarterly, annually — has a named owner and a defined input.
 
-## Try it yourself
+## Put the idea to work
 
 1. Classify three current use cases into risk tiers and list the minimum governance each one triggers. Where two people disagree, the tier definition is the defect.
 2. Take one standing exception and write either its expiry date or the standard that would retire it permanently.
 
-## Questions for design review
+## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -117,13 +119,13 @@ Governance fails as queues and exceptions rather than as stack traces. Diagnose 
 | What separates principles, standards, policy-as-code, and configuration? | Principles state non-negotiable outcomes; standards define reusable contracts; policy-as-code decides what is eligible at runtime; configuration selects within that envelope. Only the first two are argued; the last two are executed. |
 | How do you know governance is accelerating delivery? | Time from evidence-complete to approved is falling, exceptions are trending down as standards absorb them, and the same evidence serves engineering review, risk review, and audit without rework. |
 
-## Why Chapter 27 comes next
+## Where this leads next
 
 Governance defines who may release change; Chapter 27 makes releases immutable, promotable, observable, reversible, and recoverable.
 
-# 27 — Release Without Breaking Work in Flight
+# 27 — Release New Behavior Without Breaking Work in Flight
 
-> **Evidence note.** The incident lifecycle aligns with NIST SP 800-61 Rev. 3’s integration of incident response into cybersecurity risk management; agent-specific containment and recovery remain workload-defined. [R42]
+> **Evidence context:** The incident lifecycle aligns with NIST SP 800-61 Rev. 3’s integration of incident response into cybersecurity risk management; agent-specific containment and recovery remain workload-defined. **[R42]**
 
 |  |
 | --- |
@@ -131,9 +133,9 @@ Governance defines who may release change; Chapter 27 makes releases immutable, 
 
 |  |
 | --- |
-| **DESIGN DECISION**  Release immutable bundles with compatibility evidence; roll back new assignment while active runs remain pinned to compatible code. |
+| **THE DESIGN CHOICE** Release immutable bundles with compatibility evidence; roll back new assignment while active runs remain pinned to compatible code. |
 
-## Why this chapter matters
+## Why a release is more than a deployment
 
 An agentic release changes more than application code: it can change prompts,
 tools, policies, model routes, schemas, and the behavior of work already in
@@ -141,7 +143,7 @@ flight. This chapter shows how to package those changes, prove compatibility,
 canary new work, and recover without rewriting history or abandoning active
 runs.
 
-## Immutable releases and compatible workers
+## Keep releases immutable and workers compatible
 
 [[DIAGRAM:release-recovery|Figure 27-1 — Immutable release promotion and recovery without rewriting active history]]
 
@@ -149,7 +151,9 @@ runs.
 | --- | --- | --- | --- | --- |
 | Release Registry and compatible worker pools | candidate artifact to production assignment | release cohort · workflow build · cell | one release cohort | ReleaseManifest · CompatibilityMatrix · RolloutPlan |
 
-## The release is the behavior
+## Treat the full behavior as the release
+
+For an agentic system, behavior is spread across more than application code. A model route, prompt, Skill, tool schema, policy bundle, evaluator, and workflow definition can each change what the user experiences or what the system may do. A release therefore pins the whole graph. That makes a production result reproducible and gives rollback a precise meaning: restore known behavior, not merely an older container image.
 
 A production release includes more than application code: agent and Skill versions, prompts and instructions, SDK adapter, workflow build, model route and fallbacks, tool and policy versions, schemas, sandbox image, knowledge strategy, evaluation suite, dashboards, runbooks, rollout, and rollback. Northstar records these in an immutable ReleaseManifest and pins the manifest to each run.
 
@@ -175,9 +179,9 @@ The distinction between a release and a deployment becomes concrete during a too
 
 This is why “roll back the model” is usually incomplete. If the prompt, tool schema, policy, workflow build, or retrieved knowledge strategy also changed, restoring one model identifier does not restore the behavior. The smallest safe rollback unit is the release bundle, while emergency deny and credential revocation remain separate controls that can take effect immediately and be recorded alongside the pinned release.
 
-## Deployment architecture
+## A deployment shape that supports safe change
 
-### A production topology to start with
+### A production topology that is easy to reason about
 
 The topology has two different jobs. The control plane decides what may run and which immutable bundle a run receives; regional execution planes do the work within that decision. Keeping those jobs separate lets a release be globally described while state, queues, credentials, and model endpoints remain inside the required residency and failure boundary.
 
@@ -216,7 +220,7 @@ The boundary is operational as well as logical. A regional worker should be able
 | Sandboxing | Ephemeral containers or microVMs with egress proxy | Isolation strength, startup latency, observability, policy integration |
 | Telemetry/evals | OpenTelemetry + trace/metric backend + evaluation service | Portability, privacy controls, async trace linking, dataset/experiment workflow |
 
-## Versioning, lifecycle, governance, and compliance
+## Version every artifact that can change behavior
 
 | **Required analysis** | **Design conclusion** |
 | --- | --- |
@@ -269,9 +273,9 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 * Document explanations at the right level: evidence and rules for business decisions; trajectory summaries for operations; model internals are neither necessary nor sufficient.
 * Never auto-train or rewrite production policies/prompts directly from live conversations. Curate, de-identify, review, evaluate, and promote changes through the same lifecycle.
 
-### How to build it
+### A workable implementation
 
-### Who owns what
+### Who should own each decision
 
 | **Component** | **Responsibility** |
 | --- | --- |
@@ -284,7 +288,7 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 | Governance Inventory | Track use case, owners, data, autonomy, controls, evidence, exceptions, retention, and regulatory mapping |
 | Emergency Control | Kill switch, deny policy, credential revocation, and safe rollback independent of normal release cadence |
 
-### The interfaces
+### The contracts between components
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -298,7 +302,7 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 | POST /v1/governance/exceptions | Create time-bounded, scoped waiver with compensating controls, approvers, owner, evidence, and renewal prohibition/default |
 | GET /v1/governance/inventory | Query deployed agents/use cases by owner, risk, autonomy, data class, region, vendor, controls, incidents, and review date |
 
-### The records that matter
+### Records worth preserving
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -335,15 +339,15 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 | --- |
 | **PRODUCTION CONSIDERATION**  Version the prompt, the model pin, the tool manifests, and the policy as one release artifact. Rolling back an agent means restoring all four together; a deployment that can change the model without changing the recorded version has no rollback, only a guess. |
 
-## What the evidence supports
+## What the evidence lets us conclude
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | Supply chain | An SBOM describes components; SLSA provenance describes where and how an artifact was built. Use both, verify signatures and builder identity before promotion, and include model/prompt/Skill/policy/evaluation digests in the release manifest. | SLSA |
 
-Evidence anchors: SLSA; CISA-SBOM. Full URLs, authority, version, and scope appear in Appendix K.
+The discussion above draws on SLSA; CISA-SBOM. Appendix K lists the complete sources and records their authority, version, and scope.
 
-## A practical starting point
+## A sensible place to start
 
 
 ### Release compatibility check
@@ -419,13 +423,13 @@ def verify_release_artifact(
         raise ValueError("SBOM and provenance are required")
 ```
 
-## When the system misbehaves
+## If this fails in production
 
 1. Resolve the exact release manifest and worker compatibility for the run.
 2. Replay history before migrating workflow code.
 3. Verify rollback stopped new assignment without changing active history.
 
-## Before you ship
+## What to verify before production
 
 **✓** Client and workflow contracts remain stable across SDKs, providers, engines, and connectors.
 
@@ -437,12 +441,12 @@ def verify_release_artifact(
 
 **✓** Compatibility, schema migration, fencing, regional recovery, and effect reconciliation are designed before deployment.
 
-## Try it yourself
+## Put the idea to work
 
 1. Design CI/CD gates for an agent, Skill Pack, policy, and workflow release.
 2. Write a regional recovery sequence that fences the old writer and reconciles effects.
 
-## Questions for design review
+## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -452,13 +456,13 @@ def verify_release_artifact(
 | Why use workload queues and regional cells? | Isolate risk and latency classes, control noisy neighbors, scale additively, enforce residency, bound blast radius, and keep critical execution dependencies local. |
 | Describe safe regional failover during an external write. | Stop admission, fence the old writer, restore compatible durable state, reconcile executing and unknown effects and signals, atomically advance placement, then resume by risk tier. |
 
-## Why Chapter 28 comes next
+## Where this leads next
 
 The release lifecycle is controlled; Chapter 28 sizes the system and optimizes cost, latency, capacity, and reliability around verified outcomes.
 
-# 28 — Make Performance a Business Decision
+# 28 — Treat Performance as a Business Decision
 
-> **Evidence note.** Little’s Law relates average items in a stable system to arrival rate and average time in system. The capacity equations in this chapter are planning approximations and must be calibrated by load tests. [R43]
+> **Evidence context:** Little’s Law relates average items in a stable system to arrival rate and average time in system. The capacity equations in this chapter are planning approximations and must be calibrated by load tests. **[R43]**
 
 |  |
 | --- |
@@ -466,9 +470,9 @@ The release lifecycle is controlled; Chapter 28 sizes the system and optimizes c
 
 |  |
 | --- |
-| **DESIGN DECISION**  Optimize cost per verified success through shorter trajectories, selective context, deliberate routing, bounded concurrency, and safe degradation. |
+| **THE DESIGN CHOICE** Optimize cost per verified success through shorter trajectories, selective context, deliberate routing, bounded concurrency, and safe degradation. |
 
-## Why this chapter matters
+## Why cost and latency have to be designed into the workflow
 
 The cheapest token is not a cheap outcome if it creates a rework loop, a human
 queue, or an unverified effect. This chapter connects latency, cost, capacity,
@@ -486,17 +490,19 @@ the architecture meets the operating budget.
 
 ## Optimize the trajectory, not the token
 
+A cheaper model call can make the workflow more expensive if it causes extra retrieval, repeated tool calls, evaluator retries, or human escalation. The unit of optimization is the accepted business outcome and the path taken to reach it. Measure cost and latency at each stage, then improve the bottleneck that changes the journey. This keeps local savings from shifting work—and risk—to a more expensive part of the system.
+
 The useful objective is **cost and latency per verified successful outcome**, constrained by quality, safety, reliability, and compliance. A cheaper model can be more expensive if it causes more turns, retrievals, retries, escalations, or human review. First remove unnecessary work: prefer deterministic paths, smaller eligible tool sets, early acceptance, selective retrieval, artifact reuse, and bounded parallelism.
 
-### Latency and cost budget
+### Give each stage a latency and cost budget
 
 Allocate an end-to-end deadline across admission, queue, context, model, tools, human dwell, and reserve. Each child task inherits a narrower budget. Track expected and worst-case tokens, tool calls, external charges, sandbox minutes, and human minutes. The budget service issues permits; workers cannot exceed the lease by continuing to reason.
 
-### Capacity and fairness
+### Share capacity without starving important work
 
 Separate queues by workload and risk class. Weighted fair scheduling prevents a large tenant from starving others. Concurrency permits reflect the actual scarce resource: model route, vendor rate limit, browser pool, code sandbox, database writer, or approver queue. Backpressure starts at admission rather than after every subsystem is overloaded.
 
-### Safe degradation
+### Decide what the system may drop or defer
 
 Under pressure, Northstar can defer nonurgent work, produce a draft rather than commit, reduce optional context, use an evaluated lower-cost route, serialize optional fan-out, or request human scheduling. It never disables authorization, tenant isolation, approval, effect verification, or required audit. Every optimization is tested by slice, canaried, reversible, and observable.
 
@@ -526,7 +532,7 @@ Assume the 120-runs-per-minute peak is expected to last long enough for queues t
 
 The numbers above are illustrative planning inputs, not universal limits. Their purpose is to show the order of reasoning: measure demand, identify the scarce resource, reserve capacity for the outcomes that matter, choose a reversible degradation, and verify that the degraded path still satisfies its safety and acceptance contract.
 
-## Scalability, performance, and cost
+## Scale the workflow, not just the model call
 
 | **Required analysis** | **Design conclusion** |
 | --- | --- |
@@ -538,7 +544,7 @@ The numbers above are illustrative planning inputs, not universal limits. Their 
 | Failure scenarios | One tenant consumes all quota; fan-out explosion; retry storm; head-of-line blocking; model quota is exhausted while workers scale uselessly; sandbox image cold starts dominate latency. |
 | Enterprise example | A month-end finance workload uses priority queues and reserved model quota for close-critical tasks, separate pools for OCR/code execution, and backpressure that defers low-priority research rather than failing all runs. |
 
-### Scaling topology
+### Scale by workload and failure boundary
 
 Begin with a small number of meaningful pools rather than a queue for every tenant. A pool represents a real operational difference: interactive versus batch latency, read-only versus mutating risk, browser versus GPU resource profile, or one residency boundary versus another. Within a pool, tenant-aware quotas and fair scheduling provide isolation without creating an unmanageable number of services.
 
@@ -552,7 +558,7 @@ Begin with a small number of meaningful pools rather than a queue for every tena
 
 This layered view prevents a common operational mistake: treating worker count as capacity. If the model provider has no remaining token quota, adding workers only increases contention and may amplify retries. The scheduler should keep work queued until the scarce permit is available, while the admission controller decides whether waiting is still compatible with the deadline.
 
-### Capacity and concurrency controls
+### Control concurrency before queues control you
 
 * Hierarchical token buckets: organization → environment → tenant → agent → user → run → provider/tool.
 * Queue partitions and worker pools by latency class, risk, region/residency, sandbox profile, model family, and data classification.
@@ -562,7 +568,7 @@ This layered view prevents a common operational mistake: treating worker count a
 * Fair scheduling with reserved capacity for critical workflows and protection against a single tenant or recursive agent tree.
 * Prewarmed sandboxes only for latency-sensitive workloads; immutable images, snapshot pools, and aggressive idle reclamation for the rest.
 
-### Cost/performance optimization order
+### Optimize in the order that changes outcomes
 
 1. **Remove unnecessary agency:** replace stable decisions with code, rules, search, or classifiers.
 2. **Reduce work:** incremental recomputation, event correlation, cached deterministic results, delta retrieval, and early exit on acceptance criteria.
@@ -575,13 +581,13 @@ This layered view prevents a common operational mistake: treating worker count a
 9. **Use spend-aware planning:** each plan estimates cost and reserves budget; report marginal value of optional branches.
 10. **Measure cost per accepted outcome:** token price alone ignores retries, human review, failed trajectories, and tool charges.
 
-### How to build it
+### A workable implementation
 
-### Who owns what
+### Who should own each decision
 
 The Admission Controller predicts resource/risk and accepts, defers, or rejects work; the Hierarchical Quota Service owns organization-to-run limits; the Queue/Scheduler owns priority and fairness; the Worker Lease Service owns assignment/heartbeat; Provider Limiters translate external quotas into dispatch permits; the Capacity Controller scales pools; and the Usage/Cost Ledger attributes reserved and actual resources.
 
-### The interfaces
+### The contracts between components
 
 | **API** | **Purpose and key semantics** |
 | --- | --- |
@@ -595,7 +601,7 @@ The Admission Controller predicts resource/risk and accepts, defers, or rejects 
 | GET /v1/capacity | Return region/pool/provider availability, queue age, reserved capacity, health, and planning hints |
 | GET /v1/runs/{run\_id}/cost | Return reserved/actual/forecast cost by node, agent, model, tool, retry, tenant, and outcome |
 
-### The records that matter
+### Records worth preserving
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
@@ -646,19 +652,19 @@ These are policy shapes, not universal numbers. Determine actual limits from tas
 | --- |
 | **PERFORMANCE AND COST**  Route on policy first, then on price. Model choice is a governance decision before it is an economic one: data residency, retention, and approved use constrain the candidate set, and only then does cost per verified outcome pick from what remains. |
 
-## What the evidence supports
+## What the evidence lets us conclude
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | Sizing method | Size from measured arrival rates and service-time distributions. Include fan-out, retry amplification, model/tool quotas, approval dwell time, tenant fairness, and headroom. Cost per verified success is more useful than token cost alone. | QUEUEING; MLFLOW-TRACE |
 
-Evidence anchors: QUEUEING; MLFLOW-TRACE. Full URLs, authority, version, and scope appear in Appendix K.
+The discussion above draws on QUEUEING; MLFLOW-TRACE. Appendix K lists the complete sources and records their authority, version, and scope.
 
 |  |
 | --- |
 | **BEST PRACTICE**  Measure cost per verified successful outcome, not per token or per request. Tokens are an input; the business pays for completed work. A change that halves token spend while pushing five percent more runs into human review has almost certainly cost money. |
 
-## A practical starting point
+## A sensible place to start
 
 
 ### Admission and capacity permit
@@ -694,13 +700,13 @@ def admit(requested: CapacityPermit, available: CapacityPermit) -> CapacityPermi
     return requested
 ```
 
-## When the system misbehaves
+## If this fails in production
 
 1. Decompose end-to-end p95 into queue, workflow, model, retrieval, tool, and human components.
 2. Measure turns, calls, tokens, retries, and escalations per verified success.
 3. Inspect tenant fairness, queue age, and safe-degradation decisions under load.
 
-## Before you ship
+## What to verify before production
 
 **✓** The objective is cost and latency per verified success, not token price alone.
 
@@ -712,12 +718,12 @@ def admit(requested: CapacityPermit, available: CapacityPermit) -> CapacityPermi
 
 **✓** Every optimization is evaluated, canaried, reversible, and constrained by safety gates.
 
-## Try it yourself
+## Put the idea to work
 
 1. Build a capacity model for 10,000 daily runs with burst and tenant quotas.
 2. Design an experiment that reduces context cost without regressing groundedness.
 
-## Questions for design review
+## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
@@ -727,6 +733,6 @@ def admit(requested: CapacityPermit, available: CapacityPermit) -> CapacityPermi
 | How should overload degrade? | Reject or defer early, protect durable state, reduce optional context, switch to approved bounded routes, produce drafts, and preserve audit. |
 | Why can the cheapest model be more expensive? | Lower reliability may cause more turns, retries, escalations, human work, and failed outcomes, increasing total cost per success. |
 
-## Why the appendices matter next
+## Where this leads next
 
 The architecture narrative is complete. The appendices provide decision aids, runbooks, contracts, framework evidence, references, maintenance criteria, and production acceptance checks for implementation and future editions.

@@ -189,7 +189,7 @@ def main() -> int:
                 errors.append(f"DOCX callout is unreadable: ink on #{failure['fill']} = {failure['ratio']}:1 — {failure['text']}")
             cp=doc.core_properties
             book_cfg=json.loads((root/'config/book.json').read_text(encoding='utf-8'))['book']
-            expected_title=f"{book_cfg['title']} — Book v{book_cfg['version']}"
+            expected_title=book_cfg['title']
             if cp.title!=expected_title: errors.append(f"DOCX title metadata is {cp.title!r}, expected {expected_title!r}")
             if cp.author!='Reza Rahimi, PhD': errors.append(f"Unexpected DOCX author metadata: {cp.author}")
         except Exception as exc: errors.append(f"DOCX validation error: {exc}")
