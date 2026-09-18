@@ -4,6 +4,28 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Apply the Chapter 1 review-comment pass across publication formats
+
+- Rewrote the front matter's "architecture in one view" paragraph and four of
+  its six engineering-contract principles (reproducibility, trust boundaries,
+  change control, failure handling) from the reviewer's DOCX comments, and
+  removed a redundant "small engineering contract" paragraph the same review
+  flagged.
+- Aligned two other unqualified "reproducible" claims elsewhere in the book
+  with the front matter's revised reconstructable-and-explainable framing, so
+  the book does not promise byte-identical replay of nondeterministic model
+  behavior in one place while acknowledging it cannot be guaranteed in another.
+- Rewrote Chapter 1's Monday-through-Friday failure narrative with named
+  failure themes (Durability, Trust boundaries, Transactional effects,
+  Evidence and auditability, Release control), and rewrote "The gap between a
+  useful demo and a dependable system" and the renamed "Draw the boundary
+  around the model" section with the reviewer's expanded narrative.
+- Removed a redundant Before/After checkpoint table and code callout from
+  Chapter 1's opening, and corrected the opening code listing's stated line
+  count from fifteen to ten lines to match the actual example.
+- Regenerated `book/manuscript.md`, the distributable Markdown, DOCX, and
+  XeLaTeX sources, and the LaTeX PDF from the updated source.
+
 ### Apply the reviewed v2.1.0 DOCX edits across publication formats
 
 - Reconciled the latest reviewed DOCX's title metadata and cover wording
