@@ -85,22 +85,24 @@ Harborlight mortgage case is the cumulative runnable path.
 
 ## The architecture in one view
 
-Treat the architecture below as a map of responsibilities, not a prescribed product stack. Read it from the outside in: requests enter through controlled boundaries, reasoning happens inside explicit limits, and every durable decision or external effect returns to a system that can authorize it, record it, and recover it. The value of the diagram is not the number of boxes; it is the clarity of the ownership lines between them.
+The architecture below shows how responsibilities are divided across the system. It is not meant to prescribe specific technologies or products.
+
+As you read the diagram, follow a request through the system. It first enters through a controlled entry point, then moves to the components responsible for reasoning and completing the task. These components operate within clearly defined boundaries. When the system needs to make an important decision, change data, or take an external action, that action goes through the appropriate controls so it can be authorized, recorded, and recovered if something goes wrong.
+
+The main purpose of the diagram is to make one thing clear: which part of the system is responsible for each job, and where responsibility moves from one component to another.
 
 [[DIAGRAM:book-map|Figure 0-1 — Narrative map from foundations to production operations]]
 
 ## The engineering contract behind the architecture
 
-The book returns to a small engineering contract again and again. Models may interpret ambiguity and propose a next step. Deterministic services decide whether the step is allowed, commit it exactly once, and preserve enough evidence to explain the outcome later. Each framework, tool, protocol, and model has to fit inside that contract rather than quietly redefine it.
-
 The architectures and practices in this book are built around a small set of principles for operating agentic systems safely and reliably in production:
 
 - **AI can propose; deterministic systems decide and commit.** Models and agents may reason, recommend, generate, and plan, but important actions should pass through deterministic rules, policies, and validation before they change enterprise state.
-- **Every production run must be reproducible.** Record the exact versions of the prompts, Skills, workflows, policies, model routes, tools, evaluators, and knowledge used for each run. When something goes wrong, teams should be able to determine exactly what produced the result.
+- **Every production run must be reconstructable and explainable.** Agentic systems are inherently nondeterministic, so reproducing the exact reasoning path or output may not always be possible. Instead, preserve enough evidence to reconstruct what happened: the inputs and relevant context, model and prompt versions, Skills and tools, policy and configuration versions, decisions, tool calls, external effects, approvals, and outcomes. Where deterministic components are involved, their behavior should be reproducible; where model behavior is nondeterministic, the system should support replay and comparison rather than promise identical results.
 - **Every action must have clear ownership.** Any action that changes external state—such as updating a database, sending a message, or calling a business API—should have one responsible owner, protection against duplicate execution, a record of what happened, and a clear way to verify that it succeeded.
-- **Never assume trust across system boundaries.** Whenever data or an action crosses a trust boundary, revalidate who is making the request, what they are allowed to do, whether the content is safe, and whether the data can be used in that context.
-- **Production changes must be controlled and reversible.** Material changes should be evaluated before release, approved according to their level of risk, introduced gradually through canary deployments when appropriate, monitored after deployment, and designed so they can be rolled back safely.
-- **Production failures should improve the system.** Significant failures should not end with incident resolution. When appropriate and authorized, they should become regression tests, evaluation cases, or improvement candidates so the system can learn from real production experience.
+- **Trust must be explicitly established at every system boundary.** When data, identity, or an action crosses a trust boundary, the receiving component must independently enforce the controls appropriate to that boundary. This includes authenticating the caller or workload, authorizing the requested action, validating untrusted content, and enforcing data-use and disclosure policies for the current context.
+- **Agentic behavior changes must be controlled, observable, and recoverable.** Any material change to an agentic system—including models, prompts, Skills, tools, policies, knowledge sources, workflow logic, or agent configuration—should be versioned and evaluated before production use. Changes should be introduced progressively when appropriate, monitored against explicit acceptance and stop conditions, and have a defined recovery strategy. Recovery may mean rollback, roll-forward, disabling a capability, restoring a previous version, or allowing in-flight runs to complete under their original configuration.
+- **Production failures should become governed evidence for improvement.** Significant production failures should not end with incident resolution. Capture the relevant traces, inputs, outputs, tool interactions, policy decisions, external effects, and system versions as evidence. When appropriate and authorized, convert failures into regression tests, evaluation cases, safety checks, or improvement candidates. Any resulting change to models, prompts, Skills, tools, policies, knowledge, or workflows must pass the normal evaluation, approval, and release process before affecting production behavior.
 
 Together, these principles establish a simple operating contract: agents provide intelligence and flexibility, while deterministic controls provide authority, safety, traceability, and reliability.
 

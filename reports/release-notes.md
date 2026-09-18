@@ -2,6 +2,31 @@
 
 Book v2.1.0 is the canonical foundation for *Building an Enterprise General Intelligence Platform* by Reza Rahimi, PhD.
 
+## Chapter 1 review-comment reconciliation — 2026-09-18
+
+Sixteen reviewer comments left on the distributed v2.1.0 DOCX were reconciled
+into the canonical Markdown. The front matter's "architecture in one view"
+paragraph and four of its six engineering-contract principles were rewritten
+per the review, and a redundant "small engineering contract" paragraph was
+removed. Chapter 1's Monday-through-Friday failure narrative now names each
+day's failure theme (Durability, Trust boundaries, Transactional effects,
+Evidence and auditability, Release control), and "The gap between a useful
+demo and a dependable system" plus the renamed "Draw the boundary around the
+model" section carry the reviewer's expanded narrative. A redundant
+Before/After checkpoint table and code callout were removed from the chapter
+opening, and its code listing's stated line count was corrected from fifteen
+to ten lines to match the actual example. Two other unqualified "reproducible"
+claims elsewhere in the book were aligned with the front matter's revised
+reconstructable-and-explainable framing for nondeterministic model behavior.
+The 8-Part / 28-chapter / 12-appendix topology, citations, examples, diagrams,
+and stable identifiers remain intact.
+
+Local evidence: `make validate`, `make examples-run` (123 example tests and 30
+mortgage-case tests), `make deterministic`, and genuine `make pdf` pass; the
+XeLaTeX output is 286 Letter-size pages. `make package` produced the
+417-entry release ZIP. `make qa-pdf` remains unavailable because LibreOffice /
+`soffice` is not installed, so DOCX pagination QA is not claimed as passed.
+
 ## Reviewed DOCX reconciliation — 2026-09-17
 
 The reviewed v2.1.0 DOCX was reconciled into the canonical Markdown parts and

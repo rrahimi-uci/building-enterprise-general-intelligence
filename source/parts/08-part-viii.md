@@ -153,7 +153,7 @@ runs.
 
 ## Treat the full behavior as the release
 
-For an agentic system, behavior is spread across more than application code. A model route, prompt, Skill, tool schema, policy bundle, evaluator, and workflow definition can each change what the user experiences or what the system may do. A release therefore pins the whole graph. That makes a production result reproducible and gives rollback a precise meaning: restore known behavior, not merely an older container image.
+For an agentic system, behavior is spread across more than application code. A model route, prompt, Skill, tool schema, policy bundle, evaluator, and workflow definition can each change what the user experiences or what the system may do. A release therefore pins the whole graph. That makes a production result reconstructable and gives rollback a precise meaning: restore known behavior, not merely an older container image.
 
 A production release includes more than application code: agent and Skill versions, prompts and instructions, SDK adapter, workflow build, model route and fallbacks, tool and policy versions, schemas, sandbox image, knowledge strategy, evaluation suite, dashboards, runbooks, rollout, and rollback. Northstar records these in an immutable ReleaseManifest and pins the manifest to each run.
 
