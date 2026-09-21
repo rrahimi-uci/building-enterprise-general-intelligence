@@ -4,6 +4,28 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Connect Chapter 2's opening callouts into one narrative
+
+- Added a framing paragraph before Chapter 2's four opening callout boxes
+  ("Where the mortgage case stands," "What blocks the next step," "A
+  comparative Northstar example," "The design choice") stating the chapter's
+  central problem — a model output can parse cleanly and still be unsafe to
+  execute — and the architectural response: every proposal crosses a
+  deterministic boundary before it can change real-world state. Previously
+  the four boxes stacked with no connecting prose, unlike every other chapter
+  opening in the book, which pairs its two standard callouts with a bridging
+  "Why ..." thesis paragraph.
+- Added one-sentence transitions between the boxes so the sequence reads as
+  current state → safety gap → general failure mode → design principle,
+  rather than four disconnected statements.
+- Rewrote the "Why a valid-looking output is not enough" paragraph to
+  explicitly reference "the design choice above" and name the six-gate
+  lifecycle, so it reads as the chapter's thesis and hands off cleanly into
+  "Six gates before anything changes" instead of repeating the opening frame.
+- Regenerated `book/manuscript.md`, the distributable Markdown, DOCX, and
+  XeLaTeX sources; ran structural, citation, and rendering-source validation
+  and a genuine XeLaTeX compile, and visually confirmed the affected page.
+
 ### Apply a second Chapter 1 review-comment pass across publication formats
 
 - Reconciled 2 reviewer comments from the latest v2.1.0-FINAL-CLEAN DOCX pass

@@ -626,6 +626,14 @@ and shows why a well-formed proposal is still not permission to act.
 
 # 02 — From Model Output to Safe Action
 
+A model output that parses cleanly can still be unsafe to execute. Correct
+JSON, a real tool name, and arguments that pass schema validation say nothing
+about whether the caller is authorized, whether the state it reasoned over is
+still current, or whether the effect has already happened. This chapter treats
+that gap as the central problem: a model output is a proposal, and a proposal
+only becomes a real-world effect after it crosses a deterministic boundary —
+validated, authorized, committed, verified, and accepted outside the model.
+
 |  |
 | --- |
 | **WHERE THE MORTGAGE CASE STANDS** C01 can summarize MORT-2026-000184 and identify the missing second pay statement. It cannot yet distinguish a model candidate from verified evidence or express the next step as a typed command. |
@@ -634,9 +642,15 @@ and shows why a well-formed proposal is still not permission to act.
 | --- |
 | **WHAT BLOCKS THE NEXT STEP** The case is now understandable but not yet executable: a malformed, stale, or over-authorized model output could still be mistaken for a valid workflow instruction. |
 
+The mortgage case makes the gap concrete, but it is not specific to
+mortgages — the same failure appears anywhere a model's output is allowed to
+trigger an action.
+
 |  |
 | --- |
 | **A COMPARATIVE NORTHSTAR EXAMPLE** The retained supplier prototype proposes a call to create a supplier record. The JSON is valid and the rationale sounds convincing, yet the record may be stale, the user may lack write authority, and a retry could create a duplicate. The same failure mechanism explains why Harborlight introduces a deterministic shell around every mortgage proposal. |
+
+Both cases resolve the same way.
 
 |  |
 | --- |
@@ -644,11 +658,13 @@ and shows why a well-formed proposal is still not permission to act.
 
 ## Why a valid-looking output is not enough
 
-Once a model can call tools, its output starts to look like an instruction. It
-is still only a proposal. This chapter follows one proposal through validation,
-authorization, commit, verification, and acceptance, so you can see what each
-boundary protects and what goes wrong when a well-formed JSON object is allowed
-to act as permission.
+Once a model can call tools, its output starts to look like an instruction.
+The design choice above is what keeps it from acting like one: treat it as a
+proposal, and require it to clear validation, authorization, commit,
+verification, and acceptance before anything changes. This chapter follows
+one proposal through all six gates, so you can see exactly what each boundary
+protects and what goes wrong when a well-formed JSON object is mistaken for
+permission.
 
 ## Six gates before anything changes
 
