@@ -4,6 +4,28 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Apply a second Chapter 1 review-comment pass across publication formats
+
+- Reconciled 2 reviewer comments from the latest v2.1.0-FINAL-CLEAN DOCX pass
+  into Chapter 1's "Level four — an enterprise agentic system" discussion:
+  added an explicit reasoning/authority boundary principle (rendered as two
+  block-quoted statements, matching the book's existing pull-quote pattern),
+  tied that boundary to the Harborlight mortgage running example, and closed
+  the section with an explicit "central transition" synthesis sentence.
+- Retitled "The comparative Northstar domain thread" to "The comparative
+  supplier-onboarding thread" and removed the "Northstar" label from its
+  body text. "Northstar" is used 200+ times elsewhere as the platform
+  codename for Harborlight's own architecture; labeling the *comparative*
+  supplier-onboarding domain as a "Northstar thread" was a terminology
+  collision the review comments implicitly flagged by dropping the term.
+  Expanded the paragraph with an explicit "governed execution" breakdown
+  while preserving the existing "deliberately inconvenient" framing and the
+  Harborlight-remains-the-runnable-path caveat.
+- No comments were left on Chapter 2 in this review pass; Chapter 2 is
+  otherwise unchanged.
+- Regenerated `book/manuscript.md`, the distributable Markdown, DOCX, and
+  XeLaTeX sources, and the LaTeX PDF from the updated source.
+
 ### Apply the Chapter 1 review-comment pass across publication formats
 
 - Rewrote the front matter's "architecture in one view" paragraph and four of

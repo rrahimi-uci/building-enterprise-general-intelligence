@@ -285,9 +285,13 @@ takes actions. The failure modes change category, not just severity.
 
 ### Level four — an enterprise agentic system
 
-The fourth level is everything that makes level three safe to operate: durable
-state, identity and authorization, bounded resources, effect semantics,
-evidence, human control, evaluation, and release management.
+Level four is where an agent becomes part of an enterprise-grade operational
+system. The defining change is not that the agent reasons better; it is that
+the architecture around the agent makes its execution **controlled, durable,
+verifiable, and governable**. The fourth level is everything that makes level
+three safe to operate: durable state, identity and authorization, bounded
+resources, effect semantics, evidence, human control, evaluation, and release
+management.
 
 | Level | Adds | Characteristic new failure |
 | --- | --- | --- |
@@ -301,10 +305,31 @@ constraint and record-keeping. That is the shape of the discipline: the model
 does not become more capable as you productionize it; the system around it
 becomes more accountable.
 
-This distinction prevents a common category error. Better prompting can improve
-a reasoning step; it cannot provide transactional integrity, credential
-isolation, deterministic replay, tenant boundaries, or a provable audit trail.
-Those are properties of the surrounding system, and no prompt can grant them.
+Model intelligence and operational guarantees are fundamentally different
+concerns, which is why this distinction prevents a common category error.
+Better prompting can improve a reasoning step; it cannot provide transactional
+integrity, credential isolation, deterministic replay, tenant boundaries, or a
+provable audit trail. Those are properties of the surrounding system, and no
+prompt can grant them.
+
+A useful principle for level four:
+
+> The agent can interpret, reason, and propose; authoritative systems verify,
+> authorize, execute, and record.
+
+The boundary matters most when a run hits uncertainty, and not every
+uncertainty should be sent back to the model:
+
+> Reasoning can suggest that something is true; authoritative state must
+> establish that it is true.
+
+Consider the Harborlight mortgage case. An agent may determine that a package
+*appears* complete, but that judgment alone cannot close the workflow.
+Completion occurs only after the system verifies the required documents,
+policy checks, approvals, stored artifacts, and protected external effects.
+Likewise, a model may decide that a write should happen, but only the
+authoritative downstream system — and the evidence around that interaction —
+can establish whether the write actually committed.
 
 ### Which component should own each uncertainty
 
@@ -330,16 +355,30 @@ succeeded, whether a user may act, or whether the work is done — not because i
 would necessarily be wrong, but because being right by luck is indistinguishable
 from being right by construction, and only one of those can be audited.
 
-### The comparative Northstar domain thread
+### The comparative supplier-onboarding thread
 
-The retained Northstar supplier-onboarding thread retrieves candidate records,
-validates documents, screens sanctions, requests corrections, coordinates
-specialists, waits for human decisions, creates supplier records, and preserves
-evidence. The use case is deliberately inconvenient: it crosses data
-boundaries, lasts days, includes ambiguous reasoning, performs protected
-writes, and requires audit. That makes it useful comparative evidence for
-testing whether an architecture is real; the Harborlight mortgage case remains
-the cumulative runnable path.
+This boundary matters even more once agentic work spans systems, specialists,
+humans, and time — which is exactly what the retained supplier-onboarding
+thread is for. It retrieves candidate records, validates documents, screens
+sanctions, requests corrections, coordinates specialists, waits for human
+decisions, creates supplier records, and preserves evidence of each material
+step. The use case is deliberately inconvenient: it crosses data boundaries,
+lasts days, includes ambiguous reasoning, performs protected writes, and
+requires audit.
+
+At lower levels, a run like this can look like a sequence of successful agent
+actions. At level four it becomes a **governed execution**: state survives
+across steps and waiting periods, identities and permissions constrain every
+action, external effects are protected against duplication and ambiguity,
+human decisions become explicit workflow events, and evidence establishes what
+was requested, authorized, executed, and ultimately accepted. That makes it
+useful comparative evidence for testing whether an architecture is real —
+whether it can support cross-system, multi-day, consequential work while
+remaining controlled, recoverable, and auditable — while the Harborlight
+mortgage case remains the cumulative runnable path.
+
+That is the central transition at level four: from an agent that can perform
+work to a system that can reliably govern the work the agent performs.
 
 ## What changes when the prototype meets production
 
