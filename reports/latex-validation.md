@@ -13,7 +13,7 @@
 - **code_blocks:** `70`
 - **longtables:** `141`
 - **compact_tables:** `106`
-- **callout_tables:** `95`
+- **callout_tables:** `93`
 - **citation_occurrences:** `107`
 - **bundled_fonts:** `8`
 

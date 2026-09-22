@@ -4,6 +4,37 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Remove the Northstar comparative supplier-onboarding example
+
+- Removed the retained supplier-onboarding comparative case entirely: the two
+  `A COMPARATIVE NORTHSTAR EXAMPLE` callout boxes (Chapter 2's tool-proposal
+  example and Chapter 3's SDK-adoption example), Chapter 1's "The comparative
+  supplier-onboarding thread" subsection, and every sentence in the front
+  matter and Chapter 1 that introduced or contrasted it against Harborlight.
+  The Harborlight mortgage case is judged general enough on its own to carry
+  the book's examples without a second business scenario.
+- Rewrote each removal site instead of leaving a gap: the front matter's
+  preface and "How to Use the Book" section, Chapter 1's opening ("A mortgage
+  case that grows with the architecture") and its Northstar-codename
+  disambiguation sentence, and the "level four" discussion, which now
+  illustrates governed execution (state surviving waits, identity
+  constraints, protected effects, human decisions as workflow events,
+  evidence) directly through Harborlight rather than through the removed
+  supplier thread. Chapter 2 and Chapter 3 lost the transition sentences that
+  existed only to lead into or out of the removed boxes.
+- Left every other use of "Northstar" untouched. Outside these ~6 spots, the
+  word is an unrelated platform-codename synonym for Harborlight's own
+  architecture (e.g. "Northstar separates a global definition and governance
+  plane...") used across most other Parts; it was never a second example and
+  does not need to change.
+- No diagrams, runnable code examples, or citation entries referenced the
+  supplier case — confirmed by audit before editing — so none needed
+  changes.
+- Regenerated `book/manuscript.md`, the distributable Markdown, DOCX, and
+  XeLaTeX sources; ran structural, citation, and rendering-source validation,
+  a genuine XeLaTeX compile, a determinism check, and visually confirmed the
+  three affected chapter openings.
+
 ### Connect Chapter 2's opening callouts into one narrative
 
 - Added a framing paragraph before Chapter 2's four opening callout boxes
