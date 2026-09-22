@@ -26,8 +26,7 @@ and real consequences enter the picture.
 The examples use a fictional Harborlight mortgage case as a thread. It is not a
 claim that mortgage underwriting can be delegated to a model; it is a useful
 stress test because the case has sensitive evidence, human judgment, policy,
-long waits, and protected effects. Comparative Northstar examples show how the
-same contracts travel to supplier onboarding and other domains.
+long waits, and protected effects.
 
 ## How to read the claims in this book
 
@@ -70,9 +69,8 @@ before any model-owned lending decision or protected loan-origination write:
 | `C03` | 3 | A provider-neutral bounded runtime seam with an optional OpenAI adapter | Workflow state, policy, credentials, approvals, effects, receipts, and audit |
 
 Later checkpoints are roadmap targets, not claims that the corresponding
-production platform has already been implemented. The retained Northstar
-supplier-onboarding material is comparative architecture evidence; the
-Harborlight mortgage case is the cumulative runnable path.
+production platform has already been implemented; the Harborlight mortgage
+case remains the cumulative runnable path.
 
 | **Reader** | **Primary path** | **Decision supported** |
 | --- | --- | --- |
@@ -196,10 +194,7 @@ capabilities to this foundation; they do not replace it.
 
 The cumulative implementation follows one fictional mortgage case so the
 reader can see the same system acquire each capability without jumping to a
-new application. The original Northstar supplier-onboarding material remains
-as explicitly comparative architecture evidence: it illustrates the same
-durability, authority, evidence, and release problems in another enterprise
-domain, but it is not the runnable case or the implementation-status anchor.
+new application.
 
 **Harborlight Home Finance** is a fictional lender preparing an underwriter-ready
 package for a synthetic purchase application. The anchor case is
@@ -210,7 +205,7 @@ privacy, evidence, policy, human oversight, audit, and recovery controls. The
 target is an illustrative design objective, not a benchmark.
 
 In the architecture sections, **Northstar** is the platform codename used for
-Harborlight's mortgage workflow. It is not a second business scenario.
+Harborlight's mortgage workflow.
 
 | Contract | Initial mortgage case |
 | --- | --- |
@@ -532,27 +527,16 @@ succeeded, whether a user may act, or whether the work is done — not because i
 would necessarily be wrong, but because being right by luck is indistinguishable
 from being right by construction, and only one of those can be audited.
 
-### The comparative supplier-onboarding thread
-
 This boundary matters even more once agentic work spans systems, specialists,
-humans, and time — which is exactly what the retained supplier-onboarding
-thread is for. It retrieves candidate records, validates documents, screens
-sanctions, requests corrections, coordinates specialists, waits for human
-decisions, creates supplier records, and preserves evidence of each material
-step. The use case is deliberately inconvenient: it crosses data boundaries,
-lasts days, includes ambiguous reasoning, performs protected writes, and
-requires audit.
-
-At lower levels, a run like this can look like a sequence of successful agent
-actions. At level four it becomes a **governed execution**: state survives
-across steps and waiting periods, identities and permissions constrain every
-action, external effects are protected against duplication and ambiguity,
-human decisions become explicit workflow events, and evidence establishes what
-was requested, authorized, executed, and ultimately accepted. That makes it
-useful comparative evidence for testing whether an architecture is real —
-whether it can support cross-system, multi-day, consequential work while
-remaining controlled, recoverable, and auditable — while the Harborlight
-mortgage case remains the cumulative runnable path.
+humans, and time. The Harborlight mortgage case already does this: it crosses
+data boundaries, waits days for a human to supply a missing document, performs
+protected writes, and requires audit. At lower levels, a run like this can
+look like a sequence of successful agent actions. At level four it becomes a
+**governed execution**: state survives across steps and waiting periods,
+identities and permissions constrain every action, external effects are
+protected against duplication and ambiguity, human decisions become explicit
+workflow events, and evidence establishes what was requested, authorized,
+executed, and ultimately accepted.
 
 That is the central transition at level four: from an agent that can perform
 work to a system that can reliably govern the work the agent performs.
@@ -855,16 +839,6 @@ validated, authorized, committed, verified, and accepted outside the model.
 |  |
 | --- |
 | **WHAT BLOCKS THE NEXT STEP** The case is now understandable but not yet executable: a malformed, stale, or over-authorized model output could still be mistaken for a valid workflow instruction. |
-
-The mortgage case makes the gap concrete, but it is not specific to
-mortgages — the same failure appears anywhere a model's output is allowed to
-trigger an action.
-
-|  |
-| --- |
-| **A COMPARATIVE NORTHSTAR EXAMPLE** The retained supplier prototype proposes a call to create a supplier record. The JSON is valid and the rationale sounds convincing, yet the record may be stale, the user may lack write authority, and a retry could create a duplicate. The same failure mechanism explains why Harborlight introduces a deterministic shell around every mortgage proposal. |
-
-Both cases resolve the same way.
 
 |  |
 | --- |
@@ -1423,10 +1397,6 @@ not become the owner of the case, policy, approval, or effect records.
 > **Evidence context:** Concrete adapter examples use OpenAI Agents SDK v0.22.2 and its documented agent, tool, guardrail, handoff, result, and tracing surfaces; the platform contracts remain framework-neutral. **[R29][R30]**
 
 > This chapter uses the OpenAI Agents SDK as a concrete adapter. Enterprise applications should compile platform-owned contracts into this or another framework through conformance-tested adapters; Chapters 4–7 place that boundary in the wider architecture and delivery platform.
-
-|  |
-| --- |
-| **A COMPARATIVE NORTHSTAR EXAMPLE** The retained supplier platform adopts OpenAI Agents SDK for its compact agent loop, tools, handoffs, structured outputs, tracing, sessions, and human-interruption surfaces. The architecture team refuses to let SDK state become workflow truth or to expose raw enterprise credentials to the agent process; Harborlight applies the same boundary to its C03 runtime seam. |
 
 |  |
 | --- |

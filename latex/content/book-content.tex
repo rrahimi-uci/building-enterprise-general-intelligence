@@ -12,7 +12,7 @@ This edition starts from a deliberately unfashionable premise: an agentic applic
 
 The book follows that idea from the first model call to a system that has to run for years. We begin with the boundaries that make an agent predictable, then define the architecture and turn it into reusable platform capabilities. From there, the chapters work through the patterns, security controls, evidence, governance, and operating decisions that appear once real people, real data, and real consequences enter the picture.\par
 
-The examples use a fictional Harborlight mortgage case as a thread. It is not a claim that mortgage underwriting can be delegated to a model; it is a useful stress test because the case has sensitive evidence, human judgment, policy, long waits, and protected effects. Comparative Northstar examples show how the same contracts travel to supplier onboarding and other domains.\par
+The examples use a fictional Harborlight mortgage case as a thread. It is not a claim that mortgage underwriting can be delegated to a model; it is a useful stress test because the case has sensitive evidence, human judgment, policy, long waits, and protected effects.\par
 
 \section{How to read the claims in this book}
 
@@ -53,7 +53,7 @@ The cumulative implementation path follows one synthetic Harborlight Home Financ
 \end{tabular}
 \BookTableEnd
 
-Later checkpoints are roadmap targets, not claims that the corresponding production platform has already been implemented. The retained Northstar supplier-onboarding material is comparative architecture evidence; the Harborlight mortgage case is the cumulative runnable path.\par
+Later checkpoints are roadmap targets, not claims that the corresponding production platform has already been implemented; the Harborlight mortgage case remains the cumulative runnable path.\par
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -257,11 +257,11 @@ Start Harborlight as a governed distributed application with one bounded reasoni
 
 \section{A mortgage case that grows with the architecture}
 
-The cumulative implementation follows one fictional mortgage case so the reader can see the same system acquire each capability without jumping to a new application. The original Northstar supplier-onboarding material remains as explicitly comparative architecture evidence: it illustrates the same durability, authority, evidence, and release problems in another enterprise domain, but it is not the runnable case or the implementation-status anchor.\par
+The cumulative implementation follows one fictional mortgage case so the reader can see the same system acquire each capability without jumping to a new application.\par
 
 \textbf{Harborlight Home Finance} is a fictional lender preparing an underwriter-ready package for a synthetic purchase application. The anchor case is \lstinline[style=bookinline]!MORT-2026-000184! in tenant \lstinline[style=bookinline]!harborlight-us-west!, for synthetic applicant Alex Morgan and a fictional property. The target is to prepare a review package within one business day for routine synthetic cases while preserving identity, privacy, evidence, policy, human oversight, audit, and recovery controls. The target is an illustrative design objective, not a benchmark.\par
 
-In the architecture sections, \textbf{Northstar} is the platform codename used for Harborlight's mortgage workflow. It is not a second business scenario.\par
+In the architecture sections, \textbf{Northstar} is the platform codename used for Harborlight's mortgage workflow.\par
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -527,11 +527,7 @@ Whether the run is complete & Executable acceptance criteria & Workflow / accept
 
 Read the table as a series of refusals. The model is allowed to interpret language and propose structure. It is not allowed to decide whether a payment succeeded, whether a user may act, or whether the work is done — not because it would necessarily be wrong, but because being right by luck is indistinguishable from being right by construction, and only one of those can be audited.\par
 
-\subsection{The comparative supplier-onboarding thread}
-
-This boundary matters even more once agentic work spans systems, specialists, humans, and time — which is exactly what the retained supplier-onboarding thread is for. It retrieves candidate records, validates documents, screens sanctions, requests corrections, coordinates specialists, waits for human decisions, creates supplier records, and preserves evidence of each material step. The use case is deliberately inconvenient: it crosses data boundaries, lasts days, includes ambiguous reasoning, performs protected writes, and requires audit.\par
-
-At lower levels, a run like this can look like a sequence of successful agent actions. At level four it becomes a \textbf{governed execution}: state survives across steps and waiting periods, identities and permissions constrain every action, external effects are protected against duplication and ambiguity, human decisions become explicit workflow events, and evidence establishes what was requested, authorized, executed, and ultimately accepted. That makes it useful comparative evidence for testing whether an architecture is real — whether it can support cross-system, multi-day, consequential work while remaining controlled, recoverable, and auditable — while the Harborlight mortgage case remains the cumulative runnable path.\par
+This boundary matters even more once agentic work spans systems, specialists, humans, and time. The Harborlight mortgage case already does this: it crosses data boundaries, waits days for a human to supply a missing document, performs protected writes, and requires audit. At lower levels, a run like this can look like a sequence of successful agent actions. At level four it becomes a \textbf{governed execution}: state survives across steps and waiting periods, identities and permissions constrain every action, external effects are protected against duplication and ambiguity, human decisions become explicit workflow events, and evidence establishes what was requested, authorized, executed, and ultimately accepted.\par
 
 That is the central transition at level four: from an agent that can perform work to a system that can reliably govern the work the agent performs.\par
 
@@ -874,14 +870,6 @@ C01 can summarize MORT-2026-000184 and identify the missing second pay statement
 \begin{bookcallout}[What Blocks The Next Step]
 The case is now understandable but not yet executable: a malformed, stale, or over-authorized model output could still be mistaken for a valid workflow instruction.
 \end{bookcallout}
-
-The mortgage case makes the gap concrete, but it is not specific to mortgages — the same failure appears anywhere a model's output is allowed to trigger an action.\par
-
-\begin{bookcallout}[A Comparative Northstar Example]
-The retained supplier prototype proposes a call to create a supplier record. The JSON is valid and the rationale sounds convincing, yet the record may be stale, the user may lack write authority, and a retry could create a duplicate. The same failure mechanism explains why Harborlight introduces a deterministic shell around every mortgage proposal.
-\end{bookcallout}
-
-Both cases resolve the same way.\par
 
 \begin{bookcallout}[The Design Choice]
 Treat every model output as a typed proposal; validate, authorize, commit, verify, and accept outside the model.
@@ -1546,10 +1534,6 @@ For the mortgage case, the remaining bottleneck is the execution seam: the typed
 This chapter uses the OpenAI Agents SDK as a concrete adapter. Enterprise applications should compile platform-owned contracts into this or another framework through conformance-tested adapters; Chapters 4–7 place that boundary in the wider architecture and delivery platform.
 
 \end{bookquote}
-
-\begin{bookcallout}[A Comparative Northstar Example]
-The retained supplier platform adopts OpenAI Agents SDK for its compact agent loop, tools, handoffs, structured outputs, tracing, sessions, and human-interruption surfaces. The architecture team refuses to let SDK state become workflow truth or to expose raw enterprise credentials to the agent process; Harborlight applies the same boundary to its C03 runtime seam.
-\end{bookcallout}
 
 \begin{bookcallout}[The Design Choice]
 Place the OpenAI Agents SDK behind AgentRuntime; pin 0.22.2 and keep workflow, authority, credentials, effects, and audit platform-owned.

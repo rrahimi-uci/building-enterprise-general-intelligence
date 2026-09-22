@@ -26,8 +26,7 @@ and real consequences enter the picture.
 The examples use a fictional Harborlight mortgage case as a thread. It is not a
 claim that mortgage underwriting can be delegated to a model; it is a useful
 stress test because the case has sensitive evidence, human judgment, policy,
-long waits, and protected effects. Comparative Northstar examples show how the
-same contracts travel to supplier onboarding and other domains.
+long waits, and protected effects.
 
 ## How to read the claims in this book
 
@@ -70,9 +69,8 @@ before any model-owned lending decision or protected loan-origination write:
 | `C03` | 3 | A provider-neutral bounded runtime seam with an optional OpenAI adapter | Workflow state, policy, credentials, approvals, effects, receipts, and audit |
 
 Later checkpoints are roadmap targets, not claims that the corresponding
-production platform has already been implemented. The retained Northstar
-supplier-onboarding material is comparative architecture evidence; the
-Harborlight mortgage case is the cumulative runnable path.
+production platform has already been implemented; the Harborlight mortgage
+case remains the cumulative runnable path.
 
 | **Reader** | **Primary path** | **Decision supported** |
 | --- | --- | --- |
