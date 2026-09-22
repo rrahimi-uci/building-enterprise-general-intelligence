@@ -1,9 +1,9 @@
 {
-  "output": "dist/Enterprise-General-Intelligence-v2.1.0.docx",
-  "sha256": "27983f446e9ee58001dad01cca0a5c2a4a005062ab447bd895201f647f6ec671",
-  "bytes": 24425002,
+  "output": "qa/determinism/build-b.docx",
+  "sha256": "5abb3f598a35c0f795ce701805b92150c2a7d4da6c44118a96bbff55abc420cf",
+  "bytes": 24425331,
   "template_only": false,
-  "paragraphs": 3070,
+  "paragraphs": 3073,
   "tables": 421,
   "inline_images": 54,
   "chapter_headings": 28,
