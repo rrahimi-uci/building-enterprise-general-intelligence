@@ -41,7 +41,7 @@ This framing also explains why a central board alone scales poorly. A board can 
 
 ## Share responsibility without losing accountability
 
-Governance makes decisions explicit, proportional, evidence-based, and reversible. It accelerates safe delivery with reusable risk tiers, policy, review paths, and evidence rather than sending every prompt edit to one committee.
+Figure 26-1 shows the split. Central services provide identity and policy, evidence and audit, and risk classes and exceptions once; domain teams decide in context; and the review board engages in proportion to risk class, not to team.
 
 [[DIAGRAM:governance-model|Figure 26-1 — Federated governance with centralized control services]]
 
@@ -51,7 +51,7 @@ Governance makes decisions explicit, proportional, evidence-based, and reversibl
 | Risk tier/autonomy | Risk owner | Threat/data/effect assessment and controls |
 | Platform contracts | Platform product owner | RFC, compatibility/migration, SLO |
 | Data/context/memory purpose | Data owner | Source, ACL, purpose, retention, deletion, quality |
-| Tool/effect authorization | Resource owner | Tool contract, permission, idempotency/reconcile, approval policy |
+| Tool/effect authorization | Resource owner | Tool contract, permission, idempotency/reconciliation, approval policy |
 | Model/provider/route | Model governance owner | Capability, evaluation, data terms, region, cost, resilience |
 | Evaluator/dataset truth | Domain evaluation owner | Lineage, rubric, calibration, uncertainty |
 | Production promotion | Release owner | ValidationReport, required approvals, canary, rollback |
@@ -85,7 +85,7 @@ The discussion above draws on R12; R13; R14; R40. Appendix K lists the complete 
 
 ## If this fails in production
 
-Governance fails as queues and exceptions rather than as stack traces. Diagnose it the same way.
+Governance fails as queues and exceptions rather than as stack traces. Diagnose it with the same rigor as an outage.
 
 1. When a release is blocked, find which single decision lacks a named owner instead of escalating the whole release.
 2. When the same exception recurs, treat it as a missing standard rather than a repeated approval.
@@ -94,9 +94,9 @@ Governance fails as queues and exceptions rather than as stack traces. Diagnose 
 
 ## What to verify before production
 
-**✓** Every decision class in the accountability table has one named owner and one required evidence artifact.
+**✓** Every decision class in the accountability table has one named owner and its required evidence defined.
 
-**✓** Risk tier is derived from impact, protected effects, autonomy, exposure, scale, reversibility, and human detectability — not from the model name.
+**✓** Risk tier is derived from impact, sensitive data, protected effects, autonomy, exposure, scale, reversibility, and human detectability — not from the model name.
 
 **✓** Exceptions are scoped, compensated, monitored, owned, and expiring. An exception without an expiry is a silent policy change.
 
@@ -115,7 +115,7 @@ Governance fails as queues and exceptions rather than as stack traces. Diagnose 
 | --- | --- |
 | Why federate governance rather than centralize it? | Central review of every prompt edit becomes the bottleneck and is abandoned. Centralize reusable control services, risk tiers, policy, and evidence; federate domain acceptance, tools, knowledge, and SLOs to accountable owners. |
 | What makes a risk tier defensible? | It is derived from consequence and reversibility — incorrect-outcome impact, sensitive data, protected effects, autonomy, exposure, scale, and human detectability — rather than from the model or framework in use. |
-| Why must every exception expire? | An exception that never expires is an undocumented policy change with no owner and no review. Expiry forces either the standard to change or the compensating control to be retired deliberately. |
+| Why must every exception expire? | An exception that never expires is an undocumented policy change with no owner and no review. Expiry forces a deliberate choice: absorb the exception into a changed standard or close the gap. |
 | What separates principles, standards, policy-as-code, and configuration? | Principles state non-negotiable outcomes; standards define reusable contracts; policy-as-code decides what is eligible at runtime; configuration selects within that envelope. Only the first two are argued; the last two are executed. |
 | How do you know governance is accelerating delivery? | Time from evidence-complete to approved is falling, exceptions are trending down as standards absorb them, and the same evidence serves engineering review, risk review, and audit without rework. |
 
@@ -129,7 +129,7 @@ Governance defines who may release change; Chapter 27 makes releases immutable, 
 
 |  |
 | --- |
-| **NORTHSTAR AT THIS POINT**  A new release changes a tool schema and workflow decision. Active runs still contain the old event history. Northstar deploys compatible workers, pins release manifests, canaries new starts, and rolls back assignment without rewriting history. |
+| **NORTHSTAR AT THIS POINT**  A new release changes a tool schema and a workflow definition. Active runs still contain the old event history. Northstar deploys compatible workers, pins release manifests, canaries new starts, and rolls back assignment without rewriting history. |
 
 |  |
 | --- |
@@ -155,7 +155,7 @@ runs.
 
 For an agentic system, behavior is spread across more than application code. A model route, prompt, Skill, tool schema, policy bundle, evaluator, and workflow definition can each change what the user experiences or what the system may do. A release therefore pins the whole graph. That makes a production result reconstructable and gives rollback a precise meaning: restore known behavior, not merely an older container image.
 
-A production release includes more than application code: agent and Skill versions, prompts and instructions, SDK adapter, workflow build, model route and fallbacks, tool and policy versions, schemas, sandbox image, knowledge strategy, evaluation suite, dashboards, runbooks, rollout, and rollback. Northstar records these in an immutable ReleaseManifest and pins the manifest to each run.
+Concretely, a production release covers agent and Skill versions, prompts and instructions, SDK adapter, workflow build, model route and fallbacks, tool and policy versions, schemas, sandbox image, knowledge strategy, evaluation suite, dashboards, runbooks, rollout, and rollback. Northstar records these in an immutable ReleaseManifest and pins the manifest to each run.
 
 CI verifies types and contracts, deterministic replay, policy and grant subsets, tool and effect semantics, prompt and trajectory regressions, threat cases, performance, container signatures, provenance, and migration compatibility. CD promotes the exact same signed artifacts through shadow, canary, tenant cohort, and regional stages.
 
@@ -202,7 +202,7 @@ The boundary is operational as well as logical. A regional worker should be able
 * **Isolation:** namespaces are not the only boundary. Combine tenant-aware authorization, row-level security, separate encryption keys, network policies, workload identity, queue quotas, and—where risk requires—dedicated accounts/clusters.
 * **Worker classes:** separate lightweight model/tool orchestration from browser/code execution, GPU inference, data processing, and high-risk connectors. Each class has an immutable image, resource limits, egress policy, and workload identity.
 * **Secrets:** fetch just in time from a broker or exchange identity for a short-lived credential. Never bake secrets into images, prompts, tool manifests, checkpoints, or environment dumps.
-* **Release:** deploy agent and workflow bundles using GitOps-style promotion, canaries, feature flags, and automated rollback. Keep old workflow code available until all compatible in-flight runs complete or migrate.
+* **Release:** deploy agent and workflow bundles using GitOps-style promotion, canaries, feature flags, and automated rollback. Keep old workflow code available until every in-flight run pinned to it completes or migrates.
 * **Disaster recovery:** define RPO/RTO separately for run history, business effects, artifacts, indexes, telemetry, and audit. Reconcile effects against source systems after recovery before resuming mutations.
 
 ### Suggested baseline stack—not a mandate
@@ -210,7 +210,7 @@ The boundary is operational as well as logical. A regional worker should be able
 | **Concern** | **Typical choices** | **Selection criteria** |
 | --- | --- | --- |
 | Durable workflow | Temporal, DBOS, Restate, cloud durable functions/state machines | Replay/versioning, signals/timers, child workflows, visibility, language/runtime fit, operations |
-| Agent graph/harness | LangGraph, OpenAI Agents SDK, Anthropic Agent SDK/Managed Agents, Microsoft Agent Framework, Google ADK, PydanticAI, LlamaIndex | Typed state, interrupts, tool ergonomics, model portability, trace quality, escape hatches |
+| Agent graph/harness | LangGraph, OpenAI Agents SDK, Claude Agent SDK/Managed Agents, Microsoft Agent Framework, Google ADK, PydanticAI, LlamaIndex | Typed state, interrupts, tool ergonomics, model portability, trace quality, escape hatches |
 | Events/queues | Kafka/Pulsar, cloud pub-sub/queues, NATS | Ordering, retention, throughput, replay, tenancy, ecosystem, residency |
 | Policy | OPA/Rego, Cedar/Verified Permissions, cloud IAM plus domain service | RBAC/ABAC expressiveness, decision logs, latency, analysis/testing, tenant model |
 | Workload identity | SPIFFE/SPIRE, cloud workload federation, service mesh identity | Short-lived credentials, federation, attestation, sender/audience binding |
@@ -227,7 +227,7 @@ The boundary is operational as well as logical. A regional worker should be able
 | Problem | Safely change a system whose behavior depends on code, models, prompts, policies, schemas, tools, knowledge, and external services while preserving reproducibility and regulatory evidence. |
 | Why it is difficult | Model aliases drift; prompt/tool combinations interact; long-running workflows span deployments; knowledge changes continuously; policies may need immediate revocation. |
 | Design alternatives | Mutable latest configuration; environment snapshots; semantic versions; content-addressed bundles; feature flags; canary/shadow releases; full immutable run manifests. |
-| Recommended architecture | Resolve every run to an immutable RunManifest of content digests and semantic versions. Promote signed release bundles through dev → QA → staging → canary → production using risk-tiered eval gates. Keep emergency policy/kill-switch controls separate and auditable. |
+| Recommended architecture | Resolve every run to an immutable RunManifest of content digests and semantic versions. Promote signed release bundles through dev → QA → staging → shadow → canary → production using risk-tiered eval gates. Keep emergency policy/kill-switch controls separate and auditable. |
 | Trade-offs | Pinning and compatibility management add storage and release discipline. They enable rollback, replay, investigation, and controlled experimentation. |
 | Failure scenarios | Model alias changes behavior; tool schema breaks old prompt; replay uses current knowledge; policy rollback re-enables a forbidden action; active workflow cannot replay under new code. |
 | Enterprise example | A regulated underwriting run stores the exact decision-service version, policy bundle, model route, prompts, retrieved document revisions, tool digests, approvals, and output hashes for examination months later. |
@@ -266,14 +266,14 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 ### Governance controls
 
 * Inventory every deployed agent, use case, owner, business purpose, autonomy level, tools, data classes, users, vendors, regions, SLOs, and risk tier.
-* Map controls to NIST AI RMF Govern/Map/Measure/Manage, ISO/IEC 42001 management-system processes, security/privacy standards, and applicable sectoral rules. As of August 2026, most EU AI Act rules and enforcement apply; legal classification must be use-case specific.
+* Map controls to NIST AI RMF Govern/Map/Measure/Manage, ISO/IEC 42001 management-system processes, security/privacy standards, and applicable sectoral rules. EU AI Act obligations phase in by date and risk category; confirm the current timeline against the official source [R40] and classify each use case individually.
 * Require documented intended use, prohibited use, foreseeable misuse, human-oversight design, evaluation evidence, residual risk acceptance, and rollback owner before release.
 * Produce an immutable evidence package per material run: request, identities, purpose, versions, policy decisions, source provenance, plan revisions, tool effects, approvals, output, metrics, incidents, and retention class.
 * Separate telemetry access from business-data access; redact by default and support legal hold, deletion, residency, and customer-managed keys.
 * Document explanations at the right level: evidence and rules for business decisions; trajectory summaries for operations; model internals are neither necessary nor sufficient.
 * Never auto-train or rewrite production policies/prompts directly from live conversations. Curate, de-identify, review, evaluate, and promote changes through the same lifecycle.
 
-### A workable implementation
+## A workable implementation
 
 ### Who should own each decision
 
@@ -283,7 +283,7 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 | Release Bundle Builder | Resolve dependencies, compatibility, SBOM/provenance, signatures, migration requirements, and rollout policy |
 | Evaluation/Gate Service | Run risk-tiered quality, reliability, security, latency, cost, and compliance gates |
 | Promotion Service | Move signed bundle through environments with approvals, canary/shadow, and rollback |
-| Runtime Resolver | Resolve a run to one immutable manifest and regional endpoints; never serves mutable “latest” to an active run |
+| Runtime Resolver | Resolve a run to one immutable manifest and regional endpoints; never serve mutable “latest” to an active run |
 | Drift Monitor | Detect model/provider/tool/data/policy behavior or availability changes against baselines |
 | Governance Inventory | Track use case, owners, data, autonomy, controls, evidence, exceptions, retention, and regulatory mapping |
 | Emergency Control | Kill switch, deny policy, credential revocation, and safe rollback independent of normal release cadence |
@@ -333,19 +333,19 @@ The last row closes the loop without allowing production to rewrite itself. A tr
 * Index dependency edges to answer “what uses this version?” before deprecation, incident containment, or vulnerability response. Run impact analysis asynchronously but from a consistent snapshot.
 * Roll out by tenant/use case/risk/region cohorts with bounded canary volume. Automated rollback consumes streaming SLO/eval signals but never rewrites historical manifests.
 * Keep release metadata, signatures, policies, and governance evidence replicated with tested backup/restore. Separate normal promotion permissions from emergency deny/rollback authority.
-* Archive old artifacts only after all active-run, replay, audit, legal-hold, and rollback dependencies expire. Retain digest tombstones permanently enough to prevent ambiguous reuse.
+* Archive old artifacts only after all active-run, replay, audit, legal-hold, and rollback dependencies expire. Retain digest tombstones permanently to prevent ambiguous reuse.
 
 |  |
 | --- |
-| **PRODUCTION CONSIDERATION**  Version the prompt, the model pin, the tool manifests, and the policy as one release artifact. Rolling back an agent means restoring all four together; a deployment that can change the model without changing the recorded version has no rollback, only a guess. |
+| **PRODUCTION CONSIDERATION**  Version the prompt, the model pin, the tool manifests, the policy, and the workflow build as one release bundle. Rolling back an agent means restoring the whole bundle; a deployment that can change the model without changing the recorded version has no rollback, only a guess. |
 
 ## What the evidence lets us conclude
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Supply chain | An SBOM describes components; SLSA provenance describes where and how an artifact was built. Use both, verify signatures and builder identity before promotion, and include model/prompt/Skill/policy/evaluation digests in the release manifest. | SLSA |
+| Supply chain | An SBOM describes components; SLSA provenance describes where and how an artifact was built. Use both, verify signatures and builder identity before promotion, and include model/prompt/Skill/policy/evaluation digests in the release manifest. | R17; R18 |
 
-The discussion above draws on SLSA; CISA-SBOM. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R17; R18; R42. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -431,13 +431,13 @@ def verify_release_artifact(
 
 ## What to verify before production
 
-**✓** Client and workflow contracts remain stable across SDKs, providers, engines, and connectors.
+**✓** Every run is pinned to an immutable ReleaseManifest; no mutable “latest” reference reaches an active run.
 
-**✓** Idempotency, concurrency, asynchronous operations, deadlines, pagination, events, errors, and artifacts are consistent.
+**✓** Rollback changes the release assigned to new work; active runs stay on compatible workers or follow an explicit, tested migration.
 
-**✓** Each authoritative record and consistency boundary has one owner and store.
+**✓** Promotion moves the same signed bundle through every stage, and each gate's evidence travels with it.
 
-**✓** Partitions, queues, quotas, fairness, backpressure, and cells isolate workloads.
+**✓** Emergency deny, kill switch, and credential revocation work independently of the normal release cadence.
 
 **✓** Compatibility, schema migration, fencing, regional recovery, and effect reconciliation are designed before deployment.
 
@@ -450,10 +450,10 @@ def verify_release_artifact(
 
 | **Question** | **Strong answer** |
 | --- | --- |
-| How do stable contracts make an agent platform portable? | Public run, task, and tool contracts and authoritative records remain provider neutral; SDK and model-specific objects stay behind adapters and gateways. |
-| What conventions are essential for a long-running Run API? | Idempotent commands, expected versions, 202 operations, durable status and events, typed errors, deadlines, cancellation semantics, and immutable artifact references. |
-| How would you choose stores for workflow, business state, artifacts, search, telemetry, and audit? | Match consistency, access, retention, rebuildability, write pattern, and scale; do not use queues as transactions, vectors as truth, traces as audit, or prompts as state. |
-| Why use workload queues and regional cells? | Isolate risk and latency classes, control noisy neighbors, scale additively, enforce residency, bound blast radius, and keep critical execution dependencies local. |
+| Why is “roll back the model” usually incomplete? | Behavior also depends on the prompt, tool schema, policy, workflow build, and knowledge strategy. The smallest safe rollback unit is the release bundle; emergency deny and credential revocation remain separate, immediate controls. |
+| What happens to active runs when a release is rolled back? | Rollback changes the release assigned to new work. Active runs stay pinned to compatible workers or move only through an explicit, tested migration; history is never rewritten. |
+| Why separate the control plane from regional execution planes? | The control plane decides what may run and which bundle a run receives; regions do the work inside residency and failure boundaries. A region verifies signed bundles locally but never invents policy, so high-risk admission fails closed. |
+| How does production evidence improve the system without production rewriting itself? | A trace becomes input to a curated dataset; it reaches production only after de-identification, review, evaluation, and promotion as a new candidate. |
 | Describe safe regional failover during an external write. | Stop admission, fence the old writer, restore compatible durable state, reconcile executing and unknown effects and signals, atomically advance placement, then resume by risk tier. |
 
 ## Where this leads next
@@ -486,13 +486,13 @@ the architecture meets the operating budget.
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
-| Admission controller and budget service | tenant demand to scarce shared capacity | workload class · tenant · queue | one admitted run | BudgetLease · CapacityPermit · DegradationDecision |
+| Admission controller and budget service | tenant demand to scarce shared capacity | workload class · tenant · queue | one admitted run | BudgetReservation · CapacityPermit · DegradationDecision |
 
 ## Optimize the trajectory, not the token
 
 A cheaper model call can make the workflow more expensive if it causes extra retrieval, repeated tool calls, evaluator retries, or human escalation. The unit of optimization is the accepted business outcome and the path taken to reach it. Measure cost and latency at each stage, then improve the bottleneck that changes the journey. This keeps local savings from shifting work—and risk—to a more expensive part of the system.
 
-The useful objective is **cost and latency per verified successful outcome**, constrained by quality, safety, reliability, and compliance. A cheaper model can be more expensive if it causes more turns, retrievals, retries, escalations, or human review. First remove unnecessary work: prefer deterministic paths, smaller eligible tool sets, early acceptance, selective retrieval, artifact reuse, and bounded parallelism.
+The useful objective is **cost and latency per verified successful outcome**, constrained by quality, safety, reliability, and compliance. First remove unnecessary work: prefer deterministic paths, smaller eligible tool sets, early acceptance, selective retrieval, artifact reuse, and bounded parallelism.
 
 ### Give each stage a latency and cost budget
 
@@ -521,14 +521,14 @@ For a stable workload, Little’s Law gives a useful first estimate: `average wo
 
 ### A quarter-end planning example
 
-Assume the 120-runs-per-minute peak is expected to last long enough for queues to reach steady state. The planning model estimates 480 active runs before headroom. Northstar reserves 25 percent of capacity for close-critical work, so ordinary research cannot consume the last protected permits. When the browser pool reaches its limit, the admission controller defers new browser-heavy runs or offers a draft path; it does not keep accepting work that will wait past its deadline.
+Assume the 120-runs-per-minute peak is expected to last long enough for queues to reach steady state. The planning model estimates 480 active runs before headroom. Northstar reserves 25 percent of capacity for deadline-critical cases, so lower-priority work cannot consume the last protected permits. When the browser pool reaches its limit, the admission controller defers new browser-heavy runs or offers a draft path; it does not keep accepting work that will wait past its deadline.
 
 | **Observed pressure** | **Safe response** | **Shortcut to avoid** |
 | --- | --- | --- |
 | Queue age predicts a deadline miss | Defer low-priority work, preserve reserved capacity, and expose a retry-after time | Add workers while the provider quota is already exhausted |
 | Token spend rises without better acceptance | Reduce duplicate context, tighten tool schemas, and inspect retry/fan-out causes | Switch every node to the cheapest model |
 | A lower-cost route increases escalations | Revert the route for the affected slice and compare cost per verified success | Keep the route because token cost fell |
-| A tool call is slow or unknown | Preserve the effect record and reconcile before retrying | Treat timeout as proof that no effect occurred |
+| A tool call is slow or its outcome is unknown | Preserve the effect record and reconcile before retrying | Treat timeout as proof that no effect occurred |
 
 The numbers above are illustrative planning inputs, not universal limits. Their purpose is to show the order of reasoning: measure demand, identify the scarce resource, reserve capacity for the outcomes that matter, choose a reversible degradation, and verify that the degraded path still satisfies its safety and acceptance contract.
 
@@ -539,7 +539,7 @@ The numbers above are illustrative planning inputs, not universal limits. Their 
 | Problem | Scale bursty, heterogeneous, quota-bound work while controlling latency, spend, fairness, noisy neighbors, and long-lived idle runs. |
 | Why it is difficult | Model and tool limits differ; agent fan-out is dynamic; a slow branch holds joins; retries amplify load; GPU and sandbox workloads have very different resource profiles. |
 | Design alternatives | Synchronous monolith; generic job queue; serverless functions; Kubernetes worker pools; actor systems; workflow-task queues; provider-managed runtime. |
-| Recommended architecture | Separate the stateless control plane from queue-driven execution pools. Partition queues by workload/risk/tenant/region; use fair scheduling and admission budgets; autoscale on backlog age and service time; apply hierarchical quotas and backpressure before model providers. Suspend idle workflows without workers. |
+| Recommended architecture | Separate the stateless control plane from queue-driven execution pools. Partition queues by workload/risk/tenant/region; use fair scheduling and admission budgets; autoscale on backlog age and service time; apply hierarchical quotas and backpressure before model providers. Suspend idle workflows so they hold no workers. |
 | Trade-offs | More pools improve isolation and tuning but increase operations. Managed runtimes reduce undifferentiated work while increasing vendor dependency and potentially weakening cross-vendor trace and state portability. |
 | Failure scenarios | One tenant consumes all quota; fan-out explosion; retry storm; head-of-line blocking; model quota is exhausted while workers scale uselessly; sandbox image cold starts dominate latency. |
 | Enterprise example | A month-end finance workload uses priority queues and reserved model quota for close-critical tasks, separate pools for OCR/code execution, and backpressure that defers low-priority research rather than failing all runs. |
@@ -563,7 +563,7 @@ This layered view prevents a common operational mistake: treating worker count a
 * Hierarchical token buckets: organization → environment → tenant → agent → user → run → provider/tool.
 * Queue partitions and worker pools by latency class, risk, region/residency, sandbox profile, model family, and data classification.
 * Concurrency keys for scarce resources or records; use optimistic concurrency for data and semaphores for quotas.
-* Backpressure on predicted service time, queue age, provider quota, and spend—not CPU alone. KEDA-style event-driven autoscaling is appropriate for queue workers.
+* Backpressure on predicted service time, queue age, provider quota, and spend—not CPU alone. Event-driven autoscaling (for example, KEDA on Kubernetes) suits queue workers.
 * Bounded fan-out and speculative execution. Cancel losing branches once a validated result wins; account for cancellation lag.
 * Fair scheduling with reserved capacity for critical workflows and protection against a single tenant or recursive agent tree.
 * Prewarmed sandboxes only for latency-sensitive workloads; immutable images, snapshot pools, and aggressive idle reclamation for the rest.
@@ -577,11 +577,11 @@ This layered view prevents a common operational mistake: treating worker count a
 5. **Parallelize selectively:** only independent, sufficiently valuable branches; cap fan-out and straggler time.
 6. **Cache safely:** key by model/version, prompt hash, normalized input, tenant, authorization scope, policy, and knowledge snapshot. Do not share sensitive cache entries across principals.
 7. **Batch:** embeddings, classification, and offline evals where latency permits.
-8. **Optimize the ACI:** precise tool schemas and smaller tool sets reduce retries and wrong calls more reliably than ever-longer prompts.
+8. **Optimize the agent–computer interface (ACI):** precise tool schemas and smaller tool sets reduce retries and wrong calls more reliably than ever-longer prompts.
 9. **Use spend-aware planning:** each plan estimates cost and reserves budget; report marginal value of optional branches.
-10. **Measure cost per accepted outcome:** token price alone ignores retries, human review, failed trajectories, and tool charges.
+10. **Measure cost per verified successful outcome:** token price alone ignores retries, human review, failed trajectories, and tool charges.
 
-### A workable implementation
+## A workable implementation
 
 ### Who should own each decision
 
@@ -631,7 +631,7 @@ The Admission Controller predicts resource/risk and accepts, defers, or rejects 
 * Partition queues by region/residency, risk, workload profile, model/tool compatibility, and latency class—but avoid per-tenant queues unless isolation or volume justifies the operational cardinality.
 * Use hierarchical distributed rate limiting with regional allocations and periodic reconciliation; no request should require a synchronous global lock. Keep a safety margin for clock/network skew and provider quota uncertainty.
 * Autoscale on backlog arrival rate, oldest age, service time, active leases, and downstream permits. Do not scale workers when provider quota is the bottleneck.
-* Enforce bounded fan-out, ready-node concurrency, delegation depth, speculative branches, context bytes, and retries per run. Admission reserves the aggregate worst permitted burst.
+* Enforce bounded fan-out, ready-node concurrency, delegation depth, speculative branches, context bytes, and retries per run. Admission checks the run’s worst permitted burst; hard reservations still cover only the near execution horizon.
 * Protect priority traffic with reserved capacity; cap each class so “urgent” cannot starve routine work indefinitely. Use aging to prevent starvation.
 * For large tenants, assign dedicated queue partitions/provider accounts/pools when needed; otherwise use shared pools with tenant-aware quotas and noisy-neighbor telemetry.
 * Cost caches, prompt caches, and response caches must include tenant, authorization, model/tool/prompt/schema/policy versions, and knowledge snapshot. Cache hits still emit usage/provenance events.
@@ -656,13 +656,13 @@ These are policy shapes, not universal numbers. Determine actual limits from tas
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Sizing method | Size from measured arrival rates and service-time distributions. Include fan-out, retry amplification, model/tool quotas, approval dwell time, tenant fairness, and headroom. Cost per verified success is more useful than token cost alone. | QUEUEING; MLFLOW-TRACE |
+| Sizing method | Size from measured arrival rates and service-time distributions. Include fan-out, retry amplification, model/tool quotas, approval dwell time, tenant fairness, and headroom. Cost per verified success is more useful than token cost alone. | R43 |
 
-The discussion above draws on QUEUEING; MLFLOW-TRACE. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R43. Appendix K lists the complete sources and records their authority, version, and scope.
 
 |  |
 | --- |
-| **BEST PRACTICE**  Measure cost per verified successful outcome, not per token or per request. Tokens are an input; the business pays for completed work. A change that halves token spend while pushing five percent more runs into human review has almost certainly cost money. |
+| **BEST PRACTICE**  Measure cost per verified successful outcome, not per token or per request. Tokens are an input; the business pays for completed work. A change that halves token spend while pushing five percent more runs into human review may well have cost money. |
 
 ## A sensible place to start
 

@@ -4,6 +4,88 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Apply DOCX review to the appendices
+
+Applied a deep review of the DOCX (Appendices A–L and the closing) to the canonical source:
+
+- Appendix A's "Primary chapters" column pointed seven rows at the wrong chapters (an older numbering); each row now points to the chapters that teach it.
+- Appendix I states Python 3.13, matching `pyproject.toml` and CI; Appendix L's verified-success cost formula has correct precedence and token demand no longer double-counts; Appendix F no longer implies exact replay is possible.
+- Little's Law now cites R43; product and term names are consistent (Claude Agent SDK, PydanticAI, Skill Pack); the closing ends on its argument rather than a naming note.
+
+### Apply DOCX review to Part VIII
+
+Applied a deep review of the DOCX (Chapters 26–28) to the canonical source:
+
+- Ch27's checklist and design-review questions now test release and recovery (pinning, rollback, promotion, emergency controls) instead of Part II topics; rollback restores the whole bundle, and the promotion path includes shadow.
+- The dated, uncited EU AI Act status claim now points readers to the official timeline [R40].
+- Replaced unresolvable source keys with registry IDs (R17, R18, R42, R43); MLFLOW-TRACE was dropped.
+- Ch28's reservation rules no longer conflict, the Northstar example uses mortgage terms, and undefined acronyms (ACI, KEDA) are expanded; Ch26 explains Figure 26-1 and fixes the exception-expiry logic.
+
+### Apply DOCX review to Part VII
+
+Applied a deep review of the DOCX (Chapters 24–25) to the canonical source:
+
+- Tightened the automated vs approval-required line: self-authored behavior never auto-approves, canaries are approved, and the Memory and Model-selection rows name their approval.
+- Ch24 no longer implies a joined trace is an audit trail; the worked example's payload is a document, not a payment.
+- Replaced unresolvable source keys with registry IDs (R13, R19, R20, R21); MLFLOW-TRACE/MLFLOW-MCP have no registry entry and were dropped; Phoenix capabilities narrowed to the source's scope.
+- Ch25 figures numbered in reading order; checklist and design-review items now test runtime adaptation vs governed release.
+
+### Apply DOCX review to Part VI
+
+Applied a deep review of the DOCX (Chapters 20–23) to the canonical source:
+
+- Fixed the Ch22 failure timeline, which said "ERP" in a scenario about the LOS, and expanded LOS on first use.
+- Ch22 no longer says to authorize "never against the agent's own identity", which contradicted Ch21's subject-and-actor model.
+- Removed overstated security guarantees: containment claims replace "remains safe", "remains valid", and "passes every input guard"; approval is bound when required rather than for every protected effect.
+- Replaced unresolvable legacy source keys with registry IDs; effect-state names and the intent hash are used consistently.
+
+### Apply DOCX review to Part V
+
+Applied a deep review of the DOCX (Chapters 18–19) to the canonical source:
+
+- "Neither protocol carries authorization" now says *business* authorization, consistent with the MCP authorization row; A2A is described as stateful with best-effort cancellation, not durable.
+- Replaced unresolvable source keys with registry IDs (R05, R06, R07, R09, R10, R28); the out-of-scope A2A citation for the multi-agent quality claim was dropped.
+- Ch18's mortgage specialists now match the chapter's own case; the deterministic join validates artifacts.
+- Ch19 announces its LLM Gateway material and names that gateway explicitly in its headings; contract names match the code and records tables.
+
+### Apply DOCX review to Part IV
+
+Applied a deep review of the DOCX (Chapters 10–17) to the canonical source:
+
+- Fixed contradictions with the book's core rules: Ch11 handoff now acknowledges before ownership transfers; Ch14's workflow persists (not commits) the proposed effect before approval; Ch10's loop step no longer executes mutations inside the loop.
+- Ch17's "How to read a card" now describes the four parts every card actually uses; the catalog-level pitfall box no longer splits the AP-16 card.
+- Ch14's checklist and design-review questions now test this chapter's material (authorization vs intervention, approval expiry) instead of repeating tool-chapter items.
+- Replaced unresolvable legacy source keys with registry IDs; OAI-HITL has no registry entry and was dropped.
+- Corrected swapped Ch10 headings, empty headings, grammar, and US spelling.
+
+### Apply DOCX review to Part III
+
+Applied a deep review of the DOCX (Chapters 7–9) to the canonical source:
+
+- Replaced unresolvable source keys (SLSA, A2A-101, MCP-2026, OWASP-CHEAT) with registry IDs; Ch8's summary line now matches its table.
+- Ch8 lifecycle: revocation normally follows the compatibility window, and Staged includes the limited canary that promotes it.
+- Ch7 uses the canonical ToolManifest contract name; illustrative listings are labelled as such.
+- Removed a repeated "pack grants nothing" sentence and three near-duplicate headings; US spelling throughout.
+
+### Apply DOCX review to Part II
+
+Applied a deep review of the DOCX (Chapters 4–6) to the canonical source:
+
+- Ch4 plane count is now consistent (seven planes in the opening, table, and design-review answer); "execution plane" no longer means two things; trust-boundary answer matches the table.
+- Replaced unresolvable legacy source keys with registry IDs (R03, R04, R13, R39); R48 is disclosed as the author's own repository.
+- Ch5/Ch6 clarity: Figure 5-1 is referenced in prose; the miscounted "seven representations" is removed; the AP-13/AP-02 cross-reference is corrected; the garbled final checklist item is fixed.
+- Promoted the empty "A workable implementation" heading to the parent of its subsections; US spelling throughout.
+
+### Apply DOCX review to the front matter and Part I
+
+Applied a deep review of the DOCX (front matter, Chapters 1–3) to the canonical source:
+
+- "Northstar" now means only the platform codename; the supplier-onboarding comparison is no longer labelled Northstar (front matter, Ch1, Ch2, Ch3 callouts).
+- Fixed contradictions: Ch3's restart test no longer claims a committed receipt while approval is pending; Ch1 no longer says the model "did nothing wrong" in all five failures.
+- Fixed cross-references: Figure 1-3 now points to Figure 4-1 for detail; acceptance criteria point to Chapters 10 and 12; Figures 1-1/1-2 numbered in reading order; front-matter appendix list matches the appendix titles.
+- Replaced unresolvable legacy source keys with registry IDs (R01, R13).
+- Removed a code-free duplicate section ("One bounded agent step in code") and a leaked authoring note; joined hard-wrapped bullets; consistent US spelling and component names (LLM Gateway, reauthorize).
+
 ### Remove the reviews-comments folder
 
 - Removed `reviews-comments/` (an already-applied Chapter 3 review DOCX and its `.gitkeep`) and its `.gitignore` rule. Its entries drop out of `RELEASE-MANIFEST.json` and `CHECKSUMS.sha256` at the next `make package`.

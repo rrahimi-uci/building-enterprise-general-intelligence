@@ -29,18 +29,18 @@ agents make a diagram look sophisticated.
 
 ## What every collaboration must make explicit
 
-Every additional agent introduces another scheduler, context boundary, identity, budget, and failure mode. That cost is justified when a specialist has meaningfully different expertise, data access, tools, ownership, latency, or scaling needs. It is not justified merely because a multi-agent conversation looks modular. The collaboration contract makes the cost visible by requiring each task to have one owner, one authority envelope, explicit artifacts, and a rule for joining or cancelling work.
+Every additional agent introduces another scheduler, context boundary, identity, budget, and failure mode. That cost is justified when a specialist has meaningfully different expertise, data access, tools, ownership, latency, or scaling needs. It is not justified merely because a multi-agent conversation looks modular. The collaboration contract makes the cost visible by requiring each task to have one owner, one authority envelope, explicit artifacts, and a rule for joining or canceling work.
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
-| Task Service and supervisor workflow | parent/child authority and artifact adoption | task tree · specialist queue | one child task | TaskEnvelope · ChildGrant · JoinPolicy |
+| Task Service and supervisor workflow | parent/child authority and artifact adoption | task tree · specialist queue | one child task | TaskEnvelope · CapabilityEnvelope · JoinPolicy |
 
 ## Treat collaboration as durable work, not conversation
 
 [[DIAGRAM:supervisor-worker|Figure 18-1 — Supervisor/worker: narrowed child grants, an explicit fan-in contract, and durable cancellation]]
 
-A supervisor/worker topology is justified when specialists have different tools, data boundaries, owners, SLOs, or deployment needs. Harborlight’s supervisor owns the evidence-package outcome and creates durable child tasks for document extraction, income verification, property review, and policy explanation. Each child receives only the capability, evidence, budget, deadline, and cancellation scope it needs.
+Harborlight’s supervisor owns the evidence-package outcome and creates durable child tasks for document extraction, income verification, property review, and policy explanation. Each child receives only the capability, evidence, budget, deadline, and cancellation scope it needs.
 
 Fan-in is explicit: wait for all, quorum, first valid, or fallback. Artifact conflicts use deterministic precedence, source freshness, confidence thresholds, or human resolution. Free-form conversation may help agents explain results, but it cannot replace task status, ownership, artifact, or effect records.
 
@@ -56,7 +56,7 @@ Nested delegation multiplies cost and risk. Northstar caps depth, children, conc
 | Recommended architecture | Default to one agent inside a typed workflow. Add a specialist only when its instructions, tools, policy, context window, owner, deployment, or SLO differ. Use manager-as-tools for bounded work; use handoff only when user-facing ownership truly transfers. Avoid peer swarms for transactional work. |
 | Trade-offs | Central coordination is easier to govern but can bottleneck; decentralized collaboration may increase coverage but weakens determinism, auditability, and cost control. |
 | Failure scenarios | Ping-pong handoffs; orphaned tasks; two agents mutate the same record; context or permission loss; circular delegation; premature “done”; aggregator accepts incompatible artifacts. |
-| Enterprise example | A mortgage-underwriting coordinator delegates document extraction, policy retrieval, and anomaly review, but a deterministic workflow owns the case and only the authorized decision service commits status. |
+| Enterprise example | A mortgage-underwriting coordinator delegates document extraction, income verification, property review, and policy explanation, but a deterministic workflow owns the case and only the authorized decision service commits status. |
 
 ### Topology decision table
 
@@ -81,7 +81,7 @@ Nested delegation multiplies cost and risk. Northstar caps depth, children, conc
 * **Termination:** terminal states are deterministic—acceptance criteria satisfied, user canceled, policy denied, budget/time/step limit reached, or unrecoverable error. The model may recommend completion but cannot invent the terminal transition.
 * **Plan changes:** append a versioned plan revision with rationale and diff; validate new nodes against the original authority envelope. Materially broader scope requires new consent or approval.
 
-### A workable implementation
+## A workable implementation
 
 ### Who should own each decision
 
@@ -154,9 +154,9 @@ JSON · implementation excerpt
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Collaboration claim | Multi-agent structure does not inherently improve quality. Add specialists only when capability, ownership, trust, isolation, or parallelism justifies coordination cost, and evaluate against the strongest single-agent baseline. | MULTIAGENT; A2A-101 |
+| Collaboration claim | Multi-agent structure does not inherently improve quality. Add specialists only when capability, ownership, trust, isolation, or parallelism justifies coordination cost, and evaluate against the strongest single-agent baseline. | R28 |
 
-The discussion above draws on MULTIAGENT; A2A-101. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R28. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## How Supervisor/Worker works in practice
 
@@ -166,7 +166,7 @@ The discussion above draws on MULTIAGENT; A2A-101. Appendix K lists the complete
 
 ### How the pattern works
 
-The supervisor creates typed child tasks with narrower grants and acceptance criteria. Workers return artifacts; the supervisor or deterministic join validates and aggregates them.
+The supervisor creates typed child tasks with narrower grants and acceptance criteria. Workers return artifacts; the supervisor's deterministic join validates and aggregates them.
 
 1. Decompose only along meaningful specialist boundaries.
 2. Create durable TaskEnvelopes and child capability envelopes.
@@ -362,7 +362,7 @@ def derive_child(
 
 **✓** Joins define all, quorum, first-valid, or fallback semantics and conflict policy.
 
-**✓** MCP and A2A pass through gateways that verify peers, schemas, artifacts, quotas, and cancellation.
+**✓** MCP and A2A pass through gateways that verify peers, schemas, artifacts, quotas, and cancellation (Chapter 19).
 
 ## Put the idea to work
 
@@ -381,7 +381,7 @@ def derive_child(
 
 ## Where this leads next
 
-Multi-agent collaboration inside one platform is only part of the problem; Chapter 19 governs cross-platform tools, agents, APIs, and events.
+Multi-agent collaboration inside one platform is only part of the problem; Chapter 19 extends those controls to external tools, agents, and model providers.
 
 # 19 — Crossing System Boundaries: MCP, A2A, and Local Control
 
@@ -401,7 +401,8 @@ External protocols make it easier to discover and exchange work with tools and
 agents outside your boundary. They do not make those endpoints trustworthy, or
 their artifacts safe to adopt. This chapter follows an MCP call and an A2A
 task through local gateways, where identity, policy, quotas, provenance, and
-effect semantics are re-established before anything is used.
+effect semantics are re-established before anything is used. It closes by
+placing the LLM Gateway among those boundaries.
 
 ## Re-establish trust at every protocol boundary
 
@@ -410,7 +411,7 @@ A protocol can standardize the envelope without making the sender trustworthy. A
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
-| MCP and A2A Gateways | local trust domain to external endpoint or peer | endpoint · peer · tenant quota | one remote call or task | ServerManifest · A2ATask · ArtifactEnvelope |
+| MCP and A2A Gateways | local trust domain to external endpoint or peer | endpoint · peer · tenant quota | one remote call or task | ServerManifest · A2ATaskEnvelope · RemoteArtifact |
 
 ## Two protocols, two responsibilities
 
@@ -420,19 +421,19 @@ and a mature system runs both.
 
 | | **MCP** | **A2A** |
 | --- | --- | --- |
-| Standardizes | How a host discovers and invokes **tools, resources and prompts** on a server | How peers collaborate around a **task**: messages, status, streaming, artifacts, cancellation |
+| Standardizes | How a host discovers and invokes **tools, resources, and prompts** on a server | How peers collaborate around a **task**: messages, status, streaming, artifacts, cancellation |
 | Unit of exchange | A tool call and its result | A task with a lifecycle |
 | Who owns the work | The caller, throughout | Transfers to the peer, which reports status back |
 | Typical use | "Read this record for me" | "Own this sub-goal and tell me when it is done" |
 | What it does **not** decide | Whether the caller may invoke the tool | Whether the peer may be trusted with the task |
 
-That last row is the one that matters. Neither protocol carries authorization.
-MCP describes how a tool is discovered and called, not who may call it; A2A
+That last row is the one that matters. Neither protocol carries business authorization.
+MCP describes how a tool is discovered and called, not whether this subject may use it for this purpose; A2A
 describes how a task is delegated, not whether this peer should receive it.
 Both therefore terminate at a gateway that supplies the decision the protocol
 omits.
 
-MCP standardizes how a host discovers and invokes tools, resources, and prompts exposed by a server. A2A standardizes collaboration around tasks, messages, status, streaming, artifacts, and cancellation. They can coexist: a local agent may use MCP for a capability and A2A to delegate independently owned work.
+A local agent may use MCP for a capability and A2A to delegate independently owned work.
 
 Northstar terminates both protocols at gateways. The MCP Gateway resolves a pinned server manifest, authenticates the endpoint, filters tools, validates schemas, applies tenant and user policy, constrains egress, and wraps mutating calls in effect semantics. The A2A Gateway verifies peer identity and trust profile, translates local TaskEnvelope to the negotiated protocol, persists status, enforces deadlines and quotas, and scans returned artifacts before local adoption.
 
@@ -451,7 +452,7 @@ MLflow 3.15.0 introduced experimental MCP Registry capabilities for registering 
 | Problem | Independent agents need to discover capabilities, delegate work, exchange artifacts, propagate failure, and agree on ownership without exposing internal prompts or state. |
 | Why it is difficult | Natural-language messages are ambiguous; remote agents have separate identities and SLOs; asynchronous tasks outlive connections; protocol interoperability does not guarantee shared authorization or semantics. |
 | Design alternatives | In-process calls; queue topics; shared blackboard; RPC; workflow child runs; MCP tool exposure; A2A tasks and messages. |
-| Recommended architecture | For agents under one platform, use workflow-native child tasks. Across deployment or vendor boundaries, use an A2A gateway with typed task/artifact envelopes and authenticated async operations. Use MCP for tools/resources. Never use conversation alone as the durable task record. |
+| Recommended architecture | For agents under one platform, use workflow-native child tasks. Across deployment or vendor boundaries, use the A2A Gateway with typed task/artifact envelopes and authenticated async operations. Use MCP for tools/resources. Never use conversation alone as the durable task record. |
 | Trade-offs | Standard protocols reduce integration cost but cover transport more than governance. A gateway may reduce protocol features, yet it supplies policy, tenant binding, quotas, schema validation, and audit. |
 | Failure scenarios | Agent advertises a misleading capability; task status is lost; result schema differs; duplicate delegation starts duplicate work; parent cancels but child continues; remote agent requests broader rights. |
 | Enterprise example | A mortgage platform delegates property appraisal review to a separately operated agent. The remote agent receives authorized document references and read-only scope, returns a signed appraisal artifact, and cannot alter the case or make the lending decision. |
@@ -491,7 +492,7 @@ A2A’s task/message/artifact model and async operations are useful at remote-ag
 * Aggregators validate schema, provenance, duplicate claims, evidence quality, and conflict policy. They do not concatenate prose and call it consensus.
 * Shared mutable state is prohibited across trust domains. Exchange immutable artifacts or versioned patches; use optimistic concurrency for authorized updates.
 
-### A workable implementation
+## A workable implementation
 
 ### Who should own each decision
 
@@ -503,7 +504,7 @@ The Agent Directory stores validated cards and endpoint metadata; the Peer Trust
 | --- | --- |
 | POST /v1/peers | Register remote agent issuer/domain, trust material, approved endpoints, allowed skills/purposes, risk ceiling, and data boundary |
 | POST /v1/peers/{peer\_id}:refreshCard | Fetch and verify agent card; new digest remains pending until compatibility/policy checks pass |
-| GET /v1/agents:resolve?skill=...; region=... | Resolve policy-eligible local or remote agents; discovery never returns a grant |
+| GET /v1/agents:resolve?skill=...&region=... | Resolve policy-eligible local or remote agents; discovery never returns a grant |
 | POST /v1/federated-tasks | Create an internal durable child task and dispatch an A2A task/message idempotently |
 | GET /v1/federated-tasks/{task\_id} | Return canonical local state, mapped remote state, artifacts, heartbeat, deadlines, and trace links |
 | POST /v1/federated-tasks/{task\_id}/messages | Send typed clarification or additional artifact reference under the existing authority ceiling |
@@ -548,7 +549,7 @@ At an open boundary, expose the standard A2A agent-card and task/message operati
 * Bound remote fan-out at the parent. A peer may not recursively delegate unless the task grant explicitly permits a depth and the resulting chain remains visible.
 * Treat missed heartbeat, callback failure, cancellation ambiguity, and artifact validation failure as distinct states; do not automatically resubmit a potentially active remote task.
 
-## What belongs at the model gateway—and what does not
+## What belongs at the LLM Gateway—and what does not
 
 The LLM Gateway is the controlled boundary between enterprise workloads and model providers or self-hosted inference. It normalizes model access and enforces model-specific routing, policy, privacy, economics, observability, and release governance. It does not own business workflow, tool effects, agent delegation, or the external API perimeter.
 
@@ -563,7 +564,7 @@ The LLM Gateway is the controlled boundary between enterprise workloads and mode
 | MCP Gateway | Platform → MCP server | Server trust, discovery, tool eligibility, scoped credentials, protocol audit | General model inference |
 | Orchestration layer | Run → tasks/activities | State, deadlines, retries, joins, cancellation, compensation | Provider perimeter or policy truth |
 
-## What the gateway needs to enforce
+## What the LLM Gateway needs to enforce
 
 | **Capability** | **Behavior** | **Control** |
 | --- | --- | --- |
@@ -587,7 +588,7 @@ Filter by tenant, purpose, data class, residency, risk, required capabilities, c
 
 Record candidate routes, exclusions/reasons, selected provider/model/version/region, policy digest, budgets, fallback chain, and experiment cohort. Cache keys must include every security and semantic dependency. Never cache a protected decision that depends on current authorization or resource version without preserving that dependency.
 
-## What to measure at the gateway
+## What to measure at the LLM Gateway
 
 Measure route distribution and eligibility, task success/quality by route, schema/tool correctness, refusal/safety, p50/p95/p99 latency, queue/retry amplification, cache hits and unsafe-key rejection, tokens/cost per accepted outcome, policy denials, PII/secrets detections, provider error/fallback, alias/version drift, and trace completeness. Centralization adds latency and blast-radius risk; deploy regionally, isolate tenants/risk classes, use bulkheads, and retain platform-owned contracts even when buying a gateway.
 
@@ -595,11 +596,11 @@ Measure route distribution and eligibility, task success/quality by route, schem
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| MCP correction | Use MCP 2026-07-28 for new designs: the core is stateless, initialize and Mcp-Session-Id are removed, requests carry protocol/capability metadata, and server/discover supports version selection. Application state uses explicit handles. Tasks and Skills over MCP are optional extensions, not core guarantees. | MCP-2026; MCP-CHANGELOG |
-| MCP authorization | Use protected-resource and authorization-server discovery, PKCE, audience/resource binding, short-lived tokens, step-up scopes, issuer validation, and SSRF-safe metadata retrieval. Token passthrough to an upstream API is forbidden. | MCP-AUTH; RFC8707; RFC9728 |
-| A2A correction | Pin A2A 1.0.1. Normative operations include SendMessage, GetTask, ListTasks, CancelTask, and SubscribeToTask; local /v1 bridges are Northstar APIs, not A2A endpoints. Cancellation is best effort and authorization must prevent task-existence leakage. | A2A-101 |
+| MCP correction | Use MCP 2026-07-28 for new designs: the core is stateless, initialize and Mcp-Session-Id are removed, requests carry protocol/capability metadata, and server/discover supports version selection. Application state uses explicit handles. Tasks and Skills over MCP are optional extensions, not core guarantees. | R05 |
+| MCP authorization | Use protected-resource and authorization-server discovery, PKCE, audience/resource binding, short-lived tokens, step-up scopes, issuer validation, and SSRF-safe metadata retrieval. Token passthrough to an upstream API is forbidden. | R06; R09; R10 |
+| A2A correction | Pin A2A 1.0.1. Normative operations include SendMessage, GetTask, ListTasks, CancelTask, and SubscribeToTask; local /v1 bridges are Northstar APIs, not A2A endpoints. Cancellation is best effort and authorization must prevent task-existence leakage. | R07 |
 
-The discussion above draws on MCP-2026; MCP-AUTH; A2A-101. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R05; R06; R07; R09; R10. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -682,19 +683,19 @@ def resolve_production_mcp_server():
 
 ## Put the idea to work
 
-1. Wrap an MCP tool with a local Tool Gateway policy.
+1. Wrap an MCP tool with local MCP Gateway policy.
 2. Define an A2A TaskEnvelope with status, cancellation, and artifact adoption semantics.
 
 ## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
-| What does MCP standardize? | How hosts discover and invoke server tools and resources; it does not establish business authorization or endpoint trust. |
-| What does A2A add? | Durable task, message, status, artifact, streaming, and cancellation semantics across agent boundaries. |
+| What does MCP standardize? | How hosts discover and invoke server tools, resources, and prompts; it does not establish business authorization or endpoint trust. |
+| What does A2A add? | Stateful task, message, status, artifact, streaming, and best-effort cancellation semantics across agent boundaries. |
 | Why put protocol gateways at the boundary? | To verify peers, schemas, authority, quotas, classifications, artifacts, egress, effects, and audit using local policy. |
 | How should a remote artifact be adopted? | Authenticate the source, validate schema and hash, scan content, enforce classification and provenance, then copy or reference under local policy. |
 | How do you version external capabilities? | Pin registry entry, endpoint, protocol profile, schemas, trust material, tool or agent version, and tested compatibility in the release manifest. |
 
 ## Where this leads next
 
-The gateway controls model access, but not the entire attack surface; Chapter 20 introduces defense in depth across all agentic trust boundaries.
+Gateways control protocol and model access, but not the entire attack surface; Chapter 20 introduces defense in depth across all agentic trust boundaries.
