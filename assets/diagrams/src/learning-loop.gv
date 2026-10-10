@@ -1,6 +1,7 @@
-// Figure 25-1 — The continuous improvement loop.
+// Figure 25-3 — The continuous improvement loop.
 // Message: production evidence returns as a versioned, approved change. The
-// loop is closed but it is not automatic; approval is a step, not a formality.
+// loop is closed but it is not automatic; approval is a step, not a formality,
+// granted by an owner or by a change class approved in advance.
 digraph learning_loop {
   layout = circo
   graph [mindist=0.42]
@@ -12,7 +13,7 @@ digraph learning_loop {
   diagnose  [label="Diagnose", fillcolor="#EAF3FB", color="#1450A3", style=filled]
   recommend [label="Recommend", fillcolor="#EAF3FB", color="#1450A3", style=filled]
   validate  [label="Validate", fillcolor="#EAF3FB", color="#1450A3", style=filled]
-  approve   [label="Approve\nhuman", fillcolor="#FFF4DF", color="#8A5600", style=filled]
+  approve   [label="Approve\nowner or\npre-approved\nclass", fillcolor="#FFF4DF", color="#8A5600", style=filled, height=0.82]
   deploy    [label="Deploy", fillcolor="#F7ECF8", color="#6A2E6E"]
   monitor   [label="Monitor", fillcolor="#F7ECF8", color="#6A2E6E"]
   learn     [label="Learn", fillcolor="#E7F5F3", color="#0D6E69"]
