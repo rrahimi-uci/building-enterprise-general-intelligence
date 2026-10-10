@@ -31,7 +31,7 @@ walking a reader through a design.
   contracts, formulas, security boundaries, examples, citations, diagrams,
   and stable identifiers remain unchanged.
 - Re-read the chapter transitions after the title changes and corrected the
-  Appendix A references that still pointed to the pre-v2.1.0 chapter numbers.
+  Appendix A references that still pointed to the earlier-draft chapter numbers.
 
 ### Final handoff status
 
@@ -164,7 +164,7 @@ does not yet let a reader run the system described across the chapters.
 **Do not call the running example production-ready yet.** Accept this PR as the
 implementation plan, then implement PR-NS-00 through PR-NS-27 incrementally,
 with each PR independently reviewed and validated. The manuscript’s existing
-publication artifacts remain valid for the current v2.1.0 source; the cumulative
+publication artifacts remain valid for the current v1.0.0 source; the cumulative
 example should be treated as an explicit next-workstream until the full-book
 acceptance gates in `code-gap.md` pass.
 
@@ -204,7 +204,7 @@ evaluation, and operations.
 - Part I now introduces the mortgage anchor, but supplier material remains in
   later chapters until their checkpoint-aligned migration PRs land. A full-book
   stale-term and preservation review is required after each subsequent slice.
-- The checked-in v2.1.0 output is synchronized and structurally valid, but DOCX
+- The checked-in v1.0.0 output is synchronized and structurally valid, but DOCX
   pagination QA still requires LibreOffice/`soffice` in the validation
   environment.
 

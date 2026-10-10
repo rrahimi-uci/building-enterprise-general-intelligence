@@ -1,10 +1,10 @@
-# Book v2.1.0 Release Notes
+# Book v1.0.0 Release Notes
 
-Book v2.1.0 is the canonical foundation for *Building an Enterprise General Intelligence Platform* by Reza Rahimi, PhD.
+Book v1.0.0 is the canonical foundation for *Building an Enterprise General Intelligence Platform* by Reza Rahimi, PhD.
 
 ## Chapter 1 review-comment reconciliation — 2026-09-18
 
-Sixteen reviewer comments left on the distributed v2.1.0 DOCX were reconciled
+Sixteen reviewer comments left on the distributed v1.0.0 DOCX were reconciled
 into the canonical Markdown. The front matter's "architecture in one view"
 paragraph and four of its six engineering-contract principles were rewritten
 per the review, and a redundant "small engineering contract" paragraph was
@@ -29,7 +29,7 @@ XeLaTeX output is 286 Letter-size pages. `make package` produced the
 
 ## Reviewed DOCX reconciliation — 2026-09-17
 
-The reviewed v2.1.0 DOCX was reconciled into the canonical Markdown parts and
+The reviewed v1.0.0 DOCX was reconciled into the canonical Markdown parts and
 regenerated into the distributable Markdown, DOCX, and XeLaTeX source. The
 reviewed reader-facing headings, evidence callouts, chapter and appendix
 transitions, pattern catalog, and threat catalog now agree across formats. The

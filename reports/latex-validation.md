@@ -1,4 +1,4 @@
-# LaTeX Validation — Book v2.1.0
+# LaTeX Validation — Book v1.0.0
 
 **Source result:** PASS
 **Target engine:** XeLaTeX

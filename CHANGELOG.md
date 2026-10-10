@@ -535,44 +535,19 @@ Applied a deep review of the DOCX (front matter, Chapters 1–3) to the canonica
 
 ## [1.0.0] — 2026-09-13
 
-### Publication foundation
+First public release of *Building an Enterprise General Intelligence Platform* by Reza Rahimi, PhD. Earlier working drafts carried the labels v2.x and v3.x; those are retired, and 1.0.0 is the only release version. The draft changelog is in git history.
 
-- Established the first canonical Book v1.0.0 release under the title *Enterprise General Intelligence: Architecting Governed Agentic Systems for the Enterprise* by Reza Rahimi, PhD.
-- Re-reviewed the complete book as one narrative: 12 Parts, 31 chapters, and 15 appendices.
-- Added explicit Part orientations and 31 curated chapter-to-chapter transitions.
-- Removed 22 repeated companion-package paragraphs and stale v2.x/v3.x release labels.
-- Preserved the enterprise progression from intent and platform layers through reasoning, orchestration, context, memory, tools, multi-agent collaboration, security, reliability, observability, governance, operations, and evolution.
+### The book
 
-### Technical and citation quality
+- 8 Parts, 28 chapters, and 12 appendices, each Part and chapter opening on a new page; every chapter is preceded by its full-page Letter cover (`cover-images/`) in the DOCX and XeLaTeX editions.
+- One running example, the Harborlight mortgage case, carried through the chapters, with a cumulative implementation under `mortgage_case/` and the roadmap in `code-gap.md`.
+- Canonical prose in `source/parts/*.md`; the DOCX, XeLaTeX, and distributable Markdown editions are generated from it, with a cross-format contract in `styles/`.
+- Every citation resolves to `config/references.json` with a recorded scope; Appendix K is generated from it, with the claim-scope traceability matrix.
+- Every diagram is rendered from an editable source in `assets/diagrams/src/` (vector PDF for XeLaTeX, PNG for DOCX) and registered in `config/diagrams.json`.
+- Every code listing is a tested file under `examples/`, registered in `config/examples.json` and executed in CI.
 
-- Added a professional numbered References section and a claim-scope traceability matrix.
-- Registered 43 primary/credible references and 94 citation occurrences; all reference IDs resolve and all registry entries are cited.
-- Scoped evidence so external sources do not implicitly validate book-authored architecture recommendations.
-- Corrected the Temporal durable-execution publication year to 2025.
-- Added the Amazon Bedrock Agents Classic maintenance-mode/new-customer caveat and AgentCore direction.
-- Reframed MLflow 3.15.2 as a reproducibility pin without an unsupported release-date or “latest version” claim.
-- Standardized undated living documentation as `n.d.` with access dates.
+### Versioning
 
-### Design and rendering
-
-- Created an agent-focused cover and a unified navy/cyan publication system.
-- Rebuilt DOCX deterministically from Markdown rather than editing legacy Word XML.
-- Added fixed styles for headings, body text, code, tables, callouts, captions, headers, footers, and page numbers.
-- Ensured every Part, chapter, and appendix starts on a new page; Part and appendices dividers are standalone.
-- Included all 18 teaching diagrams and 19 total inline images.
-
-### Maintainability
-
-- Established `source/parts/*.md` as the editable canonical source and added deterministic assembly.
-- Added machine-readable book, diagram, style-token, and reference registries.
-- Added reusable build, validation, reference, diagram, QA, deterministic-check, and packaging tools.
-- Added a DOCX style template, Markdown component templates, four agent skills, design-system documentation, cross-format rules, contribution guidance, release checklist, checksums, and manifest.
-- Preserved original v3.1 sources and legacy generation tools for provenance.
-
-### Validation
-
-- Validated DOCX package integrity, metadata, styles, headings, tables, images, citations, and canonical-Markdown equivalence.
-- Rendered and inspected a 213-page Letter-size PDF: 46 chapter/appendix starts on unique pages, 13 standalone divider pages, and no unintended blank pages.
-- Added clean-extraction rebuild and deterministic hash checks as release gates.
-
-[1.0.0]: ./
+- Book version is `1.0.0` in `config/book.json`, the cover, title page, running header, and the artifact names `Enterprise-General-Intelligence-v1.0.0.{md,docx,tex,pdf}`.
+- The stale-label validator now rejects any `v2.x` or `v3.x` label in the manuscript.
+- The pre-release DOCX layout baseline is renamed `latex/reference/DOCX-layout-reference-draft.pdf` so its name no longer implies it matches v1.0.0.

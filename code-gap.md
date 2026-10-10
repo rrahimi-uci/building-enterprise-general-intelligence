@@ -1,13 +1,10 @@
 # Mortgage Running Example — Code Gap and Implementation Roadmap
 
-**Requested baseline:** v2.0.1
-**Source actually supplied and reviewed:** *Building an Enterprise General Intelligence Platform*, Book v2.1.0, September 2026
+**Source actually supplied and reviewed:** *Building an Enterprise General Intelligence Platform*, Book v1.0.0, September 2026
 **Course alignment:** *Building Enterprise-Grade Agentic Systems — Course*, 14 lessons
 **Scope:** one cumulative mortgage case across Book Chapters 1–28, cross-mapped to the 14 course lessons
 **Audit date:** 2026-09-16
 **Status:** corrected implementation roadmap; the foundation slice for `C01`–`C03`, the targeted C24 OpenAI/Agents SDK/MLflow grounding slice, and an offline platform-contract slice spanning C04–C28 are implemented on this branch. Full chapter-integrated checkpoint execution, CLI wiring, and release evidence for C04–C28 remain planned.
-
-> **Version resolution.** The request names v2.0.1, but the attached source identifies itself throughout as Book v2.1.0. This revision treats the supplied v2.1.0 file as the authoritative baseline. If v2.0.1 was intentional, compare that source before implementation and update this roadmap rather than assuming the editions are equivalent.
 
 ## Executive decision
 
@@ -62,7 +59,7 @@ meaning for a shared identifier.
 
 ## What was reviewed
 
-The review covered the supplied Book v2.1.0 Markdown, the 14-lesson course, the original `code-gap.md`, the repository implementation, and the public API names referenced by the book. Static extraction found 54 Python fenced snippets in the original book; all parse as Python syntax when considered individually, but many are teaching excerpts rather than standalone programs. Syntax validity therefore does not prove that imports, names, external services, or end-to-end behavior work. The implementation audit runs the pinned offline environment and tests the provider boundaries with fakes or the scripted Agents SDK model.
+The review covered the supplied Book v1.0.0 Markdown, the 14-lesson course, the original `code-gap.md`, the repository implementation, and the public API names referenced by the book. Static extraction found 54 Python fenced snippets in the original book; all parse as Python syntax when considered individually, but many are teaching excerpts rather than standalone programs. Syntax validity therefore does not prove that imports, names, external services, or end-to-end behavior work. The implementation audit runs the pinned offline environment and tests the provider boundaries with fakes or the scripted Agents SDK model.
 
 Appendix I originally described a `northstar` package and supplier-onboarding demo that do not match the repository’s canonical `mortgage_case` package. The appendix is now corrected to distinguish the framework-neutral architecture from the implemented mortgage slice. The registry and generated reports, rather than hand-maintained prose counts, are authoritative for the complete example suite.
 
@@ -84,7 +81,6 @@ Appendix I originally described a `northstar` package and supplier-onboarding de
 | Moderate | Each stage proposed many new files without a stable cumulative package contract. | A stable domain package, additive platform modules, and immutable chapter entry points prevent copy/paste drift while preserving earlier checkpoints. |
 | Moderate | Acceptance criteria often described success without a reader-visible command or expected evidence. | Every checkpoint requires an offline command, expected `StageReport`, at least one failure/refusal scenario, and named behavioral tests. |
 | Moderate | The attached book’s cover title and Appendix I companion title are inconsistent. | This roadmap uses the supplied cover title and refers to the companion package generically; manuscript title normalization remains a source-edit follow-up. |
-| Editorial | The request says v2.0.1 while the supplied file says v2.1.0. | The mismatch is explicit in the header and must be resolved before release tagging. |
 | Major | The first revision placed the package under `examples/mortgage_case/` but invoked it as `python -m mortgage_case`; that import does not work from a clean checkout without extra packaging configuration. | The target package now lives at repository root as `mortgage_case/`, so the documented module command and compile command agree. |
 | Major | “One case” conflicted with multi-case fairness, reliability, and capacity evaluation. | `MORT-2026-000184` is the anchor case; controlled variants and versioned synthetic cohorts are permitted for tests and never replace the narrative. |
 | Major | Bare `ApprovalRequest`/`ApprovalDecision` is dangerously ambiguous in a mortgage context because readers may confuse platform action authorization with credit approval. | The platform contract is renamed `HumanActionAuthorization`; `LendingDecision` remains a separate underwriter/domain record. |
@@ -291,12 +287,11 @@ Do not use “OpenAI SDK” when the specific package matters, and do not introd
 
 ### Reproducibility rules
 
-- Pin `openai==3.13.0`, `openai-agents==0.22.2`, and `mlflow==3.15.2` for the Book v2.1.0 offline reproduction profile, then verify their transitive compatibility in CI. Do not describe the old `openai>=2.25.0` floor as the supported runtime baseline for this profile.
+- Pin `openai==3.13.0`, `openai-agents==0.22.2`, and `mlflow==3.15.2` for the Book v1.0.0 offline reproduction profile, then verify their transitive compatibility in CI. Do not describe the old `openai>=2.25.0` floor as the supported runtime baseline for this profile.
 - Separate extras: `offline`, `openai`, `agents`, `mlflow`, `protocols`, and `all`.
 - The mandatory test job uses the scripted model and synthetic connectors. Live OpenAI and remote MLflow jobs are opt-in and never the only evidence.
 - Record Python, OS, package lock digest, model route, tool schema, prompt/Skill, policy, dataset, scorer, and workflow build in every release manifest.
 - Never put an API key, access token, account number, reusable credential, raw protected attribute, or hidden chain-of-thought in source, fixtures, serialized SDK state, trace tags, or sample output.
-- Treat the v2.0.1/v2.1.0 mismatch as a release blocker: implementation may proceed against the supplied v2.1.0 baseline, but no release may be tagged “v2.0.1-aligned” without that edition and an explicit diff.
 
 ## Target package layout
 

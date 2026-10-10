@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "release": "2.1.0",
+  "release": "1.0.0",
   "title": "Building an Enterprise General Intelligence Platform",
   "author": "Reza Rahimi, PhD",
   "release_date": "2026-09-13",
@@ -12,12 +12,12 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 430,
+  "file_count": 429,
   "files": [
     {
       "path": ".gitattributes",
       "bytes": 574,
-      "sha256": "f1b7126ee143743d9b2ea5d742421a9c18e966244278417b0e6729b4f2f6325b"
+      "sha256": "05b03805f351c4e611cdbafb8d535947b2820e272cf20dc4cdf6385d75a765a5"
     },
     {
       "path": ".github/pull_request_template.md",
@@ -32,12 +32,12 @@
     {
       "path": ".github/workflows/latex.yml",
       "bytes": 3796,
-      "sha256": "cf8fd7704e2179f8b3c395a6834ddcb168840251ce902c54faf45a83196784d9"
+      "sha256": "c7f23852974065b84ac355bbcbd340dcbb84a98a1df055d0c5122d6390bb2916"
     },
     {
       "path": ".github/workflows/validate.yml",
       "bytes": 1757,
-      "sha256": "dc89113ef22c4dc801b875dcf6d09c54e7461b048263e2645c1137c60b4e9031"
+      "sha256": "fe4e73e5fe9a14cafa4bdac39e3ffe609f6c18c024dbe6e49917406e18816a8c"
     },
     {
       "path": ".gitignore",
@@ -52,12 +52,12 @@
     {
       "path": "AGENTS.md",
       "bytes": 6446,
-      "sha256": "5d8b1d2a0299ba37021d5d6a061a270bf7bbb994a3d74ee868d5fa7d4f982312"
+      "sha256": "d06c3c833727bb32fe73822e16c33ce7d9f15c9af2583f88806b6d1e3ed4c209"
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 50622,
-      "sha256": "06ab5397b886bfce4ba6b63585ddfacdd3b19f06f984bb82007292a2d3e57cf9"
+      "bytes": 1778,
+      "sha256": "5f521c5d074368d055394279d6068882ab64390de93032a6286573ea786847a8"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -72,12 +72,12 @@
     {
       "path": "Makefile",
       "bytes": 6148,
-      "sha256": "bab28be9397840345a2a68e430904c78dd47d4356de367ccc1703654e4b9def6"
+      "sha256": "d528bf1735aa485dae62794863fc8dcf440640d546dd70442f3cadd6045a2c72"
     },
     {
       "path": "README.md",
       "bytes": 15038,
-      "sha256": "54a0086991a0a94043ee478a543c525b4aef8e98c38950b71b3af3e57b3bde99"
+      "sha256": "da2d944d886d31b12f6877eecab5935a41222400dac3b43e0f4356fcd225c550"
     },
     {
       "path": "RELEASE-CHECKLIST.md",
@@ -90,9 +90,9 @@
       "sha256": "6418189550ae0cd22dbbfe12bb74529094594cd80718a088871c0663baa1ad2a"
     },
     {
-      "path": "assets/cover/cover-v2.1.0.png",
-      "bytes": 5125259,
-      "sha256": "601aa4c053879fbaf2883beaa3f3c2e41494f6cb4075dc95141bc7e98d2fd736"
+      "path": "assets/cover/cover-v1.0.0.png",
+      "bytes": 5124409,
+      "sha256": "9f1cd2dce229591d05d39bb610ab0cfd2cae4a2e80c10b727cf5b868b9a03af7"
     },
     {
       "path": "assets/diagrams/anti-ambient-authority.pdf",
@@ -781,18 +781,18 @@
     },
     {
       "path": "book/manuscript.md",
-      "bytes": 712793,
-      "sha256": "e59038bc0adaf8c4b80eb6fe2f926ff9a702eea03bce5c4efe40ebb90aae6523"
+      "bytes": 712797,
+      "sha256": "6c67fd4c20543ca28c8ee2088973e7a421e504dc2679354f12c0e8fa32630388"
     },
     {
       "path": "code-gap.md",
-      "bytes": 99365,
-      "sha256": "cde3e2eb82ae0a797878b31602726ae8b42c46a9e86ba442e7a62b2265bf6e29"
+      "bytes": 98614,
+      "sha256": "a44f50c67416597f257b6a4cc0c5e4d63482a91ffc96a8848daa6caf1f843afe"
     },
     {
       "path": "config/book.json",
       "bytes": 4786,
-      "sha256": "ae7ebf19e59f15b1592a237e716fd25f944547eee01e0433c606ccdecd541e6e"
+      "sha256": "4aa6991106c40e0a24005b3894a79956e88180658fc92c32558266d1199b5a38"
     },
     {
       "path": "config/chapter-covers.json",
@@ -975,19 +975,19 @@
       "sha256": "de741d0e17e62d424567ff15e49e8a0bbe9e9a82bf9e346ff3996a89ffc0945f"
     },
     {
-      "path": "dist/Enterprise-General-Intelligence-v2.1.0.docx",
-      "bytes": 43610058,
-      "sha256": "7359a3af5ba764b8edb85843ffd6c302c2dcacfdb0b55341bccfe5a763ed6431"
+      "path": "dist/Enterprise-General-Intelligence-v1.0.0.docx",
+      "bytes": 43609202,
+      "sha256": "b37b4327f6e25c3403681d77f8f3a92340b5cceb66c95fc6456d398f436f9250"
     },
     {
-      "path": "dist/Enterprise-General-Intelligence-v2.1.0.md",
-      "bytes": 712793,
-      "sha256": "e59038bc0adaf8c4b80eb6fe2f926ff9a702eea03bce5c4efe40ebb90aae6523"
+      "path": "dist/Enterprise-General-Intelligence-v1.0.0.md",
+      "bytes": 712797,
+      "sha256": "6c67fd4c20543ca28c8ee2088973e7a421e504dc2679354f12c0e8fa32630388"
     },
     {
-      "path": "dist/Enterprise-General-Intelligence-v2.1.0.tex",
+      "path": "dist/Enterprise-General-Intelligence-v1.0.0.tex",
       "bytes": 554,
-      "sha256": "37b9dbbd1abd8d0c66eb6f20e61eaedbc253e951f556a8d7a523b8458b5cdd2a"
+      "sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7"
     },
     {
       "path": "examples/README.md",
@@ -1016,8 +1016,8 @@
     },
     {
       "path": "examples/contracts.py",
-      "bytes": 2452,
-      "sha256": "c07097be450f6f51772f6ed40698fb53743fb8e4c5a2fbd8f0f5413a77e1448a"
+      "bytes": 2456,
+      "sha256": "43ed321fa5293230c6ff59ccff5db189687e64196f8a572c4138eac4fefca85a"
     },
     {
       "path": "examples/foundations/__init__.py",
@@ -1310,29 +1310,29 @@
       "sha256": "38f04d7842023522613ebe9144c673a29dbcffcd0b88742350738c36e763d40e"
     },
     {
-      "path": "latex/Enterprise-General-Intelligence-v2.1.0.tex",
+      "path": "latex/Enterprise-General-Intelligence-v1.0.0.tex",
       "bytes": 554,
-      "sha256": "37b9dbbd1abd8d0c66eb6f20e61eaedbc253e951f556a8d7a523b8458b5cdd2a"
+      "sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7"
     },
     {
       "path": "latex/README.md",
-      "bytes": 5319,
-      "sha256": "1d72331eb57306170a041e30b634907d32d2b18f54b2ad55d21cdba7eafac351"
+      "bytes": 5349,
+      "sha256": "a607f2727fc2d52a5f5b90b72cc7b87b5b0155c428c49157ca906787cd4875e9"
     },
     {
       "path": "latex/bookstyle.sty",
       "bytes": 14436,
-      "sha256": "54d4efe867d3a09edd804f8fac1b0dea9d1bece35b9d106aed7c9492c9597314"
+      "sha256": "7a1273ba38763881c8ed2ede7ad741ea49ca031d7bb5f8fc354e413a88d840c8"
     },
     {
       "path": "latex/compile.sh",
       "bytes": 708,
-      "sha256": "c48cf05d143e2cdbd1f37090ba3dddf8218574dabeb28b3b4fdb4c6c377644ab"
+      "sha256": "28e733bd763b6975f73fd79e854a7887117fd3ab34e37022bc7febd709b536d2"
     },
     {
       "path": "latex/content/book-content.tex",
-      "bytes": 850124,
-      "sha256": "f4f9aaac8901240c0e7d85ddaecfd4729790f68ae6be1be2b9259f9dccb536de"
+      "bytes": 850128,
+      "sha256": "edfd1e9a530ccfff362ab3267d1a4c292dd761597d2a4e2115567bda31a75455"
     },
     {
       "path": "latex/fonts/LICENSE-SIL-OFL-1.1.txt",
@@ -1380,7 +1380,7 @@
       "sha256": "836e31f422015e15da61ae6d6d6a67db09ce3a177755041e8d5a8e8d1dd50c74"
     },
     {
-      "path": "latex/reference/DOCX-layout-reference-v1.0.0.pdf",
+      "path": "latex/reference/DOCX-layout-reference-draft.pdf",
       "bytes": 6954693,
       "sha256": "44ead28b866b949652c02618e8dbf95113233126915de69a768071731cf550e4"
     },
@@ -1640,11 +1640,6 @@
       "sha256": "c7535168740cd3dc2c39eedfca137cac115150edb5fc60d43670a49532ebb521"
     },
     {
-      "path": "proposals/knowledge-management.md",
-      "bytes": 27414,
-      "sha256": "b6c561e28b99a3181d76381f28621fd7aad9b6048ec338f8601dfa4b2c46344f"
-    },
-    {
       "path": "provenance/legacy-tools/build_final_book.py",
       "bytes": 18203,
       "sha256": "daf47778ebd72acaf7d3c9b266ba9444268e9c8115a863f36a6f14e00ba3bce8"
@@ -1682,37 +1677,37 @@
     {
       "path": "qa/build-report.json",
       "bytes": 309,
-      "sha256": "0e93eafe5a81567069c2d2e49aba205985fcf6734971a42b34f78de776197881"
+      "sha256": "dab2ef9d85efbc9de98765fb464632ca4d6cbfcca7337fe23e9ddf94f044b7db"
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 43610058,
-      "sha256": "7359a3af5ba764b8edb85843ffd6c302c2dcacfdb0b55341bccfe5a763ed6431"
+      "bytes": 43609202,
+      "sha256": "b37b4327f6e25c3403681d77f8f3a92340b5cceb66c95fc6456d398f436f9250"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 43610058,
-      "sha256": "7359a3af5ba764b8edb85843ffd6c302c2dcacfdb0b55341bccfe5a763ed6431"
+      "bytes": 43609202,
+      "sha256": "b37b4327f6e25c3403681d77f8f3a92340b5cceb66c95fc6456d398f436f9250"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "4617b111c403b42f515033fde011632106bd373b8509c72b483d5aff34c8b5a3"
+      "sha256": "dbddf4fac14e73060c8f5178b6509bc3fa0c74574d4a3be1325372f3bf0d32db"
     },
     {
       "path": "qa/latex-validation-report.json",
       "bytes": 17056,
-      "sha256": "fbeafdfc471327e866b6db3923539ff159dfcb05869d02d5d8685bb73d636b8f"
+      "sha256": "f56a6469ee7d5988d864235bc9a5932a8788a1677438a1b8f3210d24c5d54d2a"
     },
     {
       "path": "qa/validation-report.json",
       "bytes": 875,
-      "sha256": "6c3a2597f958adb39eee9dfb3640df406526bc897d9cc93d1d7b896e6a26f867"
+      "sha256": "0c7db832ba1480e443db4372bb99942c365d9a11ab22ba36f8514fdfa390eef1"
     },
     {
       "path": "reports/assembly-report.json",
       "bytes": 1189,
-      "sha256": "e549708252232e86bcd744521d58e6fb2832e2be43f16fa89fef03e27b2ba2db"
+      "sha256": "79687006d756f3e9e91156c01b34e0aea1223c6846c3d6e0f16e6b68cdb7c933"
     },
     {
       "path": "reports/chapter-cover-report.json",
@@ -1727,12 +1722,12 @@
     {
       "path": "reports/citation-audit.md",
       "bytes": 7378,
-      "sha256": "87f00f0ed6c0e3351c7b632eabe1c1f0b7b92f1f550e7158196bfa24ac8d3833"
+      "sha256": "ddabb15824a55cb090ea150d584d38d8354e8fbd521cd85d938b9f364b37c88a"
     },
     {
       "path": "reports/citation-verification.json",
       "bytes": 13001,
-      "sha256": "988d09dcf806dc468db6912792c4bbe99524513193f2961c33967654671f009a"
+      "sha256": "c99ce01155b1f6949b234ec3bd7da1be0a5df86c2f6675a0dca7800763c7f8c3"
     },
     {
       "path": "reports/diagram-render-report.json",
@@ -1741,8 +1736,8 @@
     },
     {
       "path": "reports/editorial-audit.md",
-      "bytes": 18899,
-      "sha256": "10d10b60fc94769802e800893056e3557b3fc666633e5c66c2568609e7cb64c7"
+      "bytes": 18902,
+      "sha256": "882b7f8fe8d2827218a61961939feca3140ebefa63cee4482da33e56eb4d155c"
     },
     {
       "path": "reports/editorial-transformation.json",
@@ -1762,17 +1757,17 @@
     {
       "path": "reports/latex-build-report.json",
       "bytes": 2429,
-      "sha256": "4d22b2f9e05495958a6deaad624caf1296eb751745cbfd8b1df28ee39287c92c"
+      "sha256": "5a074f5a894a96b4265c60a160559588d7c208ef6e998e8b5bf54678e3033df2"
     },
     {
       "path": "reports/latex-validation.md",
       "bytes": 723,
-      "sha256": "5f909ed231061e331a2315aa5071d76c5b523d5fa8842894d837d6236353ee64"
+      "sha256": "be48b9080fc3e2da2e62fa04fda3dd37cb0bca506c969db2b9c2f4e4d9dcdfb6"
     },
     {
       "path": "reports/release-notes.md",
       "bytes": 6557,
-      "sha256": "36a69638f02b6a81e7d930792c99dd8b62c0454d8ec35ecf181f50c8df5da8b0"
+      "sha256": "a6a65759632b989c02ac9530666c66ed1716b49b5a2618a5969b7c160ad09e67"
     },
     {
       "path": "reports/restructure-map.json",
@@ -1782,12 +1777,12 @@
     {
       "path": "reports/technical-validation.md",
       "bytes": 4100,
-      "sha256": "3464ea4f8aa311580ec4fca83d87a1c5ac45f2bdd0be38937404d1c94a6d7f0c"
+      "sha256": "db5ee24f874b981981265dbac10dc3ccff58af08467fe39b8129bad69f7c22a8"
     },
     {
       "path": "reports/validation-summary.md",
       "bytes": 864,
-      "sha256": "bdc29ec4a7acad05cc0d87cf7c984df97d4bfce3bb10bbfcd2740b53b12e84fc"
+      "sha256": "9565470e8380b07d6315f8a50506f534007197b7cff6e219b7501ce67ab0b9bc"
     },
     {
       "path": "requirements.txt",
@@ -1922,7 +1917,7 @@
     {
       "path": "source/parts/00-front-matter.md",
       "bytes": 12671,
-      "sha256": "b4d7023d0dc413678a28ee973d7f1c9478718dca6475ec2eef3db16f2d0de55f"
+      "sha256": "5c93eab424036e9e121c0f66194bb35bc3eb2e90286eff4c74dbba1cc7927d25"
     },
     {
       "path": "source/parts/01-part-i.md",
@@ -1972,12 +1967,12 @@
     {
       "path": "styles/CROSS-FORMAT-CONTRACT.md",
       "bytes": 5193,
-      "sha256": "0b63f4f7decd2ffdf70c816da1cb98f49e3173a68fdba3effe3c71c22a2f2b90"
+      "sha256": "e75b2409ae0e4dbd4fa37906ab9d59722c0fb3f674d9ce0792c89cd020c89099"
     },
     {
       "path": "styles/DESIGN-SYSTEM.md",
-      "bytes": 13440,
-      "sha256": "7295285a59af173b8278f804f50a758be0ee293b4fc1957eaaec21e6fcd0d98c"
+      "bytes": 13429,
+      "sha256": "163577372f672d4cecf78f4a4ded1181833c5d158e7fcb544702f541dc827e26"
     },
     {
       "path": "styles/DOCX-STYLES.md",
@@ -1986,13 +1981,13 @@
     },
     {
       "path": "styles/LATEX-STYLES.md",
-      "bytes": 6873,
-      "sha256": "f41c4f350886bbea758473cc520731875387e9db6eda49b617ff7e56fb09b03b"
+      "bytes": 6863,
+      "sha256": "3c64e126923a5eb5c18bba2b90bf17ef03e22b6f24aede5ae434b9bcc8d00eb2"
     },
     {
       "path": "templates/book-style-template.docx",
       "bytes": 40395,
-      "sha256": "645b97f1a5c7caa0b700a8d753972456f5f51c05fea6ddaff0327698498d5314"
+      "sha256": "96a1c72e484f8456dcd4b003160c698b04d16f19de3f91e7efdbf7a1a13c1c9a"
     },
     {
       "path": "templates/chapter.template.md",
@@ -2071,8 +2066,8 @@
     },
     {
       "path": "tools/assemble_manuscript.py",
-      "bytes": 9531,
-      "sha256": "3fa8eb1db475765570eddd51e67d76d17ce2637a4bd2739ea0b7bbae6e93331f"
+      "bytes": 9513,
+      "sha256": "3feab63f3daf8d8ac00c9bfb85885d0362bb1c64c818a0abb3fb552bbd2286c8"
     },
     {
       "path": "tools/bootstrap_tex.sh",
@@ -2081,18 +2076,18 @@
     },
     {
       "path": "tools/build_book.py",
-      "bytes": 26419,
-      "sha256": "e7cdcc8619038d4194ffc568b53b330c32ce5d4bfb4a4f19f1cac2e4efaf7811"
+      "bytes": 26424,
+      "sha256": "0c26a373d5db5a0c48094b22a445f690d41ed22bbb49295d0e7553e4f5e4a70c"
     },
     {
       "path": "tools/build_latex.py",
-      "bytes": 25133,
-      "sha256": "a421cf753a8291c09122c65959d4e6bc70536babf1936e6a5fec8a70e5b35571"
+      "bytes": 25132,
+      "sha256": "d4a770e90fd729a2e7825dab6f403fc0ce85df97b323c84c2d8bd54e05c6c740"
     },
     {
       "path": "tools/callouts.py",
-      "bytes": 5160,
-      "sha256": "05192b7b3e38040476ce9f5f1ff0fd3a276a2b99e805823731d9d81192f2bdac"
+      "bytes": 5176,
+      "sha256": "f4517039e1628eb042a4e1ea6769401006cb92a2b421aa803f078d74fe1d79b8"
     },
     {
       "path": "tools/check_examples.py",
@@ -2101,8 +2096,8 @@
     },
     {
       "path": "tools/check_references.py",
-      "bytes": 6098,
-      "sha256": "7e62bb652e5cd43842634f60e7bf07ac50b609196a5adb3df17226540731406f"
+      "bytes": 6088,
+      "sha256": "9ee5f58cde91d5bb3f710f41b5736aad560a88a912d667d4c19b025b9abb444e"
     },
     {
       "path": "tools/clean_package_test.py",
@@ -2122,12 +2117,12 @@
     {
       "path": "tools/generate_cover.py",
       "bytes": 4716,
-      "sha256": "bc12d7bf7c4fdf35a7a9e429f93681a63e5104b997c0e3390f02a2c15abc4d2b"
+      "sha256": "df4f79e2c1703a3e3fc22d6885f6877de6e842379e91aa084fe606be32e9841b"
     },
     {
       "path": "tools/package_release.py",
       "bytes": 4364,
-      "sha256": "18b5ce246f95933cfa331a6f3e1a4f981b64fd6070e8e434be3c24d698420e17"
+      "sha256": "73b840062d3a4fa4d6594a0040fca8915a0346835e1628fb90e5291cde8ddd7d"
     },
     {
       "path": "tools/prepare_manuscript.py",
@@ -2146,18 +2141,18 @@
     },
     {
       "path": "tools/render_pdf_qa.py",
-      "bytes": 4756,
-      "sha256": "1bba9f5f07af1e11bceb9e5187b7016c4764e79b8ae84b0509ee645f4ae3ff8d"
+      "bytes": 4771,
+      "sha256": "0b2fcb06d6023f962fff2e680f6e2c9a5e5e32ff9c4ae432b52bb6d3d3a5ac8d"
     },
     {
       "path": "tools/validate_book.py",
-      "bytes": 14787,
-      "sha256": "010199fe6aec88c89986ac0afeefda6b35b25f035449132abcc158161add0531"
+      "bytes": 14682,
+      "sha256": "4d6f93b70047669194eb9d192f66d7ab989df750e0d3035e92c8e266b30a3e80"
     },
     {
       "path": "tools/validate_latex.py",
-      "bytes": 20886,
-      "sha256": "e613ddd6fe7330ac0dbe9d038a995637978d61045caf6db343e87f709bf55740"
+      "bytes": 20901,
+      "sha256": "81aff5be97ce5cd9f16d69e2dbd0c8257c4d29e9f596c81ed4756acfe9c9f8c9"
     },
     {
       "path": "tools/validate_mortgage_stage_registry.py",

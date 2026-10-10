@@ -1,12 +1,12 @@
 {
-  "release": "2.1.0",
+  "release": "1.0.0",
   "engine": "XeLaTeX",
   "canonical_markdown": "book/manuscript.md",
-  "canonical_markdown_sha256": "e59038bc0adaf8c4b80eb6fe2f926ff9a702eea03bce5c4efe40ebb90aae6523",
-  "main_tex": "latex/Enterprise-General-Intelligence-v2.1.0.tex",
-  "main_tex_sha256": "37b9dbbd1abd8d0c66eb6f20e61eaedbc253e951f556a8d7a523b8458b5cdd2a",
+  "canonical_markdown_sha256": "6c67fd4c20543ca28c8ee2088973e7a421e504dc2679354f12c0e8fa32630388",
+  "main_tex": "latex/Enterprise-General-Intelligence-v1.0.0.tex",
+  "main_tex_sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7",
   "content_tex": "latex/content/book-content.tex",
-  "content_tex_sha256": "f4f9aaac8901240c0e7d85ddaecfd4729790f68ae6be1be2b9259f9dccb536de",
+  "content_tex_sha256": "edfd1e9a530ccfff362ab3267d1a4c292dd761597d2a4e2115567bda31a75455",
   "style": "latex/bookstyle.sty",
   "fonts": [
     {
@@ -62,6 +62,6 @@
     "callouts": 95,
     "citations": 109
   },
-  "source_bytes": 850678,
+  "source_bytes": 850682,
   "compile_command": "latex/compile.sh"
 }

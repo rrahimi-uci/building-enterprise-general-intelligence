@@ -49,7 +49,7 @@ def render_reference_sections(text: str, references: list[dict]) -> str:
     for r in references:
         if r["id"] not in seen:
             ref_lines.append(f"* **[{r['id']}]** {r['author_or_organization']} ({r['year']}). *{r['title']}*. {r['publication_or_version']}. [Source]({r['url']}). Accessed 13 September 2026. **Supports:** {r['supports']}")
-    # v2.1.0 folds the former Appendix M into Appendix K. The matrix only ever
+    # Appendix K absorbs the former Appendix M. The matrix only ever
     # made sense next to the entries it scopes, and splitting them meant a reader
     # checking a citation had to hold two appendix letters in their head.
     ref_lines += [
@@ -73,7 +73,7 @@ def example_region(body: str, start: str, end: str, region: str | None) -> str:
     Named regions let a single verified file serve two chapters at two depths --
     the agent-step contracts a foundations chapter needs, and the full platform
     contract set the architecture chapter needs -- without a second copy that can
-    drift. The book had exactly that duplication before v2.1.0.
+    drift. Earlier drafts had exactly that duplication.
     """
     if region:
         open_marker = f"# --8<-- region:{region}"
@@ -150,7 +150,7 @@ def main() -> int:
     manuscript, example_count = expand_examples(manuscript, root)
 
     canonical = root / "book" / "manuscript.md"
-    distribution = root / "dist" / "Enterprise-General-Intelligence-v2.1.0.md"
+    distribution = root / "dist" / "Enterprise-General-Intelligence-v1.0.0.md"
     canonical.parent.mkdir(parents=True, exist_ok=True)
     distribution.parent.mkdir(parents=True, exist_ok=True)
     canonical.write_text(manuscript, encoding="utf-8", newline="\n")

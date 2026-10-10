@@ -1,4 +1,4 @@
-# Technical Validation Record — Book v2.1.0
+# Technical Validation Record — Book v1.0.0
 
 **Result:** PASS; DOCX pagination QA BLOCKED
 **Validated:** 2026-09-16
