@@ -120,12 +120,13 @@ denies credit and never writes to a real loan-origination system.
 | `observability/mortgage_agents_mlflow.py` | 24 | Real Agents SDK tool run traced by MLflow |
 | `observability/mlflow_trajectory_evaluation.py` | 25 | Deterministic and model-assisted trajectory scorers |
 | `contracts.py` | 03, 04 | Shared step and platform contracts, `RiskClass` (two views) |
-| `platform/skills_registry.py` | 08 | Policy-aware resolution, SemVer precedence, lifecycle outside the digest |
+| `platform/skills_registry.py` | 08, 09 | Policy-aware resolution, SemVer precedence, lifecycle outside the digest, pinned packs |
 | `patterns/react_engine.py` | 10 | Turn, tool and no-progress budgets as typed stop reasons |
 | `patterns/plan_compilation.py` | 12 | Binding a plan to its policy envelope |
 | `patterns/approval_verification.py` | 14 | Binding a human approval, self-approval, expiry |
 | `runtime/durable_state.py` | 15 | Run state as a replayable event fold |
 | `runtime/step_execution.py` | 03 | Platform-owned adapter around the SDK |
+| `runtime/adapter_conformance.py` | 07 | Adapter conformance checks that report gaps by name |
 | `mortgage/cumulative_case.py` | 01–03 | Cumulative synthetic mortgage checkpoints (`C01`–`C03`) |
 
 ## Adding an example
