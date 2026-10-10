@@ -1,6 +1,7 @@
 // Figure 22-1 — Protected effect lifecycle.
 // Message: an unknown outcome is a durable stop, not a failed request that can
-// be blindly retried; compensation is a new business effect.
+// be blindly retried; compensation is a new business effect. The effect is
+// reserved before approval so duplicate proposals awaiting it share one key.
 digraph effect_lifecycle {
   rankdir = TB
   graph [ranksep=0.35, nodesep=0.30]
@@ -19,11 +20,11 @@ digraph effect_lifecycle {
   compensating [label="Compensating\nauthorized reversal", fillcolor="#FFF4DF", color="#8A5600"]
   compensated [label="Compensated\noriginal receipt retained", fillcolor="#F7ECF8", color="#6A2E6E"]
 
-  proposal -> reserved [label="  R0–R2  "]
-  proposal -> approval [label="  R3/R4  ", style=dashed, color="#8A5600", fontcolor="#8A5600"]
-  approval -> reserved [label="  approved proposal  ", style=dashed]
+  proposal -> reserved [label="  reserve key  "]
+  reserved -> executing [label="  R0–R2: dispatch once  "]
+  reserved -> approval [label="  R3/R4  ", style=dashed, color="#8A5600", fontcolor="#8A5600"]
+  approval -> executing [label="  approved: dispatch once  ", style=dashed]
   approval -> declined [label="  denied/expired  ", style=dashed, color="#A62C2C", fontcolor="#A62C2C"]
-  reserved -> executing [label="  dispatch once  "]
   reserved -> declined [label="  precondition fails  ", color="#A62C2C", fontcolor="#A62C2C"]
   executing -> committed [label="  receipt verified  "]
   executing -> unknown [label="  timeout/lost ack  ", color="#A62C2C", fontcolor="#A62C2C"]

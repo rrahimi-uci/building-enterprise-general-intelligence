@@ -14,6 +14,15 @@ All notable changes follow semantic versioning and are recorded here.
 - Approval records are `ApprovalRequest` / `ApprovalDecision`, issued by `ApprovalService`, in the examples and `mortgage_case/`.
 - Examples and tests use the second pay statement (`pay_statement`) as the missing document.
 
+### Part VI — Security, Identity, and Control (continuity review, WP-VI)
+
+- The Part VI orientation states the "assume manipulation" premise once and maps Chapters 20–23, replacing a control order the chapters contradicted.
+- Chapter 20 keeps "guardrail" in its detector sense only, has one nine-layer model (Figure 20-1 redrawn to match), and gives every threat card a first deterministic refusal layer. Figure 20-3 now shows the detector feeding the policy engine. It gains opening boxes and an incident section cited to NIST SP 800-61 [R42].
+- Chapter 21 is reordered: subject, actor, and purpose; then the decision; then how authority travels, with capability envelope (scope) and credential lease (proof) defined. The subset proof is the new `capability-envelope` example.
+- Chapter 22 is one argument with one implementation block. It defines Unknown canonically, relates risk classes to use-case tiers, and drops the inline ledger in favor of the `effect-idempotency` example. Figure 22-1 reserves the effect before approval.
+- Chapter 23 continues the Chapter 20 example rather than retelling it. It drops its duplicate layer list, threat table, and credentials API, and adds kill-switch and data-lineage/privacy sections. Its code is now the `egress-url` and `kill-switch` examples, without the unrelated RTO/RPO class. The governance record moves to Chapter 26.
+- Approval terminology replaces "human action authorization" throughout the Part. Chapter 21 and 23 cover labels follow the revised text.
+
 ### Cover artwork and version labels
 
 - Removed printed release numbers from the book cover and all 28 chapter covers; regenerated the cover artwork and synchronized publication artifacts. The release identifier remains `v1.0.0` in metadata, filenames, title page, and running footers.

@@ -4574,7 +4574,7 @@
    "title": "Carry Identity, Narrow Authority",
    "focus": "Carry subject and actor; grant the intersection, never the union.",
    "themes": [
-    "Dual principal",
+    "Subject and actor",
     "Monotonic narrowing",
     "Last-hop credentials"
    ],
@@ -4583,7 +4583,7 @@
     "groups": [
      {
       "id": "identities",
-      "label": "Three identities",
+      "label": "Subject, actor, purpose",
       "box": [
        0.1,
        0.35,
@@ -4758,7 +4758,7 @@
     "components": [
      {
       "ref": "identities",
-      "name": "Three identities"
+      "name": "Subject, actor, purpose"
      },
      {
       "ref": "pdp",
@@ -5007,7 +5007,7 @@
    "title": "Contain the Damage When a Model Is Manipulated",
    "focus": "Assume the model is manipulated; independent limits keep the failure local.",
    "themes": [
-    "Assume compromise",
+    "Assume manipulation",
     "Blast-radius limits",
     "Scoped kill switches"
    ],
