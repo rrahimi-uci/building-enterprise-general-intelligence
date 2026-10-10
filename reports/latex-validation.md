@@ -10,9 +10,9 @@
 - **chapters:** `28`
 - **appendices:** `12`
 - **diagrams:** `42`
-- **code_blocks:** `61`
-- **longtables:** `152`
-- **compact_tables:** `102`
+- **code_blocks:** `60`
+- **longtables:** `148`
+- **compact_tables:** `101`
 - **callout_tables:** `72`
 - **citation_occurrences:** `113`
 - **bundled_fonts:** `8`
