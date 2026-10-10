@@ -204,7 +204,7 @@ Committed — tracked release evidence, listed in `CHECKSUMS.sha256`:
 - `assets/cover/cover-v2.1.0.png`
 - `assets/parts/part-*.png` — Part divider panels, cropped from `source/part-visuals/`
 - `assets/diagrams/*.pdf` and `*.png` — rendered from `assets/diagrams/src/` by `make diagrams`
-- `cover-images/chapter-*.png` — chapter cover visuals, rendered from `config/chapter-covers.json` by `make chapter-covers`
+- `cover-images/chapter-*.png` — chapter cover visuals, rendered from `config/chapter-covers.json` by `make chapter-covers` and embedded as the page before each chapter in the DOCX and XeLaTeX editions
 - `templates/book-style-template.docx`
 
 Not committed — regenerable, and gitignored so rebuilds do not churn binaries

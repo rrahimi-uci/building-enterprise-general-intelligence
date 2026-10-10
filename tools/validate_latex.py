@@ -106,6 +106,7 @@ def main() -> int:
         "narrative_parts": content.count(r"\BookPartPage{") - content.count(r"\BookPartPage{REFERENCE}"),
         "appendix_dividers": content.count(r"\BookPartPage{REFERENCE}"),
         "chapters": content.count(r"\BookChapter{"),
+        "chapter_covers": content.count(r"\BookChapterCover{"),
         "appendices": content.count(r"\BookAppendix{"),
         "diagrams": content.count(r"\BookDiagram{"),
         "code_blocks": content.count(r"\begin{lstlisting}"),
@@ -118,6 +119,7 @@ def main() -> int:
         "narrative_parts": 8,
         "appendix_dividers": 1,
         "chapters": 28,
+        "chapter_covers": 28,
         "appendices": 12,
     }
     for key, value in expected.items():
@@ -237,6 +239,23 @@ def main() -> int:
             minimum = 295 if "cover" in value else 220
             if effective_dpi < minimum:
                 errors.append("Insufficient image resolution: " + value + " at " + format(effective_dpi, ".1f") + " dpi")
+    # Chapter covers: full-bleed Letter pages, so measure against 8.5in like the cover.
+    covers_path = root / "config" / "chapter-covers.json"
+    if covers_path.exists():
+        covers_doc = json.loads(covers_path.read_text(encoding="utf-8"))
+        for entry in covers_doc["chapters"]:
+            value = covers_doc["output_dir"] + "/" + entry["file"]
+            path = root / value
+            if not path.exists():
+                errors.append("Missing chapter cover: " + value)
+                continue
+            if value not in content:
+                errors.append("Chapter cover is registered but never referenced in the TeX: " + value)
+            with Image.open(path) as image:
+                effective_dpi = image.width / 8.5
+                image_quality.append({"file": value, "pixels": [image.width, image.height], "effective_dpi": round(effective_dpi, 1)})
+                if effective_dpi < 295:
+                    errors.append("Insufficient image resolution: " + value + " at " + format(effective_dpi, ".1f") + " dpi")
     measurements["image_quality"] = image_quality
 
     font_files = sorted((root / "latex" / "fonts").glob("*.ttf"))

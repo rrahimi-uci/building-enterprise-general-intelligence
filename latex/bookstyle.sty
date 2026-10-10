@@ -177,6 +177,13 @@
   \noindent\includegraphics[width=\paperwidth,height=\paperheight]{#1}%
   \clearpage\restoregeometry}
 
+% A full-bleed Letter chapter cover. It stands alone on the page before the
+% chapter's own opening page, exactly as the Part divider does.
+\newcommand{\BookChapterCover}[1]{%
+  \clearpage\newgeometry{margin=0pt}\thispagestyle{empty}%
+  \noindent\includegraphics[width=\paperwidth,height=\paperheight]{#1}%
+  \clearpage\restoregeometry}
+
 \newcommand{\BookTitlePage}[4]{%
   \thispagestyle{empty}\vspace*{0.11\textheight}%
   {\color{BookCyan}\rule{1.15in}{4pt}\par}\vspace{18pt}%

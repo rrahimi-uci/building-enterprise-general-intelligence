@@ -276,6 +276,19 @@ def add_table(doc,rows,cfg,spacer=True):
             elif ri%2==0: shade(cell,'F3F7FB')
     if spacer: doc.add_paragraph().paragraph_format.space_after=Pt(1)
 
+def chapter_cover_path(root,number):
+    spec=root/'config/chapter-covers.json'
+    if not spec.exists(): return None
+    data=json.loads(spec.read_text(encoding='utf-8'))
+    for c in data['chapters']:
+        if f"{c['chapter']:02d}"==number: return root/data['output_dir']/c['file']
+    return None
+
+def add_chapter_cover(doc,path):
+    # One US Letter cover page per chapter, set like the book cover: the page
+    # holds only the image, followed by a page break into the chapter itself.
+    p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_after=Pt(0); p.add_run().add_picture(str(path),width=Inches(7.05)); add_page_break(doc)
+
 def add_diagram(doc,root,key,caption,cfg):
     path=root/'assets/diagrams'/f'{key}.png'
     if not path.exists(): raise FileNotFoundError(f'Missing diagram {path}')
@@ -316,10 +329,17 @@ def build(root:Path,out:Path,template_only=False):
                 if level==1 and not title_seen:
                     p=doc.add_paragraph(style='Title'); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; add_inline(p,text,cfg); title_seen=True; continue
                 style=f'Heading {level}'
+                cover=None
+                if level==1:
+                    num=re.match(r'^(\d{2}) — ',text); cover=chapter_cover_path(root,num.group(1)) if num else None
+                    if cover is not None:
+                        if not cover.exists(): raise FileNotFoundError(f'Missing chapter cover {cover}')
+                        if not after_part: add_page_break(doc)
+                        add_chapter_cover(doc,cover)
                 p=doc.add_paragraph(style=style); add_inline(p,text,cfg); p.paragraph_format.keep_with_next=True
                 if level==1:
                     is_chapter=bool(re.match(r'^\d{2} — ',text) or text.startswith('Appendix '))
-                    p.paragraph_format.page_break_before=False if after_part and is_chapter else True
+                    p.paragraph_format.page_break_before=False if cover is not None or (after_part and is_chapter) else True  # a cover page already ended with its own break
                     after_part=False
                 lead_keep_next=level in (2,3)
                 continue

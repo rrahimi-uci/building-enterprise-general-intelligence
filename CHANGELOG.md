@@ -4,6 +4,19 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Place the chapter covers in the DOCX and XeLaTeX editions
+
+- Each of the 28 chapters now opens with its full-page Letter cover
+  (`cover-images/`), set as a standalone page before the chapter heading in
+  both editions. The chapter text still starts with its H1 on the next page.
+- The DOCX builder embeds each cover like the book cover; the LaTeX style adds
+  `\BookChapterCover` (full bleed). The covers appear in both the DOCX and
+  the compiled PDF; the LaTeX PDF grows from 288 to 344 pages and the DOCX
+  from about 24 MB to about 52 MB.
+- Validators now require 28 registered covers per edition, each 2550 × 3300
+  with a checksum that matches `reports/chapter-cover-report.json`, and count
+  the extra DOCX images.
+
 ### Apply DOCX review to the appendices
 
 Applied a deep review of the DOCX (Appendices A–L and the closing) to the canonical source:

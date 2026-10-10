@@ -176,9 +176,21 @@ def main() -> int:
             # panels. A literal only proved the book had not gained an image.
             pv=root/'config/part-visuals.json'
             visuals=json.loads(pv.read_text(encoding='utf-8'))['visuals'] if pv.exists() else []
-            expected_images=1+len(diags)+len(visuals)
+            cc=root/'config/chapter-covers.json'
+            cover_spec=json.loads(cc.read_text(encoding='utf-8')) if cc.exists() else {'output_dir':'','chapters':[]}
+            covers=cover_spec['chapters']
+            expected_images=1+len(diags)+len(visuals)+len(covers)
             checks['expected_docx_images']=expected_images
-            if len(doc.inline_shapes)!=expected_images: errors.append(f"Expected {expected_images} DOCX images (cover + {len(diags)} diagrams + {len(visuals)} Part panels), found {len(doc.inline_shapes)}")
+            if len(doc.inline_shapes)!=expected_images: errors.append(f"Expected {expected_images} DOCX images (cover + {len(diags)} diagrams + {len(visuals)} Part panels + {len(covers)} chapter covers), found {len(doc.inline_shapes)}")
+            if covers and len(covers)!=28: errors.append(f"Expected 28 chapter covers, registered {len(covers)}")
+            report_path=root/'reports/chapter-cover-report.json'
+            cover_hashes={r['file']:r['sha256'] for r in json.loads(report_path.read_text(encoding='utf-8'))['records']} if report_path.exists() else {}
+            for c in covers:
+                rel=f"{cover_spec['output_dir']}/{c['file']}"; asset=root/rel
+                if not asset.exists(): errors.append(f"Missing chapter {c['chapter']} cover {rel}"); continue
+                with Image.open(asset) as im:
+                    if im.size!=(2550,3300): errors.append(f"Chapter {c['chapter']} cover is {im.size}, expected 2550x3300 (US Letter at 300 dpi)")
+                if cover_hashes.get(rel) and sha(asset)!=cover_hashes[rel]: errors.append(f"Chapter {c['chapter']} cover checksum differs from reports/chapter-cover-report.json: {rel}")
             for v in visuals:
                 asset=root/v['file']
                 if not asset.exists(): errors.append(f"Missing Part {v['part']} panel {v['file']}"); continue

@@ -4,11 +4,12 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "37b9dbbd1abd8d0c66eb6f20e61eaedbc253e951f556a8d7a523b8458b5cdd2a",
-    "content_tex_sha256": "c071693bc8b34fde4d9f830a4ad43936fc663774d08c4e828694a7dc80ac0997",
-    "style_sha256": "5da6e75458e0435caa0d9a1040642324bcbbafb1f9df53322707528d92ea0e30",
+    "content_tex_sha256": "a574c29c37c4a0b3a2f6e22438c0a33c8acee07e3f03912b20bbbb08e9911ecb",
+    "style_sha256": "dea427368ae863a2b2890c9402c87e2e804942b4d4c81f27a5a19bf7e32330c1",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
+    "chapter_covers": 28,
     "appendices": 12,
     "diagrams": 45,
     "code_blocks": 70,
@@ -388,6 +389,230 @@
           2396
         ],
         "effective_dpi": 358.1
+      },
+      {
+        "file": "cover-images/chapter-01-what-turns-an-llm-call-into-a-production-system.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-02-from-model-output-to-safe-action.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-03-keep-the-agent-framework-in-its-lane.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-04-design-the-architecture-around-the-model.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-05-give-knowledge-an-owner.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-06-build-context-without-losing-the-plot.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-07-build-a-paved-road-for-agent-teams.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-08-package-capabilities-as-versioned-skills.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-09-turn-skills-into-a-coherent-domain-platform.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-10-use-react-without-creating-a-runaway-loop.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-11-route-the-work-without-losing-ownership.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-12-turn-proposed-plans-into-safe-executable-work.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-13-use-critique-to-improve-never-to-self-approve.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-14-put-people-where-their-judgment-matters.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-15-keep-long-running-work-alive-through-failure.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-16-choose-patterns-that-fit-real-enterprise-work.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-17-architecture-patterns-that-fail-in-production.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-18-coordinate-specialists-without-losing-control.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-19-crossing-system-boundaries-mcp-a2a-and-local-control.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-20-security-starts-outside-the-prompt.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-21-carry-identity-narrow-authority.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-22-make-external-effects-safe-to-retry.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-23-contain-the-damage-when-a-model-is-manipulated.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-24-follow-a-run-from-request-to-verified-outcome.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-25-improve-the-system-without-handing-it-control.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-26-make-governance-part-of-how-the-platform-runs.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-27-release-new-behavior-without-breaking-work-in-flight.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "cover-images/chapter-28-treat-performance-as-a-business-decision.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
       }
     ],
     "bundled_fonts": 8,
