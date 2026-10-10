@@ -1,6 +1,6 @@
 # Book Concept Map — Continuity and Flow Review
 
-Shared reference map for the per-chapter continuity reviews of *Building an Enterprise General Intelligence Platform* (v2.1.0). It was built from a full read of `source/parts/00-front-matter.md` through `09-appendices.md`, plus the diagram sources in `assets/diagrams/src/` wherever a figure comparison needed them.
+Shared reference map for the per-chapter continuity reviews of *Building an Enterprise General Intelligence Platform* (v1.0.0). It was built from a full read of `source/parts/00-front-matter.md` through `09-appendices.md`, plus the diagram sources in `assets/diagrams/src/` wherever a figure comparison needed them.
 
 **Conventions**
 

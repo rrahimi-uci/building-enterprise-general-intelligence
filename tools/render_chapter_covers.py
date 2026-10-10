@@ -616,7 +616,7 @@ def render_page(ch: dict, part_titles: dict, book: dict) -> str:
 
     # Footer ----------------------------------------------------------------
     fy = PAGE_H - 108
-    out.append(t(x, fy, f"BOOK v{book['version']}  •  {book['author'].upper()}", 30, INK_SOFT, bold=True, spacing=1.5))
+    out.append(t(x, fy, book['author'].upper(), 30, INK_SOFT, bold=True, spacing=1.5))
     out.append(t(PAGE_W - MARGIN, fy, f"CHAPTER {ch['chapter']:02d}", 30, accent, bold=True, spacing=3, anchor="end"))
     out.append("</svg>")
     return "\n".join(out)

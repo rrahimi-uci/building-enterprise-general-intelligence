@@ -54,9 +54,7 @@ def generate(root:Path)->Path:
         d.text((175,divider_y+60+i*68),line,font=F(41),fill=(224,238,249))
     d.rounded_rectangle((155,2740,1325,2920),radius=26,fill=(5,25,52,225),outline=(81,220,234,255),width=4)
     d.text((205,2780),cfg['author'].upper(),font=F(70,True),fill='white')
-    d.rounded_rectangle((155,2965,1150,3090),radius=20,fill=(5,25,52,225),outline=(224,154,50,255),width=4)
-    d.text((205,2998),f"BOOK v{cfg['version']}",font=F(51,True),fill='white')
-    d.text((165,3160),art.get('strapline',''),font=F(34),fill=(205,225,241))
+    d.text((165,3020),art.get('strapline',''),font=F(34),fill=(205,225,241))
     rendered=im.convert('RGB')
     # PNG bytes are only reproducible for a fixed zlib build: the same pixels
     # compress differently under a different zlib/libdeflate version, even with
