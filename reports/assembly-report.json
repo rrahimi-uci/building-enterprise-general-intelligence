@@ -12,12 +12,12 @@
     "source/parts/08-part-viii.md",
     "source/parts/09-appendices.md"
   ],
-  "bytes": 734797,
-  "sha256": "ea4ba4c17c7040ff8c6619434a5d3b59cb62f708b049805054682b4a4740468b",
+  "bytes": 747966,
+  "sha256": "383157e2c814dbdc37b9847fca819bd53175e417e2697b0e715a40ccbb257c04",
   "parts": 8,
   "chapters": 28,
   "appendices": 12,
-  "citation_occurrences": 115,
+  "citation_occurrences": 139,
   "expanded_examples": 52,
   "cited_reference_ids": [
     "R01",
@@ -67,6 +67,12 @@
     "R45",
     "R46",
     "R47",
-    "R48"
+    "R48",
+    "R49",
+    "R50",
+    "R51",
+    "R52",
+    "R53",
+    "R54"
   ]
 }

@@ -72,6 +72,25 @@ make examples        # validate the registry and every [[EXAMPLE:id]] marker
 make examples-run    # execute the example test suite against the pinned SDKs
 ```
 
+### Companion code correction notes
+
+These notes record fixes made to the companion code before 1.0.0. They moved
+here from Appendix I, which now covers only how to run and verify the code.
+
+* SDK HITL returns a structured RunResult; it no longer throws serialized run state in an exception.
+* The protected write tool is registered, and it carries an enterprise approval ID and proposal hash to the gateway.
+* MLflow evaluation is a synchronous orchestration call that may invoke an async predictor; the wrapper is no longer incorrectly declared async.
+* Delegated authority narrows purpose and cost as well as action, resource, data class, region, risk, time, and depth.
+* Mutating tools require stable idempotency keys; ambiguous connector exceptions move effects to Unknown for reconciliation.
+* Proposal-bound approval, CloudEvents/outbox, artifact-adoption policy, supply-chain attestation, kill-switch, and recovery-objective examples were added.
+* Approval timestamps must be timezone-aware and causal; expiration is an exclusive boundary.
+* Skill and Skill Pack versions use SemVer precedence; duplicate packs fail, and deprecated artifacts require explicit replay mode.
+* ReAct stops repeated identical observations instead of looping to a turn limit.
+* Compiled plans bind the plan to the policy envelope and make conservative cost-reservation semantics explicit.
+* The direct OpenAI Responses adapter is contract-tested with a fake client, so the test proves request shape and platform-schema translation without a network call.
+* The MLflow mortgage integration proves that `disable_openai_agent_tracer=False` exposes Agents SDK AgentRunner, agent, and tool spans while `trace_include_sensitive_data=False` keeps raw fixture content out of model trace payloads.
+* The generated example report and CI output are authoritative for the test count.
+
 ## Authoring loop
 
 The fast inner loop while writing:

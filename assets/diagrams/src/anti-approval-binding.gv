@@ -1,4 +1,4 @@
-// Figure 17-4 — AP-06. Boolean consent versus proposal-bound human action authorization.
+// Figure 17-4 — AP-06. Boolean consent versus proposal-bound, expiring approval.
 // Message: the top path lets the payload change between consent and commit; the bottom path makes that change detectable.
 //
 // Layout: two labelled columns rather than two clusters. A top-level
@@ -21,14 +21,14 @@ digraph anti_approval_binding {
   bad -> good [style=invis]
 
 
-  b1 [label="Reviewer sees\n\"pay $10,000\"", shape=box, style="filled,rounded", fillcolor="#EEF4FA", color="#4A6078"]
+  b1 [label="Reviewer sees\nevidence package v3", shape=box, style="filled,rounded", fillcolor="#EEF4FA", color="#4A6078"]
   b2 [label="approved = true", shape=box, style="filled,rounded", fillcolor="#FBE3E3", color="#A62C2C"]
-  b3 [label="Arguments change", shape=note, style=filled, fillcolor="#FBE3E3", color="#A62C2C"]
-  b4 [label="Commits $100,000", shape=box, style="filled,rounded", fillcolor="#FBE3E3", color="#A62C2C"]
+  b3 [label="Case moves to v5;\npackage gains a document", shape=note, style=filled, fillcolor="#FBE3E3", color="#A62C2C"]
+  b4 [label="Submits unreviewed\npackage v5", shape=box, style="filled,rounded", fillcolor="#FBE3E3", color="#A62C2C"]
   g1 [label="Immutable proposal\ndigest + policy version", shape=note, style=filled, fillcolor="#E6F5F9", color="#0B6076"]
-  g2 [label="Human action authorization\nbound to digest · expires", shape=box, style="filled,rounded", fillcolor="#EAF3FB", color="#1450A3"]
+  g2 [label="Approval bound to\ndigest · expires", shape=box, style="filled,rounded", fillcolor="#EAF3FB", color="#1450A3"]
   g3 [label="Digest still\nmatches?", shape=diamond, style=filled, fillcolor="#FFF4DF", color="#8A5600", height=0.62]
-  g4 [label="Commit\nidempotency = digest", shape=box, style="filled,rounded", fillcolor="#E7F5F3", color="#0D6E69"]
+  g4 [label="Commit\nkey = logical effect", shape=box, style="filled,rounded", fillcolor="#E7F5F3", color="#0D6E69"]
 
   b1 -> b2 [color="#A62C2C", constraint=false]
   b2 -> b3 [color="#A62C2C", constraint=false]

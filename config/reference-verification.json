@@ -334,5 +334,41 @@
     "method": "direct inspection of the repository at ARCHITECTURE.md \u00a71.1",
     "verified": "2026-09-14",
     "caveat": "Book-authored project. The 44% figure is self-reported from one documented run on one corpus and was read from the source repository, not independently reproduced."
+  },
+  {
+    "id": "R49",
+    "status": "verified",
+    "method": "direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope)",
+    "verified": "2026-10-10"
+  },
+  {
+    "id": "R50",
+    "status": "verified",
+    "method": "direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope)",
+    "verified": "2026-10-10"
+  },
+  {
+    "id": "R51",
+    "status": "verified",
+    "method": "direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope)",
+    "verified": "2026-10-10"
+  },
+  {
+    "id": "R52",
+    "status": "verified",
+    "method": "direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope)",
+    "verified": "2026-10-10"
+  },
+  {
+    "id": "R53",
+    "status": "verified",
+    "method": "direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope)",
+    "verified": "2026-10-10"
+  },
+  {
+    "id": "R54",
+    "status": "verified",
+    "method": "direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope)",
+    "verified": "2026-10-10"
   }
 ]

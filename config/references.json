@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "citation_style": "Numbered source identifiers [R01]\u2026[R43]; bibliography ordered by identifier; accessed date shown for online sources.",
+  "citation_style": "Numbered source identifiers [R01]\u2026[R54]; bibliography ordered by identifier; accessed date shown for online sources.",
   "release": "1.0.0",
   "verified_on": "2026-09-13",
   "references": [
@@ -201,7 +201,7 @@
     },
     {
       "id": "R14",
-      "type": "standard",
+      "type": "management system standard",
       "author_or_organization": "ISO/IEC",
       "year": "2023",
       "title": "Information technology \u2014 Artificial intelligence \u2014 Management system",
@@ -722,6 +722,96 @@
         "checked_on": "2026-09-14",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated scope; re-verify living documentation before reuse."
+      }
+    },
+    {
+      "id": "R49",
+      "type": "research",
+      "author_or_organization": "Wu et al.",
+      "year": "2023",
+      "title": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
+      "publication_or_version": "arXiv:2308.08155",
+      "url": "https://arxiv.org/abs/2308.08155",
+      "supports": "Presents AutoGen, a framework in which multiple agents converse using LLMs, human input, and tools. Supports only the description of multi-agent conversation as a composition mechanism.",
+      "verification": {
+        "checked_on": "2026-10-10",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R50",
+      "type": "research",
+      "author_or_organization": "Liu et al.",
+      "year": "2023",
+      "title": "AgentBench: Evaluating LLMs as Agents",
+      "publication_or_version": "ICLR 2024 / arXiv:2308.03688",
+      "url": "https://arxiv.org/abs/2308.03688",
+      "supports": "Introduces an eight-environment agent benchmark and reports wide performance differences between models, attributed mainly to weak long-term reasoning, decision-making, and instruction following.",
+      "verification": {
+        "checked_on": "2026-10-10",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R51",
+      "type": "research",
+      "author_or_organization": "Mialon et al.",
+      "year": "2023",
+      "title": "GAIA: a benchmark for General AI Assistants",
+      "publication_or_version": "arXiv:2311.12983",
+      "url": "https://arxiv.org/abs/2311.12983",
+      "supports": "Introduces 466 real-world questions that are simple for humans but require tools, browsing, and multimodality, and reports a large human-versus-model gap.",
+      "verification": {
+        "checked_on": "2026-10-10",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R52",
+      "type": "research",
+      "author_or_organization": "Jimenez et al.",
+      "year": "2023",
+      "title": "SWE-bench: Can Language Models Resolve Real-World GitHub Issues?",
+      "publication_or_version": "ICLR 2024 / arXiv:2310.06770",
+      "url": "https://arxiv.org/abs/2310.06770",
+      "supports": "Introduces a benchmark of real GitHub issues evaluated with executable tests.",
+      "verification": {
+        "checked_on": "2026-10-10",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R53",
+      "type": "research",
+      "author_or_organization": "Yao et al.",
+      "year": "2024",
+      "title": "\u03c4-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains",
+      "publication_or_version": "arXiv:2406.12045",
+      "url": "https://arxiv.org/abs/2406.12045",
+      "supports": "Introduces a benchmark of tool agents interacting with users under domain rules and reports inconsistent behavior across repeated trials.",
+      "verification": {
+        "checked_on": "2026-10-10",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R54",
+      "type": "research",
+      "author_or_organization": "Debenedetti et al.",
+      "year": "2024",
+      "title": "AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents",
+      "publication_or_version": "arXiv:2406.13352",
+      "url": "https://arxiv.org/abs/2406.13352",
+      "supports": "Introduces an environment for evaluating tool-using agents' task utility and prompt-injection security together.",
+      "verification": {
+        "checked_on": "2026-10-10",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
     }
   ]

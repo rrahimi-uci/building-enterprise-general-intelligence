@@ -1035,3 +1035,30 @@ Grep checks before merging the last Part:
 - The D-26 placement of the Closing Perspective needs a builder check; the validators' heading counts are safe.
 - The D-23(b) JSON/YAML allowance interprets AGENTS.md and is the author's to confirm.
 - The citation fixes (DC-xx) require verifying each primary source. Where verification fails, the claim must be weakened or removed, never re-cited speculatively.
+
+---
+
+## 17. Implementation status
+
+The plan was applied in ten pull requests, all based on `main`. Counts are the ones each PR reported.
+
+| PR | Package | Result |
+| --- | --- | --- |
+| #71 | Phase 1: shared contracts and code | All seven items applied: `proposed_action`, one `RiskClass` enum, typed ReAct stops, Ch 22 effect semantics in `effect_idempotency.py` (DF-01), Skill status outside the digest, `pay_statement`, approval record rename (D-22) |
+| #75 | WP-FM and WP-I (front matter, Ch 01–03) | 62 applied, 5 adapted, 0 skipped. C01-R27 adapted: maintainer section removed, one sentence kept |
+| #76 | WP-II (Ch 04–06) | 45 applied, 4 adapted, 1 skipped (C06-R13, a no-op owned by Ch 16) |
+| #73 | WP-III (Ch 07–09) | 32 applied, 6 adapted, 1 skipped (C08-R11: no registered source for Agent Skills, Phase 0.12) |
+| #74 | WP-IV (Ch 10–17, Appendix A rebuild) | Both halves applied; the Ch 14–17 half reported 50 applied, 4 adapted. Deferred within the plan: C12-R13 (to WP-V), C13-R08 (to WP-I), C17-R12 (to WP-A) |
+| #77 | WP-V (Ch 18–19) | 35 applied, 1 adapted (C19-R06: vendor-neutral registry clause), 2 deferred to WP-II and WP-VIII |
+| #78 | WP-VI (Ch 20–23) | 49 applied, 4 adapted, 0 skipped |
+| #72 | WP-VII (Ch 24–25) | 28 applied, 4 adapted, 0 skipped |
+| #79 | WP-VIII (Ch 26–28, Closing Perspective) | All applied or adapted except C27-R12 (skipped: its table was deleted by C27-R09). The D-26 builder check passed with no builder change |
+| This PR | WP-A and the final cross-Part pass | Appendix items B, C, D, E, H, I, J, and K applied; L kept unchanged as planned; item A was done in #74; the follow-ups listed in its description fixed |
+
+**Skipped or adapted on purpose.** C08-R11 and every other MLflow or Agent Skills claim without a registered source was removed or softened rather than re-cited (Phase 0.11–0.12). The Ch 16 title was kept (Phase 0.5). Diagram and example IDs that still contain "guardrail" keep their IDs; only captions changed (Phase 0.13).
+
+**Remaining open items.**
+- No genuine XeLaTeX PDF or pagination QA was produced locally for any of these PRs (`latexmk` and LibreOffice are not installed); CI must compile and the pages around the Closing Perspective, Ch 16, Appendix A, and every changed figure still need visual inspection.
+- `mortgage_case/platform/enterprise.py` (not rendered in the book) still uses `mortgage-policy@2026.09` and an `employment-verification-mcp` double; the book itself renders `policy://mortgage@2026.09` and an income-verification MCP server.
+- Appendix D rows for the Claude Agent SDK, CrewAI, and Restate have no registered source; they are flagged in the evidence note.
+- Release steps (changelog roll-up to a version, `make package`, Notion sync) are not done.

@@ -1,8 +1,8 @@
 {
   "release": "1.0.0",
   "checked": "2026-09-13",
-  "references": 48,
-  "citation_occurrences": 115,
+  "references": 54,
+  "citation_occurrences": 139,
   "cited_ids": [
     "R01",
     "R02",
@@ -51,7 +51,13 @@
     "R45",
     "R46",
     "R47",
-    "R48"
+    "R48",
+    "R49",
+    "R50",
+    "R51",
+    "R52",
+    "R53",
+    "R54"
   ],
   "unknown_ids": [],
   "uncited_ids": [],
@@ -394,6 +400,42 @@
       "method": "direct inspection of the repository at ARCHITECTURE.md \u00a71.1",
       "verified": "2026-09-14",
       "caveat": "Book-authored project. The 44% figure is self-reported from one documented run on one corpus and was read from the source repository, not independently reproduced."
+    },
+    {
+      "id": "R49",
+      "status": "verified",
+      "method": "direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope)",
+      "verified": "2026-10-10"
+    },
+    {
+      "id": "R50",
+      "status": "verified",
+      "method": "direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope)",
+      "verified": "2026-10-10"
+    },
+    {
+      "id": "R51",
+      "status": "verified",
+      "method": "direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope)",
+      "verified": "2026-10-10"
+    },
+    {
+      "id": "R52",
+      "status": "verified",
+      "method": "direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope)",
+      "verified": "2026-10-10"
+    },
+    {
+      "id": "R53",
+      "status": "verified",
+      "method": "direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope)",
+      "verified": "2026-10-10"
+    },
+    {
+      "id": "R54",
+      "status": "verified",
+      "method": "direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope)",
+      "verified": "2026-10-10"
     }
   ],
   "pass": true,

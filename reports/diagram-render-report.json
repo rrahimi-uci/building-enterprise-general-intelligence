@@ -1,6 +1,6 @@
 {
-  "diagrams": 43,
-  "with_vector": 43,
+  "diagrams": 42,
+  "with_vector": 42,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -17,12 +17,12 @@
       "id": "anti-approval-binding",
       "source": "anti-approval-binding.gv",
       "pixels": [
-        2420,
-        2250
+        2392,
+        2083
       ],
-      "effective_dpi": 353,
+      "effective_dpi": 349,
       "vector": true,
-      "sha256": "b651f803f7c4f0a86aabdf1a628c6ad916ad3ef0522242e3e1288223df8cf6dd"
+      "sha256": "e1c5b392d5d685077e6aba313e3d8875a518d3c8fd9c62b32f4b2be9c15df9bf"
     },
     {
       "id": "anti-before-after",
@@ -50,12 +50,12 @@
       "id": "book-map",
       "source": "book-map.gv",
       "pixels": [
-        2266,
-        1855
+        2505,
+        1818
       ],
-      "effective_dpi": 331,
+      "effective_dpi": 366,
       "vector": true,
-      "sha256": "f9134866904054ee4ed21d163aed27e6f06ac112c16e7bab23fee61c53aef1c2"
+      "sha256": "6f4351eb5ac059425c0e8c7e9c9815dcf747014d87fe8978f176686c1e1796da"
     },
     {
       "id": "capability-ladder",
@@ -135,26 +135,15 @@
       "sha256": "48e287314084041ba128fc6a8a8cf02652a7ef819d36acc8ae7c38ed98ce29dd"
     },
     {
-      "id": "gateway-position",
-      "source": "gateway-position.gv",
-      "pixels": [
-        2389,
-        2164
-      ],
-      "effective_dpi": 349,
-      "vector": true,
-      "sha256": "9abc8f1a3c4a1c4c8f2d16ef95a01150ef73e65b2a30579155fbe3a78b75ade3"
-    },
-    {
       "id": "gateway-roles",
       "source": "gateway-roles.gv",
       "pixels": [
-        5278,
-        1173
+        4578,
+        1428
       ],
-      "effective_dpi": 771,
+      "effective_dpi": 668,
       "vector": true,
-      "sha256": "822fdc303fba2e1a744514730c107916e9779b86a0c23b0861e251f0f16e8265"
+      "sha256": "c4171d7e82e160267fc2123fc50b05d3adbe489d40dda9a26307ee727da4adfb"
     },
     {
       "id": "governance-model",
@@ -440,7 +429,7 @@
       ],
       "effective_dpi": 357,
       "vector": true,
-      "sha256": "3f38a682544d71ac9e9c8e44a4fb99c5c3412c6719df8501f896d8327994c6cd"
+      "sha256": "3ecd6681de6ecd40454bb982243e114639ba290c0799666d03465b857572db71"
     },
     {
       "id": "skill-resolution",
@@ -462,7 +451,7 @@
       ],
       "effective_dpi": 471,
       "vector": true,
-      "sha256": "c4009fa0a6d7ecdd907b1e096d4cb6d7421c66a02e6349d85744e59d2aee578b"
+      "sha256": "c0f2d101eb6e854fc45f81ec193ab8286313c9d05c582d1407c7ed95f6b06292"
     },
     {
       "id": "system-overview",
@@ -473,7 +462,7 @@
       ],
       "effective_dpi": 554,
       "vector": true,
-      "sha256": "8ff18685606b98a1f3e4e559c527ec2376a98e42c921ed5a5f4bfd178919293c"
+      "sha256": "c799b2abf25dd9371c324b2b7f91184ea89ea2403257f8cae071bdc27cbbe7e4"
     }
   ],
   "errors": [],

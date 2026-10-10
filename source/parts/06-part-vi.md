@@ -783,7 +783,7 @@ protocol-level authorization, including the ban on token passthrough.
 
 | **Failure** | **Default response** | **Never do** |
 | --- | --- | --- |
-| Model 429/5xx | Retry with jitter under per-provider budget; route only to an evaluated compatible fallback (Chapter 19) | Retry every branch simultaneously |
+| Model 429/5xx | Retry with jitter under per-provider budget; route only to an evaluated compatible fallback (Chapter 28) | Retry every branch simultaneously |
 | Invalid structured output | One constrained repair attempt, then fallback or fail | Silently coerce materially ambiguous fields |
 | Tool transient error before effect | Retry if manifest declares safe/idempotent | Assume all reads and writes are equivalent |
 | Timeout with unknown effect | Query by idempotency key or reconcile effect ledger before retry | Blindly repeat the mutation |
@@ -1075,7 +1075,7 @@ than abandoned. Its release-side counterpart is Chapter 27's Emergency Control.
 | --- | --- |
 | Content inspection service | Scan and classify inbound and retrieved content; attach labels and taint |
 | Tool Gateway and protocol gateways | Enforce the containment obligations returned with each decision |
-| Access Broker/STS (Chapter 21; the secret broker in Figure 23-1) | Issue credential leases, including leases for stored secrets; this chapter governs how they are injected |
+| Access Broker/STS (Chapter 21) | Issue credential leases, including leases for stored secrets; this chapter governs how they are injected |
 | Sandbox Control Plane | Attest and lease isolated execution |
 | Egress proxy | Resolve, canonicalize, and filter outbound destinations |
 | DLP service | Inspect structured and unstructured payloads |

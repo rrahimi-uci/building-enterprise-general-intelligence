@@ -83,7 +83,7 @@ Appendix I originally described a `northstar` package and supplier-onboarding de
 | Moderate | The attached book’s cover title and Appendix I companion title are inconsistent. | This roadmap uses the supplied cover title and refers to the companion package generically; manuscript title normalization remains a source-edit follow-up. |
 | Major | The first revision placed the package under `examples/mortgage_case/` but invoked it as `python -m mortgage_case`; that import does not work from a clean checkout without extra packaging configuration. | The target package now lives at repository root as `mortgage_case/`, so the documented module command and compile command agree. |
 | Major | “One case” conflicted with multi-case fairness, reliability, and capacity evaluation. | `MORT-2026-000184` is the anchor case; controlled variants and versioned synthetic cohorts are permitted for tests and never replace the narrative. |
-| Major | Bare `ApprovalRequest`/`ApprovalDecision` is dangerously ambiguous in a mortgage context because readers may confuse platform action authorization with credit approval. | The platform contract is renamed `HumanActionAuthorization`; `LendingDecision` remains a separate underwriter/domain record. |
+| Major | Bare `ApprovalRequest`/`ApprovalDecision` is dangerously ambiguous in a mortgage context because readers may confuse a platform approval of one operational effect with credit approval. | The platform records are `ApprovalRequest`/`ApprovalDecision` (review decision D-22, Chapter 14): an approval permits one exact operational effect and is never credit approval; `LendingDecision` remains a separate underwriter/domain record. |
 | Major | Chapters 14, 18, and 19 used approval/grant semantics before Chapter 21 fully introduced identity and delegated authorization. | A minimal `PrincipalContext` and non-executable `CapabilityScope` begin in `C04`; pre-`C21` tasks are synthetic/read-only, and `C21` upgrades and revalidates the contracts before `C22` permits the first protected write. |
 | Moderate | The canonical calculation fixture named LTV/DTI but did not state deterministic inputs, expected outputs, precision, or serialization. | A versioned synthetic calculation oracle now specifies `Decimal` inputs, formulas, four-decimal outputs, rounding, and string serialization. |
 | Moderate | Trace guidance allowed business identifiers without requiring pseudonymization and did not explicitly exclude hidden reasoning. | `C24` requires opaque/pseudonymous correlation IDs, a protected lookup map, and no raw PII, document text, credentials, or hidden chain-of-thought in telemetry. |
@@ -168,15 +168,15 @@ Each chapter repairs one concrete limitation. By `C28`, the anchor case can surv
 | Candidate extraction | Employer name inferred from a pay statement | Model may propose; never treated as verified without source/provenance and deterministic checks |
 | Verified evidence | Employment verification artifact with source revision and digest | Verification/domain service owns status and freshness |
 | Deterministic calculation | LTV, DTI, document age, totals, and consistency checks | Typed calculation service using `Decimal`, explicit rounding, and versioned formulas |
-| Policy result | Required evidence, threshold result, action-authorization obligation, reason code | Versioned policy service; model may explain only from the returned result |
+| Policy result | Required evidence, threshold result, approval obligation, reason code | Versioned policy service; model may explain only from the returned result |
 | Recommendation | `ready_for_underwriter`, `needs_evidence`, or `intervention_required` | Model may propose; evaluator and workflow validate evidence and obligations |
-| Human action authorization | Permit one exact operational effect such as sending a condition request | Authorized reviewer plus platform policy; never a lending decision |
+| Approval | Permit one exact operational effect such as sending a condition request | Authorized reviewer plus platform policy; never a lending decision |
 | Lending decision | Approve, deny, suspend, or counteroffer | Authorized human and/or regulated deterministic decision service outside the model runtime |
-| External effect | Create a condition, mark case ready for review, or record the human decision | Gateway/domain service under idempotency, concurrency, human-action authorization, and receipt controls |
+| External effect | Create a condition, mark case ready for review, or record the human decision | Gateway/domain service under idempotency, concurrency, approval, and receipt controls |
 
-### Terminology: action authorization is not credit approval
+### Terminology: an approval is not credit approval
 
-Use `HumanActionAuthorizationRequest` and `HumanActionAuthorizationDecision` for permission to execute an exact platform effect. Valid dispositions are `authorize_effect`, `reject_effect`, `request_evidence`, and `expired`. Use `LendingDecision` only for the authoritative mortgage disposition recorded by the underwriter/domain system. Never name both records `ApprovalDecision`, and never present an “Approve” button without saying which kind of decision it represents.
+Use `ApprovalRequest` and `ApprovalDecision` (Chapter 14) only for permission to execute one exact platform effect. The allowed responses are approve, reject, edit-and-resubmit, request-evidence, and cancel-run; an unanswered request expires. Use `LendingDecision` only for the authoritative mortgage disposition recorded by the underwriter/domain system. Never record a credit disposition as an `ApprovalDecision`, and never present an “Approve” button without saying which kind of decision it represents.
 
 ### Stable workflow
 
@@ -204,9 +204,9 @@ Non-success or waiting dispositions are `NEEDS_INPUT`, `POLICY_BLOCKED`, `UNKNOW
 5. Tenant and case authorization happens before document content reaches a model.
 6. No raw SSN, bank account, credential, complete document, unrestricted prompt, or hidden chain-of-thought is placed in a normal trace, log, exception, or MLflow tag.
 7. Every write has one logical effect key, one canonical intent hash, a current case precondition, a receipt or `UNKNOWN_EFFECT`, and a reconciliation path.
-8. Every human action authorization is bound to the exact case version, evidence set, policy version, proposal hash, actor, and expiry. The final `LendingDecision` is a separate authoritative record with its own actor, evidence, policy, and case version.
+8. Every approval is bound to the exact case version, evidence set, policy version, proposal hash, actor, and expiry. The final `LendingDecision` is a separate authoritative record with its own actor, evidence, policy, and case version.
 9. A timeout after a write never becomes an ordinary retry.
-10. Terminal workflow completion is impossible while required evidence, action authorization, lending decision, or effect obligations are missing or unknown.
+10. Terminal workflow completion is impossible while required evidence, approval, lending decision, or effect obligations are missing or unknown.
 
 ### Success criteria
 
@@ -228,13 +228,13 @@ AgentRuntime adapter
 Context + knowledge + calculation + policy services
         | typed candidate facts, verified evidence, exact authorization
         v
-Tool Gateway + human action authorization + effect ledger
+Tool Gateway + approval + effect ledger
         | scoped credentials, idempotency, preconditions, receipts
         v
 Synthetic document / verification / LOS connectors
         |
         +--> OpenTelemetry-compatible trace and MLflow diagnostics/evaluation
-        +--> separate authoritative audit, action-authorization, lending-decision, and effect evidence
+        +--> separate authoritative audit, approval, lending-decision, and effect evidence
 ```
 
 The OpenAI SDKs own model-facing mechanics only. MLflow owns diagnostics and evaluation mechanics only. Custom Python and the selected durable runtime own platform contracts, workflow state, authority, calculations, effects, recovery, and tests.
@@ -266,9 +266,9 @@ The course has 14 lessons, while the supplied book has 28 chapters. The executab
 | --- | --- | --- |
 | Python 3.11+ | Domain contracts, deterministic workflow model, adapters, fixtures, CLI, and tests | Replayable workflow code cannot read the clock, call I/O, or generate uncontrolled randomness |
 | Pydantic 2 | Public/internal schemas and validation | A valid schema is not proof of truth, authorization, or acceptance |
-| OpenAI Python SDK (`openai==3.13.0`) | Optional direct Responses API baseline and provider adapter | Does not own tools, workflow, policy, effects, human action authorizations, or durable state |
+| OpenAI Python SDK (`openai==3.13.0`) | Optional direct Responses API baseline and provider adapter | Does not own tools, workflow, policy, effects, approvals, or durable state |
 | OpenAI Agents SDK (`openai-agents==0.22.2`) | `Agent`, `Runner`, function tools, structured output, local handoffs, limits, HITL state, and SDK tracing inside `AgentRuntime` | Does not own enterprise workflow truth, connector credentials, lending decisions, or audit |
-| MLflow (`mlflow==3.15.2`) | Local/remote traces, experiments, datasets, scorers, comparisons, and evaluation evidence; its OpenAI integration also records Agents SDK spans when explicitly enabled | Not the action-authorization store, policy source, effect ledger, LOS, or audit ledger |
+| MLflow (`mlflow==3.15.2`) | Local/remote traces, experiments, datasets, scorers, comparisons, and evaluation evidence; its OpenAI integration also records Agents SDK spans when explicitly enabled | Not the approval store, policy source, effect ledger, LOS, or audit ledger |
 | OpenTelemetry-compatible context | Cross-process trace propagation and semantic span envelope | Trace sampling or loss cannot erase required audit evidence |
 | SQLite/in-memory stores | Deterministic local teaching implementation | Clearly labeled as test stores, not production persistence claims |
 | Durable workflow abstraction | Pure reducer and activity contracts in required offline path | A production adapter may use Temporal, DBOS, Restate, or another engine after conformance tests |
@@ -425,7 +425,7 @@ Every `Cxx` checkpoint must include:
 | `ContextManifest` / `MemoryRecord` | `C06` | Authorization precedes model exposure; prompt is a projection |
 | `SkillManifest` / `SkillPackManifest` | `C08`–`C09` | Resolution is deterministic and does not grant authority |
 | `PlanRevision` / `PlanNode` | `C12` | Model proposes; compiler validates and scheduler executes |
-| `HumanActionAuthorizationRequest` / `HumanActionAuthorizationDecision` | `C14` | Exact operational proposal/evidence/policy/case version and expiry are bound; this is not credit approval |
+| `ApprovalRequest` / `ApprovalDecision` | `C14` | Exact operational proposal/evidence/policy/case version and expiry are bound; this is not credit approval |
 | `WorkflowEvent` / `Checkpoint` / `WaitRegistration` | `C15` | Replay never repeats unrecorded I/O or an uncertain effect |
 | `TaskEnvelope` / `OwnershipTransfer` | `C18` | One owner; child `CapabilityScope` is a strict subset; tasks remain synthetic/read-only until `C21` revalidates authority |
 | `PrincipalChain` / `CapabilityEnvelope` | `C21` | Subject is preserved and each delegation narrows authority |
@@ -552,7 +552,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Reader-visible walkthrough | Retrieve the rule governing required income evidence; cite it in the explanation; independently enforce freshness and evidence requirements before the case can advance. |
 | Required failure or refusal | Contradictory employer data, stale credit artifact, unknown required fact, out-of-scope rule, and changed policy revision fail closed. |
 | Implementation and technology | Typed knowledge/rule graph and provenance store; retrieval adapter optional; model may identify candidate applicability but never certify policy truth. |
-| Acceptance criteria | Every rule result points to source revision and span; a policy change invalidates affected recommendations/action authorizations; no prompt text can override an enforceable rule. |
+| Acceptance criteria | Every rule result points to source revision and span; a policy change invalidates affected recommendations/approvals; no prompt text can override an enforceable rule. |
 | Target files | `stages/c05_knowledge.py`, `platform/knowledge.py`, `fixtures/policies/`, `tests/unit/test_c05.py` |
 
 ### C06 — Chapter 6: Build Context Without Losing the Plot
@@ -650,7 +650,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Reader-visible walkthrough | The model proposes a plan for `MORT-2026-000184`; the compiler rejects illegal nodes, binds exact capabilities, computes a digest, and schedules only ready nodes. |
 | Required failure or refusal | Cycle, unknown capability, protected decision node, excessive cost/fan-out, missing prerequisite, or revision that replays a committed effect is rejected. |
 | Implementation and technology | Pydantic Plan IR and pure compiler; SDK may propose candidate nodes but never schedules them. |
-| Acceptance criteria | Compiled order and digest are deterministic; completed effects/artifacts are frozen across revisions; conditional action-authorization/effect nodes remain blocked until prerequisites hold. |
+| Acceptance criteria | Compiled order and digest are deterministic; completed effects/artifacts are frozen across revisions; conditional approval/effect nodes remain blocked until prerequisites hold. |
 | Target files | `stages/c12_planning.py`, `platform/planning.py`, `tests/unit/test_c12.py` |
 
 ### C13 — Chapter 13: Use Critique to Improve, Not to Self-Approve
@@ -672,12 +672,12 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Major** |
-| Learning goal | Persist exact proposal-bound human action authorization and keep it distinct from the final lending decision. |
+| Learning goal | Persist exact proposal-bound approval and keep it distinct from the final lending decision. |
 | Before | The system can prepare a recommendation but cannot safely ask a human to authorize a condition request or readiness transition. |
-| Add for the mortgage case | Create `HumanActionAuthorizationRequest`, immutable evidence snapshot, proposal hash, synthetic eligible-reviewer policy, expiry, allowed responses, decision event, and resume lease. Full current entitlement enforcement is intentionally deferred to `C21`. |
+| Add for the mortgage case | Create `ApprovalRequest`, immutable evidence snapshot, proposal hash, synthetic eligible-reviewer policy, expiry, allowed responses, decision event, and resume lease. Full current entitlement enforcement is intentionally deferred to `C21`. |
 | Reader-visible walkthrough | Present the exact proposed condition-send or `mark_ready_for_underwriter` operation, source evidence, calculations, policy version, case version, uncertainty, and before/after preview. The interface says “Authorize this operation,” never “Approve the mortgage.” |
-| Required failure or refusal | Changed case/evidence/policy/arguments, expired request, ineligible/self reviewer, replayed decision, or reused action authorization after mutation blocks resume. |
-| Implementation and technology | Custom human-action-authorization service/signature test double and durable wait; Agents SDK HITL state may pause local tools but is not the enterprise authorization record or a lending decision. |
+| Required failure or refusal | Changed case/evidence/policy/arguments, expired request, ineligible/self reviewer, replayed decision, or reused approval after mutation blocks resume. |
+| Implementation and technology | Custom Approval Service/signature test double and durable wait; Agents SDK HITL state may pause local tools but is not the enterprise approval record or a lending decision. |
 | Acceptance criteria | The authorized proposal hash and current state must match before resume; rejection/needs-evidence/expiry are durable dispositions; the normal stage still has no protected connector, and no final loan decision is delegated to the model. |
 | Target files | `stages/c14_human_review.py`, `platform/action_authorization.py`, `tests/workflow/test_c14.py` |
 
@@ -776,7 +776,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Reader-visible walkthrough | Carry subject, actor, tenant, purpose, region, risk, case resource, and action from admission through child task to LOS connector. |
 | Required failure or refusal | Cross-case/tenant access, changed subject, broader child scope, wrong purpose/audience/region, expired grant, or revoked loan officer is denied before data/effect. |
 | Implementation and technology | Custom policy and STS doubles; optional OAuth token-exchange adapter only in integration tests; no bearer token reaches model or serialized state. |
-| Acceptance criteria | Child authority only narrows action/resource/data/purpose/risk/time/cost/depth; exact invocation is reauthorized; deny/invalidation wins over cache; all earlier action-authorization, child-task, and protocol flows pass the upgraded checks. |
+| Acceptance criteria | Child authority only narrows action/resource/data/purpose/risk/time/cost/depth; exact invocation is reauthorized; deny/invalidation wins over cache; all earlier approval, child-task, and protocol flows pass the upgraded checks. |
 | Target files | `stages/c21_identity.py`, `platform/authorization.py`, `tests/security/test_c21.py` |
 
 ### C22 — Chapter 22: Make Effects Safe to Retry
@@ -784,11 +784,11 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Field | Roadmap |
 | --- | --- |
 | Severity | **Major** |
-| Learning goal | Prove one protected mortgage effect can receive human action authorization, commit once, be verified, and reconcile uncertainty. |
-| Before | Human action authorization, durable workflow, and enforceable identity exist, but no end-to-end mortgage mutation composes gateway, case version, effect ledger, connector, receipt, and acceptance. |
-| Add for the mortgage case | Make `loan_case.mark_ready_for_underwriter@1` the first canonical protected effect. Use logical key `{tenant}:case:{case_id}:mark_ready:v{target_case_version}`; hash schema, action, canonical resource, arguments, and expected version; record policy decision, `HumanActionAuthorizationDecision`, downstream request ID, receipt, observed projection, and reconciliation state. |
+| Learning goal | Prove one protected mortgage effect can receive approval, commit once, be verified, and reconcile uncertainty. |
+| Before | Approval, durable workflow, and enforceable identity exist, but no end-to-end mortgage mutation composes gateway, case version, effect ledger, connector, receipt, and acceptance. |
+| Add for the mortgage case | Make `loan_case.mark_ready_for_underwriter@1` the first canonical protected effect. Use logical key `{tenant}:case:{case_id}:mark_ready:v{target_case_version}`; hash schema, action, canonical resource, arguments, and expected version; record policy decision, `ApprovalDecision`, downstream request ID, receipt, observed projection, and reconciliation state. |
 | Reader-visible walkthrough | Submit the exact human-authorized readiness transition to the synthetic LOS and verify the case projection. Recording the later human lending decision is a separate domain-owned effect and never a model action. |
-| Required failure or refusal | Timeout after commit becomes `UNKNOWN_EFFECT`; replay, changed intent under the same logical key, stale case, action-authorization mismatch, or unauthorized caller never duplicates or bypasses the effect. |
+| Required failure or refusal | Timeout after commit becomes `UNKNOWN_EFFECT`; replay, changed intent under the same logical key, stale case, approval mismatch, or unauthorized caller never duplicates or bypasses the effect. |
 | Implementation and technology | Custom Tool Gateway/effect ledger plus synthetic LOS connector and failure injector; Agents SDK only proposes. |
 | Acceptance criteria | Happy path produces one receipt and one LOS call; replay returns the receipt; a reused key with a different intent is a conflict; reconciliation proves committed/absent/intervention; completion waits for the verified effect. |
 | Target files | `stages/c22_effects.py`, `platform/effects.py`, `adapters/synthetic_los.py`, `tests/workflow/test_c22.py` |
@@ -813,8 +813,8 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | --- | --- |
 | Severity | **Major** |
 | Learning goal | Link the complete mortgage trajectory while keeping PII and authoritative audit evidence out of ordinary telemetry. |
-| Before | Stage reports and local logs exist, but there is no causal trace across workflow, SDK, retrieval, policy, tasks, action authorizations, effects, and connectors. |
-| Add for the mortgage case | Add OpenTelemetry-compatible trace context and MLflow 3.15.2 adapter with opaque/pseudonymous run/node/task/context/policy/action-authorization/effect/release IDs, safe span attributes, asynchronous links, completeness checks, and a protected lookup map outside telemetry. |
+| Before | Stage reports and local logs exist, but there is no causal trace across workflow, SDK, retrieval, policy, tasks, approvals, effects, and connectors. |
+| Add for the mortgage case | Add OpenTelemetry-compatible trace context and MLflow 3.15.2 adapter with opaque/pseudonymous run/node/task/context/policy/approval/effect/release IDs, safe span attributes, asynchronous links, completeness checks, and a protected lookup map outside telemetry. |
 | Reader-visible walkthrough | Trace one appraisal wait and readiness effect; identify queue, model, tool, and human dwell time without exposing full prompts/documents/SSN/account data. |
 | Required failure or refusal | Broken propagation, dropped required span, raw PII tag, secret-like value, excessive cardinality, or trace-store outage triggers a typed signal; protected audit remains complete. |
 | Implementation and technology | MLflow tracing with local SQLite-compatible test profile where supported; explicit platform spans; autologging configured so sensitive capture is disabled/default-safe. |
@@ -874,7 +874,7 @@ Each checkpoint has one primary teaching delta. Later chapters may compose earli
 | Reader-visible walkthrough | Replay routine, missing-document, attack, provider-outage, and threefold-spike cohort workloads; report sample size, p50/p95, cost per verified package, human-review burden, unknown-effect backlog, deadline misses, and uncertainty where estimated. |
 | Required failure or refusal | Provider outage, quota exhaustion, hot tenant, approval backlog, retry storm, or proposed degradation that bypasses a control results in backpressure or a safe partial state. |
 | Implementation and technology | Custom deterministic simulator and metrics; MLflow may store experiment results but does not define acceptance. |
-| Acceptance criteria | Metrics use the verified workflow-completion denominator, state assumptions and cohort generation method, show distributions/slices/uncertainty, preserve tenant/risk fairness, and never degrade authorization/action-authorization/effect/privacy controls. |
+| Acceptance criteria | Metrics use the verified workflow-completion denominator, state assumptions and cohort generation method, show distributions/slices/uncertainty, preserve tenant/risk fairness, and never degrade authorization/approval/effect/privacy controls. |
 | Target files | `stages/c28_capacity.py`, `platform/capacity.py`, `platform/simulation.py`, `tests/evaluation/test_c28.py` |
 
 ## Source and navigation changes required during implementation
@@ -891,7 +891,7 @@ The cumulative code and the teaching narrative must tell the same story. When ea
 | Diagrams and generated outputs | Rebuild from canonical source; do not hand-edit generated Markdown, DOCX, LaTeX, images, manifests, or checksums. |
 | References | Keep vendor/version claims scoped to the supplied baseline; re-verify release/API claims before a new edition. |
 
-Do not leave mixed names such as supplier IDs in mortgage code, `northstar` imports in the new package, or a `supplier.create` tool in an action-authorization/effect example. A migration check should scan source, examples, tests, diagrams, and outputs for stale primary-case terminology while allowing explicitly marked contrast examples.
+Do not leave mixed names such as supplier IDs in mortgage code, `northstar` imports in the new package, or a `supplier.create` tool in an approval/effect example. A migration check should scan source, examples, tests, diagrams, and outputs for stale primary-case terminology while allowing explicitly marked contrast examples.
 
 ## Implementation order and review boundaries
 
@@ -970,9 +970,9 @@ The roadmap is complete only when a new reader can follow `MORT-2026-000184` fro
 - Runtime decision paths do not use protected characteristics as decision features; governed fairness/proxy evaluation is isolated, approved, privacy-reviewed, statistically qualified, and release-gating. Synthetic results are labeled as mechanism tests, not real-world fairness evidence.
 - Authorization filters tenant/case/field/source/purpose before document bytes reach the model; context and memory have provenance, trust, retention, correction, and deletion rules.
 - Delegation preserves subject identity, records actor/owner, narrows authority/budget/time/depth, and defines cancellation/join behavior.
-- Human action authorization binds the exact operational proposal, evidence, policy, case version, reviewer, and expiry; material change requires a new authorization. The separate `LendingDecision` remains human/domain-owned.
+- An approval binds the exact operational proposal, evidence, policy, case version, reviewer, and expiry; material change requires a new approval. The separate `LendingDecision` remains human/domain-owned.
 - Protected LOS effects use idempotency, intent hash, optimistic precondition, receipt, unknown state, reconciliation, and one retry owner.
-- Duplicate delivery, stale state, provider outage, timeout-after-write, cancellation, revoked access, action-authorization expiry, child failure, prompt injection, cross-tenant access, PII leakage, incompatible worker, and fairness regression have executable tests and an operator disposition.
+- Duplicate delivery, stale state, provider outage, timeout-after-write, cancellation, revoked access, approval expiry, child failure, prompt injection, cross-tenant access, PII leakage, incompatible worker, and fairness regression have executable tests and an operator disposition.
 - MLflow and OpenTelemetry evidence joins to platform IDs while raw sensitive content is excluded by default and authoritative audit/effect/approval records remain separate.
 - Evaluation covers evidence accuracy, calculations, trajectory/tool use, authorization, safety, fairness, repeated-run reliability, latency, cost, human burden, and worst slices with executable release gates.
 - The book/course source, example registry, README, diagrams, code, tests, generated artifacts, manifests, checksums, and release package agree after each release.

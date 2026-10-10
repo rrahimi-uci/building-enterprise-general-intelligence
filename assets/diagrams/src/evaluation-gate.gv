@@ -1,4 +1,4 @@
-// Figure 25-3 — Candidate evaluation and a risk-tiered release gate.
+// Figure 25-1 — Candidate evaluation and a risk-tiered release gate.
 // Message: an average score cannot outweigh a deterministic invariant or a
 // high-consequence slice regression; failures become reviewed future cases.
 digraph evaluation_gate {

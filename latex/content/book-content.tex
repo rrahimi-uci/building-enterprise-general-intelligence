@@ -30,7 +30,7 @@ Use the book as an engineering foundation rather than a prescription. Take the e
 
 \BookFrontChapter{How to Use the Book}
 
-Read this as one architecture story, not as a stack of unrelated technology surveys. Start with the map, then choose the reader path that matches your decision. Most chapters move from a concrete problem through boundaries, architecture, implementation, failure modes, measurement, and trade-offs; the pattern and anti-pattern catalogs (Chapters 16–17) are reference cards. You can use the review questions to test whether the idea survives contact with your own system.\par
+Read this as one architecture story, not as a stack of unrelated technology surveys. Start with the map, then choose the reader path that matches your decision. Most chapters move from a concrete problem through boundaries, architecture, implementation, failure modes, measurement, and trade-offs; the pattern cards (Appendix A) and anti-pattern catalog (Chapter 17) are reference cards. You can use the review questions to test whether the idea survives contact with your own system.\par
 
 The cumulative implementation path follows one synthetic Harborlight Home Finance case so the architecture grows without changing applications between chapters. The first three checkpoints are implemented and deliberately stop before any model-owned lending decision or protected loan-origination write:\par
 
@@ -2170,7 +2170,7 @@ Orchestrator → tool & Requested action and delegated context & PDP decision, d
 Agent → agent & Claims, artifacts, status, requested authority & Authenticated channel, signed task envelope, scope intersection, limits & Chapters 18–19 \\
 \rowcolor{BookLight}
 Sandbox → network & Code, browser activity, generated payloads & Default-deny egress, DNS/HTTP proxy, quotas, filesystem isolation & Chapter 23 \\
-Platform → model vendor & Prompts, retrieved content, telemetry & Redaction, residency policy, retention controls, vendor allowlist & Chapter 19 \\
+Platform → model vendor & Prompts, retrieved content, telemetry & Redaction, residency policy, retention controls, vendor allowlist & § What the LLM Gateway enforces \\
 \rowcolor{BookLight}
 Result → destination & Reports, emails, records, deployments & Output classification, provenance, approval, destination authorization & Chapters 14 and 22 \\
 \end{longtable}
@@ -7958,7 +7958,7 @@ class TaskService:
 
 \item Build the durable task tree and identify the current owner of every node.
 
-\item Verify each child grant is a subset of the parent grant (Chapter 21 § Capability-envelope subset proof).
+\item Verify each child grant is a subset of the parent grant (the subset proof in Chapter 21 § A sensible place to start).
 
 \item Inspect join semantics, missing artifacts, duplicates, and conflicts.
 
@@ -8023,7 +8023,7 @@ Inside one platform, the Task Service enforces these rules directly. Chapter 19 
 \end{bookquote}
 
 \begin{bookcallout}[Where The Mortgage Case Stands]
-Harborlight consumes a third-party employment-verification MCP server, and the property-review specialist from Chapter 18 is now a partner-operated agent reached through A2A. Protocol conformance makes messages interoperable; it does not make the endpoint trusted or the artifact safe to adopt.
+Harborlight consumes a third-party income-verification MCP server, and the property-review specialist from Chapter 18 is now a partner-operated agent reached through A2A. Protocol conformance makes messages interoperable; it does not make the endpoint trusted or the artifact safe to adopt.
 \end{bookcallout}
 
 \begin{bookcallout}[The Design Choice]
@@ -9395,7 +9395,7 @@ Enterprise example & A mortgage agent creates a document-request proposal with a
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Default response} & \color{white}\bfseries \textbf{Never do} \\
 \endhead
-Model 429/5xx & Retry with jitter under per-provider budget; route only to an evaluated compatible fallback (Chapter 19) & Retry every branch simultaneously \\
+Model 429/5xx & Retry with jitter under per-provider budget; route only to an evaluated compatible fallback (Chapter 28) & Retry every branch simultaneously \\
 \rowcolor{BookLight}
 Invalid structured output & One constrained repair attempt, then fallback or fail & Silently coerce materially ambiguous fields \\
 Tool transient error before effect & Retry if manifest declares safe/idempotent & Assume all reads and writes are equivalent \\
@@ -9902,7 +9902,7 @@ A kill switch is the instrument for Chapter 20's Contain and Revoke phases. It t
 Content inspection service & Scan and classify inbound and retrieved content; attach labels and taint \\
 \rowcolor{BookLight}
 Tool Gateway and protocol gateways & Enforce the containment obligations returned with each decision \\
-Access Broker/STS (Chapter 21; the secret broker in Figure 23-1) & Issue credential leases, including leases for stored secrets; this chapter governs how they are injected \\
+Access Broker/STS (Chapter 21) & Issue credential leases, including leases for stored secrets; this chapter governs how they are injected \\
 \rowcolor{BookLight}
 Sandbox Control Plane & Attest and lease isolated execution \\
 Egress proxy & Resolve, canonicalize, and filter outbound destinations \\
@@ -11300,7 +11300,7 @@ Exceptions & A time-bound gap in one control & Named risk authority & ExceptionW
 
 Principles and standards are argued; policy-as-code and configuration are executed.\par
 
-The release gate (Chapter 25's ReleaseGateDecision) takes two inputs: the use case's tier and the change class. In T0–T2 use cases, pre-approved low-risk change classes (metadata, documentation, evaluated prompt wording) may promote automatically on passing gates. A change in Chapter 25's "Require human governance" row (§ Close the loop without handing control to the model) always requires a named approver, whatever the tier. In T3–T4 use cases every behavior change needs the release owner's recorded approval and a canary; T4 adds independent assurance.\par
+The release gate (Chapter 25's ReleaseGateDecision) takes two inputs: the use case's tier and the change class. In T0–T2 use cases, pre-approved low-risk change classes (metadata, documentation, evaluated prompt wording) may promote automatically on passing gates. A change in the "Require human governance" row of Chapter 25 § Close the loop without handing control to the model always requires a named approver, whatever the tier. In T3–T4 use cases every behavior change needs the release owner's recorded approval and a canary; T4 adds independent assurance.\par
 
 A design review covers each area below; the chapter in parentheses holds its controls: outcome and acceptance (Chapters 2 and 13), deterministic boundary (2), state and effect ownership (15, 22), identity and delegation (21), context and memory (6), tool, MCP, and A2A trust (19), threats (20), evaluation truth (25), observability and privacy (24), recovery and release (27), capacity and cost (28), human oversight (14), and portability (3).\par
 
@@ -12462,7 +12462,7 @@ The companion code implements the first three checkpoints (C01–C03); later che
 
 \item Trust/deployment boundary: identity, authorization, protocol gateway, tenancy, audit.
 
-\item Side effect: proposal/authorize/commit, idempotency, reconciliation, acceptance.
+\item Side effect: the six gates (Chapter 2), idempotency, and reconciliation.
 
 \item Post-deployment improvement: governed learning; never self-certification.
 
@@ -12482,7 +12482,7 @@ Each card names the obligation it protects, the shortcut that fails, the better 
 
 \textbf{Better design.} A controller bounds steps, time, tokens, tools, and evidence, and deterministic acceptance decides when the work is done.\par
 
-\textbf{Built in.} Chapter 10; card: § ReAct at a glance.\par
+\textbf{Built in.} Chapter 10; card: Chapter 10 § ReAct at a glance.\par
 
 \subsection{P-02 — Deterministic spine with semantic nodes}
 
@@ -12504,7 +12504,7 @@ Each card names the obligation it protects, the shortcut that fails, the better 
 
 \textbf{Better design.} Authorization precedes retrieval, and a manifest records each segment's source, snapshot, provenance, rank, freshness, and token allocation: planner → authorization → retrieval → ranking/dedup → manifest → model.\par
 
-\textbf{Built in.} Chapter 6; see § How context is assembled.\par
+\textbf{Built in.} Chapter 6 § How context is assembled.\par
 
 \subsection{P-04 — Provenance-bound memory}
 
@@ -12514,7 +12514,7 @@ Each card names the obligation it protects, the shortcut that fails, the better 
 
 \textbf{Better design.} Working memory stays run-scoped; long-term memory is written only through a gate that requires purpose, scope, TTL, provenance, verification, and a deletion path.\par
 
-\textbf{Built in.} Chapter 6; see § Memory is not a bag of embeddings.\par
+\textbf{Built in.} Chapter 6 § Memory is not a bag of embeddings.\par
 
 \subsection{P-05 — Tool façade behind the six gates}
 
@@ -12649,31 +12649,34 @@ Human authority & Chapter 14 approval and intervention & AP-06 Boolean approval 
 
 \BookAppendix{B}{When Things Go Wrong: Triage and Runbooks}
 
+Each row names the Chapter 17 card that describes the failure's usual cause.\par
+
 \needspace{5\baselineskip}
 \BookTableStart
-\small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\fontsize{7.2}{9}\selectfont
+\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Symptom} & \color{white}\bfseries \textbf{Inspect first} & \color{white}\bfseries \textbf{Safe response} \\
+\color{white}\bfseries \textbf{Symptom} & \color{white}\bfseries \textbf{Inspect first} & \color{white}\bfseries \textbf{Safe response} & \color{white}\bfseries \textbf{Anti-pattern} \\
 \endfirsthead
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Symptom} & \color{white}\bfseries \textbf{Inspect first} & \color{white}\bfseries \textbf{Safe response} \\
+\color{white}\bfseries \textbf{Symptom} & \color{white}\bfseries \textbf{Inspect first} & \color{white}\bfseries \textbf{Safe response} & \color{white}\bfseries \textbf{Anti-pattern} \\
 \endhead
-Plausible answer, wrong evidence & ContextManifest, revisions, authorization, trust labels & Rebuild context; reject unsupported claims; add regression case \\
+Plausible answer, wrong evidence & ContextManifest, revisions, authorization, trust labels & Rebuild context; reject unsupported claims; add regression case & AP-02, AP-09 \\
 \rowcolor{BookLight}
-Repeated tool loop & Action-observation signatures and information gain & Stop on no-progress; reduce tools; route or escalate \\
-Duplicate business write & Effect key, intent hash, idempotency, receipt & Freeze dependents; reconcile; repair retry ownership \\
+Repeated tool loop & Action-observation signatures and information gain & Stop on no-progress; reduce tools; route or escalate & AP-11 \\
+Duplicate business write & Effect key, intent hash, idempotency, receipt & Freeze dependents; reconcile; repair retry ownership & AP-04 \\
 \rowcolor{BookLight}
-Write timed out & Effect state and downstream request ID & Mark unknown; never blind-retry; reconcile \\
-Run stuck after approval & Proposal hash, expiry, version, signal & Reauthorize; reapprove if drifted; repair wait \\
+Write timed out & Effect state and downstream request ID & Mark Unknown; never blind-retry; reconcile & AP-05 \\
+Run stuck after approval & Proposal hash, expiry, version, signal & Reauthorize; reapprove if drifted; repair wait & AP-06 \\
 \rowcolor{BookLight}
-Cross-tenant retrieval & Tenant key, policy, cache key, artifact lineage & Emergency deny; quarantine; incident response \\
-Old run fails after deploy & RunManifest and compatibility & Compatible worker or tested migration \\
+Cross-tenant retrieval & Tenant key, policy, cache key, artifact lineage & Emergency deny; quarantine; incident response & AP-03 \\
+Old run fails after deploy & RunManifest and compatibility & Compatible worker or tested migration & AP-16 \\
 \rowcolor{BookLight}
-High p95 latency & Queue, model, retrieval, tool, human, retry path & Fix dominant segment; enforce permits \\
-Judge passes security failure & Scorer precedence & Hard deterministic failure blocks release \\
+High p95 latency & Queue, model, retrieval, tool, human, retry path & Fix dominant segment; enforce permits & AP-04 \\
+Judge passes security failure & Scorer precedence & Hard deterministic failure blocks release & AP-10 \\
 \rowcolor{BookLight}
-Unsafe remote artifact & Peer, grant, schema/hash/classification/scan & Reject adoption; quarantine; review trust profile \\
+Run closed with obligations outstanding & AcceptanceDecision and acceptance criteria & Reopen through intervention; require executable acceptance & AP-07 \\
+Unsafe remote artifact & Peer, grant, schema/hash/classification/scan & Reject adoption; quarantine; review trust profile & — (Chapter 19) \\
 \end{longtable}
 \BookTableEnd
 
@@ -12687,9 +12690,9 @@ Unsafe remote artifact & Peer, grant, schema/hash/classification/scan & Reject a
 
 \item Query the authoritative downstream system by idempotency key, resource ID, or business predicate.
 
-\item Classify committed, absent, partial, executing, or unprovable.
+\item Classify the result in Chapter 22's effect states: Committed; Declined (proven absent); Partial; still Executing (check again within the provider's visibility window); or InterventionRequired (unprovable).
 
-\item Record evidence; accept, retry safely, compensate, or move to InterventionRequired.
+\item Record evidence; then accept a Committed receipt, retry a Declined effect under the same logical key, compensate a Partial one, or open an intervention task (Chapter 14).
 
 \item Add the failure to simulation and release regression tests.
 
@@ -12697,32 +12700,60 @@ Unsafe remote artifact & Peer, grant, schema/hash/classification/scan & Reject a
 
 \BookAppendix{C}{Core Platform Contracts at a Glance}
 
+Each contract has one owner and one defining chapter, as indexed in Chapter 4 § The contracts that hold the platform together. Key fields are abridged; the defining chapter holds the full record.\par
+
 \needspace{5\baselineskip}
 \BookTableStart
-\small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\fontsize{7.2}{9}\selectfont
+\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Contract} & \color{white}\bfseries \textbf{Owner} & \color{white}\bfseries \textbf{Key fields} \\
+\color{white}\bfseries \textbf{Contract} & \color{white}\bfseries \textbf{Owner} & \color{white}\bfseries \textbf{Key fields} & \color{white}\bfseries \textbf{Defined in} \\
 \endfirsthead
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Contract} & \color{white}\bfseries \textbf{Owner} & \color{white}\bfseries \textbf{Key fields} \\
+\color{white}\bfseries \textbf{Contract} & \color{white}\bfseries \textbf{Owner} & \color{white}\bfseries \textbf{Key fields} & \color{white}\bfseries \textbf{Defined in} \\
 \endhead
-RunManifest & Run Service & tenant, subject, purpose, release, capability, budgets, region, deadline \\
+RunManifest & Run Service & ReleaseManifest digest; resolved Skill and pack digests, knowledge snapshots, model route, runtime adapter, capability envelope, budget, use-case tier; written once at admission & Chapter 4 \\
 \rowcolor{BookLight}
-WorkflowExecution & Workflow engine & history, build, state version, waits, children, terminal reason \\
-AgentStep & AgentRuntime & agent, context, tools, limits, output, usage \\
+Artifact & Producing run (bytes in the artifact store) & artifact ID, immutable version, schema, content hash, creator run/node/agent, source refs, classification, residency, retention & Chapter 4 \\
+Event (CloudEvent envelope) & Producing service, through its outbox & standard attributes plus \lstinline[style=bookinline]!tenant_id!, \lstinline[style=bookinline]!correlation_id!, \lstinline[style=bookinline]!causation_id!, \lstinline[style=bookinline]!traceparent!; payload by \lstinline[style=bookinline]!dataref! and \lstinline[style=bookinline]!datahash! & Chapter 4 \\
 \rowcolor{BookLight}
-TaskEnvelope & Task Service & owner, goal, acceptance, grant, artifacts, deadline, cancellation \\
-ContextManifest & Context Service & source revisions, hashes, policy, trust, redaction, tokens \\
+AgentStepRequest / AgentStepResult & Run Service builds the request; AgentRuntime returns the result & request: identity, behavior pins, ContextManifest, capabilities, bounds, output schema, trace; result: status (\lstinline[style=bookinline]!completed!, \lstinline[style=bookinline]!needs_input!, \lstinline[style=bookinline]!proposed_action!, \lstinline[style=bookinline]!failed!), payload, artifact refs, proposed action, usage, error & Chapter 3 \\
+ContextManifest & Context Service & RunManifest digest, node, step request ID, revision, policy version, section caps and allocation, ordered segments (kind, trust tier, source revision, hash, authorization decision), omitted candidates, redactions, manifest hash & Chapter 6 \\
 \rowcolor{BookLight}
-CapabilityEnvelope & Authorization & subject, actor, action, resource, purpose, data, region, risk, expiry \\
-ToolManifest & Tool Registry & schemas, risk, effects, approval, credential, runtime, lifecycle \\
+MemoryRecord & Memory Service & tenant, subject/team scope, type, value, provenance, confidence, consent, purpose allowlist, TTL, status, supersedes & Chapter 6 \\
+Skill manifest & Skill owner; Skill Registry & interface schemas, instructions, required tools and knowledge, data-class and region policy, \lstinline[style=bookinline]!risk_ceiling!, evaluation suite and gates, owner, digest; lifecycle lives in SkillRelease & Chapter 8 \\
 \rowcolor{BookLight}
-HumanActionAuthorizationRequest / HumanActionAuthorizationDecision & Human Action Authorization Service & proposal hash, preview, evidence, version, expiry, approver policy, decision \\
-EffectRecord & Effect Ledger & logical key, intent hash, state, request ID, receipt, reconciliation \\
+SkillPackManifest & Pack owner & pinned Skill digests, dependency constraints, runtime capabilities, data and region policy, risk ceiling, evaluation gates, release aliases, support window; certified by a CompatibilityReport & Chapter 9 \\
+RoutingDecision & Route service (agents); LLM Gateway (models) & candidate routes, exclusions and reasons, selected route, confidence and reason, fallback & Chapters 11 and 28 \\
 \rowcolor{BookLight}
-Artifact & Artifact Service & schema, hash, provenance, classification, retention, version \\
-ReleaseManifest & Release Registry & agents, Skills, SDK, workflow, models, tools, policy, schemas, evals \\
+OwnershipTransfer & Ownership Service & task, from/to owner, previous/new capability envelope, obligations, deadline, acknowledgment state (proposed, accepted, rejected, expired), proposal hash & Chapter 11 (record in Chapter 18) \\
+Plan IR (CandidatePlan, PlanNode) & Planner proposes; Plan Compiler validates & plan ID, revision, goal, \lstinline[style=bookinline]!capability_envelope_id!, budget; nodes with kind, capability ref, dependencies, inputs, output schema, \lstinline[style=bookinline]!risk_class!, retry policy, acceptance checks, failure strategy & Chapter 12 \\
+\rowcolor{BookLight}
+AcceptanceDecision & Acceptance engine & candidate, criteria version, outcome (accepted, rejected with typed defects, escalated), per-criterion evaluator type and evidence refs & Chapter 13 \\
+ApprovalRequest / ApprovalDecision & Approval Service & request: proposal hash, resource and logical effect key, before/after diff, subject and actor, evidence, policy digest, risk class, expected resource version, expiry, allowed responses; decision: proposal hash, approver identity and assurance, decision, reason, signature, time & Chapter 14 \\
+\rowcolor{BookLight}
+InterventionTask & Assignment/Queue Service & run/node, trigger and reason code, evidence refs, alternatives, allowed responses, assignee, SLA, state/version, response & Chapter 14 \\
+WorkflowExecution & Workflow engine & run ID, workflow type/build, home region/shard, state, state version, history generation & Chapter 15 \\
+\rowcolor{BookLight}
+TaskEnvelope & Task Service & identity, goal, data, contract, authority (\lstinline[style=bookinline]!capability_grant_id!), budgets, reliability (idempotency key, cancellation), observability & Chapter 18 \\
+FederatedTask & A2A Gateway (Task Bridge) & local and remote task IDs, parent run, peer/agent/version, capability envelope ref, state mapping, idempotency key, deadline, budget & Chapter 19 \\
+\rowcolor{BookLight}
+CapabilityEnvelope & Authorization Service & grant ID, run/task, permitted actions/resources/data classes, explicit denies, purpose, regions, maximum risk class, cost ceiling, delegation depth, expiry, parent grant & Chapter 21 \\
+PolicyDecision & Authorization Service & decision ID, input hash, result, obligations, reason codes, policy digest, evaluated time & Chapter 21 \\
+\rowcolor{BookLight}
+CredentialLease & Access Broker/STS & opaque handle, kind, grant and decision IDs, audience, scope, expiry, use count, sender binding; secret never in run state & Chapter 21 \\
+ToolManifest & Tool Registry & identity, interface schemas, security, risk class, runtime limits, effect semantics (idempotency key, precondition, receipt, compensation), operations & Chapter 22 \\
+\rowcolor{BookLight}
+EffectRecord / EffectReceipt & Effect Service & logical key, idempotency key, intent hash, expected version, state (Chapter 22's lifecycle), downstream IDs, receipt, compensation refs & Chapter 22 \\
+OutboxRecord / InboxReceipt & Producing service / consumer & event ID, aggregate version, envelope, publish state; consumer, source/event ID, payload hash, status & Chapter 22 \\
+\rowcolor{BookLight}
+EvaluationResult / ValidationReport / ReleaseGateDecision & Evaluation Orchestrator; Evaluation/Gate Service & metric, score, evaluator type and version; candidate digest, comparisons, slice regressions; tier, thresholds, decision, waiver, approvers & Chapter 25 \\
+GovernanceRecord / ExceptionWaiver & Governance Inventory; Exception Service & use case, owners, risk tier, autonomy, data classes, effects, controls, evaluations, current release, exceptions, review date; waiver scope, compensating controls, expiry & Chapter 26 \\
+\rowcolor{BookLight}
+ChangeBundle / ReleaseManifest & Release Bundle Builder & proposed changes, evidence, risk, rollback plan; immutable signed dependency graph including Skill and pack digests, migrations, rollout and rollback & Chapter 27 \\
+EnvironmentBinding / PromotionDecision & Promotion Service & tenant/use case/environment/region, active manifest, traffic weights; gate digest (ReleaseGateDecision), approvers, canary cohort, rollback trigger & Chapter 27 \\
+\rowcolor{BookLight}
+BudgetReservation & Usage/Cost Ledger & reservation ID, owner run/node, resource, amount, consumed/released, expiry, ledger version & Chapter 28 \\
 \end{longtable}
 \BookTableEnd
 
@@ -12730,98 +12761,76 @@ ReleaseManifest & Release Registry & agents, Skills, SDK, workflow, models, tool
 
 \begin{bookquote}
 
-\textbf{Evidence context:} The landscape summary is based on current framework documentation for OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Amazon Bedrock multi-agent collaboration, LangGraph, LlamaIndex Workflows, PydanticAI durable execution, Dapr Agents, and DBOS. It records declared capabilities, not a comparative production certification. \textbf{\BookCitation{R29}\BookCitation{R31}\BookCitation{R32}\BookCitation{R33}\BookCitation{R34}\BookCitation{R35}\BookCitation{R36}\BookCitation{R37}\BookCitation{R38}}
+\textbf{Evidence context:} The comparison draws on current documentation for the OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Amazon Bedrock multi-agent collaboration, LangGraph and LangSmith, LlamaIndex Workflows, PydanticAI durable execution, Dapr Agents, Temporal, DBOS, MCP, A2A, OpenTelemetry GenAI conventions, and MLflow. It records declared capabilities, not a comparative production certification. The Claude Agent SDK, CrewAI, and Restate entries have no registered source in this edition; verify their current documentation and maturity before relying on them. \textbf{\BookCitation{R02}\BookCitation{R05}\BookCitation{R06}\BookCitation{R07}\BookCitation{R19}\BookCitation{R20}\BookCitation{R21}\BookCitation{R25}\BookCitation{R29}\BookCitation{R31}\BookCitation{R32}\BookCitation{R33}\BookCitation{R34}\BookCitation{R35}\BookCitation{R36}\BookCitation{R37}\BookCitation{R38}}
 
 \end{bookquote}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\fontsize{7.2}{9}\selectfont
-\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Framework} & \color{white}\bfseries \textbf{Strength} & \color{white}\bfseries \textbf{Enterprise caution} & \color{white}\bfseries \textbf{Recommended placement} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Framework} & \color{white}\bfseries \textbf{Strength} & \color{white}\bfseries \textbf{Enterprise caution} & \color{white}\bfseries \textbf{Recommended placement} \\
-\endhead
-OpenAI Agents SDK & Compact Python runtime for agents, tools, handoffs, guardrails, structured outputs, sessions, tracing, MCP, HITL, RunState, and sandbox surfaces. & SDK state is not enterprise workflow truth; protect credentials, authorization, effects, and long waits outside it. & Bounded AgentRuntime adapter. Book baseline: \lstinline[style=bookinline]!openai-agents==0.22.2! with \lstinline[style=bookinline]!openai==3.13.0! in the offline profile. \\
-\rowcolor{BookLight}
-LangGraph & Graph-oriented stateful agent orchestration with persistence and interrupts. & Graph state and persistence semantics still need enterprise identity, effects, policy, release, and audit integration. & Use for application-level graph orchestration when its persistence model fits; keep external writes governed. \\
-Microsoft Agent Framework & Agent and workflow abstractions aligned with Microsoft ecosystems. & Avoid binding public enterprise contracts to framework-specific messages or state. & Use behind adapters when Azure and Microsoft identity/tooling are strategic. \\
-\rowcolor{BookLight}
-Google ADK & Composable agents and tools with Google-cloud integration. & Cloud-native convenience does not replace provider-neutral run, task, policy, effect, and evidence contracts. & Use for Google-centric implementations behind the same platform boundary. \\
-PydanticAI & Typed Python agent development with model-provider abstractions and durable-execution integrations. & Typed outputs improve validation but do not prove authorization, truth, or effect completion. & Use for strongly typed application adapters and testable agent code. \\
-\rowcolor{BookLight}
-Temporal & Mature durable execution, timers, signals, retries, and workflow history. & Requires deterministic workflow discipline, compatibility strategy, and separate domain effect semantics. & Strong default for long-running enterprise workflows and recoverable coordination. \\
-DBOS & Durable workflows integrated with Python and database-backed execution. & Evaluate operational model, scale envelope, ecosystem maturity, and regional recovery requirements. & Useful when application teams want code-centric durability with a simpler operational footprint. \\
-\rowcolor{BookLight}
-MLflow 3.15.x & OpenTelemetry-compatible GenAI tracing, evaluation, scorers, feedback, and experimental MCP Registry surfaces. & Tracing is not audit; model judges need calibration; MCP Registry features require version pinning and maturity review. & Diagnostics and evaluation baseline pinned to 3.15.2 in this edition. \\
-\end{longtable}
-\BookTableEnd
-
-\section{What the framework landscape means}
 
 \begin{bookcallout}[Frameworks Solve Different Layers]
 An agent SDK is not automatically a durable workflow engine; a protocol is not an authorization system; a trace product is not an audit ledger; and a managed agent runtime does not remove the enterprise’s responsibility for data, policy, and outcome risk.
 \end{bookcallout}
 
+\section{Compare frameworks by the layer they serve}
+
 \needspace{5\baselineskip}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
 \begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Architecture/framework} & \color{white}\bfseries \textbf{Strongest contribution} & \color{white}\bfseries \textbf{Important gaps or risks} & \color{white}\bfseries \textbf{Recommended role} \\
+\color{white}\bfseries \textbf{Framework or standard} & \color{white}\bfseries \textbf{Strength} & \color{white}\bfseries \textbf{Enterprise caution} & \color{white}\bfseries \textbf{Recommended placement} \\
 \endfirsthead
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Architecture/framework} & \color{white}\bfseries \textbf{Strongest contribution} & \color{white}\bfseries \textbf{Important gaps or risks} & \color{white}\bfseries \textbf{Recommended role} \\
+\color{white}\bfseries \textbf{Framework or standard} & \color{white}\bfseries \textbf{Strength} & \color{white}\bfseries \textbf{Enterprise caution} & \color{white}\bfseries \textbf{Recommended placement} \\
 \endhead
-OpenAI Agents SDK and Agents API & Clear agent/tool/handoff abstractions, guardrails, tracing, managed and self-orchestrated options; useful manager-vs-handoff distinction & Provider gravity; application still owns business transactions, delegated authorization, cross-system durability, and policy semantics & Model-facing harness behind an enterprise run/tool gateway; use handoffs only for true ownership transfer \\
+OpenAI Agents SDK & Compact Python runtime for agents, tools, handoffs, guardrails, structured outputs, sessions, tracing, MCP, HITL, RunState, and sandbox surfaces; a useful manager-versus-handoff distinction & SDK state is not workflow truth; provider gravity; the application still owns credentials, authorization, effects, durability, and long waits & Bounded AgentRuntime adapter (Chapter 3); an SDK handoff moves control inside one step, never accountability (Chapter 11). Book baseline: \lstinline[style=bookinline]!openai-agents==0.22.2! with \lstinline[style=bookinline]!openai==3.13.0! in the offline profile \\
 \rowcolor{BookLight}
-Claude Agent SDK and Managed Agents & Long-horizon harness design, hosted session/event model, sandbox/worker separation, strong guidance to start simple & Managed runtime is beta/evolving; token cost can be high; enterprise effects and cross-vendor state must remain externally governed & High-value research/coding workloads; keep authoritative run/effect/audit state portable \\
-Google ADK • A2A & Multi-language agent/workflow toolkit and an increasingly concrete open remote-agent task protocol; A2A 1.0 defines discovery, tasks, messages, artifacts, streaming, and async updates & Protocol interoperability does not guarantee capability trust, authorization equivalence, transaction semantics, or quality & ADK as one harness option; A2A gateway at cross-team/vendor boundaries with enterprise policy wrapping \\
+Claude Agent SDK and Managed Agents & Long-horizon harness design, hosted session and event model, sandbox/worker separation, guidance to start simple & Verify feature maturity and cost before adoption; enterprise effects and cross-vendor state stay externally governed & Research and coding workloads behind the same AgentRuntime boundary; keep run, effect, and audit state portable \\
+Google ADK and A2A & Composable agents and tools with Google Cloud integration; A2A 1.0 defines agent cards, tasks, messages, artifacts, bindings, and lifecycle operations & Cloud convenience and protocol interoperability do not supply capability trust, authorization equivalence, transaction semantics, or quality & ADK as one harness option behind the platform boundary; the A2A Gateway at cross-team and vendor boundaries (Chapter 19) \\
 \rowcolor{BookLight}
-Microsoft Agent Framework & Converges AutoGen and Semantic Kernel concepts; agents, typed sessions/middleware, graph/functional workflows, long-task harness, telemetry and broad provider integrations & Some language/features remain preview or evolving; Azure-centric managed integrations can increase platform coupling & Good enterprise SDK choice where Microsoft ecosystem and typed middleware matter; still pair with durable/effect architecture \\
-LangGraph • LangSmith & Explicit graph state, checkpointers, interrupts, stores, time travel, human-in-the-loop, and strong trace/eval workflow & Graph checkpoints may be mistaken for complete enterprise durability; production cloud adds vendor surface; memory semantics remain application-defined & Agent-state machine and developer tooling, optionally inside a separate durable cross-service workflow kernel \\
+Microsoft Agent Framework & Agent and workflow abstractions that converge AutoGen and Semantic Kernel concepts: typed sessions and middleware, graph workflows, telemetry, broad provider integrations & Some languages and features remain preview; Azure-centric managed integrations increase coupling; do not bind public contracts to framework messages or state & Behind adapters where the Microsoft ecosystem and typed middleware matter; pair with the durable and effect architecture \\
+LangGraph and LangSmith & Explicit graph state, checkpointers, interrupts, stores, time travel, human-in-the-loop, and trace/evaluation workflow & Graph checkpoints are not complete enterprise durability; identity, effects, policy, release, and audit still need integration; memory semantics remain application-defined & Application-level graph orchestration, optionally inside a separate durable workflow; keep external writes governed \\
 \rowcolor{BookLight}
-PydanticAI & Pythonic typed outputs/dependencies, validation, OpenTelemetry orientation, and integrations with multiple durable backends & Python-centered; durability depends on selected backend and correct activity boundaries & Strong application layer for typed agents when portability across durable engines is valuable \\
-LlamaIndex Workflows & Lightweight event-driven, async workflow model tightly integrated with retrieval/data workflows & Need careful assessment of operational durability, multi-service transactions, identity and governance for the target deployment & Data/retrieval-heavy flows and controlled event-driven pipelines; integrate through platform gateways \\
+PydanticAI & Typed outputs and dependencies, validation, model-provider abstraction, OpenTelemetry orientation, and durable-execution integrations & Typed outputs improve validation but prove neither authorization, truth, nor effect completion; durability depends on the chosen backend and activity boundaries & Strongly typed application adapters and testable agent code \\
+LlamaIndex Workflows & Lightweight event-driven, asynchronous workflows integrated with retrieval and data pipelines & Assess operational durability, multi-service transactions, identity, and governance for the target deployment & Retrieval-heavy flows and controlled event-driven pipelines behind platform gateways \\
 \rowcolor{BookLight}
-CrewAI & Accessible crew/flow mental model, role specialization, event-driven flows, rapid prototyping and enterprise console features & Multi-agent role-play can encourage complexity; verify durability, permission, trace, and effect semantics rather than relying on abstractions & Prototyping and bounded business automations where its flow layer passes platform controls \\
-Dapr Agents & Connects agents to Dapr actors, workflows, state, messaging, resiliency, secrets, and OpenTelemetry; useful cloud-native composition & Adds sidecar/actor operational model; semantics depend on Dapr components and deployment maturity & Teams already standardized on Dapr that want durable, stateful, event-driven agents \\
+CrewAI & Accessible crew and flow model, role specialization, event-driven flows, rapid prototyping & Role-play can encourage complexity; verify durability, permission, trace, and effect semantics rather than relying on the abstraction & Prototyping and bounded automations whose flow layer passes platform controls \\
+Dapr Agents & Connects agents to Dapr actors, workflows, state, messaging, resiliency, secrets, and OpenTelemetry & Adds a sidecar and actor operational model; semantics depend on Dapr components and deployment maturity & Teams already standardized on Dapr that want durable, stateful, event-driven agents \\
 \rowcolor{BookLight}
-Amazon Bedrock Agents Classic / AgentCore & Bedrock Agents Classic documents a supervisor/collaborator model; its documentation states that the service is in maintenance mode and closed to new customers, with AgentCore identified for similar capabilities. & AWS lock-in, lifecycle status, and supervisor-centric topology; inspect portability, observability, migration, and service-specific limits. & Existing Classic estates or AWS-native evaluations that explicitly account for maintenance status; wrap source-system authorization and evidence externally. \\
-Temporal, DBOS, Restate, and cloud durable runtimes & Crash-resilient execution, timers, retries, signals, workflow state, long waits, and operational visibility & They do not supply agent reasoning, knowledge governance, tool semantics, or business authorization; replay constraints require discipline & Foundational execution substrate beneath or around the chosen agent harness \\
+Amazon Bedrock Agents Classic / AgentCore & Bedrock Agents Classic documents a supervisor/collaborator model; its documentation states that the service is in maintenance mode and closed to new customers, with AgentCore identified for similar capabilities & AWS lock-in, lifecycle status, and supervisor-centric topology; inspect portability, observability, migration, and service-specific limits & Existing Classic estates or AWS-native evaluations that account for maintenance status; wrap source-system authorization and evidence externally \\
+Temporal & Mature durable execution, timers, signals, retries, and workflow history & Requires deterministic workflow discipline, a compatibility strategy, and separate domain effect semantics & Strong default for long-running workflows and recoverable coordination (Chapter 15) \\
 \rowcolor{BookLight}
-MCP & Broad tool/resource interoperability with standardized transports and OAuth-based HTTP authorization & Authorization is optional at protocol level; token passthrough/confused-deputy risks; tool trust, risk classification, tenancy, and business policy are out of scope & Tool interoperability behind a controlled gateway—not direct unrestricted production access \\
-OpenTelemetry GenAI conventions & Emerging common vocabulary for model, agent, MCP, span, metric, and event telemetry & Conventions are evolving; full prompt/tool content creates privacy risk; semantic interoperability does not guarantee causal completeness & Canonical instrumentation base plus organization-specific run/effect/policy attributes \\
+DBOS, Restate, and cloud durable runtimes & Crash-resilient workflows, timers, retries, signals, and long waits; DBOS integrates database-backed execution with Python & Supply no agent reasoning, knowledge governance, tool semantics, or business authorization; evaluate scale envelope, maturity, and regional recovery & Execution substrate beneath the agent harness when a code-centric, simpler operational footprint fits \\
+MLflow 3.15.x & GenAI tracing and evaluation: datasets, judges and scorers, feedback, and production monitoring & Tracing is not audit; model judges need calibration & Diagnostics and evaluation baseline pinned to 3.15.2 in this edition (Chapters 24 and 25) \\
+\rowcolor{BookLight}
+MCP & Tool and resource interoperability with standard transports and OAuth-based HTTP authorization & Authorization is optional at protocol level; token passthrough and confused-deputy risks; tool trust, risk classification, tenancy, and business policy are out of scope & Behind the MCP Gateway and Tool Gateway (Chapters 19 and 22), never direct unrestricted production access \\
+OpenTelemetry GenAI conventions & Emerging common vocabulary for model, agent, MCP, span, metric, and event telemetry & Conventions are evolving; full prompt and tool content creates privacy risk; semantic interoperability does not guarantee causal completeness & Instrumentation base plus organization-specific run, effect, and policy attributes (Chapter 24) \\
 \end{longtable}
 \BookTableEnd
 
-\subsection{Where the industry is heading}
+\section{Where the industry is heading}
 
 \begin{enumerate}
 
 \item \textbf{From chains to explicit state:} graph and workflow abstractions are replacing invisible prompt loops.
 
-\item \textbf{From synchronous chat to sessions/tasks:} managed runtimes and A2A now model asynchronous, interruptible, long-running work.
+\item \textbf{From synchronous chat to sessions and tasks:} managed runtimes and A2A now model asynchronous, interruptible, long-running work.
 
-\item \textbf{From bespoke plugins to protocols:} MCP standardizes tools/resources; A2A standardizes remote-agent interaction.
+\item \textbf{From bespoke plugins to protocols:} MCP standardizes tools and resources; A2A standardizes remote-agent interaction.
 
 \item \textbf{From logs to trajectories:} framework traces and OpenTelemetry conventions increasingly capture handoffs, tools, tokens, and evaluation signals.
 
 \item \textbf{From single-vendor demos to gateways:} enterprises need model, tool, policy, identity, and telemetry gateways to retain control across frameworks.
 
-\item \textbf{From prompt safeguards to capability security:} OWASP’s agentic focus reflects that the central risk is privileged action under manipulated context.
+\item \textbf{From prompt safeguards to capability security:} OWASP’s agentic list centers on privileged action under manipulated context \BookCitation{R15}.
 
-\item \textbf{From “autonomy” to bounded agency:} the strongest public guidance recommends simple composable patterns, explicit workflows, and greater autonomy only where measurable value justifies it.
+\item \textbf{From “autonomy” to bounded agency:} public guidance recommends simple composable patterns and earning orchestration complexity only where measurable value justifies it \BookCitation{R27}.
 
 \end{enumerate}
 
-\subsection{A practical way to choose}
+\section{A practical way to choose}
 
 Choose the smallest harness that expresses the agent behavior, the strongest durable engine that matches the run’s consequences, and enterprise-owned gateways for identity, policy, tools, models, telemetry, and artifacts. Do not force one framework to own all three layers.\par
 
-\subsection{A baseline stack by concern—not a mandate}
+\section{A baseline stack by concern—not a mandate}
 
 Each row names typical choices for one concern and the criteria that should decide among them.\par
 
@@ -12867,22 +12876,20 @@ Telemetry/evals & OpenTelemetry + trace/metric backend + evaluation service & Po
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Research or benchmark} & \color{white}\bfseries \textbf{What it established} & \color{white}\bfseries \textbf{Architectural implication} \\
 \endhead
-ReAct & Interleaving reasoning and environment actions improves many interactive tasks compared with reasoning or acting alone & Agent loops need real tool feedback and explicit stop limits; reasoning text does not supply transaction safety \\
+ReAct \BookCitation{R01} & Interleaving reasoning and environment actions improves many interactive tasks compared with reasoning or acting alone & Agent loops need real tool feedback and explicit stop limits; reasoning text does not supply transaction safety \\
 \rowcolor{BookLight}
-AutoGen & Multi-agent conversation is a flexible composition mechanism for tools, models, and humans & Conversation is useful as an application abstraction, but enterprise ownership and durable task semantics must be added \\
-AgentBench & Agent performance varies substantially across interactive environments and cannot be inferred from static language benchmarks & Evaluate in environment-specific tasks with real tool/state constraints \\
+AutoGen \BookCitation{R49} & Multi-agent conversation is a flexible composition mechanism for tools, models, and humans & Conversation is useful as an application abstraction, but enterprise ownership and durable task semantics must be added \\
+AgentBench \BookCitation{R50} & Across eight interactive environments, agent performance differs widely between models; weak long-term reasoning, decision-making, and instruction following are the main failure causes & Evaluate in environment-specific tasks with real tool and state constraints \\
 \rowcolor{BookLight}
-GAIA & Conceptually simple human tasks involving browsing, files, multimodality, and tools expose robustness gaps & Real-world competence is cross-capability and long-tail; “easy for a human” is not an adequate release assumption \\
-SWE-bench & Real repository issues plus executable tests offer grounded evaluation for coding agents & Prefer domains with objective environmental feedback; still require human review for broader requirements/security \\
+GAIA \BookCitation{R51} & Questions that are simple for humans but require browsing, files, multimodality, and tools expose a large gap between humans and tool-equipped models & “Easy for a human” is not an adequate release assumption; test cross-capability, long-tail tasks \\
+SWE-bench \BookCitation{R52} & Real repository issues with executable tests give grounded evaluation for coding agents & Prefer domains with objective environmental feedback; still require human review for broader requirements and security \\
 \rowcolor{BookLight}
-τ-bench & Tool agents must interact with users while following domain policies; repeated-run reliability matters & Test multi-turn policy compliance and consistency, not only final-answer quality \\
-AgentDojo & Tool-integrated agents can be benchmarked jointly for utility and prompt-injection security & Security evals must measure both attack resistance and retained task utility \\
-\rowcolor{BookLight}
-Long-horizon reliability research & Emerging 2026 work reports sharp degradation and compounding errors as task horizon grows & Decompose, checkpoint, verify, constrain replanning, and measure reliability by horizon; treat current results as evolving research \\
+τ-bench \BookCitation{R53} & Tool agents must interact with users while following domain rules, and they behave inconsistently across repeated trials & Test multi-turn policy compliance and repeated-run consistency, not only final-answer quality \\
+AgentDojo \BookCitation{R54} & Tool-integrated agents can be evaluated jointly for task utility and prompt-injection security & Security evaluations must measure both attack resistance and retained task utility \\
 \end{longtable}
 \BookTableEnd
 
-The common lesson is not that “more agents” is state of the art. It is that useful agent behavior comes from environment grounding, specialized interfaces, explicit state, executable verification, and bounded iteration. Long trajectories amplify even modest per-step error; therefore architecture must create shorter verified segments and durable recovery points.\par
+The common lesson is not that “more agents” is state of the art. It is that useful agent behavior comes from environment grounding, specialized interfaces, explicit state, executable verification, and bounded iteration. This book's working hypothesis, not a cited result, is that long trajectories compound even modest per-step error; architecture should therefore create shorter verified segments and durable recovery points, and measure reliability by task horizon.\par
 
 \BookAppendix{F}{Known Limits and the Controls That Contain Them}
 
@@ -12968,38 +12975,109 @@ Before an agent can mutate an enterprise system, require all of the following:\p
 
 \BookAppendix{H}{Glossary}
 
+Chapter 1 § The vocabulary this book assumes introduces the core terms; this glossary defines them and the rest of the book's working vocabulary. Records are listed with their fields in Appendix C.\par
+
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Term} & \color{white}\bfseries \textbf{Definition} \\
+\color{white}\bfseries \textbf{Term} & \color{white}\bfseries \textbf{Definition} & \color{white}\bfseries \textbf{Chapter} \\
 \endfirsthead
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Term} & \color{white}\bfseries \textbf{Definition} \\
+\color{white}\bfseries \textbf{Term} & \color{white}\bfseries \textbf{Definition} & \color{white}\bfseries \textbf{Chapter} \\
 \endhead
-Acceptance engine & Deterministic component deciding whether executable terminal criteria are satisfied. \\
+A2A Gateway & Control point that decides whether an external agent may receive or return a task, and terminates the A2A protocol; internal delegation belongs to the Task Service & 19 \\
 \rowcolor{BookLight}
-Actor & Workload identity performing an action on behalf of a subject. \\
-AgentRuntime & Provider-neutral interface for one bounded agent step. \\
+Acceptance criteria & Executable checks over authoritative state that decide whether a run succeeded; evaluated by code, never asserted by the model & 2 \\
+Acceptance engine & The only component that may mark a candidate, plan node, or answer as accepted; runs deterministic checks first and calibrated judges only where a criterion cannot be computed & 13 \\
 \rowcolor{BookLight}
-Artifact & Immutable output or evidence object with schema, hash, classification, and provenance. \\
-Capability envelope & Maximum delegated authority across action, resource, purpose, data, region, risk, time, spend, and delegation. \\
+AcceptanceDecision & The acceptance engine's record: accepted, rejected with typed defects, or escalated, with evaluator type and evidence per criterion & 13 \\
+Activity & A unit of I/O, such as a model or tool call, that a durable workflow schedules, retries, and records & 15 \\
 \rowcolor{BookLight}
-ContextManifest & Ordered record of authorized references used for one model context. \\
-Effect & Externally observable mutation with durable intent, state, receipt, and reconciliation. \\
+Actor & The workload identity performing an action on behalf of a subject & 21 \\
+AgentRuntime & Provider-neutral interface that executes one bounded agent step: \lstinline[style=bookinline]!AgentRuntime.execute(AgentStepRequest) → AgentStepResult! & 3 \\
 \rowcolor{BookLight}
-EvidenceRef & Source revision or artifact reference with hash, provenance, and authorization lineage. \\
-Handoff & Explicit transfer of interaction or task ownership. \\
+AgentSpec & The versioned definition of an agent: instructions, required Skills, topology, and owner & 4 \\
+AgentStepRequest / AgentStepResult & The platform contract into and out of one agent step; the result's status is \lstinline[style=bookinline]!completed!, \lstinline[style=bookinline]!needs_input!, \lstinline[style=bookinline]!proposed_action!, or \lstinline[style=bookinline]!failed! & 3 \\
 \rowcolor{BookLight}
-InterventionRequired & State used when correctness cannot be established automatically. \\
-Plan IR & Typed proposed-work representation before compilation and scheduling. \\
+API Gateway & Control point that decides whether a caller is admitted to the platform at all & 1 \\
+Approval & A human decision bound to one exact proposal and its expiry (ApprovalRequest, ApprovalDecision, Approval Service); it never replaces reauthorization at commit & 14 \\
 \rowcolor{BookLight}
-Skill & Versioned capability package of contract, instructions, tools, knowledge, policy, workflow, tests, and operations metadata. \\
-Skill Pack & Certified domain distribution of compatible Skills and shared controls. \\
+Artifact & Immutable output or evidence object with schema, hash, classification, and provenance & 4 \\
+Audience binding & Restricting a credential to one intended recipient so it cannot be replayed against another service & 21 \\
 \rowcolor{BookLight}
-Subject & Principal whose delegated authority initiates a protected action. \\
-Unknown effect & Mutation whose outcome cannot be proven and must be reconciled. \\
+Authorization & The policy decision over subject, actor, purpose, resource, and action; distinct from a human approval & 21 \\
+Canary & Exposing a change to a bounded cohort of real traffic with explicit stop conditions before full release & 27 \\
+\rowcolor{BookLight}
+Capability envelope & The platform-computed maximum scope a run or child task may use (actions, resources, purpose, data, region, risk, time, spend, delegation), identified by its \lstinline[style=bookinline]!grant_id!; a child's envelope is a provable subset of its parent's & 21 \\
+Causal run trace & One run's linked spans across workflow, model, tools, approvals, and effects; links to the authoritative records and replaces none & 24 \\
+\rowcolor{BookLight}
+Change class & The classification of a proposed change; with the use-case tier it sets review depth & 25 \\
+ChangeBundle & A proposed change to versioned objects; it becomes a ReleaseManifest only when promoted & 27 \\
+\rowcolor{BookLight}
+Child task & Durable delegated work with one owner, carried by a TaskEnvelope and executed as a child workflow & 18 \\
+Compensation & A new, authorized business action that reverses a committed effect; it never erases the original receipt & 22 \\
+\rowcolor{BookLight}
+ContextManifest & Record of exactly what one agent step's context contained and why: ordered segments with source, trust tier, authorization decision, and token allocation & 6 \\
+Credential lease & A short-lived, audience-bound credential minted after authorization for one downstream call; the proof that accompanies a capability envelope's scope & 21 \\
+\rowcolor{BookLight}
+Deterministic shell & The six gates around a model proposal: propose, validate, authorize (including any human approval), commit, verify, accept & 2 \\
+Downscoping & Deriving a narrower credential from a broader one so delegated work never exceeds its delegator's authority & 21 \\
+\rowcolor{BookLight}
+Effect & An externally observable mutation with durable intent, state, receipt, and reconciliation & 22 \\
+Effect ledger & The Effect Service's durable record of every external change attempted, its idempotency key, and its confirmed outcome & 22 \\
+\rowcolor{BookLight}
+Effect risk class (R0–R4) & Classification of one tool effect, from R0 pure transform to R4 irreversible, privileged, or financial action that an agent may only propose & 22 \\
+EnvironmentBinding & Says which ReleaseManifest new runs receive for a tenant, use case, environment, and region; rollback changes it & 27 \\
+\rowcolor{BookLight}
+EvaluationResult & One evaluator's score for one case and attempt, with evaluator type and version & 25 \\
+EvidenceRef & Source revision or artifact reference with hash, provenance, and authorization lineage & 6 \\
+\rowcolor{BookLight}
+Federated task & A child task that crosses a trust boundary to an external agent through the A2A Gateway & 19 \\
+Global control tier & The deployment tier that publishes signed, immutable definitions and holds no run state & 4 \\
+\rowcolor{BookLight}
+Guardrail & A probabilistic detector, such as an input or output check; its finding feeds a policy point and never decides authorization & 20 \\
+Handoff & An accountable transfer of task or interaction ownership that takes effect only when the recipient acknowledges; a framework handoff moves control, not accountability & 11 \\
+\rowcolor{BookLight}
+Idempotency key & A caller-supplied identifier that lets a downstream system recognize a repeated request as the same request & 22 \\
+InterventionRequired & Run, task, or effect state used when correctness cannot be established automatically; it opens an intervention task & 15, 22 \\
+\rowcolor{BookLight}
+Intervention task & A typed request for human help with an uncertain run; its response is an input to the run and never approves an effect & 14 \\
+Layer & A deployable unit of the architecture (for example, Model access or Durable execution); layers serve the planes & 4 \\
+\rowcolor{BookLight}
+LLM Gateway & Control point that decides which model may answer under which data policy, and enforces model routing, privacy, budgets, and evidence & 4 \\
+MCP Gateway & Control point that terminates MCP and decides whether an external server and tool are trusted and eligible & 19 \\
+\rowcolor{BookLight}
+Plan IR & Typed representation of proposed work that is compiled and checked before any node is scheduled & 12 \\
+Plane & An ownership domain; the seven planes give every authoritative record one owner & 4 \\
+\rowcolor{BookLight}
+Provenance & Where content came from, under what authority it was retrieved, and how far it may be trusted & 5, 6 \\
+Purpose & Why an action is requested; carried with subject and actor so a valid identity cannot be reused for an unrelated operation & 21 \\
+\rowcolor{BookLight}
+Regional execution cell & The regional unit that holds a run's control, workflow, workers, gateways, context, and effect ledger & 4 \\
+Release gate & The decision whether a candidate may be promoted, recorded as a ReleaseGateDecision & 25 \\
+\rowcolor{BookLight}
+ReleaseManifest & The immutable, signed graph of every behavior-relevant version in a release; fixes the eligible Skill and pack set & 27 \\
+Run & One admitted unit of work with a RunManifest; it contains a workflow execution whose nodes run activities, agent steps, or child tasks & 4, 15 \\
+\rowcolor{BookLight}
+RunManifest & Per-run record written once at admission: the ReleaseManifest digest plus what was resolved for this run & 4 \\
+Skill & Versioned capability package: interface, instructions, eligible tools, knowledge, policy, risk ceiling, evaluation, owner, digest & 8 \\
+\rowcolor{BookLight}
+Skill Pack & Certified, co-released set of compatible Skills with shared policy and evaluations; installing one grants nothing & 9 \\
+Subject & The principal whose delegated authority initiates a protected action & 21 \\
+\rowcolor{BookLight}
+TaskEnvelope & The contract every child task carries, in eight field groups & 18 \\
+Tool Gateway & Control point that decides whether an effect may happen, for this subject, exactly once; protocol-agnostic & 2, 22 \\
+\rowcolor{BookLight}
+Trajectory & A run's ordered decisions viewed for evaluation & 25 \\
+Trust tier & The rank of a context segment's origin, from tier 1 system instructions to tier 4 retrieved data that can never direct behavior & 6 \\
+\rowcolor{BookLight}
+Unknown & Effect state when a mutation may have reached the downstream system and the platform holds neither a receipt nor proof of absence; it blocks retry and dependent work & 22 \\
+Use-case tier (T0–T4) & Classification of a whole use case that sets governance and release depth; never lower than its most dangerous eligible effect requires & 26 \\
+\rowcolor{BookLight}
+ValidationReport & The release evidence for one candidate: evaluation comparisons, other test results, and slice regressions & 25 \\
+Workflow execution & The durable, replayable history that owns a run's state; one active execution per run generation & 15 \\
 \end{longtable}
 \BookTableEnd
 
@@ -13017,32 +13095,27 @@ This appendix explains how to run and verify the book's companion code.\par
 
 \item OpenAI Python SDK 3.13.0 (the exact offline-profile pin; the pinned Agents SDK declares the compatible \lstinline[style=bookinline]!openai! 3.x range)
 
-\item MLflow 3.15.2 (the pinned example baseline; re-verify current releases before implementation)
+\item MLflow 3.15.2 (the pinned example baseline \BookCitation{R21}; re-verify current releases before implementation)
 
 \item Pydantic 2
 
 \end{itemize}
 
-MLflow 3.15.0 introduced the MCP Registry and multimodal trace judges; 3.15.2 adds immutable evaluation dataset versions and scorer ensembles. The examples deliberately pin versions so a reader can reproduce behavior.\par
+The examples deliberately pin versions so a reader can reproduce behavior.\par
 
-\section{Run the repository examples and tests}
+\section{Run the examples, tests, and demo}
 
-BASH · implementation excerpt\par
+From the repository root:\par
 
-\needspace{38.4pt}
-\begin{lstlisting}[style=bookcode,title={BASH},language=bookbash]
-make examples-run
-.venv-examples/bin/python -m pytest tests/mortgage_case -q
-\end{lstlisting}
+\begin{enumerate}
 
-\section{Run the deterministic demo}
+\item \lstinline[style=bookinline]!make examples-run! executes every registered example's tests.
 
-BASH · implementation excerpt\par
+\item \lstinline[style=bookinline]!.venv-examples/bin/python -m pytest tests/mortgage_case -q! runs the mortgage-case tests.
 
-\needspace{29.2pt}
-\begin{lstlisting}[style=bookcode,title={BASH},language=bookbash]
-.venv-examples/bin/python -m mortgage_case --chapter 3 --scenario happy_path --offline --json
-\end{lstlisting}
+\item \lstinline[style=bookinline]!.venv-examples/bin/python -m mortgage_case --chapter 3 --scenario happy_path --offline --json! runs the deterministic demo through checkpoint C03.
+
+\end{enumerate}
 
 The direct OpenAI Python SDK adapter and OpenAI Agents SDK adapter are optional provider integrations behind provider-neutral contracts. The default offline path uses the scripted Agents SDK model and a synthetic gateway, while the MLflow example uses a local SQLite tracking URI. No command in the offline profile requires credentials or a network connection.\par
 
@@ -13070,50 +13143,11 @@ The direct OpenAI Python SDK adapter and OpenAI Agents SDK adapter are optional 
 
 \end{itemize}
 
-\section{Corrections and closure notes}
-
-\begin{itemize}
-
-\item SDK HITL now returns a structured RunResult; it no longer throws serialized run state in an exception.
-
-\item The protected write tool is actually registered, and it carries an enterprise approval ID and proposal hash to the gateway.
-
-\item MLflow evaluation is a synchronous orchestration call that may invoke an async predictor; the wrapper is no longer incorrectly declared async.
-
-\item Delegated authority now narrows purpose and cost as well as action, resource, data class, region, risk, time, and depth.
-
-\item Mutating tools require stable idempotency keys; ambiguous connector exceptions move effects to unknown for reconciliation.
-
-\item Added proposal-bound approval, CloudEvents/outbox, artifact-adoption policy, supply-chain attestation, kill-switch, and recovery-objective examples.
-
-\item Approval timestamps must be timezone-aware and causal; expiration is an exclusive boundary.
-
-\item Skill and Skill Pack versions use SemVer precedence; duplicate packs fail, and deprecated artifacts require explicit replay mode.
-
-\item ReAct stops repeated identical observations instead of looping to a turn limit.
-
-\item Compiled plans bind the plan to the policy envelope and make conservative cost-reservation semantics explicit.
-
-\item The C01–C03 foundation has 19 focused mortgage unit/contract tests in this revision; the generated example report and CI output remain authoritative for the complete count.
-
-\item The direct OpenAI Responses adapter is contract-tested with a fake client, so the test proves request shape and platform-schema translation without a network call.
-
-\item The MLflow mortgage integration proves that \lstinline[style=bookinline]!disable_openai_agent_tracer=False! exposes Agents SDK AgentRunner, agent, and tool spans while \lstinline[style=bookinline]!trace_include_sensitive_data=False! prevents raw fixture content from entering model trace payloads.
-
-\end{itemize}
-
-The live provider path still requires credentials and should be treated as an explicit integration test, not as evidence supplied by the offline suite. Treat the book's Skill and Skill Pack as platform-owned packaging patterns, not as aliases for A2A AgentSkill metadata or the optional Skills-over-MCP extension.\par
+The live provider path still requires credentials and should be treated as an explicit integration test, not as evidence supplied by the offline suite. As Chapter 8 notes, the book's Skill and Skill Pack are platform-owned packaging patterns, not aliases for A2A AgentSkill metadata or Skills over MCP.\par
 
 \section{Rebuild and verify}
 
-BASH · implementation excerpt\par
-
-\needspace{47.6pt}
-\begin{lstlisting}[style=bookcode,title={BASH},language=bookbash]
-.venv-examples/bin/python -m compileall -q mortgage_case examples tests
-make examples-run
-.venv-examples/bin/python -m mortgage_case --chapter 3 --scenario happy_path --offline --json
-\end{lstlisting}
+Run \lstinline[style=bookinline]!.venv-examples/bin/python -m compileall -q mortgage_case examples tests!, then repeat the three commands above. The repository README records the companion code's correction history.\par
 
 \BookAppendix{J}{Prompt and Acceptance Criteria for a Coding Agent}
 
@@ -13187,7 +13221,7 @@ For each major problem use this exact structure:\par
 
 \item \textbf{Problem inventory} — severity, affected stakeholders, current failure modes, and measurable success criteria.
 
-\item \textbf{Layered reference architecture} — experience, edge, agent control, run control, durable execution, model, capability/tool, data/knowledge, sandbox, identity/policy, observability/evaluation, and governance layers.
+\item \textbf{Layered reference architecture} — experience, edge and admission, agent registry and release, run control, durable execution, model access, tool and protocol access, knowledge and context services, sandboxed execution, trust and governance, and operations and improvement layers (the layers of Chapter 4).
 
 \item \textbf{Execution lifecycle} — run state machine, pause/resume, plan revisions, child tasks, approvals, cancellation, compensation, and terminal semantics.
 
@@ -13371,7 +13405,7 @@ A submission is accepted only if all are true:\par
 
 \end{itemize}
 
-\BookAppendix{K}{References}
+\BookAppendix{K}{References and Evidence Scope}
 
 \section{Citation policy}
 
@@ -13384,6 +13418,18 @@ References are numbered by stable registry identifier. Each citation supports on
 \item \BookReferenceTarget{R01}\textbf{\BookCitation{R01}} Yao et al. (2023). \emph{ReAct: Synergizing Reasoning and Acting in Language Models}. ICLR 2023 / arXiv:2210.03629. \href{\detokenize{https://arxiv.org/abs/2210.03629}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Defines ReAct and reports benchmark results for interleaved reasoning and action.
 
 \item \BookReferenceTarget{R43}\textbf{\BookCitation{R43}} Little, John D. C. (1961). \emph{A Proof for the Queuing Formula: L = λW}. Operations Research 9(3). \href{\detokenize{https://doi.org/10.1287/opre.9.3.383}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Primary source for Little’s Law; book sizing equations remain workload-specific approximations.
+
+\item \BookReferenceTarget{R49}\textbf{\BookCitation{R49}} Wu et al. (2023). \emph{AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation}. arXiv:2308.08155. \href{\detokenize{https://arxiv.org/abs/2308.08155}}{Primary or authoritative source}. Accessed 10 October 2026. \textbf{Supports:} Presents AutoGen, a framework in which multiple agents converse using LLMs, human input, and tools. Supports only the description of multi-agent conversation as a composition mechanism.
+
+\item \BookReferenceTarget{R50}\textbf{\BookCitation{R50}} Liu et al. (2023). \emph{AgentBench: Evaluating LLMs as Agents}. ICLR 2024 / arXiv:2308.03688. \href{\detokenize{https://arxiv.org/abs/2308.03688}}{Primary or authoritative source}. Accessed 10 October 2026. \textbf{Supports:} Introduces an eight-environment agent benchmark and reports wide performance differences between models, attributed mainly to weak long-term reasoning, decision-making, and instruction following.
+
+\item \BookReferenceTarget{R51}\textbf{\BookCitation{R51}} Mialon et al. (2023). \emph{GAIA: a benchmark for General AI Assistants}. arXiv:2311.12983. \href{\detokenize{https://arxiv.org/abs/2311.12983}}{Primary or authoritative source}. Accessed 10 October 2026. \textbf{Supports:} Introduces 466 real-world questions that are simple for humans but require tools, browsing, and multimodality, and reports a large human-versus-model gap.
+
+\item \BookReferenceTarget{R52}\textbf{\BookCitation{R52}} Jimenez et al. (2023). \emph{SWE-bench: Can Language Models Resolve Real-World GitHub Issues?}. ICLR 2024 / arXiv:2310.06770. \href{\detokenize{https://arxiv.org/abs/2310.06770}}{Primary or authoritative source}. Accessed 10 October 2026. \textbf{Supports:} Introduces a benchmark of real GitHub issues evaluated with executable tests.
+
+\item \BookReferenceTarget{R53}\textbf{\BookCitation{R53}} Yao et al. (2024). \emph{τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains}. arXiv:2406.12045. \href{\detokenize{https://arxiv.org/abs/2406.12045}}{Primary or authoritative source}. Accessed 10 October 2026. \textbf{Supports:} Introduces a benchmark of tool agents interacting with users under domain rules and reports inconsistent behavior across repeated trials.
+
+\item \BookReferenceTarget{R54}\textbf{\BookCitation{R54}} Debenedetti et al. (2024). \emph{AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents}. arXiv:2406.13352. \href{\detokenize{https://arxiv.org/abs/2406.13352}}{Primary or authoritative source}. Accessed 10 October 2026. \textbf{Supports:} Introduces an environment for evaluating tool-using agents' task utility and prompt-injection security together.
 
 \end{itemize}
 
@@ -13405,19 +13451,17 @@ References are numbered by stable registry identifier. Each citation supports on
 
 \item \BookReferenceTarget{R10}\textbf{\BookCitation{R10}} IETF (2025). \emph{OAuth 2.0 Protected Resource Metadata}. RFC 9728. \href{\detokenize{https://datatracker.ietf.org/doc/html/rfc9728}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Defines protected-resource metadata used in authorization discovery.
 
-\item \BookReferenceTarget{R14}\textbf{\BookCitation{R14}} ISO/IEC (2023). \emph{Information technology — Artificial intelligence — Management system}. ISO/IEC 42001:2023. \href{\detokenize{https://www.iso.org/standard/42001}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Defines requirements for an AI management system and continual improvement.
-
 \item \BookReferenceTarget{R19}\textbf{\BookCitation{R19}} OpenTelemetry (2026). \emph{Generative AI Semantic Conventions}. Development status. \href{\detokenize{https://github.com/open-telemetry/semantic-conventions-genai}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Defines emerging GenAI spans, events, metrics, agent, provider, and MCP mappings.
 
 \item \BookReferenceTarget{R41}\textbf{\BookCitation{R41}} W3C (2023). \emph{Web Content Accessibility Guidelines (WCAG) 2.2}. W3C Recommendation. \href{\detokenize{https://www.w3.org/TR/WCAG22/}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Defines accessibility success criteria relevant to human-review interfaces.
 
-\item \BookReferenceTarget{R44}\textbf{\BookCitation{R44}} Object Management Group (2014). \emph{Business Process Model and Notation (BPMN)}. Version 2.0.2, formal, January 2014. \href{\detokenize{https://www.omg.org/spec/BPMN/2.0.2}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Defines BPMN process modelling notation and its execution semantics. Supports the existence and semantics of the standard only, not any claim about its suitability for agentic planning.
+\item \BookReferenceTarget{R44}\textbf{\BookCitation{R44}} Object Management Group (2014). \emph{Business Process Model and Notation (BPMN)}. Version 2.0.2, formal, January 2014. \href{\detokenize{https://www.omg.org/spec/BPMN/2.0.2}}{Primary or authoritative source}. Accessed 14 September 2026. \textbf{Supports:} Defines BPMN process modelling notation and its execution semantics. Supports the existence and semantics of the standard only, not any claim about its suitability for agentic planning.
 
-\item \BookReferenceTarget{R45}\textbf{\BookCitation{R45}} Object Management Group (2024). \emph{Decision Model and Notation (DMN)}. Version 1.5, formal, August 2024. \href{\detokenize{https://www.omg.org/spec/DMN/1.5}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Defines DMN decision tables, hit policies, and FEEL. Supports the existence and semantics of the standard only, not any claim about agent decision quality.
+\item \BookReferenceTarget{R45}\textbf{\BookCitation{R45}} Object Management Group (2024). \emph{Decision Model and Notation (DMN)}. Version 1.5, formal, August 2024. \href{\detokenize{https://www.omg.org/spec/DMN/1.5}}{Primary or authoritative source}. Accessed 14 September 2026. \textbf{Supports:} Defines DMN decision tables, hit policies, and FEEL. Supports the existence and semantics of the standard only, not any claim about agent decision quality.
 
-\item \BookReferenceTarget{R46}\textbf{\BookCitation{R46}} Object Management Group (2016). \emph{Case Management Model and Notation (CMMN)}. Version 1.1, formal, December 2016. \href{\detokenize{https://www.omg.org/spec/CMMN/1.1}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Defines CMMN case modelling for unordered, event-driven work. Supports the existence and semantics of the standard only.
+\item \BookReferenceTarget{R46}\textbf{\BookCitation{R46}} Object Management Group (2016). \emph{Case Management Model and Notation (CMMN)}. Version 1.1, formal, December 2016. \href{\detokenize{https://www.omg.org/spec/CMMN/1.1}}{Primary or authoritative source}. Accessed 14 September 2026. \textbf{Supports:} Defines CMMN case modelling for unordered, event-driven work. Supports the existence and semantics of the standard only.
 
-\item \BookReferenceTarget{R47}\textbf{\BookCitation{R47}} Object Management Group (2019). \emph{Semantics of Business Vocabulary and Business Rules (SBVR)}. Version 1.5, formal, December 2019. \href{\detokenize{https://www.omg.org/spec/SBVR/1.5}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only.
+\item \BookReferenceTarget{R47}\textbf{\BookCitation{R47}} Object Management Group (2019). \emph{Semantics of Business Vocabulary and Business Rules (SBVR)}. Version 1.5, formal, December 2019. \href{\detokenize{https://www.omg.org/spec/SBVR/1.5}}{Primary or authoritative source}. Accessed 14 September 2026. \textbf{Supports:} Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only.
 
 \end{itemize}
 
@@ -13430,6 +13474,8 @@ References are numbered by stable registry identifier. Each citation supports on
 \item \BookReferenceTarget{R12}\textbf{\BookCitation{R12}} NIST (2023). \emph{Artificial Intelligence Risk Management Framework (AI RMF 1.0)}. NIST AI 100-1. \href{\detokenize{https://www.nist.gov/itl/ai-risk-management-framework}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Defines voluntary Govern, Map, Measure, and Manage risk-management functions.
 
 \item \BookReferenceTarget{R13}\textbf{\BookCitation{R13}} NIST (2024). \emph{Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile}. NIST AI 600-1. \href{\detokenize{https://doi.org/10.6028/NIST.AI.600-1}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Provides cross-sector generative-AI risk considerations across the AI lifecycle.
+
+\item \BookReferenceTarget{R14}\textbf{\BookCitation{R14}} ISO/IEC (2023). \emph{Information technology — Artificial intelligence — Management system}. ISO/IEC 42001:2023. \href{\detokenize{https://www.iso.org/standard/42001}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Defines requirements for an AI management system and continual improvement.
 
 \item \BookReferenceTarget{R15}\textbf{\BookCitation{R15}} OWASP GenAI Security Project (2026). \emph{OWASP Top 10 for Agentic Applications}. 2026 edition. \href{\detokenize{https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Prioritizes major agentic-application security risks and mitigations.
 
@@ -13493,7 +13539,7 @@ References are numbered by stable registry identifier. Each citation supports on
 
 \item \BookReferenceTarget{R38}\textbf{\BookCitation{R38}} DBOS (2026). \emph{DBOS AI Quickstart}. Current documentation. \href{\detokenize{https://docs.dbos.dev/ai/ai-quickstart}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Documents durable long-running agent workflows, queues, waits, and framework integrations.
 
-\item \BookReferenceTarget{R48}\textbf{\BookCitation{R48}} Rahimi, R. (2026). \emph{Policy Logic Forge: compiling compliance policy text into typed, source-grounded executable decision logic}. Repository documentation, ARCHITECTURE.md §1.1. \href{\detokenize{https://github.com/rrahimi-uci/policy-logic-forge}}{Primary or authoritative source}. Accessed 13 September 2026. \textbf{Supports:} Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44\% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction.
+\item \BookReferenceTarget{R48}\textbf{\BookCitation{R48}} Rahimi, R. (2026). \emph{Policy Logic Forge: compiling compliance policy text into typed, source-grounded executable decision logic}. Repository documentation, ARCHITECTURE.md §1.1. \href{\detokenize{https://github.com/rrahimi-uci/policy-logic-forge}}{Primary or authoritative source}. Accessed 14 September 2026. \textbf{Supports:} Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44\% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction.
 
 \end{itemize}
 
@@ -13531,7 +13577,7 @@ R11 & official guidance & Supports resource-centric, continuously evaluated trus
 R12 & official guidance & Defines voluntary Govern, Map, Measure, and Manage risk-management functions. & Verified 2026-09-13; re-check living sources before use. \\
 R13 & official guidance & Provides cross-sector generative-AI risk considerations across the AI lifecycle. & Verified 2026-09-13; re-check living sources before use. \\
 \rowcolor{BookLight}
-R14 & standard & Defines requirements for an AI management system and continual improvement. & Verified 2026-09-13; re-check living sources before use. \\
+R14 & management system standard & Defines requirements for an AI management system and continual improvement. & Verified 2026-09-13; re-check living sources before use. \\
 R15 & community guidance & Prioritizes major agentic-application security risks and mitigations. & Verified 2026-09-13; re-check living sources before use. \\
 \rowcolor{BookLight}
 R16 & community guidance & Provides practical controls for identity, tools, memory, output, and monitoring. & Verified 2026-09-13; re-check living sources before use. \\
@@ -13583,6 +13629,15 @@ R46 & standard & Defines CMMN case modelling for unordered, event-driven work. S
 R47 & standard & Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only. & Verified 2026-09-14; re-check living sources before use. \\
 \rowcolor{BookLight}
 R48 & framework documentation & Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44\% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction. & Verified 2026-09-14; re-check living sources before use. \\
+R49 & research & Presents AutoGen, a framework in which multiple agents converse using LLMs, human input, and tools. Supports only the description of multi-agent conversation as a composition mechanism. & Verified 2026-10-10; re-check living sources before use. \\
+\rowcolor{BookLight}
+R50 & research & Introduces an eight-environment agent benchmark and reports wide performance differences between models, attributed mainly to weak long-term reasoning, decision-making, and instruction following. & Verified 2026-10-10; re-check living sources before use. \\
+R51 & research & Introduces 466 real-world questions that are simple for humans but require tools, browsing, and multimodality, and reports a large human-versus-model gap. & Verified 2026-10-10; re-check living sources before use. \\
+\rowcolor{BookLight}
+R52 & research & Introduces a benchmark of real GitHub issues evaluated with executable tests. & Verified 2026-10-10; re-check living sources before use. \\
+R53 & research & Introduces a benchmark of tool agents interacting with users under domain rules and reports inconsistent behavior across repeated trials. & Verified 2026-10-10; re-check living sources before use. \\
+\rowcolor{BookLight}
+R54 & research & Introduces an environment for evaluating tool-using agents' task utility and prompt-injection security together. & Verified 2026-10-10; re-check living sources before use. \\
 \end{longtable}
 \BookTableEnd
 

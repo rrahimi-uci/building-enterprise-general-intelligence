@@ -4,7 +4,7 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7",
-    "content_tex_sha256": "a1371e5132e31b8cfce2d959d5b97968110133ee3a29d80a24896b243addeb89",
+    "content_tex_sha256": "0a612b7d9a34bcb5e4092b861087c96592a44244d8d52146bd979b4efa266dee",
     "style_sha256": "7a1273ba38763881c8ed2ede7ad741ea49ca031d7bb5f8fc354e413a88d840c8",
     "narrative_parts": 8,
     "appendix_dividers": 1,
@@ -12,15 +12,15 @@
     "chapter_covers": 28,
     "appendices": 12,
     "diagrams": 42,
-    "code_blocks": 60,
-    "longtables": 150,
+    "code_blocks": 57,
+    "longtables": 149,
     "compact_tables": 104,
     "callout_tables": 71,
-    "citation_occurrences": 115,
-    "reference_targets": 48,
-    "unique_citation_ids": 48,
-    "markdown_tables": 325,
-    "markdown_code_blocks": 60,
+    "citation_occurrences": 139,
+    "reference_targets": 54,
+    "unique_citation_ids": 54,
+    "markdown_tables": 324,
+    "markdown_code_blocks": 57,
     "image_quality": [
       {
         "file": "assets/cover/cover-v1.0.0.png",
@@ -241,10 +241,10 @@
       {
         "file": "assets/diagrams/anti-approval-binding.png",
         "pixels": [
-          2420,
-          2250
+          2392,
+          2083
         ],
-        "effective_dpi": 342.8
+        "effective_dpi": 338.8
       },
       {
         "file": "assets/diagrams/supervisor-worker.png",
