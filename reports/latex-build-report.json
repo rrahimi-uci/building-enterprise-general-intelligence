@@ -6,7 +6,7 @@
   "main_tex": "latex/Enterprise-General-Intelligence-v2.1.0.tex",
   "main_tex_sha256": "37b9dbbd1abd8d0c66eb6f20e61eaedbc253e951f556a8d7a523b8458b5cdd2a",
   "content_tex": "latex/content/book-content.tex",
-  "content_tex_sha256": "f4f9aaac8901240c0e7d85ddaecfd4729790f68ae6be1be2b9259f9dccb536de",
+  "content_tex_sha256": "7a65b5a878524382f610436e1718ff0b5d1e2e1dda5bd930823044108ff132b7",
   "style": "latex/bookstyle.sty",
   "fonts": [
     {
@@ -62,6 +62,6 @@
     "callouts": 95,
     "citations": 109
   },
-  "source_bytes": 850678,
+  "source_bytes": 850138,
   "compile_command": "latex/compile.sh"
 }

@@ -14,6 +14,7 @@ All notable changes follow semantic versioning and are recorded here.
   the compiled PDF; the LaTeX PDF grows from 288 to 344 pages and the DOCX
   from about 24 MB to about 52 MB.
 - Removed the Part divider artwork (the eight Part panel images) from both editions. Part divider pages keep the Part number, title, and orientation text on the navy page. The panel generator (`tools/prepare_part_visuals.py`), its registry (`config/part-visuals.json`), `assets/parts/`, and the `make part-visuals` target are removed; the immutable source artwork in `source/part-visuals/` is kept as provenance.
+- Removed 28 blank pages from the PDF (344 → 310 pages): the cover macro used `\newgeometry`, which emitted an empty page before every cover. It now draws the cover as a page-sized overlay. Code listings up to about 330 pt are kept whole; larger ones may break across pages instead of stranding a nearly empty page behind their heading. The DOCX cover page now uses a paragraph page-break property instead of separate break paragraphs.
 - Validators now require 28 registered covers per edition, each 2550 × 3300
   with a checksum that matches `reports/chapter-cover-report.json`, and count
   the extra DOCX images.

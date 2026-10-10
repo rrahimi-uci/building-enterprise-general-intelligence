@@ -745,7 +745,6 @@ The discussion above draws on R01; R13. Appendix K lists the complete sources an
 
 \BookSnake · Provider-neutral agent-step and platform contracts\par
 
-\needspace{332.8pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class EvidenceRef(BaseModel):
     uri: str
@@ -1151,7 +1150,6 @@ def chapter_02_deterministic_proposal() -> dict[str, object]:
 
 \BookSnake · Bounded agent loop with a typed tool\par
 
-\needspace{516.8pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class MortgageCaseStatus(BaseModel):
     """The structured answer the agent must produce."""
@@ -2599,7 +2597,6 @@ class CandidatePlan(BaseModel):
 
 \BookSnake · implementation excerpt\par
 
-\needspace{388.0pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
@@ -2774,7 +2771,6 @@ Entities, relationships, dependencies, and the organization's own semantics. Tra
 
 \BookSnake · Traversal answering a question similarity cannot\par
 
-\needspace{406.4pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @dataclass
 class KnowledgeGraph:
@@ -2830,7 +2826,6 @@ The core of the layer. A rule an agent reads is documentation; a rule the platfo
 
 \BookSnake · A policy sentence as a typed, scoped rule with provenance\par
 
-\needspace{489.2pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 Modality = Literal["obligation", "permission", "prohibition"]
 
@@ -2891,7 +2886,6 @@ Enforcement then happens where intent becomes action:\par
 
 \BookSnake · A policy rule enforced at the effect boundary\par
 
-\needspace{553.6pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class PolicyViolation(Exception):
     """Refused by an enforceable rule. Carries the rule that refused it."""
@@ -2965,7 +2959,6 @@ What the agent may do, with the consequences attached. A tool list says what exi
 
 \BookSnake · Discovering a capability with its effects and prerequisites\par
 
-\needspace{526.0pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 Effect = Literal["read", "write", "irreversible"]
 
@@ -3059,7 +3052,6 @@ Extraction is probabilistic. Verification must not be. The pipeline that works s
 
 \BookSnake · Rebuilding a claim's evidence instead of trusting its citation\par
 
-\needspace{406.4pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @dataclass(frozen=True)
 class Verdict:
@@ -3824,7 +3816,6 @@ class ContextManifest(BaseModel):
 
 \BookSnake · implementation excerpt\par
 
-\needspace{388.0pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
@@ -4334,7 +4325,6 @@ The discussion above draws on R05; R07. Appendix K lists the complete sources an
 
 \BookSnake · Resolving a skill version under policy and SemVer precedence\par
 
-\needspace{581.2pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class SkillRegistry:
     def __init__(self) -> None:
@@ -4810,7 +4800,6 @@ Budget exhaustion & External turn, call, token, time, and cost enforcement. \\
 
 \BookSnake · Bounded ReAct loop with an explicit run budget\par
 
-\needspace{526.0pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @dataclass
 class RunBudget:
@@ -4873,7 +4862,6 @@ async def run(question: str, *, budget: RunBudget, model=None) -> str:
 
 \BookSnake · A ReAct controller that owns the budgets\par
 
-\needspace{590.4pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class ReActEngine:
     """A bounded reason-act-observe loop with an external tool boundary."""
@@ -5237,7 +5225,6 @@ Context loss & Typed artifact and obligation references instead of transcript co
 
 \BookSnake · Routing by handoff: transferring ownership, not context\par
 
-\needspace{351.2pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 evidence_specialist = Agent(
     name="Mortgage evidence specialist",
@@ -5733,7 +5720,6 @@ Plan churn & Revision, no-progress, and cost limits; freeze committed facts. \\
 
 \BookSnake · Compiling an approved plan into a budget-bounded envelope\par
 
-\needspace{599.6pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, object]:
     """Validate and bind a proposed plan to the policy envelope.
@@ -6591,7 +6577,6 @@ class PendingApprovals:
 
 \BookSnake · implementation excerpt\par
 
-\needspace{332.8pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
@@ -6633,7 +6618,6 @@ def proposal_hash(action: str, destination: str,
 
 \BookSnake · Verifying human action authorization against this exact proposal\par
 
-\needspace{452.4pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class HumanActionAuthorizationDecision(BaseModel):
     approval_id: str
@@ -7084,7 +7068,6 @@ Unknown mutation & Freeze dependents and reconcile before retry or close. \\
 
 \BookSnake · Durable run state as a replayable event fold\par
 
-\needspace{544.4pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def evolve(state: RunState, event: WorkflowEvent) -> RunState:
     if event.expected_state_version is not None and event.expected_state_version != state.state_version:
@@ -8195,7 +8178,6 @@ class TaskEnvelope(BaseModel):
 
 \BookSnake · implementation excerpt\par
 
-\needspace{627.2pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
@@ -9079,7 +9061,6 @@ The discussion above draws on R11; R15; R16. Appendix K lists the complete sourc
 
 \BookSnake · An input guardrail that trips before any tool runs\par
 
-\needspace{443.2pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 # Phrases that attempt to re-authorize the agent from inside the content. A real
 # deployment classifies rather than matches strings; the architecture is the
@@ -9493,7 +9474,6 @@ The discussion above draws on R06; R08; R09. Appendix K lists the complete sourc
 
 \BookSnake · implementation excerpt\par
 
-\needspace{627.2pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
@@ -10127,7 +10107,6 @@ class EffectLedger:
 
 \BookSnake · implementation excerpt\par
 
-\needspace{498.4pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
@@ -10548,7 +10527,6 @@ def authorize_url(raw_url: str, allowed_hosts: frozenset[str]) -> tuple[str, tup
 
 \BookSnake · implementation excerpt\par
 
-\needspace{342.0pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
@@ -10906,7 +10884,6 @@ def handle_request(case_id: str) -> str:
 
 \BookSnake · Configuring MLflow tracing around a governed agent step\par
 
-\needspace{332.8pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def configure_observability(experiment: str = "book-mortgage-evidence-review") -> None:
     """Point MLflow at the tracking backend and capture provider calls.
@@ -11407,7 +11384,6 @@ Trusting an LLM judge you have not calibrated against human labels. A judge is a
 
 \BookSnake · Evaluating an agent against a dataset with MLflow\par
 
-\needspace{507.6pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 # These are controlled synthetic cases, not production incidents. A production
 # dataset needs its own privacy, purpose, leakage, and retention review.
@@ -11468,7 +11444,6 @@ def evaluate() -> dict[str, float]:
 
 \BookSnake · Combining deterministic and model-assisted MLflow trajectory scorers\par
 
-\needspace{461.6pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @scorer(name="no_unknown_effects")
 def no_unknown_effects(trace: Trace) -> Feedback:
@@ -12202,7 +12177,6 @@ def compatible(run: ReleaseManifest, worker: ReleaseManifest) -> bool:
 
 \BookSnake · implementation excerpt\par
 
-\needspace{332.8pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
 
@@ -13336,7 +13310,6 @@ For each major problem use this exact structure:\par
 
 TXT · implementation excerpt\par
 
-\needspace{424.8pt}
 \begin{lstlisting}[style=bookcode,title={TEXT}]
 /docs
   /architecture.md

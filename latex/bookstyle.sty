@@ -172,11 +172,16 @@
   \clearpage\restoregeometry}
 
 % A full-bleed Letter chapter cover. It stands alone on the page before the
-% chapter's own opening page, exactly as the Part divider does.
+% chapter's own opening page, exactly as the Part divider does. It is drawn as
+% a page-sized overlay: \newgeometry here would emit a blank page first.
 \newcommand{\BookChapterCover}[1]{%
-  \clearpage\newgeometry{margin=0pt}\thispagestyle{empty}%
-  \noindent\includegraphics[width=\paperwidth,height=\paperheight]{#1}%
-  \clearpage\restoregeometry}
+  \clearpage\thispagestyle{empty}%
+  \null
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[inner sep=0pt,anchor=center] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{#1}};
+  \end{tikzpicture}%
+  \clearpage}
 
 \newcommand{\BookTitlePage}[4]{%
   \thispagestyle{empty}\vspace*{0.11\textheight}%

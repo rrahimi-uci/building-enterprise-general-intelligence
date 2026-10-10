@@ -976,8 +976,8 @@
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v2.1.0.docx",
-      "bytes": 43610058,
-      "sha256": "7359a3af5ba764b8edb85843ffd6c302c2dcacfdb0b55341bccfe5a763ed6431"
+      "bytes": 43609782,
+      "sha256": "ae2418063cfe1c23fc523a1951f09e4aca97f4512dfe08d46b11461db36e273d"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v2.1.0.md",
@@ -1321,8 +1321,8 @@
     },
     {
       "path": "latex/bookstyle.sty",
-      "bytes": 14436,
-      "sha256": "54d4efe867d3a09edd804f8fac1b0dea9d1bece35b9d106aed7c9492c9597314"
+      "bytes": 14622,
+      "sha256": "06f92398f50ef3b377512bdd797a70b60ef3b49e4282a402eea2652f0d335d1a"
     },
     {
       "path": "latex/compile.sh",
@@ -1331,8 +1331,8 @@
     },
     {
       "path": "latex/content/book-content.tex",
-      "bytes": 850124,
-      "sha256": "f4f9aaac8901240c0e7d85ddaecfd4729790f68ae6be1be2b9259f9dccb536de"
+      "bytes": 849584,
+      "sha256": "7a65b5a878524382f610436e1718ff0b5d1e2e1dda5bd930823044108ff132b7"
     },
     {
       "path": "latex/fonts/LICENSE-SIL-OFL-1.1.txt",
@@ -1682,32 +1682,32 @@
     {
       "path": "qa/build-report.json",
       "bytes": 309,
-      "sha256": "0e93eafe5a81567069c2d2e49aba205985fcf6734971a42b34f78de776197881"
+      "sha256": "5db7545f739c18695eb906f54a2e2d8dba7b5324deeb27e0486eaff874df653b"
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 43610058,
-      "sha256": "7359a3af5ba764b8edb85843ffd6c302c2dcacfdb0b55341bccfe5a763ed6431"
+      "bytes": 43609782,
+      "sha256": "ae2418063cfe1c23fc523a1951f09e4aca97f4512dfe08d46b11461db36e273d"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 43610058,
-      "sha256": "7359a3af5ba764b8edb85843ffd6c302c2dcacfdb0b55341bccfe5a763ed6431"
+      "bytes": 43609782,
+      "sha256": "ae2418063cfe1c23fc523a1951f09e4aca97f4512dfe08d46b11461db36e273d"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "4617b111c403b42f515033fde011632106bd373b8509c72b483d5aff34c8b5a3"
+      "sha256": "90aba3002fa4fbb529f9bdc2e7ca39ebedb32126af70d824232c0a6da07824d0"
     },
     {
       "path": "qa/latex-validation-report.json",
       "bytes": 17056,
-      "sha256": "fbeafdfc471327e866b6db3923539ff159dfcb05869d02d5d8685bb73d636b8f"
+      "sha256": "21f4516d416000eb553041680fdf1ba66dd9a124f98e506da5b3fe5b70ebd8c3"
     },
     {
       "path": "qa/validation-report.json",
       "bytes": 875,
-      "sha256": "6c3a2597f958adb39eee9dfb3640df406526bc897d9cc93d1d7b896e6a26f867"
+      "sha256": "11d569dd84cd9fc47505ec6637102d11730c0a909a3c546448d0737027eaee2b"
     },
     {
       "path": "reports/assembly-report.json",
@@ -1762,7 +1762,7 @@
     {
       "path": "reports/latex-build-report.json",
       "bytes": 2429,
-      "sha256": "4d22b2f9e05495958a6deaad624caf1296eb751745cbfd8b1df28ee39287c92c"
+      "sha256": "b3b7a89c19d76071d740b46d3b4ba45e328c73aad9faa242de9bf5c7c86675d2"
     },
     {
       "path": "reports/latex-validation.md",
@@ -1787,7 +1787,7 @@
     {
       "path": "reports/validation-summary.md",
       "bytes": 864,
-      "sha256": "bdc29ec4a7acad05cc0d87cf7c984df97d4bfce3bb10bbfcd2740b53b12e84fc"
+      "sha256": "72b7361e488c1d511ef11c483cf53b1f07d7d4f769fc2e46a546d3c826e5cfda"
     },
     {
       "path": "requirements.txt",
@@ -2081,13 +2081,13 @@
     },
     {
       "path": "tools/build_book.py",
-      "bytes": 26419,
-      "sha256": "e7cdcc8619038d4194ffc568b53b330c32ce5d4bfb4a4f19f1cac2e4efaf7811"
+      "bytes": 26504,
+      "sha256": "12b472f18bafb735ad055b3cb5674cd1ed4d7816ea3b2de971c3378ab2997d3a"
     },
     {
       "path": "tools/build_latex.py",
       "bytes": 25133,
-      "sha256": "a421cf753a8291c09122c65959d4e6bc70536babf1936e6a5fec8a70e5b35571"
+      "sha256": "3a50d8d292137c7543abb41fd212273865e6af08f052efeefc5209d01f08024d"
     },
     {
       "path": "tools/callouts.py",

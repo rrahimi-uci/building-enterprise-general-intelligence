@@ -319,7 +319,7 @@ CODE_FRAME_PT = 20.0
 # reserving would only strand a half-empty page in front of it. Listings that
 # large are editorial debt: use the example region markers to show the part that
 # teaches instead of the whole file.
-CODE_MAX_RESERVE_PT = 643.0
+CODE_MAX_RESERVE_PT = 330.0
 
 
 def code_reservation(code: str) -> str:
