@@ -1,7 +1,7 @@
 {
   "output": "qa/determinism/build-b.docx",
-  "sha256": "c37c219aafbdb004660532203d316cb9657f76ef233f791cbed327de7c4aa730",
-  "bytes": 24427013,
+  "sha256": "0b82a38ba7dafb3a107d15db95e7f708f6f8d62a1c0fd4fdded27c37e1a4f5ec",
+  "bytes": 24426950,
   "template_only": false,
   "paragraphs": 3058,
   "tables": 421,

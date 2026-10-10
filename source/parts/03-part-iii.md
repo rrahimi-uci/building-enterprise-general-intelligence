@@ -10,7 +10,7 @@ safety and evidence while leaving domain teams room to build something useful.
 
 > **Evidence context:** The portability layer is informed by current public agent abstractions from OpenAI, Microsoft, and Google; capability parity is not assumed and must be proven by adapter conformance tests. **[R29][R31][R32]**
 
-## Why every team should not rebuild the safety layer
+## Why teams should not each rebuild the safety layer
 
 Without a platform, every team rebuilds the same dangerous plumbing and every
 fix arrives at a different speed. This chapter describes a paved road made of
@@ -18,17 +18,17 @@ contracts, adapters, and delivery practices. The goal is not to force every
 application into one monolith; it is to make the safe path easier to reuse
 than the clever shortcut.
 
-## What the paved road actually provides
+## When the need becomes obvious
 
 The need for a paved road becomes obvious after the second or third team ships. One team retries inside its SDK wrapper, another records only transcripts, and a third gives tools a broad service credential. Each local choice looks reasonable, but the organization now has three incompatible meanings of failure, audit, and authorization. A platform earns its place by making those cross-cutting decisions once and leaving product teams free to build differentiated domain behavior.
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
-| Platform services own contracts and evidence; applications own domain behaviour | application code to platform-owned control planes | template · adapter · release artifact | one application release | AgentSpec · RunContext · ToolSpec · ReleaseManifest |
+| Platform services own contracts and evidence; applications own domain behavior | application code to platform-owned control planes | template · adapter · release artifact | one application release | AgentSpec · RunContext · ToolManifest · ReleaseManifest |
 
 ## What teams should be able to rely on
 
-The developer platform is a reusable paved road that lets teams build differentiated agents without repeatedly rebuilding identity, policy, tool safety, tracing, evaluation, durable execution, and delivery infrastructure. It is not a mandatory monolith: applications use platform-owned contracts and replaceable adapters.
+The developer platform is a reusable paved road that lets teams build differentiated agents without repeatedly rebuilding identity, policy, tool safety, tracing, evaluation, durable execution, and delivery infrastructure. Applications use platform-owned contracts and replaceable adapters.
 
 [[DIAGRAM:developer-platform|Figure 7-1 — Agentic developer platform and SDK capability stack]]
 
@@ -55,7 +55,7 @@ The developer platform is a reusable paved road that lets teams build differenti
 
 [[DIAGRAM:portability|Figure 7-2 — Platform contracts with replaceable framework and provider adapters]]
 
-Use AgentSpec, RunContext, TaskEnvelope, ToolSpec/ToolCall, ContextManifest, MemoryRecord, EvaluationResult, and ReleaseManifest as stable contracts. Compile them into framework/provider adapters. Standardized contracts, MCP, APIs, events, agent-to-agent protocols, gateways, and shared platform services provide interoperability without leaking vendor-native message objects into applications. Compatibility suites verify cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.
+Use AgentSpec, RunContext, TaskEnvelope, ToolManifest/ToolCall, ContextManifest, MemoryRecord, EvaluationResult, and ReleaseManifest as stable contracts. Compile them into framework/provider adapters. Standardized contracts, MCP, APIs, events, agent-to-agent protocols, gateways, and shared platform services provide interoperability without leaking vendor-native message objects into applications. Compatibility suites verify cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.
 
 ## How a capability moves from idea to production
 
@@ -65,7 +65,7 @@ Create from an approved template; attach tools, Skills, context, and memory; con
 
 ## SDK example
 
-🐍 · implementation excerpt
+🐍 · illustrative pseudocode
 
 ```python
 agent = platform.agent(
@@ -115,7 +115,7 @@ Deterministic units verify schemas, policy helpers, acceptance, routes, reducers
 
 ## CLI and delivery workflow
 
-BASH · implementation excerpt
+BASH · illustrative command sequence
 
 ```bash
 agentctl init mortgage-evidence-review --template regulated-workflow --risk high
@@ -151,26 +151,26 @@ The discussion above draws on R29; R31; R32. Appendix K lists the complete sourc
 
 **✓** SDKs, adapters, model aliases, tool schemas, Skills, MCP servers, policy bundles, evaluators, and knowledge snapshots are pinned in the release manifest.
 
-**✓** A model or provider swap ships as a behaviour change with evaluation, canary, and rollback — never as configuration.
+**✓** A model or provider swap ships as a behavior change with evaluation, canary, and rollback — never as configuration.
 
-**✓** Adapter conformance suites cover cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behaviour.
+**✓** Adapter conformance suites cover cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.
 
 **✓** Every golden-path stage emits its evidence artifact; a stage that produces no evidence is not complete.
 
 ## Put the idea to work
 
-1. Take one existing agent and list which of the sixteen platform capabilities it reimplements locally. Estimate the cost of removing each.
+1. Take one existing agent and list which of the sixteen platform capabilities it reimplements locally. Estimate the cost of replacing each with the platform service.
 2. Write an adapter conformance test that fails when a framework silently drops cancellation mid-run.
 
 ## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
-| Why should platform contracts, not framework objects, be the stable interface? | Vendor message objects change between releases and differ in semantics. Contracts such as AgentSpec, ToolSpec, and ReleaseManifest keep applications, evidence, and audits stable while adapters absorb the change. |
-| What makes a paved road adopted rather than mandated? | It removes work the team would otherwise do — identity, policy, tracing, durable execution, release — while leaving domain behaviour, topology, and acceptance to the team. A road that constrains domain decisions gets bypassed. |
-| Why is a model or provider swap not configuration? | Behaviour, cost, latency, and failure modes all change without application code changing, so it requires the same evaluation, canary, and rollback evidence as a code release. |
+| Why should platform contracts, not framework objects, be the stable interface? | Vendor message objects change between releases and differ in semantics. Contracts such as AgentSpec, ToolManifest, and ReleaseManifest keep applications, evidence, and audits stable while adapters absorb the change. |
+| What makes a paved road adopted rather than mandated? | It removes work the team would otherwise do — identity, policy, tracing, durable execution, release — while leaving domain behavior, topology, and acceptance to the team. A road that constrains domain decisions gets bypassed. |
+| Why is a model or provider swap not configuration? | Behavior, cost, latency, and failure modes all change without application code changing, so it requires the same evaluation, canary, and rollback evidence as a code release. |
 | What does the golden path make visible that a convenient SDK hides? | Authority, versions, risk, evidence, and cost. An SDK that hides them does not remove the complexity; it relocates it to production incidents. |
-| When is framework portability proven? | Only when adapter conformance tests pass across cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behaviour. Parity is never inferred from documentation. |
+| When is framework portability proven? | Only when adapter conformance tests pass across cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior. Parity is never inferred from documentation. |
 
 ## Where this leads next
 
@@ -201,9 +201,9 @@ A Skill is useful when it can be reviewed, tested, versioned, and retired as a c
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
-| Skill Registry and resolver | semantic discovery to policy-bound resolution | skill family · registry partition | one skill version | SkillManifest · SkillRequirement · SkillRelease |
+| Skill Registry and resolver | semantic discovery to policy-bound resolution | Skill family · registry partition | one Skill version | SkillManifest · SkillRequirement · SkillRelease |
 
-## A Skill is more than its prompt
+## The Skill manifest
 
 A Skill is the smallest independently owned and versioned package that lets an agent perform a meaningful capability. Its manifest names interface schemas, instructions, eligible tools, knowledge sources, optional workflow template, policy constraints, side-effect class, observability fields, evaluation suite, owner, lifecycle, and immutable digest.
 
@@ -240,16 +240,16 @@ lifecycle: active
 
 Three things in that file are doing more work than they appear to. The
 `digest` is what a run actually pins, so an alias moving under you cannot
-change behaviour mid-flight. The `requires` block is exhaustive — a Skill that
+change behavior mid-flight. The `requires` block is exhaustive — a Skill that
 reaches for a tool not listed there fails, which is what makes the manifest a
 contract rather than documentation. And `evaluation.gates` means promotion is
-decided by evidence, not by a reviewer's judgement on the day.
+decided by evidence, not by a reviewer's judgment on the day.
 
 Skills separate reuse from copy-and-paste. An application requests a capability such as `mortgage.evidence.read`; it does not embed a specific prompt and connector.
 
 ### Discovery is not permission
 
-This is the distinction the chapter turns on, and conflating the two is how
+This is the distinction the chapter turns on: conflating discovery with resolution is how
 governed capability quietly becomes ungoverned.
 
 [[DIAGRAM:skill-resolution|Figure 8-1 — Discovery proposes candidates; resolution pins exactly one version, or fails]]
@@ -284,12 +284,12 @@ Draft → Certified → Staged → Active → Deprecated → Revoked is evidence
 | --- | --- | --- |
 | **Draft** | Authored, not trusted | Passing the certification suite |
 | **Certified** | Evidence exists; not yet deployed | A staging release decision |
-| **Staged** | Running against non-production traffic | Canary evidence within gates |
+| **Staged** | Running in staging, shadow, or a limited canary | Canary evidence within gates |
 | **Active** | Resolvable by production runs | — |
 | **Deprecated** | Still resolvable for runs already using it | The compatibility window expiring |
 | **Revoked** | Not resolvable by anything new | — |
 
-Certification includes contract, unit, simulation, trajectory, threat, failure-injection, load, and operator-readiness checks. Deprecation retains a compatibility window for active runs — a long-running mortgage evidence review started three weeks ago must finish on the version it pinned. Revocation removes the Skill from new resolution immediately and may trigger workflow pause or migration by risk class; it is the one transition that can affect a run already in flight, which is why it is reserved for a defect serious enough to justify that.
+Certification includes contract, unit, simulation, trajectory, threat, failure-injection, load, and operator-readiness checks. Deprecation retains a compatibility window for active runs — a long-running mortgage evidence review started three weeks ago must finish on the version it pinned. Revocation removes the Skill from all resolution and may trigger workflow pause or migration by risk class. It normally follows the compatibility window; revoking earlier is the one transition that can affect a run already in flight, which is why it is reserved for a defect serious enough to justify that.
 
 ### Skill contract surface
 
@@ -305,9 +305,9 @@ The registry scales as a read-heavy control-plane service with immutable manifes
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Terminology | Skill is a platform-owned package in this book. It is not an OpenAI Agents SDK primitive and is not identical to A2A AgentSkill metadata or Skills over MCP. Interchange requires an explicit adapter and loss analysis. | A2A-101; MCP-2026 |
+| Terminology | Skill is a platform-owned package in this book. It is not an OpenAI Agents SDK primitive and is not identical to A2A AgentSkill metadata or Skills over MCP. Interchange requires an explicit adapter and loss analysis. | R05; R07 |
 
-The discussion above draws on SLSA; MCP-2026. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R05; R07. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -372,7 +372,7 @@ release. The payoff is visible during change: a mortgage team can roll out a
 compatible capability bundle instead of discovering incompatibilities in
 production one agent at a time.
 
-## Why the pack should ship as one unit
+## Compatibility, not convenience
 
 Shipping related Skills together is less about convenience than compatibility. Suppose document validation begins returning a new evidence schema while income verification still expects the old one. Independent releases can leave a run in the gap between them. A pack pins versions known to work together, tests shared workflow and policy as one behavior, and gives operators one unit to promote or roll back.
 
@@ -407,19 +407,19 @@ installing tenant's own grants.
 | Declare its dependency and risk ceiling | Change the installing tenant's grants |
 
 A business unit that installs the mortgage-evidence pack and has no entitlement
-to the income-verification source gets a pack whose verification Skill will not resolve for
+to the income-verification source gets a pack whose income-verification Skill will not resolve for
 its runs. That is the correct outcome, and it is why sharing a pack across
 business units is a policy and data-boundary review rather than a package
 install.
 
 ### Pack governance and sharing
 
-Packs move through signed releases and aliases such as development, staging, and production. Tenant rollout policy can pin a version or cohort. Sharing across business units requires explicit policy and data-boundary review; installing a pack never grants access to its data sources or tools.
+Packs move through signed releases and aliases such as development, staging, and production. Tenant rollout policy can pin a version or cohort.
 
 ### Domain pack examples
 
-* **Mortgage evidence review:** application evidence, income and property checks, policy, underwriter-package preparation, document request.
-* **Comparative customer support:** account read, entitlement, troubleshooting, refund proposal, escalation.
+* **Mortgage evidence review:** evidence retrieval, document validation, income and property checks, policy explanation, underwriter-package preparation, document request.
+* **Customer support:** account read, entitlement, troubleshooting, refund proposal, escalation.
 * **Software delivery:** repository context, test planning, code change, review, deployment evidence.
 * **Financial close:** reconciliation, variance explanation, exception routing, controlled posting.
 
@@ -427,9 +427,9 @@ Packs move through signed releases and aliases such as development, staging, and
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Distribution security | A Skill Pack is executable supply chain: pin dependencies and tool schemas, produce SBOM and signed provenance, scan transitive content and binaries, enforce publisher trust, and support revocation without rewriting historical runs. | SLSA; OWASP-CHEAT |
+| Distribution security | A Skill Pack is executable supply chain: pin dependencies and tool schemas, produce SBOM and signed provenance, scan transitive content and binaries, enforce publisher trust, and support revocation without rewriting historical runs. | R16; R17 |
 
-The discussion above draws on SLSA; OWASP-CHEAT. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R16; R17. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
