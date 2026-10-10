@@ -11,7 +11,7 @@ TEX_ENTRY := latex/Enterprise-General-Intelligence-v2.1.0.tex
 
 PYTHON_EXAMPLES ?= $(if $(wildcard .venv-examples/bin/python),.venv-examples/bin/python,python3)
 
-.PHONY: help setup setup-examples all assemble cover part-visuals diagrams build latex draft pdf references \
+.PHONY: help setup setup-examples all assemble cover part-visuals chapter-covers diagrams build latex draft pdf references \
         examples examples-run latex-validate validate deterministic qa-pdf latex-pdf \
         package release clean distclean
 
@@ -27,6 +27,7 @@ help:
 	@echo "  cover           regenerate the cover image"
 	@echo "  part-visuals    crop the Part artwork panels from their sources"
 	@echo "  diagrams        render every diagram from its editable source"
+	@echo "  chapter-covers  render the Letter-size chapter cover visuals"
 	@echo "  build           assemble + cover + DOCX"
 	@echo "  latex           generate latex/content/book-content.tex"
 	@echo ""
@@ -81,6 +82,11 @@ part-visuals:
 ## raster PNG for DOCX. Needs graphviz and, for sequence diagrams, mermaid-cli.
 diagrams:
 	$(PYTHON) tools/render_diagrams.py --root "$(ROOT)"
+
+## chapter-covers: render one US Letter (8.5x11 in, 300 dpi) cover visual per
+## chapter into cover-images/ from config/chapter-covers.json. Needs rsvg-convert.
+chapter-covers:
+	$(PYTHON) tools/render_chapter_covers.py --root "$(ROOT)"
 
 build: assemble cover part-visuals
 	$(PYTHON) tools/build_book.py --root "$(ROOT)"
