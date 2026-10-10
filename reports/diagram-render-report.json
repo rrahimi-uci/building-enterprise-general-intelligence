@@ -194,11 +194,11 @@
       "source": "learning-loop.gv",
       "pixels": [
         2267,
-        1983
+        2017
       ],
       "effective_dpi": 331,
       "vector": true,
-      "sha256": "f6e857a053e678656a09ee673ce19dacf53b7dcc57a956517bead09efed47baa"
+      "sha256": "bd2da5d776297413d934d4e9e8130ce4ff60b61ef5ec7d60dacbff6a9c68453b"
     },
     {
       "id": "model-routing",
@@ -358,12 +358,12 @@
       "id": "runtime-offline",
       "source": "runtime-offline.gv",
       "pixels": [
-        2466,
-        4487
+        2461,
+        4575
       ],
-      "effective_dpi": 360,
+      "effective_dpi": 359,
       "vector": true,
-      "sha256": "ae9175f77e46e1dfcc28f99be1c08d9c4dbe9c9ff44a15287a9deb49d1271e95"
+      "sha256": "ecb4626c958ef46a12eaac28031e918829c6162437372245a50e06496635fe23"
     },
     {
       "id": "runtime-boundary",

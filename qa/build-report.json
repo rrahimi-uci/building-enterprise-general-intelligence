@@ -1,10 +1,10 @@
 {
-  "output": "qa/determinism/build-b.docx",
-  "sha256": "e9ea4f9179cbdda64a7328ee7802930172fd14f0865304064eea65330fe24f89",
-  "bytes": 43278082,
+  "output": "dist/Enterprise-General-Intelligence-v1.0.0.docx",
+  "sha256": "9a23df87f2e747d6ab44a795ae4fd2217ad92dc792bd3a0452d38cd797b953b1",
+  "bytes": 43332804,
   "template_only": false,
-  "paragraphs": 3139,
-  "tables": 425,
+  "paragraphs": 3150,
+  "tables": 428,
   "inline_images": 72,
   "chapter_headings": 28,
   "appendix_headings": 12

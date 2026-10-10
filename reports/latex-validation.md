@@ -11,10 +11,10 @@
 - **appendices:** `12`
 - **diagrams:** `43`
 - **code_blocks:** `69`
-- **longtables:** `144`
-- **compact_tables:** `106`
-- **callout_tables:** `97`
-- **citation_occurrences:** `109`
+- **longtables:** `145`
+- **compact_tables:** `109`
+- **callout_tables:** `96`
+- **citation_occurrences:** `111`
 - **bundled_fonts:** `8`
 
 ## Quality controls

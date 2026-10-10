@@ -4,7 +4,7 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7",
-    "content_tex_sha256": "266d8f773461fc2f77246b06ab85828ab51d5a466c2c0d5afb4cdfbed4abd01d",
+    "content_tex_sha256": "a4c233e3382c52caafcd5028fd4d61e16953240bc47a6d664b263b8afeb93edd",
     "style_sha256": "7a1273ba38763881c8ed2ede7ad741ea49ca031d7bb5f8fc354e413a88d840c8",
     "narrative_parts": 8,
     "appendix_dividers": 1,
@@ -13,13 +13,13 @@
     "appendices": 12,
     "diagrams": 43,
     "code_blocks": 69,
-    "longtables": 144,
-    "compact_tables": 106,
-    "callout_tables": 97,
-    "citation_occurrences": 109,
+    "longtables": 145,
+    "compact_tables": 109,
+    "callout_tables": 96,
+    "citation_occurrences": 111,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 347,
+    "markdown_tables": 350,
     "markdown_code_blocks": 69,
     "image_quality": [
       {
@@ -335,20 +335,20 @@
         "effective_dpi": 568.6
       },
       {
+        "file": "assets/diagrams/runtime-offline.png",
+        "pixels": [
+          2461,
+          4575
+        ],
+        "effective_dpi": 348.6
+      },
+      {
         "file": "assets/diagrams/learning-loop.png",
         "pixels": [
           2267,
-          1983
+          2017
         ],
         "effective_dpi": 321.1
-      },
-      {
-        "file": "assets/diagrams/runtime-offline.png",
-        "pixels": [
-          2466,
-          4487
-        ],
-        "effective_dpi": 349.3
       },
       {
         "file": "assets/diagrams/governance-model.png",
