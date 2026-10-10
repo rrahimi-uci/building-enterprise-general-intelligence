@@ -2083,7 +2083,7 @@
      {
       "id": "acc",
       "label": "Acceptance engine",
-      "sub": "external stop rule",
+      "sub": "decides acceptance",
       "kind": "control",
       "at": [
        8.0,
@@ -2183,7 +2183,7 @@
      {
       "from": "ctl",
       "to": "acc",
-      "label": "stop?"
+      "label": "answer"
      },
      {
       "from": "acc",
@@ -2622,7 +2622,7 @@
      },
      {
       "id": "appr",
-      "label": "Consent / approval",
+      "label": "New approval",
       "sub": "if risk or authority expands",
       "kind": "human",
       "at": [
@@ -3012,7 +3012,7 @@
     "Reauthorize at commit"
    ],
    "diagram": {
-    "title": "Proposal-bound authorization lifecycle",
+    "title": "Proposal-bound approval lifecycle",
     "groups": [
      {
       "id": "g_machine",
@@ -3539,8 +3539,8 @@
      },
      {
       "id": "shortcut",
-      "label": "Tempting Shortcut",
-      "sub": "chosen by fashion",
+      "label": "Choose by Fashion",
+      "sub": "by pattern name",
       "kind": "bad",
       "tone": "amber",
       "at": [
@@ -3581,12 +3581,13 @@
      },
      {
       "id": "flow",
-      "label": "Runtime Flow",
+      "label": "Compose in One Run",
       "kind": "service",
       "at": [
        9.75,
        4.45
-      ]
+      ],
+      "sub": "durable spine"
      },
      {
       "id": "cost",
@@ -3600,8 +3601,8 @@
      },
      {
       "id": "watch",
-      "label": "What to Watch",
-      "sub": "failure signals",
+      "label": "When Not to Choose",
+      "sub": "per pattern",
       "kind": "record",
       "at": [
        9.75,
@@ -3637,12 +3638,12 @@
      {
       "from": "pattern",
       "to": "flow",
-      "label": "runs as"
+      "label": "composes"
      },
      {
       "from": "flow",
       "to": "watch",
-      "label": "track"
+      "label": "check"
      },
      {
       "from": "pattern",
@@ -3652,7 +3653,7 @@
      {
       "from": "watch",
       "to": "pattern",
-      "label": "tune",
+      "label": "narrow",
       "style": "feedback",
       "route": "straight",
       "label_t": 0.5
@@ -3672,7 +3673,7 @@
      },
      {
       "ref": "watch",
-      "name": "Watch failure signals"
+      "name": "Know when not to choose"
      },
      {
       "ref": "cost",

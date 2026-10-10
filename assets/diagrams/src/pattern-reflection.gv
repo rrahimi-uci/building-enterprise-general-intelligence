@@ -1,7 +1,8 @@
 // Figure 13-1 — Reflection. Improvement without self-certification.
-// Message: the produce-evaluate-revise loop is bounded, and the evaluator's
-// verdict is advisory. Promotion is decided outside the loop, by a gate the
-// loop cannot reach -- otherwise the system grades its own homework.
+// Message: the produce-check-judge-revise loop is bounded. Executable checks run
+// before the judge, and the judge's score is advisory. Acceptance is decided
+// outside the loop, by an engine the loop cannot reach -- otherwise the system
+// grades its own homework.
 digraph pattern_reflection {
   rankdir = TB
   graph [ranksep=0.36, nodesep=0.26]
@@ -10,16 +11,19 @@ digraph pattern_reflection {
   edge [arrowsize=0.65, penwidth=1.5, color="#0D6E69"]
 
   pro [label="Produce\ncandidate", fillcolor="#E7F5F3", color="#0D6E69"]
-  ev  [label="Evaluate\nrubric · advisory", fillcolor="#E6F5F9", color="#0B6076", width=1.9]
+  chk [label="Executable checks\nschema · evidence · arithmetic · policy", fillcolor="#EAF3FB",
+       color="#1450A3", width=2.6]
+  ev  [label="Judge\nqualitative · advisory", fillcolor="#E6F5F9", color="#0B6076", width=1.9]
   rev [label="Revise", fillcolor="#E7F5F3", color="#0D6E69"]
   cap [label="Revision cap\nn attempts", fillcolor="#EAF3FB", color="#1450A3", width=1.7]
-  gate [label="External gate\ntests · policy · human", fillcolor="#FCECEC",
-        color="#A62C2C", width=2.3]
+  gate [label="Acceptance engine\nchecks · judge evidence · human escalation", fillcolor="#FCECEC",
+        color="#A62C2C", width=2.9]
   out [label="Accepted", fillcolor="#FFF4DF", color="#8A5600", width=1.4]
 
-  pro -> ev -> rev
+  pro -> chk -> ev -> rev
+  chk -> rev [label=" fails", fontsize=9, fontcolor="#4A6078", style=dashed]
   rev -> pro [label=" while under cap", fontsize=9, fontcolor="#4A6078"]
   cap -> rev [color="#1450A3", style=dashed, arrowsize=0.55]
-  ev -> gate [color="#A62C2C", label=" never self-promotes", fontsize=9, fontcolor="#A62C2C"]
+  ev -> gate [color="#A62C2C", label=" never self-accepts", fontsize=9, fontcolor="#A62C2C"]
   gate -> out [color="#8A5600"]
 }
