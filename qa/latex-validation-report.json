@@ -4,7 +4,7 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7",
-    "content_tex_sha256": "7359ca94e8cc1435700071476b54b0bac95fbd48293f9d81ab09b36ea1c918f2",
+    "content_tex_sha256": "f9d280510822fe99b71916bfbb4259ae090275bb27cea31078075c03620cd519",
     "style_sha256": "7a1273ba38763881c8ed2ede7ad741ea49ca031d7bb5f8fc354e413a88d840c8",
     "narrative_parts": 8,
     "appendix_dividers": 1,
@@ -12,15 +12,15 @@
     "chapter_covers": 28,
     "appendices": 12,
     "diagrams": 43,
-    "code_blocks": 68,
-    "longtables": 148,
-    "compact_tables": 109,
-    "callout_tables": 79,
+    "code_blocks": 64,
+    "longtables": 152,
+    "compact_tables": 107,
+    "callout_tables": 74,
     "citation_occurrences": 113,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 336,
-    "markdown_code_blocks": 68,
+    "markdown_tables": 333,
+    "markdown_code_blocks": 64,
     "image_quality": [
       {
         "file": "assets/cover/cover-v1.0.0.png",
@@ -33,10 +33,10 @@
       {
         "file": "assets/diagrams/book-map.png",
         "pixels": [
-          2266,
-          1855
+          2505,
+          1818
         ],
-        "effective_dpi": 321.0
+        "effective_dpi": 354.8
       },
       {
         "file": "assets/diagrams/mortgage-case-lifecycle.png",
@@ -65,10 +65,10 @@
       {
         "file": "assets/diagrams/gateway-roles.png",
         "pixels": [
-          5278,
-          1173
+          4578,
+          1428
         ],
-        "effective_dpi": 747.6
+        "effective_dpi": 648.4
       },
       {
         "file": "assets/diagrams/deterministic-shell.png",
@@ -89,16 +89,16 @@
       {
         "file": "assets/diagrams/reference-architecture.png",
         "pixels": [
-          4148,
-          2780
+          4209,
+          2789
         ],
-        "effective_dpi": 587.5
+        "effective_dpi": 596.2
       },
       {
         "file": "assets/diagrams/request-sequence.png",
         "pixels": [
           2055,
-          1365
+          1210
         ],
         "effective_dpi": 291.1
       },
@@ -114,7 +114,7 @@
         "file": "assets/diagrams/policy-to-guardrail.png",
         "pixels": [
           2322,
-          2798
+          3195
         ],
         "effective_dpi": 328.9
       },

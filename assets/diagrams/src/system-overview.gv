@@ -4,11 +4,9 @@
 // narrows as you read down, and the two concerns that do not sit in the stack
 // -- security, and the platform that builds and runs it -- flank it.
 //
-// This is deliberately the same visual language as Figure 4-1 (same palette,
-// same spine construct, same downward request path) at a lower resolution, so
-// that a reader arriving at Chapter 4 recognises the drill-down instead of
-// meeting a new notation. Bands here are single nodes; in Figure 4-1 they open
-// up into containers of named components. Nothing in this figure should be more
+// It shares Figure 4-1's visual language (palette, spine construct, downward
+// request path) so the notation carries over, but the decompositions differ:
+// Chapter 4 maps its planes onto these bands. Bands here are single nodes. Nothing in this figure should be more
 // specific than a band name and what it owns.
 //
 // Layout note: each spine is a cluster of chained nodes, exactly as in Figure
@@ -41,7 +39,7 @@ digraph system_overview {
   // ------------------------------------------------------------- the bands --
   // badge (Part) | name | what it owns
   ch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#4A6078" BGCOLOR="#EEF4FA">
-    <TR><TD WIDTH="56" BGCOLOR="#4A6078" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>I</B></FONT></TD>
+    <TR><TD WIDTH="56" BGCOLOR="#4A6078" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>II · IV</B></FONT></TD>
         <TD WIDTH="150" ALIGN="LEFT"><B>Channels</B></TD>
         <TD WIDTH="268" ALIGN="LEFT"><FONT POINT-SIZE="11">who asks for work, and who sees the result</FONT></TD></TR></TABLE>>]
 

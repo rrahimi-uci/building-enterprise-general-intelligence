@@ -9,7 +9,7 @@
         2550,
         3300
       ],
-      "sha256": "114098e5580b83b5e5aa8d4d52344efdbb3d4cd52b76515ba4a1c80f63c7be3d"
+      "sha256": "ed06a509bf4c900ba90315ad2a3a8c3c734bc696e262c9110998ca5ef9057d8f"
     },
     {
       "file": "cover-images/chapter-02-from-model-output-to-safe-action.png",
@@ -17,7 +17,7 @@
         2550,
         3300
       ],
-      "sha256": "ec1563449a4d8a2e1aa24b0b6ff3358c364a6705bba1708e3f1b04d074afc489"
+      "sha256": "4991986f8e88cc59e95b4f5719a31acc47ea620630dfbe8c8b0bc0e4a5694da2"
     },
     {
       "file": "cover-images/chapter-03-keep-the-agent-framework-in-its-lane.png",
@@ -33,7 +33,7 @@
         2550,
         3300
       ],
-      "sha256": "c6e5bbd3ac0a0d8749c06fdf88dc5c8141139d2684619415ed05eb502c96433d"
+      "sha256": "cadfd22c2cafc0d3a49a6b67570e579aa37b02561afb27b7593fec70c7d82ce7"
     },
     {
       "file": "cover-images/chapter-05-give-knowledge-an-owner.png",
@@ -41,7 +41,7 @@
         2550,
         3300
       ],
-      "sha256": "f4254e0a544a6531310e34a992c786ec866183134bb9dff29518fe1187fa2593"
+      "sha256": "ce06ecec406916dc9016e7bfa953bab5f8dce63ad879d21df4a19b587b8f99bb"
     },
     {
       "file": "cover-images/chapter-06-build-context-without-losing-the-plot.png",
@@ -49,7 +49,7 @@
         2550,
         3300
       ],
-      "sha256": "49d200a0e7e20b35a864d0258b453bb0158b6ac40cfc258b7d42535e364593cb"
+      "sha256": "4678193f9f8fe9fa9ed74b1cc5f8557ca69f2a47a35361f940c1987403b5f2f7"
     },
     {
       "file": "cover-images/chapter-07-build-a-paved-road-for-agent-teams.png",

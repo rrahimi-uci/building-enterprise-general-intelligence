@@ -1,7 +1,8 @@
 """The provider-neutral contracts every agent step and platform API shares.
 
-One file, two views. Chapter 03 needs the agent-step subset; chapter 04 needs
-the full platform set. In earlier drafts these were two listings that had already
+One file, several views. Chapter 03 shows the agent-step subset (region
+``step``); chapter 04 shows the run, artifact, and event contracts (region
+``platform``). In earlier drafts these were separate listings that had already
 drifted apart -- the shorter one was not even a prefix of the longer.
 """
 from __future__ import annotations
@@ -13,6 +14,9 @@ from typing import Annotated, Any, Callable, Literal
 
 from pydantic import (
     BaseModel, BeforeValidator, ConfigDict, Field, PlainSerializer, field_validator,
+
+
+    model_validator,
 )
 
 # --8<-- region:step
@@ -180,3 +184,108 @@ class TaskService:
         return child
 
 # --8<-- endregion:task
+
+
+# --8<-- region:platform
+Digest = Annotated[str, Field(pattern=r"^sha256:[0-9a-f]{64}$")]
+# A Skill or pack pin names its version and its content digest: name@1.2.3#sha256:...
+PinnedRef = Annotated[str, Field(pattern=r"^[\w.-]+@[\w.+-]+#sha256:[0-9a-f]{64}$")]
+
+
+class RuntimeBinding(BaseModel):
+    model_config = ConfigDict(frozen=True)
+    adapter: str
+    sdk: str
+
+
+class RunBudget(BaseModel):
+    model_config = ConfigDict(frozen=True)
+    usd: Decimal = Field(gt=0)
+    tokens: int = Field(gt=0)
+    steps: int = Field(gt=0)
+    delegation_depth: int = Field(ge=0)
+
+
+class RunManifest(BaseModel):
+    """Written once at admission and never edited; new versions mean a new run.
+
+    Release pins (agent build, prompt and policy bundles, tool contracts) are
+    reached through ``release_manifest``; this record holds what was resolved
+    for this run inside that release.
+    """
+
+    model_config = ConfigDict(frozen=True)
+    run_id: str
+    tenant_id: str
+    subject: str                     # the initiating subject
+    actor: str                       # the acting workload identity
+    purpose: str
+    risk_tier: Literal["T0", "T1", "T2", "T3", "T4"]   # use-case tier, Chapter 26
+    release_manifest: Digest
+    agent: str
+    runtime: RuntimeBinding
+    skills: tuple[PinnedRef, ...]
+    skill_pack: PinnedRef
+    model_route: str                 # chosen within the release's eligible set
+    knowledge_snapshots: tuple[str, ...]
+    capability_envelope: str
+    budget: RunBudget
+    retention_class: str
+    trace_id: str
+
+
+class ArtifactRef(BaseModel):
+    """How runs, events, and results point at an artifact: by version and hash."""
+
+    model_config = ConfigDict(frozen=True)
+    artifact_id: str
+    version: int = Field(ge=1)
+    media_type: str
+    sha256: Digest
+    created_by_run: str
+    tenant_id: str
+    classification: str
+    residency: str
+
+
+class CloudEvent(BaseModel):
+    """CloudEvents 1.0 envelope for a fact that already happened.
+
+    Large or sensitive payloads travel by ``dataref`` and ``datahash``; ``data``
+    is optional and only for small, non-sensitive facts.
+    """
+
+    specversion: Literal["1.0"] = "1.0"
+    id: str = Field(min_length=1)
+    source: str = Field(min_length=1)
+    type: str = Field(min_length=1)
+    subject: str | None = None
+    time: datetime
+    dataschema: str | None = None
+    tenant_id: str
+    correlation_id: str
+    causation_id: str | None = None
+    traceparent: str | None = None
+    dataref: str | None = None
+    datahash: Digest | None = None
+    data: dict[str, Any] | None = None
+
+    @field_validator("source")
+    @classmethod
+    def source_is_uri_reference(cls, value: str) -> str:
+        if ":" not in value and not value.startswith("/"):
+            raise ValueError("source must be a URI-reference")
+        return value
+
+    @model_validator(mode="after")
+    def reference_carries_its_hash(self) -> "CloudEvent":
+        if (self.dataref is None) != (self.datahash is None):
+            raise ValueError("dataref and datahash travel together")
+        return self
+
+
+def deduplication_key(event: CloudEvent) -> tuple[str, str]:
+    """Producers make (source, id) unique per distinct event; consumers dedupe on it."""
+    return event.source, event.id
+
+# --8<-- endregion:platform
