@@ -31,7 +31,7 @@ class SyntheticMortgageGateway:
         return {
             "case_id": kwargs["case_id"],
             "available_document_ids": ["APP-000184", "PAY-000184-01", "PUR-000184"],
-            "missing_document_kinds": ["employment_verification"],
+            "missing_document_kinds": ["pay_statement"],
             "synthetic_notice": SYNTHETIC_NOTICE,
         }
 
@@ -69,7 +69,7 @@ def run_mortgage_review() -> dict[str, object]:
     model = ScriptedModel([
         ToolCall("read_mortgage_case", {"case_id": case.case_id}),
         Say(
-            '{"status":"needs_input","summary":"Employment verification is '
+            '{"status":"needs_input","summary":"A second pay statement is '
             'missing.","evidence_artifact_ids":[]}'
         ),
     ])

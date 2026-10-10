@@ -11,7 +11,7 @@ async def test_agent_calls_the_tool_before_answering():
     model = ScriptedModel([
         ToolCall("read_mortgage_case", {"case_id": CASE_ID}),
         Say('{"case_id": "MORT-2026-000184", "needs_input": true, '
-            '"summary": "Employment verification is missing."}'),
+            '"summary": "A second pay statement is missing."}'),
     ])
     result = await run("Does MORT-2026-000184 have all required evidence?", model=model)
     assert isinstance(result, MortgageCaseStatus)

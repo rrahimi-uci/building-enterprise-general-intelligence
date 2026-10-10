@@ -21,7 +21,11 @@ def call(tool="mortgage.case.read", **args):
                          tool_call=ToolCall(tool_id=tool, arguments=args))
 
 
+invoked: list[str] = []
+
+
 async def _tool(tool_id, arguments, effect_key):
+    invoked.append(tool_id)
     return {"status": "ok", "tool": tool_id, "case_id": CASE_ID}
 
 
@@ -35,16 +39,33 @@ def test_limits_reject_a_nonsense_configuration():
 async def test_an_answer_ends_the_loop_immediately():
     model = ScriptedDecisions([AgentDecision(disposition="answer", answer="done")])
     result = await ReActEngine(model, _tool).run(f"Review mortgage case {CASE_ID}")
-    assert result.answer == "done"
+    assert result.status == "completed"
+    assert result.decision.answer == "done"
     assert model.turns == 1
+
+
+async def test_a_mutation_leaves_the_loop_as_a_proposal():
+    invoked.clear()
+    proposal = AgentDecision(
+        disposition="proposed_action",
+        tool_call=ToolCall(tool_id="mortgage.document.request@1",
+                           arguments={"case_id": CASE_ID, "document_kind": "pay_statement"}),
+    )
+    model = ScriptedDecisions([call(q="a"), proposal])
+    result = await ReActEngine(model, _tool).run(f"Review mortgage case {CASE_ID}")
+    assert result.status == "proposed_action"
+    assert result.decision.tool_call.tool_id == "mortgage.document.request@1"
+    # Only the read ran; the mutation was never dispatched by the loop.
+    assert invoked == ["mortgage.case.read"]
 
 
 async def test_tool_call_budget_is_enforced_by_the_engine():
     model = ScriptedDecisions([call(q="a"), call(q="b"), call(q="c")])
     engine = ReActEngine(model, _tool, ReActLimits(maximum_turns=9, maximum_tool_calls=2,
                                                    maximum_identical_observations=9))
-    with pytest.raises(RuntimeError, match="tool-call budget"):
-        await engine.run(f"Review mortgage case {CASE_ID}")
+    result = await engine.run(f"Review mortgage case {CASE_ID}")
+    # A tripped bound is a typed outcome the workflow can act on, not an exception.
+    assert (result.status, result.error_code) == ("failed", "budget_exhausted")
 
 
 async def test_a_no_progress_loop_is_detected():
@@ -52,13 +73,13 @@ async def test_a_no_progress_loop_is_detected():
     model = ScriptedDecisions([call(q="same")])
     engine = ReActEngine(model, _tool, ReActLimits(maximum_turns=9, maximum_tool_calls=9,
                                                    maximum_identical_observations=2))
-    with pytest.raises(RuntimeError, match="no-progress"):
-        await engine.run(f"Review mortgage case {CASE_ID}")
+    result = await engine.run(f"Review mortgage case {CASE_ID}")
+    assert (result.status, result.error_code) == ("failed", "no_progress")
 
 
 async def test_turn_limit_bounds_a_loop_that_never_answers():
     model = ScriptedDecisions([call(q="a"), call(q="b"), call(q="c"), call(q="d")])
     engine = ReActEngine(model, _tool, ReActLimits(maximum_turns=2, maximum_tool_calls=9,
                                                    maximum_identical_observations=9))
-    with pytest.raises(RuntimeError, match="turn limit"):
-        await engine.run(f"Review mortgage case {CASE_ID}")
+    result = await engine.run(f"Review mortgage case {CASE_ID}")
+    assert (result.status, result.error_code) == ("failed", "budget_exhausted")

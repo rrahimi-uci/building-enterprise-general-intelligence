@@ -5,6 +5,10 @@ a running workflow. This one resolves against the requirement -- capability,
 purpose, region, risk ceiling, data classes -- and only then picks the highest
 eligible SemVer, so a resolution is reproducible and explainable.
 
+Lifecycle state is not in the manifest. The manifest is immutable and digested,
+so its state lives in the registry's release record and changes as evidence
+arrives without moving the digest.
+
 The SemVer precedence parser below is deliberately complete: getting prerelease
 ordering wrong is how a registry silently promotes 1.0.0-rc1 over 1.0.0.
 """
@@ -15,9 +19,11 @@ import json
 import re
 from typing import Literal
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, field_validator, model_validator
 
-from examples.contracts import SkillRequirement
+from examples.contracts import Risk, SkillRequirement
+
+LifecycleState = Literal["draft", "certified", "staged", "active", "deprecated", "revoked"]
 
 
 _SEMVER = re.compile(
@@ -61,8 +67,7 @@ class SkillManifest(BaseModel):
     allowed_purposes: frozenset[str]
     allowed_data_classes: frozenset[str]
     allowed_regions: frozenset[str]
-    maximum_risk: int = Field(ge=0, le=4)
-    status: Literal["draft", "active", "deprecated", "revoked"] = "draft"
+    risk_ceiling: Risk
     digest: str | None = None
 
     @field_validator("version")
@@ -91,7 +96,6 @@ class SkillPackManifest(BaseModel):
     skill_versions: tuple[str, ...]
     policy_bundle_ref: str
     evaluation_suite_ref: str
-    status: Literal["draft", "active", "deprecated", "revoked"] = "draft"
 
     @field_validator("version")
     @classmethod
@@ -105,13 +109,22 @@ class SkillRegistry:
     def __init__(self) -> None:
         self._skills: dict[str, SkillManifest] = {}
         self._packs: dict[str, SkillPackManifest] = {}
+        # Release records: lifecycle state per version, outside the digest.
+        self._skill_state: dict[str, LifecycleState] = {}
+        self._pack_state: dict[str, LifecycleState] = {}
 
     def register_skill(self, skill: SkillManifest) -> str:
         key = f"{skill.skill_id}@{skill.version}"
         if key in self._skills:
             raise ValueError(f"skill already exists: {key}")
         self._skills[key] = skill
+        self._skill_state[key] = "draft"
         return key
+
+    def set_skill_state(self, key: str, state: LifecycleState) -> None:
+        if key not in self._skills:
+            raise LookupError(f"unknown skill: {key}")
+        self._skill_state[key] = state
 
     def register_pack(self, pack: SkillPackManifest) -> str:
         key = f"{pack.pack_id}@{pack.version}"
@@ -120,23 +133,29 @@ class SkillRegistry:
         missing = set(pack.skill_versions) - self._skills.keys()
         if missing:
             raise ValueError(f"pack references unknown skills: {sorted(missing)}")
-        if pack.status == "active" and any(
-            self._skills[skill_key].status != "active"
-            for skill_key in pack.skill_versions
+        self._packs[key] = pack
+        self._pack_state[key] = "draft"
+        return key
+
+    def set_pack_state(self, key: str, state: LifecycleState) -> None:
+        if key not in self._packs:
+            raise LookupError(f"unknown skill pack: {key}")
+        if state == "active" and any(
+            self._skill_state[skill_key] != "active"
+            for skill_key in self._packs[key].skill_versions
         ):
             raise ValueError("active pack must reference only active skills")
-        self._packs[key] = pack
-        return key
+        self._pack_state[key] = state
 
     def resolve(self, requirement: SkillRequirement) -> SkillManifest:
         candidates = [
             skill
-            for skill in self._skills.values()
-            if skill.status == "active"
+            for key, skill in self._skills.items()
+            if self._skill_state[key] == "active"
             and requirement.capability in skill.capabilities
             and requirement.purpose in skill.allowed_purposes
             and requirement.region in skill.allowed_regions
-            and requirement.maximum_risk <= skill.maximum_risk
+            and requirement.risk_ceiling <= skill.risk_ceiling
             and requirement.required_data_classes <= skill.allowed_data_classes
         ]
         if not candidates:
@@ -156,12 +175,14 @@ class SkillRegistry:
         if allow_deprecated_for_replay:
             permitted_pack_states.add("deprecated")
             permitted_skill_states.add("deprecated")
-        if pack.status not in permitted_pack_states:
+        if self._pack_state[pack_key] not in permitted_pack_states:
             raise LookupError("skill pack is not available for this resolution mode")
-        skills = tuple(self._skills[key] for key in pack.skill_versions)
-        if any(skill.status not in permitted_skill_states for skill in skills):
+        if any(
+            self._skill_state[key] not in permitted_skill_states
+            for key in pack.skill_versions
+        ):
             raise LookupError("skill pack contains unavailable skill")
-        return skills
+        return tuple(self._skills[key] for key in pack.skill_versions)
 
 
 # --8<-- endregion:resolution

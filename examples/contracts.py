@@ -1,6 +1,6 @@
 """The provider-neutral contracts every agent step and platform API shares.
 
-One file, two views. Chapter 02 needs the agent-step subset; chapter 04 needs
+One file, two views. Chapter 03 needs the agent-step subset; chapter 04 needs
 the full platform set. In earlier drafts these were two listings that had already
 drifted apart -- the shorter one was not even a prefix of the longer.
 """
@@ -8,9 +8,10 @@ from __future__ import annotations
 
 from datetime import datetime
 from decimal import Decimal
-from typing import Any, Literal
+from enum import IntEnum
+from typing import Annotated, Any, Literal
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, BeforeValidator, Field, PlainSerializer, field_validator
 
 # --8<-- region:step
 class EvidenceRef(BaseModel):
@@ -25,7 +26,11 @@ class ToolCall(BaseModel):
     logical_effect_key: str | None = None
 
 class AgentDecision(BaseModel):
-    disposition: Literal["answer", "needs_input", "invoke_tool", "delegate"]
+    # invoke_tool is a read the loop may run; proposed_action is a mutation that
+    # leaves the loop as a proposal for the six gates.
+    disposition: Literal[
+        "answer", "needs_input", "invoke_tool", "proposed_action", "delegate"
+    ]
     answer: str | None = None
     tool_call: ToolCall | None = None
     evidence: list[EvidenceRef] = Field(default_factory=list)
@@ -50,10 +55,36 @@ class AgentStepResult(BaseModel):
 
 # --8<-- endregion:step
 
+class RiskClass(IntEnum):
+    """Effect risk class (Chapter 22): R0 pure transform to R4 irreversible action."""
+
+    R0 = 0
+    R1 = 1
+    R2 = 2
+    R3 = 3
+    R4 = 4
+
+
+def _risk_class(value: object) -> object:
+    # Accept RiskClass.R1 or "R1"; refuse a bare number, which reads as a tier.
+    if isinstance(value, str) and value in RiskClass.__members__:
+        return RiskClass[value]
+    if not isinstance(value, RiskClass):
+        raise ValueError("risk class must be R0-R4, not a bare number")
+    return value
+
+
+Risk = Annotated[
+    RiskClass,
+    BeforeValidator(_risk_class),
+    PlainSerializer(lambda risk: risk.name, return_type=str),
+]
+
+
 class SkillRequirement(BaseModel):
     capability: str
     purpose: str
-    maximum_risk: int = Field(ge=0, le=4)
+    risk_ceiling: Risk
     required_data_classes: frozenset[str] = frozenset()
     region: str
 
@@ -63,7 +94,7 @@ class PlanNode(BaseModel):
     depends_on: tuple[str, ...] = ()
     maximum_cost_usd: Decimal = Field(ge=0)
     maximum_attempts: int = Field(ge=1, le=10)
-    risk_class: int = Field(ge=0, le=4)
+    risk_class: Risk
 
     @field_validator("maximum_cost_usd", mode="before")
     @classmethod

@@ -11,7 +11,7 @@
   "examples": [
     {
       "id": "contracts",
-      "book_chapters": [1, 4],
+      "book_chapters": [3, 4],
       "path": "examples/contracts.py",
       "language": "python",
       "title": "Provider-neutral agent-step and platform contracts",
@@ -131,7 +131,7 @@
       "book_chapters": [14],
       "path": "examples/patterns/approval_gate.py",
       "language": "python",
-      "title": "A human action-authorization gate that survives the wait",
+      "title": "A human approval gate that survives the wait",
       "verify": "test",
       "tests": [
         "examples/tests/test_approval_gate.py"
@@ -224,7 +224,7 @@
       "book_chapters": [12],
       "path": "examples/patterns/plan_compilation.py",
       "language": "python",
-      "title": "Compiling an approved plan into a budget-bounded envelope",
+      "title": "Compiling a validated plan into a budget-bounded envelope",
       "verify": "test",
       "tests": [
         "examples/tests/test_plan_compilation.py"
@@ -241,7 +241,7 @@
       "book_chapters": [14],
       "path": "examples/patterns/approval_verification.py",
       "language": "python",
-      "title": "Verifying human action authorization against this exact proposal",
+      "title": "Verifying a human approval against this exact proposal",
       "verify": "test",
       "tests": [
         "examples/tests/test_approval_verification.py"

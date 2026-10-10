@@ -48,9 +48,9 @@ async def test_stale_proposal_is_rejected_before_dispatch():
         await gateway.invoke(
             intent=ToolIntent(
                 tool_version="mortgage.document.request@1",
-                arguments={"case_id": "MORT-2026-000184", "document_kind": "employment_verification"},
+                arguments={"case_id": "MORT-2026-000184", "document_kind": "pay_statement"},
                 expected_resource_version=6,
-                logical_effect_key="mortgage:document-request:MORT-2026-000184:employment_verification",
+                logical_effect_key="mortgage:document-request:MORT-2026-000184:pay_statement",
             ),
             context=context(version=7),
         )
@@ -69,9 +69,9 @@ async def test_unauthorized_action_is_rejected():
         await gateway.invoke(
             intent=ToolIntent(
                 tool_version="mortgage.document.request@1",
-                arguments={"case_id": "MORT-2026-000184", "document_kind": "employment_verification"},
+                arguments={"case_id": "MORT-2026-000184", "document_kind": "pay_statement"},
                 expected_resource_version=7,
-                logical_effect_key="mortgage:document-request:MORT-2026-000184:employment_verification",
+                logical_effect_key="mortgage:document-request:MORT-2026-000184:pay_statement",
             ),
             context=InvocationContext(
                 allowed_actions=frozenset({"mortgage:case:read"}),
@@ -93,9 +93,9 @@ async def test_replaying_a_committed_effect_returns_one_receipt():
     gateway.register(manifest(), connector)
     intent = ToolIntent(
         tool_version="mortgage.document.request@1",
-        arguments={"case_id": "MORT-2026-000184", "document_kind": "employment_verification"},
+        arguments={"case_id": "MORT-2026-000184", "document_kind": "pay_statement"},
         expected_resource_version=7,
-        logical_effect_key="mortgage:document-request:MORT-2026-000184:employment_verification",
+        logical_effect_key="mortgage:document-request:MORT-2026-000184:pay_statement",
     )
 
     first = await gateway.invoke(intent=intent, context=context())
@@ -117,9 +117,9 @@ async def test_unknown_outcome_is_not_blindly_retried():
     gateway.register(manifest(), connector)
     intent = ToolIntent(
         tool_version="mortgage.document.request@1",
-        arguments={"case_id": "MORT-2026-000184", "document_kind": "employment_verification"},
+        arguments={"case_id": "MORT-2026-000184", "document_kind": "pay_statement"},
         expected_resource_version=7,
-        logical_effect_key="mortgage:document-request:MORT-2026-000184:employment_verification",
+        logical_effect_key="mortgage:document-request:MORT-2026-000184:pay_statement",
     )
 
     with pytest.raises(EffectOutcomeUnknown):
