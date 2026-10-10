@@ -8,6 +8,16 @@ All notable changes follow semantic versioning and are recorded here.
 
 - Removed `reviews-comments/` (an already-applied Chapter 3 review DOCX and its `.gitkeep`) and its `.gitignore` rule. Its entries drop out of `RELEASE-MANIFEST.json` and `CHECKSUMS.sha256` at the next `make package`.
 
+### Fix three book-wide DOCX/LaTeX rendering defects
+
+- Markdown backslash escapes (`artifact\_id`, `a \< b`) printed literally in
+  the DOCX (about 125 identifiers) and `\<` printed in the LaTeX edition.
+  Both builders now unescape them outside code spans.
+- Numbered lists continued one sequence across the whole DOCX (Chapter 2's
+  ten principles rendered as 37–46). Each list now restarts at 1.
+- Hard-wrapped list items rendered as a bullet followed by stray body
+  paragraphs. Indented continuation lines now join their item in both builders.
+
 ### Add Letter-size chapter cover visuals
 
 - Added one cover visual per chapter (28) in `cover-images/`, plus an overview

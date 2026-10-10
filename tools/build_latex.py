@@ -145,12 +145,12 @@ def parse_markdown(markdown: str):
             i += 1
             continue
         if re.match(r"^[-*]\s+", line):
-            yield ("bullet", re.sub(r"^[-*]\s+", "", line))
-            i += 1
+            text, i = list_item(lines, i, re.sub(r"^[-*]\s+", "", line))
+            yield ("bullet", text)
             continue
         if re.match(r"^\d+\.\s+", line):
-            yield ("number", re.sub(r"^\d+\.\s+", "", line))
-            i += 1
+            text, i = list_item(lines, i, re.sub(r"^\d+\.\s+", "", line))
+            yield ("number", text)
             continue
         if line.startswith("> "):
             yield ("quote", line[2:].strip())
@@ -176,8 +176,19 @@ def parse_markdown(markdown: str):
         yield ("paragraph", " ".join(paragraph))
 
 
+def list_item(lines: list[str], i: int, first: str) -> tuple[str, int]:
+    """Join a hard-wrapped list item's indented continuation lines."""
+    parts = [first.strip()]
+    i += 1
+    while (i < len(lines) and lines[i][:1] in (" ", "\t") and lines[i].strip()
+           and not re.match(r"^\s*([-*]|\d+\.)\s+", lines[i])):
+        parts.append(lines[i].strip())
+        i += 1
+    return " ".join(parts), i
+
+
 def markdown_unescape(text: str) -> str:
-    return re.sub(r"\\([\\`*_{}\[\]()#+.!|>\-])", r"\1", text)
+    return re.sub(r"\\([\\`*_{}\[\]()#+.!|<>\-])", r"\1", text)
 
 
 def escape_plain(text: str) -> str:
