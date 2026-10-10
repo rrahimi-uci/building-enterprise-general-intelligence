@@ -4,6 +4,15 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Apply DOCX review to Part III
+
+Applied a deep review of the DOCX (Chapters 7–9) to the canonical source:
+
+- Replaced unresolvable source keys (SLSA, A2A-101, MCP-2026, OWASP-CHEAT) with registry IDs; Ch8's summary line now matches its table.
+- Ch8 lifecycle: revocation normally follows the compatibility window, and Staged includes the limited canary that promotes it.
+- Ch7 uses the canonical ToolManifest contract name; illustrative listings are labelled as such.
+- Removed a repeated "pack grants nothing" sentence and three near-duplicate headings; US spelling throughout.
+
 ### Apply DOCX review to Part II
 
 Applied a deep review of the DOCX (Chapters 4–6) to the canonical source:
