@@ -23,7 +23,7 @@ async def test_within_budget_runs_normally():
     budget = RunBudget(max_tool_calls=3)
     model = ScriptedModel([
         ToolCall("search_mortgage_evidence", {"query": "income"}),
-        Say("Employment verification is missing."),
+        Say("A second pay statement is missing."),
     ])
     answer = await run("Check income evidence for MORT-2026-000184", budget=budget, model=model)
     assert budget.exhausted_at is None

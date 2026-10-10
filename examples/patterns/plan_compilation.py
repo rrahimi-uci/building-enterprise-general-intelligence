@@ -1,8 +1,8 @@
-"""Compiling an approved plan into an executable, budget-bounded envelope.
+"""Compiling a validated plan into an executable, budget-bounded envelope.
 
 A plan is data before it is behaviour. Compiling it fixes the budgets, the
-eligible tool versions, and a digest of exactly what was approved, so the thing
-that executes is provably the thing a reviewer saw.
+eligible tool versions, and a digest of exactly what was validated, so the thing
+that executes is provably the thing the compiler validated.
 """
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ import re
 from dataclasses import dataclass
 from decimal import Decimal
 
-from examples.contracts import CandidatePlan
+from examples.contracts import CandidatePlan, RiskClass
 
 
 _SHA256 = re.compile(r"^sha256:[0-9a-f]{64}$")
@@ -26,7 +26,7 @@ class PlanEnvelope:
     maximum_cost_usd: Decimal
     policy_digest: str
     maximum_nodes: int = 100
-    maximum_risk: int = 4
+    maximum_risk: RiskClass = RiskClass.R4
 
     def __post_init__(self) -> None:
         if not isinstance(self.maximum_cost_usd, Decimal):
@@ -35,8 +35,8 @@ class PlanEnvelope:
             raise ValueError("maximum_cost_usd must be finite and non-negative")
         if self.maximum_nodes < 1:
             raise ValueError("maximum_nodes must be positive")
-        if not 0 <= self.maximum_risk <= 4:
-            raise ValueError("maximum_risk must be between 0 and 4")
+        if not isinstance(self.maximum_risk, RiskClass):
+            raise TypeError("maximum_risk must be a RiskClass (R0-R4)")
         if _SHA256.fullmatch(self.policy_digest) is None:
             raise ValueError("policy_digest must be a canonical sha256 digest")
 
@@ -96,7 +96,7 @@ def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, objec
         "allowed_capabilities": sorted(envelope.allowed_capabilities),
         "maximum_cost_usd": str(envelope.maximum_cost_usd),
         "maximum_nodes": envelope.maximum_nodes,
-        "maximum_risk": envelope.maximum_risk,
+        "maximum_risk": envelope.maximum_risk.name,
         "policy_digest": envelope.policy_digest,
     }
     return {

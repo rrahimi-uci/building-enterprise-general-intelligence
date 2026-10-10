@@ -19,7 +19,7 @@ class _FakeResponses:
                 status="NEEDS_INPUT",
                 summary="A required income document is missing.",
                 available_document_ids=("APP-000184", "PAY-000184-01", "PUR-000184"),
-                missing_document_kinds=("employment_verification",),
+                missing_document_kinds=("pay_statement",),
                 proposed_next_control="Request the missing document",
             )
 

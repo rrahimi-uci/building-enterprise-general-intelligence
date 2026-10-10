@@ -2,7 +2,7 @@
 
 from .enterprise import (
     Artifact, CapabilityEnvelope, CapabilityScope, ContextManifest, EffectRecord,
-    HumanActionAuthorizationDecision, HumanActionAuthorizationRequest,
+    ApprovalDecision, ApprovalRequest,
     MemoryRecord, PrincipalChain, PrincipalContext, RunManifest, TaskEnvelope,
     TraceEnvelope, WorkflowEvent, canonical_json, digest, narrow_scope,
     proposal_hash,

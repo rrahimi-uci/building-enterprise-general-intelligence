@@ -34,7 +34,7 @@ ANCHOR_CASE_ID = load_anchor_case().case_id
 def read_mortgage_case(case_id: str) -> str:
     """Return the evidence status of one synthetic mortgage case."""
     records = {
-        ANCHOR_CASE_ID: "missing employment_verification evidence",
+        ANCHOR_CASE_ID: "missing a second pay_statement",
     }
     status = records.get(case_id)
     if status is None:

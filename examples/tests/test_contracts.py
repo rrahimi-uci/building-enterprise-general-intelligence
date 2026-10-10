@@ -9,7 +9,7 @@ from pydantic import ValidationError
 
 from examples.contracts import (
     AgentDecision, AgentStepRequest, CandidatePlan, EvidenceRef, PlanNode,
-    SkillRequirement, ToolCall,
+    RiskClass, SkillRequirement, ToolCall,
 )
 
 
@@ -28,13 +28,22 @@ def test_decision_disposition_is_closed():
         AgentDecision(disposition="do_whatever")
 
 
+def test_a_mutation_is_a_proposed_action_not_a_tool_invocation():
+    proposal = AgentDecision(
+        disposition="proposed_action",
+        tool_call=ToolCall(tool_id="mortgage.document.request@1",
+                           arguments={"case_id": "MORT-2026-000184", "document_kind": "pay_statement"}),
+    )
+    assert proposal.disposition == "proposed_action"
+
+
 def test_tool_call_carries_an_optional_logical_effect_key():
     call = ToolCall(
         tool_id="mortgage.document.request",
-        arguments={"case_id": "MORT-2026-000184", "document_kind": "employment_verification"},
-        logical_effect_key="mortgage:document-request:MORT-2026-000184:employment_verification",
+        arguments={"case_id": "MORT-2026-000184", "document_kind": "pay_statement"},
+        logical_effect_key="mortgage:document-request:MORT-2026-000184:pay_statement",
     )
-    assert call.logical_effect_key == "mortgage:document-request:MORT-2026-000184:employment_verification"
+    assert call.logical_effect_key == "mortgage:document-request:MORT-2026-000184:pay_statement"
     assert ToolCall(tool_id="lookup", arguments={}).logical_effect_key is None
 
 
@@ -53,17 +62,28 @@ def test_step_request_pins_everything_a_replay_needs():
                          agent_version="1.4.0", context_manifest_id="ctx:1")
 
 
+def test_risk_is_an_effect_risk_class_never_a_bare_number():
+    requirement = SkillRequirement(capability="mortgage.evidence.review",
+                                   purpose="mortgage_pre_underwriting_review", region="us",
+                                   risk_ceiling="R2")
+    assert requirement.risk_ceiling is RiskClass.R2
+    assert RiskClass.R1 < requirement.risk_ceiling < RiskClass.R4
+    # The JSON form matches the prose: "R2", not 2.
+    assert requirement.model_dump(mode="json")["risk_ceiling"] == "R2"
+    with pytest.raises(ValidationError, match="bare number"):
+        SkillRequirement(capability="c", purpose="p", region="us", risk_ceiling=2)
+    with pytest.raises(ValidationError):
+        SkillRequirement(capability="c", purpose="p", region="us", risk_ceiling="R5")
+
+
 def test_plan_nodes_must_declare_their_own_bounds():
-    SkillRequirement(capability="mortgage.evidence.review",
-                     purpose="mortgage_pre_underwriting_review", region="us",
-                     maximum_risk=2)
     node = PlanNode(id="n1", capability="lookup", maximum_cost_usd=Decimal("0.25"),
-                    maximum_attempts=2, risk_class=1)
+                    maximum_attempts=2, risk_class=RiskClass.R1)
     # Every node carries its own cost, attempt, and risk bounds, so a plan cannot
-    # be approved without the reviewer seeing what each step may spend.
+    # be validated without the compiler seeing what each step may spend.
     assert (node.maximum_cost_usd, node.maximum_attempts) == (Decimal("0.25"), 2)
     with pytest.raises(ValidationError, match="Decimal"):
         PlanNode(id="n-float", capability="lookup", maximum_cost_usd=0.25,
-                 maximum_attempts=2, risk_class=1)
+                 maximum_attempts=2, risk_class=RiskClass.R1)
     with pytest.raises(ValidationError):
         PlanNode(id="n2", capability="lookup")

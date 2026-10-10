@@ -1,7 +1,7 @@
-"""Verifying that an action authorization covers this exact proposal, and has not lapsed.
+"""Verifying that an approval covers this exact proposal, and has not lapsed.
 
-The companion to the action-authorization gate: the gate persists the pause,
-this verifies the decision at commit time. Timezone-aware timestamps are required rather than
+The companion to the approval gate: the gate persists the pause, this verifies
+the decision at commit time. Timezone-aware timestamps are required rather than
 assumed, because a naive datetime is how an expiry check silently passes.
 """
 from __future__ import annotations
@@ -20,8 +20,8 @@ def _require_aware(value: datetime, field_name: str) -> datetime:
     return value
 
 
-class HumanActionAuthorizationRequest(BaseModel):
-    """Exact action reviewed by an authorized human; immutable after presentation."""
+class ApprovalRequest(BaseModel):
+    """Exact action reviewed by an eligible human approver; immutable after presentation."""
 
     tenant_id: str
     run_id: str
@@ -46,7 +46,7 @@ class HumanActionAuthorizationRequest(BaseModel):
 
 
 # --8<-- region:core
-class HumanActionAuthorizationDecision(BaseModel):
+class ApprovalDecision(BaseModel):
     approval_id: str
     proposal_hash: str
     tenant_id: str
@@ -63,36 +63,36 @@ class HumanActionAuthorizationDecision(BaseModel):
         return _require_aware(value, info.field_name)
 
     @model_validator(mode="after")
-    def expiry_follows_authorization(self) -> "HumanActionAuthorizationDecision":
+    def expiry_follows_approval(self) -> "ApprovalDecision":
         if self.expires_at <= self.approved_at:
             raise ValueError("expires_at must be later than approved_at")
         return self
 
 
-def verify_action_authorization(
-    proposal: HumanActionAuthorizationRequest,
-    decision: HumanActionAuthorizationDecision,
+def verify_approval(
+    proposal: ApprovalRequest,
+    decision: ApprovalDecision,
     *,
     now: datetime,
     actual_resource_version: int,
 ) -> None:
-    """Fail closed if authorization no longer matches the action or current state."""
+    """Fail closed if the approval no longer matches the action or current state."""
 
     _require_aware(now, "now")
     if decision.proposal_hash != proposal.digest():
-        raise PermissionError("action authorization is not bound to this proposal")
+        raise PermissionError("approval is not bound to this proposal")
     if (decision.tenant_id, decision.run_id) != (proposal.tenant_id, proposal.run_id):
-        raise PermissionError("action authorization scope mismatch")
+        raise PermissionError("approval scope mismatch")
     if decision.approver_id == proposal.actor_id:
         raise PermissionError("actor cannot self-approve")
     if decision.policy_digest != proposal.policy_digest:
-        raise PermissionError("policy changed after authorization")
+        raise PermissionError("policy changed after approval")
     if now < decision.approved_at:
-        raise PermissionError("authorization is not yet effective")
+        raise PermissionError("approval is not yet effective")
     if now >= min(decision.expires_at, proposal.expires_at):
-        raise PermissionError("action authorization expired")
+        raise PermissionError("approval expired")
     if actual_resource_version != proposal.expected_resource_version:
-        raise PermissionError("resource changed after authorization")
+        raise PermissionError("resource changed after approval")
 
 
 # --8<-- endregion:core

@@ -745,7 +745,7 @@ The discussion above draws on R01; R13. Appendix K lists the complete sources an
 
 \BookSnake · Provider-neutral agent-step and platform contracts\par
 
-\needspace{332.8pt}
+\needspace{369.6pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class EvidenceRef(BaseModel):
     uri: str
@@ -759,7 +759,11 @@ class ToolCall(BaseModel):
     logical_effect_key: str | None = None
 
 class AgentDecision(BaseModel):
-    disposition: Literal["answer", "needs_input", "invoke_tool", "delegate"]
+    # invoke_tool is a read the loop may run; proposed_action is a mutation that
+    # leaves the loop as a proposal for the six gates.
+    disposition: Literal[
+        "answer", "needs_input", "invoke_tool", "proposed_action", "delegate"
+    ]
     answer: str | None = None
     tool_call: ToolCall | None = None
     evidence: list[EvidenceRef] = Field(default_factory=list)
@@ -1170,7 +1174,7 @@ ANCHOR_CASE_ID = load_anchor_case().case_id
 def read_mortgage_case(case_id: str) -> str:
     """Return the evidence status of one synthetic mortgage case."""
     records = {
-        ANCHOR_CASE_ID: "missing employment_verification evidence",
+        ANCHOR_CASE_ID: "missing a second pay_statement",
     }
     status = records.get(case_id)
     if status is None:
@@ -2520,7 +2524,7 @@ The discussion above draws on R03; R04. Appendix K lists the complete sources an
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 """The provider-neutral contracts every agent step and platform API shares.
 
-One file, two views. Chapter 02 needs the agent-step subset; chapter 04 needs
+One file, two views. Chapter 03 needs the agent-step subset; chapter 04 needs
 the full platform set. In earlier drafts these were two listings that had already
 drifted apart -- the shorter one was not even a prefix of the longer.
 """
@@ -2528,9 +2532,10 @@ from __future__ import annotations
 
 from datetime import datetime
 from decimal import Decimal
-from typing import Any, Literal
+from enum import IntEnum
+from typing import Annotated, Any, Literal
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, BeforeValidator, Field, PlainSerializer, field_validator
 
 class EvidenceRef(BaseModel):
     uri: str
@@ -2544,7 +2549,11 @@ class ToolCall(BaseModel):
     logical_effect_key: str | None = None
 
 class AgentDecision(BaseModel):
-    disposition: Literal["answer", "needs_input", "invoke_tool", "delegate"]
+    # invoke_tool is a read the loop may run; proposed_action is a mutation that
+    # leaves the loop as a proposal for the six gates.
+    disposition: Literal[
+        "answer", "needs_input", "invoke_tool", "proposed_action", "delegate"
+    ]
     answer: str | None = None
     tool_call: ToolCall | None = None
     evidence: list[EvidenceRef] = Field(default_factory=list)
@@ -2568,10 +2577,36 @@ class AgentStepResult(BaseModel):
     error_code: str | None = None
 
 
+class RiskClass(IntEnum):
+    """Effect risk class (Chapter 22): R0 pure transform to R4 irreversible action."""
+
+    R0 = 0
+    R1 = 1
+    R2 = 2
+    R3 = 3
+    R4 = 4
+
+
+def _risk_class(value: object) -> object:
+    # Accept RiskClass.R1 or "R1"; refuse a bare number, which reads as a tier.
+    if isinstance(value, str) and value in RiskClass.__members__:
+        return RiskClass[value]
+    if not isinstance(value, RiskClass):
+        raise ValueError("risk class must be R0-R4, not a bare number")
+    return value
+
+
+Risk = Annotated[
+    RiskClass,
+    BeforeValidator(_risk_class),
+    PlainSerializer(lambda risk: risk.name, return_type=str),
+]
+
+
 class SkillRequirement(BaseModel):
     capability: str
     purpose: str
-    maximum_risk: int = Field(ge=0, le=4)
+    risk_ceiling: Risk
     required_data_classes: frozenset[str] = frozenset()
     region: str
 
@@ -2581,7 +2616,7 @@ class PlanNode(BaseModel):
     depends_on: tuple[str, ...] = ()
     maximum_cost_usd: Decimal = Field(ge=0)
     maximum_attempts: int = Field(ge=1, le=10)
-    risk_class: int = Field(ge=0, le=4)
+    risk_class: Risk
 
     @field_validator("maximum_cost_usd", mode="before")
     @classmethod
@@ -4334,19 +4369,27 @@ The discussion above draws on R05; R07. Appendix K lists the complete sources an
 
 \BookSnake · Resolving a skill version under policy and SemVer precedence\par
 
-\needspace{581.2pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class SkillRegistry:
     def __init__(self) -> None:
         self._skills: dict[str, SkillManifest] = {}
         self._packs: dict[str, SkillPackManifest] = {}
+        # Release records: lifecycle state per version, outside the digest.
+        self._skill_state: dict[str, LifecycleState] = {}
+        self._pack_state: dict[str, LifecycleState] = {}
 
     def register_skill(self, skill: SkillManifest) -> str:
         key = f"{skill.skill_id}@{skill.version}"
         if key in self._skills:
             raise ValueError(f"skill already exists: {key}")
         self._skills[key] = skill
+        self._skill_state[key] = "draft"
         return key
+
+    def set_skill_state(self, key: str, state: LifecycleState) -> None:
+        if key not in self._skills:
+            raise LookupError(f"unknown skill: {key}")
+        self._skill_state[key] = state
 
     def register_pack(self, pack: SkillPackManifest) -> str:
         key = f"{pack.pack_id}@{pack.version}"
@@ -4355,23 +4398,29 @@ class SkillRegistry:
         missing = set(pack.skill_versions) - self._skills.keys()
         if missing:
             raise ValueError(f"pack references unknown skills: {sorted(missing)}")
-        if pack.status == "active" and any(
-            self._skills[skill_key].status != "active"
-            for skill_key in pack.skill_versions
+        self._packs[key] = pack
+        self._pack_state[key] = "draft"
+        return key
+
+    def set_pack_state(self, key: str, state: LifecycleState) -> None:
+        if key not in self._packs:
+            raise LookupError(f"unknown skill pack: {key}")
+        if state == "active" and any(
+            self._skill_state[skill_key] != "active"
+            for skill_key in self._packs[key].skill_versions
         ):
             raise ValueError("active pack must reference only active skills")
-        self._packs[key] = pack
-        return key
+        self._pack_state[key] = state
 
     def resolve(self, requirement: SkillRequirement) -> SkillManifest:
         candidates = [
             skill
-            for skill in self._skills.values()
-            if skill.status == "active"
+            for key, skill in self._skills.items()
+            if self._skill_state[key] == "active"
             and requirement.capability in skill.capabilities
             and requirement.purpose in skill.allowed_purposes
             and requirement.region in skill.allowed_regions
-            and requirement.maximum_risk <= skill.maximum_risk
+            and requirement.risk_ceiling <= skill.risk_ceiling
             and requirement.required_data_classes <= skill.allowed_data_classes
         ]
         if not candidates:
@@ -4391,12 +4440,14 @@ class SkillRegistry:
         if allow_deprecated_for_replay:
             permitted_pack_states.add("deprecated")
             permitted_skill_states.add("deprecated")
-        if pack.status not in permitted_pack_states:
+        if self._pack_state[pack_key] not in permitted_pack_states:
             raise LookupError("skill pack is not available for this resolution mode")
-        skills = tuple(self._skills[key] for key in pack.skill_versions)
-        if any(skill.status not in permitted_skill_states for skill in skills):
+        if any(
+            self._skill_state[key] not in permitted_skill_states
+            for key in pack.skill_versions
+        ):
             raise LookupError("skill pack contains unavailable skill")
-        return skills
+        return tuple(self._skills[key] for key in pack.skill_versions)
 \end{lstlisting}
 
 \section{If this fails in production}
@@ -4837,7 +4888,7 @@ def search_mortgage_evidence(context: RunContextWrapper[RunBudget], query: str) 
         # read this, stop, and explain itself rather than retrying blindly.
         return "budget exhausted: no further searches permitted in this run"
     hits = {
-        "income": "employment_verification is missing",
+        "income": "a second pay_statement is missing",
         "property": "purchase_agreement is available",
         "title": "title evidence is not in this checkpoint",
     }
@@ -4873,7 +4924,6 @@ async def run(question: str, *, budget: RunBudget, model=None) -> str:
 
 \BookSnake · A ReAct controller that owns the budgets\par
 
-\needspace{590.4pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class ReActEngine:
     """A bounded reason-act-observe loop with an external tool boundary."""
@@ -4900,7 +4950,12 @@ class ReActEngine:
         ).encode()
         return hashlib.sha256(payload).hexdigest()
 
-    async def run(self, goal: str) -> AgentDecision:
+    @staticmethod
+    def _stop(reason: StopReason) -> AgentStepResult:
+        # A tripped bound is a typed outcome, not an exception.
+        return AgentStepResult(status="failed", error_code=reason)
+
+    async def run(self, goal: str) -> AgentStepResult:
         observations: list[dict[str, object]] = []
         identical_observations: dict[str, int] = {}
         tool_calls = 0
@@ -4908,13 +4963,18 @@ class ReActEngine:
             decision = await self.model.decide(
                 goal=goal, observations=tuple(observations)
             )
-            if decision.disposition in {"answer", "needs_input", "delegate"}:
-                return decision
+            if decision.disposition in {"answer", "delegate"}:
+                return AgentStepResult(status="completed", decision=decision)
+            if decision.disposition == "needs_input":
+                return AgentStepResult(status="needs_input", decision=decision)
             if decision.tool_call is None:
-                raise ValueError("invoke_tool decision is missing tool_call")
+                raise ValueError(f"{decision.disposition} decision is missing tool_call")
+            if decision.disposition == "proposed_action":
+                # A mutation never runs here; the workflow takes it through the gates.
+                return AgentStepResult(status="proposed_action", decision=decision)
             tool_calls += 1
             if tool_calls > self.limits.maximum_tool_calls:
-                raise RuntimeError("tool-call budget exceeded")
+                return self._stop("budget_exhausted")
             result = await self.invoke_tool(
                 decision.tool_call.tool_id,
                 decision.tool_call.arguments,
@@ -4935,8 +4995,8 @@ class ReActEngine:
                 identical_observations[fingerprint]
                 >= self.limits.maximum_identical_observations
             ):
-                raise RuntimeError("no-progress loop detected")
-        raise RuntimeError("ReAct turn limit exceeded")
+                return self._stop("no_progress")
+        return self._stop("budget_exhausted")
 \end{lstlisting}
 
 \section{If this fails in production}
@@ -5731,7 +5791,7 @@ Plan churn & Revision, no-progress, and cost limits; freeze committed facts. \\
 
 \subsection{Plan IR compiler}
 
-\BookSnake · Compiling an approved plan into a budget-bounded envelope\par
+\BookSnake · Compiling a validated plan into a budget-bounded envelope\par
 
 \needspace{599.6pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
@@ -5784,7 +5844,7 @@ def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, objec
         "allowed_capabilities": sorted(envelope.allowed_capabilities),
         "maximum_cost_usd": str(envelope.maximum_cost_usd),
         "maximum_nodes": envelope.maximum_nodes,
-        "maximum_risk": envelope.maximum_risk,
+        "maximum_risk": envelope.maximum_risk.name,
         "policy_digest": envelope.policy_digest,
     }
     return {
@@ -6496,36 +6556,36 @@ Queue abandonment & SLA, escalation, reassignment, cancellation, and safe timeou
 
 \section{A sensible place to start}
 
-\BookSnake · A human action-authorization gate that survives the wait\par
+\BookSnake · A human approval gate that survives the wait\par
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def proposal_hash(action: str, arguments: dict) -> str:
-    """Bind an authorization decision to one exact proposal, not to an intent."""
+    """Bind an approval decision to one exact proposal, not to an intent."""
     payload = json.dumps({"action": action, "arguments": arguments}, sort_keys=True)
     return hashlib.sha256(payload.encode()).hexdigest()
 
 
 @dataclass(frozen=True)
-class HumanActionAuthorizationDecision:
+class ApprovalDecision:
     proposal_hash: str
     approver_id: str
     expires_at: datetime
     signature: str
 
 
-class HumanActionAuthorizationExpired(Exception):
-    """The authorization decision lapsed before the effect committed."""
+class ApprovalExpired(Exception):
+    """The approval decision lapsed before the effect committed."""
 
 
-class HumanActionAuthorizationMismatch(Exception):
+class ApprovalMismatch(Exception):
     """The proposal changed after it was approved."""
 
 
-class HumanActionAuthorizationNotAuthentic(Exception):
-    """The authorization decision was not issued by the authorization service."""
+class ApprovalNotAuthentic(Exception):
+    """The approval decision was not issued by the Approval Service."""
 
 
-class HumanActionAuthorizationService:
+class ApprovalService:
     """Issues signed decisions. Only this component speaks for a human reviewer."""
 
     def __init__(self, secret: bytes) -> None:
@@ -6535,24 +6595,24 @@ class HumanActionAuthorizationService:
         payload = f"{proposal_hash}|{approver_id}|{expires_at.isoformat()}".encode()
         return hmac.new(self._secret, payload, hashlib.sha256).hexdigest()
 
-    def issue(self, proposal_hash: str, approver_id: str, expires_at: datetime) -> HumanActionAuthorizationDecision:
-        return HumanActionAuthorizationDecision(
+    def issue(self, proposal_hash: str, approver_id: str, expires_at: datetime) -> ApprovalDecision:
+        return ApprovalDecision(
             proposal_hash=proposal_hash, approver_id=approver_id, expires_at=expires_at,
             signature=self._signature(proposal_hash, approver_id, expires_at),
         )
 
-    def verify(self, decision: HumanActionAuthorizationDecision) -> None:
+    def verify(self, decision: ApprovalDecision) -> None:
         expected = self._signature(decision.proposal_hash, decision.approver_id, decision.expires_at)
         # compare_digest, not ==: an equality check on a signature leaks timing.
         if not hmac.compare_digest(expected, decision.signature):
-            raise HumanActionAuthorizationNotAuthentic("decision was not issued by the authorization service")
+            raise ApprovalNotAuthentic("decision was not issued by the Approval Service")
 
 
 @dataclass
 class PendingApprovals:
     """Persisted pauses. A real system stores these in the workflow database."""
 
-    service: HumanActionAuthorizationService
+    service: ApprovalService
     pending: dict[str, dict] = field(default_factory=dict)
 
     def pause(self, run_id: str, action: str, arguments: dict, ttl: timedelta) -> str:
@@ -6570,21 +6630,21 @@ class PendingApprovals:
         }
         return self.pending[run_id]["digest"]
 
-    def commit(self, run_id: str, decision: HumanActionAuthorizationDecision, now: datetime | None = None) -> str:
+    def commit(self, run_id: str, decision: ApprovalDecision, now: datetime | None = None) -> str:
         record = self.pending[run_id]
         now = now or datetime.now(timezone.utc)
-        # Authenticity first: an unsigned decision is not authorization, so there is
+        # Authenticity first: an unsigned decision is not an approval, so there is
         # nothing to compare it against.
         self.service.verify(decision)
         # Recompute from the stored proposal rather than trusting the stored
         # digest, so tampering with the pending record is caught too.
         current = proposal_hash(record["action"], record["arguments"])
         if decision.proposal_hash != current:
-            raise HumanActionAuthorizationMismatch("the authorized proposal is not the one being committed")
+            raise ApprovalMismatch("the approved proposal is not the one being committed")
         if now >= decision.expires_at or now >= record["expires_at"]:
-            raise HumanActionAuthorizationExpired("authorization lapsed; request it again")
+            raise ApprovalExpired("approval lapsed; request it again")
         del self.pending[run_id]
-        return f"committed {record['action']} authorized by {decision.approver_id}"
+        return f"committed {record['action']} approved by {decision.approver_id}"
 \end{lstlisting}
 
 \subsection{Proposal-bound approval contract}
@@ -6631,11 +6691,11 @@ def proposal_hash(action: str, destination: str,
 
 \subsection{Executable proposal-bound approval}
 
-\BookSnake · Verifying human action authorization against this exact proposal\par
+\BookSnake · Verifying a human approval against this exact proposal\par
 
 \needspace{452.4pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
-class HumanActionAuthorizationDecision(BaseModel):
+class ApprovalDecision(BaseModel):
     approval_id: str
     proposal_hash: str
     tenant_id: str
@@ -6652,36 +6712,36 @@ class HumanActionAuthorizationDecision(BaseModel):
         return _require_aware(value, info.field_name)
 
     @model_validator(mode="after")
-    def expiry_follows_authorization(self) -> "HumanActionAuthorizationDecision":
+    def expiry_follows_approval(self) -> "ApprovalDecision":
         if self.expires_at <= self.approved_at:
             raise ValueError("expires_at must be later than approved_at")
         return self
 
 
-def verify_action_authorization(
-    proposal: HumanActionAuthorizationRequest,
-    decision: HumanActionAuthorizationDecision,
+def verify_approval(
+    proposal: ApprovalRequest,
+    decision: ApprovalDecision,
     *,
     now: datetime,
     actual_resource_version: int,
 ) -> None:
-    """Fail closed if authorization no longer matches the action or current state."""
+    """Fail closed if the approval no longer matches the action or current state."""
 
     _require_aware(now, "now")
     if decision.proposal_hash != proposal.digest():
-        raise PermissionError("action authorization is not bound to this proposal")
+        raise PermissionError("approval is not bound to this proposal")
     if (decision.tenant_id, decision.run_id) != (proposal.tenant_id, proposal.run_id):
-        raise PermissionError("action authorization scope mismatch")
+        raise PermissionError("approval scope mismatch")
     if decision.approver_id == proposal.actor_id:
         raise PermissionError("actor cannot self-approve")
     if decision.policy_digest != proposal.policy_digest:
-        raise PermissionError("policy changed after authorization")
+        raise PermissionError("policy changed after approval")
     if now < decision.approved_at:
-        raise PermissionError("authorization is not yet effective")
+        raise PermissionError("approval is not yet effective")
     if now >= min(decision.expires_at, proposal.expires_at):
-        raise PermissionError("action authorization expired")
+        raise PermissionError("approval expired")
     if actual_resource_version != proposal.expected_resource_version:
-        raise PermissionError("resource changed after authorization")
+        raise PermissionError("resource changed after approval")
 \end{lstlisting}
 
 \section{If this fails in production}
@@ -10094,33 +10154,86 @@ The discussion above draws on R03; R04. Appendix K lists the complete sources an
 
 \BookSnake · Effect-level idempotency ledger\par
 
-\needspace{250.0pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
+EffectState = Literal[
+    "reserved", "executing", "committed", "declined", "unknown", "intervention_required"
+]
+
+
+class EffectConflict(Exception):
+    """The logical key was reused with a different intent."""
+
+
 class EffectOutcomeUnknown(Exception):
-    """Raised when a dispatch timed out and the outcome cannot be proven."""
+    """The effect may have happened; reconcile before anything retries it."""
+
+
+class DownstreamDeclined(Exception):
+    """The downstream system answered, and the answer proves no effect happened."""
+
+
+@dataclass
+class EffectRecord:
+    intent_hash: str
+    state: EffectState
+    receipt: str | None = None
+    evidence: str | None = None
+
+
+def hash_intent(intent: dict[str, object]) -> str:
+    payload = json.dumps(intent, sort_keys=True, separators=(",", ":"), default=str)
+    return "sha256:" + hashlib.sha256(payload.encode()).hexdigest()
 
 
 @dataclass
 class EffectLedger:
-    """Records the outcome of each logical effect exactly once."""
+    """Reference implementation; production uses a transactional durable store."""
 
-    _committed: dict[str, str] = field(default_factory=dict)
-    _in_flight: set[str] = field(default_factory=set)
+    _records: dict[str, EffectRecord] = field(default_factory=dict)
 
-    def commit(self, effect_key: str, apply) -> str:
-        # A replayed key returns the original receipt. The caller cannot tell
-        # whether it won the race, and does not need to.
-        if effect_key in self._committed:
-            return self._committed[effect_key]
-        if effect_key in self._in_flight:
-            raise EffectOutcomeUnknown(f"{effect_key} is still in flight")
-        self._in_flight.add(effect_key)
+    def commit(self, key: str, intent: dict[str, object], apply: Callable[[], str]) -> str:
+        digest = hash_intent(intent)
+        record = self._records.get(key)
+        if record is not None and record.state != "declined":
+            if record.intent_hash != digest:
+                raise EffectConflict(f"{key} was reused with a different intent")
+            if record.state == "committed":
+                return record.receipt  # a replay returns the original receipt
+            raise EffectOutcomeUnknown(f"{key} is {record.state}; refusing to re-apply")
+        # No record, or a decline that proved nothing happened: safe to apply.
+        # Production writes "reserved" and "executing" durably before dispatch.
+        record = self._records[key] = EffectRecord(digest, "reserved")
+        record.state = "executing"
         try:
             receipt = apply()
-        finally:
-            self._in_flight.discard(effect_key)
-        self._committed[effect_key] = receipt
+        except DownstreamDeclined:
+            record.state = "declined"
+            raise
+        except Exception as error:
+            # A timeout or a lost connection proves nothing: the effect may have landed.
+            record.state = "unknown"
+            raise EffectOutcomeUnknown(f"{key} outcome is unknown") from error
+        record.state, record.receipt = "committed", receipt
         return receipt
+
+    def reconcile(
+        self, key: str, *, outcome: Literal["committed", "absent", "unprovable"], evidence: str
+    ) -> EffectRecord:
+        """Settle an Unknown effect from downstream evidence, never from a guess."""
+        record = self._records[key]
+        if record.state != "unknown":
+            raise EffectConflict(f"only an unknown effect is reconciled, not {record.state}")
+        record.evidence = evidence
+        if outcome == "committed":
+            record.state, record.receipt = "committed", evidence
+        elif outcome == "absent":
+            record.state = "declined"
+        else:
+            record.state = "intervention_required"
+        return record
+
+    def get(self, key: str) -> EffectRecord:
+        return self._records[key]
 \end{lstlisting}
 
 \subsection{Effect-state ledger}
@@ -10960,7 +11073,7 @@ class SyntheticMortgageGateway:
         return {
             "case_id": kwargs["case_id"],
             "available_document_ids": ["APP-000184", "PAY-000184-01", "PUR-000184"],
-            "missing_document_kinds": ["employment_verification"],
+            "missing_document_kinds": ["pay_statement"],
             "synthetic_notice": SYNTHETIC_NOTICE,
         }
 
@@ -10998,7 +11111,7 @@ def run_mortgage_review() -> dict[str, object]:
     model = ScriptedModel([
         ToolCall("read_mortgage_case", {"case_id": case.case_id}),
         Say(
-            '{"status":"needs_input","summary":"Employment verification is '
+            '{"status":"needs_input","summary":"A second pay statement is '
             'missing.","evidence_artifact_ids":[]}'
         ),
     ])

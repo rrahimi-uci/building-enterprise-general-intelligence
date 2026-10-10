@@ -9,11 +9,11 @@ import pytest
 
 from mortgage_case.domain.case import load_anchor_case
 from mortgage_case.domain.errors import MortgageCaseError, ProposalRejected
-from mortgage_case.platform.action_authorization import (
-    HumanActionAuthorizationDecision,
-    HumanActionAuthorizationRequest,
+from mortgage_case.platform.approval import (
+    ApprovalDecision,
+    ApprovalRequest,
     proposal_hash,
-    verify_action_authorization,
+    verify_approval,
 )
 from mortgage_case.platform.authorization import (
     CapabilityEnvelope,
@@ -166,12 +166,12 @@ def test_scope_and_child_task_store_never_widen_authority():
         store.complete("TASK-unknown", "ART-1")
 
 
-def test_human_action_authorization_is_bound_to_proposal_and_case_version():
+def test_approval_is_bound_to_proposal_and_case_version():
     action = "underwriting.mark_ready"
     resource = f"mortgage://case/{CASE.case_id}"
     arguments = {"case_version": CASE.case_version}
-    request = HumanActionAuthorizationRequest(
-        authorization_id="HAA-1",
+    request = ApprovalRequest(
+        approval_id="APR-1",
         case_id=CASE.case_id,
         action=action,
         resource=resource,
@@ -180,20 +180,20 @@ def test_human_action_authorization_is_bound_to_proposal_and_case_version():
         policy_version="mortgage-policy@2026.09",
         expires_at=NOW + timedelta(minutes=15),
         required_role="underwriter",
-        status="authorized",
+        status="approved",
     )
-    decision = HumanActionAuthorizationDecision(
-        authorization_id="HAA-1",
+    decision = ApprovalDecision(
+        approval_id="APR-1",
         proposal_hash=request.proposal_hash,
         approver_id="human-9",
         approver_role="underwriter",
-        decision="authorize",
+        decision="approve",
         decided_at=NOW,
         reason="synthetic test decision",
     )
-    verify_action_authorization(request, decision, current_case_version=CASE.case_version)
+    verify_approval(request, decision, current_case_version=CASE.case_version)
     with pytest.raises(ProposalRejected, match="STALE_CASE_VERSION"):
-        verify_action_authorization(request, decision, current_case_version=CASE.case_version + 1)
+        verify_approval(request, decision, current_case_version=CASE.case_version + 1)
 
 
 def test_identity_authorization_binds_envelope_to_current_principal():

@@ -459,10 +459,10 @@ class OwnershipTransfer(BaseModel):
     cancellation_lineage: tuple[str, ...] = ()
 
 
-class HumanActionAuthorizationRequest(BaseModel):
+class ApprovalRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    authorization_id: str
+    approval_id: str
     case_id: str
     action: str
     resource: str
@@ -471,7 +471,7 @@ class HumanActionAuthorizationRequest(BaseModel):
     policy_version: str
     expires_at: datetime
     required_role: str
-    status: Literal["pending", "authorized", "rejected", "expired"] = "pending"
+    status: Literal["pending", "approved", "rejected", "expired"] = "pending"
 
     @field_validator("expires_at")
     @classmethod
@@ -481,14 +481,14 @@ class HumanActionAuthorizationRequest(BaseModel):
         return value.astimezone(UTC)
 
 
-class HumanActionAuthorizationDecision(BaseModel):
+class ApprovalDecision(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    authorization_id: str
+    approval_id: str
     proposal_hash: str
     approver_id: str
     approver_role: str
-    decision: Literal["authorize", "reject"]
+    decision: Literal["approve", "reject"]
     decided_at: datetime
     reason: str
 
@@ -504,17 +504,17 @@ def proposal_hash(action: str, resource: str, arguments: dict[str, Any], case_ve
     return digest({"action": action, "resource": resource, "arguments": arguments, "case_version": case_version})
 
 
-def verify_action_authorization(request: HumanActionAuthorizationRequest, decision: HumanActionAuthorizationDecision, *, current_case_version: int, now: datetime = NOW) -> None:
-    if request.status != "authorized" or decision.decision != "authorize":
-        raise ProposalRejected("AUTHORIZATION_NOT_GRANTED", "authorization is not active")
-    if decision.authorization_id != request.authorization_id or decision.proposal_hash != request.proposal_hash:
-        raise ProposalRejected("AUTHORIZATION_BINDING_MISMATCH", "decision is not bound to this proposal")
+def verify_approval(request: ApprovalRequest, decision: ApprovalDecision, *, current_case_version: int, now: datetime = NOW) -> None:
+    if request.status != "approved" or decision.decision != "approve":
+        raise ProposalRejected("APPROVAL_NOT_GRANTED", "approval is not active")
+    if decision.approval_id != request.approval_id or decision.proposal_hash != request.proposal_hash:
+        raise ProposalRejected("APPROVAL_BINDING_MISMATCH", "decision is not bound to this proposal")
     if decision.approver_role != request.required_role:
         raise ProposalRejected("APPROVER_NOT_ELIGIBLE", "approver does not satisfy the role predicate")
     if now >= request.expires_at:
-        raise ProposalRejected("AUTHORIZATION_EXPIRED", "authorization expired before commit")
+        raise ProposalRejected("APPROVAL_EXPIRED", "approval expired before commit")
     if current_case_version != request.case_version:
-        raise ProposalRejected("STALE_CASE_VERSION", "case changed after authorization")
+        raise ProposalRejected("STALE_CASE_VERSION", "case changed after approval")
 
 
 class TaskEnvelope(BaseModel):
@@ -765,7 +765,7 @@ def build_trace(*, include_pii: bool = False, outage: bool = False) -> TraceEnve
         raise MortgageCaseError("TRACE_STORE_UNAVAILABLE", "diagnostic trace store is unavailable; audit remains separate")
     if any("Alex Morgan" in value for value in attributes.values()):
         raise ProposalRejected("TRACE_PRIVACY_VIOLATION", "PII is not allowed in ordinary telemetry")
-    spans = tuple(TraceSpan(span_id=f"SPAN-{index:02d}", name=name, attributes=attributes) for index, name in enumerate(("workflow", "agent", "policy", "human_authorization", "effect"), start=1))
+    spans = tuple(TraceSpan(span_id=f"SPAN-{index:02d}", name=name, attributes=attributes) for index, name in enumerate(("workflow", "agent", "policy", "human_approval", "effect"), start=1))
     return TraceEnvelope(trace_id="TRACE-REF-000184", spans=spans, audit_reference="AUDIT-REF-000184")
 
 

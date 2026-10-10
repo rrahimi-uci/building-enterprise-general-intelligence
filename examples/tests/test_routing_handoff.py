@@ -8,13 +8,13 @@ async def test_request_is_handed_to_the_owning_specialist():
     # A handoff is dispatched as a tool call named transfer_to_<agent>.
     model = ScriptedModel([
         ToolCall("transfer_to_mortgage_evidence_specialist", {}),
-        Say("MORT-2026-000184 is missing employment verification."),
+        Say("MORT-2026-000184 is missing a second pay statement."),
     ])
     answer, decided_by = await run(
         "What evidence is missing from MORT-2026-000184?", model=model
     )
     assert decided_by == "Mortgage evidence specialist", "ownership must transfer, not just context"
-    assert "employment verification" in answer
+    assert "second pay statement" in answer
 
 
 async def test_routing_to_the_other_specialist():

@@ -41,7 +41,7 @@ def search_mortgage_evidence(context: RunContextWrapper[RunBudget], query: str) 
         # read this, stop, and explain itself rather than retrying blindly.
         return "budget exhausted: no further searches permitted in this run"
     hits = {
-        "income": "employment_verification is missing",
+        "income": "a second pay_statement is missing",
         "property": "purchase_agreement is available",
         "title": "title evidence is not in this checkpoint",
     }
