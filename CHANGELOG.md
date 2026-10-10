@@ -4,6 +4,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Remove the proposals folder
+
+- Removed `proposals/` (one unreferenced draft, `knowledge-management.md`). Its entry drops out of `RELEASE-MANIFEST.json` and `CHECKSUMS.sha256` at the next `make package`.
+
 ### Place the chapter covers in the DOCX and XeLaTeX editions
 
 - Each of the 28 chapters now opens with its full-page Letter cover
