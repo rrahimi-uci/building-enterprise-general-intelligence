@@ -12,7 +12,7 @@ This edition starts from a deliberately unfashionable premise: an agentic applic
 
 The book follows that idea from the first model call to a system that has to run for years. We begin with the boundaries that make an agent predictable, then define the architecture and turn it into reusable platform capabilities. From there, the chapters work through the patterns, security controls, evidence, governance, and operating decisions that appear once real people, real data, and real consequences enter the picture.\par
 
-The examples use a fictional Harborlight mortgage case as a thread. It is not a claim that mortgage underwriting can be delegated to a model; it is a useful stress test because the case has sensitive evidence, human judgment, policy, long waits, and protected effects. Comparative Northstar examples show how the same contracts travel to supplier onboarding and other domains.\par
+The examples use a fictional Harborlight mortgage case as a thread. It is not a claim that mortgage underwriting can be delegated to a model; it is a useful stress test because the case has sensitive evidence, human judgment, policy, long waits, and protected effects. Comparative supplier-onboarding examples show how the same contracts travel to other domains.\par
 
 \section{How to read the claims in this book}
 
@@ -30,7 +30,7 @@ Use the book as an engineering foundation rather than a prescription. Take the e
 
 A book about governed systems should be maintainable in the same disciplined way. The accompanying Book v2.1.0 package includes the canonical Markdown, generated DOCX, diagrams, cover assets, references, styles, templates, build and validation tools, and release evidence needed to reproduce this edition.\par
 
-The canonical Markdown is the source of truth. Make substantive changes there and in the relevant registries, then regenerate the DOCX through the build process. That keeps references, diagrams, formatting, and structure aligned—even when people and AI agents both contribute.\par
+The canonical Markdown is the source of truth. Make substantive changes there and in the relevant registries, then regenerate the DOCX and LaTeX editions through the build process. That keeps references, diagrams, formatting, and structure aligned—even when people and AI agents both contribute.\par
 
 The package README walks through build, validation, and release. Following it gives future contributors a safe way to extend the book without quietly breaking its structure, style, or evidence trail.\par
 
@@ -53,7 +53,7 @@ The cumulative implementation path follows one synthetic Harborlight Home Financ
 \end{tabular}
 \BookTableEnd
 
-Later checkpoints are roadmap targets, not claims that the corresponding production platform has already been implemented. The retained Northstar supplier-onboarding material is comparative architecture evidence; the Harborlight mortgage case is the cumulative runnable path.\par
+Later checkpoints are roadmap targets, not claims that the corresponding production platform has already been implemented. The retained supplier-onboarding material is comparative architecture evidence; the Harborlight mortgage case is the cumulative runnable path.\par
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -66,7 +66,7 @@ Executive and product leader & Parts II, III, VIII and Appendix G & Investment, 
 Enterprise / solution architect & Parts I–VIII & Boundaries, contracts, topology, integration, security, and lifecycle \\
 Platform engineer & Parts II, III, V–VIII & Reusable control planes, SDKs, gateways, telemetry, release, and operations \\
 \rowcolor{BookLight}
-Application developer & Parts I, II, III, IV, VII & Agent design, knowledge, tools, Skills, tests, debugging, and improvement \\
+Application developer & Parts I–IV, VII & Agent design, knowledge, tools, Skills, tests, debugging, and improvement \\
 Security / risk / privacy & Parts II, VI, VIII and Appendices F, K & Knowledge governance, threat controls, evidence, approvals, exceptions, and assurance \\
 \rowcolor{BookLight}
 SRE / operations & Parts VII, VIII and Appendices B, L & SLOs, incidents, recovery, capacity, and verified-success economics \\
@@ -215,29 +215,29 @@ Together, these principles establish a simple operating contract: agents provide
 
 \begin{itemize}
 
-\item A. Choosing a Pattern: Decision Tree and Catalog
+\item A. Choosing the Right Pattern: A Decision Guide
 
 \item B. When Things Go Wrong: Triage and Runbooks
 
-\item C. Platform Contracts at a Glance
+\item C. Core Platform Contracts at a Glance
 
-\item D. Choosing a Framework
+\item D. Choosing an Agent Framework
 
 \item E. What This Architecture Means for Research
 
-\item F. Known Limits—and the Controls That Contain Them
+\item F. Known Limits and the Controls That Contain Them
 
-\item G. A Practical Enterprise Adoption Roadmap
+\item G. A Practical Roadmap for Enterprise Adoption
 
 \item H. Glossary
 
 \item I. Companion Implementation Guide: Harborlight Mortgage
 
-\item J. Coding-Agent Prompt and Acceptance Criteria
+\item J. Prompt and Acceptance Criteria for a Coding Agent
 
 \item K. References and Evidence Scope
 
-\item L. Capacity, resilience, and release acceptance
+\item L. Capacity, Resilience, and Release Acceptance
 
 \end{itemize}
 
@@ -247,7 +247,7 @@ Together, these principles establish a simple operating contract: agents provide
 
 \BookChapter{01}{What Turns an LLM Call into a Production System}
 
-\begin{bookcallout}[Where Harborlight Stands]
+\begin{bookcallout}[Where The Mortgage Case Stands]
 Harborlight Home Finance wants to prepare an underwriter-ready package for a routine synthetic case within one business day. A prototype can summarize evidence, but production must also retrieve authorized records, identify missing inputs, pause for people, preserve audit evidence, and survive days of inactivity.
 \end{bookcallout}
 
@@ -257,7 +257,7 @@ Start Harborlight as a governed distributed application with one bounded reasoni
 
 \section{A mortgage case that grows with the architecture}
 
-The cumulative implementation follows one fictional mortgage case so the reader can see the same system acquire each capability without jumping to a new application. The original Northstar supplier-onboarding material remains as explicitly comparative architecture evidence: it illustrates the same durability, authority, evidence, and release problems in another enterprise domain, but it is not the runnable case or the implementation-status anchor.\par
+The cumulative implementation follows one fictional mortgage case so the reader can see the same system acquire each capability without jumping to a new application. The original supplier-onboarding material remains as explicitly comparative architecture evidence: it illustrates the same durability, authority, evidence, and release problems in another enterprise domain, but it is not the runnable case or the implementation-status anchor.\par
 
 \textbf{Harborlight Home Finance} is a fictional lender preparing an underwriter-ready package for a synthetic purchase application. The anchor case is \lstinline[style=bookinline]!MORT-2026-000184! in tenant \lstinline[style=bookinline]!harborlight-us-west!, for synthetic applicant Alex Morgan and a fictional property. The target is to prepare a review package within one business day for routine synthetic cases while preserving identity, privacy, evidence, policy, human oversight, audit, and recovery controls. The target is an illustrative design objective, not a benchmark.\par
 
@@ -288,15 +288,15 @@ Success criteria & Every claim has an evidence reference or is labeled a candida
 
 The first bottleneck is deliberately ordinary: the initial file has an application, one pay statement, and a purchase agreement, but the second pay statement needed for income verification is missing. The first checkpoint can identify that gap. It cannot infer the missing income, calculate an authoritative debt-to-income ratio, approve or deny the loan, or update a loan-origination system.\par
 
-\BookDiagram{assets/diagrams/mortgage-case-lifecycle.pdf}{Figure 1-2 — The mortgage case starts with a missing-evidence bottleneck and adds verification, calculation, and human-owned review one control at a time}{mortgage-case-lifecycle}
+\BookDiagram{assets/diagrams/mortgage-case-lifecycle.pdf}{Figure 1-1 — The mortgage case starts with a missing-evidence bottleneck and adds verification, calculation, and human-owned review one control at a time}{mortgage-case-lifecycle}
 
 \section{Start with a demo that genuinely works}
 
 Almost every enterprise agent begins as a script that works on the first try. It is worth looking at one honestly, because the gap between it and a production system is the subject of this entire book — and the gap is not intelligence.\par
 
-\BookSnake · an intentionally abbreviated prototype sketch\par
+The following minimal mortgage example is retained as a contrast to the production design, but it is not a repository-executed listing: its surrounding application code is intentionally omitted. Keeping this sketch visibly non-executable prevents a reader from mistaking omitted gateway and effect controls for a complete implementation.\par
 
-The following minimal mortgage example is retained as a contrast to the production design, but it is not a repository-executed listing: its surrounding application code is intentionally omitted. The runnable, provider-pinned foundation is the mortgage example above; keeping this sketch visibly non-executable prevents a reader from mistaking omitted gateway and effect controls for a complete implementation.\par
+\BookSnake · an intentionally abbreviated prototype sketch\par
 
 \needspace{112.0pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
@@ -334,10 +334,10 @@ A model's answer is not an audit record. The system must preserve the evidence, 
 
 A model change is a production change even when the code does not change. Model versions must be evaluated against representative mortgage cases, released gradually, monitored, and rolled back when quality falls below an acceptable threshold.\par
 
-None of those five failures is a reasoning failure. The model did nothing wrong in any of them. They are failures of \emph{durability}, \emph{trust boundaries}, \emph{transactional effects}, \emph{evidence}, and \emph{release control} — five properties that live in the system around the model, and that no amount of prompt engineering can supply. That is the central claim of this chapter, and the reason the rest of the book is organized the way it is.\par
+None of those five failures can be fixed by better reasoning. They are failures of \emph{durability}, \emph{trust boundaries}, \emph{transactional effects}, \emph{evidence}, and \emph{release control} — five properties that live in the system around the model, and that no amount of prompt engineering can supply. That is the central claim of this chapter, and the reason the rest of the book is organized the way it is.\par
 
 \begin{bookantipattern}[Common pitfall]
-The most expensive misconception in enterprise agent projects is that the prototype is 80\% of the system and the rest is hardening. The prototype is the reasoning component. Durability, authority, effect semantics, evidence and release control are not hardening — they are the other components, and they are most of the work.
+The most expensive misconception in enterprise agent projects is that the prototype is 80\% of the system and the rest is hardening. The prototype is the reasoning component. Durability, authority, effect semantics, evidence, and release control are not hardening — they are the other components, and they are most of the work.
 \end{bookantipattern}
 
 \section{The gap between a useful demo and a dependable system}
@@ -388,7 +388,7 @@ Being precise about these levels matters because the architecture required to op
 
 The four levels below make that progression explicit.\par
 
-\BookDiagram{assets/diagrams/capability-ladder.pdf}{Figure 1-1 — Four levels: what each one adds, and what it still cannot do}{capability-ladder}
+\BookDiagram{assets/diagrams/capability-ladder.pdf}{Figure 1-2 — Four levels: what each one adds, and what it still cannot do}{capability-ladder}
 
 \subsection{Level one — a model}
 
@@ -445,7 +445,7 @@ result = await Runner.run(
 
 \textbf{What changes at this level:} The ability to handle tasks whose shape is not known in advance — where the second step depends on what the first returned.\par
 
-\textbf{What is still missing:} Survive. The loop lives in one process. If that process restarts, everything it knew is gone, including the knowledge that it already requested a mortgage document. It also decides for itself when to stop, which means \emph{termination is now a property of a text generator}.\par
+\textbf{What is still missing:} Survival. The loop lives in one process. If that process restarts, everything it knew is gone, including the knowledge that it already requested a mortgage document. It also decides for itself when to stop, which means \emph{termination is now a property of a text generator}.\par
 
 That last point is worth sitting with. At level two, a bug produces a wrong answer. At level three, a bug produces an unbounded loop that spends money and takes actions. The failure modes change category, not just severity.\par
 
@@ -470,7 +470,7 @@ Enterprise system & Durability, authority, evidence, control & Complexity — wh
 
 Notice that the fourth level adds no intelligence at all. Everything it adds is constraint and record-keeping. That is the shape of the discipline: the model does not become more capable as you productionize it; the system around it becomes more accountable.\par
 
-Model intelligence and operational guarantees are fundamentally different concerns, which is why this distinction prevents a common category error. Better prompting can improve a reasoning step; it cannot provide transactional integrity, credential isolation, deterministic replay, tenant boundaries, or a provable audit trail. Those are properties of the surrounding system, and no prompt can grant them.\par
+This distinction prevents a common category error: model intelligence and operational guarantees are different concerns. Better prompting can improve a reasoning step; it cannot provide transactional integrity, credential isolation, deterministic replay, tenant boundaries, or a provable audit trail. Those are properties of the surrounding system, and no prompt can grant them.\par
 
 A useful principle for level four:\par
 
@@ -615,7 +615,7 @@ Several terms in the table above are used throughout the book with precise meani
 \rowcolor{BookNavy}
 \color{white}\bfseries Term & \color{white}\bfseries What it means here & \color{white}\bfseries Where it is developed \\
 \endhead
-\textbf{Idempotency key} & A caller-supplied identifier that lets a downstream system recognise a repeated request as the \emph{same} request, so a retry updates nothing rather than creating a duplicate & Chapter 22 \\
+\textbf{Idempotency key} & A caller-supplied identifier that lets a downstream system recognize a repeated request as the \emph{same} request, so a retry updates nothing rather than creating a duplicate & Chapter 22 \\
 \rowcolor{BookLight}
 \textbf{Effect ledger} & The platform's own durable record of every external change it attempted, its idempotency key, and its confirmed outcome — separate from the downstream system's record & Chapter 22 \\
 \textbf{Compensation} & A deliberate reversing action for a step that cannot be rolled back, because it already committed elsewhere & Chapter 15 \\
@@ -626,7 +626,7 @@ Several terms in the table above are used throughout the book with precise meani
 \textbf{RBAC / ABAC} & Role-based access control decides by \emph{who someone is}; attribute-based access control decides by properties of the subject, resource, purpose and context at the moment of the request & Chapter 21 \\
 \textbf{Provenance} & The record of where a piece of content came from, under what authority it was retrieved, and how far it may be trusted & Chapters 5 and 6 \\
 \rowcolor{BookLight}
-\textbf{Acceptance criteria} & Executable checks over authoritative state that decide whether a run succeeded — evaluated by code, never asserted by the model & Chapter 14 \\
+\textbf{Acceptance criteria} & Executable checks over authoritative state that decide whether a run succeeded — evaluated by code, never asserted by the model & Chapters 10 and 12 \\
 \textbf{Canary} & Exposing a change to a small fraction of real traffic with explicit stop conditions before releasing it fully & Chapter 27 \\
 \rowcolor{BookLight}
 \textbf{Trace} & A causal graph of one run's steps, decisions, versions and effects — not a log file & Chapter 24 \\
@@ -651,7 +651,7 @@ Everything the rest of this book builds is one picture. Read it once now, before
 
 \BookDiagram{assets/diagrams/system-overview.pdf}{Figure 1-3 — The whole system at a thousand feet: the bands, the descent from proposal to committed effect, and the two concerns that cross them all}{system-overview}
 
-The Roman numerals are the reading map. Each band is one Part's subject, and the book descends through them in order: the shape first, then the layers, then the implementation inside each layer.\par
+The Roman numerals are the reading map: each band names the Part or Parts that develop it.\par
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -672,16 +672,16 @@ Knowledge & Governed knowledge, rules, catalogs, per-run context & Part II \\
 Control points & Which model, task, tool, or approval may proceed & Parts IV–VII \\
 \rowcolor{BookLight}
 Security & Identity, guardrails, approvals, containment & Part VI \\
-Where truth lives & Where effects actually commit and stay true & Throughout \\
+Systems of record & Where effects commit and stay authoritative & Throughout \\
 \rowcolor{BookLight}
 Evidence & Traces, evaluation, and the loop into the next release & Part VII \\
 Platform and operations & The paved road that builds, releases and runs it & Parts III and VIII \\
 \end{longtable}
 \BookTableEnd
 
-Two properties of this picture matter more than any component in it. Authority narrows downward, which is what the labelled descent records: the agent proposes, the platform authorizes, and only the bottom bands commit anything. And security is not a band you pass through once — it spans every one of them, which is why the figure draws it as a spine beside the stack rather than a layer within it, and why it gets a Part of its own. The platform that builds, releases and runs the system is drawn the same way and for the same reason.\par
+Two properties of this picture matter more than any component in it. Authority narrows downward, which is what the labeled descent records: the agent proposes, the platform authorizes, and only the bottom bands commit anything. And security is not a band you pass through once — it spans every one of them, which is why the figure draws it as a spine beside the stack rather than a layer within it, and why it gets a Part of its own. The platform that builds, releases and runs the system is drawn the same way and for the same reason.\par
 
-\BookFigureCaption{Figure 1-3 is this same picture at higher resolution: every band there opens into the components it owns. The notation carries over — a solid path is the request, dashed is control, dotted is evidence — so nothing new has to be learned to read it.}
+\BookFigureCaption{Figure 4-1 in Chapter 4 is this same picture at higher resolution: every band there opens into the components it owns. The notation carries over — a solid path is the request, dashed is control, dotted is evidence — so nothing new has to be learned to read it.}
 
 \section{Each control point answers a different question}
 
@@ -707,11 +707,11 @@ Human approval gate & Has an authorized reviewer approved this exact proposal? &
 \end{tabular}
 \BookTableEnd
 
-The \textbf{Tool Gateway} is the enterprise's control point for \emph{effects}. It validates the tool version and schema, re-authorizes the action and resource against the caller's grant, mints a last-hop credential, enforces idempotency, and records the receipt. It is deliberately protocol-agnostic, because effects arrive over REST, gRPC, a database transaction, a queue, and MCP, and the control must be the same for all of them.\par
+The \textbf{Tool Gateway} is the enterprise's control point for \emph{effects}. It validates the tool version and schema, reauthorizes the action and resource against the caller's grant, mints a last-hop credential, enforces idempotency, and records the receipt. It is deliberately protocol-agnostic, because effects arrive over REST, gRPC, a database transaction, a queue, and MCP, and the control must be the same for all of them.\par
 
 The \textbf{MCP Gateway} terminates one protocol. It decides whether an external MCP server is trusted, which of its tools are eligible, and what scoped credentials it may use. That is a real and necessary job, and it is a different job.\par
 
-The \textbf{human approval gate} is a control point for protected proposals, not a replacement for authorization or effect verification. It presents the exact proposal, evidence, expected resource version, and consequences to an eligible reviewer. The resulting human action authorization decision is bound to that proposal and expires; the Tool Gateway still reauthorizes the request and records the effect receipt.\par
+The \textbf{human approval gate} is a control point for protected proposals, not a replacement for authorization or effect verification. It presents the exact proposal, evidence, expected resource version, and consequences to an eligible reviewer. The resulting human action authorization is bound to that proposal and expires; the Tool Gateway still reauthorizes the request and records the effect receipt.\par
 
 Two lifecycle controls are related but deliberately named separately. The \textbf{acceptance gate} decides whether a run has discharged its obligations, while the \textbf{evaluation/release gate} decides whether a new behavior bundle may be promoted. Neither lets a model certify its own output, and neither substitutes for the request-time control points above.\par
 
@@ -731,11 +731,11 @@ Do not rename the Tool Gateway after a protocol. A tool invoked over MCP still p
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
 \endhead
-Grounding boundary & Separate model capability from system correctness. A benchmark or demo does not establish authorization, durability, privacy, or business acceptance. Every material output should carry evidence references and uncertainty. & NIST-GAI; REACT \\
+Grounding boundary & Separate model capability from system correctness. A benchmark or demo does not establish authorization, durability, privacy, or business acceptance. Every material output should carry evidence references and uncertainty. & R01; R13 \\
 \end{longtable}
 \BookTableEnd
 
-The discussion above draws on NIST-GAI; REACT. Appendix K lists the complete sources and records their authority, version, and scope.\par
+The discussion above draws on R01; R13. Appendix K lists the complete sources and records their authority, version, and scope.\par
 
 \section{A sensible place to start}
 
@@ -857,7 +857,7 @@ The case is now understandable but not yet executable: a malformed, stale, or ov
 
 The mortgage case makes the gap concrete, but it is not specific to mortgages — the same failure appears anywhere a model's output is allowed to trigger an action.\par
 
-\begin{bookcallout}[A Comparative Northstar Example]
+\begin{bookcallout}[A Comparative Supplier Example]
 The retained supplier prototype proposes a call to create a supplier record. The JSON is valid and the rationale sounds convincing, yet the record may be stale, the user may lack write authority, and a retry could create a duplicate. The same failure mechanism explains why Harborlight introduces a deterministic shell around every mortgage proposal.
 \end{bookcallout}
 
@@ -896,8 +896,6 @@ A useful proposal is small. It names one disposition, one tool or delegation tar
 \subsection{One proposal, six gates}
 
 The sequence above is the chapter in one line, but it only becomes useful when you can see what each gate rejects. Here is a single proposal from Harborlight, and what happens to it.\par
-
-The diagram establishes the order. The table below is the single operational summary, placed after the concrete proposal so each rejection is tied to a specific field or state rather than repeated as abstract gate descriptions.\par
 
 JSON · what the model actually emits\par
 
@@ -1209,7 +1207,7 @@ async def run(question: str, *, model=None) -> MortgageCaseStatus:
 
 \subsection{Governed Tool Gateway}
 
-The first listing shows the model-facing loop. This second listing shows the platform-facing boundary that receives its proposal. Every instruction is on its own line and the comments call out the decisions that must remain deterministic. The in-memory ledger keeps the example runnable offline; production persists these transitions atomically with the downstream effect.\par
+The previous listing shows the model-facing loop. The next listing shows the platform-facing boundary that receives its proposal. Every instruction is on its own line and the comments call out the decisions that must remain deterministic. The in-memory ledger keeps the example runnable offline; production persists these transitions atomically with the downstream effect.\par
 
 \BookSnake · A readable Tool Gateway with validation, authorization, and effect idempotency\par
 
@@ -1513,7 +1511,7 @@ This chapter uses the OpenAI Agents SDK as a concrete adapter. Enterprise applic
 
 \end{bookquote}
 
-\begin{bookcallout}[A Comparative Northstar Example]
+\begin{bookcallout}[A Comparative Supplier Example]
 The retained supplier platform adopts OpenAI Agents SDK for its compact agent loop, tools, handoffs, structured outputs, tracing, sessions, and human-interruption surfaces. The architecture team refuses to let SDK state become workflow truth or to expose raw enterprise credentials to the agent process; Harborlight applies the same boundary to its C03 runtime seam.
 \end{bookcallout}
 
@@ -1869,7 +1867,7 @@ Framework state can help resume an agent. Platform state must recover the busine
 
 \section{The restart test}
 
-Imagine that all agent workers crash at 2:00 a.m. Then imagine that Northstar replaces the SDK and deploys a new adapter. The organization must still know that \lstinline[style=bookinline]!MORT-2026-000184! exists, evidence review is incomplete, the document request is pending, human action authorization \lstinline[style=bookinline]!HAA-718! is pending, policy \lstinline[style=bookinline]!mortgage-policy@2026.09! applied, and effect receipt \lstinline[style=bookinline]!RCPT-MORT-000184! records the committed action.\par
+Imagine that all agent workers crash at 2:00 a.m. Then imagine that Northstar replaces the SDK and deploys a new adapter. The organization must still know that \lstinline[style=bookinline]!MORT-2026-000184! exists, evidence review is incomplete, the document request is pending, human action authorization \lstinline[style=bookinline]!HAA-718! is pending, policy \lstinline[style=bookinline]!mortgage-policy@2026.09! applied, and no effect receipt yet records a committed document request.\par
 
 None of those facts should require reconstructing an SDK session object. If losing framework state means losing the business process, the framework owns too much. This test should be applied to every proposed framework feature, serialization format, and persistence shortcut.\par
 
@@ -1955,7 +1953,7 @@ No single layer carries the entire security burden. A guardrail may stop a bad p
 
 \section{One retry owner}
 
-Retries are another place where framework and platform behavior can collide. Suppose the agent requests an evidence document, the domain service commits it, and the network fails before the response reaches the caller. The caller sees a timeout, but Northstar may already contain the document request.\par
+Retries are another place where framework and platform behavior can collide. Suppose the agent requests an evidence document, the domain service commits it, and the network fails before the response reaches the caller. The caller sees a timeout, but the document request may already exist.\par
 
 The safe policy is:\par
 
@@ -1965,7 +1963,7 @@ The safe policy is:\par
 \begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries Failure class & \color{white}\bfseries Owner and response \\
-Safe read or pure computation & The workflow or model gateway may retry within its recorded attempt and budget \\
+Safe read or pure computation & The workflow or LLM Gateway may retry within its recorded attempt and budget \\
 \rowcolor{BookLight}
 Known idempotent mutation & One owner retries with the same logical effect key \\
 Unknown mutation outcome & The effect service reconciles first; no component blindly retries \\
@@ -1975,12 +1973,6 @@ Non-idempotent protected mutation & Require an explicit compensation or human-co
 \BookTableEnd
 
 For the evidence request, the logical key could combine \lstinline[style=bookinline]!RUN-98217!, \lstinline[style=bookinline]!REQUEST_MORTGAGE_DOCUMENT!, \lstinline[style=bookinline]!MORT-2026-000184!, and \lstinline[style=bookinline]!employment_verification!. If the same request arrives twice, the effect layer returns the original receipt instead of creating a second business action. Chapters 15 and 22 develop durable execution and effect semantics in detail.\par
-
-\section{One bounded agent step in code}
-
-The implementation is easier to understand once the adapter’s responsibility is explicit. The existing \lstinline[style=bookinline]!step-execution! listing builds the SDK agent, attaches the eligible façade, injects bounded run configuration, disables sensitive trace payloads, validates the structured result, and maps it into a platform-owned result.\par
-
-It intentionally does not choose the next workflow transition. The returned disposition goes back to the durable workflow, which may continue, request evidence, request approval, retry, compensate, or complete. Keeping that decision outside the adapter prevents a vendor-native run result from becoming a hidden state machine.\par
 
 \section{The complete execution path}
 
@@ -2120,7 +2112,7 @@ When execution behaves unexpectedly, debug the boundary in order:\par
 
 \item \textbf{Did a business effect occur?} Find the effect record and downstream receipt. Never infer this from the model’s final message or SDK result.
 
-\item \textbf{Who retried?} Identify whether the workflow, Model Gateway, SDK, Tool Gateway, or domain service retried. Multiple uncoordinated retry owners are a common source of duplicate behavior.
+\item \textbf{Who retried?} Identify whether the workflow, LLM Gateway, SDK, Tool Gateway, or domain service retried. Multiple uncoordinated retry owners are a common source of duplicate behavior.
 
 \end{enumerate}
 

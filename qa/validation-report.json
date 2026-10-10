@@ -2,8 +2,8 @@
   "release": "2.1.0",
   "validated_on": "2026-09-13",
   "checks": {
-    "canonical_markdown_sha256": "30c714f4f4cf378fca3a16b84cff27b91ea74fa390c62d9994315af55286472d",
-    "canonical_markdown_bytes": 714754,
+    "canonical_markdown_sha256": "ca069a1103afd3249a52df83a1bf7d28904a75cbba5e517e73616333abea0210",
+    "canonical_markdown_bytes": 713550,
     "parts": 8,
     "chapters": 28,
     "appendices": 12,
@@ -17,9 +17,9 @@
       2550,
       3300
     ],
-    "docx_sha256": "837ed9079a993cbfa664eb316a88f0e1e2314e0b446248b42c6243c808fc0acb",
-    "docx_bytes": 24427416,
-    "docx_paragraphs": 3062,
+    "docx_sha256": "20dcc48e6702a11d96b405e645e6d2ed30601cab6b447f3a07ed7195ffd0636c",
+    "docx_bytes": 24426903,
+    "docx_paragraphs": 3058,
     "docx_tables": 421,
     "docx_inline_images": 54,
     "docx_chapters": 28,

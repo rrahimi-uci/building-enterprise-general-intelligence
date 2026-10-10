@@ -26,8 +26,8 @@ and real consequences enter the picture.
 The examples use a fictional Harborlight mortgage case as a thread. It is not a
 claim that mortgage underwriting can be delegated to a model; it is a useful
 stress test because the case has sensitive evidence, human judgment, policy,
-long waits, and protected effects. Comparative Northstar examples show how the
-same contracts travel to supplier onboarding and other domains.
+long waits, and protected effects. Comparative supplier-onboarding examples show
+how the same contracts travel to other domains.
 
 ## How to read the claims in this book
 
@@ -45,7 +45,7 @@ Use the book as an engineering foundation rather than a prescription. Take the e
 
 A book about governed systems should be maintainable in the same disciplined way. The accompanying Book v2.1.0 package includes the canonical Markdown, generated DOCX, diagrams, cover assets, references, styles, templates, build and validation tools, and release evidence needed to reproduce this edition.
 
-The canonical Markdown is the source of truth. Make substantive changes there and in the relevant registries, then regenerate the DOCX through the build process. That keeps references, diagrams, formatting, and structure aligned—even when people and AI agents both contribute.
+The canonical Markdown is the source of truth. Make substantive changes there and in the relevant registries, then regenerate the DOCX and LaTeX editions through the build process. That keeps references, diagrams, formatting, and structure aligned—even when people and AI agents both contribute.
 
 The package README walks through build, validation, and release. Following it gives future contributors a safe way to extend the book without quietly breaking its structure, style, or evidence trail.
 
@@ -70,8 +70,8 @@ before any model-owned lending decision or protected loan-origination write:
 | `C03` | 3 | A provider-neutral bounded runtime seam with an optional OpenAI adapter | Workflow state, policy, credentials, approvals, effects, receipts, and audit |
 
 Later checkpoints are roadmap targets, not claims that the corresponding
-production platform has already been implemented. The retained Northstar
-supplier-onboarding material is comparative architecture evidence; the
+production platform has already been implemented. The retained supplier-onboarding
+material is comparative architecture evidence; the
 Harborlight mortgage case is the cumulative runnable path.
 
 | **Reader** | **Primary path** | **Decision supported** |
@@ -79,7 +79,7 @@ Harborlight mortgage case is the cumulative runnable path.
 | Executive and product leader | Parts II, III, VIII and Appendix G | Investment, operating model, risk appetite, platform scope, and outcome governance |
 | Enterprise / solution architect | Parts I–VIII | Boundaries, contracts, topology, integration, security, and lifecycle |
 | Platform engineer | Parts II, III, V–VIII | Reusable control planes, SDKs, gateways, telemetry, release, and operations |
-| Application developer | Parts I, II, III, IV, VII | Agent design, knowledge, tools, Skills, tests, debugging, and improvement |
+| Application developer | Parts I–IV, VII | Agent design, knowledge, tools, Skills, tests, debugging, and improvement |
 | Security / risk / privacy | Parts II, VI, VIII and Appendices F, K | Knowledge governance, threat controls, evidence, approvals, exceptions, and assurance |
 | SRE / operations | Parts VII, VIII and Appendices B, L | SLOs, incidents, recovery, capacity, and verified-success economics |
 
@@ -162,15 +162,15 @@ Together, these principles establish a simple operating contract: agents provide
 
 ## Appendices
 
-- A. Choosing a Pattern: Decision Tree and Catalog
+- A. Choosing the Right Pattern: A Decision Guide
 - B. When Things Go Wrong: Triage and Runbooks
-- C. Platform Contracts at a Glance
-- D. Choosing a Framework
+- C. Core Platform Contracts at a Glance
+- D. Choosing an Agent Framework
 - E. What This Architecture Means for Research
-- F. Known Limits—and the Controls That Contain Them
-- G. A Practical Enterprise Adoption Roadmap
+- F. Known Limits and the Controls That Contain Them
+- G. A Practical Roadmap for Enterprise Adoption
 - H. Glossary
 - I. Companion Implementation Guide: Harborlight Mortgage
-- J. Coding-Agent Prompt and Acceptance Criteria
+- J. Prompt and Acceptance Criteria for a Coding Agent
 - K. References and Evidence Scope
-- L. Capacity, resilience, and release acceptance
+- L. Capacity, Resilience, and Release Acceptance

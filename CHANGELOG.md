@@ -4,6 +4,16 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Apply DOCX review to the front matter and Part I
+
+Applied a deep review of the DOCX (front matter, Chapters 1–3) to the canonical source:
+
+- "Northstar" now means only the platform codename; the supplier-onboarding comparison is no longer labelled Northstar (front matter, Ch1, Ch2, Ch3 callouts).
+- Fixed contradictions: Ch3's restart test no longer claims a committed receipt while approval is pending; Ch1 no longer says the model "did nothing wrong" in all five failures.
+- Fixed cross-references: Figure 1-3 now points to Figure 4-1 for detail; acceptance criteria point to Chapters 10 and 12; Figures 1-1/1-2 numbered in reading order; front-matter appendix list matches the appendix titles.
+- Replaced unresolvable legacy source keys with registry IDs (R01, R13).
+- Removed a code-free duplicate section ("One bounded agent step in code") and a leaked authoring note; joined hard-wrapped bullets; consistent US spelling and component names (LLM Gateway, reauthorize).
+
 ### Fix three book-wide DOCX/LaTeX rendering defects
 
 - Markdown backslash escapes (`artifact\_id`, `a \< b`) printed literally in

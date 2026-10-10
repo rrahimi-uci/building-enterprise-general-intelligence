@@ -26,8 +26,8 @@ and real consequences enter the picture.
 The examples use a fictional Harborlight mortgage case as a thread. It is not a
 claim that mortgage underwriting can be delegated to a model; it is a useful
 stress test because the case has sensitive evidence, human judgment, policy,
-long waits, and protected effects. Comparative Northstar examples show how the
-same contracts travel to supplier onboarding and other domains.
+long waits, and protected effects. Comparative supplier-onboarding examples show
+how the same contracts travel to other domains.
 
 ## How to read the claims in this book
 
@@ -45,7 +45,7 @@ Use the book as an engineering foundation rather than a prescription. Take the e
 
 A book about governed systems should be maintainable in the same disciplined way. The accompanying Book v2.1.0 package includes the canonical Markdown, generated DOCX, diagrams, cover assets, references, styles, templates, build and validation tools, and release evidence needed to reproduce this edition.
 
-The canonical Markdown is the source of truth. Make substantive changes there and in the relevant registries, then regenerate the DOCX through the build process. That keeps references, diagrams, formatting, and structure aligned—even when people and AI agents both contribute.
+The canonical Markdown is the source of truth. Make substantive changes there and in the relevant registries, then regenerate the DOCX and LaTeX editions through the build process. That keeps references, diagrams, formatting, and structure aligned—even when people and AI agents both contribute.
 
 The package README walks through build, validation, and release. Following it gives future contributors a safe way to extend the book without quietly breaking its structure, style, or evidence trail.
 
@@ -70,8 +70,8 @@ before any model-owned lending decision or protected loan-origination write:
 | `C03` | 3 | A provider-neutral bounded runtime seam with an optional OpenAI adapter | Workflow state, policy, credentials, approvals, effects, receipts, and audit |
 
 Later checkpoints are roadmap targets, not claims that the corresponding
-production platform has already been implemented. The retained Northstar
-supplier-onboarding material is comparative architecture evidence; the
+production platform has already been implemented. The retained supplier-onboarding
+material is comparative architecture evidence; the
 Harborlight mortgage case is the cumulative runnable path.
 
 | **Reader** | **Primary path** | **Decision supported** |
@@ -79,7 +79,7 @@ Harborlight mortgage case is the cumulative runnable path.
 | Executive and product leader | Parts II, III, VIII and Appendix G | Investment, operating model, risk appetite, platform scope, and outcome governance |
 | Enterprise / solution architect | Parts I–VIII | Boundaries, contracts, topology, integration, security, and lifecycle |
 | Platform engineer | Parts II, III, V–VIII | Reusable control planes, SDKs, gateways, telemetry, release, and operations |
-| Application developer | Parts I, II, III, IV, VII | Agent design, knowledge, tools, Skills, tests, debugging, and improvement |
+| Application developer | Parts I–IV, VII | Agent design, knowledge, tools, Skills, tests, debugging, and improvement |
 | Security / risk / privacy | Parts II, VI, VIII and Appendices F, K | Knowledge governance, threat controls, evidence, approvals, exceptions, and assurance |
 | SRE / operations | Parts VII, VIII and Appendices B, L | SLOs, incidents, recovery, capacity, and verified-success economics |
 
@@ -162,18 +162,18 @@ Together, these principles establish a simple operating contract: agents provide
 
 ## Appendices
 
-- A. Choosing a Pattern: Decision Tree and Catalog
+- A. Choosing the Right Pattern: A Decision Guide
 - B. When Things Go Wrong: Triage and Runbooks
-- C. Platform Contracts at a Glance
-- D. Choosing a Framework
+- C. Core Platform Contracts at a Glance
+- D. Choosing an Agent Framework
 - E. What This Architecture Means for Research
-- F. Known Limits—and the Controls That Contain Them
-- G. A Practical Enterprise Adoption Roadmap
+- F. Known Limits and the Controls That Contain Them
+- G. A Practical Roadmap for Enterprise Adoption
 - H. Glossary
 - I. Companion Implementation Guide: Harborlight Mortgage
-- J. Coding-Agent Prompt and Acceptance Criteria
+- J. Prompt and Acceptance Criteria for a Coding Agent
 - K. References and Evidence Scope
-- L. Capacity, resilience, and release acceptance
+- L. Capacity, Resilience, and Release Acceptance
 
 # PART I — FOUNDATIONS
 
@@ -186,7 +186,7 @@ capabilities to this foundation; they do not replace it.
 
 |  |
 | --- |
-| **WHERE HARBORLIGHT STANDS** Harborlight Home Finance wants to prepare an underwriter-ready package for a routine synthetic case within one business day. A prototype can summarize evidence, but production must also retrieve authorized records, identify missing inputs, pause for people, preserve audit evidence, and survive days of inactivity. |
+| **WHERE THE MORTGAGE CASE STANDS** Harborlight Home Finance wants to prepare an underwriter-ready package for a routine synthetic case within one business day. A prototype can summarize evidence, but production must also retrieve authorized records, identify missing inputs, pause for people, preserve audit evidence, and survive days of inactivity. |
 
 |  |
 | --- |
@@ -196,7 +196,7 @@ capabilities to this foundation; they do not replace it.
 
 The cumulative implementation follows one fictional mortgage case so the
 reader can see the same system acquire each capability without jumping to a
-new application. The original Northstar supplier-onboarding material remains
+new application. The original supplier-onboarding material remains
 as explicitly comparative architecture evidence: it illustrates the same
 durability, authority, evidence, and release problems in another enterprise
 domain, but it is not the runnable case or the implementation-status anchor.
@@ -229,7 +229,7 @@ identify that gap. It cannot infer the missing income, calculate an authoritativ
 debt-to-income ratio, approve or deny the loan, or update a loan-origination
 system.
 
-[[DIAGRAM:mortgage-case-lifecycle|Figure 1-2 — The mortgage case starts with a missing-evidence bottleneck and adds verification, calculation, and human-owned review one control at a time]]
+[[DIAGRAM:mortgage-case-lifecycle|Figure 1-1 — The mortgage case starts with a missing-evidence bottleneck and adds verification, calculation, and human-owned review one control at a time]]
 
 ## Start with a demo that genuinely works
 
@@ -237,14 +237,13 @@ Almost every enterprise agent begins as a script that works on the first try. It
 is worth looking at one honestly, because the gap between it and a production
 system is the subject of this entire book — and the gap is not intelligence.
 
-🐍 · an intentionally abbreviated prototype sketch
-
 The following minimal mortgage example is retained as a contrast to the
 production design, but it is not a repository-executed listing: its surrounding
-application code is intentionally omitted. The runnable,
-provider-pinned foundation is the mortgage example above; keeping this sketch
-visibly non-executable prevents a reader from mistaking omitted gateway and
-effect controls for a complete implementation.
+application code is intentionally omitted. Keeping this sketch visibly
+non-executable prevents a reader from mistaking omitted gateway and effect
+controls for a complete implementation.
+
+🐍 · an intentionally abbreviated prototype sketch
 
 ```python
 from agents import Agent, Runner
@@ -313,8 +312,7 @@ Model versions must be evaluated against representative mortgage cases,
 released gradually, monitored, and rolled back when quality falls below an
 acceptable threshold.
 
-None of those five failures is a reasoning failure. The model did nothing wrong
-in any of them. They are failures of *durability*, *trust boundaries*,
+None of those five failures can be fixed by better reasoning. They are failures of *durability*, *trust boundaries*,
 *transactional effects*, *evidence*, and *release control* — five properties
 that live in the system around the model, and that no amount of prompt
 engineering can supply. That is the central claim of this chapter, and the
@@ -322,7 +320,7 @@ reason the rest of the book is organized the way it is.
 
 |  |
 | --- |
-| **COMMON PITFALL**  The most expensive misconception in enterprise agent projects is that the prototype is 80% of the system and the rest is hardening. The prototype is the reasoning component. Durability, authority, effect semantics, evidence and release control are not hardening — they are the other components, and they are most of the work. |
+| **COMMON PITFALL**  The most expensive misconception in enterprise agent projects is that the prototype is 80% of the system and the rest is hardening. The prototype is the reasoning component. Durability, authority, effect semantics, evidence, and release control are not hardening — they are the other components, and they are most of the work. |
 
 ## The gap between a useful demo and a dependable system
 
@@ -392,7 +390,7 @@ operate them safely changes as their capabilities increase.
 
 The four levels below make that progression explicit.
 
-[[DIAGRAM:capability-ladder|Figure 1-1 — Four levels: what each one adds, and what it still cannot do]]
+[[DIAGRAM:capability-ladder|Figure 1-2 — Four levels: what each one adds, and what it still cannot do]]
 
 ### Level one — a model
 
@@ -454,7 +452,7 @@ result = await Runner.run(
 
 **What changes at this level:** The ability to handle tasks whose shape is not known in advance — where the second step depends on what the first returned.
 
-**What is still missing:** Survive. The loop lives in one process. If that process restarts, everything it knew is gone, including the knowledge that it already requested a mortgage document. It also decides for itself when to stop, which means *termination is now a property of a text generator*.
+**What is still missing:** Survival. The loop lives in one process. If that process restarts, everything it knew is gone, including the knowledge that it already requested a mortgage document. It also decides for itself when to stop, which means *termination is now a property of a text generator*.
 
 That last point is worth sitting with. At level two, a bug produces a wrong
 answer. At level three, a bug produces an unbounded loop that spends money and
@@ -482,8 +480,8 @@ constraint and record-keeping. That is the shape of the discipline: the model
 does not become more capable as you productionize it; the system around it
 becomes more accountable.
 
-Model intelligence and operational guarantees are fundamentally different
-concerns, which is why this distinction prevents a common category error.
+This distinction prevents a common category error: model intelligence and
+operational guarantees are different concerns.
 Better prompting can improve a reasoning step; it cannot provide transactional
 integrity, credential isolation, deterministic replay, tenant boundaries, or a
 provable audit trail. Those are properties of the surrounding system, and no
@@ -567,18 +565,10 @@ agent and will not relax their rules for it.
 Four properties of that setting make it harder than ordinary application
 development, and they interact:
 
-- **The model is nondeterministic.** The same input can produce different
-  output. Anything that must be reproducible therefore cannot depend on the
-  model producing the same thing twice.
-- **The environment is concurrent and partially failing.** Two runs touch the
-  same mortgage case. A document service times out. A queue delivers a message twice. None of
-  this is exceptional; it is Tuesday.
-- **Inputs may be adversarial.** Not only from users — a retrieved document, a
-  tool result, or a third-party server's tool description is untrusted text that
-  the model will read as readily as your instructions.
-- **Many actions are irreversible.** A payment, an email to a customer, a
-  deletion. "Retry on failure" is sound advice for a read and dangerous advice
-  for a write.
+- **The model is nondeterministic.** The same input can produce different output. Anything that must be reproducible therefore cannot depend on the model producing the same thing twice.
+- **The environment is concurrent and partially failing.** Two runs touch the same mortgage case. A document service times out. A queue delivers a message twice. None of this is exceptional; it is Tuesday.
+- **Inputs may be adversarial.** Not only from users — a retrieved document, a tool result, or a third-party server's tool description is untrusted text that the model will read as readily as your instructions.
+- **Many actions are irreversible.** A payment, an email to a customer, a deletion. "Retry on failure" is sound advice for a read and dangerous advice for a write.
 
 Put together, these mean that production design has to answer three questions
 for *every step a run takes*, not once at the design stage:
@@ -627,14 +617,14 @@ chapters; this is enough to read on with.
 
 | Term | What it means here | Where it is developed |
 | --- | --- | --- |
-| **Idempotency key** | A caller-supplied identifier that lets a downstream system recognise a repeated request as the *same* request, so a retry updates nothing rather than creating a duplicate | Chapter 22 |
+| **Idempotency key** | A caller-supplied identifier that lets a downstream system recognize a repeated request as the *same* request, so a retry updates nothing rather than creating a duplicate | Chapter 22 |
 | **Effect ledger** | The platform's own durable record of every external change it attempted, its idempotency key, and its confirmed outcome — separate from the downstream system's record | Chapter 22 |
 | **Compensation** | A deliberate reversing action for a step that cannot be rolled back, because it already committed elsewhere | Chapter 15 |
 | **Downscoping** | Deriving a narrower credential from a broader one, so a delegated step can never exceed the authority of the step that delegated it | Chapter 21 |
 | **Audience binding** | Restricting a credential to one intended recipient, so a token leaked from one service cannot be replayed against another | Chapter 21 |
 | **RBAC / ABAC** | Role-based access control decides by *who someone is*; attribute-based access control decides by properties of the subject, resource, purpose and context at the moment of the request | Chapter 21 |
 | **Provenance** | The record of where a piece of content came from, under what authority it was retrieved, and how far it may be trusted | Chapters 5 and 6 |
-| **Acceptance criteria** | Executable checks over authoritative state that decide whether a run succeeded — evaluated by code, never asserted by the model | Chapter 14 |
+| **Acceptance criteria** | Executable checks over authoritative state that decide whether a run succeeded — evaluated by code, never asserted by the model | Chapters 10 and 12 |
 | **Canary** | Exposing a change to a small fraction of real traffic with explicit stop conditions before releasing it fully | Chapter 27 |
 | **Trace** | A causal graph of one run's steps, decisions, versions and effects — not a log file | Chapter 24 |
 
@@ -671,9 +661,8 @@ any of it is justified, so that each Part has somewhere to land.
 
 [[DIAGRAM:system-overview|Figure 1-3 — The whole system at a thousand feet: the bands, the descent from proposal to committed effect, and the two concerns that cross them all]]
 
-The Roman numerals are the reading map. Each band is one Part's subject, and the
-book descends through them in order: the shape first, then the layers, then the
-implementation inside each layer.
+The Roman numerals are the reading map: each band names the Part or Parts that
+develop it.
 
 | Band | What it owns | Detailed in |
 | --- | --- | --- |
@@ -683,19 +672,19 @@ implementation inside each layer.
 | Knowledge | Governed knowledge, rules, catalogs, per-run context | Part II |
 | Control points | Which model, task, tool, or approval may proceed | Parts IV–VII |
 | Security | Identity, guardrails, approvals, containment | Part VI |
-| Where truth lives | Where effects actually commit and stay true | Throughout |
+| Systems of record | Where effects commit and stay authoritative | Throughout |
 | Evidence | Traces, evaluation, and the loop into the next release | Part VII |
 | Platform and operations | The paved road that builds, releases and runs it | Parts III and VIII |
 
 Two properties of this picture matter more than any component in it. Authority
-narrows downward, which is what the labelled descent records: the agent
+narrows downward, which is what the labeled descent records: the agent
 proposes, the platform authorizes, and only the bottom bands commit anything.
 And security is not a band you pass through once — it spans every one of them,
 which is why the figure draws it as a spine beside the stack rather than a layer
 within it, and why it gets a Part of its own. The platform that builds,
 releases and runs the system is drawn the same way and for the same reason.
 
-Figure 1-3 is this same picture at higher resolution: every band there opens
+Figure 4-1 in Chapter 4 is this same picture at higher resolution: every band there opens
 into the components it owns. The notation carries over — a solid path is the
 request, dashed is control, dotted is evidence — so nothing new has to be
 learned to read it.
@@ -717,7 +706,7 @@ the word is the same. They are not alternatives, and none replaces another.
 | Human approval gate | Has an authorized reviewer approved this exact proposal? | Current identity, policy, resource version, or effect receipt |
 
 The **Tool Gateway** is the enterprise's control point for *effects*. It validates
-the tool version and schema, re-authorizes the action and resource against the
+the tool version and schema, reauthorizes the action and resource against the
 caller's grant, mints a last-hop credential, enforces idempotency, and records
 the receipt. It is deliberately protocol-agnostic, because effects arrive over
 REST, gRPC, a database transaction, a queue, and MCP, and the control must be
@@ -730,7 +719,7 @@ it may use. That is a real and necessary job, and it is a different job.
 The **human approval gate** is a control point for protected proposals, not a
 replacement for authorization or effect verification. It presents the exact
 proposal, evidence, expected resource version, and consequences to an eligible
-reviewer. The resulting human action authorization decision is bound to that proposal and expires; the Tool
+reviewer. The resulting human action authorization is bound to that proposal and expires; the Tool
 Gateway still reauthorizes the request and records the effect receipt.
 
 Two lifecycle controls are related but deliberately named separately. The
@@ -748,9 +737,9 @@ for the request-time control points above.
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Grounding boundary | Separate model capability from system correctness. A benchmark or demo does not establish authorization, durability, privacy, or business acceptance. Every material output should carry evidence references and uncertainty. | NIST-GAI; REACT |
+| Grounding boundary | Separate model capability from system correctness. A benchmark or demo does not establish authorization, durability, privacy, or business acceptance. Every material output should carry evidence references and uncertainty. | R01; R13 |
 
-The discussion above draws on NIST-GAI; REACT. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R01; R13. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -862,7 +851,7 @@ trigger an action.
 
 |  |
 | --- |
-| **A COMPARATIVE NORTHSTAR EXAMPLE** The retained supplier prototype proposes a call to create a supplier record. The JSON is valid and the rationale sounds convincing, yet the record may be stale, the user may lack write authority, and a retry could create a duplicate. The same failure mechanism explains why Harborlight introduces a deterministic shell around every mortgage proposal. |
+| **A COMPARATIVE SUPPLIER EXAMPLE** The retained supplier prototype proposes a call to create a supplier record. The JSON is valid and the rationale sounds convincing, yet the record may be stale, the user may lack write authority, and a retry could create a duplicate. The same failure mechanism explains why Harborlight introduces a deterministic shell around every mortgage proposal. |
 
 Both cases resolve the same way.
 
@@ -902,10 +891,6 @@ A useful proposal is small. It names one disposition, one tool or delegation tar
 The sequence above is the chapter in one line, but it only becomes useful when
 you can see what each gate rejects. Here is a single proposal from Harborlight,
 and what happens to it.
-
-The diagram establishes the order. The table below is the single operational
-summary, placed after the concrete proposal so each rejection is tied to a
-specific field or state rather than repeated as abstract gate descriptions.
 
 JSON · what the model actually emits
 
@@ -1141,7 +1126,7 @@ async def run(question: str, *, model=None) -> MortgageCaseStatus:
 
 ### Governed Tool Gateway
 
-The first listing shows the model-facing loop. This second listing shows the
+The previous listing shows the model-facing loop. The next listing shows the
 platform-facing boundary that receives its proposal. Every instruction is on
 its own line and the comments call out the decisions that must remain
 deterministic. The in-memory ledger keeps the example runnable offline;
@@ -1375,13 +1360,9 @@ class ToolGateway:
 
 ## If this fails in production
 
-* Trace the intent-to-execution path. Compare the model’s raw proposal with the
-  validated command, identifying any rejected, modified, or defaulted fields.
-* Verify the execution boundary. Inspect the final authorization and policy
-  decision, approval state, and resource version immediately before the side
-  effect is committed.
-* Test idempotency. Replay the same logical mutation and confirm that it
-  produces no duplicate side effect and resolves to the same durable receipt.
+* Trace the intent-to-execution path. Compare the model’s raw proposal with the validated command, identifying any rejected, modified, or defaulted fields.
+* Verify the execution boundary. Inspect the final authorization and policy decision, approval state, and resource version immediately before the side effect is committed.
+* Test idempotency. Replay the same logical mutation and confirm that it produces no duplicate side effect and resolves to the same durable receipt.
 
 ## What to verify before production
 
@@ -1426,7 +1407,7 @@ not become the owner of the case, policy, approval, or effect records.
 
 |  |
 | --- |
-| **A COMPARATIVE NORTHSTAR EXAMPLE** The retained supplier platform adopts OpenAI Agents SDK for its compact agent loop, tools, handoffs, structured outputs, tracing, sessions, and human-interruption surfaces. The architecture team refuses to let SDK state become workflow truth or to expose raw enterprise credentials to the agent process; Harborlight applies the same boundary to its C03 runtime seam. |
+| **A COMPARATIVE SUPPLIER EXAMPLE** The retained supplier platform adopts OpenAI Agents SDK for its compact agent loop, tools, handoffs, structured outputs, tracing, sessions, and human-interruption surfaces. The architecture team refuses to let SDK state become workflow truth or to expose raw enterprise credentials to the agent process; Harborlight applies the same boundary to its C03 runtime seam. |
 
 |  |
 | --- |
@@ -1686,7 +1667,7 @@ Framework state can help resume an agent. Platform state must recover the busine
 
 ## The restart test
 
-Imagine that all agent workers crash at 2:00 a.m. Then imagine that Northstar replaces the SDK and deploys a new adapter. The organization must still know that `MORT-2026-000184` exists, evidence review is incomplete, the document request is pending, human action authorization `HAA-718` is pending, policy `mortgage-policy@2026.09` applied, and effect receipt `RCPT-MORT-000184` records the committed action.
+Imagine that all agent workers crash at 2:00 a.m. Then imagine that Northstar replaces the SDK and deploys a new adapter. The organization must still know that `MORT-2026-000184` exists, evidence review is incomplete, the document request is pending, human action authorization `HAA-718` is pending, policy `mortgage-policy@2026.09` applied, and no effect receipt yet records a committed document request.
 
 None of those facts should require reconstructing an SDK session object. If losing framework state means losing the business process, the framework owns too much. This test should be applied to every proposed framework feature, serialization format, and persistence shortcut.
 
@@ -1743,13 +1724,13 @@ No single layer carries the entire security burden. A guardrail may stop a bad p
 
 ## One retry owner
 
-Retries are another place where framework and platform behavior can collide. Suppose the agent requests an evidence document, the domain service commits it, and the network fails before the response reaches the caller. The caller sees a timeout, but Northstar may already contain the document request.
+Retries are another place where framework and platform behavior can collide. Suppose the agent requests an evidence document, the domain service commits it, and the network fails before the response reaches the caller. The caller sees a timeout, but the document request may already exist.
 
 The safe policy is:
 
 | Failure class | Owner and response |
 | --- | --- |
-| Safe read or pure computation | The workflow or model gateway may retry within its recorded attempt and budget |
+| Safe read or pure computation | The workflow or LLM Gateway may retry within its recorded attempt and budget |
 | Known idempotent mutation | One owner retries with the same logical effect key |
 | Unknown mutation outcome | The effect service reconciles first; no component blindly retries |
 | Non-idempotent protected mutation | Require an explicit compensation or human-controlled recovery path |
@@ -1759,12 +1740,6 @@ For the evidence request, the logical key could combine `RUN-98217`,
 `employment_verification`. If the same request arrives twice, the effect layer
 returns the original receipt instead of creating a second business action.
 Chapters 15 and 22 develop durable execution and effect semantics in detail.
-
-## One bounded agent step in code
-
-The implementation is easier to understand once the adapter’s responsibility is explicit. The existing `step-execution` listing builds the SDK agent, attaches the eligible façade, injects bounded run configuration, disables sensitive trace payloads, validates the structured result, and maps it into a platform-owned result.
-
-It intentionally does not choose the next workflow transition. The returned disposition goes back to the durable workflow, which may continue, request evidence, request approval, retry, compensate, or complete. Keeping that decision outside the adapter prevents a vendor-native run result from becoming a hidden state machine.
 
 ## The complete execution path
 
@@ -1849,7 +1824,7 @@ When execution behaves unexpectedly, debug the boundary in order:
 3. **What did the model actually do?** Inspect the trace for reasoning steps, tool selection, arguments, observations, handoffs, interruption, and structured output. Treat the trace as evidence of behavior, not proof of authorization or commit.
 4. **What did the gateway permit?** Compare the proposed operation with the policy decision, capability envelope, approval state, and exact resource reauthorization.
 5. **Did a business effect occur?** Find the effect record and downstream receipt. Never infer this from the model’s final message or SDK result.
-6. **Who retried?** Identify whether the workflow, Model Gateway, SDK, Tool Gateway, or domain service retried. Multiple uncoordinated retry owners are a common source of duplicate behavior.
+6. **Who retried?** Identify whether the workflow, LLM Gateway, SDK, Tool Gateway, or domain service retried. Multiple uncoordinated retry owners are a common source of duplicate behavior.
 
 ## What this chapter established
 
