@@ -6264,13 +6264,11 @@ still be unauthorized for this tenant; an A2A peer can accept a task and still
 lack the evidence or identity needed to act. Model providers are a third
 external boundary; the LLM Gateway that terminates it sits in the Gateways and
 integration plane (Chapter 4), and model routing, which filters by policy
-before it optimizes (Figure 19-1), is treated as a cost decision in Chapter 28.
+before it optimizes, is treated as a cost decision in Chapter 28 (Figure 28-2).
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | MCP and A2A Gateways | local trust domain to external endpoint or peer | endpoint · peer · tenant quota | one remote call or task | ServerManifest · FederatedTask · RemoteArtifact |
-
-[[DIAGRAM:model-routing|Figure 19-1 — Policy-first model-routing decision tree]]
 
 ## Two protocols, two responsibilities
 
@@ -9442,7 +9440,7 @@ The numbers above are illustrative planning inputs, not universal limits. Their 
 
 Model routing happens at the LLM Gateway (Chapter 4), and model choice is a governance decision before it is an economic one. Filter by tenant, purpose, data class, residency, risk, required capabilities, context length, tool/JSON behavior, and approved version. Only then optimize expected accepted-outcome quality under latency and cost budgets. Health and quota further constrain selection. Fallbacks obey the same invariants; “any available model” is not a safe fallback. Figure 28-2 shows the decision tree.
 
-<!-- FIG-19-2-MOVES-HERE -->
+[[DIAGRAM:model-routing|Figure 28-2 — Policy-first model-routing decision tree]]
 
 Record each routing decision: candidate routes, exclusions and reasons, selected provider/model/version/region, policy digest, budgets, fallback chain, and experiment cohort.
 

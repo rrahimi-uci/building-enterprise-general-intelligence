@@ -8032,7 +8032,7 @@ Terminate MCP and A2A at governed local gateways; verify endpoints, artifacts, a
 
 \section{Why interoperability does not transfer trust}
 
-External protocols make it easier to discover and exchange work with tools and agents outside your boundary. They do not make those endpoints trustworthy, or their artifacts safe to adopt. An MCP server can describe a tool accurately and still be unauthorized for this tenant; an A2A peer can accept a task and still lack the evidence or identity needed to act. Model providers are a third external boundary; the LLM Gateway that terminates it sits in the Gateways and integration plane (Chapter 4), and model routing, which filters by policy before it optimizes (Figure 19-1), is treated as a cost decision in Chapter 28.\par
+External protocols make it easier to discover and exchange work with tools and agents outside your boundary. They do not make those endpoints trustworthy, or their artifacts safe to adopt. An MCP server can describe a tool accurately and still be unauthorized for this tenant; an A2A peer can accept a task and still lack the evidence or identity needed to act. Model providers are a third external boundary; the LLM Gateway that terminates it sits in the Gateways and integration plane (Chapter 4), and model routing, which filters by policy before it optimizes, is treated as a cost decision in Chapter 28 (Figure 28-2).\par
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -8043,8 +8043,6 @@ External protocols make it easier to discover and exchange work with tools and a
 MCP and A2A Gateways & local trust domain to external endpoint or peer & endpoint · peer · tenant quota & one remote call or task & ServerManifest · FederatedTask · RemoteArtifact \\
 \end{tabular}
 \BookTableEnd
-
-\BookDiagram{assets/diagrams/model-routing.pdf}{Figure 19-1 — Policy-first model-routing decision tree}{model-routing}
 
 \section{Two protocols, two responsibilities}
 
@@ -12135,7 +12133,7 @@ The numbers above are illustrative planning inputs, not universal limits. Their 
 
 Model routing happens at the LLM Gateway (Chapter 4), and model choice is a governance decision before it is an economic one. Filter by tenant, purpose, data class, residency, risk, required capabilities, context length, tool/JSON behavior, and approved version. Only then optimize expected accepted-outcome quality under latency and cost budgets. Health and quota further constrain selection. Fallbacks obey the same invariants; “any available model” is not a safe fallback. Figure 28-2 shows the decision tree.\par
 
-<!-- FIG-19-2-MOVES-HERE -->\par
+\BookDiagram{assets/diagrams/model-routing.pdf}{Figure 28-2 — Policy-first model-routing decision tree}{model-routing}
 
 Record each routing decision: candidate routes, exclusions and reasons, selected provider/model/version/region, policy digest, budgets, fallback chain, and experiment cohort.\par
 
