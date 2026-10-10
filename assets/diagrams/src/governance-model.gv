@@ -11,16 +11,16 @@ digraph governance_model {
     color="#1450A3"; style="rounded"; margin=14; bgcolor="#F6FAFE"
     c1 [label="Identity and\npolicy", fillcolor="#EAF3FB", color="#1450A3", style=filled]
     c2 [label="Evidence and\naudit", fillcolor="#EAF3FB", color="#1450A3", style=filled]
-    c3 [label="Risk classes and\nexceptions", fillcolor="#EAF3FB", color="#1450A3", style=filled]
+    c3 [label="Risk tiers and\nexceptions", fillcolor="#EAF3FB", color="#1450A3", style=filled]
   }
   subgraph cluster_domains {
     label="  Domain teams · decide in context  "; labeljust="l"; fontsize=12; fontcolor="#0D6E69"
     color="#0D6E69"; style="rounded"; margin=14; bgcolor="#F4FBFA"
-    d1 [label="Finance\nagents", fillcolor="#E7F5F3", color="#0D6E69"]
+    d1 [label="Mortgage evidence\nagents", fillcolor="#E7F5F3", color="#0D6E69"]
     d2 [label="Supply chain\nagents", fillcolor="#E7F5F3", color="#0D6E69"]
     d3 [label="Service\nagents", fillcolor="#E7F5F3", color="#0D6E69"]
   }
-  board [label="Review board · proportional to risk class, not to team", fillcolor="#FFF4DF", color="#8A5600", style=filled, width=4.4]
+  board [label="Review board · proportional to risk tier, not to team", fillcolor="#FFF4DF", color="#8A5600", style=filled, width=4.4]
 
   c1 -> d1 [label="  grants  "]
   c2 -> d2 [label="  evidence  "]

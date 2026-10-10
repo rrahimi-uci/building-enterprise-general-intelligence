@@ -160,12 +160,12 @@
       "id": "governance-model",
       "source": "governance-model.gv",
       "pixels": [
-        2286,
-        1560
+        2287,
+        1532
       ],
       "effective_dpi": 334,
       "vector": true,
-      "sha256": "f6610ba8bda791e0c2c520c507af352a9d4c850f6e471e510da57847dc4cee51"
+      "sha256": "f7770bb832a0847b46f9be3caf5b998cb0dc5d69dc176bc8e3e3e99a6486488f"
     },
     {
       "id": "guardrail-sequence",
@@ -336,23 +336,23 @@
       "id": "release-recovery",
       "source": "release-recovery.gv",
       "pixels": [
-        2639,
-        3270
+        2613,
+        3139
       ],
-      "effective_dpi": 385,
+      "effective_dpi": 381,
       "vector": true,
-      "sha256": "2821187cb8b0efb8af797ab239cd4effaff5907c3b07ae4bf09ab2a582f1b63e"
+      "sha256": "a63f80fa6f6ba3e673ee4caa1fe791b715d137a1e4ca4e07980e7883a5f30745"
     },
     {
       "id": "reliability-economics",
       "source": "reliability-economics.gv",
       "pixels": [
-        2528,
-        2396
+        2747,
+        2438
       ],
-      "effective_dpi": 369,
+      "effective_dpi": 401,
       "vector": true,
-      "sha256": "741f097070c5b94bde04fbc1db7f091b5112a563c33f0a5059e1f232e51c6645"
+      "sha256": "6f615778d5c8dbf95decf7adb569845831c9ed3f421064a14b070a16ff8742fe"
     },
     {
       "id": "runtime-offline",

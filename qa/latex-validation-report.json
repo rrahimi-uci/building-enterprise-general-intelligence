@@ -4,7 +4,7 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7",
-    "content_tex_sha256": "b781dea4d330ad9803ce1b8eb22cc7f9928ce07ae5b725be88de48c57805267d",
+    "content_tex_sha256": "a1371e5132e31b8cfce2d959d5b97968110133ee3a29d80a24896b243addeb89",
     "style_sha256": "7a1273ba38763881c8ed2ede7ad741ea49ca031d7bb5f8fc354e413a88d840c8",
     "narrative_parts": 8,
     "appendix_dividers": 1,
@@ -13,13 +13,13 @@
     "appendices": 12,
     "diagrams": 42,
     "code_blocks": 60,
-    "longtables": 148,
-    "compact_tables": 101,
-    "callout_tables": 72,
-    "citation_occurrences": 113,
+    "longtables": 150,
+    "compact_tables": 104,
+    "callout_tables": 71,
+    "citation_occurrences": 115,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 321,
+    "markdown_tables": 325,
     "markdown_code_blocks": 60,
     "image_quality": [
       {
@@ -255,14 +255,6 @@
         "effective_dpi": 456.7
       },
       {
-        "file": "assets/diagrams/model-routing.png",
-        "pixels": [
-          2295,
-          2292
-        ],
-        "effective_dpi": 325.1
-      },
-      {
         "file": "assets/diagrams/security-depth.png",
         "pixels": [
           2266,
@@ -345,26 +337,34 @@
       {
         "file": "assets/diagrams/governance-model.png",
         "pixels": [
-          2286,
-          1560
+          2287,
+          1532
         ],
-        "effective_dpi": 323.8
+        "effective_dpi": 323.9
       },
       {
         "file": "assets/diagrams/release-recovery.png",
         "pixels": [
-          2639,
-          3270
+          2613,
+          3139
         ],
-        "effective_dpi": 310.5
+        "effective_dpi": 307.4
       },
       {
         "file": "assets/diagrams/reliability-economics.png",
         "pixels": [
-          2528,
-          2396
+          2747,
+          2438
         ],
-        "effective_dpi": 358.1
+        "effective_dpi": 389.1
+      },
+      {
+        "file": "assets/diagrams/model-routing.png",
+        "pixels": [
+          2295,
+          2292
+        ],
+        "effective_dpi": 325.1
       },
       {
         "file": "cover-images/chapter-01-what-turns-an-llm-call-into-a-production-system.png",

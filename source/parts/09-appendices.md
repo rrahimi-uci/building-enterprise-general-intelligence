@@ -1,3 +1,23 @@
+# Closing Perspective: What Production-Grade Intelligence Requires
+
+|  |
+| --- |
+| **THE PRODUCTION STANDARD**  An enterprise-grade system produces a verified outcome within explicit authority, time, cost, data, and risk boundaries; survives partial failure and change; and preserves evidence sufficient for users, operators, reviewers, and auditors. |
+
+Chapter 1's prototype failed in one week for five reasons, none of them intelligence.
+
+| **Day** | **Failure** | **What now contains it** |
+| --- | --- | --- |
+| Monday | A redeploy erased a running case with no record of what it had done | Durable run history, suspended waits, compatible workers (Chapters 15 and 27) |
+| Tuesday | An uploaded document carried an injected instruction | Content–instruction separation, boundary enforcement, containment (Chapters 6, 20, and 23) |
+| Wednesday | A document request committed, but its confirmation was lost | Effect ledger, intent hash, reconciliation of unknown outcomes (Chapter 22) |
+| Thursday | An auditor asked why the case advanced, and only the model's statement remained | Causal run trace plus a separate audit ledger (Chapter 24) |
+| Friday | A cheaper model shipped with no code change and missed incomplete evidence | Evaluated, immutable release with rollback of assignment (Chapters 25 and 27) |
+
+The model provides bounded reasoning; the surrounding system owns state, authority, effects, evidence, and recovery.
+
+The companion code implements the first three checkpoints (C01–C03); later checkpoints are roadmap targets, specified in this book and tracked in Appendix I.
+
 # PART REFERENCE — APPENDICES: FIELD GUIDE AND REFERENCE
 
 The appendices are meant to be used at the desk, not admired at the end of the
@@ -268,6 +288,23 @@ The chapters column lists where each pattern is built, plus Chapter 17 for its a
 ### A practical way to choose
 
 Choose the smallest harness that expresses the agent behavior, the strongest durable engine that matches the run’s consequences, and enterprise-owned gateways for identity, policy, tools, models, telemetry, and artifacts. Do not force one framework to own all three layers.
+
+### A baseline stack by concern—not a mandate
+
+Each row names typical choices for one concern and the criteria that should decide among them.
+
+| **Concern** | **Typical choices** | **Selection criteria** |
+| --- | --- | --- |
+| Durable workflow | Temporal, DBOS, Restate, cloud durable functions/state machines | Replay/versioning, signals/timers, child workflows, visibility, language/runtime fit, operations |
+| Agent graph/harness | LangGraph, OpenAI Agents SDK, Claude Agent SDK/Managed Agents, Microsoft Agent Framework, Google ADK, PydanticAI, LlamaIndex | Typed state, interrupts, tool ergonomics, model portability, trace quality, escape hatches |
+| Events/queues | Kafka/Pulsar, cloud pub-sub/queues, NATS | Ordering, retention, throughput, replay, tenancy, ecosystem, residency |
+| Policy | OPA/Rego, Cedar/Verified Permissions, cloud IAM plus domain service | RBAC/ABAC expressiveness, decision logs, latency, analysis/testing, tenant model |
+| Workload identity | SPIFFE/SPIRE, cloud workload federation, service mesh identity | Short-lived credentials, federation, attestation, sender/audience binding |
+| Operational state | PostgreSQL-compatible relational store | Transactions, RLS, JSON support, operational maturity, backup/restore |
+| Artifacts | Versioned object storage | Immutability, retention lock, encryption, signed access, regionality |
+| Retrieval | Search engine + vector index + optional graph | ACL correctness, freshness, hybrid search, lineage, deletion, scale |
+| Sandboxing | Ephemeral containers or microVMs with egress proxy | Isolation strength, startup latency, observability, policy integration |
+| Telemetry/evals | OpenTelemetry + trace/metric backend + evaluation service | Portability, privacy controls, async trace linking, dataset/experiment workflow |
 
 # Appendix E — What This Architecture Means for Research
 
@@ -699,11 +736,3 @@ References are numbered by stable registry identifier. Each citation supports on
 | Operations | SLOs, dashboards, paging, kill-switch drill, RTO/RPO restoration evidence, runbook ownership |
 | Supply chain | Lock digest, SBOM, signed provenance, trusted builder/signer, release manifest, revocation exercise |
 | Human factors | Accessible approval test, preview fidelity, reviewer calibration, fatigue/override metrics, recourse path |
-
-# Closing Perspective: What Production-Grade Intelligence Requires
-
-|  |
-| --- |
-| **THE PRODUCTION STANDARD**  An enterprise-grade system produces a verified outcome within explicit authority, time, cost, data, and risk boundaries; survives partial failure and change; and preserves evidence sufficient for users, operators, reviewers, and auditors. |
-
-Harborlight began with one model call. It ends as explicit contracts and control loops: a deterministic shell around bounded intelligence, reusable Skills, durable tasks, governed protocols, narrow authority, verified effects, causal traces, executable evaluation, compatible releases, and measured optimization.

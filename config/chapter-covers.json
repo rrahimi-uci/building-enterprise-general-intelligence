@@ -5757,7 +5757,7 @@
      },
      {
       "id": "t01",
-      "label": "Tier 0–1",
+      "label": "T0–T1",
       "sub": "standard policy · basic eval",
       "kind": "control",
       "at": [
@@ -5768,7 +5768,7 @@
      },
      {
       "id": "t2",
-      "label": "Tier 2",
+      "label": "T2",
       "sub": "domain acceptance",
       "kind": "control",
       "at": [
@@ -5779,8 +5779,8 @@
      },
      {
       "id": "t34",
-      "label": "Tier 3–4",
-      "sub": "exact approval · assurance",
+      "label": "T3–T4",
+      "sub": "approval · assurance",
       "kind": "human",
       "at": [
        7.4,

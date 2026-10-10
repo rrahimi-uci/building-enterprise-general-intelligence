@@ -266,13 +266,11 @@ still be unauthorized for this tenant; an A2A peer can accept a task and still
 lack the evidence or identity needed to act. Model providers are a third
 external boundary; the LLM Gateway that terminates it sits in the Gateways and
 integration plane (Chapter 4), and model routing, which filters by policy
-before it optimizes (Figure 19-1), is treated as a cost decision in Chapter 28.
+before it optimizes, is treated as a cost decision in Chapter 28 (Figure 28-2).
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | MCP and A2A Gateways | local trust domain to external endpoint or peer | endpoint · peer · tenant quota | one remote call or task | ServerManifest · FederatedTask · RemoteArtifact |
-
-[[DIAGRAM:model-routing|Figure 19-1 — Policy-first model-routing decision tree]]
 
 ## Two protocols, two responsibilities
 
