@@ -13,6 +13,16 @@ All notable changes follow semantic versioning and are recorded here.
 - Chapter 6 has one ten-stage pipeline, five context sources, one segment `kind` enum mapped to trust tiers, memory in one section, and one ContextManifest schema in the new `context-manifest` example; the artifact-adoption listing leaves for Chapter 19.
 - Approval terminology, Harborlight case boxes (Northstar removed), "Strong answer" and ✓ template forms, and Chapter 17 anti-pattern pointers are applied across Part II; the Chapter 4–6 covers follow the renamed components.
 
+### Part VII — evidence, evaluation, and improvement (continuity review, WP-VII)
+
+- Chapter 24 is the home of observability: one decision-centric span schema (decision, memory, and security-control spans; `effect.state` on tool spans), the single metric scorecard, and the telemetry implementation (collector, trace index, content vault, audit ledger writer) moved in from Chapter 25.
+- Chapter 24 states the four authoritative records (trace, workflow history, effect ledger, audit ledger), names the causal run trace and trajectory, separates workflow replay, diagnostic replay, and fork, and absorbs Chapter 7's first-divergence steps into a five-step § Debugging method that the worked example now follows.
+- Chapter 25 is reordered: release gate, test layers, worked example, runtime/offline boundary (now with a test, placements, and a Harborlight example), the learning loop with defined records and an automate/govern/never table, then evaluation-only implementation.
+- Chapter 25 defines EvaluationResult, ValidationReport, and ReleaseGateDecision; one test-layer table replaces the pyramid list; the waiver path and the Chapter 13 versus release-gate distinction are explained.
+- MLflow claims are limited to what R20/R21 support; the Agents SDK tracer default is now a tested statement about the pinned package.
+- The trajectory example adds a deterministic `forbidden_tool_absent` scorer, and its judge no longer assesses authorization.
+- Figures 25-2 and 25-3: runtime lane matches the prose; Approve reads "owner or pre-approved class".
+
 ### Shared contracts and examples (continuity review, Phase 1)
 
 - `AgentDecision.disposition` gains `proposed_action`: `invoke_tool` is a read, and a mutation leaves the loop as a proposal.

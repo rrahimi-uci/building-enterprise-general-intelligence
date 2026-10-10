@@ -4,7 +4,7 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7",
-    "content_tex_sha256": "c989d7ef469387d5d4d2378795a13b5ac58d9e6a99c0a842589b49b0ae8345a9",
+    "content_tex_sha256": "4b443a4c59bd2df61807e823770443006abc6523d7c68c9f1309f11a6d210d83",
     "style_sha256": "7a1273ba38763881c8ed2ede7ad741ea49ca031d7bb5f8fc354e413a88d840c8",
     "narrative_parts": 8,
     "appendix_dividers": 1,
@@ -12,15 +12,15 @@
     "chapter_covers": 28,
     "appendices": 12,
     "diagrams": 45,
-    "code_blocks": 65,
-    "longtables": 145,
-    "compact_tables": 105,
+    "code_blocks": 70,
+    "longtables": 143,
+    "compact_tables": 108,
     "callout_tables": 94,
-    "citation_occurrences": 109,
+    "citation_occurrences": 111,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 344,
-    "markdown_code_blocks": 65,
+    "markdown_tables": 345,
+    "markdown_code_blocks": 70,
     "image_quality": [
       {
         "file": "assets/cover/cover-v1.0.0.png",
@@ -89,16 +89,16 @@
       {
         "file": "assets/diagrams/reference-architecture.png",
         "pixels": [
-          4209,
-          2789
+          4148,
+          2780
         ],
-        "effective_dpi": 596.2
+        "effective_dpi": 587.5
       },
       {
         "file": "assets/diagrams/request-sequence.png",
         "pixels": [
           2055,
-          1210
+          1365
         ],
         "effective_dpi": 291.1
       },
@@ -114,7 +114,7 @@
         "file": "assets/diagrams/policy-to-guardrail.png",
         "pixels": [
           2322,
-          3195
+          2798
         ],
         "effective_dpi": 328.9
       },
@@ -351,20 +351,20 @@
         "effective_dpi": 568.6
       },
       {
+        "file": "assets/diagrams/runtime-offline.png",
+        "pixels": [
+          2461,
+          4575
+        ],
+        "effective_dpi": 348.6
+      },
+      {
         "file": "assets/diagrams/learning-loop.png",
         "pixels": [
           2267,
-          1983
+          2017
         ],
         "effective_dpi": 321.1
-      },
-      {
-        "file": "assets/diagrams/runtime-offline.png",
-        "pixels": [
-          2466,
-          4487
-        ],
-        "effective_dpi": 349.3
       },
       {
         "file": "assets/diagrams/governance-model.png",
