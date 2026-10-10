@@ -4,6 +4,15 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Apply DOCX review to Part V
+
+Applied a deep review of the DOCX (Chapters 18–19) to the canonical source:
+
+- "Neither protocol carries authorization" now says *business* authorization, consistent with the MCP authorization row; A2A is described as stateful with best-effort cancellation, not durable.
+- Replaced unresolvable source keys with registry IDs (R05, R06, R07, R09, R10, R28); the out-of-scope A2A citation for the multi-agent quality claim was dropped.
+- Ch18's mortgage specialists now match the chapter's own case; the deterministic join validates artifacts.
+- Ch19 announces its LLM Gateway material and names that gateway explicitly in its headings; contract names match the code and records tables.
+
 ### Apply DOCX review to Part IV
 
 Applied a deep review of the DOCX (Chapters 10–17) to the canonical source:
