@@ -4,6 +4,15 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Apply DOCX review to Part II
+
+Applied a deep review of the DOCX (Chapters 4–6) to the canonical source:
+
+- Ch4 plane count is now consistent (seven planes in the opening, table, and design-review answer); "execution plane" no longer means two things; trust-boundary answer matches the table.
+- Replaced unresolvable legacy source keys with registry IDs (R03, R04, R13, R39); R48 is disclosed as the author's own repository.
+- Ch5/Ch6 clarity: Figure 5-1 is referenced in prose; the miscounted "seven representations" is removed; the AP-13/AP-02 cross-reference is corrected; the garbled final checklist item is fixed.
+- Promoted the empty "A workable implementation" heading to the parent of its subsections; US spelling throughout.
+
 ### Apply DOCX review to the front matter and Part I
 
 Applied a deep review of the DOCX (front matter, Chapters 1–3) to the canonical source:

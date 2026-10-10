@@ -2179,11 +2179,11 @@ Each platform service owns one authoritative record & global control plane to re
 
 \section{What the architecture is trying to protect}
 
-The enterprise architecture places probabilistic reasoning inside explicit experience, runtime, workflow, knowledge, integration, security, evaluation, and operations planes. The agent is a decision component—not the workflow, authorization service, database, policy engine, or proof of completion.\par
+The enterprise architecture places probabilistic reasoning inside the seven explicit planes in the table below. The agent is a decision component—not the workflow, authorization service, database, policy engine, or proof of completion.\par
 
 \BookDiagram{assets/diagrams/reference-architecture.pdf}{Figure 4-1 — The layered reference architecture: planes, the components in each, and the two concerns that cross them all}{reference-architecture}
 
-Read the figure downward: each layer names the components the plane owns, and the solid path traces one request from intent to committed effect, narrowing in authority at every step. Trust and governance and evidence and improvement are drawn as vertical spines rather than layers because neither sits between two planes — the policy decision point is consulted at admission, at run control, and again at the Tool Gateway, and the collector gathers from every plane. Dashed edges are control, dotted edges are evidence, and the bottom band sits outside the trust boundary: nothing there is assumed, and everything returned from it is revalidated.\par
+Read the figure downward: each layer names the components the plane owns, and the solid path traces one request from intent to committed effect, narrowing in authority at every step. \emph{Trust and governance} and \emph{Evidence and improvement} are drawn as vertical spines rather than layers because neither sits between two planes — the policy decision point is consulted at admission, at run control, and again at the Tool Gateway, and the collector gathers from every plane. Dashed edges are control, dotted edges are evidence, and the bottom band sits outside the trust boundary: nothing there is assumed, and everything returned from it is revalidated.\par
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -2236,7 +2236,7 @@ Evaluation and operations & Tracing, evaluation, SLOs, incidents, release, capac
 \begin{tabular}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Concern} & \color{white}\bfseries \textbf{Owner} & \color{white}\bfseries \textbf{Model may} & \color{white}\bfseries \textbf{Model may not} \\
-Workflow & Durable Run Service & Propose a semantic result & Invent state, retry history, or terminal \\
+Workflow & Durable Run Service & Propose a semantic result & Invent state, retry history, or terminal outcome \\
 \rowcolor{BookLight}
 Authorization & Identity and policy services & Explain requested scope & Grant or expand authority \\
 Business truth & Domain system & Read an authorized projection & Replace truth with a summary \\
@@ -2269,7 +2269,7 @@ Deploy global definitions and governance into regional execution cells connected
 
 \section{Turn the diagram into enforceable contracts}
 
-A reference architecture becomes implementable when every arrow has an API or event contract and every record has one authoritative writer. Northstar separates a global definition and governance plane from regional execution cells. Cells contain run control, durable workflow, bounded agent workers, model and Tool Gateways, context services, effect ledger, artifact store, and regional telemetry/audit pipelines.\par
+A reference architecture becomes implementable when every arrow has an API or event contract and every record has one authoritative writer. Northstar separates a global definition and governance plane from regional execution cells. Cells contain run control, durable workflow, bounded agent workers, model gateway, Tool Gateway, context services, effect ledger, artifact store, and regional telemetry/audit pipelines.\par
 
 The public Run API is asynchronous and idempotent. Commands carry expected state version and deadline; accepted work returns 202 plus an operation or run resource. Status and events are durable and paginated. Large inputs and outputs use immutable artifact references rather than oversized JSON. Public contracts do not expose SDK messages or provider-specific run objects.\par
 
@@ -2331,7 +2331,7 @@ Run control plane & Run API, planner, coordinator, budget manager, human action 
 Durable execution & Workflow engine, timers, signal handlers, checkpoint/event store & Crash recovery, pause/resume, retries, compensation, replay \\
 \rowcolor{BookLight}
 Model plane & Model gateway, router, prompt assembler, structured-output validator & Provider abstraction, routing, caching, quotas, redaction \\
-Capability plane & Tool gateway, MCP clients/servers, A2A gateway, connectors & Discovery, authorization, invocation, isolation, versioning \\
+Capability plane & Tool Gateway, MCP clients/servers, A2A gateway, connectors & Discovery, authorization, invocation, isolation, versioning \\
 \rowcolor{BookLight}
 Data and knowledge & RDBMS, object store, search/vector index, catalog, lineage & Authoritative state, artifacts, retrieval, provenance and ACLs \\
 Execution plane & Sandboxed workers, code/browser runners, egress proxy & Resource isolation and constrained side effects \\
@@ -2497,11 +2497,11 @@ A vector database is an index, not the source of truth; an agent transcript is n
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
 \endhead
-Event contract & Use a CloudEvents 1.0-compatible envelope for interoperability, but keep domain semantics and delivery guarantees in versioned event contracts. Source plus ID supports deduplication; large or sensitive artifacts should be referenced rather than embedded. & CLOUDEVENTS \\
+Event contract & Use a CloudEvents 1.0-compatible envelope for interoperability, but keep domain semantics and delivery guarantees in versioned event contracts. Source plus ID supports deduplication; large or sensitive artifacts should be referenced rather than embedded. & R04 \\
 \end{longtable}
 \BookTableEnd
 
-The discussion above draws on CLOUDEVENTS. Appendix K lists the complete sources and records their authority, version, and scope.\par
+The discussion above draws on R03; R04. Appendix K lists the complete sources and records their authority, version, and scope.\par
 
 \section{A sensible place to start}
 
@@ -2681,10 +2681,10 @@ def deduplication_key(event: CloudEvent) -> tuple[str, str]:
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Question} & \color{white}\bfseries \textbf{Strong answer} \\
 \endhead
-Walk through the major planes of an enterprise agent platform. & Experience and edge, global definition, run control, durable execution, agent and model, capability, data and context, trust, and operations—with explicit ownership and interfaces. \\
+Walk through the major planes of an enterprise agent platform. & Experience and channels, agent applications, runtime and workflow, gateways and integration, context/RAG/memory/Skills, security and governance, and evaluation and operations—with explicit ownership and interfaces. \\
 \rowcolor{BookLight}
-Why separate the control plane from the execution plane? & They have different scaling, availability, data-residency, and failure characteristics; immutable definitions can fan out while active tenant runs stay regional. \\
-Where are the most important trust boundaries? & User-to-edge, knowledge-to-model, model-to-workflow, workflow-to-tool, sandbox-to-network, peer-to-platform, and platform-to-model provider. \\
+Why separate the global control plane from regional execution cells? & They have different scaling, availability, data-residency, and failure characteristics; immutable definitions can fan out while active tenant runs stay regional. \\
+Where are the most important trust boundaries? & User-to-platform, knowledge-to-model, model-to-orchestrator, orchestrator-to-tool, agent-to-agent, sandbox-to-network, platform-to-model-vendor, and result-to-destination. \\
 \rowcolor{BookLight}
 Why use cell-based deployment? & Additive scale, tenant placement, residency, bounded blast radius, independent canaries, and predictable stateful-service limits. \\
 How should execution behave during a control-plane outage? & Continue compatible in-flight work on pinned last-known-good bundles, apply local denies and kill switches, and restrict high-risk admission when freshness cannot be established. \\
@@ -2723,9 +2723,9 @@ Knowledge Hub and its registries & authored source to governed artifact & artifa
 \end{tabular}
 \BookTableEnd
 
-\section{Why retrieval alone cannot tell you what to trust}
+\section{Why similarity cannot tell you what to trust}
 
-Retrieval-augmented generation answers one question well: \emph{what text is relevant to this?} Enterprises then ask it three questions it was never designed for.\par
+Retrieval-augmented generation answers one question well: \emph{what text is relevant to this?} Enterprises then ask it three questions it was never designed for; Figure 5-1 shows all four behind one governed resolution surface.\par
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -2750,7 +2750,7 @@ The clearest case is the one Harborlight hit. An underwriting policy excludes a 
 
 Consider a policy sentence that says a pay statement is acceptable only within a particular age window. The source document is authoritative, but the runtime cannot safely enforce prose. The platform extracts a candidate rule, preserves the exact source span, has an eligible owner verify the interpretation, compiles the approved rule, and records the version used for each case. Skip a link in that chain and the system may enforce a rule nobody can explain or prove is current.\par
 
-The knowledge fabric uses seven representations, each derived from—and traceable back to—the source above it. That lineage lets an engineer explain why a rule exists, detect when the source changed, and rebuild every derived artifact. A guardrail that cannot point to the sentence or decision behind it is not an enforceable policy; it is an opinion encoded in software.\par
+Each representation in the knowledge fabric is derived from—and traceable back to—the source above it. That lineage lets an engineer explain why a rule exists, detect when the source changed, and rebuild every derived artifact. A guardrail that cannot point to the sentence or decision behind it is not an enforceable policy; it is an opinion encoded in software.\par
 
 \subsection{Semantic knowledge}
 
@@ -2812,7 +2812,7 @@ class KnowledgeGraph:
 
 Traversal must be bounded. An unbounded walk over an enterprise graph is a denial of service against your own agent, and a cycle makes it non-terminating.\par
 
-The honest caveat: ontologies are where enterprise knowledge programmes go to die. The useful heuristic is to model only what an agent must traverse to make a decision it cannot make otherwise, and to let a modelling exercise justify itself one query at a time.\par
+The honest caveat: ontologies are where enterprise knowledge programs go to die. The useful heuristic is to model only what an agent must traverse to make a decision it cannot make otherwise, and to let a modeling exercise justify itself one query at a time.\par
 
 \subsection{Business rules as enforceable constraints}
 
@@ -3014,7 +3014,7 @@ class CapabilityCatalog:
         return found[0]
 \end{lstlisting}
 
-Filtering before discovery matters more than it looks. A capability the caller may not invoke should never appear, because a listed-but-forbidden tool is an invitation to try. This is the knowledge-side view of the Skills of Chapter 8 and the tool manifests of Chapter 22; it is the same artifact seen from discovery rather than from execution.\par
+Filtering during discovery matters more than it looks. A capability the caller may not invoke should never appear, because a listed-but-forbidden tool is an invitation to try. This is the knowledge-side view of the Skills of Chapter 8 and the tool manifests of Chapter 22; it is the same artifact seen from discovery rather than from execution.\par
 
 \subsection{Process and decision models}
 
@@ -3035,7 +3035,7 @@ SBVR \BookCitation{R47} & Business vocabulary and rules & Resolves what a term m
 \end{tabular}
 \BookTableEnd
 
-DMN earns its place fastest. A decision table with a declared hit policy is the one artifact that turns a class of judgement calls into a lookup, and a lookup can be tested. BPMN pays off where the sequence is genuinely fixed and the cost of skipping a step is high. CMMN and SBVR are narrower; adopt them when case work or vocabulary ambiguity is the actual problem, not because the set is incomplete without them.\par
+DMN earns its place fastest. A decision table with a declared hit policy is the one artifact that turns a class of judgment calls into a lookup, and a lookup can be tested. BPMN pays off where the sequence is genuinely fixed and the cost of skipping a step is high. CMMN and SBVR are narrower; adopt them when case work or vocabulary ambiguity is the actual problem, not because the set is incomplete without them.\par
 
 \section{Turn policy prose into logic the system can enforce}
 
@@ -3269,7 +3269,7 @@ Permissions belong to the knowledge artifact, enforced at the resolution boundar
 \endhead
 Standards scope & BPMN, DMN, CMMN, and SBVR are OMG specifications; each citation supports the existence and semantics of its own standard and nothing about its suitability for agentic systems. That assessment is book-authored. & R44; R45; R46; R47 \\
 \rowcolor{BookLight}
-Verification measurement & The 44\% rejection figure is one run of one compliance pipeline on one corpus, reported by its authors. It is evidence that independent verification finds real errors, not a general error rate for extraction. & R48 \\
+Verification measurement & The 44\% rejection figure is one run of one compliance pipeline on one corpus, reported in the book author's own implementation repository. It is evidence that independent verification finds real errors, not a general error rate for extraction. & R48 \\
 \end{longtable}
 \BookTableEnd
 
@@ -3288,7 +3288,7 @@ Agents must not hold connection strings to six stores. They ask one service, whi
 \small
 \begin{tabular}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
-\color{white}\bfseries Plane & \color{white}\bfseries Holds & \color{white}\bfseries Answers \\
+\color{white}\bfseries Hub view & \color{white}\bfseries Holds & \color{white}\bfseries Answers \\
 Governance & Ownership, versions, effective dates, permissions, lifecycle & May this agent see this, and is it current? \\
 \rowcolor{BookLight}
 Semantic & Documents and embeddings & What text is relevant? \\
@@ -3304,7 +3304,7 @@ Capability & Tools, APIs, effects, prerequisites & What can be done, and at what
 One query surface sits above all six. Permissions are enforced there, attribution is attached there, and an agent that asks for knowledge it may not have receives a refusal rather than a filtered answer.\par
 
 \begin{bookproduction}[Production consideration]
-Version the knowledge layer alongside the agent. An agent release pinned to a policy version is reproducible; one that resolves against "current" changes behaviour when a document changes, with no deployment and no trace.
+Version the knowledge layer alongside the agent. An agent release pinned to a policy version is reproducible; one that resolves against "current" changes behavior when a document changes, with no deployment and no trace.
 \end{bookproduction}
 
 \section{If this fails in production}
@@ -3458,7 +3458,7 @@ The model receives text from several origins in one window, and it has no inhere
 \fontsize{7.2}{9}\selectfont
 \begin{tabular}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
 \rowcolor{BookNavy}
-\color{white}\bfseries Tier & \color{white}\bfseries Origin & \color{white}\bfseries Trust & \color{white}\bfseries Can it direct behaviour? \\
+\color{white}\bfseries Tier & \color{white}\bfseries Origin & \color{white}\bfseries Trust & \color{white}\bfseries Can it direct behavior? \\
 1 & System and application instructions & Release artifact, code-reviewed & Yes — this is the definition of the agent \\
 \rowcolor{BookLight}
 2 & Skill instructions & Pinned, versioned capability artifact & Yes, within the capability's declared scope \\
@@ -3472,7 +3472,7 @@ Content cannot promote itself between tiers. A retrieved document that contains 
 
 \subsection{Memory is not a bag of embeddings}
 
-One store in this pipeline behaves differently from the rest. Retrieval reads; memory \emph{writes}, and a write that outlives the run is a protected data effect rather than a caching convenience. Creating long-term memory therefore carries the same obligations as any other durable write: an owner, a scope, provenance, a confidence, the policy basis that permitted it, a TTL, and a correction and deletion path. And when a remembered summary disagrees with canonical business state, canonical state wins — always, and without the model being asked to adjudicate. Chapter 17 catalogs the alternative as AP-13.\par
+One source feeding this pipeline behaves differently from the rest. Retrieval reads; memory \emph{writes}, and a write that outlives the run is a protected data effect rather than a caching convenience. Creating long-term memory therefore carries the same obligations as any other durable write: an owner, a scope, provenance, a confidence, the policy basis that permitted it, a TTL, and a correction and deletion path. And when a remembered summary disagrees with canonical business state, canonical state wins — always, and without the model being asked to adjudicate. Chapter 17 catalogs ungoverned memory writes as AP-13 and summary-as-state as AP-02.\par
 
 \section{Four kinds of state that should not be collapsed into one store}
 
@@ -3550,7 +3550,7 @@ Telemetry and audit & Traces, metrics, policy decisions, effect records & Trace 
 
 \end{enumerate}
 
-\subsection{A workable implementation}
+\section{A workable implementation}
 
 \subsection{Who should own each decision}
 
@@ -3683,11 +3683,11 @@ Retrieve less, and cite what you retrieved. Context is the dominant cost in most
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
 \endhead
-Privacy lifecycle & Context and memory need purpose limitation, consent or other legal basis where applicable, data-subject request handling, deletion propagation, legal-hold precedence, residency, provider retention controls, and proof that derived summaries/indexes were handled too. & NIST-GAI; GDPR \\
+Privacy lifecycle & Context and memory need purpose limitation, consent or other legal basis where applicable, data-subject request handling, deletion propagation, legal-hold precedence, residency, provider retention controls, and proof that derived summaries/indexes were handled too. & R13; R39 \\
 \end{longtable}
 \BookTableEnd
 
-The discussion above draws on NIST-GAI; GDPR. Appendix K lists the complete sources and records their authority, version, and scope.\par
+The discussion above draws on R13; R39. Appendix K lists the complete sources and records their authority, version, and scope.\par
 
 \section{How Memory works in practice}
 
@@ -3878,7 +3878,7 @@ def authorize_artifact_adoption(
 
 \textbf{\ensuremath{\checkmark}} Memory creation is a governed write with scope, provenance, confidence, lawful basis, TTL, correction, and deletion.\par
 
-\textbf{\ensuremath{\checkmark} Final implementation and deletion propagate through indexes, caches, summaries, memories, contexts, and artifacts.}\par
+\textbf{\ensuremath{\checkmark}} Correction and deletion propagate through indexes, caches, summaries, memories, contexts, and artifacts.\par
 
 \section{Put the idea to work}
 
