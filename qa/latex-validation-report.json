@@ -4,7 +4,7 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "37b9dbbd1abd8d0c66eb6f20e61eaedbc253e951f556a8d7a523b8458b5cdd2a",
-    "content_tex_sha256": "48f7e749c5b6dec0bb9777b9e1d30cda427830a421ef8bdc82de27e3a8b94b40",
+    "content_tex_sha256": "ffa86733b5eff031acd617262b20ebaa6a29b54a20bac8ab47faba3fcfdd8672",
     "style_sha256": "5da6e75458e0435caa0d9a1040642324bcbbafb1f9df53322707528d92ea0e30",
     "narrative_parts": 8,
     "appendix_dividers": 1,
@@ -15,7 +15,7 @@
     "longtables": 142,
     "compact_tables": 105,
     "callout_tables": 95,
-    "citation_occurrences": 107,
+    "citation_occurrences": 108,
     "reference_targets": 48,
     "unique_citation_ids": 48,
     "markdown_tables": 342,

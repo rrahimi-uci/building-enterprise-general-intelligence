@@ -4,6 +4,15 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Apply DOCX review to Part VIII
+
+Applied a deep review of the DOCX (Chapters 26–28) to the canonical source:
+
+- Ch27's checklist and design-review questions now test release and recovery (pinning, rollback, promotion, emergency controls) instead of Part II topics; rollback restores the whole bundle, and the promotion path includes shadow.
+- The dated, uncited EU AI Act status claim now points readers to the official timeline [R40].
+- Replaced unresolvable source keys with registry IDs (R17, R18, R42, R43); MLFLOW-TRACE was dropped.
+- Ch28's reservation rules no longer conflict, the Northstar example uses mortgage terms, and undefined acronyms (ACI, KEDA) are expanded; Ch26 explains Figure 26-1 and fixes the exception-expiry logic.
+
 ### Apply DOCX review to Part VII
 
 Applied a deep review of the DOCX (Chapters 24–25) to the canonical source:
