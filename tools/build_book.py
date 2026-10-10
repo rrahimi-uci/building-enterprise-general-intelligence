@@ -102,6 +102,14 @@ def split_row(line):
 def sep_row(line):
     cs=split_row(line); return bool(cs) and all(re.fullmatch(r':?-{3,}:?',c.replace(' ','')) for c in cs)
 
+def list_item(lines,i,first):
+    # A hard-wrapped item continues on indented lines; join them so the item
+    # renders as one list paragraph instead of a bullet plus stray paragraphs.
+    parts=[first.strip()]; i+=1
+    while i<len(lines) and lines[i][:1] in (' ','\t') and lines[i].strip() and not re.match(r'^\s*([-*]|\d+\.)\s+',lines[i]):
+        parts.append(lines[i].strip()); i+=1
+    return ' '.join(parts),i
+
 def parse(md):
     lines=md.splitlines(); i=0
     # Optional YAML front matter.
@@ -136,8 +144,8 @@ def parse(md):
             yield ('table',rows); continue
         if re.match(r'^[-*]\s+\[[ xX]\]\s+',line):
             checked='☑' if re.match(r'^[-*]\s+\[[xX]\]',line) else '☐'; yield ('bullet',checked+' '+re.sub(r'^[-*]\s+\[[ xX]\]\s+','',line)); i+=1; continue
-        if re.match(r'^[-*]\s+',line): yield ('bullet',re.sub(r'^[-*]\s+','',line)); i+=1; continue
-        if re.match(r'^\d+\.\s+',line): yield ('number',re.sub(r'^\d+\.\s+','',line)); i+=1; continue
+        if re.match(r'^[-*]\s+',line): text,i=list_item(lines,i,re.sub(r'^[-*]\s+','',line)); yield ('bullet',text); continue
+        if re.match(r'^\d+\.\s+',line): text,i=list_item(lines,i,re.sub(r'^\d+\.\s+','',line)); yield ('number',text); continue
         if line.startswith('> '): yield ('quote',line[2:].strip()); i+=1; continue
         para=[stripped]; i+=1
         while i<len(lines):
@@ -147,16 +155,21 @@ def parse(md):
             para.append(ns); i+=1
         yield ('para',' '.join(para))
 
+# Markdown backslash escapes (artifact\_id, a \< b) are source syntax, not text.
+# Strip them everywhere except inside code spans, matching build_latex.py.
+def md_unescape(text):
+    return re.sub(r'\\([\\`*_{}\[\]()#+.!|<>\-])', r'\1', text)
+
 def add_inline(p,text,cfg,bold_override=False):
     C=cfg['design']['colors']; mono=cfg['design']['fonts']['mono']
     token=re.compile(r'(\*\*.+?\*\*|`[^`]+`|\[[^\]]+\]\(https?://[^)]+\)|\[R\d{2}\]|(?<!\*)\*[^*\n]+\*)')
     pos=0
     for m in token.finditer(text):
         if m.start()>pos:
-            r=p.add_run(text[pos:m.start()]); r.bold=bold_override or None
+            r=p.add_run(md_unescape(text[pos:m.start()])); r.bold=bold_override or None
         t=m.group(0)
         if t.startswith('**'):
-            r=p.add_run(t[2:-2]); r.bold=True
+            r=p.add_run(md_unescape(t[2:-2])); r.bold=True
         elif t.startswith('`'):
             r=p.add_run(t[1:-1]); r.font.name=mono; r.font.size=Pt(8.7); r.font.color.rgb=color('405A75'); r.font.highlight_color=None
         elif re.match(r'^\[[^\]]+\]\(https?://',t):
@@ -164,10 +177,23 @@ def add_inline(p,text,cfg,bold_override=False):
         elif re.fullmatch(r'\[R\d{2}\]',t):
             r=p.add_run(t); r.bold=True; r.font.color.rgb=color(C['blue'])
         elif t.startswith('*'):
-            r=p.add_run(t[1:-1]); r.italic=True
+            r=p.add_run(md_unescape(t[1:-1])); r.italic=True
         pos=m.end()
     if pos<len(text):
-        r=p.add_run(text[pos:]); r.bold=bold_override or None
+        r=p.add_run(md_unescape(text[pos:])); r.bold=bold_override or None
+
+# Every numbered list restarts at 1. The List Number style carries one shared
+# numbering instance, so each new list gets its own instance with a start override.
+def new_numbered_list(doc):
+    numbering=doc.part.numbering_part.numbering_definitions._numbering
+    style_num=int(doc.styles['List Number'].element.pPr.numPr.numId.val)
+    abstract=numbering.num_having_numId(style_num).abstractNumId.val
+    num=numbering.add_num(abstract); num.add_lvlOverride(ilvl=0).add_startOverride(1)
+    return num.numId
+
+def set_num(p,num_id):
+    numPr=p._p.get_or_add_pPr().get_or_add_numPr()
+    numPr.get_or_add_ilvl().val=0; numPr.get_or_add_numId().val=num_id
 
 def add_page_break(doc):
     p=doc.add_paragraph(); p.add_run().add_break(WD_BREAK.PAGE)
@@ -279,7 +305,7 @@ def build(root:Path,out:Path,template_only=False):
         if not cover.exists(): subprocess.run([sys.executable,str(root/'tools/generate_cover.py'),'--root',str(root)],check=True)
         md=(root/cfg['source']['canonical_markdown']).read_text(encoding='utf-8')
         after_part=False; title_seen=False; lead_keep_next=False; blocks=0
-        parsed=list(parse(md))
+        parsed=list(parse(md)); list_num_id=None
         for block_index,b in enumerate(parsed):
             blocks+=1; kind=b[0]
             if kind=='cover':
@@ -312,6 +338,9 @@ def build(root:Path,out:Path,template_only=False):
                 lead_keep_next=False; continue
             if kind=='number':
                 p=add_paragraph(doc,b[1],cfg,'List Number'); p.paragraph_format.keep_together=True
+                prev=parsed[block_index-1][0] if block_index else None
+                if prev!='number' or list_num_id is None: list_num_id=new_numbered_list(doc)
+                set_num(p,list_num_id)
                 if lead_keep_next: p.paragraph_format.keep_with_next=True
                 lead_keep_next=False; continue
             if kind=='quote':

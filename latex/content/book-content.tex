@@ -543,35 +543,15 @@ Four properties of that setting make it harder than ordinary application develop
 
 \begin{itemize}
 
-\item \textbf{The model is nondeterministic.} The same input can produce different
+\item \textbf{The model is nondeterministic.} The same input can produce different output. Anything that must be reproducible therefore cannot depend on the model producing the same thing twice.
+
+\item \textbf{The environment is concurrent and partially failing.} Two runs touch the same mortgage case. A document service times out. A queue delivers a message twice. None of this is exceptional; it is Tuesday.
+
+\item \textbf{Inputs may be adversarial.} Not only from users — a retrieved document, a tool result, or a third-party server's tool description is untrusted text that the model will read as readily as your instructions.
+
+\item \textbf{Many actions are irreversible.} A payment, an email to a customer, a deletion. "Retry on failure" is sound advice for a read and dangerous advice for a write.
 
 \end{itemize}
-
-output. Anything that must be reproducible therefore cannot depend on the model producing the same thing twice.\par
-
-\begin{itemize}
-
-\item \textbf{The environment is concurrent and partially failing.} Two runs touch the
-
-\end{itemize}
-
-same mortgage case. A document service times out. A queue delivers a message twice. None of this is exceptional; it is Tuesday.\par
-
-\begin{itemize}
-
-\item \textbf{Inputs may be adversarial.} Not only from users — a retrieved document, a
-
-\end{itemize}
-
-tool result, or a third-party server's tool description is untrusted text that the model will read as readily as your instructions.\par
-
-\begin{itemize}
-
-\item \textbf{Many actions are irreversible.} A payment, an email to a customer, a
-
-\end{itemize}
-
-deletion. "Retry on failure" is sound advice for a read and dangerous advice for a write.\par
 
 Put together, these mean that production design has to answer three questions for \emph{every step a run takes}, not once at the design stage:\par
 
@@ -1461,27 +1441,13 @@ class ToolGateway:
 
 \begin{itemize}
 
-\item Trace the intent-to-execution path. Compare the model’s raw proposal with the
+\item Trace the intent-to-execution path. Compare the model’s raw proposal with the validated command, identifying any rejected, modified, or defaulted fields.
+
+\item Verify the execution boundary. Inspect the final authorization and policy decision, approval state, and resource version immediately before the side effect is committed.
+
+\item Test idempotency. Replay the same logical mutation and confirm that it produces no duplicate side effect and resolves to the same durable receipt.
 
 \end{itemize}
-
-validated command, identifying any rejected, modified, or defaulted fields.\par
-
-\begin{itemize}
-
-\item Verify the execution boundary. Inspect the final authorization and policy
-
-\end{itemize}
-
-decision, approval state, and resource version immediately before the side effect is committed.\par
-
-\begin{itemize}
-
-\item Test idempotency. Replay the same logical mutation and confirm that it
-
-\end{itemize}
-
-produces no duplicate side effect and resolves to the same durable receipt.\par
 
 \section{What to verify before production}
 
@@ -9853,37 +9819,17 @@ An invocation is a series of durable decisions, not a function call hidden insid
 
 \item Resolve the immutable tool manifest and validate the typed arguments.
 
-\item Canonicalize the target and reauthorize the subject, actor, purpose, and
-
-\end{enumerate}
-
-exact action.\par
-
-\begin{enumerate}
+\item Canonicalize the target and reauthorize the subject, actor, purpose, and exact action.
 
 \item Create or load the logical effect record and compare the intent hash.
 
-\item Preview the change and obtain an approval bound to the proposal when the
+\item Preview the change and obtain an approval bound to the proposal when the risk class requires it.
+
+\item Mint a last-hop credential, execute once under the connector’s timeout, and record the downstream request identifier.
+
+\item Store the receipt or mark the outcome Unknown; reconcile before any dependent mutation proceeds.
 
 \end{enumerate}
-
-risk class requires it.\par
-
-\begin{enumerate}
-
-\item Mint a last-hop credential, execute once under the connector’s timeout, and
-
-\end{enumerate}
-
-record the downstream request identifier.\par
-
-\begin{enumerate}
-
-\item Store the receipt or mark the outcome Unknown; reconcile before any dependent
-
-\end{enumerate}
-
-mutation proceeds.\par
 
 The model can request a new proposal after a denial or stale-version conflict, but it cannot skip a stage by changing the wording of its next message.\par
 
@@ -9972,7 +9918,7 @@ Compensation failure & Mark InterventionRequired, freeze dependent effects, page
 
 \begin{itemize}
 
-\item \textbf{Timeout hierarchy:} model/tool request \textbackslash{}< activity \textbackslash{}< child task \textbackslash{}< stage \textbackslash{}< overall run. A parent timeout must not silently abandon a still-running child.
+\item \textbf{Timeout hierarchy:} model/tool request < activity < child task < stage < overall run. A parent timeout must not silently abandon a still-running child.
 
 \item \textbf{Retry ownership:} exactly one layer owns retries for a given failure; otherwise SDK, gateway, queue, and workflow retries multiply.
 
