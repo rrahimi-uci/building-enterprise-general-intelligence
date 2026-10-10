@@ -94,13 +94,6 @@
       "vector": "assets/diagrams/dx-golden-path.pdf"
     },
     {
-      "id": "gateway-position",
-      "file": "assets/diagrams/gateway-position.png",
-      "sha256": "9abc8f1a3c4a1c4c8f2d16ef95a01150ef73e65b2a30579155fbe3a78b75ade3",
-      "source": "assets/diagrams/src/gateway-position.gv",
-      "vector": "assets/diagrams/gateway-position.pdf"
-    },
-    {
       "id": "gateway-roles",
       "file": "assets/diagrams/gateway-roles.png",
       "source": "assets/diagrams/src/gateway-roles.gv",
@@ -317,7 +310,7 @@
       "source": "assets/diagrams/src/supervisor-worker.gv",
       "vector": "assets/diagrams/supervisor-worker.pdf",
       "description": "Supervisor/worker with narrowed child grants, an explicit fan-in contract, and durable cancellation",
-      "sha256": "c4009fa0a6d7ecdd907b1e096d4cb6d7421c66a02e6349d85744e59d2aee578b"
+      "sha256": "c0f2d101eb6e854fc45f81ec193ab8286313c9d05c582d1407c7ed95f6b06292"
     },
     {
       "id": "system-overview",

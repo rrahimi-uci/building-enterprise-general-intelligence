@@ -4,6 +4,15 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Part V (Chapters 18–19, continuity review)
+
+- Chapter 18 defines the task lifecycle and owns the one TaskEnvelope: its eight field groups move in from Chapter 19, and the code becomes the tested `contracts#task` region (idempotent creation, depth and budget withdrawal, envelope-subset hook).
+- Handoff follows Chapter 11: `:handoff` proposes a pending OwnershipTransfer that only `:accept` commits. Plan revision belongs to Chapter 12 (`plans:revise` removed).
+- The duplicate capability-envelope proof leaves Chapter 18 (Chapter 21 owns it); the two pattern cards merge into "Supervisor/Worker at a glance"; Figure 18-1 uses the mortgage specialists.
+- Chapter 19 becomes the federated delta: the LLM Gateway material leaves (enforcement to Chapter 4, routing and metrics to Chapter 28), Figure 19-1 and `gateway-position` are retired, and A2ATaskEnvelope is deleted.
+- MCP mutations continue to the Tool Gateway; the A2A Gateway is related to Chapter 1's gateway table and to the Task Service; remote states map onto the pinned A2A 1.0.1 task-state names.
+- The artifact-adoption check moves from Chapter 6 into Chapter 19 as the tested `artifact-adoption` example, now with a content-hash check. The uncited MLflow MCP Registry version claim and untested adapter are removed.
+
 ### Part II (Chapters 4–6) continuity pass
 
 - Chapter 4 is now the book's map: it opens on the mortgage case and the Chapter 3 seam, uses the seven plane names in the tables and in Figure 4-1, maps Figure 1-3's bands onto them, renames layers so none is called "plane", and indexes every authoritative record to its owning plane and defining chapter.

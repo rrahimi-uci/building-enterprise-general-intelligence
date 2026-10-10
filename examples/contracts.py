@@ -10,10 +10,12 @@ from __future__ import annotations
 from datetime import datetime
 from decimal import Decimal
 from enum import IntEnum
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Callable, Literal
 
 from pydantic import (
     BaseModel, BeforeValidator, ConfigDict, Field, PlainSerializer, field_validator,
+
+
     model_validator,
 )
 
@@ -110,6 +112,78 @@ class PlanNode(BaseModel):
 class CandidatePlan(BaseModel):
     revision: int = Field(ge=1)
     nodes: tuple[PlanNode, ...] = Field(min_length=1, max_length=100)
+
+# --8<-- region:task
+class TaskEnvelope(BaseModel):
+    """The one child-task contract (Chapter 18), grouped as the field-group table."""
+
+    model_config = ConfigDict(frozen=True)
+
+    # Identity
+    task_id: str
+    run_id: str
+    parent_task_id: str | None = None
+    tenant_id: str
+    subject_id: str
+    owner_agent: str  # receiving agent@version
+    # Goal
+    goal: str
+    acceptance_contract: str
+    deadline: datetime
+    # Data and contract
+    input_artifact_ids: tuple[str, ...] = ()
+    output_schema: str
+    # Authority: the capability envelope this task may use (Chapter 21)
+    capability_grant_id: str
+    delegation_depth: int = Field(ge=0)  # further delegation levels allowed
+    # Budgets
+    maximum_cost_usd: Decimal = Field(ge=0)
+    # Reliability
+    idempotency_key: str
+    depends_on: tuple[str, ...] = ()
+    cancellation_parent_id: str | None = None
+    state_version: int = 0
+    # Observability
+    trace_context: str  # W3C traceparent
+
+
+SubsetCheck = Callable[[str, str], bool]  # (parent grant, child grant) -> provably narrower?
+
+
+class TaskConflict(Exception):
+    """An idempotency key was reused for a different task."""
+
+
+class TaskService:
+    def __init__(self, is_subset: SubsetCheck) -> None:
+        self._is_subset = is_subset
+        self._by_key: dict[tuple[str, str], TaskEnvelope] = {}
+        self._remaining: dict[str, Decimal] = {}
+
+    def create_child(self, parent: TaskEnvelope, child: TaskEnvelope) -> TaskEnvelope:
+        existing = self._by_key.get((child.run_id, child.idempotency_key))
+        if existing is not None:
+            if existing != child:
+                raise TaskConflict(child.idempotency_key)
+            return existing  # redelivery: same task, no second withdrawal
+        if (child.run_id, child.parent_task_id) != (parent.run_id, parent.task_id):
+            raise ValueError("child must name its parent task and run")
+        if (child.tenant_id, child.subject_id) != (parent.tenant_id, parent.subject_id):
+            raise PermissionError("tenant and subject cannot change")
+        if child.delegation_depth >= parent.delegation_depth:
+            raise PermissionError("delegation depth was not reduced")
+        if child.deadline > parent.deadline:
+            raise PermissionError("child deadline exceeds the parent's")
+        remaining = self._remaining.get(parent.task_id, parent.maximum_cost_usd)
+        if child.maximum_cost_usd > remaining:
+            raise PermissionError("budget exceeds the parent's remaining budget")
+        if not self._is_subset(parent.capability_grant_id, child.capability_grant_id):
+            raise PermissionError("capability envelope is not a subset of the parent's")
+        self._remaining[parent.task_id] = remaining - child.maximum_cost_usd
+        self._by_key[(child.run_id, child.idempotency_key)] = child
+        return child
+
+# --8<-- endregion:task
 
 
 # --8<-- region:platform

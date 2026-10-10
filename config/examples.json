@@ -11,20 +11,22 @@
   "examples": [
     {
       "id": "contracts",
-      "book_chapters": [3, 4],
+      "book_chapters": [3, 4, 18],
       "path": "examples/contracts.py",
       "language": "python",
       "title": "Provider-neutral agent-step and platform contracts",
       "verify": "test",
       "tests": [
-        "examples/tests/test_contracts.py"
+        "examples/tests/test_contracts.py",
+        "examples/tests/test_task_envelope.py"
       ],
       "libraries": [
         "pydantic==2.13.5"
       ],
       "regions": {
         "step": "The agent-step subset used in Chapter 3.",
-        "platform": "The run, artifact, and event contracts of the reference architecture."
+        "platform": "The run, artifact, and event contracts of the reference architecture.",
+        "task": "The child-task contract and the Task Service checks used in the multi-agent chapter."
       }
     },
     {
@@ -47,6 +49,20 @@
         "level-two": "Level two: a typed tool the model may request.",
         "level-three": "Level three: the same agent in a bounded loop."
       }
+    },
+    {
+      "id": "artifact-adoption",
+      "book_chapters": [19],
+      "path": "examples/federation/artifact_adoption.py",
+      "language": "python",
+      "title": "Adopting a remote artifact under local policy",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_artifact_adoption.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ]
     },
     {
       "id": "agent-tool-loop",
