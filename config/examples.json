@@ -11,20 +11,58 @@
   "examples": [
     {
       "id": "contracts",
-      "book_chapters": [3, 4],
+      "book_chapters": [3, 4, 18],
       "path": "examples/contracts.py",
       "language": "python",
       "title": "Provider-neutral agent-step and platform contracts",
       "verify": "test",
       "tests": [
-        "examples/tests/test_contracts.py"
+        "examples/tests/test_contracts.py",
+        "examples/tests/test_task_envelope.py"
       ],
       "libraries": [
         "pydantic==2.13.5"
       ],
       "regions": {
-        "step": "The agent-step subset used in the foundations chapter."
+        "step": "The agent-step subset used in Chapter 3.",
+        "platform": "The run, artifact, and event contracts of the reference architecture.",
+        "task": "The child-task contract and the Task Service checks used in the multi-agent chapter."
       }
+    },
+    {
+      "id": "prototype-levels",
+      "book_chapters": [1],
+      "path": "examples/foundations/capability_levels.py",
+      "language": "python",
+      "title": "Prototype sketch, deliberately without gateway or effect controls",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_capability_levels.py"
+      ],
+      "libraries": [
+        "openai==3.13.0",
+        "openai-agents==0.22.2"
+      ],
+      "regions": {
+        "demo": "The prototype that opens Chapter 1.",
+        "level-one": "Level one: a single model call.",
+        "level-two": "Level two: a typed tool the model may request.",
+        "level-three": "Level three: the same agent in a bounded loop."
+      }
+    },
+    {
+      "id": "artifact-adoption",
+      "book_chapters": [19],
+      "path": "examples/federation/artifact_adoption.py",
+      "language": "python",
+      "title": "Adopting a remote artifact under local policy",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_artifact_adoption.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ]
     },
     {
       "id": "agent-tool-loop",
@@ -448,6 +486,23 @@
       "libraries": [],
       "regions": {
         "core": "The logic the chapter teaches, without the supporting models."
+      }
+    },
+    {
+      "id": "context-manifest",
+      "book_chapters": [6],
+      "path": "examples/runtime/context_manifest.py",
+      "language": "python",
+      "title": "One sealed ContextManifest per agent step",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_context_manifest.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ],
+      "regions": {
+        "core": "The logic the chapter teaches, without the imports."
       }
     },
     {

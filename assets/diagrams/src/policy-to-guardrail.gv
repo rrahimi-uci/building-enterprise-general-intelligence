@@ -1,6 +1,7 @@
-// Figure 5-2 — Extract, prove, project.
+// Figure 5-2 — Extract, prove, approve, project.
 // Message: extraction is probabilistic and verification is not, so the gate in
-// the middle is the load-bearing part. Ungrounded claims leave the pipeline.
+// the middle is the load-bearing part. Ungrounded claims leave the pipeline, and
+// an accountable owner approves the interpretation before it is enforced.
 digraph policy_to_guardrail {
   rankdir = TB
   graph [ranksep=0.30, nodesep=0.35]
@@ -11,14 +12,16 @@ digraph policy_to_guardrail {
   prove [label="Grounded in\nthe corpus?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond,
          style=filled, height=1.1, width=2.0]
   reject [label="Rejected\ncitation not supported", fillcolor="#FCECEC", color="#A62C2C"]
+  approve [label="Approve\neligible owner accepts", fillcolor="#FFF4DF", color="#8A5600"]
   project [label="Project\nDMN · graph · rule", fillcolor="#EAF3FB", color="#1450A3", style=filled]
-  guard [label="Guardrail at the\neffect boundary", fillcolor="#FCECEC", color="#A62C2C", style=filled]
+  guard [label="Enforced rule at the\neffect boundary", fillcolor="#FCECEC", color="#A62C2C", style=filled]
   action [label="Governed action", fillcolor="#F7ECF8", color="#6A2E6E"]
 
   policy -> extract [label="  language model  "]
   extract -> prove [label="  claim + citation  "]
   prove -> reject [label="  no  ", color="#A62C2C", fontcolor="#A62C2C"]
-  prove -> project [label="  yes  ", color="#0D6E69", fontcolor="#0D6E69"]
+  prove -> approve [label="  yes  ", color="#0D6E69", fontcolor="#0D6E69"]
+  approve -> project [label="  rule version recorded  "]
   project -> guard [label="  enforceable  "]
   guard -> action [label="  permitted  "]
 

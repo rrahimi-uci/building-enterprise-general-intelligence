@@ -293,11 +293,11 @@
       "source": "policy-to-guardrail.gv",
       "pixels": [
         2322,
-        2798
+        3195
       ],
       "effective_dpi": 339,
       "vector": true,
-      "sha256": "5d1cb1313d1705c377a62c1243880f2a5d49a839820edc8a9faebeef2cb17a97"
+      "sha256": "8ad5b9c498355dbe4478a06e38f1f584775f978706286dd479a37205a7a44eb2"
     },
     {
       "id": "portability",
@@ -314,23 +314,23 @@
       "id": "reference-architecture",
       "source": "reference-architecture.gv",
       "pixels": [
-        4148,
-        2780
+        4209,
+        2789
       ],
-      "effective_dpi": 606,
+      "effective_dpi": 614,
       "vector": true,
-      "sha256": "57ce2db42d428b7acb30753e01af7ac53458738ffbed88b1e307516da1810ab1"
+      "sha256": "95df05d1ce386fe3a7358366341274e307d10056d3af66529f7f5573bb558f94"
     },
     {
       "id": "request-sequence",
       "source": "request-sequence.mmd",
       "pixels": [
         2055,
-        1365
+        1210
       ],
       "effective_dpi": 300,
       "vector": true,
-      "sha256": "9a3b07d4bf51c402d678f77c2eef298fc1d3f72ae26069a61adde8ea0e7f38f5"
+      "sha256": "9e8f2e8e8247be23bba33ce664f15a84a13e932ca5a80ba3b51858f584c3c03c"
     },
     {
       "id": "release-recovery",
