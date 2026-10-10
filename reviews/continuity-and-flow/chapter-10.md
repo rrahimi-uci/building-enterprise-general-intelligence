@@ -9,7 +9,7 @@ The chapter is short and on-thesis. Its central idea is clear and correct: the l
 1. **The disposition list mixes two kinds of outcome, and one sentence contradicts itself.** § Acceptance and failure semantics (`:49`) lists six dispositions. Some are model decisions (answer, needs_input, delegate, proposed_action). Others are controller outcomes (budget_exhausted, failed). The next sentence says a mutation "never executes inside the unconstrained loop". Two sentences later it says "If a mutation times out, the loop stops." The code contract does not match either: `AgentDecision.disposition` is `answer | needs_input | invoke_tool | delegate` (`examples/contracts.py:28`), and `ReActEngine` raises `RuntimeError` rather than returning `budget_exhausted` or `failed`.
 2. **"Stop" and "accept" are conflated.** `:41` says "the decision to stop belongs to the acceptance engine". But the controller stops on limits and no-progress (`:45`, `:53`). The acceptance engine decides whether an answer is accepted. Ch 13 later separates these roles cleanly. Ch 10 should not blur them first.
 3. **The "How ReAct works in practice" card mostly repeats the prose.** About 70% of it restates `:23–53`. Its unique content is the five-step loop, the context-poisoning control, and the signal list. The five-step loop is the only ordered description of the mechanism, and it sits 40 lines below the figure it explains. ReAct is also the one Part IV pattern that really is described four times: prose, card, P-01, and Appendix A item 2.
-4. **The transition from Part III is missing.** Ch 09 closes on "The platform and capability model are complete". Ch 10 never mentions Skills, the Tool Gateway, or the AgentRuntime seam, although its "small eligible tool set" (`:89`) is exactly what Ch 08 resolution and the Ch 02 Tool Gateway produce.
+4. **The transition from Part III is missing.** Ch 09 closes on "The platform and capability model are complete". Ch 10 never mentions Skills or the AgentRuntime seam, and names the Tool Gateway only once, inside the card's step 3 (`:83`), although its "small eligible tool set" (`:89`) is exactly what Ch 08 resolution and the Ch 02 Tool Gateway produce. [verified: corrected — the review said the Tool Gateway is never mentioned; it is, at `:83`]
 
 Lesser issues: "information gain" is used but never defined; the capacity guidance appears twice (`:53`, `:57`); the COMMON PITFALL is misplaced; there is a generic EVIDENCE BOUNDARY box; the two examples run back to back without lead-ins.
 
@@ -91,7 +91,7 @@ Lesser issues: "information gain" is used but never defined; the capacity guidan
   - `bounded-react-loop` is an OpenAI Agents SDK version in which the tool refuses after a budget.
   - `react-engine#core` is the framework-neutral controller the chapter describes.
   - The reader is not told why there are two.
-  - `react-engine` executes every `invoke_tool` decision, including any mutation (it passes a `logical_effect_key`). It also raises on budget and no-progress instead of returning typed outcomes. Both contradict `:49`.
+  - `react-engine` hands every `invoke_tool` decision, including one carrying a `logical_effect_key` (a mutation), to the injected `invoke_tool` callable; neither the engine nor its tests distinguish a read from a mutation or return a mutation as a proposal, so the `:49` rule is left to whatever callable is injected rather than enforced by the controller the chapter describes. It also raises `RuntimeError` on budget, turn limit, and no-progress instead of returning typed outcomes, which does contradict `:49`. [verified: softened — the mutation point is "not enforced", not a direct contradiction; the raise-versus-typed-outcome point is confirmed against `examples/patterns/react_engine.py:81–104` and `test_react_engine.py:46–64`]
 
 **§ If this fails in production (`:125`).**
 - *Verdict:* good, and specific to the chapter.
@@ -246,7 +246,7 @@ Lesser issues: "information gain" is used but never defined; the capacity guidan
 - **Change:**
   - Delete the `:21` H2 heading and keep its paragraph as unheaded chapter-intro text.
   - Drop its last sentence, which restates the design-choice box.
-  - Move the state-owner table (`:33–35`) to after § Keep the feedback loop inside external limits' first paragraph, or drop it per the book-wide decision on that table (map §5.1).
+  - Move the state-owner table (`:33–35`) to after § Keep the feedback loop inside external limits' first paragraph. [verified: the "or drop it" option is resolved to "keep" by overall-book-review.md §D-30(b)]
   - Apply the same treatment to Ch 11–13 (C11-R09, C12-R09, C13-R09).
 - **Related:** map §5.1 "Double why opening".
 
@@ -259,7 +259,7 @@ Lesser issues: "information gain" is used but never defined; the capacity guidan
 **C10-R10 — Priority: Low — Action: Rewrite**
 - **Location:** `04-part-iv.md:59–65`, § What the evidence lets us conclude.
 - **Issue:** the generic EVIDENCE BOUNDARY box, and R13 cited without a claim.
-- **Change:** delete the box; the `:11` evidence context already scopes R01. Change the source line to "The discussion above draws on R01." Drop R13 from this chapter unless a sentence is tied to its scope (R13 stays cited elsewhere).
+- **Change:** delete the box; the `:11` evidence context already scopes R01. Change the source line to "The discussion above draws on R01." Drop R13 from this chapter unless a sentence is tied to its scope (R13 stays cited in Ch 01, 04, 12, 13, 25, and 26, so the registry invariant holds).
 - **Related:** C11-R10, C12-R10, C13-R10 (same treatment).
 
 **C10-R11 — Priority: Medium — Action: Condense (requires Ch 16/17 owner)**
@@ -282,10 +282,29 @@ Lesser issues: "information gain" is used but never defined; the capacity guidan
 **C10-R13 — Priority: Low — Action: Rewrite (book-wide T1)**
 - **Location:** "Northstar" at `04-part-iv.md:45`, `:195`, `:410`, `:672`, `:674`.
 - **Issue:** two names for one platform (map §6 T1).
-- **Change:** apply the book-wide T1 decision. If Northstar is dropped, use "Harborlight's platform" or "the platform". This one item covers all of Ch 10–13, so it is not repeated in the other files.
+- **Change:** apply the book-wide T1 decision, which overall-book-review.md §D-20 resolves to "drop Northstar": use "Harborlight's platform" or "the platform". This one item covers all of Ch 10–13, so it is not repeated in the other files. [verified: the five locations are exact; the two further Part IV occurrences, `:882` and `:1146`, belong to Ch 14–15]
 
 **C10-R14 — Priority: Low — Action: Cross-reference** *Added in reconciliation (see overall-book-review.md §D-29).*
 - **Location:** End of § If this fails in production.
 - **Issue:** Same request as C05-R16.
 - **Change:** Add one line: "If limits reset at each delegation hop or every layer retries, see AP-11 and AP-04 in Chapter 17."
 - **Related:** C17-R03, C10-R09.
+
+## Verification log
+
+- **Line references checked:** 78 (every `:n` in this file, plus the Ch 16/17, Appendix A, Ch 01–03, Ch 22, and Ch 28 pointers). Fixed: 0. All resolved within ±3 lines.
+- **Claims removed:** none.
+- **Claims softened:**
+  - "`react-engine` executes every `invoke_tool` decision, including any mutation … contradict `:49`" → the engine does not enforce the read/mutation split; whether a mutation executes depends on the injected `invoke_tool` callable. The raise-instead-of-typed-outcome point stands.
+  - "Ch 10 never mentions … the Tool Gateway" → it is named once, in card step 3 (`:83`); Skills and AgentRuntime are genuinely absent from `:9–160`.
+- **Claims confirmed (most consequential):**
+  - `:49` lists six dispositions mixing model decisions and controller outcomes; `AgentDecision.disposition` is `answer | needs_input | invoke_tool | delegate` (`examples/contracts.py:28`); `ReActEngine.run` raises `RuntimeError` for tool-call budget, no-progress, and turn limit (`react_engine.py:82`, `:103`, `:104`), and `test_react_engine.py` asserts those raises.
+  - `:41` "the decision to stop belongs to the acceptance engine" is verbatim; `pattern-react.gv` has the edge `obs -> acc [label=" stop?"]`.
+  - "information gain" appears only at `:112`, `:145`, `:154` (and Appendix B `09-appendices.md:42`); no definition anywhere in the book.
+  - ReAct is described four times: prose, card (`:71`), P-01 (`:1377–1383`), Appendix A item 2 and row "Reasoning" (`09-appendices.md:13`, `:24`).
+  - `01-part-i.md:450` sends "Acceptance criteria" to "Chapters 10 and 12".
+  - Cost metric drift: `:53` "turns per successful outcome", `:57` "cost per *completed task*", Ch 28 "cost per verified successful outcome" (`08-part-viii.md:495`).
+  - R13 (NIST AI 600-1, scope "cross-sector generative-AI risk considerations") is tied to no sentence in `:9–160`.
+  - AP-11 at `:1560` is the composition argument; Ch 03 § One retry owner (`01-part-i.md:1184`) and AP-04 (`:1707`) exist as cited.
+- **Recommendations amended:** C10-R08 (state-owner "or drop" resolved to keep per D-30(b)); C10-R13 (Northstar resolved to drop per D-20); C10-R10 (named where R13 stays cited).
+- **Not verifiable here:** the "about 70%" card-overlap estimate (a judgement; the three unique items listed are accurate), the "five earlier pre-teachings" of unknown effect (depends on the concept map, not checked), and the "map T6 five names" count.

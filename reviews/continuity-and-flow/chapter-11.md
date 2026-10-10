@@ -16,7 +16,7 @@ The chapter's thesis is valuable and stated well in § Routing and handoff are d
    The reader cannot tell whether the SDK primitive they will actually use is a Ch 11 handoff.
 2. **Figure 11-1 omits the chapter's key step.** The prose says the eligible set is assembled *before* classification (`:193`, `:226`, checklist `:347`). The diagram (`pattern-routing.gv`) shows Request → Classify → Specialist → Policy, with no eligibility stage.
 3. **Two pattern cards, an anti-pattern list, and a design-review question all restate the same controls.** The § Anti-patterns bullets (`:203–206`) duplicate the failure tables (`:247–249`, `:291–293`). Routing Q4 (`:369`) duplicates the routing signals list (`:253–258`).
-4. **Implementation is thin and in the wrong form.** There is no implementation section. The handoff protocol has no record definition here (Ch 18's `OwnershipTransfer` has different fields). The inline "Deterministic route validation" excerpt is not registered under `examples/`: `Route` lacks `@dataclass`, five imports are unused, and it uses an integer `risk`, a third risk representation alongside "R1" (Ch 12) and 0–4 (`plan_compilation.py`).
+4. **Implementation is thin and in the wrong form.** There is no implementation section. The handoff protocol has no record definition here (Ch 18's `OwnershipTransfer` has different fields). The inline "Deterministic route validation" excerpt is not registered under `examples/`: `Route` lacks `@dataclass`, every import is unused (all five import lines, seven names, including the `dataclass` that is imported but never applied), and it uses an integer `risk`, a third risk representation alongside "R1" (Ch 12) and 0–4 (`plan_compilation.py`). [verified: corrected — "five imports" undercounted; `:314–319` import seven names and none is used]
 
 "Model routing" (`:234`) also collides with Ch 19's model routing. And "run envelope" (`:193`) is one of five names for the capability envelope (map T6).
 
@@ -55,14 +55,14 @@ The chapter's thesis is valuable and stated well in § Routing and handoff are d
 - *Verdict:* the content is right, but the heading covers only the first paragraph. The second paragraph (`:195`) is the chapter's only prose description of the handoff record, and it sits under a routing heading.
 - *Issues:*
   - The figure contradicts the eligibility-first order.
-  - "run envelope" (T6) and "child capability envelope" / "cancellation lineage" are used before Ch 18 and Ch 21 (map §4 row 32), with no pointer.
+  - "run envelope" (T6) and "child capability envelope" / "cancellation lineage" are used here with no pointer to Ch 18 or Ch 21 (map §4 row 32). Ch 11 is not the first use, though: "capability envelope" already appears in Ch 01 (`01-part-i.md:404`) and Ch 03 (`:1088`), and "cancellation lineage" in Ch 03's bounds table (`:1045`); Ch 21 defines the envelope (`06-part-vi.md:424`), and "cancellation lineage" is never defined anywhere. [verified: softened — the terms predate Ch 11; the missing pointer stands]
   - There is no link to Ch 08 § Discovery is not permission, which is the same principle.
 
 **§§ Confidence and fallback (`:197`).**
 - *Role:* low-confidence behavior.
 - *Adds:* calibration on a versioned dataset; clarify / safe default / human triage; for privileged routes, both eligibility and exact authorization.
 - *Verdict:* good and specific.
-- *Issues:* "human triage" is the first Part IV appearance of a human queue, which is a natural forward pointer to Ch 14 that is not taken.
+- *Issues:* "human triage" (already named at `:193` in the router's target list, and here as the fallback) is the first Part IV appearance of a human queue, which is a natural forward pointer to Ch 14 that is not taken. [verified: corrected — the first occurrence is `:193`, not `:199`]
 
 **§§ Anti-patterns (`:201`).**
 - *Role:* a local anti-pattern list.
@@ -95,7 +95,7 @@ The chapter's thesis is valuable and stated well in § Routing and handoff are d
 **§ A sensible place to start (`:304`) / §§ Deterministic route validation (`:309`).**
 - *Verdict:* this is where the conflict is most visible.
   - `[[EXAMPLE:routing-handoff]]` shows an SDK triage agent with `handoffs=[…]`. That is routing implemented *as* a framework handoff, the conflation the chapter warns against. It has no ownership record, acknowledgment, or authority narrowing.
-  - The inline excerpt shows envelope checking but not eligibility-before-classification or fallback. It is inline code, against the AGENTS.md rule, and has defects (no `@dataclass`, unused imports `hashlib`, `json`, `Awaitable`, `Callable`, `Protocol`, `AgentDecision`; integer risk).
+  - The inline excerpt shows envelope checking but not eligibility-before-classification or fallback. It is inline code, against the AGENTS.md rule, and has defects (no `@dataclass`, unused imports `hashlib`, `json`, `dataclass`, `Awaitable`, `Callable`, `Protocol`, `AgentDecision`; integer risk). [verified: corrected — `dataclass` added to the unused list]
 - *Issues:* the empty H2 wrapper.
 
 **§ If this fails in production (`:339`).** Steps 1–2 are good. Step 3 ("Verify ownership and cancellation after a handoff") is vague: verify what? It should say "check that the old owner remained accountable until the recipient's acknowledgment was recorded".
@@ -154,9 +154,9 @@ The chapter's thesis is valuable and stated well in § Routing and handoff are d
 | Router component | Routing card | Ch 18 Router row (`05-part-v.md:94`); topology "Router + specialists" (`:68`) | **Reinforcement.** Ch 18 places the router in a topology. A pointer from Ch 18 to Ch 11 is enough (Ch 18 owner). |
 | Eligibility-first selection | `:193` | Ch 19 § Filter for policy before optimizing cost or quality (`05-part-v.md:587`) | **Reinforcement:** the same principle applied to a different subject (work versus model). Cross-reference both ways; do not merge. |
 | Ownership transfer across protocol boundaries | — | Ch 19 § Two protocols, two responsibilities (A2A "Transfers to the peer") and § Ownership and failure rules | **Reinforcement.** Ch 19 is the federated case of Ch 11's handoff. Ch 19 should cite Ch 11 (Ch 19 owner). Ch 11 should not mention A2A beyond a pointer (and drop R07). |
-| Handoff by chat | `:204` | AP-08 (`04-part-iv.md:1821`); P-06 (`:1427`) | **Reinforcement.** Point to AP-08. **Requires Ch 16/17 owner:** P-06 should cite Ch 11 for the ownership-transfer protocol as well as Ch 18. |
+| Handoff by chat | `:204` | AP-08 (`04-part-iv.md:1821`); P-06 (`:1427`) | **Reinforcement.** Point to AP-08. **Requires Ch 16/17 owner:** P-06 should cite Ch 11 for the ownership-transfer protocol (P-06 currently names no chapter at all; its "TaskEnvelope, one owner … deterministic join" design is Ch 18's). [verified: corrected — P-06 does not cite Ch 18 either] |
 | Privilege through selection / catalog exposure | `:205` | AP-12 (`:1691`); Ch 08 § Discovery is not permission | **Reinforcement.** Point to AP-12 and Ch 08. |
-| Pattern catalog coverage | Routing and Handoff cards | Ch 16 has no routing or handoff P-card; Appendix A has no routing row (map §8) | **Gap, not duplication.** **Requires Ch 16/17 owner:** either add one P-card ("Eligibility-first routing with acknowledged handoff") or note in Ch 16's intro that the Ch 10–15 at-a-glance cards are the catalog entries for those patterns. Appendix A should gain a routing/handoff row pointing to Ch 11 and AP-08/AP-12. |
+| Pattern catalog coverage | Routing and Handoff cards | Ch 16 has no routing or handoff P-card; Appendix A has no routing row (map §8) | **Gap, not duplication.** **Requires Ch 16/17 owner:** overall-book-review.md §D-04 resolves this: no new P-card; routing and handoff get an obligation-table row (C16-R10), and the chapter cards retitled "at a glance" are the canonical summaries. Appendix A should gain a routing/handoff row pointing to Ch 11 and AP-08/AP-12. [verified: the two options offered here are superseded by D-04] |
 | Glossary | — | Appendix H "Handoff: Explicit transfer of interaction or task ownership" (`09-appendices.md:213`) | Consistent with Ch 11; keep. |
 
 ## Structural Recommendations
@@ -283,3 +283,24 @@ The chapter's thesis is valuable and stated well in § Routing and handoff are d
 - **Issue:** `RouteDecision` versus `RoutingDecision` (Ch 04 `02-part-ii.md:42`, Ch 20 `06-part-vi.md:77`), and `Handoff` versus `OwnershipTransfer` (Ch 18).
 - **Change:** use `RoutingDecision · OwnershipTransfer · CapabilityEnvelope`.
 - **Related:** Ch 18 record alignment (Ch 18 owner).
+
+## Verification log
+
+- **Line references checked:** 96 (every `:n` in this file, plus the Ch 03, Ch 18, Ch 19, Ch 04, Ch 20, Ch 16/17, Appendix A/H, example, and diagram pointers). Fixed: 1 (first "human triage" is `:193`, not `:199`). All others resolved within ±3 lines.
+- **Claims removed:** none.
+- **Claims softened:**
+  - "child capability envelope / cancellation lineage are used before Ch 18 and Ch 21" → both terms already appear in Ch 01/Ch 03; the missing forward pointer stands, and "cancellation lineage" has no definition anywhere.
+  - Catalog-coverage row: the "add a P-card or note in Ch 16's intro" options are superseded by D-04 (obligation-table row, C16-R10).
+- **Claims corrected:**
+  - Unused imports in the inline excerpt: all seven imported names (`hashlib`, `json`, `dataclass`, `Awaitable`, `Callable`, `Protocol`, `AgentDecision`) are unused, not five.
+  - P-06 cites no chapter at all (the review implied it cites Ch 18).
+- **Claims confirmed (most consequential):**
+  - Ch 03 `01-part-i.md:1163` "control changes locally but the same activity remains accountable" and `:1166` "A local handoff must not silently transfer authority" are verbatim; `routing_handoff.py:3` says "A handoff is an authority transfer"; the example uses `handoffs=[…]` with no ownership record or acknowledgment, and `test_routing_handoff.py:16` asserts only `last_agent.name`.
+  - Ch 18 `:78` "atomically transfer the conversation owner" and `:104` `:handoff` "Atomically transfer owner" carry no acknowledgment step; `OwnershipTransfer` (`05-part-v.md:138`) has no obligations, deadline, or acknowledgment state; Ch 18 Q `:377` says "conversational control transfer".
+  - `pattern-routing.gv` is `req -> cls -> {s1,s2,fb}`, `cls` labeled "Classify\nintent · risk · confidence", with no eligibility node; `:193`, `:226`, `:347` all put eligibility first.
+  - `RouteDecision` (`:187`) vs `RoutingDecision` (`02-part-ii.md:42`, `06-part-vi.md:77`): confirmed; `RouteDecision` appears nowhere else in the book.
+  - Ch 16 P-01…P-12 contain no routing or handoff card; Appendix A's table has no routing row (its "Orchestration" row cites 11–15).
+  - R29's registry scope includes "handoffs"; the SDK is never named in Ch 11 prose (`:162–374`); R07 stays cited in Ch 08 and Ch 19 if dropped here.
+  - "model routing" at `:234` collides with Ch 19's "Model routing" row (`05-part-v.md:572`).
+- **Recommendations amended:** the catalog-coverage row (D-04). C11-R08 was already reconciled (D-08). No other change.
+- **Not verifiable here:** "one of five names for the capability envelope (map T6)" (map count not checked; four variants were found in the source: run envelope, authority envelope, capability envelope, child capability envelope).

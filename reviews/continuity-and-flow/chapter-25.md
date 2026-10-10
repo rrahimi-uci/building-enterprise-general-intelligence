@@ -17,8 +17,8 @@ The chapter loses shape after the worked example. The brief asked whether the la
 
 | Section | Verdict |
 | --- | --- |
-| § Close the loop… | Substantive and canonical. Its cells are telegraphic and use six record names that are never defined (ObservationRecord, DetectionEvent, LearningRecord, ValidationReport, PromotionDecision, causal hypothesis). It previews itself at `:253–257`, 130 lines earlier. It never walks the Harborlight regression through its stages. |
-| § Separate runtime adaptation from offline improvement | **Underdeveloped.** One dense sentence pair carries one of the book's top invariants. It has no example, no test the reader can apply, and no link to Ch 13's in-run revision loop, Ch 06 memory writes, Ch 28 degradation, or Ch 23 kill switches. Its figure disagrees with its prose. |
+| § Close the loop… | Substantive and canonical. Its cells are telegraphic and use six record names that this chapter never defines (ObservationRecord, DetectionEvent, LearningRecord, ValidationReport, PromotionDecision, causal hypothesis); five are defined nowhere in the book, while PromotionDecision is defined in Ch 27's records table (`08-part-viii.md:313`). It previews itself at `:253–257`, 130 lines earlier. It never walks the Harborlight regression through its stages. [verified: corrected — PromotionDecision has a definition in Ch 27] |
+| § Separate runtime adaptation from offline improvement | **Underdeveloped.** One dense sentence pair carries one of the book's top invariants. It has no example, no test the reader can apply, and no link to Ch 13's in-run revision loop, Ch 06 memory writes, Ch 28 degradation, or Ch 23 kill switches. Its figure's runtime lane does not match its prose list. [verified: softened — the lists differ; see the section review] |
 | § Choose the right improvement path | Unique and useful. It lacks one sentence telling the reader how to use it. |
 | § Measure both the outcome and the path | **Redundant.** It repeats § Judge the outcome and the path separately (concept), the evidence context (vendor list), and Ch 24's scorecard (metrics), and adds only the sentence "no framework score is release authority". |
 | § Automate only when regressions are contained | **Redundant in its first half** (it restates the Learn stage, the BEST PRACTICE box, and `:337–339`). **Unique in its second half**: the require-human list and the prohibit list. The heading does not describe the content. |
@@ -26,8 +26,8 @@ The chapter loses shape after the worked example. The brief asked whether the la
 Three structural problems sit around these sections:
 
 1. § A workable implementation (`:341–381`) sits between the worked example and the loop. Half of it is Ch 24's telemetry infrastructure.
-2. Ch 13's run-level evaluator and this chapter's release-level evaluation are never distinguished. As a result, the judge-discipline rules are restated six times in this chapter (`:269`, `:288–293`, `:319`, `:443`, `:447–449`, `:489`), on top of Ch 13's four.
-3. The MLflow material is honest and pinned. But the evaluation example reports *means only*, which is the failure the chapter warns against. The trajectory example checks "authorized trajectory" with a model judge, which contradicts the chapter's rule that authorization is checked deterministically. Neither example demonstrates the mortgage case's slice regression.
+2. Ch 13's run-level evaluator and this chapter's release-level evaluation are never distinguished. As a result, the judge-discipline rules are restated six times in this chapter (`:269`, `:288–293`, `:319`, `:443`, `:447–449`, `:489`), on top of Ch 13's several statements (`04-part-iv.md:661`, `:672–674`, `:829`, `:842–845`). [verified: corrected — "Ch 13's four" undercounted; Ch 13 states the rule in prose, checklist, and three review questions]
+3. The MLflow material is honest and pinned. But the evaluation example reports *means only*, which is the failure the chapter warns against. The trajectory example's only scorer that touches authorization is a model judge whose instruction asks whether tool calls stay "within the authorized trajectory"; its docstring positions the judge as evidence that "cannot override authorization… invariants", so it does not contradict the rule as a gate, but the example ships no deterministic authorization check at all. Neither example demonstrates the mortgage case's slice regression. [verified: softened — "contradicts" overstated; the module docstring already subordinates the judge]
 
 ## Intended Reader Mental Model
 
@@ -76,7 +76,7 @@ The text delivers What, Why, and the gate well. The Ch 13 relationship, the runt
 - *Role:* eval-case anatomy and MLflow capability.
 - *Adds:* `:275` (case inputs, fixtures, allowed and forbidden tools, budgets, failure injections, slice tags; result contents) is the most concrete definition in the chapter.
 - *Issues:*
-  - `:273` is the third statement of averages-hide-regressions (after the box and `:241`; `:265–268` is the fourth).
+  - `:273` is the fourth statement of averages-hide-regressions (after the box `:230`, `:241`, and `:265–268`). [verified: corrected — the order was inverted; `:265–268` precedes `:273`]
   - `:277` (MLflow 3.15.x features, the 3.15.2 pin) is product detail inside a conceptual section and duplicates the evidence row at `:442`. Its feature claims ("adds immutable evaluation-dataset versions and scorer ensembles") exceed R21's recorded scope ("Pins the reproducibility baseline").
 - See C25-R10, C25-R12.
 
@@ -128,7 +128,7 @@ The text delivers What, Why, and the gate well. The Ch 13 relationship, the runt
 - *Verdict:* underdeveloped relative to its weight. It is the subject of checklist item 1 and Q2.
 - *Issues:*
   - **Missing content:** a test the reader can apply; a Harborlight example; the relation to Ch 13 (in-run revision improves an *artifact* and is runtime), to Ch 06 (a memory write within policy is a governed runtime data effect, while changing memory policy is offline), and to Ch 28 degradation and Ch 23 kill switches (runtime controls inside the envelope).
-  - **Figure 25-3 versus prose.** The runtime lane says "Retrieve more context, Retry within budget, Escalate to a human". The prose says "reduces optional context, sheds load, stops a loop…". The figure's key message, the dashed arrow "evidence, not a change", is never stated in prose.
+  - **Figure 25-3 versus prose.** The runtime lane says "Retrieve more context, Retry within budget, Escalate to a human" (`runtime-offline.gv:13–15`). The prose says "selects only pre-approved routes/fallbacks, reduces optional context, sheds load, stops a loop, asks for input, escalates, or rolls back". Only "Escalate" appears in both; "Retrieve more context" has no counterpart and points the opposite way from "reduces optional context"; "Retry within budget" is absent from the prose. The figure's key message, the dashed arrow "evidence, not a change" (`:28`), appears nowhere in the book's prose (grep). [verified: made precise]
   - **Order.** The section belongs *before* the loop: first establish what may change without a release, then describe the loop that governs everything else.
 - See C25-R03, C25-R04.
 
@@ -165,7 +165,7 @@ The text delivers What, Why, and the gate well. The Ch 13 relationship, the runt
   - The H2 is empty and neither example has a lead-in.
   - `mlflow-evaluation` returns `…/mean` only, with no slices or baseline. That is the "average" the chapter warns about, and the text should say so.
   - `mlflow-trajectory-evaluation`'s `no_unknown_effects` reads the `effect.state` span attribute, which Ch 24 must name (C24-R02).
-  - Its `tool_trajectory_judge` asks a model whether tool calls stay "within the authorized trajectory". By the chapter's own rule, authorization is a deterministic check.
+  - Its `tool_trajectory_judge` asks a model whether tool calls stay "within the authorized trajectory" (`mlflow_trajectory_evaluation.py:45–48`). By the chapter's own rule, authorization is a deterministic check; the example's docstring says the judge "cannot override authorization… invariants", but no deterministic scorer in the example checks authorization, so the judge is the only one that does. The test (`test_mlflow_trajectory_evaluation.py`) only asserts the judge's name and template variable. [verified: softened and made precise]
   - No example shows the worked example's forbidden-tool slice regression.
 - See C25-R11.
 
@@ -243,7 +243,7 @@ The text delivers What, Why, and the gate well. The Ch 13 relationship, the runt
 | Ch 07 Figure 7-5 and § Test the contracts before you test the model (`03-part-iii.md:112–116`) | Test pyramid (4 tiers) | D with drift | Ch 25 owns the single test-layer table (C25-R06). The Ch 07 review keeps its figure as a summary, captioned or pointed to Ch 25. |
 | Ch 07 golden path "Evaluate" / "Improve" rows (`03-part-iii.md:104`, `:108`) | Eval and improvement in the developer path | R | Keep. |
 | Ch 24 § A scorecard operators can actually use (`07-part-vii.md:121–132`) | Metric catalog | D with `:432` | Ch 24 owns the catalog (C24-R02). Ch 25 deletes `:432` and references it (C25-R05). |
-| Ch 24 `:139`, `:147`, `:149–150`, Required-analysis cells | Grader calibration, eval queues, slices, leakage | Misplaced in Ch 24 | Ch 25 owns them. Ch 24 removes them (C24-R08). The eval-queue bullet moves to Ch 25's implementation (C25-R01). |
+| Ch 24 `:139`, `:147`, `:149–150`, Required-analysis cells | Grader calibration, eval queues, slices, leakage | Misplaced in Ch 24 | Ch 25 owns them. Ch 24 removes them (`:139` via C24-R07; the rest via C24-R08). The eval-queue bullet moves to Ch 25's implementation (C25-R01). [verified: corrected — `:139` is deleted by C24-R07, not C24-R08] |
 | Ch 25 § A workable implementation telemetry rows | Ch 24's implementation | Misplaced | Move to Ch 24 (C25-R01 / C24-R01). |
 | Ch 27 § Promotion and continuous-improvement loop "Learn" row and closing paragraph (`08-part-viii.md:262–264`); Ch 27 Q4 (`:455`) | Production evidence becomes a candidate, not a mutation | D | Ch 25 owns the learning loop. The Ch 27 review replaces the Learn row's explanation and Q4 with a reference to Ch 25 § Close the loop…. Ch 25's Deploy/Monitor rows point to Ch 27 for promotion mechanics (C25-R08). |
 | Ch 27 Q1/Q2 (`08-part-viii.md:453–454`) | Release bundle, rollback | D with Ch 25 Q4/Q5 | Ch 27 owns them. Ch 25 removes Q4/Q5 (C25-R13). |
@@ -328,7 +328,7 @@ Delete § Measure both the outcome and the path and the § Automate only when re
   - Delete the H2.
   - Move the sentence "Normalize all framework scores into a platform-owned EvaluationResult; no framework score is release authority" into § A safe improvement loop… after "it cannot override a protected invariant" (`:269`).
   - Delete the vendor survey (the evidence context `:226` already names the tools).
-  - Delete the metric list. Ch 24's scorecard absorbs the metrics only listed here (C24-R02). Add to the end of § Judge the outcome and the path separately paragraph 1: "Chapter 24's scorecard lists the outcome and trajectory metrics; here they are computed per case, per slice, against a baseline."
+  - Delete the metric list. Ch 24's scorecard absorbs the metrics only listed here (C24-R02, as amended: tool-selection precision/recall, argument correctness, plan adherence, faithfulness/unsupported-claim rate, retrieval relevance/precision/recall/freshness, retry amplification, reviewer fatigue, user satisfaction). Add to the end of § Judge the outcome and the path separately paragraph 1: "Chapter 24's scorecard lists the outcome and trajectory metrics; here they are computed per case, per slice, against a baseline." [verified: amended — named the full set so the deletion is lossless]
 - **Related:** C24-R02.
 
 **C25-R06 — Priority: High — Action: Merge**
@@ -345,7 +345,7 @@ Delete § Measure both the outcome and the path and the § Automate only when re
 - **Location:** case box (`:230`) and § Worked example — average improvement, protected-slice regression (`:321–339`).
 - **Issue:** "unauthorized LOS lookup" conflicts with the reader's Ch 21–22 model, where the gateway denies it. "Release graph" is undefined.
 - **Change:**
-  - Change "produces an unauthorized LOS lookup" to "attempts an LOS lookup outside the case's eligible tool set". Make the same change in the box.
+  - Change "produces an unauthorized LOS lookup" (`:324`) to "attempts an LOS lookup outside the case's eligible tool set". In the box (`:230`), change "introduces one unauthorized tool trajectory" to "introduces one attempted tool call outside the eligible set". [verified: amended — the box does not contain the "LOS lookup" phrase, so "the same change" needed its own wording]
   - After the table, add: "In production the Tool Gateway would deny the call, but the attempt is still a deterministic trajectory failure: the candidate's context or routing now pushes the model toward a forbidden action, and shipping it would turn a release defect into production denials and incidents that each depend on one control holding."
   - Replace "release graph" in the Diagnosis row with "release manifest" (T7). Add "(Chapter 24 § Debugging method)" to the same row.
   - Apply the same "release graph" fix to the evidence context (`:226`).
@@ -403,7 +403,7 @@ Delete § Measure both the outcome and the path and the § Automate only when re
   - **Lead-in under § MLflow trajectory evaluation:** "The deterministic `no_unknown_effects` scorer reads the `effect.state` attribute that Chapter 24's tool spans record; it is a release blocker. The judge and built-in scorers add quality evidence and cannot override it."
   - **Example change** (repository change; it needs an updated behavioural test and the `config/examples.json` entry unchanged):
     - add a deterministic `forbidden_tool_absent` scorer that fails when a trace contains a TOOL span whose name is outside the case's `expectations["eligible_tools"]`;
-    - reword `tool_trajectory_judge`'s instructions to judge necessity and efficiency only. Remove "stays within the authorized trajectory", which contradicts `:288–293` and `:443`.
+    - reword `tool_trajectory_judge`'s instructions to judge necessity and efficiency only. Remove "stays within the authorized trajectory", which asks a probabilistic judge to rule on an invariant that `:288–293` and `:443` reserve for deterministic checks. [verified: softened — see Overall Assessment item 3]
   - **Exercise 2:** change to "Add a deterministic scorer that fails any case whose trace attempts a tool outside its eligible set, then show that a candidate with a better mean still fails the gate on one slice."
 - **Related:** C24-R02 (the `effect.state` naming), C25-R07.
 
@@ -447,3 +447,35 @@ Delete § Measure both the outcome and the path and the § Automate only when re
 - **Location:** § A safe improvement loop starts with evidence, after `:269`.
 - **Issue:** the waiver outcome in Figure 25-1 and the gate API is unexplained.
 - **Change:** add one sentence: "A gate may return waiver-required for residual risk outside a protected invariant; the waiver is a Chapter 26 exception — scoped, owned, compensated, and expiring — never a way past a deterministic failure."
+
+## Verification log
+
+Second pass against `source/parts/07-part-vii.md:224–495`, the cited passages in Ch 04, 07, 13, 17, 22, 24, 26, 27, the `mlflow-evaluation` and `mlflow-trajectory-evaluation` examples and tests, `config/references.json` (R13, R20–R26), `config/examples.json`, `evaluation-gate.gv`, `learning-loop.gv`, `runtime-offline.gv`, `test-pyramid.gv`, and overall-book-review.md §11–§12.
+
+- **Line references checked:** 71. Fixed: 0 (Ch 27 Q4 is at `08-part-viii.md:456`, cited as `:455`; within tolerance, left).
+- **Claims removed:** none.
+- **Claims softened / corrected:**
+  - "Six record names that are never defined" → five; PromotionDecision is defined in Ch 27 (`08-part-viii.md:313`). Consistent with D-05, which gives PromotionDecision to Ch 27.
+  - "Ch 13's four" judge-rule statements → "several" (prose `:661`, `:672`, `:674`; checklist `:829`; questions `:842`, `:843`, `:845`).
+  - `:273` is the fourth, not the third, statement of averages-hide-regressions.
+  - Trajectory judge "contradicts" the deterministic-authorization rule → the judge is already subordinated by the module docstring; the real gap is that no deterministic scorer checks authorization (Overall item 3, § A sensible place to start, C25-R11).
+  - "Its figure disagrees with its prose" → the lists differ; only "Escalate" is shared.
+  - C25-R07: the case box does not say "LOS lookup"; gave it its own replacement wording.
+  - Cross-duplication row: Ch 24 `:139` is removed by C24-R07, not C24-R08.
+- **Important claims confirmed (evidence):**
+  - `mlflow_evaluation.py` `evaluate()` returns only `{scorer}/mean` (`:62–68`); DATASET has two cases, no slice tags, no baseline.
+  - `no_unknown_effects` reads `span.attributes.get("effect.state")` (`mlflow_trajectory_evaluation.py:30`).
+  - `tool_trajectory_judge` is a `make_judge` with the instruction "stays within the authorized trajectory" (`:43–50`).
+  - R21 `supports` = "Pins the reproducibility baseline used for book examples"; R20 covers "evaluation datasets, feedback, judges, systematic evaluation, and production monitoring". The `:277` sentence "Version 3.15.2 adds immutable evaluation-dataset versions and scorer ensembles" has no scoped source (C25-R12 stands).
+  - R23 (Phoenix) is cited only at `07-part-vii.md:11` (Ch 24); Ch 25's evidence context lists R20, R21, R22, R24, R25, R26.
+  - AgentDojo appears at `:314` and `09-appendices.md:140` with no entry in `config/references.json`.
+  - `learning-loop.gv:15` labels the node `Approve\nhuman`; the table row `:401` allows pre-approved low-risk classes to auto-approve.
+  - `evaluation-gate.gv:27,44–47` draws the waiver path; "waiver" appears in prose only inside the API row `:365` and the ReleaseGateDecision row `:380`.
+  - "release graph" appears three times book-wide (`:226`, `:334`, `09-appendices.md:155`) and never defined; T7 is ChangeBundle → ReleaseManifest → EnvironmentBinding → RunManifest.
+  - Capitalised "Feedback" appears only at `:263`; `mlflow.entities.Feedback` is the MLflow class the trajectory example imports.
+  - EvaluationResult is used in Ch 04 (`02-part-ii.md:44`), Ch 07 (`03-part-iii.md:58`), Ch 13 (`04-part-iv.md:666`), and Ch 25 (`:396`, `:430`); the records table defines EvalScore (`:379`). ValidationReport is used in Ch 07 (`:106`), Ch 20 (`06-part-vi.md:82`), Ch 25 (`:400`), and Ch 26 (`08-part-viii.md:27`, `:37`, `:57`) and defined nowhere.
+  - Seven bullets at `:297–303` versus nine rows at `:309–317`; `test-pyramid.gv` has four tiers (contract and unit, evaluation sets, scenario simulation, live canary).
+  - `:forkReplay` at `:366` versus Ch 04 `:fork` at `02-part-ii.md:169`.
+- **Recommendations amended:** C25-R05 (names the full metric set absorbed by Ch 24), C25-R07 (box wording), C25-R11 (judge rationale softened). C25-R08's record changes are consistent with D-05 (ObservationRecord, DetectionEvent, LearningRecord dropped; PromotionDecision recorded in Ch 27) and D-02; C25-R06 with D-11; the heading retitle in C25-R10 is in D-32. The example change in C25-R11 keeps code in `examples/` with a test, and the diagram changes in C25-R04/R08 go through the `.gv` sources; no invariant is broken.
+- **Not verifiable here:** the MLflow 3.15.2 feature claims at `:277` (need the release notes; C25-R12 option 1). Whether `make_judge` in MLflow 3.15.2 would actually run against a trace at evaluation time was not executed (the test deliberately avoids a provider call).
+- **Note for the synthesizer:** the `.gv` header comments for the three Part VII figures carry different figure numbers from the manuscript markers (see the Ch 24 verification log); fix the comments when C25-R04/R08 edit those files.

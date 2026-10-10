@@ -26,7 +26,7 @@ The chapter has, however, been assembled from at least three overlapping drafts,
 - **Two pipelines.** Ten stages at `:621–632` (evidence admission) and eight steps at `:694–701` (window composition), with different scopes and orders.
 - **Three ContextManifest shapes:** the record table (`:729`), JSON (`:739–755`), and Python (`:855–862`). They use three trust-label vocabularies, and a fourth appears at `:700`.
 - **Three state classifications:** "four kinds" (`:667`), an 8-row taxonomy (`:681–690`), and Q2's different "four" (`:940`).
-- **Memory in five places:** `:661–663`, the taxonomy rows (`:686–687`), the APIs (`:717–720`), the consistency bullet (`:762`), and the How Memory card (`:787–829`). The card restates `:663`'s obligation list almost word for word.
+- **Memory in five places:** `:661–663`, the taxonomy rows (`:686–687`), the APIs (`:717–720`), the consistency bullet (`:762`), and the How Memory card (`:787–829`). The card's first sentence (`:795`) restates `:663`'s obligation list in different words (the same seven items, plus "subject" and "retrieval authorization"). [verified: softened — was "almost word for word"; the lists match in content, not wording]
 
 There are also two unexplained code listings (`:834–910`, one of which belongs to Ch 19) and a 7-row Required-analysis table that restates the surrounding prose with an off-thread claims-handling example.
 
@@ -92,7 +92,7 @@ The reader should leave with:
 **§ Context assembly pipeline (`:692–701`).** *Role:* the second pipeline. *Verdict:* **D**; merge it into § How context is assembled. *Issues:*
 
 - Its unique content: section composition (steps 1–3, 5), a separate policy gate for memory (step 5), the segment-label vocabulary (step 7), and a manifest hash on the model span (step 8).
-- Its order conflicts with the 10-stage pipeline. Here "Remove duplicates, stale items…" is step 6, after retrieval, while the 10-stage pipeline fetches pinned versions at stage 4 and deduplicates at stage 6. Step 7 labels data after deduplication, while stage 5 classifies before.
+- Its order partly conflicts with the 10-stage pipeline: step 7 labels each segment after deduplication (step 6), while the 10-stage pipeline classifies and labels at stage 5, before deduplication at stage 6. [verified: removed — the claimed "dedup after retrieval" conflict is not one: both pipelines fetch first (stage 4 / steps 4–5) and deduplicate afterwards (stage 6 / step 6); the labeling order is the real difference]
 
 **§ A workable implementation (`:703`) / § Who should own each decision (`:705–707`).** *Role:* seven owning services. *Verdict:* useful. *Issues:*
 
@@ -194,7 +194,7 @@ Nothing else needs expanding. The chapter's problem is excess, not thinness.
 
 | Repeated concept | Locations | Verdict |
 | --- | --- | --- |
-| Context pipeline | `:621–632` vs `:694–701` | D with conflicting order; merge into the first |
+| Context pipeline | `:621–632` vs `:694–701` | D with partly conflicting order (labeling before vs after dedup) and different scope; merge into the first [verified: softened — see § Context assembly pipeline] |
 | ContextManifest shape | `:729`, `:739–755`, `:855–862` | D with drift; one schema in `examples/` |
 | Trust-label vocabulary | tiers 1–4 (`:647–652`); `instruction/user_input/enterprise_data/tool_result/memory` (`:700`); `"trust": "untrusted-content"` (`:749`); `trust_role` (`:851`) | D (map T19); one enum mapped to tiers |
 | State classification | "four kinds" (`:667`); 8-row taxonomy (`:681–690`); Q2's four (`:940`); checklist's eight (`:920`) | D; one source set |
@@ -210,7 +210,7 @@ Nothing else needs expanding. The chapter's problem is excess, not thinness.
 | § State taxonomy and storage (`:679–690`) | Ch 04 § Where each kind of state belongs (`:228–242`) | Partial D, on different axes | **Disagreement with the map** (which makes Ch 06 canonical and has it absorb Ch 04's table). Ch 04 keeps the physical-store table; Ch 06 keeps only the context sources and points to Ch 04 for stores (C06-R03, C04-R13) |
 | Workflow-state and durable-execution rows (`:684–685`); "canonical state wins" (`:663`) | Ch 15 § Durable state is more than chat history (`04-part-iv.md:1142–1148`), § Records worth preserving (`:1220–1231`) | D (Ch 15 owns the RunState) | Ch 15. Ch 06 owns only the RunStateProjection that context reads |
 | `GET /v1/runs/{run_id}/state` (`:714`) | Ch 15 `GET /v1/runs/{run_id}` (`04-part-iv.md:1211`); Ch 04 `:164` | D | Ch 15. Ch 06 refers to "the run projection (Chapter 15)" |
-| § Memory is not a bag of embeddings + § How Memory works in practice | P-04 (`04-part-iv.md:1407`, working/episodic/semantic/profile); AP-13; T-06; Appendix F #7 | P-04 taxonomy drift (map T18); AP-13 R | Ch 06's working/long-term taxonomy. The Ch 16 review aligns P-04 |
+| § Memory is not a bag of embeddings + § How Memory works in practice | P-04 (`04-part-iv.md:1413`, working/episodic/semantic/profile) [verified: corrected — was `:1407`, the "## Memory" heading; the taxonomy is at `:1413`]; AP-13; T-06; Appendix F #7 | P-04 taxonomy drift (map T18); AP-13 R | Ch 06's working/long-term taxonomy. The Ch 16 review aligns P-04 |
 | § How context is assembled | P-03 runtime flow "retrieval → policy" (`04-part-iv.md:1401`) | Contradiction | Ch 06. The Ch 16 review fixes P-03 to authorize → retrieve |
 | ContextManifest | AP-02 code `ContextManifest.project`; Ch 20 T-04; Ch 24; Appendix C | R once unified | Ch 06 (one schema) |
 | Trust hierarchy | Ch 20 T-01/T-02 and § Worked example; Ch 23 threats row 1; Ch 03 protection-stack step 1 | R (threat view) | Ch 06 for the mechanism, Ch 20 for the threat |
@@ -341,3 +341,34 @@ Target order:
    - **Issue:** Same request as C05-R16.
    - **Change:** Add one line: "If the transcript is the state or memory is written by default, the repair is structural; see AP-02 and AP-13 in Chapter 17."
    - **Related:** C17-R03.
+
+## Verification log
+
+Second pass against `source/parts/02-part-ii.md:587–947`, `01-part-i.md`, `03-part-iii.md`, `04-part-iv.md`, `05-part-v.md`, `06-part-vi.md`, `07-part-vii.md`, `08-part-viii.md`, `09-appendices.md`, `assets/diagrams/src/context-pipeline.gv`, `examples/contracts.py`, and overall-book-review.md §12.
+
+**Line references:** 118 checked; 1 off by more than 3 lines and renumbered (P-04 `04-part-iv.md:1407` → `:1413`). Quotations checked verbatim (`:599`, `:634–637`, `:663`, `:707`, `:777`, `:795`, `:805`, `:818`, `:914`, `:942`, `01-part-i.md:1043`, `04-part-iv.md:1401`).
+
+**Claims removed (1):** "the second pipeline deduplicates after retrieval while the first fetches at stage 4 and deduplicates at stage 6" — both pipelines fetch first and deduplicate after; not a conflict.
+
+**Claims softened (2):** the Memory card restates `:663` "almost word for word" → same obligations, different wording; "D with conflicting order" → partly conflicting (labeling order only).
+
+**Important claims confirmed:**
+
+- Two pipelines: ten stages at `:621–632` (Figure 6-1, `context-pipeline.gv:17–26` matches the stage labels) and eight steps at `:694–701`; the labeling order differs (stage 5 before dedup vs step 7 after).
+- Three ContextManifest shapes (`:729`, `:739–755`, `:855–862`) with four trust-label vocabularies (`:647–652`, `:700`, `:749`, `:851`); none references the RunManifest; `:729` says "run/node/model call" while `AgentStepRequest.max_turns` (`examples/contracts.py:41`) allows up to 20 model calls per step.
+- Heading "Four kinds" (`:665`) vs an 8-row taxonomy (`:683–690`), Q2's four (`:940`), and the checklist's eight (`:920`).
+- Memory in five places (`:661–663`, `:686–687`, `:717–720`, `:762`, `:787–829`); the card is 124 lines after the prose.
+- Stage 8 allocates tokens after ranking; `:771` says "Allocate a fixed context budget before retrieval".
+- "Durable execution state" (`:685`) is Ch 15's (`04-part-iv.md:1146`, `:1224–1230`); Artifacts (`:689`) and Telemetry/audit (`:690`) restate Ch 04 (`:200`, `:237–238`).
+- `GET /v1/runs/{run_id}/state` (`:714`) beside Ch 04 `GET /v1/runs/{id}` (`:164`) and Ch 15 `GET /v1/runs/{run_id}` (`04-part-iv.md:1211`).
+- Ch 03's RunManifest table has `context_manifest` (`01-part-i.md:1232`); its AgentStepRequest table already says "Authorized ContextManifest" (`:1043`).
+- P-03's flow is "Planner → retrieval → policy → ranking/dedup → manifest → model" (`04-part-iv.md:1401`), which contradicts stage 3 before stage 4; P-04 uses working/episodic/semantic/profile (`:1413`).
+- The adoption listing (`:865–910`) matches Ch 19's `adoptResult` (`05-part-v.md:513`), its Q (`:696`), and Ch 18 rule 4 (`:218`); nothing in Ch 06 explains it.
+- "taint" occurs in Ch 06 only at `:942`; TaintEdge and "tainted content" are Ch 23 (`06-part-vi.md:1135`, `:1270`).
+- ContextManifest is reused in Ch 16 (P-03), Ch 17 (`04-part-iv.md:1601`, `:1619` `ContextManifest.project`), Ch 20 (five mentions incl. T-04), Ch 24 (lowercase, `07-part-vii.md:154`), and Appendices A, B, C, H, L.
+- Ch 07 `03-part-iii.md:58` lists ContextManifest, MemoryRecord, TaskEnvelope, etc. as stable contracts; Ch 06 `:947` does not name the hand-off.
+- Ch 21 § Data-plane controls (`06-part-vi.md:429–431`), Ch 19 Caching row (`05-part-v.md:577`), Ch 28 item 6 (`08-part-viii.md:578`), Appendix F #7 (`09-appendices.md:161`) all exist as cited.
+
+**Recommendations amended:** none in substance. Checked against §12: C06-R02 (D-23(b): the Ch 06 JSON goes), C06-R03 (D-15 store table stays in Ch 04; D-30(a) deletes the Required-analysis table), C06-R04 (D-04 dissolves the Memory card into its H2), C06-R07 (D-18: Ch 19 canonical, code becomes a registered example), C06-R14 (D-29) are all consistent. C06-R01's stage-order rationale ("gives two orders") still holds on the labeling difference. C06-R06 asks for "Context Service", which matches Figure 4-1 (`reference-architecture.gv:102`) and Appendix C (`09-appendices.md:69`). No recommendation touches topology, keeps code inline (C06-R02 and C06-R07 move it to `examples/`), hand-edits a rendered diagram, or widens a citation scope.
+
+**Not verified:** map §3/§4/§5 row numbers, T18/T19, and S8/S16; the Ch 16 and Ch 19 reviews' matching items (C06-R13, C06-R07's placement) were not read.

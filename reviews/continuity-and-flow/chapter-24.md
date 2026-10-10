@@ -11,9 +11,9 @@ It does not yet work as the **canonical home for observability** that the rest o
 1. **The span schema is call-centric, not decision-centric.** § What the trace needs to connect lists Run, Model, Retrieval, Policy, Tool, Agent task, Approval, and Workflow spans. It has nothing for the decisions the earlier chapters made observable: routing (Ch 11), plan compilation and revision (Ch 12), step disposition and information gain (Ch 10), critique and acceptance (Ch 13), memory reads and writes (Ch 06), and security controls (Ch 20/23). The chapter's own OBSERVABILITY TIP says "Trace the decision, not only the call", but its schema mostly traces calls.
 2. **Its implementation lives in Ch 25.** The Telemetry Collector, Trace Index, Content Vault, Metrics/SLO pipeline, Replay/Fork Service, OTLP ingest, `GET /v1/runs/{id}/trace`, TraceIndex, SpanEnvelope, and ContentBlob are all at `07-part-vii.md:347–375`. Figure 24-1 already draws "Trace index", "Audit ledger", and "Content vault" (`assets/diagrams/src/causal-trace.gv`), yet Ch 24's prose never names the content vault or the trace index.
 3. **Ch 25 material leaks in.** Eval datasets, trajectory grading, LLM-judge failure, grader calibration, evaluation queues, and dataset leakage appear at `:98–101`, `:139`, `:147`, `:149–150`.
-4. **The same enumerations repeat.** Span kinds are listed six times (`:56`, `:99`, `:106`, `:108–117`, `:195`, `:214`). Attribute lists appear three times (`:58`, `:108–117`, `:137`). The "questions a trace must answer" appear twice (`:46–50`, `:54`).
+4. **The same enumerations repeat.** Span kinds are listed six times in full (`:56`, `:99`, `:106`, `:108–117`, `:195`, `:214`), and a seventh, shorter list sits in If-fails step 2 (`:190`). Attribute lists appear three times (`:58`, `:108–117`, `:137`). The "questions a trace must answer" appear twice (`:46–50`, `:54`). [verified: corrected — count was stated as exactly six; `:190` also enumerates span kinds]
 
-The debugging method (`:64–66`) is thinner than Ch 07's version of it (`03-part-iii.md:141–146`), although the concept map makes Ch 24 its canonical home. The MLflow section is honest about scope, but the three examples get no lead-in prose, and the version-specific MLflow detail sits in a conceptual section (`:58`).
+The debugging method (`:64–66`) is thinner than Ch 07's version of it (`03-part-iii.md:141–146`), although the concept map makes Ch 24 its canonical home. The MLflow section is honest about scope, but two of the three examples get no lead-in prose (only the mortgage example has one, `:179–183`), and the version-specific MLflow detail sits in a conceptual section (`:58`). [verified: corrected — "the three examples get no lead-in prose" contradicted the section review below, which notes the mortgage example's prose]
 
 Net: keep the thesis, the diagnostics-versus-audit split, the worked example, the scorecard, and the replay rule. Consolidate the enumerations into one span schema. Pull the telemetry implementation in from Ch 25, and push evaluation content out to Ch 25.
 
@@ -57,7 +57,7 @@ The text delivers What, Why, and Trade-offs well. How is fragmented across repea
 - *Role:* diagnostics versus audit, Figure 24-1, the state-owner table, and four operator questions.
 - *Adds:* the core split. This is the chapter's main mental model.
 - *Issues:*
-  - The four questions (`:46–50`) overlap the six questions in the next section (`:54`).
+  - The four questions (`:46–50`) overlap the five questions in the next section (`:54`; the fourth is compound: proposal, effect, receipt). [verified: corrected — `:54` holds five question sentences, not six]
   - The state-owner table's core contracts (TraceContext · SpanLink · AuditEvent) are never defined in the body. AuditEvent is defined nowhere in the book.
   - The section never says how the audit ledger relates to Ch 22's effect ledger or Ch 15's workflow history, though the worked example uses the effect ledger (`:85`).
   - No back-reference to P-09 or AP-14, which the reader met about 500 lines earlier as "causal run graph" (T22).
@@ -82,7 +82,7 @@ The text delivers What, Why, and Trade-offs well. How is fragmented across repea
 - *Adds:* the five time categories (queue, execution, human dwell, retry delay, reconciliation), which are valuable.
 - *Issues:*
   - Three sentences are too sparse for the canonical home.
-  - Ch 07 § If this fails in production (`03-part-iii.md:141–146`) is richer: it lists the categories of first divergent span (input classification, source/freshness, prompt, route, model, tool, arguments, policy, effect, approval, acceptance), says to diff against the nearest accepted run, and gives the rule "do not edit the prompt until the evidence locates the failing responsibility."
+  - Ch 07 § If this fails in production (`03-part-iii.md:141–146`) is richer: it lists the categories of first divergent span (input classification, source/freshness, prompt, route, model, tool, arguments, policy, effect, approval, acceptance), says to diff against the nearest accepted run, and gives the rule "do not edit the prompt until the evidence locates the failing responsibility." Ch 24 is not empty on the diff point: `:66` already says "Compare the run manifest and context/evidence versions before comparing final prose"; what it lacks is the "nearest accepted run" baseline, the divergence categories, and the no-prompt-edit rule. Ch 24's five time categories, in turn, are absent from Ch 07. [verified: softened — the two versions each hold something the other lacks; Ch 07 is fuller, not strictly a superset]
   - § If this fails in production (`:189–191`) restates this method again.
 - See C24-R04.
 
@@ -90,7 +90,7 @@ The text delivers What, Why, and Trade-offs well. How is fragmented across repea
 - *Role:* applies the method to Harborlight.
 - *Verdict:* strong. It is concrete, safe-next-step oriented, and correctly shows Unknown → reconcile before retry (Ch 22 reinforcement).
 - *Issues:*
-  - The example does not visibly *follow* the method. Only the queue (3 min) and approval (4 min) durations are given, so the critical-path decomposition into the five time categories is implicit.
+  - The example does not visibly *follow* the method. Only the queue (3 min) and approval (4 min) durations are given, so seven of the twelve minutes are unaccounted for and the critical-path decomposition into the five time categories is implicit.
   - It never names the first divergent decision (the stale index snapshot).
   - "Human action authorization wait" (`:73`) is the T3 term.
 - See C24-R05.
@@ -111,7 +111,7 @@ The text delivers What, Why, and Trade-offs well. How is fragmented across repea
     - Ch 06: memory ID, TTL.
     - Ch 15: workflow build, timer/wait, signal source.
     - Ch 18: grant lineage, join condition.
-    - Ch 23: taint label, egress decision.
+    - Ch 23: taint label, egress decision (Ch 23 has no "What you need to see" card; these come from its TaintEdge record at `06-part-vi.md:1135` and its If-fails list at `:1270–1272`). [verified: corrected — Ch 23 is not one of the twelve cards]
   - The Tool row says "effect receipt" but not effect *state*. Ch 25's `no_unknown_effects` scorer reads `effect.state` from spans (`examples/observability/mlflow_trajectory_evaluation.py`).
   - The chain-of-thought paragraph (`:119`) is good and unique.
 - See C24-R02.
@@ -119,7 +119,7 @@ The text delivers What, Why, and Trade-offs well. How is fragmented across repea
 **§ A scorecard operators can actually use (`:121–132`)**
 - *Role:* the eight-dimension operator scorecard.
 - *Verdict:* valuable. These are exactly the dimensions Ch 25's checklist requires evaluation to cover (`:472`).
-- *Fix:* make this the book's single metric catalog. Fold in the metrics that only Ch 25 § Measure both the outcome and the path lists (`:432`): tool-selection precision/recall, argument correctness, plan adherence, faithfulness/unsupported-claim rate, retry amplification, reviewer fatigue. Then Ch 25 can delete that section (C24-R02, C25-R05).
+- *Fix:* make this the book's single metric catalog. Fold in the metrics that only Ch 25 § Measure both the outcome and the path lists (`:432`): tool-selection precision/recall, argument correctness, plan adherence, faithfulness/unsupported-claim rate, retrieval relevance/precision/recall/freshness, retry amplification, reviewer fatigue, user satisfaction. Then Ch 25 can delete that section (C24-R02, C25-R05). [verified: corrected — the original list omitted the retrieval metrics and user satisfaction, which `:432` has and the Ch 24 scorecard lacks]
 
 **§ Trace and replay semantics (`:134–139`)**
 - Bullet 1 (W3C propagation and span links) is unique and good.
@@ -177,7 +177,7 @@ The text delivers What, Why, and Trade-offs well. How is fragmented across repea
 
 ## Sparse or Underdeveloped Content
 
-- **§ Debugging method (`:64–66`).** This is the canonical home for first-divergence debugging, but it holds three sentences. It needs the divergence categories and the "diff against the nearest accepted run; don't edit the prompt first" rule, both currently in Ch 07 (`03-part-iii.md:143–146`). Write it as an ordered method the worked example visibly follows (C24-R04).
+- **§ Debugging method (`:64–66`).** This is the canonical home for first-divergence debugging, but it holds three sentences. It needs the divergence categories and the "diff against the nearest accepted run; don't edit the prompt first" rule, both currently only in Ch 07 (`03-part-iii.md:143–146`); its own `:66` already carries a weaker "compare manifest and versions before prose" instruction. Write it as an ordered method the worked example visibly follows (C24-R04). [verified: softened — see § Debugging method above]
 - **Implementation.** There is no owner/contract/record treatment. The components exist in Ch 25 and in Figure 24-1 (C24-R01).
 - **Decision spans.** Routing, plan, step-disposition, and acceptance decisions are not in the schema (C24-R02).
 - **Audit ledger.** It appears as a figure node and a contract name (AuditEvent) but is never described: who writes it, what makes it loss-intolerant, where it lives. A one-row record plus a cross-reference to Ch 06 § State taxonomy and storage (`02-part-ii.md:690`, "append-only/WORM archive") is enough (C24-R12). Do not add a new section.
@@ -222,7 +222,7 @@ The text delivers What, Why, and Trade-offs well. How is fragmented across repea
 | Ch 07 § If this fails in production (`03-part-iii.md:141–146`) | First-divergence debugging, more complete than Ch 24's | D, with the canonical home the thinner one | Ch 24 absorbs the content (C24-R04). The Ch 07 review cuts Ch 07's list to a one-line pointer. |
 | Ch 07 platform table "Observability/Tracing: Unified run graph…" (`03-part-iii.md:49`); golden path "Debug" row (`:103`) | Run graph as a platform capability | R (platform framing) | Keep. Ch 07 may add "(Chapter 24)". |
 | Ch 16 § P-09 — Causal run graph (`04-part-iv.md:1457`) | The same concept as a card | R (decision aid) | Keep. Ch 24 back-references it (C24-R06). |
-| Ch 17 § AP-14 — Telemetry without causal or effect lineage (`04-part-iv.md:1839`) | The same concept as an anti-pattern; its metrics ("percentage of runs joinable to a business outcome, spans missing parent or version identifiers, unattributed spend") match Ch 24's `:150` | R | Keep. Ch 24 back-references it. |
+| Ch 17 § AP-14 — Telemetry without causal or effect lineage (`04-part-iv.md:1839`) | The same concept as an anti-pattern; its metrics ("percentage of runs joinable to a business outcome, spans missing parent or version identifiers, unattributed spend", `:1841`) overlap Ch 24's `:150` (trace completeness, broken links) without matching it | R | Keep. Ch 24 back-references it. [verified: softened — "match" overstated; `:150` is a collector-health list and shares only two items with AP-14's metrics] |
 | Pattern cards' "What you need to see in production" (12 locations listed above) | Pattern-specific attributes | R as card-local reminders, but they never converge | Ch 24 consolidates them into the schema (C24-R02). Card owners keep their lists. Optionally they append "(span attributes, Chapter 24)"; each chapter's review decides. |
 | Ch 04 § Run API `:fork` (`02-part-ii.md:169`); Ch 14 console (`04-part-iv.md:906–908`, `:938`) | Fork / sandbox replay | R | Ch 24 owns diagnostic replay and fork semantics and cites Ch 04's endpoint. Ch 25's `:forkReplay` is removed (C24-R01, C25-R01). |
 | Ch 15 replay (`04-part-iv.md:1148`, `:1235`) | Recorded activity results on replay | R | Ch 15 owns workflow replay. Ch 24 states the distinction (C24-R07). |
@@ -291,7 +291,7 @@ Target order for Chapter 24 (headings marked *new* or *moved*):
   - **Attributes on existing rows.** Add "effect state (`effect.state`)" and "credential lease ID" to Tool. Add "workflow build, timer/wait state, signal source" to Workflow. Add "grant lineage, join condition" to Agent task.
   - **Mapping sentence.** After the table, add one sentence: "The 'What you need to see in production' lists in Chapters 2, 6, 10–15, and 18 are attributes on these span types; this table is their common schema."
   - **Cleanup.** Delete the attribute list at `:58` (from "Required attributes include…") and the bullet at `:137`; both are now in the table.
-  - **Scorecard.** Add to Outcome quality "faithfulness / unsupported-claim rate". Add to Trajectory quality "tool-selection precision/recall, argument correctness, plan adherence". Add "retry amplification" to Reliability. Add "reviewer fatigue" to Human load. Add one sentence under the table: "Chapter 25 explains how the outcome and trajectory rows are scored offline and per slice."
+  - **Scorecard.** Add to Outcome quality "faithfulness / unsupported-claim rate, user satisfaction". Add to Trajectory quality "tool-selection precision/recall, argument correctness, plan adherence, retrieval relevance/precision/recall/freshness". Add "retry amplification" to Reliability. Add "reviewer fatigue" to Human load. Add one sentence under the table: "Chapter 25 explains how the outcome and trajectory rows are scored offline and per slice." [verified: amended — added the retrieval metrics and user satisfaction so that deleting Ch 25 `:432` (C25-R05) loses nothing]
 - **Related:** C25-R05 (deletes Ch 25 `:432`), C25-R11. Ch 24 owns the schema and the metric catalog.
 
 **C24-R03 — Priority: High — Action: Merge**
@@ -322,7 +322,7 @@ Target order for Chapter 24 (headings marked *new* or *moved*):
 
 **C24-R05 — Priority: Medium — Action: Rewrite**
 - **Location:** § Worked example — diagnosing a slow mortgage-evidence review (`:68–90`).
-- **Issue:** the example does not visibly apply the method, the durations do not sum, and the first divergence is unnamed.
+- **Issue:** the example does not visibly apply the method, only two of the five segments carry a duration (3 + 4 of twelve minutes), and the first divergence is unnamed. [verified: corrected — "the durations do not sum" implied an arithmetic error; the table is incomplete, not wrong]
 - **Why it matters:** the example is where the reader rehearses the method.
 - **Change:**
   - Add a "Time and category" column to the table: queue → queue time; retrieval retry → retry delay; approval → human dwell; connector → execution plus reconciliation. Give durations that sum to twelve minutes (the author picks the numbers; they are illustrative).
@@ -410,7 +410,7 @@ Target order for Chapter 24 (headings marked *new* or *moved*):
 - **Issue:** "In the pinned MLflow 3.15.2 profile, Agents SDK tracing is disabled by default" has no registry source scoped to that claim. R21's `supports` is only "Pins the reproducibility baseline used for book examples". This conflicts with AGENTS.md citation safety.
 - **Change:** do one of two things.
   - Verify the claim against the 3.15.2 release notes, then extend R21's `supports` in `config/references.json` to cover it.
-  - Or recast it as a book-authored, tested statement: "the book's pinned example enables it explicitly; see `examples/tests/test_mortgage_agents_mlflow.py`".
+  - Or recast it as a book-authored statement about the examples, without claiming the default is tested: "the book's pinned examples enable the Agents SDK trace processor explicitly (`disable_openai_agent_tracer=False` in `mlflow_trace_configuration.py` and `mortgage_agents_mlflow.py`)". `examples/tests/test_mortgage_agents_mlflow.py` proves that AgentRunner, agent, and tool spans appear *with* the flag; no test shows they are absent without it, so "disabled by default" stays a comment-level claim unless a test is added. [verified: amended — the original wording called the default-disabled claim "tested", which the test does not do]
 - **Related:** C25-R12 (the same issue in Ch 25).
 
 **C24-R16 — Priority: Low — Action: Rewrite**
@@ -425,3 +425,32 @@ Target order for Chapter 24 (headings marked *new* or *moved*):
 - **Issue:** Same request as C05-R16.
 - **Change:** Add one line: "If telemetry cannot join a run to its release, decisions, and effects, see AP-14 in Chapter 17."
 - **Related:** C17-R03, C24-R09.
+
+## Verification log
+
+Second pass against `source/parts/07-part-vii.md:1–222`, the cited passages in Ch 02–07, 13–19, 22–23, 25–27, the five MLflow examples and their tests, `config/references.json`, `config/examples.json`, `causal-trace.gv`, and overall-book-review.md §11–§12.
+
+- **Line references checked:** 78 (Ch 24 internal and cross-chapter). Fixed: 0. All within ±3 lines; the cited section headings (Ch 04 § Run API, Ch 04 § Where each kind of state belongs, Ch 06 § State taxonomy and storage, Ch 07 § If this fails in production, Ch 14 § Operator console requirements, Ch 19 § Scalability, federation, and failure isolation) exist at the cited lines.
+- **Claims removed:** none.
+- **Claims softened:**
+  - "Span kinds listed six times" → six full lists plus a shorter seventh at `:190`.
+  - "The three examples get no lead-in prose" → two of three; the mortgage example has `:179–183`.
+  - "Six questions at `:54`" → five (one compound).
+  - "Durations do not sum" → only two of five segments carry a duration.
+  - Debugging method: Ch 07 is fuller but not a superset; Ch 24 `:66` already has a weaker diff-before-prose instruction, and Ch 07 lacks the five time categories.
+  - AP-14 metrics "match" `:150` → overlap on two items.
+  - Ch 23 is not one of the twelve cards; its signals come from TaintEdge and its If-fails list.
+- **Important claims confirmed (evidence):**
+  - Eval content in Ch 24 at `:98–101`, `:139`, `:147`, `:149–150` (read).
+  - Ch 24 prose never names "content vault" or "trace index"; both appear only in `causal-trace.gv` and Ch 25 `:348–349` (grep of all parts).
+  - AuditEvent, TraceContext, SpanLink appear only at `:44` book-wide (grep).
+  - No "P-09", "AP-14", or "Chapter 14" in Ch 24 (grep of `:9–222`).
+  - Twelve "What you need to see in production" headings at the listed lines, in Ch 02, 06, 10, 11 (×2), 12, 13 (×2), 14, 15, 18 (×2); every per-card attribute the review attributes to Ch 06, 10, 11, 12, 13, 15, 18 is on that card.
+  - `no_unknown_effects` reads `span.attributes.get("effect.state")` (`mlflow_trajectory_evaluation.py:30`); Ch 24's span table has no `effect.state` attribute, only "effect state" in the `:58` prose list.
+  - R21 `supports` is exactly "Pins the reproducibility baseline used for book examples"; the "disabled by default" claim at `:58` has no scoped source. The examples assert it in comments (`mlflow_trace_configuration.py:6–8`, `mortgage_agents_mlflow.py:44–45`); `test_mortgage_agents_mlflow.py` tests only the with-flag behaviour.
+  - `:forkReplay` (`:366`) vs Ch 04 `:fork` (`02-part-ii.md:169`) and Ch 14 `:operatorAction` "fork replay" (`04-part-iv.md:938`).
+  - Ch 25 § Measure both… `:432` lists eight metric families absent from the Ch 24 scorecard, not six (added retrieval metrics and user satisfaction to C24-R02).
+  - Concept map row 55 rates the Ch 19 W3C-trace-context forward use Low (`book-concept-map.md:407`).
+- **Recommendations amended:** C24-R02 (scorecard fold-in list), C24-R05 (issue wording), C24-R15 (second option no longer claims the default is tested). All recommendations remain consistent with D-03, D-04, D-10, D-15, D-20, D-22, D-29 and with repo invariants (diagram and example changes go through sources and tests; no topology change).
+- **Not verifiable here:** whether MLflow 3.15.2 really disables the Agents SDK tracer by default (needs the release notes; C24-R15 option 1). The "Ch 01's vocabulary" pointer in the Overall Assessment is loose (Ch 01 says "causal trace graph", `01-part-i.md:405`); left as is.
+- **Note for the synthesizer:** the `.gv` header comments number the Part VII figures differently from the manuscript markers (`runtime-offline.gv` says "Figure 25-2", `learning-loop.gv` "Figure 25-1", `evaluation-gate.gv` "Figure 25-3"; the markers say 25-3, 25-2, 25-1). Captions come from the markers, so no reader-visible defect, but the comments should be fixed when C25-R04/R08 touch those files.

@@ -223,7 +223,7 @@ The "What should be agentic?" table is valuable and is reinforcement, not redund
 | Plan revision API | `plans/{plan_id}:revise` (`:496`) | Ch 18 `runs/{run_id}/plans:revise` (`05-part-v.md:108`); Ch 18 rule "Plan changes" (`:82`) | **Redundancy with drift.** Ch 12 is canonical. **Requires Ch 18 owner:** delete Ch 18's API row and replace the rule bullet's body with "Plans change only through a compiled revision (Chapter 12)." |
 | BudgetReservation | `:510` | Ch 28 (`08-part-viii.md:610`) | **Redundancy.** Canonical in Ch 28. Ch 12 keeps the row but adds "(defined in Chapter 28)", or drops it and references Ch 28 from `:495`. |
 | "What should be agentic?" | `:430–445` | Ch 01 § Which component should own each uncertainty; Ch 02 § Where distributed systems must remain authoritative; Ch 03 § Responsibility map; Ch 04 § Where truth lives; Ch 18 § Topology decision table; Ch 16 Figure 16-1; Appendix A item 1 | **Reinforcement** (agrees with map §3). It adds the work-type axis and should be the one Part IV selection table. **Requires Ch 16/17 owner:** Ch 16 § How to use these patterns… should cite it rather than restate selection logic; Appendix A item 1 can point to it. |
-| Deterministic spine with semantic nodes | Recommended-architecture row `:425`; agentic table | Ch 16 § P-02 (`:1387`); Appendix A row "Orchestration" | **Reinforcement.** P-02 is effectively this chapter's pattern, but it cites "Onboarding" (T17) and not Ch 12. **Requires Ch 16/17 owner:** P-02 should name Ch 12 (Plan IR) and Ch 15 (durable workflow) as its source chapters. Appendix A's "Orchestration" row should list Ch 12 explicitly. Ch 16 has no "plan compilation" P-card; if Ch 16 keeps a full catalog, P-02 can absorb it. |
+| Deterministic spine with semantic nodes | Recommended-architecture row `:425`; agentic table | Ch 16 § P-02 (`:1387`); Appendix A row "Orchestration" | **Reinforcement.** P-02 is effectively this chapter's pattern, but it cites "Onboarding" (T17) and not Ch 12. **Requires Ch 16/17 owner:** P-02 should name Ch 12 (Plan IR) and Ch 15 (durable workflow) as its source chapters. Appendix A's "Orchestration" row already spans "11–15, 17–18" (`09-appendices.md:25`), so Ch 12 is covered by range; naming the Plan IR there is optional. Ch 16 has no "plan compilation" P-card; overall-book-review.md §D-04 resolves this to an obligation-table row (C16-R10), not a new card. [verified: softened — the Appendix A row does include Ch 12; the P-card option is superseded by D-04] |
 | Loop/delegation bounds | `:519` | Ch 10 no-progress; AP-11 (`:1560`) | **Reinforcement.** Cross-reference both. |
 | Planner/critic churn | `:427` "critic repeatedly rewrites a correct result" | Ch 13 § Bounded optimization loop; Ch 13 exercise 2 | Belongs to Ch 13. Delete it here along with the analysis-table condensation. |
 
@@ -284,6 +284,8 @@ Delete the Required-analysis table and the ARCHITECTURE GUIDANCE box after movin
 - **Change:** add:
 
   > "Each node kind is executed by a mechanism defined elsewhere: `llm_activity` is a bounded model step (Chapter 10) whose output is accepted as in Chapter 13; `tool_activity` crosses the six gates (Chapter 2) with effect semantics from Chapter 22; `gate` is a human authorization (Chapter 14); `wait` is a durable timer or signal (Chapter 15); `child_task` and `join` are durable delegation and fan-in (Chapter 18)."
+
+  [verified: per overall-book-review.md §D-22, write "`gate` is a human approval (Chapter 14)" when applying.]
 - **Related:** C10-R01 (Part IV orientation).
 
 **C12-R05 — Priority: Medium — Action: Condense**
@@ -324,7 +326,7 @@ Delete the Required-analysis table and the ARCHITECTURE GUIDANCE box after movin
 **C12-R09 — Priority: Medium — Action: Remove (heading)**
 - **Location:** `04-part-iv.md:397`, § From candidate plan to executable work.
 - **Issue:** an empty heading.
-- **Change:** delete the H2 and move the state-owner table to follow `:406`, or drop it per the book-wide state-owner-table decision (map §5.1).
+- **Change:** delete the H2 and move the state-owner table to follow `:406`. [verified: the "or drop it" option is resolved to "keep" by overall-book-review.md §D-30(b)]
 - **Related:** C10-R08.
 
 **C12-R10 — Priority: Low — Action: Rewrite**
@@ -361,3 +363,22 @@ Delete the Required-analysis table and the ARCHITECTURE GUIDANCE box after movin
 - **Issue:** The Ch 08 and Ch 09 reviews ask Ch 12 to point to Ch 08 where compilation binds Skill releases; no Ch 12 item did.
 - **Change:** In the C12-R02 sentence, write "…binds each capability requirement to an eligible Skill and tool release (Chapter 8)…". In § Compile-time checks, add to the eligibility bullet: "a pack Skill the run may not resolve is refused here, naming the rule, never mid-run (Chapter 9)."
 - **Related:** C08-R03, C09-R07, C12-R02.
+
+## Verification log
+
+- **Line references checked:** 112 (every `:n` in this file, plus the Ch 02, Ch 11, Ch 13, Ch 16/17, Ch 18, Ch 21, Ch 22, Ch 28, Appendix A, example, and test pointers). Fixed: 0. All resolved within ±3 lines ("about 110 lines" between `:414` and `:522` is 108; "45 lines after the IR" is 43).
+- **Claims removed:** none.
+- **Claims softened:**
+  - "Appendix A's Orchestration row should list Ch 12 explicitly" → the row already spans "11–15, 17–18"; naming the Plan IR is optional.
+  - The "add a plan-compilation P-card" option is superseded by D-04 (obligation-table row).
+- **Claims confirmed (most consequential):**
+  - Three risk representations: `"risk_class": "R1"` (`:465`), "R4 commit" (`:518`), `PlanNode.risk_class: int = Field(ge=0, le=4)` (`examples/contracts.py:66`), `PlanEnvelope.maximum_risk: int = 4` (`plan_compilation.py:29`), Ch 11 `risk: int` (`:331`). `test_plan_compilation.py:46–48` uses `risk=4` against `maximum_risk=2`.
+  - R0–R4 are defined only at `06-part-vi.md:714–722` (Ch 22). Book-wide grep: the first R-code is Ch 12 `:465`; later uses are Ch 21 `:495` (with a Ch 22 pointer), Ch 24 `07-part-vii.md:145`, Ch 23 `06-part-vi.md:1178`, and Appendix `09-appendices.md:446`. Ch 12 carries no pointer. "risk class" as a phrase first appears at `01-part-i.md:734` (Ch 02 § Scaling the shell), as stated.
+  - Compiler-duty repetition at `:406`, `:410`, `:473`, `:484`, `:494`, `:516–520`, `:562`, `:617`, `:634`; replanning at `:416`, `:425`, `:524–530`, `:568`, `:619`, `:635`, `:544`: every location checked and present.
+  - `:397` H2 contains only the state-owner table; Plan IR is an H3 (`:447`) under `:418`, after the 7-row analysis table and the 12-row agentic table; § Compile-time checks is the fourth H3 under § A workable implementation.
+  - `POST /v1/plans/{plan_id}:revise` (`:496`) vs Ch 18 `POST /v1/runs/{run_id}/plans:revise` (`05-part-v.md:108`) and rule bullet `:82`; `BudgetReservation` at `:510` and `08-part-viii.md:610`.
+  - `config/examples.json` title "Compiling an approved plan into a budget-bounded envelope"; docstring "provably the thing a reviewer saw" (`plan_compilation.py:1–5`).
+  - Eight design alternatives at `:424`; `:427` includes "critic repeatedly rewrites a correct result"; scale bullet 7 (`:540`) is the route-first link.
+  - P-02 (`:1387–1391`) cites "Onboarding" and no chapter.
+- **Recommendations amended:** C12-R04 (D-22 wording note); C12-R09 (D-30(b) resolves "or drop" to keep); Cross-Chapter row on P-02/Appendix A (D-04).
+- **Not verifiable here:** the claim that scale bullets 1, 2, 4, 5 are "book-wide boilerplate" (map §5.1 not re-checked across all chapters); "ten chapters later" is Ch 12 → Ch 22 and is exact.

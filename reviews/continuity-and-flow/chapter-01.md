@@ -46,7 +46,7 @@ The chapter delivers What, Why, and When well. "How" is diffuse because it is sp
 - *Adds:* the core claim that the gap is not intelligence, and the five failure properties.
 - *Verdict:* excellent. This is the chapter's best section.
 - *Issues:*
-  - `:63–67` spends three sentences explaining why the sketch is not executable. The label at `:69` already says so.
+  - `:63–67` spends two sentences explaining why the sketch is not executable. The label at `:69` already says so. [verified: corrected — the paragraph is two sentences, not three]
   - `:81`: `# "Employment verification is missing."` contradicts `:49–50` (T15).
   - COMMON PITFALL (`:146`) adds a new angle ("80% hardening"). It is reinforcement, so keep it.
 
@@ -59,11 +59,11 @@ The chapter delivers What, Why, and When well. "How" is diffuse because it is sp
 **§ Draw the boundary around the model (`:167`).**
 - *Role:* ownership boundary plus the first state-owner table.
 - *Adds:* the state-owner table.
-- *Verdict:* the prose (`:172–181`) is a third statement of the thesis, and `:324–330` (Level four) repeats its examples (workflow state, permission, write commit).
+- *Verdict:* the prose (`:172–181`) is a third statement of the thesis, and `:324–330` (Level four) repeats its write-commit example; `:324–330` adds the completion example, while `:177–181` alone carries the workflow-state and authorization examples. [verified: softened — the two passages share only the "tool call ≠ committed write" point; the rest differs]
 - *Issues:*
   - The five-column table (`:186–188`) is the template every later chapter uses (map §5.1), and this is the only place it could be explained. It is not explained.
   - The row uses unseen terms: "RunManifest · AgentStep · Artifact", "regional cell", and "Run Service". "AgentStep" should be AgentStepRequest/AgentStepResult (T9).
-  - The pivot at `:193–194` ("With that boundary established…what exactly do we mean by an agent?") shows the order is backwards. The levels explain why the boundary exists.
+  - The pivot at `:193–194` ("With that boundary established, we can answer another important question: what exactly do we mean when we call something an 'agent'?") shows the order is backwards. [verified: corrected — quotation made exact] The levels explain why the boundary exists.
 
 **§ Four very different things we call an agent (`:196`).** The intro (`:198–214`) is tight and sets up Figure 1-2. Good.
 - **§ Level one — a model (`:218`):** clear. Inline code (`:224–237`) conflicts with the `AGENTS.md` rule that code lives in `examples/`. That is a policy note, not a flow issue.
@@ -95,7 +95,7 @@ The chapter delivers What, Why, and When well. "How" is diffuse because it is sp
   - Compensation → "Chapter 15" (`:445`). The fullest treatment is Ch 22 § The mechanics that make retries safe and § Where transaction guarantees begin and end.
   - Acceptance criteria → "Chapters 10 and 12" (`:450`). The definition is Ch 02 § Deterministic acceptance, with Ch 13 and Ch 15 § Terminal correctness.
   - Missing terms used in this chapter: capability envelope (`:404`), last-hop credential (`:533`), and run manifest (`:405`).
-  - "Appendix H carries the full glossary" (`:455`) is false. Appendix H has 15 terms and none of these.
+  - "Appendix H carries the full glossary" (`:455`) is false. Appendix H has 15 terms; it defines capability envelope but neither credential lease / last-hop credential nor run manifest, and none of the ten terms in this chapter's own vocabulary table. [verified: corrected — Appendix H does define "Capability envelope"; the original "none of these" was wrong]
 - **§ Anti-pattern — the autonomous monolith (`:458`):** a good negative image that consolidates the chapter, with a correct pointer to AP-01. It is reinforcement and should stay.
 
 **§ The system as a set of responsibilities (`:480`).**
@@ -108,11 +108,11 @@ The chapter delivers What, Why, and When well. "How" is diffuse because it is sp
 **§ Each control point answers a different question (`:515`).**
 - *Role:* canonical gateway taxonomy (map).
 - *Adds:* Figure 1-4 and a six-row table.
-- *Verdict:* keep the table and figure. They prevent real confusion. The four paragraphs after them (`:531–552`) are mostly detail that Ch 02 § How Tool Use works in practice re-teaches nearly verbatim. `:793` repeats `:531–534`'s pipeline.
+- *Verdict:* keep the table and figure. They prevent real confusion. The four paragraphs after them (`:531–552`) are mostly detail that Ch 02 § How Tool Use works in practice re-teaches. `:793` closely paraphrases `:531–534`'s pipeline (same verbs — validates, reauthorizes, mints a last-hop credential, records — with "enforces idempotency" replaced by "invokes a connector, verifies the result"). [verified: softened — the two sentences are similar, not verbatim]
 - *Issues:*
   - "Agent Gateway" (`:525`) is never developed. Ch 19 uses both "Agent Gateway" (table `05-part-v.md:561`) and "A2A Gateway" (`:438`, `:455`, `:499`).
   - "mints a last-hop credential" and "records the receipt" are not in the vocabulary.
-  - "behavior bundle" (`:550`) is a fourth release-artifact name (T7).
+  - "behavior bundle" (`:550`) is another release-artifact name outside the T7 chain (ChangeBundle → ReleaseManifest → EnvironmentBinding → RunManifest); it occurs only here in the book. [verified: softened — "fourth" was not countable; the term is used once book-wide]
   - There is no sentence connecting these control points to the owners in the uncertainty table. Example: the Tool Gateway consults the policy engine and writes the effect ledger, and the acceptance gate is the acceptance engine. The reader gets two vocabularies for the same components.
   - The ARCHITECTURE GUIDANCE box (`:556`) adds the naming rationale. It is reinforcement and should stay.
 
@@ -128,7 +128,7 @@ The chapter delivers What, Why, and When well. "How" is diffuse because it is sp
 
 ## Sparse or Underdeveloped Content
 
-- **The state-owner table** (`:186–188`) is the book's most repeated device (25 chapters) and is never explained. Two or three sentences defining the five columns would make every later instance readable. This is the one expansion the chapter needs.
+- **The state-owner table** (`:186–188`) is the book's most repeated device (24 occurrences across the chapters; Ch 03 is one of the four chapters without one) and is never explained. [verified: corrected — grep counts 24 `| **State owner** |` tables, matching D-30(b), not 25] Two or three sentences defining the five columns would make every later instance readable. This is the one expansion the chapter needs.
 - **The C01 checkpoint** is described in prose (`:48–53`, `:611–614`) but never shown with the Before/Added/After table that Ch 02 (`:840–842`) and Ch 03 (`:933–935`) use. Without it, Ch 02's "Before: C01 returns a candidate summary…" has no antecedent.
 - **The mechanism-to-question mapping** (`:403–406`) is a single sentence where a short mapping would let the reader use the three questions as an index into the book.
 
@@ -156,7 +156,7 @@ Nothing else needs expansion. The chapter's problem is excess, not sparseness.
 | Repeated idea | Locations | Verdict | Action |
 | --- | --- | --- | --- |
 | Thesis: model reasons, system owns state/authority/effects/evidence | `:138–142`, `:150–156`, `:160–161`, `:172–181`, `:306–311`, `:315–316` | Redundant (the map agrees) | State once at `:160–161` (relocated to the end of the demo section). Keep `:321–322` as the lead-in to the uncertainty table. Cut the rest. |
-| Completion and write-commit examples | `:177–181` and `:324–330` | Redundant | Keep `:324–330` |
+| Write-commit example | `:177–181` and `:324–330` | Partly redundant: only the "tool call ≠ committed write" point is shared; `:324–330` adds completion, `:177–181` adds workflow state and authorization | Keep `:324–330`; the workflow-state and authorization sentences of `:177–181` are already covered by `:160–161` and the uncertainty table [verified: softened — passages differ beyond the one shared example] |
 | Level four as "governed execution" | `:286–292` and `:367–377` | Redundant | Keep `:286–292`. Move `:378–379` into it. |
 | Tool Gateway pipeline | `:531–536` and Ch 02 `:793` | Cross-chapter redundancy | Keep only the protocol-agnostic point in Ch 01 |
 | Problem-space enumerations (5 failures, 4 properties, 10 problems) | `:92–136`, `:391–394`, `:422–433` | 5 failures and 10 problems are reinforcement (story vs. map). The 4 properties overlap both. | Condense the 4 properties to one paragraph |
@@ -177,14 +177,14 @@ Deliberate reinforcement to keep: the COMMON PITFALL (`:146`), the monolith anti
 | Vocabulary table pointers | Ch 22 (compensation), Ch 02/13/15 (acceptance) | Pointers are wrong | Fix in Ch 01 (C01-R03) |
 | `[[EXAMPLE:contracts#step]]` (`:572`) | Ch 03 § The request is bounded before the model sees it (field table `:1039–1047`); `[[EXAMPLE:contracts]]` in Ch 04 | Misplaced | Move the listing to Ch 03 (C01-R01, C03-R08) |
 
-**No chapter in Parts II–VIII refers back to Chapter 1, 2, or 3 by number.** A grep of `02-part-ii.md`–`09-appendices.md` finds none. Part I's canonical items are therefore never leveraged, and later chapters re-teach them standalone. When downstream chapters condense, they should add back-references such as "the control points of Chapter 1".
+**No chapter prose in Parts II–VIII refers back to Chapter 1, 2, or 3 by number, or to "Part I" by name.** A grep of `02-part-ii.md`–`09-appendices.md` finds no "Chapter 1/2/3", "Chapters 1–3", or "Part I" in prose; the only chapter-number references are the "Primary chapters" column of Appendix A's pattern table (for example "2–3" for P-05), and the Part II orientation's "The first Part established…" (`02-part-ii.md:3`), which recalls Part I without naming it. [verified: corrected — the appendix table and the Part II recall exist; the prose claim stands] Part I's canonical items are therefore never leveraged, and later chapters re-teach them standalone. When downstream chapters condense, they should add back-references such as "the control points of Chapter 1".
 
 ### Front matter (`00-front-matter.md`) — issues affecting the reader's starting model
 
 | # | Location | Issue | Verdict |
 | --- | --- | --- | --- |
 | FM-1 | Preface `:26–30`; How to Use `:72–75` | Promises "comparative supplier-onboarding examples show how the same contracts travel to other domains". The thread has no artifact, code, or checkpoint. It appears only as boxes in Ch 01–03 and unlabeled in P-02/AP-03/AP-07. "Retained supplier-onboarding material" is maintainer language. | Promise not kept. Retire it (C01-R24). |
-| FM-2 | How to Use, reader-path table `:77–84` | Paths contradict dependencies. **Executives** skip Part I, though Ch 01 is the thesis and Part I calls itself "the starting point" (`01-part-i.md:3`). **Platform engineers** skip Part I (they build AgentRuntime and the Tool Gateway, Ch 02–03) and Part IV (Ch 15 durable execution). **Application developers** skip Part VI (Ch 22 effect safety, needed when writing tools). **Security** skips Part V (MCP/A2A threats T-12/T-13). **SRE** skips Ch 15 (durable execution) and Ch 20/23 (incident lifecycle, kill switch). | Transition defect, High |
+| FM-2 | How to Use, reader-path table `:77–84` | Paths contradict dependencies. **Executives** skip Part I, though Ch 01 is the thesis and Part I calls itself "the starting point" (`01-part-i.md:3`). **Platform engineers** skip Part I (they build AgentRuntime and the Tool Gateway, Ch 02–03) and Part IV (Ch 15 durable execution). **Application developers** skip Part VI (Ch 22 effect safety, needed when writing tools). **Security** skips Part V (the MCP and A2A gateway mechanics of Ch 19 that the Part VI threat cards T-12/T-13 assume; the cards themselves are in Ch 20, which the path does include). [verified: corrected — T-12/T-13 are in Ch 20 (Part VI), not Part V] **SRE** skips Ch 15 (durable execution) and Ch 20/23 (incident lifecycle, kill switch). | Transition defect, High |
 | FM-3 | § The architecture in one view `:86–94` | The prose says "follow a request through the system… controlled entry point… controls", but Figure 0-1 (`book-map.gv`) is a map of the eight Parts. The request view the prose describes is Figure 1-3 (`01-part-i.md:485`). | Prose/figure mismatch |
 | FM-4 | Figure 0-1 labels | "Architecture and knowledge", "Patterns and anti-patterns", "Multi-agent and integration", "Security and guardrails", "Observability and evaluation", "Governance and operations" do not match the Part titles (T26). "Security and guardrails" also contradicts Ch 20's "guardrails are not the security boundary" (T10). | Diagram drift |
 | FM-5 | § The engineering contract behind the architecture `:96–107` | Six principles, each a paragraph, that overlap but do not match Ch 02 § Design principles (ten). Contract 1 ≈ Ch 02 P1; contract 3 ≈ P3/P7; contract 4 = P6; contract 5 ≈ P8; contract 2 and contract 6 pre-teach Ch 24/25/27. The two lists are never cross-referenced. | Redundant with drift |
@@ -258,7 +258,7 @@ Remove § The comparative supplier-onboarding thread entirely (C01-R06).
    - **Issue:** prints "Employment verification is missing.", contradicting `:49–50`, front matter `:68`, and the implemented C01/C03 tests (`tests/mortgage_case/unit/test_c01.py:21` asserts `["pay_statement"]`; `tests/mortgage_case/contract/test_c03_runtime.py:76` says "A second pay statement is missing.").
    - **Why it matters:** the running case contradicts itself on its first page.
    - **Change:** set the comment to `# "A second pay statement is missing."`.
-   - **Related:** C02-R04 and C03-R17 carry the same fix through Ch 02/03. Later-chapter occurrences belong to their reviewers: `04-part-iv.md:382, :898, :1119, :1179, :1711`, `06-part-vi.md`. The examples/tests using `employment_verification` also need it: `examples/tests/test_governed_tool_gateway.py`, `test_contracts.py`, `test_approval_gate.py`, `test_approval_verification.py`, `test_effect_idempotency.py`, `test_input_guardrail.py`, `examples/patterns/bounded_react_loop.py`, and `examples/observability/mortgage_agents_mlflow.py`.
+   - **Related:** C02-R04 and C03-R17 carry the same fix through Ch 02/03. Later-chapter occurrences belong to their reviewers: `04-part-iv.md:382, :898, :1119, :1179, :1381, :1711`. There are none in `06-part-vi.md`; `05-part-v.md:392` (Ch 19's third-party "employment-verification MCP server") is a different use and may stand. The examples/tests using `employment_verification` also need it (ten files): `examples/tests/test_governed_tool_gateway.py`, `test_contracts.py`, `test_approval_gate.py`, `test_approval_verification.py`, `test_effect_idempotency.py`, `test_input_guardrail.py`, `examples/patterns/bounded_react_loop.py`, `examples/foundations/agent_tool_loop.py`, `examples/observability/mortgage_agents_mlflow.py`, and `tests/mortgage_case/contract/test_provider_adapters.py`. [verified: corrected — grep finds no "employment" in `06-part-vi.md`, adds `04-part-iv.md:1381`, and finds ten code files, not eight; D-31 and Phase 1 item 5 in overall-book-review.md repeat the wrong counts]
 
 5. **C01-R05 — Medium — Merge / Move**
    - **Location:** `:167–194` § Draw the boundary around the model.
@@ -442,8 +442,46 @@ Remove § The comparative supplier-onboarding thread entirely (C01-R06).
 
 26. **C01-R26 — Low — Rewrite / Remove**
     - **Location:** `00-front-matter.md:109–176` Find Your Way Through the Book.
-    - **Change:** either delete it (the generated TOC covers it) or add a one-line purpose after each chapter title and list the Closing Perspective after Appendix L. Use the "Where this leads next" sentences as the source of each purpose line.
+    - **Change:** either delete it (the generated TOC covers it) or add a one-line purpose after each chapter title and list the Closing Perspective where D-26 places it — after Chapter 28 and before the Appendices (it currently sits after Appendix L, `09-appendices.md:559`). Use the "Where this leads next" sentences as the source of each purpose line. [verified: amended — "after Appendix L" matched the current position but contradicts the D-26 placement]
 
 27. **C01-R27 — Low — Move**
     - **Location:** `00-front-matter.md:44–50` § How this edition is maintained.
     - **Change:** move to the package README or Appendix I. In the preface, keep one sentence: "The book is maintained from canonical Markdown with registered references, diagrams and runnable examples; Appendix I describes the companion package."
+
+## Verification log
+
+Adversarial second pass over this file against `source/parts/00-front-matter.md`, `source/parts/01-part-i.md`, the cited downstream chapters, `config/examples.json`, `examples/contracts.py`, `examples/mortgage/cumulative_case.py`, the mortgage tests, and the diagram sources.
+
+**Line references:** about 130 checked; 1 fixed (the `:193–194` quotation was paraphrased with an ellipsis and is now exact). All others resolve within ±3 lines.
+
+**Claims removed:** none.
+
+**Claims softened or corrected:**
+- `:63–67` is two sentences, not three.
+- `:324–330` vs `:177–181`: only the "tool call ≠ committed write" example is shared; reclassified from "Redundant" to partly redundant (Section-by-Section and the redundancy table).
+- Ch 02 `:793` vs Ch 01 `:531–534`: "nearly verbatim" downgraded to "closely paraphrases" (same verbs, one clause differs).
+- "behavior bundle is a fourth release-artifact name": "fourth" is not countable; the term occurs once book-wide and is outside the T7 chain.
+- State-owner table "25 chapters" → 24 tables (grep; matches D-30(b)).
+- "Appendix H has 15 terms and none of these": Appendix H does define "Capability envelope"; it lacks credential lease and run manifest and all ten vocabulary-table terms.
+- "No chapter in Parts II–VIII refers back…": true of prose; Appendix A's pattern table lists chapter numbers ("2–3" for P-05) and `02-part-ii.md:3` recalls "the first Part" without naming it.
+- FM-2: T-12/T-13 are Ch 20 (Part VI) cards, which the Security path includes; what it skips is Ch 19's MCP/A2A mechanics.
+- C01-R04: no "employment" in `06-part-vi.md`; `04-part-iv.md:1381` added; the code list is ten files, not eight (adds `examples/foundations/agent_tool_loop.py` and `tests/mortgage_case/contract/test_provider_adapters.py`). `05-part-v.md:392` is a different (third-party MCP server) use.
+- C01-R26: "list the Closing Perspective after Appendix L" conflicts with D-26, which places it before the Appendices; amended.
+
+**Important claims confirmed (evidence):**
+- The chapter's only listing is `[[EXAMPLE:contracts#step]]` (`:572`); region `step` of `examples/contracts.py:15–51` holds EvidenceRef, ToolCall, AgentDecision, AgentStepRequest, AgentStepResult; `config/examples.json` `contracts` has `book_chapters: [1, 4]` and the docstring says "Chapter 02 needs the agent-step subset". Region `c01` exists in `examples/mortgage/cumulative_case.py:12–18` and `[[EXAMPLE:mortgage-cumulative-case#c01]]` appears nowhere in `source/parts/`.
+- `:81` prints "Employment verification is missing."; `:49–50` and `00-front-matter.md:68` say the second pay statement; `tests/mortgage_case/unit/test_c01.py:21` asserts `["pay_statement"]`; `tests/mortgage_case/contract/test_c03_runtime.py:75–76` says "A second pay statement is missing."
+- `:445` Compensation → Chapter 15: Ch 15 (`04-part-iv.md:1125–1355`) mentions compensation 4 times; Ch 22 (`06-part-vi.md:634–960`) 18 times, including § The mechanics that make retries safe (`:836`) and § Where transaction guarantees begin and end (`:890`).
+- `:450` Acceptance criteria → Chapters 10 and 12: the definition is Ch 02 § Deterministic acceptance (`:728–730`); Ch 13 § Give evaluation its own independent path (`04-part-iv.md:659`) and Ch 15 § Terminal correctness (`:1150`) exist.
+- `:492` "Channels → Part I" and the `system-overview.gv` badge "I" on the Channels band; `:510–513` "this same picture": `system-overview.gv` has 7 bands (Channels, Agent runtime, Collaboration, Knowledge, Control points, Systems of record, Evidence) plus Security and Platform spines; `reference-architecture.gv` has Experience and channels, Edge and admission, Run control and durable execution, Agent applications, Knowledge/context/memory, Gateways and integration, Systems of record and providers, with Trust and governance and Evidence and improvement as spines. Collaboration has no cluster; Evidence changes from band to spine.
+- "Agent Gateway" occurs three times book-wide (`01-part-i.md:525`, `05-part-v.md:561`, `gateway-roles.gv:11`); Ch 19 also uses "A2A Gateway" (`05-part-v.md:414, :438, :455, :499`). Consistent with D-07.
+- The supplier thread appears only in `00-front-matter.md:29, :73`, `01-part-i.md:20–25, :356–377, :640, :908`; "onboarding" appears unlabeled only in P-02 (`04-part-iv.md:1391`), AP-03 (`:1675`), and AP-07 (`:1813`).
+- `book-map.gv` labels ("Architecture and knowledge", "Patterns and anti-patterns", "Multi-agent and integration", "Security and guardrails", "Observability and evaluation", "Governance and operations") differ from the Part titles; `00-front-matter.md:88–92` describes a request flow while the figure is a Parts map.
+- Ch 19's gateway table is at `05-part-v.md:558–565` under § What belongs at the LLM Gateway—and what does not (`:552`) and adds an "Orchestration layer" row.
+- `:603` "autonomy level" and `:586` "Autonomy": the book never defines an autonomy scale; Ch 02 P8 (`:750`) uses "Autonomy level" undefined.
+
+**Recommendations amended:** C01-R04 (file list and chapter occurrences), C01-R26 (Closing Perspective placement per D-26). No recommendation breaks the 8/28/12 topology, the examples/ rule, the diagram-source rule, or citation scope; C01-R01's registry edit and C01-R11/R22's `.gv` edits are source edits followed by `make diagrams`.
+
+**Decisions in overall-book-review.md affected:** D-31 ("C01-R04 lists the eight example and test files"; "the remaining … `06-part-vi.md` occurrences") and Phase 1 item 5 ("the 8 example and test files") should read ten files and drop `06-part-vi.md`; `04-part-iv.md:1381` (P-01) joins the Part IV mechanical edits. D-26/C01-R26 placement as noted above.
+
+**Could not verify:** the judgement that Ch 26 does not follow the problem → boundaries → … → trade-offs arc (FM-6) is defensible but softer than for Ch 16/17: Ch 26 has five argumentative H2s plus the template sections and no implementation or failure-mode section by name. The claim that the comparative thread "appears only as Ch 02/03 boxes that restate their design choices" is confirmed for the boxes; whether the boxes "restate" rather than extend the design choices is a judgement I agree with on reading `:640` and `:908`.

@@ -8,7 +8,7 @@ Ch 09 rests on two things:
 - **One strong idea:** § Installing a pack grants nothing (`:390–413`). It confronts the package-manager intuition directly, gives a "does / does not" table, and closes with the business-unit example. It is the best-argued passage in Part III.
 - **One good motivating scenario:** the evidence-schema gap between document validation and income verification (`:377`).
 
-The rest is thin. It is ~1,130 words, the shortest chapter in the book apart from the catalog chapters.
+The rest is thin. At ~1,130 words it is the shortest chapter in the book; the next shortest is Ch 10 at ~1,380, and the catalog chapters Ch 16 and Ch 17 are ~1,430 and ~5,950. [verified: corrected — it is the shortest outright, not "apart from the catalog chapters"]
 
 1. **The chapter's thesis, compatibility, is asserted but never explained.** CompatibilityReport is a core contract (`:382`) that the body never describes. The fullest account of what compatibility covers is the design-review answer (`:495`), not the prose.
 2. **§ Pack governance and sharing is two sentences** (`:415–417`). It does not cover:
@@ -17,7 +17,7 @@ The rest is thin. It is ~1,130 words, the shortest chapter in the book apart fro
    - who owns a pack when its Skills have different owners. Ch 08's closing promise "without dissolving ownership" (`:354`) is never kept;
    - how the pack version relates to the ReleaseManifest's `skill_pack_versions` (`08-part-viii.md:366`) and to each run's RunManifest.
 3. **Vocabulary drifts on promotion.** The prose gives the aliases as "development, staging, and production" (`:417`). Q4 gives "dev, staging, shadow, canary, production, and rollback aliases" (`:497`). Ch 08 has lifecycle states and Ch 27 has promotion stages. Nothing separates a *lifecycle state* (trust status of a version) from an *alias* (which version an environment resolves).
-4. **The six-Skill mortgage list appears three times** (`:360`, `:386`, `:421`). The three off-thread domain examples (`:422–424`) add little.
+4. **The mortgage Skill list appears three times** (`:360`, `:386`, `:421`). The case box names five Skills (evidence retrieval, document validation, income and property checks, policy explanation, underwriter-package preparation); `:386` and `:421` repeat them and add a sixth, document request. The three off-thread domain examples (`:422–424`) add little. [verified: corrected — the case box lists five, not six]
 5. **The inline code excerpt is broken and violates policy.** It calls `_semver_key`, which is not defined in the excerpt, and imports names it never uses. It also repeats the four-state `status` problem (`:437–465`). `AGENTS.md` forbids code in `source/parts/`.
 6. **The closing gives no bridge into Part IV.** Ch 10 never mentions the platform (`04-part-iv.md:9–30`).
 
@@ -55,12 +55,12 @@ Today the reader gets What, Why, and the install invariant. How, Ownership, and 
 **Opening boxes (`:358–364`).**
 - The case box and the design choice are good.
 - The case box is a MORTGAGE CASE box, while Ch 08 used a NORTHSTAR box (concept map T1). Follow the synthesizer's decision.
-- The case box's six-Skill list is the first of three.
+- The case box's Skill list (five Skills; `:386` and `:421` add document request) is the first of three.
 
 **`## Why domain capabilities need to ship together` (`:366`).**
 - *Role:* the "why".
 - *Adds:* Skills must agree about schemas, policy, terminology, evaluation, and operations.
-- *Verdict:* fine, but its final payoff sentence ("roll out a compatible capability bundle…") is repeated at `:377`.
+- *Verdict:* fine, but its final payoff sentence ("roll out a compatible capability bundle…") is restated in substance, not verbatim, at `:377` ("one unit to promote or roll back"). [verified: softened — same point, different wording]
 - *Issue:* this is a double-why opening with the next section.
 
 **`## Compatibility, not convenience` (`:375`).**
@@ -73,7 +73,7 @@ Today the reader gets What, Why, and the install invariant. How, Ownership, and 
 - *Role:* defines what a pack pins and what the pack manifest declares.
 - *Adds:* the manifest field list (`:388`).
 - *Issues:*
-  - The list of six Skills repeats the case box.
+  - The list of six Skills repeats the case box's five and adds document request.
   - "A pack can expose a smaller capability surface to each agent" (`:388`) is an important least-agency claim with no mechanism (C09-R06).
   - "risk ceiling" agrees with C08-R06. Keep it.
 
@@ -106,7 +106,7 @@ Today the reader gets What, Why, and the install invariant. How, Ownership, and 
 - *Issues:*
   - The H2 is an empty wrapper.
   - The excerpt is a partial copy of `examples/platform/skills_registry.py`: it uses `_semver_key` without defining it, and its imports (`hashlib`, `json`, `re`, `Field`, `model_validator`, `SkillRequirement`) are unused in the excerpt.
-  - It shows only the manifest class. The parts of the example that teach compatibility, `register_pack` and `resolve_pack`, are left out.
+  - It shows only the manifest class. The parts of the example that enforce pack-to-Skill lifecycle consistency, `register_pack` (unknown Skills refused; an active pack may reference only active Skills) and `resolve_pack` (deprecated content only in replay mode), are left out. Note that neither checks schema compatibility; the example has no CompatibilityReport. [verified: softened — the omitted code teaches lifecycle consistency, not compatibility]
 
 **Template sections: `## If this fails in production` (`:467`), `## What to verify before production` (`:473`), `## Put the idea to work` (`:485`), `## Questions to bring to design review` (`:490`).**
 - *If this fails:* all three steps are good and pack-specific. Step 2 ("Compare pack alias history with active run manifests") assumes the RunManifest records the pack version, which Ch 04's RunManifest does not (C09-R02, plus the Ch 04 owner change in the Ch 08 review).
@@ -146,13 +146,13 @@ The additions above are all mechanism. The cuts are C09-R03, C09-R04, and C09-R0
 - **Within the chapter:**
   - § Why domain capabilities… → § Compatibility, not convenience gives the same payoff twice (C09-R08).
   - § Installing a pack grants nothing → § Pack governance and sharing jumps from runtime authority to release aliases with no bridge. C09-R02's opening sentence (lifecycle state versus alias) provides one.
-- **Ch 09 → Ch 10 (`:502` → `04-part-iv.md:3–7`, `:9–30`).** Neither the Part IV orientation nor Ch 10 refers back. Readers lose the thread of how patterns run *on* the paved road. The concept map's Ch 09 entry makes the same point, and I verified it: no chapter after Ch 09 cites Ch 07, 08, or 09 by number. The only inbound pointer to Part III anywhere is Ch 05 → Ch 8 (`02-part-ii.md:430`).
+- **Ch 09 → Ch 10 (`:502` → `04-part-iv.md:3–7`, `:9–30`).** Neither the Part IV orientation nor Ch 10 refers back. Readers lose the thread of how patterns run *on* the paved road. The concept map's Ch 09 entry makes the same point, and it holds: no chapter after Ch 09 cites Ch 07, 08, or 09 by number. The only inbound pointers to Part III from outside it are all earlier: Ch 03's "Chapters 4–7" (`01-part-i.md:904`), Ch 05 → Chapter 8 (`02-part-ii.md:430`), and Ch 06's closing → Chapter 7 (`02-part-ii.md:947`). [verified: corrected — Ch 05 is not the only inbound pointer; none comes from Parts IV–VIII or the appendices]
 
 ## Redundant and Repetitive Concepts
 
 | Concept | Occurrences | Verdict |
 | --- | --- | --- |
-| Mortgage pack's six Skills | `:360` (case box), `:386`, `:421` | D. Keep the case box only (C09-R03). |
+| Mortgage pack's Skills (five in the case box, six at `:386` and `:421`) | `:360` (case box), `:386`, `:421` | D. Keep the case box only (C09-R03). |
 | "Promote or roll back as one unit" | `:370–373`, `:377` | D. Merge the openings (C09-R08). |
 | Installation does not grant authority | `:392–394`, table `:402–407`, checklist `:479`, Q3 `:496` | R (the invariant). Keep. |
 | Promotion stages and aliases | `:417`, `:481`, Q4 `:497` | Conflicting. Unify (C09-R02). |
@@ -232,7 +232,7 @@ The net change is about +300 / −150 words.
    - **Issue:** The six-Skill list is repeated three times.
    - **Why it matters to the reader's mental model:** Repetition dilutes the one new thing `:386–388` says, namely what else a pack pins.
    - **Change:**
-     - Change `:386` to: "Harborlight's mortgage-evidence pack pins the six Skills named above, together with shared policy, taxonomy, knowledge strategy, workflow templates, evaluation datasets, dashboards, and runbooks."
+     - Add "document request" to the case box's list at `:360` so it names all six Skills, then change `:386` to: "Harborlight's mortgage-evidence pack pins the six Skills named above, together with shared policy, taxonomy, knowledge strategy, workflow templates, evaluation datasets, dashboards, and runbooks." [verified: amended — the case box currently names only five Skills, so "the six named above" would be false without this edit]
      - Delete bullet 1 at `:421`.
    - **Related sections:** case box `:360`.
 
@@ -249,7 +249,7 @@ The net change is about +300 / −150 words.
 5. **C09-R05**
    - **Priority:** High. **Action:** Remove / Add (example region).
    - **Location:** `### Skill Pack contract` (`:437–465`); `examples/platform/skills_registry.py`.
-   - **Issue:** The inline code violates `AGENTS.md`. It is a broken excerpt (it uses `_semver_key` undefined and has unused imports), it carries the four-state status, and it omits the logic that actually teaches compatibility.
+   - **Issue:** The inline code violates `AGENTS.md`. It is a broken excerpt (it uses `_semver_key` undefined and has unused imports), it carries the four-state status, and it omits the logic that enforces the prose's lifecycle rule (`register_pack`, `resolve_pack`). [verified: softened — the example contains no compatibility check to show]
    - **Why it matters to the reader's mental model:** The code should show the invariants the prose states.
    - **Change:**
      - Delete the inline block.
@@ -281,8 +281,8 @@ The net change is about +300 / −150 words.
    - **Issue:** A double-why opening with a repeated payoff.
    - **Why it matters to the reader's mental model:** The concrete scenario is the hook. Right now it comes second.
    - **Change:**
-     - Keep the `:366` heading. Its body becomes `:368–370` (the first two sentences), followed by the `:377` paragraph.
-     - Delete `:370–373` (from "The payoff is visible…") and the `:375` heading.
+     - Keep the `:366` heading. Its body becomes `:368–371` (the first two sentences, ending "…promoted as one release."), followed by the `:377` paragraph.
+     - Delete the third sentence at `:371–373` (from "The payoff is visible…") and the `:375` heading. [verified: corrected — "The payoff" begins on `:371`, not `:370`]
      - Keep the state-owner table after the merged text.
    - **Related sections:** Ch 08 C08-R09 (same pattern).
 
@@ -303,3 +303,24 @@ The net change is about +300 / −150 words.
     - **Why it matters to the reader's mental model:** Triage steps must rest on records that actually exist.
     - **Change:** Change it to "Compare pack alias history with the pack version and Skill digests recorded in each affected run's RunManifest." This depends on the Ch 04 RunManifest change listed in the Ch 08 review.
     - **Related sections:** C09-R02 (d).
+
+## Verification log
+
+- **Line refs checked:** 54 in-chapter and cross-chapter references; 2 fixed (C09-R08: `:368–370` → `:368–371` and `:370–373` → `:371–373`). All other cited lines exist as described, including `04-part-iv.md:3–7`, `:9–30` (no "platform" in Ch 10's opening), `:410`, `:514`; `06-part-vi.md:1067`; `08-part-viii.md:162`, `:170` (compatibility matrix), `:235–248`, `:251–262`, `:346`, `:353`, `:366`, `:385`; `09-appendices.md:217`; `01-part-i.md:744` (principle 2, least agency); `06-part-vi.md:407` (intersection of grants, Ch 21).
+- **Claims removed:** none.
+- **Claims corrected (3):**
+  - "the shortest chapter in the book apart from the catalog chapters" → the shortest outright (1,134 words; Ch 10 is next at 1,378; Ch 16 is 1,432, Ch 17 is 5,946).
+  - "The six-Skill mortgage list appears three times": the case box (`:360`) lists five Skills; `:386` and `:421` list six (adding document request). C09-R03 amended so the case box names all six before `:386` refers to "the six Skills named above".
+  - "The only inbound pointer to Part III anywhere is Ch 05 → Ch 8": grep of all `source/parts/*.md` finds three inbound pointers, all earlier than Part III (`01-part-i.md:904` "Chapters 4–7", `02-part-ii.md:430` "Chapter 8", `02-part-ii.md:947` "Chapter 7") and none from Parts IV–VIII or the appendices. The core claim (no later chapter cites Ch 07/08/09 by number) is confirmed.
+- **Claims softened (3):**
+  - The `:366` payoff sentence is "restated in substance" at `:377`, not repeated.
+  - `register_pack`/`resolve_pack` enforce lifecycle consistency; they do not check compatibility, and the example has no CompatibilityReport (section review and C09-R05 Issue).
+- **Confirmed, consequential:**
+  - The inline excerpt (`:441–465`) calls `_semver_key`, which is defined at `skills_registry.py:30` but absent from the excerpt; `hashlib`, `json`, `re`, `Field`, `model_validator`, and `SkillRequirement` are imported and unused in the excerpt. Its `status` Literal has four states (`:458`).
+  - `CompatibilityReport` occurs once in the book (`:382`). `support window` occurs at `:327` (Ch 08) and `:388` (Ch 09). `skill_pack_versions` occurs once (`08-part-viii.md:366`).
+  - § Pack governance and sharing is two sentences (`:417`) with aliases "development, staging, and production"; Q4 (`:497`) lists "dev, staging, shadow, canary, production, and rollback aliases"; Ch 27's stages are Build, Evaluate, Shadow, Canary, Promote, Learn (`08-part-viii.md:255–262`) and its CD stages are shadow, canary, tenant cohort, regional (`:158`).
+  - Ch 27 § Versioned objects (`08-part-viii.md:238–248`) has eleven rows and no Skill Pack row; the nearest is "Prompt/skill bundle" (`:240`).
+  - `register_pack` enforces "active pack must reference only active skills" (`skills_registry.py:123–127`), which the prose never states; exercise 2 (`:488`) asks for a single-Skill deprecation plan that `:415–417` does not teach.
+  - Ch 04's RunManifest records no pack version (`02-part-ii.md:177–195`), so step 2 of § If this fails (`:470`) rests on a field that does not exist (C09-R10).
+- **Recommendations amended:** C09-R03 (add document request to the case box), C09-R08 (line ranges), C09-R05 (Issue wording). C09-R04's reconciled branch (D-21, retire the thread) and C09-R09's reconciled handling (D-28) are consistent with §12; C09-R02(b)'s "Chapter 27 § Rollback and active runs" is already flagged in §12 for renaming when applied. No recommendation touches the 8/28/12 topology; C09-R05 moves code to `examples/` as required.
+- **Could not verify:** the "+300 / −150 words" estimates; whether `resolve_pack`'s replay mode is "Chapter 8's compatibility window in code" (C09-R05's proposed sentence) is an interpretation, since the code's docstring does not say so.

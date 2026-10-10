@@ -4,7 +4,7 @@ Reviewed: `source/parts/08-part-viii.md:1–124` (Part VIII orientation at `:1�
 
 ## Overall Assessment
 
-Chapter 26 has the right thesis: governance is a control loop with named decision owners, proportional tiers, and expiring exceptions. Its opening (the control loop, the Harborlight owner paragraph, and the "If the team asks…" table) is among the clearest framing in Part VIII. After that the chapter thins out quickly. § Make review predictable and proportional, which should carry the operating model, is two run-on sentences packing about 30 list items with no explanation (`:74`, `:76`). Exceptions are named six times but their lifecycle is never explained. The chapter's implementation (inventory, exception API, GovernanceRecord, ExceptionWaiver) sits in Ch 27 (`:266–274`, `:288`, `:302–303`, `:316–317`), and the governance-record field list sits in Ch 23 (`06-part-vi.md:1070`).
+Chapter 26 has the right thesis: governance is a control loop with named decision owners, proportional tiers, and expiring exceptions. Its opening (the control loop, the Harborlight owner paragraph, and the "If the team asks…" table) is among the clearest framing in Part VIII. After that the chapter thins out quickly. § Make review predictable and proportional, which should carry the operating model, is two run-on sentences packing about 30 list items with no explanation (`:74`, `:76`). Exceptions are characterized six times (and named in about 13 lines of the chapter) but their lifecycle is never explained. [verified: corrected — "named six times" undercounted; six is the number of definitional restatements, see § Redundant] The chapter's implementation (inventory, exception API, GovernanceRecord, ExceptionWaiver) sits in Ch 27 (`:266–274`, `:288`, `:302–303`, `:316–317`), and the governance-record field list sits in Ch 23 (`06-part-vi.md:1070`).
 
 The most serious continuity defect is risk numbering. The chapter defines a 0–4 tier scale for use cases (`:62–68`) but never relates it to the R0–R4 effect risk classes the reader learned in Ch 22 (`06-part-vi.md:714`) and has seen in Ch 12, 21, 23, and 24. It calls its own tiers "risk classes" at `:44` and in Figure 26-1. It also never relates either scale to the *change* risk that Ch 25's Approve stage and P-10 use to decide auto-promotion. A reader therefore reaches Ch 27's "risk-tiered eval gates" (`:230`, `:258`) without knowing which scale decides gate depth.
 
@@ -25,7 +25,7 @@ By the end of the chapter the reader should hold:
 
 **Part VIII orientation (`:1–7`).** Role: frame Part VIII. It states the operating problem well ("a run is still active during a deployment"). Issues: it does not say what each of the three chapters answers, and it does not connect back to Part VII's output (evidence and candidate changes). It also lists "reliability", but Part VIII does not own the reliability mechanisms (Ch 15, Ch 22 do). Verdict: adequate, but it misses the handoff from Part VII. See C26-R12.
 
-**§ Why governance belongs in the operating model (`:13–19`).** Role: chapter intro. It adds the claim that governance must change behavior, plus the multi-team motivation. Flow: there is no inbound bridge from Ch 25, whose loop ends at an "Approve" stage (`07-part-vii.md:401`) and whose closing promises "decision rights, risk tiers, approvals, exceptions, and accountability" (`:495`). This section is the natural place to say that Ch 26 answers *who approves, how deeply, and what happens when a control cannot be met*. It forms a double "why" opening with the first paragraph of the next H2 (`:23`), which restates it. Verdict: needs the bridge and a merge (C26-R07).
+**§ Why governance belongs in the operating model (`:13–19`).** Role: chapter intro. It adds the claim that governance must change behavior, plus the multi-team motivation. Flow: there is no inbound bridge from Ch 25, whose loop has an "Approve" stage (`07-part-vii.md:401`) that defers the decision to governance [verified: corrected — the loop does not end at Approve; Deploy, Monitor, and Learn follow at `:402–404`] and whose closing promises "decision rights, risk tiers, approvals, exceptions, and accountability" (`:495`). This section is the natural place to say that Ch 26 answers *who approves, how deeply, and what happens when a control cannot be met*. It forms a double "why" opening with the first paragraph of the next H2 (`:23`), which restates it. Verdict: needs the bridge and a merge (C26-R07).
 
 **§ Governance starts with clear decisions and owners (`:21–40`).** Role: the core framing. It adds the state-owner table, the control loop (`:29`), the Harborlight owner paragraph (`:31`), the four-question table (`:33–38`), and the central-board argument (`:40`). Flow: strong. The control loop is the chapter's best mental model. Issues:
 - The Harborlight paragraph names the same owners as the accountability table 17 lines later, but appears before that table exists, so the reader meets the example before the structure (C26-R08).
@@ -75,13 +75,13 @@ Verdict: keep after moving the content.
 
 - **Tier assignment and re-tiering** (`:60–70`). The reader is not told who assigns the tier (the accountability table says the risk owner, `:51`, but § Match the control to the risk does not), when it is re-scored, or how it relates to effect classes. Two or three sentences plus the floor rule in C26-R01 are enough.
 - **Release review depth** (`:72–76`). This is the mechanism that makes governance "predictable", and it is absent. C26-R02 adds it as one short rule tied to Ch 25.
-- **Exception lifecycle.** Exceptions are mentioned at `:38`, `:58`, `:74`, `:101`, `:110`, and `:118`, but the request → approve → monitor → expire/absorb sequence is never stated. The fields exist in Ch 27's ExceptionWaiver (`:317`). C26-R05.
+- **Exception lifecycle.** Exceptions are characterized at `:38`, `:58`, `:74`, `:101`, `:110`, and `:118` (and named in passing at `:17`, `:27`, `:44`, `:88`, `:91`, `:120`), but the request → approve → monitor → expire/absorb sequence is never stated. The fields exist in Ch 27's ExceptionWaiver (`:317`). C26-R05.
 - **Control hierarchy and cadence** (`:74`, `:76`). The content is present but unreadable as prose lists. A tabular conversion is enough (C26-R04).
 - **Implementation.** Ch 26 has no "A workable implementation" and no "A sensible place to start". The implementation material exists in Ch 27 and Ch 23; moving it fills the gap (C26-R03). I do not recommend adding new inline code.
 
 ## Missing Conceptual Connections
 
-- **Ch 25 Approve stage → Ch 26 decision rights**, missing the bridge "who approves, at what depth". Location: `:13–19`. Ch 25's loop table (`07-part-vii.md:401`) ends with "Risk class and domain/security/privacy/operations decision into PromotionDecision". Ch 26 never says it is answering that row. (C26-R07)
+- **Ch 25 Approve stage → Ch 26 decision rights**, missing the bridge "who approves, at what depth". Location: `:13–19`. Ch 25's loop table has an Approve row (`07-part-vii.md:401`) reading "Risk class and domain/security/privacy/operations decision into PromotionDecision". [verified: corrected — the row is the seventh of ten, not the last] Ch 26 never says it is answering that row. (C26-R07)
 - **Effect risk class R0–R4 (Ch 22) → use-case tier**, missing a statement that they are different subjects and that the tier is bounded below by the highest eligible effect class. Location: `:60–70`. (C26-R01)
 - **Use-case tier → release gate depth (Ch 25 `ReleaseGateDecision.risk tier`, `07-part-vii.md:380`; Ch 27 "risk-tiered eval gates", `:230`, `:258`)**, missing the rule combining tier × change class (Ch 25 "pre-approved low-risk change classes", `07-part-vii.md:401`; P-10 "A typo fix auto-promotes", `04-part-iv.md:1471`). Location: `:72–76`. (C26-R02)
 - **Ch 25 gate result "waiver-required" (`07-part-vii.md:365`) → Ch 26 exception**, missing the statement that a waiver *is* a Ch 26 exception with an ExceptionWaiver record. Location: the new exception lifecycle (C26-R05).
@@ -113,7 +113,7 @@ Verdict: keep after moving the content.
 | Ch 25 § What to verify before production (`07-part-vii.md:476`) | Use-case inventory check | D | Ch 25 replaces it with "Use-case inventory is current (Chapter 26)" (Ch 25 reviewer) |
 | Ch 16 P-10 (`04-part-iv.md:1467–1473`) | Risk-tiered evidence gates; "ChangeBundle → risk → validation…"; metrics "bypass, fatigue, exception age, regression escape" | R (decision card), but "risk" is ambiguous | Ch 16 reviewer: write "change class × use-case tier (Chapter 26)". Ch 26 absorbs the metrics (C26-R04) |
 | Ch 22 § Risk classes (`06-part-vi.md:714–722`) | R0–R4 effect classes | Different scale, unrelated in text | Ch 26 adds the relation (C26-R01). Ch 22 stays canonical for R-classes |
-| Ch 08 Skill manifest `min_risk_tier: 1` (`03-part-iii.md:233`) | Uses Ch 26's scale before definition, with no pointer | Dependency | Ch 08 reviewer: render it as `min_risk_tier: T1` with a pointer to Ch 26 |
+| Ch 08 Skill manifest `min_risk_tier: 1` (`03-part-iii.md:233`) | Uses Ch 26's scale before definition, with no pointer | Dependency | Ch 08 reviewer: render it as `min_risk_tier: T1` with a pointer to Ch 26 [verified: superseded by D-02 — the field becomes `risk_ceiling: R1`, an effect class (C08-R06), so it no longer depends on Ch 26] |
 | Ch 04 RunManifest `"risk_tier": "high"` (`02-part-ii.md:183`) | A third, non-numeric vocabulary | Drift | Ch 04 reviewer: use `"T3"` (or the named tier) |
 | Appendix A row "Governance P-10 ↔ AP-06 … 14, 17, 26" (`09-appendices.md:33`) | Pairs governance with Boolean approval | Mismatch (map §8) | Appendices reviewer |
 | Appendix G Phase 0 inventory (`09-appendices.md:179`) | Use-case/risk inventory | R | Keep |
@@ -132,7 +132,7 @@ Verdict: keep after moving the content.
    - the template sections
 3. Do not add a "A sensible place to start" code listing. The moved records and "Put the idea to work" serve that role. If the author wants one, register it under `examples/` per `AGENTS.md`; do not write it inline.
 
-**Disagreement with the concept map:** none of substance. The map lists ValidationReport as "never defined". It is *named* as the Validate-stage output in Ch 25's loop table (`07-part-vii.md:400`), though it has no record definition. The fix is the same: point to Ch 25's records.
+**Disagreement with the concept map:** none of substance. The map lists ValidationReport as "never defined". It is *named* as the Validate-stage output in Ch 25's loop table (`07-part-vii.md:400`), in Ch 07's golden path (`03-part-iii.md:106`), and in Ch 20's supply-chain row (`06-part-vi.md:82`), though it has no record definition anywhere (verified by grep). The fix is the same: point to Ch 25's records.
 
 ## Concrete Recommended Changes
 
@@ -180,7 +180,7 @@ Verdict: keep after moving the content.
    - **Related sections:** P-10 `04-part-iv.md:1473` (Ch 16 reviewer points here for metrics).
 
 5. **C26-R05 — Medium — Add.** Location: new `### Exceptions that expire` at the end of § Make review predictable and proportional.
-   - **Issue:** exceptions are named six times but their lifecycle is never given.
+   - **Issue:** exceptions are characterized six times but their lifecycle is never given.
    - **Why it matters:** "an exception without an expiry is a silent policy change" is the chapter's sharpest claim, and the reader is never shown the mechanism.
    - **Change:** four or five sentences:
      - a request names the exact control gap, scope, and compensating controls;
@@ -204,8 +204,8 @@ Verdict: keep after moving the content.
    - **Issue:** there is no inbound bridge, and the opening is a double "why".
    - **Why it matters:** readers arrive from Ch 25's Approve stage and need to know that this chapter answers it.
    - **Change:**
-     - Replace the second sentence of `:15–19` with, in substance: "Chapter 25's improvement loop ends at an Approve stage; this chapter decides who approves, how deeply, and what happens when a required control cannot be met."
-     - Move paragraph `:23` into § Why governance belongs… as its second paragraph, and delete its last sentence, which restates `:16`.
+     - Replace the second sentence of `:15–19` with, in substance: "Chapter 25's improvement loop defers its Approve stage to governance; this chapter decides who approves, how deeply, and what happens when a required control cannot be met." [verified: corrected — "ends at an Approve stage" was false; Ch 25's loop continues through Deploy, Monitor, and Learn]
+     - Move paragraph `:23` into § Why governance belongs… as its second paragraph, and delete the sentence "Start by naming the decision, the accountable role, the evidence needed, and the time boundary. Then scale review to the risk.", which restates `:16–17`. Keep its last sentence (predictability), which is the section's thesis and does not restate `:16`. [verified: corrected — the original named the wrong sentence as the restatement]
      - § Governance starts with clear decisions and owners then begins with the control loop (`:29`).
    - **Related sections:** Ch 25 `07-part-vii.md:401`, `:495`.
 
@@ -250,3 +250,24 @@ Verdict: keep after moving the content.
    - **Issue:** C23-R05 moves Ch 23's governance-sources row here, but no Ch 26 item received it.
    - **Change:** Merge it into the existing "Regulatory applicability" row rather than adding a second row. Add only what Ch 26's row lacks (NIST AI RMF under revision as of 2026; OWASP as community security guidance), keep each claim inside its registry scope (R12, R14, R15, R40), and update the "draws on" sentence. Run `make references`.
    - **Related:** C23-R05.
+
+## Verification log
+
+- **Line references checked:** 62 (all references to `08-part-viii.md`, `07-part-vii.md`, `06-part-vi.md`, `04-part-iv.md`, `03-part-iii.md`, `02-part-ii.md`, `09-appendices.md`, and `governance-model.gv`); 0 fixed. All quoted phrases (`:44`, `:119`, `:124`, `07-part-vii.md:401`, `:495`, `04-part-iv.md:1471`) are verbatim.
+- **Claims removed:** none.
+- **Claims corrected or softened:**
+  - "Ch 25's loop ends at an Approve stage" (Overall § Why governance, Missing connections, C26-R07 replacement text) — Ch 25's loop continues through Deploy, Monitor, Learn (`07-part-vii.md:402–404`); reworded to "defers its Approve stage to governance".
+  - "Exceptions are named six times" — the chapter names exceptions in 13 lines; six is the count of definitional restatements. Reworded in three places.
+  - C26-R07 named the wrong sentence of `:23` as the restatement of `:16`; corrected to the "Start by naming the decision…" sentences.
+  - Cross-chapter row for Ch 08 `min_risk_tier` marked superseded by D-02 (`risk_ceiling: R1`), consistent with the Reconciled note already in C26-R01.
+- **Important claims confirmed:**
+  - `:44` and `governance-model.gv` (node `c3` "Risk classes and exceptions", node `board` "proportional to risk class") use "risk class" for Ch 26's use-case tiers; Ch 22 § Risk classes (`06-part-vi.md:714–722`) owns R0–R4 — confirmed by reading both.
+  - R0–R4 is seen in Ch 12 (`04-part-iv.md:518`), Ch 21 (`06-part-vi.md:495`), Ch 23 (`:1178`), Ch 24 (`07-part-vii.md:145`) before Ch 26 — grep confirmed.
+  - Factor-list drift: `:70` 10 factors, `:92` 3, `:99` 8, `:117` 7 — counted.
+  - `:74` holds a 5-layer hierarchy plus 14 review areas; `:76` five cadences — counted.
+  - ValidationReport has no record definition anywhere in the book (grep: named only at `03-part-iii.md:106`, `06-part-vi.md:82`, `07-part-vii.md:400`, and Ch 26 `:27`, `:37`, `:57`).
+  - Ch 27 holds the governance implementation at `:266–274`, `:288`, `:302–303`, `:316–317`; Ch 23's field list is at `06-part-vi.md:1070` — confirmed.
+  - Ch 26 has no THE DESIGN CHOICE box; 23 of 28 chapters have one (grep count), so "one of five" holds.
+  - Ch 08 `min_risk_tier: 1` (`03-part-iii.md:233`) and Ch 04 `"risk_tier": "high"` (`02-part-ii.md:183`) are the only numeric/string tier fields — grep confirmed.
+- **Recommendations amended:** C26-R07 (two wording fixes, above). All others consistent with §12 D-02, D-05, D-19, D-22, D-29 as already annotated; none breaks the 8/28/12 topology, moves code inline, or hand-edits a rendered diagram.
+- **Not verified:** whether Ch 23's reviewer (C23-R05) actually routes the governance-sources row to C26-R13 was taken from §12 D-29, not re-read.

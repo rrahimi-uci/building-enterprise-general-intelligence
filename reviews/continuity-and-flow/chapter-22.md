@@ -15,7 +15,7 @@ The chapter is, however, two chapters stacked on top of each other:
 - **Two implementation sections.** There are two § A workable implementation blocks (`:726`, `:846`), each with owners, contracts, records, and a scale list. EffectRecord is defined twice with different fields (`:769` vs `:870`). `effects/{id}:reconcile` and `effects/{id}:compensate` appear in both API tables (`:752–753` vs `:859–860`). Two components with the same job appear under different names: "Health/Quota Service" (`:739`) and "Dependency Health Service" (`:850`).
 - **Two Required-analysis tables** (`:692`, `:811`). The first carries an off-thread HR salary example.
 - **Its concepts arrive pre-taught.** Unknown outcome is taught at least five times before this chapter (Ch 02 Verify gate, Ch 03 § One retry owner, Ch 04 § Effect receipt, Ch 15 PRODUCTION CONSIDERATION, AP-05). R0–R4 risk classes are used in Ch 12 and Ch 21 before they are defined here (`:714`). Ch 22 never acknowledges any of this. A reader arriving from Ch 21 meets the same explanations a sixth time, with no signal that this is now the full treatment.
-- **The chapter's own runnable example teaches the opposite of its thesis.** `examples/foundations/effect_idempotency.py` releases the key when `apply()` raises any exception, and its test `test_failure_does_not_poison_the_key` asserts that a downstream 500 leaves the key "retryable because the effect never committed". That is AP-05 ("timeout means failure"). Below it, an inline InMemoryEffectLedger excerpt implements the correct Unknown semantics, so the section holds two ledgers with contradictory behaviour.
+- **The chapter's own runnable example does not model its central case, and its exception path would treat a timeout as a clean failure.** `examples/foundations/effect_idempotency.py` scopes itself (docstring) to at-least-once replay: "the ledger guarantees the intent commits once, even if the agent, the queue, or the operator retries it". Its only Unknown path is a concurrent in-flight key. When `apply()` raises *any* exception, the `finally` block releases the key and nothing is recorded, so a `TimeoutError` from a dispatched mutation would leave the key retryable: the AP-05 sequence (timeout → failed → retry). The test `test_failure_does_not_poison_the_key` exercises a `RuntimeError("downstream 500")`, which is a received response rather than a timeout, so the test itself is closer to the chapter's Declined case than to AP-05; what is missing is any test or code path for the ambiguous outcome. Below it, an inline InMemoryEffectLedger excerpt implements the Unknown semantics, so the section holds two ledgers with different behaviour on failure. [verified: softened — the test's 500 case is a defensible Declined; the AP-05 reading applies to the undifferentiated exception path, not to the asserted case; "teaches the opposite of its thesis" overstated]
 - **The checklist omits the chapter's central rule.** § What to verify before production has no check for Unknown outcomes. It does have a check ("Commands and facts are distinct…", `:992`) that the chapter never teaches.
 
 Verdict: keep Ch 22 in Part VI (see the disagreement with the map below). Merge it into one argument and one implementation block. Make it explicitly the canonical home for Unknown and for risk classes, and fix the example.
@@ -54,7 +54,7 @@ What the reader already has: the six gates (Ch 02), the effect-receipt fields (C
 - *Role:* the core protocol: the state machine, receipt content, the Unknown path, the failure timeline, and the property table.
 - *Verdict:* the chapter's best section, and it should be the canonical statement of Unknown.
 - *Issues:*
-  - The precise definition of Unknown appears only in design-review Q3 (`:1013`).
+  - The definition of Unknown is split: `:667` names it ("gives that ambiguity a name—unknown"), the one-clause definition sits in the second implementation block (`:884`, "**Unknown** means the system lacks proof and must stop dependent work"), and the fullest statement is design-review Q3 (`:1013`). None sits at the head of this section. [verified: corrected — "appears only in Q3" was wrong; `:884` defines it in the body]
   - Figure 22-1 and the terminal-state definitions (`:879–888`) sit inside the *second* implementation block, about 200 lines after the states are first listed (`:669`).
 - *Fix:* C22-R03.
 
@@ -68,7 +68,7 @@ What the reader already has: the six gates (Ch 02), the effect-receipt fields (C
 
 **§ What a ToolManifest must declare (`:702`).**
 - *Role:* the manifest field groups.
-- *Verdict:* good and canonical. Ch 02 uses ToolManifest in its example without defining it, and Ch 05 (`02-part-ii.md:430`) points here.
+- *Verdict:* good and canonical. Ch 02 names ToolManifest in its state-owner table (`01-part-i.md:665`) and its example defines only a minimal dataclass (`governed_tool_gateway.py:39`); the field groups are defined only here. Ch 05 (`02-part-ii.md:430`) points here. [verified: corrected — the Ch 02 example does define a `ToolManifest` class; the chapter prose does not define the field groups]
 - *Issue:* the DEVELOPER GUIDELINE box (`:805–807`) restates this section 100 lines later. Its one new point, "resolve the manifest at dispatch, not at import", belongs here (C22-R09).
 
 **§ Risk classes (`:714`).**
@@ -90,7 +90,7 @@ What the reader already has: the six gates (Ch 02), the effect-receipt fields (C
 - *Invocation sequence:*
   - Good, but it is not mapped to the six gates.
   - Its order (create the effect record, step 3, *before* approval, step 4) contradicts Figure 22-1, where the approval gate comes before Reserved and "denied/expired → Declined" implies a record already exists.
-- *Scale list:* half its bullets duplicate the second block's list.
+- *Scale list:* its partitioning bullet (`:797`) and limits/breaker bullet (`:800`) overlap the second block's (`:899`, `:902`); the other six bullets are distinct from the second list. [verified: softened — "half its bullets" overstated; two of eight overlap]
 - *Verdict:* merge with the second block (C22-R01, C22-R06, C22-R07).
 
 **§ Design for ambiguous outcomes, not just clean failures (`:809`).**
@@ -124,7 +124,7 @@ What the reader already has: the six gates (Ch 02), the effect-receipt fields (C
 **§ What the evidence lets us conclude (`:912`).**
 - *Role:* one claim.
 - *Issues:*
-  - "until reconciliation establishes committed or absent" uses "absent", which is not a state. The canonical state is Declined.
+  - "until reconciliation establishes committed or absent" uses "absent", which is the reconciler's outcome label in the inline ledger (`:977–979`, `outcome="absent"` → `declined`) and in Appendix B (`09-appendices.md:57`), not a state name. The row should use the state name Declined for consistency with `:669` and `:884`. [verified: softened — "absent" is a defined reconcile outcome, not an undefined word]
   - R03 (outbox) and R04 (CloudEvents) support atomic publication, duplicate-consumer handling, and event identity. They do not support "retrying an unknown write is prohibited". That half is a book-authored recommendation.
 - *Fix:* C22-R12.
 
@@ -200,7 +200,7 @@ What the reader already has: the six gates (Ch 02), the effect-receipt fields (C
 | --- | --- | --- | --- |
 | Unknown outcome / timeout ≠ failure | § A reliable protocol… `:665`, lifecycle `:879`, Q3 | Ch 01 Wednesday (`01-part-i.md:104`); Ch 02 Verify row (`:701`); Ch 03 § One retry owner (`:1184–1202`); Ch 04 § Effect receipt (`02-part-ii.md:204`); Ch 10 (`04-part-iv.md:49`); Ch 15 PRODUCTION CONSIDERATION (`:1253`), table row (`:1300`), Q (`:1349`); P-08 (`:1447`); AP-05 (`:1737`); Ch 24 worked example; Appendix B § When an effect may have happened… (`09-appendices.md:52`) | **Ch 22 is canonical.** Reinforcement (keep): Ch 01 narrative, the Ch 02 single-row preview, Ch 10's one sentence, Ch 15's table row and Q, AP-05 (anti-pattern view), Ch 24 (application). Redundant (owners shrink to pointers): Ch 03 § One retry owner table (Ch 03 owner, map S5); Ch 15 PRODUCTION CONSIDERATION box (Part IV owner); Ch 04 effect-receipt field list (Ch 04 owner, moves into Ch 22 per C22-R13). Appendix B: map "absent → Declined, unprovable → InterventionRequired, executing → Executing" to Ch 22's states (Appendix owner). |
 | One retry owner per failure class | mechanics `:839`, failure table | Ch 03 § One retry owner; AP-04; Ch 15 checklist (`04-part-iv.md:1331`); Ch 19 LLM Gateway row; Ch 28 limits row | Ch 22 is canonical. AP-04 is reinforcement (it gives the 3×3×2 arithmetic). Ch 03 is redundant (Ch 03 owner). |
-| Six-step write path | § Invocation sequence `:775` | Ch 02 § One proposal, six gates; Ch 03 § The same rule applies to writes (8 steps, `01-part-i.md:1096–1105`); Ch 04 flow; Ch 15 step 8 | Ch 02 owns the gates. Ch 22's sequence is the implementation of them and must say so (C22-R06). Ch 03's 8-step list is redundant (Ch 03 owner). |
+| Six-step write path | § Invocation sequence `:775` | Ch 02 § Six gates before anything changes (`01-part-i.md:658`); Ch 03 § The same rule applies to writes (8 steps, `01-part-i.md:1096–1105`); Ch 04 flow; Ch 15 step 8 (`04-part-iv.md:1165`) | Ch 02 owns the gates. Ch 22's sequence is the implementation of them and must say so (C22-R06). Ch 03's 8-step list is redundant (Ch 03 owner). [verified: corrected — Ch 02 heading name] |
 | Effect receipt fields | prose `:671`; state table "EffectReceipt" | Ch 04 § Effect receipt (`02-part-ii.md:202–204`) | Move the field list to Ch 22 Records. Ch 04 keeps one sentence and a pointer (**requires Ch 04 owner**). |
 | Outbox / inbox | § Where transaction guarantees… `:892`, OutboxRecord `:871` | Ch 04 § CloudEvents and outbox contracts (`02-part-ii.md:258`); Ch 15 § Event architecture | Ch 04 owns the envelope and code; Ch 22 owns the delivery semantics (agrees with map). OutboxRecord references Ch 04. |
 | Risk classes R0–R4 | § Risk classes `:714` | Ch 12 (`04-part-iv.md:465`, `:518`); Ch 02 (`01-part-i.md:734`); Ch 15 step 4; Ch 21 `:495`; Ch 23 `:1178`; Ch 24 (`07-part-vii.md:145`); Ch 08 `side_effect_class`; figure "R3/R4 only" | Ch 22 is canonical. **Requires Ch 02 owner:** a one-sentence gloss at first use. **Requires Ch 12 owner:** a pointer. Distinguish from Ch 26 tiers here. **Ch 26 owner:** rename tiers per map T11 (C22-R05). |
@@ -325,9 +325,9 @@ The cost is real: the reliability rows of the failure table are broader than sec
 4. **C22-R04 · High · Rewrite (example code) and Move.**
    - *Location:* `:920–982` § A sensible place to start / § Effect-state ledger; `examples/foundations/effect_idempotency.py`; `examples/tests/test_effect_idempotency.py`.
    - *Issue:*
-     - The registered example releases the key on any exception from `apply()`, and its test asserts that a downstream 500 makes the key retryable. That teaches AP-05.
+     - The registered example releases the key on any exception from `apply()` without distinguishing a received decline from a timeout, and has no Unknown path for a dispatched mutation (only for a concurrent in-flight key). Its test asserts that a downstream 500 makes the key retryable, which is defensible as a Declined case, but no test covers a timeout, and the code would treat one identically (AP-05's sequence). [verified: softened — see Overall Assessment]
      - The inline ledger has the correct semantics but is inline (contrary to AGENTS.md) and is formatted as semicolon-chained one-liners.
-   - *Why it matters:* the chapter's only runnable code contradicts its central rule.
+   - *Why it matters:* the chapter's only runnable code omits the chapter's central case, and its failure path does not fail safe for a timeout.
    - *Change:*
      - Replace the body of `effect_idempotency.py` with the inline ledger's semantics: reserved → executing → committed / declined / unknown; intent-hash conflict; reconcile to committed / declined / intervention_required.
      - Distinguish a typed `DownstreamDeclined` error (with proof of no effect → Declined, key released only for a new intent hash) from timeout or transport errors (→ Unknown; `commit()` refuses to re-apply until reconcile).
@@ -337,7 +337,7 @@ The cost is real: the reliability rows of the failure table are broader than sec
      - Keep the existing replay and intent-conflict tests.
      - Delete the inline block and keep only `[[EXAMPLE:effect-idempotency]]` with one lead sentence under the H2, removing the empty-H2 + H3 pattern.
      - Add one sentence: "The example omits Partial and compensation; exercise 1 adds them."
-   - *Related:* map §7.3 (effect-ledger code). The Ch 02 example (`governed_tool_gateway.py`) should be checked by the Ch 02 owner for the same failure-vs-unknown conflation.
+   - *Related:* map §7.3 (effect-ledger code). The Ch 02 example (`governed_tool_gateway.py:222–224`) already marks every connector exception Unknown and raises `EffectOutcomeUnknown`, which is the conservative direction; its only gap is that it has no Declined path for a typed downstream refusal. The Ch 02 owner may align its exception taxonomy with the rewritten Ch 22 example, but there is no AP-05 conflation there. [verified: corrected — the Ch 02 example does not share the failure-vs-unknown conflation]
 
 5. **C22-R05 · High · Add and Cross-reference (risk classes; requires Ch 02, Ch 12, and Ch 26 owners).**
    - *Location:* § Risk classes `:714–722`.
@@ -355,7 +355,7 @@ The cost is real: the reliability rows of the failure table are broader than sec
    - *Location:* § Invocation sequence `:775–792`; Figure 22-1 `assets/diagrams/src/effect-lifecycle.gv`.
    - *Issue:* the sequence is not mapped to the six gates, and the figure puts approval before Reserved while the text reserves first.
    - *Change:*
-     - Add after the list: "Steps 1–2 are Chapter 2's validate and authorize gates, step 4 its human authorization, steps 3 and 5 commit, and step 6 verify; acceptance stays with the workflow."
+     - Add after the list: "Steps 1–2 are Chapter 2's validate and authorize gates, step 4 its approval gate, steps 3 and 5 commit, and step 6 verify; acceptance stays with the workflow." (Chapter 2's section is § Six gates before anything changes, `01-part-i.md:658`; the gate name follows D-22's "approval" vocabulary.)
      - Edit the figure to proposal → Reserved → (R3/R4) Approval gate → Executing, with "denied/expired" going from the approval gate to Declined. Reserving first lets duplicate proposals awaiting approval share one logical key.
      - Run `make diagrams` and update the checksum.
 
@@ -401,7 +401,7 @@ The cost is real: the reliability rows of the failure table are broader than sec
 
 12. **C22-R12 · Medium · Rewrite (citation scope).**
     - *Location:* § What the evidence lets us conclude `:916`.
-    - *Issue:* "absent" is not a defined state, and R03/R04 do not support the prohibition on retrying an unknown write.
+    - *Issue:* "absent" is a reconcile-outcome label, not the state name (Declined), and R03/R04 do not support the prohibition on retrying an unknown write. [verified: softened]
     - *Change:*
       - Split the row in two:
         - "Event delivery | Transactional outbox and CloudEvents identity support at-least-once publication with consumer deduplication | R03; R04".
@@ -440,3 +440,27 @@ The cost is real: the reliability rows of the failure table are broader than sec
    - **Issue:** Same request as C05-R16.
    - **Change:** Add one line: "If every layer retries or a timeout is treated as failure, see AP-04 and AP-05 in Chapter 17."
    - **Related:** C17-R03.
+
+## Verification log
+
+- **Line references checked:** 94 (all `06-part-vi.md` refs for `:634–1019`, plus Ch 01–04, 10, 12, 14, 15, 17, 19, 21, 23, 24, 26, 28 and Appendix B cross-refs); 1 fixed (Ch 02 heading is § Six gates before anything changes, `01-part-i.md:658`, not "§ One proposal, six gates"; the `:258` ref for Ch 04's outbox heading is `:260`, within tolerance and left as is).
+- **Claims removed:** none.
+- **Claims softened:**
+  - "The runnable example teaches the opposite of its thesis / that is AP-05" → the example's exception path does not distinguish a timeout from a received decline and has no Unknown path for a dispatched mutation; the test's 500 case is defensible as Declined. C22-R04 is still warranted, for the missing Unknown path and the undifferentiated `finally`.
+  - "The precise definition of Unknown appears only in Q3" → `:884` defines it in the body; the problem is placement.
+  - "Ch 02 uses ToolManifest in its example without defining it" → the example defines a minimal dataclass; the field groups are defined only in Ch 22.
+  - "half its [scale] bullets duplicate" → two of eight overlap.
+  - "'absent' is not a state" → it is the inline ledger's and Appendix B's reconcile-outcome label, mapped to Declined.
+- **Important claims confirmed:**
+  - Two § A workable implementation H2s (`:726`, `:846`), each with owners, contracts, records, and a scale list. `:reconcile` and `:compensate` appear in both API tables (`:752–753`, `:859–860`). "Health/Quota Service" (`:739`) and "Dependency Health Service" (`:850`) both own breaker state.
+  - EffectRecord differs between `:769` (has tool, idempotency key; lacks effect version, logical key, invocation IDs) and `:870` (has effect ID/version, logical key, invocation IDs; lacks tool, idempotency key). The inline code `:944–950` has a third shape (logical_key, intent_hash, state, receipt, downstream_request_id, reconciliation_evidence). C22-R01's union list covers all three.
+  - Figure 22-1 (`effect-lifecycle.gv`) routes `proposal -> approval` (R3/R4) `-> reserved`, with `approval -> declined` on "denied/expired"; § Invocation sequence creates the effect record at step 3 and obtains approval at step 4. The order conflict is real.
+  - `effect_idempotency.py:34–37`: `try: receipt = apply() finally: self._in_flight.discard(effect_key)`; nothing is recorded on exception. `test_effect_idempotency.py:28–33` raises `RuntimeError("downstream 500")` and asserts the key is retryable. `EffectOutcomeUnknown` is raised only for an in-flight key (`:31–32`). The registry (`config/examples.json`) binds the example to chapter 22 only.
+  - The inline ledger's `EffectState` (`:937–938`) omits `partial`; exercise 1 (`:1004`) asks the reader to add it.
+  - Q4 `:1014` is byte-identical to Ch 14's `04-part-iv.md:1107` (`diff` empty).
+  - Ch 22 contains no backward chapter reference (the only "Chapter" in `:634–1019` is the Ch 23 handoff at `:1019`). Unknown is pre-taught at `01-part-i.md:104`, `:701`, `:1194`; `02-part-ii.md:204`; `04-part-iv.md:49`, `:1253`, `:1300`, `:1349`, `:1737`.
+  - R03 scope: "atomic state/event publication and duplicate-consumer considerations"; R04: "portable event envelope and event identity semantics". Neither covers the unknown-write prohibition; C22-R12's split is correct.
+  - Ch 26 tiers 0–4 at `08-part-viii.md:62–68` ("3 Protected action"); Ch 12 uses `"risk_class": "R1"` (`04-part-iv.md:465`) and "R4 commit" (`:518`); Ch 02 "risk class" at `01-part-i.md:734`; Ch 21 `:495`.
+  - Required-analysis `:697` lists an eight-stage order; `:700` is the HR salary example.
+- **Recommendations amended:** C22-R04 (issue and rationale softened; Ch 02 cross-check note corrected: `governed_tool_gateway.py:222–224` already maps every exception to Unknown); C22-R06 (Ch 02 section name; "human authorization" → "approval gate" per D-22). The example rewrite itself still stands and is consistent with D-23. No §12 decision changes.
+- **Not verified:** Ch 19 "LLM Gateway row" and Ch 28 "limits row" as retry-ownership restatements (existence of the rows confirmed, wording not compared); Ch 24's "worked example" is the Unknown effect at `07-part-vii.md:74` (confirmed by grep only).

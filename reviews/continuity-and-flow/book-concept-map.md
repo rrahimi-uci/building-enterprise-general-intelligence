@@ -636,7 +636,7 @@ Each item states the evidence and then the option the evidence supports. These a
 **S2. Reposition or slim the Ch 17 anti-pattern catalog.**
 - *Evidence:*
   - AP-02/09/13 ↔ Ch 05/06; AP-03 ↔ Ch 21; AP-04/05 ↔ Ch 03/15/22; AP-06 ↔ Ch 03/14; AP-07 ↔ Ch 02/13; AP-08/11 ↔ Ch 18; AP-10 ↔ Ch 13; AP-12 ↔ Ch 08/19; AP-14 ↔ Ch 24; AP-15/16 ↔ Ch 07/27.
-  - Ten of the sixteen corrections rely on Parts V–VIII (§4 rows 46–51). *(Corrected in synthesis: six cards depend on Parts V–VIII, three are adequately previewed, and seven are fully grounded in Ch 01–15, matching this map's own §2; see chapter-17.md.)*
+  - Ten of the sixteen corrections rely on Parts V–VIII (§4 rows 46–51). *(Corrected in synthesis and recounted in verification: seven cards are fully grounded in Ch 01–15; nine are completed by mechanisms Parts V–VIII build, of which seven are previewed in Ch 01–15 (AP-03, 04, 05, 11, 12, 15, 16) and two name their mechanism without a preview (AP-08, AP-14). The earlier synthesis split of 6 / 3 / 7 is superseded; see chapter-17.md Verification log and overall-book-review.md §3.)*
   - Each chapter's own "If this fails in production" is a thin 3-step list that the matching AP card supersedes.
 - *Option:* keep the catalog (it is the best-written diagnostic material) but place it after Part VIII. Replace the per-chapter "If this fails" lists with pointers to the relevant AP card.
 

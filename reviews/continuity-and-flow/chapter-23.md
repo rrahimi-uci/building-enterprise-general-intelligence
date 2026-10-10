@@ -329,7 +329,7 @@ Apply the Ch 20 / Ch 23 division of labour (chapter-20.md S1). Target outline:
       - The privacy promise (Ch 22 closing, R39) is barely delivered.
     - *Change:*
       - Add claim rows within registry scope:
-        - "Supply-chain admission | SBOM inventory and SLSA build provenance answer different questions; runtime admission should verify both for pinned artifacts | R17; R18".
+        - "Supply-chain admission | SBOM inventory and SLSA build provenance answer different questions (R18 is explicitly 'distinct from build provenance'; R17 defines provenance levels); that runtime admission should verify both for pinned artifacts is a book-authored recommendation | R17; R18". [verified: amended — the registry scopes for R17 ("supply-chain security tracks, levels, and provenance requirements") and R18 ("SBOM practices; distinct from build provenance") support the first clause only; the admission rule must be labeled book-authored]
         - "Data minimization and deletion (EU context only) | GDPR principles inform minimization and erasure obligations for EU personal data; jurisdiction-specific analysis is still required | R39".
       - Keep the kill-switch row. Remove the governance row (C23-R05).
       - Set "draws on" to R15; R17; R18; R39. Drop R42 unless an incident claim is added. Ch 20 now carries R42 (C20-R10).
@@ -356,3 +356,24 @@ Apply the Ch 20 / Ch 23 division of labour (chapter-20.md S1). Target outline:
     - *Location:* § Default-deny URL authorization (`:1206–1223`, or its moved example file).
     - *Issue:* the function returns resolved addresses, but nothing requires the caller to use them, which is the anti-rebinding property claimed at `:1167`.
     - *Change:* add one sentence of lead text or a docstring line: "The egress proxy must connect only to the returned addresses for this grant; resolving again at connect time reopens DNS rebinding."
+
+## Verification log
+
+- **Line references checked:** 83 (all `06-part-vi.md` refs for `:1021–1303`, plus Ch 20/21/22 refs and Ch 05, 06, 09, 25, 26, 27, Appendix F/L cross-refs); 0 fixed.
+- **Claims removed:** none.
+- **Claims softened:** none.
+- **Recommendations amended:** C23-R10's proposed R17/R18 row now labels the "runtime admission should verify both" clause book-authored, because the registry scopes (R17: "supply-chain security tracks, levels, and provenance requirements"; R18: "SBOM practices; distinct from build provenance") support only the SBOM-versus-provenance distinction. The R39 row ("GDPR principles inform minimization and erasure obligations for EU personal data; jurisdiction-specific analysis is still required") stays inside R39's scope ("Primary legal text for EU data-protection principles and rights") and matches the chapter's own caveat at `:1023`. Dropping R42 from Ch 23's "draws on" is correct: R42 supports no Ch 23 row, and C20-R10 adds it to Ch 20 within scope.
+- **Important claims confirmed:**
+  - Three consecutive framing H2s at `:1033`, `:1042`, `:1053`; the Required-analysis row `:1087` opens "Assume model compromise."
+  - § Containment layers `:1061–1068` has 8 numbered items; the fail-closed table `:1156–1162` has 5 rows (Capability, Data, Execution, Egress, Effect) and no Credential row, although `sandbox-egress.gv` draws a "Secret broker / last-hop lease only" node.
+  - § Threats and required controls `:1094–1106` has 11 rows; "Model/vendor compromise" (`:1104`) and "Cost/availability denial" (`:1106`) have no Ch 20 T-card. `:1108` restates Ch 20 `:262`.
+  - The chapter contains no reference to Chapter 20, 21, 22, or 27 by number; its only chapter reference is the Ch 24 handoff at `:1303`.
+  - `UseCaseRecord` appears once in the whole book (`:1051`), and the map lists it as an orphan.
+  - Case box `:1027` retells the injected document ("A mortgage document contains a hidden instruction to upload applicant records to an external site"), which Ch 20 `:238–256` walks through in full.
+  - `credentials:lease` (`:1125`) and SecretLease (`:1139`) parallel Ch 21's `credentials:exchange` (`:459`) and CredentialLease (`:488`); "Secret/Credential Broker" (`:1114`) parallels Access Broker/STS (`:447`) and Ch 22's Credential Broker (`:735`).
+  - Naming drift: "Egress Gateway" `:1114` versus "Egress proxy" in `sandbox-egress.gv`, `:1167`, and T-10 `:186`.
+  - RecoveryObjectives (RTO/RPO) `:1260–1265` sits in the kill-switch excerpt; DR material is at Ch 27 `08-part-viii.md:206` and Appendix L `09-appendices.md:555`.
+  - Governance duplication: `:1068`, `:1070`, Ch 26 `08-part-viii.md:35` (use-case record), Ch 27 `:268` (inventory) and `:316` (GovernanceRecord), Ch 25 checklist `07-part-vii.md:476` (use-case inventory).
+  - `authorize_url` (`:1206–1223`) returns resolved addresses but nothing in the chapter requires connecting only to them, as C23-R13 says.
+  - Evidence: context cites R17/R18/R39 (`:1023`); rows cite R12/R14/R15/R40 and R15 (`:1186–1187`); "draws on" lists R12; R14; R15; R40; R42 (`:1189`). R17/R18/R39/R42 support no row.
+- **Not verified:** whether Ch 27's Emergency Control row (`08-part-viii.md:289`) and Ch 23's kill switch are intended as the same capability is a judgement; the two texts were confirmed to describe overlapping scope. The Q1-versus-Ch 20 Q1 and Q4-versus-Ch 21 Q2 "≈" claims are similarity judgements, not duplicates, and were left as stated.

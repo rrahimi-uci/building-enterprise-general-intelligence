@@ -18,13 +18,13 @@ The flow problems are structural and relational.
 
 - **Structure.** The H2 § Optimize the trajectory, not the token contains five H3s that are not about trajectory: budgets, sharing, degradation, the four measurements, and the quarter-end example. § Optimize the whole journey holds only a figure and a table. The "What" (four measurements) therefore arrives after the "How" (budgets, permits).
 - **Missing bridges.** The chapter never says that it composes mechanisms the reader has already met in pieces: Ch 10's per-run limits, Ch 12's compile-time cost estimate and BudgetReservation, Ch 14's approval capacity, Ch 15's suspended waits, and AP-11's monotonic budgets. Ch 15 contains no backpressure. That mechanism is first named in P-11 and lives only here.
-- **A conceptual error in the Little's Law example.** "An admitted run occupies the workflow system for four minutes" (`:520`) conflates runs in the system (which, after Ch 15, include days of durable waits) with work holding a scarce permit. Appendix L uses service time, which is the correct quantity for permits.
-- **Repetition.** Cost per verified success is restated seven times. Concurrency bullets appear twice (§ Control concurrency, § Scalability mechanics). Little's Law appears three times. Caching rules repeat Ch 21.
+- **An ambiguity in the Little's Law example that the quarter-end paragraph turns into a sizing error.** "An admitted run occupies the workflow system for four minutes" (`:520`) does not say whether four minutes is active service time or time in system (which, after Ch 15, includes days of durable waits); the same sentence then says the figure may "require more permits", and `:524` treats the 480 as "protected permits". Appendix L uses service time, which is the correct quantity for permits. [verified: softened — `:520` on its own is a correct Little's Law statement of runs in system; the conflation with permit-holding work happens in its last clause and at `:524`]
+- **Repetition.** Cost per verified success is stated about twelve times (seven of them full restatements; see § Redundant). [verified: corrected — "seven" undercounted] Concurrency bullets appear twice (§ Control concurrency, § Scalability mechanics). Little's Law appears three times. Caching rules repeat Ch 21.
 - **"Guardrails"** names numeric limits (`:639`), contradicting the book's own definition of a guardrail as a probabilistic detector (Ch 20).
 
 **The ending.** Ch 28 is the last chapter, and the book does not end; it stops. § Where this leads next (`:736–738`) says "The architecture narrative is complete" and then lists the appendices inaccurately: "maintenance criteria" does not exist, and the list omits the glossary, research, limits, roadmap, companion guide, and coding-agent prompt. It never mentions the Closing Perspective. Nothing in Ch 28 returns to the end-to-end model the book opened with: Ch 01's five non-intelligence failures (`01-part-i.md:92–142`) and the invariant "the model provides bounded reasoning; the surrounding system owns state, authority, effects, evidence, and recovery" (`:160`).
 
-The Closing Perspective, which partly does this, is buried after Appendix L and the references (`09-appendices.md:559`), where almost no reader will reach it. It is two short paragraphs, and it overclaims ("It ends as explicit contracts…") relative to what the case implements (C01–C03). The book needs a short, real ending immediately after Ch 28 that closes the loop opened in Ch 01 (C28-R10, C28-R11).
+The Closing Perspective, which partly does this, is buried after Appendix L and the references (`09-appendices.md:559`), where almost no reader will reach it. It is one callout box and one paragraph, and its "It ends as explicit contracts…" reads as a claim about the implemented case, although the companion code implements only C01–C03 (`00-front-matter.md:66–72`; Appendix I `09-appendices.md:263`, `:269`). [verified: corrected — "two short paragraphs" miscounted; "overclaims" softened, since the sentence is true of the book's design narrative and the front matter already states the code scope] The book needs a short, real ending immediately after Ch 28 that closes the loop opened in Ch 01 (C28-R10, C28-R11).
 
 ## Intended Reader Mental Model
 
@@ -49,7 +49,7 @@ The Closing Perspective, which partly does this, is buried after Appendix L and 
 
 **§ Why cost and latency have to be designed into the workflow (`:475–481`).** Role: intro. The first sentence is strong. Missing: any recall of the earlier, scattered budget mechanisms (Ch 10, Ch 12, Ch 15, AP-11) and the inbound bridge from Ch 27 (release cohorts and canaries also consume capacity). Verdict: keep, and add a bridge paragraph (C28-R03).
 
-**§ Optimize the whole journey (`:483–489`).** Figure 28-1 and the state-owner table, with no prose. In the figure, `verify -> degrade` is labeled "fail or budget": a failed verification routes into "Safe degradation (defer · draft · route)". That conflicts with Ch 15's terminal correctness (`04-part-iv.md:1152`, where a run succeeds only through acceptance and otherwise reaches a terminal or InterventionRequired state). Verdict: merge with § Start with the four measurements (C28-R02), and fix the figure (C28-R13).
+**§ Optimize the whole journey (`:483–489`).** Figure 28-1 and the state-owner table, with no prose. In the figure, `verify -> degrade` is labeled "fail or budget": a failed verification routes into "Safe degradation (defer · draft · route)". That conflicts with the chapter's own rule at `:507`, where degradation is a response to *pressure* (the figure already has `admit -> degrade` "pressure" for that), and the figure offers no terminal or InterventionRequired outcome for a run that fails verification, which Ch 15 requires (`04-part-iv.md:1152`). Verdict: merge with § Start with the four measurements (C28-R02), and fix the figure (C28-R13). [verified: softened — the primary contradiction is with `:507`; Ch 15 is contradicted by omission, not by an opposite claim]
 
 **§ Optimize the trajectory, not the token (`:491–495`).** The objective, defined clearly at `:495`. This is the canonical definition of cost per verified success. Verdict: keep as the "Why" H2, but move out the five H3s it currently parents (C28-R02).
 
@@ -59,7 +59,7 @@ The Closing Perspective, which partly does this, is buried after Appendix L and 
 
 **### Decide what the system may drop or defer (`:505–507`).** This is the canonical degradation rule (Ch 22 `06-part-vi.md:844` previews it). It deserves H2 status as the "When under pressure" step. Verdict: promote (C28-R02).
 
-**### Start with the four measurements (`:509–520`).** The four-measures table is excellent. The Little's Law paragraph conflates runs in the system with permit-holding work (C28-R01). This is the chapter's "What", and it is placed fourth. Verdict: move first and fix (C28-R01, R02).
+**### Start with the four measurements (`:509–520`).** The four-measures table is excellent. The Little's Law paragraph does not separate runs in the system from permit-holding work, and its last clause and `:524` then use the runs-in-system figure as permit capacity (C28-R01). This is the chapter's "What", and it is placed fourth. Verdict: move first and fix (C28-R01, R02).
 
 **### A quarter-end planning example (`:522–533`).** A good worked application. The 25% reservation and the browser-pool deferral are concrete. The pressure table is the best synthesis in the chapter, and row 4 ties back to Ch 22's unknown effects. It depends on the 480-run estimate, which C28-R01 corrects. Verdict: keep as the practical-application section.
 
@@ -96,7 +96,7 @@ Verdict: promote to H2 and add pointers (C28-R05, R07, R08).
 
   Verdict: merge and trim (C28-R06, R08).
 - **### Illustrative starting guardrails (`:639–649`).** The table is useful policy shapes. The heading uses "guardrail" for numeric limits (map T10). The Retry ownership row restates Ch 22's one-retry-owner rule, and the Context budget row restates Ch 06, both without pointers. Verdict: rename and add pointers (C28-R04).
-- **PERFORMANCE AND COST box (`:651–653`).** Restates Ch 19 § Filter for policy before optimizing cost or quality (`05-part-v.md:579–583`). Verdict: delete and cross-reference (C28-R07).
+- **PERFORMANCE AND COST box (`:651–653`).** Restates Ch 19 § Filter for policy before optimizing cost or quality (`05-part-v.md:583–589`) [verified: corrected — `:579–583` are gateway-table rows; the section heading is at `:583`]. Verdict: delete and cross-reference (C28-R07).
 
 **§ What the evidence lets us conclude (`:655–661`).** One row [R43], correctly scoped. Verdict: keep.
 
@@ -146,7 +146,7 @@ Nothing else needs expansion. This chapter suffers from repetition, not thinness
 
 ## Redundant and Repetitive Concepts
 
-- **Cost per verified success ×7:** `:473` (box), `:495` (definition, canonical), `:516` (table, keep), `:582` (item 10), `:665` (BEST PRACTICE), `:711` (checklist, keep), `:730` (Q1, keep). Delete `:582` and `:665` (C28-R05).
+- **Cost per verified success ×12:** full restatements at `:473` (box), `:495` (definition, canonical), `:516` (table, keep), `:582` (item 10), `:665` (BEST PRACTICE), `:711` (checklist, keep), `:730` (Q1, keep); the phrase also appears in passing at `:469` (NORTHSTAR, "verified business outcomes"), `:530` (pressure table), `:653` (PERFORMANCE box, "cost per verified outcome"), `:659` (evidence row), and `:706` (If-fails). Delete `:582` and `:665` (C28-R05); the passing uses are acceptable. [verified: corrected — the count was 7; grep finds 12, matching the synthesizer's §16 count]
 - **Little's Law ×3:** `:520` (canonical), `:630` (formula), and Appendix L `:540`. Delete `:630` and point to Appendix L (C28-R06).
 - **Concurrency/queue controls ×2:** § Control concurrency (`:561–569`) and § Scalability mechanics (`:628–637`). Merge (C28-R06).
 - **Backpressure ×4:** `:503`, `:566`, `:626`, `:633`, plus checklist `:715`. After the merge, keep `:503` (concept) and `:626` (algorithm step).
@@ -165,7 +165,7 @@ Nothing else needs expansion. This chapter suffers from repetition, not thinness
 | AP-11 (`04-part-iv.md:1560–1580`) | Monotonic budgets across delegation | R | Ch 28 pointer at `:499` (C28-R03) |
 | AP-04 (`04-part-iv.md:1709`) | Retry multiplication | R | The limits-table row points to Ch 22 (C28-R04) |
 | Ch 02 § Scaling the shell (`01-part-i.md:734`) | Queues by workload and risk class; downstream limits | R (preview) | Keep |
-| Ch 19 § Filter for policy… and the Rate limits/Caching rows (`05-part-v.md:575–583`) | Policy-first routing; hierarchical budgets; cache keys | Ch 28 box D | Delete the box (C28-R07). If the synthesizer adopts map S4(b) and moves model routing into Ch 28, the Ch 19 text moves here instead and Ch 28 becomes canonical |
+| Ch 19 § Filter for policy… (`05-part-v.md:583–589`) and the Rate limits/Caching rows (`:576–577`) [verified: corrected line numbers] | Policy-first routing; hierarchical budgets; cache keys | Ch 28 box D | Delete the box (C28-R07). If the synthesizer adopts map S4(b) and moves model routing into Ch 28, the Ch 19 text moves here instead and Ch 28 becomes canonical |
 | Ch 21 § Consistency and revocation policy (`06-part-vi.md:387`, `:495–496`) | Authorization cache keys | Ch 28 D ×3 | Ch 21 canonical (C28-R08) |
 | Ch 22 graceful degradation bullet (`06-part-vi.md:844`) | Degradation ladder | D | Ch 28 canonical. Ch 22 reviewer replaces it with a pointer |
 | Ch 23 Cost/availability denial row (`06-part-vi.md:1106`) | Quotas, backpressure as a security control | R | Keep |
@@ -193,7 +193,7 @@ Move the Closing Perspective so it immediately follows Ch 28. To avoid a topolog
 
 **Disagreement with the concept map:** none. Two refinements.
 
-- The map lists "Ch 15 backpressure" implicitly via P-11. Ch 15 actually contains no backpressure mechanism (verified: "backpressure" appears only at `01-part-i.md:734`, `04-part-iv.md:1477/1481`, `06-part-vi.md:1106`, and Ch 28). The relevant Ch 15 content is "suspend without a worker", which bears on sizing rather than on backpressure.
+- The map lists "Ch 15 backpressure" implicitly via P-11. Ch 15 actually contains no backpressure mechanism (verified: "backpressure" appears only at `01-part-i.md:734`, `04-part-iv.md:1477` (the P-11 title), `06-part-vi.md:1106`, Ch 28, and Appendices A, I, and J at `09-appendices.md:34`, `:329`, `:353`). [verified: corrected — `:1481` does not contain the word; the appendix occurrences were missing] The relevant Ch 15 content is "suspend without a worker", which bears on sizing rather than on backpressure.
 - The map's Ch 28 closing note says the appendix summary is inaccurate. I add that the deeper problem is the absence of any ending that closes Ch 01's model.
 
 ## Concrete Recommended Changes
@@ -283,7 +283,7 @@ Move the Closing Perspective so it immediately follows Ch 28. To avoid a topolog
      - Delete `:637`.
      - Replace Q3 with: "Why is worker count not capacity? — Capacity is the scarcest downstream permit: provider quota, browser slots, database writers, approvers. Adding workers when a provider quota is exhausted only increases contention and retries; keep work queued until the permit exists, and let admission decide whether waiting still meets the deadline." (from `:559`)
      - Keep checklist `:717`.
-   - **Related sections:** Ch 21 `06-part-vi.md:387`, `:496`; the Ch 19 reviewer trims `05-part-v.md:583`.
+   - **Related sections:** Ch 21 `06-part-vi.md:387`, `:496`; the Ch 19 reviewer trims the cache sentences at `05-part-v.md:589` [verified: corrected — `:583` is the section heading].
 
 9. **C28-R09 — Medium — Rewrite.** Location: `08-part-viii.md:503`, `:564`, `:611` (risk in queue partitions); `:542` ("stateless control plane").
    - **Issue:** "risk class" for queues names no scale. "Control plane" takes a third meaning.
@@ -304,11 +304,11 @@ Move the Closing Perspective so it immediately follows Ch 28. To avoid a topolog
     - **Related sections:** C26-R12 (Part VIII orientation uses the same three-loop framing); C28-R11.
 
 11. **C28-R11 — High — Move/Rewrite.** Location: `09-appendices.md:559–565` (Closing Perspective: What Production-Grade Intelligence Requires).
-    - **Issue:** the book's coda is placed after Appendix L and the references, is two paragraphs long, and overclaims ("It ends as explicit contracts…"), although the companion implements only C01–C03 (`00-front-matter.md:72`).
+    - **Issue:** the book's coda is placed after Appendix L and the references, is one box and one paragraph long, and its "It ends as explicit contracts…" reads as a claim about the implemented case, although the companion implements only C01–C03 (`00-front-matter.md:66–72`; Appendix I `09-appendices.md:263`, `:269`). [verified: corrected — length miscounted; wording softened as in Overall]
     - **Why it matters:** without a reachable ending that revisits Ch 01, the book stops rather than closes. The reader never sees the five failures resolved by the architecture they have just learned.
     - **Change:**
       - Move the Closing Perspective H1 to the top of `09-appendices.md`, before `# PART REFERENCE — APPENDICES` (`:1`), so it directly follows Ch 28. Keep the THE PRODUCTION STANDARD box.
-      - Replace its second paragraph with:
+      - Replace its one paragraph (`09-appendices.md:565`; keep the box) with: [verified: corrected — there is no "second paragraph"]
         - (a) one sentence: "Chapter 1's prototype failed in one week for five reasons, none of them intelligence."
         - (b) a five-row table "Day | Failure | What now contains it":
           - Monday durability → durable run history, suspended waits, compatible workers (Ch 15, 27);
@@ -317,7 +317,7 @@ Move the Closing Perspective so it immediately follows Ch 28. To avoid a topolog
           - Thursday audit question → causal trace plus a separate audit ledger (Ch 24);
           - Friday cheaper model → evaluated, immutable release with rollback of assignment (Ch 25, 27).
         - (c) one closing sentence restating Ch 01's line "the model provides bounded reasoning; the surrounding system owns state, authority, effects, evidence, and recovery".
-        - (d) an honest scope line: "The companion code implements checkpoints C01–C03; the remaining contracts are specified here and tracked as a roadmap (Appendix I)."
+        - (d) an honest scope line: "The companion code implements checkpoints C01–C03; the remaining contracts are specified here and tracked as a roadmap (Appendix I)." [verified: keep the front matter's wording — `code-gap.md` (status line) and `config/examples.json` also record a C24 OpenAI/MLflow grounding slice and an offline platform-contract slice for C04–C28, so write "the first three checkpoints are implemented; later checkpoints are roadmap targets" (as `00-front-matter.md:66–72` does) rather than "only", and do not claim C04–C28 are unimplemented outright]
     - **Validation needed:** the Closing Perspective is not counted as a Part, chapter, or appendix, so the 8/28/12 invariants should hold. Still, run the structural validators and check the DOCX/LaTeX divider and chapter-cover logic for an H1 placed before the appendices divider.
     - **Related sections:**
       - Appendices reviewer owns the Closing Perspective text and should reconcile with this placement.
@@ -338,8 +338,8 @@ Move the Closing Perspective so it immediately follows Ch 28. To avoid a topolog
     - **Related sections:** C27-R13.
 
 13. **C28-R13 — Medium — Rewrite.** Location: Figure 28-1 (`assets/diagrams/src/reliability-economics.gv`, edge `verify -> degrade` labeled "fail or budget").
-    - **Issue:** a failed verification is routed to "Safe degradation (defer · draft · route)".
-    - **Why it matters:** this contradicts Ch 15 § Terminal correctness, where a run succeeds only via acceptance and a failed acceptance ends in a terminal or InterventionRequired state. Retrying on a cheaper route after failing verification is exactly the hidden-cost loop the chapter warns against.
+    - **Issue:** a failed verification is routed to "Safe degradation (defer · draft · route)", although the chapter's own rule (`:507`) and the figure's existing `admit -> degrade` "pressure" edge make degradation a response to pressure, not to a failed result.
+    - **Why it matters:** the figure gives a run that fails verification no terminal or InterventionRequired outcome, which Ch 15 § Terminal correctness requires (`04-part-iv.md:1152`). Re-routing to a cheaper path after failing verification is also the hidden-cost loop `:493` warns against. [verified: softened — the Ch 15 conflict is by omission; the direct contradiction is with `:507`]
     - **Change:**
       - Relabel the edge "budget or capacity pressure".
       - Add an edge `verify -> ` a new node "Terminal / intervention\nnot accepted", styled as a failure.
@@ -356,3 +356,28 @@ Move the Closing Perspective so it immediately follows Ch 28. To avoid a topolog
     - **Why it matters:** two definitions of one record drift.
     - **Change:** Ch 28 stays canonical. Append to the Ch 28 row "requested per plan node by the Chapter 12 compiler". Ch 12 reviewer replaces its row with "BudgetReservation — see Chapter 28 § Records worth preserving" and keeps only the plan-node binding.
     - **Related sections:** C28-R03.
+
+## Verification log
+
+- **Line references checked:** 131 (every reference to `08-part-viii.md`, `09-appendices.md`, `01-part-i.md`, `04-part-iv.md`, `05-part-v.md`, `06-part-vi.md`, `07-part-vii.md`, `00-front-matter.md`, and `reliability-economics.gv`); 3 fixed (Ch 19 § Filter for policy `:579–583` → `:583–589` in two places; the Ch 19 trim target `:583` → `:589`). Quoted phrases at `:520`, `:542`, `:559`, `:738`, `04-part-iv.md:57`, `:1152`, `:1164`, and the figure label "fail or budget" are verbatim.
+- **Claims removed:** none.
+- **Claims corrected or softened:**
+  - "A conceptual error in the Little's Law example" → an ambiguity at `:520` that `:524` turns into a permit-sizing error (Overall, § Start with the four measurements). C28-R01 stands unchanged.
+  - "Cost per verified success ×7" → 12 occurrences (7 full restatements, 5 passing). C28-R05 stands.
+  - Closing Perspective "two short paragraphs" → one box and one paragraph; "overclaims" → "reads as a claim about the implemented case" (Overall, C28-R11). C28-R11's "replace its second paragraph" fixed.
+  - Figure 28-1 contradiction: primary conflict is with `:507` (degradation on pressure); Ch 15 is contradicted by omission (§ Optimize the whole journey, C28-R13).
+  - Backpressure grep locations corrected (`:1481` removed; appendix lines added).
+  - C28-R11(d): scope line should follow the front matter's wording; `code-gap.md` and `config/examples.json` record additional C24 and offline C04–C28 slices.
+- **Important claims confirmed:**
+  - Ch 15 contains no backpressure mechanism; the word appears in Part IV only in the P-11 title (`04-part-iv.md:1477`) — grep.
+  - § Optimize the trajectory parents five H3s (`:497`, `:501`, `:505`, `:509`, `:522`); § Optimize the whole journey has figure and table only — read.
+  - `:738` names "maintenance criteria" (no such appendix) and omits Appendices E–J; the appendix headings are A pattern, B triage, C contracts, D framework, E research, F limits, G roadmap, H glossary, I companion, J coding-agent prompt, K references, L acceptance (`09-appendices.md:8–533`), so C28-R10's letter groupings are right.
+  - Closing Perspective sits at `09-appendices.md:559–565`, after Appendix L and the references — read.
+  - "Illustrative starting guardrails" (`:639`) vs Ch 20 § Guardrails help, but they are not the security boundary (`06-part-vi.md:28`) — read.
+  - Appendix L `:540` uses `L = lambda_eff × E[service time]` — read.
+  - The admission code (`:689–700`) raises on every shortfall and has no defer/deadline/reservation path; `:596` returns "granted, defer-until, or hard-limit" — read.
+  - Ch 12 BudgetReservation (`04-part-iv.md:510`) and Ch 28's (`:610`) share every field but the ID — compared.
+  - The seven owner components at `:588` are counted (Admission Controller, Hierarchical Quota Service, Queue/Scheduler, Worker Lease Service, Provider Limiters, Capacity Controller, Usage/Cost Ledger).
+  - The companion code scope: `00-front-matter.md:66–72`, `examples/README.md:89–91`, `config/examples.json` (`"checkpoint": "C01-C03"`), Appendix I `09-appendices.md:263`, `:269` — read.
+- **Recommendations amended:** C28-R08 (line number), C28-R11 (paragraph reference and scope-line wording), C28-R13 (issue/why wording). C28-R11's placement is consistent with §12 D-26; no recommendation breaks the 8/28/12 topology (the Closing Perspective is an uncounted H1), C28-R12 moves code to `examples/`, and C28-R13 edits the `.gv` source.
+- **Not verified:** whether `build_book.py`/`build_latex.py` render an uncounted H1 before the appendices divider correctly (D-26 already flags this for the implementer).

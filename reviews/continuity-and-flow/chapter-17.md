@@ -1,6 +1,6 @@
 # Chapter 17 — Architecture Patterns That Fail in Production: Continuity and Flow Review
 
-Reviewed: `source/parts/04-part-iv.md:1499–1873`. Context read: Ch 16 close (`:1495–1497`), Ch 18 opening (`05-part-v.md:1–83`), Part IV intro (`:1–7`), Appendix A and B (`09-appendices.md:8–60`), Ch 01 § Anti-pattern — the autonomous monolith (`01-part-i.md:458–478`), Ch 06 § Memory is not a bag of embeddings (`02-part-ii.md:663`), Ch 22 § A reliable protocol… (`06-part-vi.md:665–688`), every chapter's § If this fails in production (all 28, compared side by side), diagram sources `anti-*.gv`, `config/chapter-covers.json` entries for Ch 17.
+Reviewed: `source/parts/04-part-iv.md:1499–1873`. Context read: Ch 16 close (`:1495–1497`), Ch 18 opening (`05-part-v.md:1–83`), Part IV intro (`:1–7`), Appendix A and B (`09-appendices.md:8–60`), Ch 01 § Anti-pattern — the autonomous monolith (`01-part-i.md:458–478`), Ch 06 § Memory is not a bag of embeddings (`02-part-ii.md:663`), Ch 22 § A reliable protocol… (`06-part-vi.md:665–688`), every chapter's § If this fails in production (the 26 chapters that have one; Ch 16 and Ch 17 do not), diagram sources `anti-*.gv`, `config/chapter-covers.json` entries for Ch 17. [verified: corrected — 26 If-fails sections, not 28]
 
 ## Overall Assessment
 
@@ -9,13 +9,13 @@ This is the best-written diagnostic material in the book. Every card starts from
 **Placement decision: keep Ch 17 where it is, and make the forward dependencies explicit.** Evidence:
 
 - **7 of 16 cards are fully grounded by Ch 01–15:** AP-01 (Ch 01/03/15), AP-02 (Ch 06/15), AP-06 (Ch 14), AP-07 (Ch 02/13), AP-09 (Ch 05), AP-10 (Ch 13), AP-13 (Ch 06).
-- **3 are previewed well enough to read:** AP-04 (Ch 03 § One retry owner), AP-05 (Ch 01 Wednesday, Ch 03, Ch 15 rule `:1237`), AP-11 (Ch 10 budgets).
-- **6 correct with mechanisms built later:** AP-03 (Ch 21), AP-08 (Ch 18), AP-12 (Ch 19/22), AP-14 (Ch 24), AP-15 (Ch 25/27), AP-16 (Ch 27).
-  - The map is internally inconsistent here. §2 says six, and §9 S2 says "ten of the sixteen". My count agrees with six, plus three partials.
+- **7 are previewed well enough to read, with the mechanism built in Parts V–VIII:** AP-04 (Ch 03 § One retry owner; built Ch 22), AP-05 (Ch 01 Wednesday, Ch 03, Ch 15 rule `:1237`; built Ch 22), AP-11 (Ch 10 budgets; built Ch 18/28), AP-03 (capability envelope and gateway enforcement in Ch 01 `01-part-i.md:404` and Ch 03 `:1088`, credential lease ID in Ch 02 `:825`, workload identity in Ch 04 `02-part-ii.md:141`; built Ch 21), AP-12 (Ch 08 § Discovery is not permission; eligible-tool resolution in Ch 03 `01-part-i.md:1208` and Ch 11; built Ch 19/21/22), AP-15 (Ch 07 Q "Why is a model or provider swap not configuration?" `03-part-iii.md:171` states the correction; Ch 03 § Framework upgrades are behavioral changes; ChangeBundle named in Ch 04 `:44` and Ch 07 `:108`; built Ch 25/27), AP-16 (Ch 07 golden path: immutable artifacts, promote with canary, `ReleaseDecision`, `03-part-iii.md:64`, `:106`, `:126`, `:300`; built Ch 27).
+- **2 correct with mechanisms built later and only a name mentioned earlier:** AP-08 (TaskEnvelope is listed in Ch 03 `01-part-i.md:1164` and Ch 04 `:93`; deterministic join first appears in Ch 16/17; built Ch 18), AP-14 ("causal run graph" is used once, in Ch 07's If-fails `03-part-iii.md:143`; built Ch 24).
+  - [verified: corrected — the original split was 7 / 3 / 6, with AP-03, AP-12, AP-15, and AP-16 in the "built later" group. Reading each card against Ch 01–15 shows those four are previewed at least as well as AP-04 is, so the honest split is 7 grounded / 7 previewed / 2 built later with no real preview. All nine non-grounded cards are completed in Parts V–VIII; the placement decision below does not change. The map's `:639` note ("six cards depend on Parts V–VIII, three are adequately previewed") and overall-book-review.md §4 ("Six Ch 17 cards preview Parts V–VIII") should be updated to this split.]
 - Anti-patterns are **problem statements**. Meeting a failure shape before its fix is sound teaching; Ch 01's Monday–Friday narrative does the same. By contrast, Ch 16's P-cards are *solution* summaries, and those do not survive being read early (see chapter-16.md).
 - The book already treats Ch 17 as the catalog that home chapters point to: Ch 01 (`01-part-i.md:477–478`, "Chapter 17 catalogs this failure as AP-01") and Ch 06 (`02-part-ii.md:663`, AP-13 and AP-02). Moving Ch 17 would renumber those references and 11 chapters for little gain.
 
-What the chapter lacks is the signposting that makes the six forward cards honest previews. No card says where its correction is built, or which earlier chapter already prevents it.
+What the chapter lacks is the signposting that makes the nine forward cards honest previews. No card says where its correction is built, or which earlier chapter already prevents it (no card cites a chapter by number; grep of `:1546–1869` for "Chapter N" finds none). [verified: corrected — nine, not six; see the recount above]
 
 Secondary problems:
 
@@ -66,7 +66,7 @@ Verdict: merge with the previous H2.
 
 **### AP-11 — Unbounded loops and recursive delegation (`:1560`).**
 - Previewed by Ch 10 (external budgets). The correction (monotonic budgets, acyclic ownership) is Ch 18's and Ch 28's subject. Ch 18 `05-part-v.md:47` restates it ("caps depth, children… across the entire task tree").
-- Code: fine as illustration. Its `parent.reserve` foreshadows Ch 28's BudgetReservation and Ch 12's.
+- Code: fine as illustration. Its `parent.reserve` recalls Ch 12's BudgetReservation record (`:510`) and foreshadows Ch 28's (`08-part-viii.md:610`; D-25 makes Ch 28 canonical). [verified: corrected — Ch 12 precedes this card, so it is recall, not foreshadowing]
 - The 5⁵ = 3,125 arithmetic is correct.
 - No forward pointer.
 
@@ -85,13 +85,13 @@ Verdict: merge with the previous H2.
 - Figure 17-2's caption (`:1669`) says "capability lease". The book's canonical terms are capability envelope for scope and credential lease for proof (§6 T6; Ch 21 Q `06-part-vi.md:625`).
 
 **### AP-03 — Ambient authority (`:1671`).**
-- The correction depends on Ch 21 (subject plus workload identity, envelope by intersection, audience-bound lease). It is jargon-dense at this point, and there is no forward pointer.
+- The correction is built in Ch 21 (envelope by intersection, lease minted at the moment of use). Its terms are already in play — capability envelope (Ch 01 `01-part-i.md:404`, Ch 03 `:1088`), credential lease ID (Ch 02 `:825`), workload identity (Ch 04 `02-part-ii.md:141`) — but only as names, and there is no forward pointer. [verified: softened — "jargon-dense" overstated it; the terms were introduced in Ch 01–04]
 - The example mixes domains: "The support agent's token… Nothing in the onboarding task requires it". Two unrelated scenarios sit in two sentences, and "onboarding" is the unlabeled supplier thread (§6 T17).
 
-**### AP-10 — LLM judge as security gate (`:1681`).** Grounded (Ch 13: "a model score… is not permission", `:666`). Ch 20 elaborates. Reinforcement.
+**### AP-10 — LLM judge as security gate (`:1681`).** Grounded (Ch 13 "Do not use when" cell, `:750`: "Do not use a model judge as sole authority for permissions, transaction success, security, or computable correctness"; also Figure 13-1's "verdict is advisory", `:670`). Ch 20 elaborates. Reinforcement. [verified: corrected — the quoted phrase "a model score… is not permission" does not occur in Ch 13; `:666` is the state-owner table row]
 
 **### AP-12 — Ungated tool discovery and catalog dumping (`:1691`).**
-- Discovery ≠ permission is grounded in Ch 08. The MCP catalog and the "approved tool slice bound to a lease" are Ch 19/21/22 material.
+- Discovery ≠ permission is grounded in Ch 08 (`03-part-iii.md:250`), and eligible-tool resolution is previewed in Ch 03 (`01-part-i.md:1208`) and Ch 11. The MCP catalog and the "approved tool slice bound to a lease" are Ch 19/21/22 material. [verified: amended — added the Ch 03/11 preview that moves this card to "previewed"]
 - "Risk tier" (`:1697`) should be "risk class" (tool eligibility uses R0–R4; §6 T11).
 
 **§ Effects, retries and recovery (`:1701`).**
@@ -135,9 +135,9 @@ Verdict: merge with the previous H2.
 
 **§ Platform, release and operations (`:1843`).** The intro ("unversioned speed is" the problem) is good.
 
-**### AP-15 — Model or provider swap as configuration (`:1847`).** The correction (ChangeBundle, slice evaluation, canary, rollback target) is Ch 25/27 material, and "ChangeBundle" is undefined here. The slice example is strong.
+**### AP-15 — Model or provider swap as configuration (`:1847`).** The correction (ChangeBundle, slice evaluation, canary, rollback target) is built in Ch 25/27, but Ch 07's design-review answer (`03-part-iii.md:171`, "requires the same evaluation, canary, and rollback evidence as a code release") and Ch 03 § Framework upgrades are behavioral changes already state it. "ChangeBundle" is named in Ch 04 `:44` and Ch 07 `:108` but defined only in Ch 27 (D-05). The slice example is strong. [verified: corrected — "undefined here" → named earlier, defined later; the correction is previewed]
 
-**### AP-16 — In-place change and test after release (`:1857`).** The correction (ReleaseManifest, signed promotion, canary, verified rollback) is Ch 27's. "If the emergency path is slower than the console, the console wins" is a memorable line.
+**### AP-16 — In-place change and test after release (`:1857`).** The correction (ReleaseManifest, signed promotion, canary, verified rollback) is built in Ch 27 and previewed by Ch 07's golden path (immutable artifacts `03-part-iii.md:64`, promote with canary `:106`, `:126`, `promote(...) -> ReleaseDecision` `:300`); ReleaseManifest is named in Ch 04 `:93` and Ch 07 `:58`. "If the emergency path is slower than the console, the console wins" is a memorable line. [verified: amended — added the Ch 07 preview]
 
 **COMMON PITFALL (`:1867–1869`).** "Audit AP-04, AP-05, AP-06 first." This is valuable prioritization, but it arrives after the reader has finished the cards. It belongs with `:1544`'s "correct in order of the blast radius".
 
@@ -147,7 +147,7 @@ Verdict: merge with the previous H2.
 
 ## Sparse or Underdeveloped Content
 
-None in the sense of missing explanation. The cards are the right depth. The one gap is **relational**: each card needs a one-line "Prevented in / Built in" tag (C17-R03). That turns the six forward cards into signposted previews and the ten grounded cards into recall that sends the reader back to the right chapter.
+None in the sense of missing explanation. The cards are the right depth. The one gap is **relational**: each card needs a one-line "Prevented in / Built in" tag (C17-R03). That turns the nine forward cards into signposted previews and the seven grounded cards (plus the preview half of the other seven) into recall that sends the reader back to the right chapter. [verified: corrected — counts per the recount]
 
 ## Missing Conceptual Connections
 
@@ -157,18 +157,19 @@ None in the sense of missing explanation. The cards are the right depth. The one
   - AP-02: Ch 06, 15
   - AP-09: Ch 05
   - AP-13: Ch 06
-  - AP-03: built in Ch 21
+  - AP-03: Ch 02, 03; built in Ch 21
   - AP-10: Ch 13; Ch 20
-  - AP-12: Ch 08; built in Ch 19, 22
+  - AP-12: Ch 03, 08; built in Ch 19, 22
   - AP-04: Ch 03; built in Ch 22
   - AP-05: Ch 15; built in Ch 22
   - AP-06: Ch 14
   - AP-07: Ch 02, 13, 15
-  - AP-08: built in Ch 18
+  - AP-08: Ch 03 (TaskEnvelope named); built in Ch 18
   - AP-14: built in Ch 24
-  - AP-15: built in Ch 25, 27
-  - AP-16: built in Ch 27
-- **Each chapter's § If this fails in production → (missing: "if the cause is structural, see AP-xx") → Ch 17.** These are complementary layers, verified across all 28 If-fails sections: they are runtime triage steps ("recompute the proposal hash", "replay history with the pinned build"), while the cards are structural diagnoses. **I disagree with map §9 S2**, which proposes replacing the per-chapter lists with AP pointers. The lists carry procedure the cards do not. Add a pointer line instead. For my chapters, see C14-R14 and C15-R12. Other chapters' owners add theirs: Ch 05 → AP-09, Ch 06 → AP-02/AP-13, Ch 10 → AP-11, Ch 13 → AP-10/AP-07, Ch 18 → AP-08/AP-11, Ch 21 → AP-03, Ch 22 → AP-04/AP-05, Ch 24 → AP-14, Ch 27 → AP-15/AP-16.
+  - AP-15: Ch 03, 07; built in Ch 25, 27
+  - AP-16: Ch 07; built in Ch 27
+  [verified: corrected — AP-03, AP-08, AP-12, AP-15, AP-16 gain their preview chapters]
+- **Each chapter's § If this fails in production → (missing: "if the cause is structural, see AP-xx") → Ch 17.** These are complementary layers, verified across the 26 If-fails sections (Ch 16 and 17 have none) [verified: corrected — 26, not 28]: they are runtime triage steps ("recompute the proposal hash", "replay history with the pinned build"), while the cards are structural diagnoses. **I disagree with map §9 S2**, which proposes replacing the per-chapter lists with AP pointers. The lists carry procedure the cards do not. Add a pointer line instead. For my chapters, see C14-R14 and C15-R12. Other chapters' owners add theirs: Ch 05 → AP-09, Ch 06 → AP-02/AP-13, Ch 10 → AP-11, Ch 13 → AP-10/AP-07, Ch 18 → AP-08/AP-11, Ch 21 → AP-03, Ch 22 → AP-04/AP-05, Ch 24 → AP-14, Ch 27 → AP-15/AP-16.
 - **Ch 17 AP-08/AP-11 → (missing: "Chapter 18 builds the replacement") → Ch 18 opening.** Two-sided: Ch 17's closing (C17-R10), and one back-reference clause in Ch 18's § Why more agents do not automatically make a better system (owner: Ch 18).
 - **Later chapters (Ch 19, 21, 22, 24, 25, 27) → (missing: "Chapter 17 named this failure as AP-xx") → back-reference.** One clause each, owned by those chapters, at most once per chapter. This mirrors the existing Ch 01/Ch 06 forward references and closes the loop.
 
@@ -215,7 +216,7 @@ None in the sense of missing explanation. The cards are the right depth. The one
 
 ## Structural Recommendations
 
-1. **Keep Ch 17 in place.** Add a **Prevented in / Built in** line to every card (C17-R03), and say in the opening that six cards preview Parts V–VIII.
+1. **Keep Ch 17 in place.** Add a **Prevented in / Built in** line to every card (C17-R03), and say in the opening that nine cards are completed by Parts V–VIII. [verified: corrected — nine, not six]
 2. Merge the two framing H2s. Move Figure 17-1 into AP-01. Put the priority guidance in § How to read a card (C17-R01, C17-R02, C17-R09).
 3. Rename the § Approval, acceptance and governance group to § Approval and acceptance (C17-R08).
 4. Keep the AP IDs as they are. They are referenced by Appendix A, Ch 01, Ch 06, three diagram sources, `config/diagrams.json`, and `config/chapter-covers.json`. State once that IDs are stable identifiers and cards are ordered by boundary (C17-R02).
@@ -228,7 +229,7 @@ None in the sense of missing explanation. The cards are the right depth. The one
    - **Issue:** Double framing. `:1511` repeats `:1503–1507`.
    - **Change:**
      - Keep the `:1501` heading.
-     - Body: `:1503–1507`, then `:1513` (the thesis), then `:1517`'s first sentence (grouping by boundary). End with one new sentence: "Seven cards describe failures the earlier chapters already prevent; three were previewed; six are corrected by mechanisms Parts V–VIII build, and each card says where."
+     - Body: `:1503–1507`, then `:1513` (the thesis), then `:1517`'s first sentence (grouping by boundary). End with one new sentence: "Seven cards describe failures the earlier chapters already prevent; the other nine are corrected by mechanisms Parts V–VIII build, most of them previewed earlier, and each card says where." [verified: corrected — wording follows the 7 / 7 / 2 recount]
      - Delete the `:1509` heading, `:1511`, and `:1517`'s second sentence.
      - Move Figure 17-1 (`:1515`) to directly after the AP-01 heading (`:1550`).
 
@@ -243,7 +244,7 @@ None in the sense of missing explanation. The cards are the right depth. The one
 
 3. **C17-R03 · High · Add (one line per card).**
    - **Location:** the end of each of the 16 cards, after **How to know the repair worked**: AP-01 `:1558`, AP-11 `:1589`, AP-02 `:1622`, AP-09 `:1632`, AP-13 `:1663`, AP-03 `:1679`, AP-10 `:1689`, AP-12 `:1699`, AP-04 `:1735`, AP-05 `:1766`, AP-06 `:1807`, AP-07 `:1817`, AP-08 `:1829`, AP-14 `:1841`, AP-15 `:1855`, AP-16 `:1865`.
-   - **Issue:** Six cards depend on Parts V–VIII and nothing says so. Ten cards could send the reader back to their prevention chapter.
+   - **Issue:** Nine cards are completed by Parts V–VIII and nothing says so. Fourteen cards could send the reader back to a chapter that prevents or previews the failure. [verified: corrected — counts per the recount]
    - **Why it matters:** This converts the chapter into an honest hinge, recall for Ch 01–15 and a preview for Ch 18–28, without moving it.
    - **Change:** Add `**Prevented in / Built in.**` followed by the mapping:
      - AP-01: Prevented in Chapters 1, 3, and 15.
@@ -251,17 +252,17 @@ None in the sense of missing explanation. The cards are the right depth. The one
      - AP-02: Chapters 6 and 15.
      - AP-09: Chapter 5.
      - AP-13: Chapter 6.
-     - AP-03: Built in Chapter 21.
+     - AP-03: Previewed in Chapters 2 and 3; built in Chapter 21. [verified: amended]
      - AP-10: Chapter 13; Chapter 20.
-     - AP-12: Chapter 8; built in Chapters 19 and 22.
+     - AP-12: Chapters 3 and 8; built in Chapters 19 and 22. [verified: amended]
      - AP-04: Chapter 3; built in Chapter 22.
      - AP-05: Chapter 15; built in Chapter 22.
      - AP-06: Chapter 14.
      - AP-07: Chapters 2, 13, and 15.
-     - AP-08: Built in Chapter 18.
+     - AP-08: Named in Chapter 3; built in Chapter 18. [verified: amended]
      - AP-14: Built in Chapter 24.
-     - AP-15: Built in Chapters 25 and 27.
-     - AP-16: Built in Chapter 27.
+     - AP-15: Previewed in Chapters 3 and 7; built in Chapters 25 and 27. [verified: amended]
+     - AP-16: Previewed in Chapter 7; built in Chapter 27. [verified: amended]
    - **Related:** C16-R04(a) uses the same chapter mapping for P-cards. Keep the two consistent.
 
 4. **C17-R04 · Medium · Rewrite (stock phrasing).**
@@ -325,3 +326,28 @@ None in the sense of missing explanation. The cards are the right depth. The one
 12. **C17-R12 · Low · Cross-reference (owner: Appendix B).**
     - **Location:** `09-appendices.md:39–50`.
     - **Change:** Add an "Anti-pattern" column so each runbook row names its card. Do not merge the tables; they answer different questions.
+
+## Verification log
+
+Second-pass fact check against `source/parts/*.md` (every card read in full), `assets/diagrams/src/anti-*.gv`, `config/diagrams.json`, `config/chapter-covers.json`, Ch 22 `06-part-vi.md:665–688` and `:1011`, and Appendix B `09-appendices.md:39–58`.
+
+- **Line references checked / fixed:** 96 checked; 1 fixed (Ch 13 `:666` → `:750`, with the quotation replaced). All 16 card headings (`:1550`–`:1857`) and the 16 card-end lines in C17-R03 confirmed exactly; `:1513`, `:1515`, `:1517`, `:1544`, `:1669`, `:1675`, `:1677`, `:1697`, `:1703`, `:1763`, `:1778`, `:1780`, `:1803`, `:1815`, `:1837`, `:1851`, `:1853`, `:1867–1869`, `:1873` confirmed. Ch 18 `05-part-v.md:15`, `:21`, `:47`; Ch 01 `:458`, `:477–478`; Ch 06 `:663` (names AP-13 and AP-02); Ch 07 `03-part-iii.md:171`; Ch 22 `:669`, `:681`; Appendix B `:45`, `:57` confirmed.
+- **Claims removed:** none.
+- **Claims softened / corrected:**
+  - The dependency split 7 grounded / 3 previewed / 6 built-later becomes 7 / 7 / 2: AP-03, AP-12, AP-15, and AP-16 are previewed in Ch 01–08 at least as well as AP-04 is (evidence listed in the Overall Assessment). This changes C17-R01's new sentence, C17-R03's Issue line and five tags, Structural recommendation 1, and the "six forward cards" phrasing. The placement decision (keep Ch 17) is unchanged.
+  - AP-03 "jargon-dense": its three terms are introduced by name in Ch 01–04.
+  - AP-15 "ChangeBundle is undefined here": named in Ch 04/07, defined in Ch 27.
+  - AP-11 code "foreshadows … Ch 12's" BudgetReservation: Ch 12 `:510` precedes the card, so it is recall.
+  - "all 28 If-fails sections": 26 (Ch 16 and 17 have none).
+- **Important claims confirmed:**
+  - AP-05 code `:1763` returns `committed=None` with "genuinely absent; now safe to retry" on a null lookup; Ch 22 `:675–681` resumes only after the reconciler "establishes a committed, declined, partial, or intervention-required result", and Appendix B step 4 (`:57`) classifies "committed, absent, partial, executing, or unprovable". The card's rule is weaker, as claimed.
+  - AP-06 code `:1803` passes `idempotency_key=proposal.digest()` where the proposal includes `policy_version`; Ch 22 `:669` separates the logical effect key (business intent) from the intent hash. The code checks hash (`:1798`) and expiry (`:1800`) only, while `:1780` says "Revalidate immediately before commit"; Ch 14 `:952` requires authority, counts, and resource version too.
+  - AP-06 prose example is a $10,000 → $100,000 payment (`:1778`); its code calls `underwriting.submit_evidence_package` (`:1787`, `:1792`).
+  - Ch 22's design-review row at `:1014` is byte-identical to Ch 14 `:1107` (relevant to C14-R12's ownership note).
+  - No card cites any chapter by number; the only "Chapter N" in `:1499–1873` is the closing sentence (`:1873`).
+  - "Approval, acceptance and governance" (`:1768`) holds AP-06 and AP-07 only.
+  - AP IDs appear in three diagram sources (`anti-ambient-authority.gv`, `anti-retry-storm.gv`, `anti-approval-binding.gv`), `config/diagrams.json` (3), and `config/chapter-covers.json` (2); `anti-ambient-authority.gv:29` labels the node "Capability lease", and `config/diagrams.json` describes it as "a narrowed capability lease", as C17-R09 assumes.
+  - The map's `:639` already carries a synthesis correction (6 / 3 / 7) that this pass supersedes; the review's "map is internally inconsistent" remark described the pre-synthesis state.
+- **Recommendations amended:** C17-R01 (sentence), C17-R03 (Issue and five tags). C17-R07 already carries D-12; C17-R11 carries D-21; the inline-code deferral in Structural recommendation 5 matches D-23(a). C16-R04(a)'s "Built in" mapping remains consistent with C17-R03 (built-in chapters are unchanged; only preview chapters were added).
+- **Decision impact for the synthesizer:** overall-book-review.md §4 line "Six Ch 17 cards preview Parts V–VIII and say so" and book-concept-map.md `:639` should read: nine cards are completed by Parts V–VIII, seven of them previewed in Ch 01–15 (AP-03, 04, 05, 11, 12, 15, 16) and two not (AP-08, AP-14). No D-nn entry encodes the count, so no reconciliation decision changes.
+- **Not verified:** the map §6 T-row identifiers and §7.3 "fifth telling" count were taken as given; Ch 01's Monday/Wednesday/Friday narrative positions were confirmed only by heading (`01-part-i.md:92`, `:104`, `:127`).

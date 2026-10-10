@@ -17,10 +17,10 @@ The Part IV intro promises that the Part "ends with a catalog of patterns" (`:6`
 
 - Of the twelve cards, only P-01 (Ch 10) corresponds to a Part IV chapter. P-02 and P-11 partly correspond to Ch 12 and Ch 15.
 - Routing, plan compilation, critique, and human review have **no card**.
-- P-06 to P-11 rest on mechanisms taught in Ch 18–28. Their "better design" lines are dense with terms the reader has not met: "TaskEnvelope… deterministic join", "capability lease… audience/purpose/resource/spend/time scope", "Prepared EffectRecord… unknown terminal", "ChangeBundle → risk → validation" (map §4 rows 40–45, verified).
+- P-06 to P-11 rest on mechanisms taught in Ch 18–28. Their "better design" lines are dense with terms the reader has met only as names in contract lists, never as mechanisms: "TaskEnvelope… deterministic join" (TaskEnvelope is listed in Ch 03 `01-part-i.md:1164` and Ch 04 `02-part-ii.md:93`; deterministic join first appears here), "capability lease… audience/purpose/resource/spend/time scope", "Prepared EffectRecord… unknown terminal" (EffectRecord is listed in Ch 03/04; the unknown state is previewed in Ch 04 `:204` and Ch 15 `:1253`), "ChangeBundle → risk → validation" (ChangeBundle is listed in Ch 04 `:44` and Ch 07 `03-part-iii.md:108`) (map §4 rows 40–45). [verified: softened — "terms the reader has not met" overstated it; three of the four records are named earlier but defined only in Ch 18/22/27]
 - P-03, P-04, P-05, and P-12 summarize Part I–III chapters, so they are recaps, not Part IV content.
 
-Figure 16-1 is the only element that matches its position. Its leaves are the Part IV patterns ("Deterministic workflow", "Bounded ReAct", "Plan–Execute", "Durable agent", "Human-in-the-loop"). But they **do not match the cards below it**. There is no Plan card and no human-in-the-loop card, and the IDs differ ("Durable agent" vs P-11 "Durable runtime with backpressure"). The figure also omits routing and critique.
+Figure 16-1 is the only element that matches its position. Its leaves are the Part IV patterns ("Deterministic workflow", "Bounded ReAct", "Plan–Execute", "Durable agent", "Human-in-the-loop"). But they **only partly match the cards below it**. "Bounded ReAct" is P-01's exact title and "Deterministic workflow" loosely matches P-02 "Deterministic spine with semantic nodes"; the other three leaves have no card ("Plan–Execute" and "Human-in-the-loop" have none, and "Durable agent" differs from P-11 "Durable runtime with backpressure"). The figure also omits routing and critique. [verified: corrected — the original "do not match" ignored the P-01 match]
 
 Form problems:
 
@@ -68,7 +68,7 @@ Today the chapter delivers only "start from the obligation", plus a catalog the 
 
 **Figure 16-1 (`:1373`).** Role: the decision tree. It is right in kind, but:
 - (a) it has no routing/handoff or critique leaf;
-- (b) its leaf names do not correspond to any card ID;
+- (b) three of its five leaf names correspond to no card, and none carries a card ID or chapter number; [verified: corrected — "Bounded ReAct" is P-01's title]
 - (c) the dashed "then" edge from q2 to q3 (`pattern-decision-tree.gv`) is unexplained in the prose.
 
 **The twelve concern H2/H3 pairs.** Every H2 below wraps exactly one card:
@@ -93,13 +93,13 @@ That is twelve single-child H2s. The H2 layer adds only the category word, which
 | ### P-01 — Bounded ReAct (`:1377`) | Ch 10 | Yes | Recap of Ch 10 § How ReAct works in practice. "Missing employment document" (§6 T15). |
 | ### P-02 — Deterministic spine with semantic nodes (`:1387`) | Ch 12 (§ What should be agentic?), Ch 15 | Yes | Example "Onboarding always validates, screens, approves…" is the unlabeled supplier thread (§6 T17). |
 | ### P-03 — Typed ContextManifest (`:1397`) | Ch 06 | Yes (recap) | Runtime flow "Planner → retrieval → policy → ranking/dedup → manifest → model" puts retrieval **before** policy, which contradicts Ch 06's "authorization precedes retrieval" (map §3, context-pipeline row). Off-thread example (contract review). |
-| ### P-04 — Provenance-bound tiered memory (`:1407`) | Ch 06 | Yes (recap) | "working/episodic/semantic/profile" contradicts Ch 06's taxonomy (§6 T18). |
+| ### P-04 — Provenance-bound tiered memory (`:1407`) | Ch 06 | Yes (recap) | "working/episodic/semantic/profile" does not match Ch 06's taxonomy (conversation, knowledge, run-scoped working memory, governed long-term memory; `02-part-ii.md:686`, `:795`, `:940`) (§6 T18). [verified: softened — a different split, not a contradiction] |
 | ### P-05 — Proposal–authorize–commit tool façade (`:1417`) | Ch 02, Ch 22 | Mostly | Fourth name for the six gates (§6 T14). "Grant" (§6 T6). |
-| ### P-06 — Typed task ownership and join (`:1427`) | Ch 18 | **No** | TaskEnvelope and deterministic join are undefined until Ch 18. Off-thread example (due diligence). |
+| ### P-06 — Typed task ownership and join (`:1427`) | Ch 18 | **No** | TaskEnvelope is named in Ch 03/04 contract lists but defined only in Ch 18; deterministic join first appears here. Off-thread example (due diligence). [verified: corrected — TaskEnvelope is named earlier] |
 | ### P-07 — Least-privilege capability envelope (`:1437`) | Ch 21 | **No** | "Capability lease" conflates envelope (scope) and credential lease (proof) (§6 T6). |
-| ### P-08 — Effect ledger and reconciliation (`:1447`) | Ch 22 | Partly (previewed in Ch 03/15) | "Prepared EffectRecord" and "unknown terminal" are not yet defined. |
+| ### P-08 — Effect ledger and reconciliation (`:1447`) | Ch 22 | Partly (previewed in Ch 03/15) | EffectRecord is named in Ch 03/04 and the unknown state previewed (Ch 04 `:204`, Ch 15 `:1253`), but the Reserved → Executing → Committed/Unknown lifecycle is defined only in Ch 22 `06-part-vi.md:669`. [verified: softened — "not yet defined" → named but not defined] |
 | ### P-09 — Causal run graph (`:1457`) | Ch 24 | **No** | Trace-vocabulary drift (§6 T22). |
-| ### P-10 — Risk-tiered evidence gates (`:1467`) | Ch 25–27 | **No** | ChangeBundle and risk tiers come from Ch 26/27. "Risk classification" collides with R0–R4 (§6 T11). Off-thread example (hiring). |
+| ### P-10 — Risk-tiered evidence gates (`:1467`) | Ch 25–27 | **No** | ChangeBundle is named in Ch 04 `:44` and Ch 07 `:108` but defined in Ch 27 (D-05); use-case tiers come from Ch 26. "Risk classification" collides with R0–R4 (§6 T11). Off-thread example (hiring). [verified: corrected — ChangeBundle is named earlier] |
 | ### P-11 — Durable runtime with backpressure (`:1477`) | Ch 15, Ch 28 | Partly | Permits, quotas, circuits, and degraded mode come from Ch 28/22. |
 | ### P-12 — Portable contracts and adapters (`:1487`) | Ch 03, Ch 07 | Yes (recap) | — |
 
@@ -253,7 +253,7 @@ The target length is roughly a third of today's chapter. No template review sect
 
 5. **C16-R05 · Medium · Rewrite (figure).**
    - **Location:** Figure 16-1 (`assets/diagrams/src/pattern-decision-tree.gv`; caption at `:1373`).
-   - **Issue:** There are no routing or critique leaves, the leaf names do not match any text, and the dashed "then" edge is unexplained.
+   - **Issue:** There are no routing or critique leaves, three of the five leaf names match no card title and none names a chapter, and the dashed "then" edge is unexplained. [verified: corrected — "Bounded ReAct" matches P-01]
    - **Change:**
      - Add a decision "Several known specialists or paths?" leading to the leaf "Routing / handoff (Ch 11)".
      - Add a post-step check "Draft quality needs revision?" leading to "Evaluator–optimizer (Ch 13)".
@@ -300,3 +300,25 @@ The target length is roughly a third of today's chapter. No template review sect
 - still add C16-R02 and C16-R03.
 
 Then reduce Appendix A to the 7-item list plus the corrected pairing table with a pointer to Ch 16. Either way, apply C15-R11 and C16-R06.
+
+## Verification log
+
+Second-pass fact check against `source/parts/*.md`, `assets/diagrams/src/pattern-decision-tree.gv`, `config/examples.json`, and `config/chapter-covers.json`.
+
+- **Line references checked / fixed:** 52 checked; 0 fixed. All twelve H2/H3 pairs (`:1375–1487`), the framing H2s (`:1358`, `:1367`), the figure marker (`:1373`), the Part IV intro (`:3–7`), Appendix A (`09-appendices.md:8–35`, pairings at `:32–33`), Ch 18's topology table (`05-part-v.md:61–72`), Ch 21's Q (`06-part-vi.md:625`), Ch 22's Q (`06-part-vi.md:1011`), and the Ch 01/Ch 06 forward references (`01-part-i.md:477`, `02-part-ii.md:663`) confirmed.
+- **Claims removed:** none.
+- **Claims softened:**
+  - Figure 16-1 leaves "do not match the cards" / "do not correspond to any card ID" / "do not match any text" (three places): "Bounded ReAct" is P-01's exact title and "Deterministic workflow" loosely matches P-02; three leaves match nothing.
+  - "terms the reader has not met": TaskEnvelope, EffectRecord, and ChangeBundle are named in Ch 03/04/07 contract lists before Ch 16; they are undefined, not unseen.
+  - P-04 "contradicts Ch 06's taxonomy" → "does not match"; Ch 06 splits conversation / knowledge / working memory / long-term memory and never uses episodic/semantic/profile.
+  - P-06, P-08, P-10 table cells: "undefined"/"not yet defined" → named earlier, defined later (sources given in each cell).
+- **Important claims confirmed:**
+  - `pattern-decision-tree.gv` leaves are exactly "Deterministic workflow", "Bounded ReAct", "Plan–Execute", "Durable agent", "Human-in-the-loop"; there is no routing or critique node; the q2 → q3 edge is `style=dashed, label=" then "` and the prose never explains it.
+  - Twelve single-child H2s, each wrapping one P-card; no case box, design choice, or review sections in the chapter.
+  - P-03's flow at `:1401` places retrieval before policy; Ch 06 states the opposite twice (`02-part-ii.md:149` "ACL filters before retrieval", Figure 6-1 caption `:619` "authorization precedes retrieval").
+  - "Chapter 16" is cited by number only at `04-part-iv.md:1354`, so the split renames no inbound cross-reference.
+  - Appendix A today pairs AP-07 with Observability (`:32`) and AP-06 with Governance (`:33`).
+  - How-X cards exist in Ch 02 (`01-part-i.md:785`), Ch 06 (`02-part-ii.md:787`), Ch 10–15, and Ch 18 (two), as claimed.
+  - "exactly-once from the business perspective" (`:1369`) vs Ch 22 Q1 (`06-part-vi.md:1011`): a wording clash only; Ch 22's answer itself targets "one idempotent logical business effect".
+- **Recommendations amended:** none in substance. C16-R04's reconciled overrides match D-02, D-04, D-21; C16-R06 matches D-28; C16-R10 matches D-04. C16-R05's leaf-rename list stands (the softening does not change the fix).
+- **Not verified:** the map §4/§5/§6 row identifiers and the "four descriptions per pattern" count were taken as given.

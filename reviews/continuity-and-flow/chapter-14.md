@@ -9,7 +9,7 @@ The chapter's core argument is sound and well placed. Human review only matters 
 There are three structural problems:
 
 1. **Approval is taught three times inside the chapter, and Ch 03 already pre-taught it.** The request fields are enumerated at `:884`, `:902`, `:944`, and again in inline code at `:1048`. The four lists use four different field sets. Ch 03 (`01-part-i.md:1137`, `:1154`) had already given the field list and the hash check. A reader reaches § Approval contract with nothing new to learn about the binding itself.
-2. **Intervention, the concept that is distinctive to this chapter, is named and then abandoned.** All contracts, APIs, records, code, and checklist items concern authorization. `InterventionTask` (`:994`) is never defined. Ch 10 ("terminates or escalates", `:45`), Ch 11 ("human triage", `:191`), Ch 12 ("escalate", "human amendment", `:460`, `:536`), and Ch 13 ("escalates with both artifacts", `:670`) all escalate to a human. Ch 14 never says that these escalations land in its intervention queue. That is the most important missing connection in Part IV.
+2. **Intervention, the concept that is distinctive to this chapter, is named and then abandoned.** All contracts, APIs, records, code, and checklist items concern authorization. `InterventionTask` (`:994`) is never defined. Ch 10 ("terminates or escalates", `:45`), Ch 11 ("human triage", `:193`, `:199`), Ch 12 ("escalate", "human amendment", `:468`, `:544`), and Ch 13 ("escalates with both artifacts", `:678`) all escalate to a human. [verified: corrected — the Ch 11/12/13 line numbers were off by 2–8 lines (`:191`, `:670` are diagram markers; `:460`, `:536` carry neither quoted phrase); the quotations themselves are verbatim at the corrected lines] Ch 14 never says that these escalations land in its intervention queue. That is the most important missing connection in Part IV.
 3. **Intervention means two different things.** The prose defines intervention as a system request for human judgment ("asks a person to diagnose, correct, supply information, or choose", `:878`, `:882`). Figure 14-1 defines it as operator-initiated control ("Operator observes a run in flight → Pause · cancel · redirect · adjust budget", `pattern-hitl.gv:21–24`). § Operator console requirements and the Operator Control Service then add a third human role, the operator, without naming it. The reader leaves with an unresolved model of who the humans are.
 
 The chapter is otherwise solid reference material. Its implementation block is heavy on generic scaling bullets, though, and it carries a duplicated design-review answer shared verbatim with Ch 22.
@@ -41,7 +41,7 @@ The chapter currently delivers the authorization part fully. Intervention, opera
 
 Verdict: right section, but overwritten and internally inconsistent with its own figure.
 
-**§ Design human review as part of the system (`:888`).** Role: the Required-analysis table plus two H3s. It adds the gate triggers (risk, novelty, confidence, value, sensitivity, reversibility, destination), the design alternatives, and the failure scenarios. Flow: the table is useful, and its enterprise example stays on the Harborlight thread. *Issue:* the heading promises "the system" but the content is an analysis table, a contract, and a console list. "Failure scenarios" lists "approval applies to a changed plan", yet the chapter never says whether a human approves plans (Ch 12 `:536` says plans can be "inspected and approved") or effects (see C14-R05).
+**§ Design human review as part of the system (`:888`).** Role: the Required-analysis table plus two H3s. It adds the gate triggers (risk, novelty, confidence, value, sensitivity, reversibility, destination), the design alternatives, and the failure scenarios. Flow: the table is useful, and its enterprise example stays on the Harborlight thread. *Issue:* the heading promises "the system" but the content is an analysis table, a contract, and a console list. "Failure scenarios" lists "approval applies to a changed plan", yet the chapter never says whether a human approves plans (Ch 12 `:544` says plans can be "inspected and approved") or effects (see C14-R05). [verified: corrected — the quote is in the ARCHITECTURE GUIDANCE box at `:544`, not `:536`]
 
 **### Approval contract (`:900`).** Role: the canonical field list for the authorization request. It adds allowed responses (authorize, reject, edit-and-resubmit, request-evidence, cancel-run), the reversible flag, and the separation-of-duties requirement. Flow: this is the right single home for the field list. *Issue:* it is the second of four lists, and none of the four agree.
 
@@ -58,7 +58,7 @@ Verdict: right section, but overwritten and internally inconsistent with its own
 
 **### Records worth preserving (`:940`).** Role: entities. It adds ApprovalEvidenceSnapshot, ApprovalAssignment, OperatorAction, EscalationPolicy, and NotificationDelivery. The validity sentence at `:952` is the clearest statement of the binding rule in the book. *Issues:* this is the third field list for the request. There is no entity for intervention.
 
-**### Workflow integration (`:954`).** Role: the six-step approval wait-and-resume sequence. It adds the concrete sequence. Flow: good, and it is the concrete instance that Ch 15 generalizes. *Issue:* it uses durable timers, wait correlation IDs, a suspended workflow without a worker, and outbox events before Ch 15 defines them. That is acceptable because the next chapter does define them, but a one-clause pointer is missing.
+**### Workflow integration (`:954`).** Role: the six-step approval wait-and-resume sequence. It adds the concrete sequence. Flow: good, and it is the concrete instance that Ch 15 generalizes. *Issue:* it uses durable timers, wait correlation IDs, and a suspended workflow without a worker before Ch 15 defines them (the outbox event it also names is already defined in Ch 04 § CloudEvents and outbox contracts, `02-part-ii.md:258–292`). That is acceptable because the next chapter does define them, but a one-clause pointer is missing. [verified: corrected — "outbox events" removed from the list of terms Ch 15 defines first; Ch 04 defines `OutboxRecord`]
 
 **### What changes as usage grows (`:963`).** Role: scaling. The unique bullets are approval capacity in end-to-end planning (`:969`), stampede prevention (`:970`), authorization computed at claim/decision time (`:967`), and digest batching that keeps one decision per effect (`:968`). The generic bullets repeat every Part IV implementation block: partition by tenant (`:965`), durable timers (`:966`), regional replication and fencing (`:971`), cache by hash (`:972`). The regional bullet duplicates Ch 15 `:1247` and Ch 27 `08-part-viii.md:166`.
 
@@ -172,7 +172,7 @@ Nothing else needs expansion. The implementation block should shrink.
      - **Invariant:** an intervention response is an *input* to the run; it never authorizes an effect. Any protected effect it leads to still needs a proposal-bound authorization.
    - Add one Records row `InterventionTask` (run/node, trigger and source chapter's reason code, evidence refs, alternatives, allowed responses, assignee, SLA, state/version, response; append-only). Add one checklist item and one design-review row (see C14-R12).
    - Do not add a second API table. State that intervention responses use the run's signal and update endpoints (Ch 04).
-   - **Related:** Ch 10 `:45`, Ch 11 `:191`, Ch 12 `:460`, Ch 13 `:670`, Ch 15 `:1152` (C15-R04 adds the back-reference).
+   - **Related:** Ch 10 `:45`, Ch 11 `:199`, Ch 12 `:468`, Ch 13 `:678`, Ch 15 `:1152` (C15-R04 adds the back-reference). [verified: corrected — line numbers]
 
 3. **C14-R03 · High · Rewrite (prose and figure).**
    - **Location:** `:878`; Figure 14-1 (`assets/diagrams/src/pattern-hitl.gv:21–24`); § Operator console requirements (`:904`).
@@ -273,3 +273,25 @@ Nothing else needs expansion. The implementation block should shrink.
    - **Issue:** The card policy (C10-R04) had no Ch 14 reciprocal, and the card restates hash binding a fourth time.
    - **Change:** Retitle the H2 "Approval and intervention at a glance". Delete THE ENGINEERING PROBLEM box and the lead sentence. Replace the hash-binding steps with a pointer to § Approval contract, and name InterventionTask as defined in § Intervention contract (C14-R02). Keep the Use when, costs, failure, and signals blocks. Place it before § What the evidence lets us conclude.
    - **Related:** C10-R04, C14-R02, C14-R04.
+
+## Verification log
+
+Second-pass fact check against `source/parts/*.md`, `examples/patterns/*.py`, `assets/diagrams/src/pattern-hitl.gv`, `config/references.json`, and the Ch 22 / Appendix B passages cited.
+
+- **Line references checked / fixed:** 71 checked; 6 fixed (Ch 11 `:191`→`:193`/`:199`, Ch 12 `:460`→`:468` and `:536`→`:544` in two places, Ch 13 `:670`→`:678` in two places). Ch 04 `:166–169` for `:cancel`/`:update`/`:fork` is actually `:167–169` (within tolerance; left).
+- **Claims removed:** none.
+- **Claims softened:**
+  - § Workflow integration "uses … outbox events before Ch 15 defines them": the outbox is defined in Ch 04 (`02-part-ii.md:258–292`, `OutboxRecord`); only timers, correlation IDs, and the worker-less wait are Ch 15's.
+- **Important claims confirmed:**
+  - The design-review row at `:1107` is byte-identical to Ch 22 `06-part-vi.md:1014` (question and answer); diffed directly.
+  - Four distinct request field sets at `:884`, `:902`, `:944`, and the inline code `:1048–1057`; no two agree. The inline `proposal_hash` (action, destination, arguments, evidence_ids, expected_version) differs from `approval_gate.py:25` (`proposal_hash(action, arguments)`), and `approval_verification.py:23–33` uses tenant_id / actor_id / tool_version / logical_effect_key / policy_digest, none of which the inline model has.
+  - `InterventionTask` occurs exactly once in the book (`04-part-iv.md:994`); `InterventionRequired` never appears in Parts I–III.
+  - Figure 14-1 source `pattern-hitl.gv:21–24` reads "Operator observes a run in flight → Pause · cancel · redirect · adjust budget"; the file's header comment also defines intervention as "changes a run already in flight", so the prose/figure split (system-requested vs operator-initiated) is real.
+  - R15 `supports` = "Prioritizes major agentic-application security risks and mitigations"; R41 = WCAG success criteria. The evidence table at `:982` cites only R15; the footer at `:984` lists R15 and R41, so R41 supports no table row.
+  - Ch 03 `01-part-i.md:1137` gives the full `HumanActionAuthorizationRequest` field list and `:1154` the hash/expiry/version recheck; the interruption/approval/reauthorization/receipt table is at `:1141–1146`.
+  - Ch 14 has 3 design-review rows; Ch 13 (`:836–846`) and Ch 15 (`:1346–1350`) have 5 each.
+  - `:1030` is an empty H2 followed by the example marker at `:1033`; `:913` is a wrapper H2 with no intro sentence.
+  - `:operatorAction` (`:938`) overlaps Ch 04 `:cancel`/`:update`/`:fork` (`02-part-ii.md:167–169`) and Ch 15 `:cancel`/`:pause`/`:resume` (`:1214–1216`).
+  - Appendix B "Run stuck after approval" is at `09-appendices.md:45`; Ch 22 property table at `06-part-vi.md:683–688`; Ch 22 `:673` "Approval proves a person authorized the proposal; it does not prove the write happened once."
+- **Recommendations amended:** C14-R02 Related line numbers only. All recommendations remain consistent with overall-book-review.md §12 (D-03 removes `:operatorAction` = C14-R09; D-22 approval naming = C14-R04; D-23 inline code = C14-R10; D-30(f) sensible-place lead = C14-R10).
+- **Not verified:** the concept-map section/row references (§6 T1, T3, T15; §9 S5; map §3) were taken as given; the "five pre-teachings" style map counts were not re-counted here.

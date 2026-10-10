@@ -41,7 +41,7 @@ The reader arrives having seen AP-08 (chat as workflow) and AP-11 (budgets reset
 **§ What every collaboration must make explicit (`:30–37`).** *Role:* the cost argument plus the state-owner table. *Adds:* "every additional agent introduces another scheduler, context boundary, identity, budget, and failure mode". This is the chapter's best statement of the justification rule. *Verdict:* make this the canonical statement of "when another agent is justified" and cut the others (C18-R06). The state-owner row's "Core contracts" (TaskEnvelope · CapabilityEnvelope · JoinPolicy) matches the body. **Good.**
 
 **§ Treat collaboration as durable work, not conversation (`:39–47`).** *Role:* the core mechanism, with Figure 18-1. *Adds:* durable child tasks with scoped inputs; fan-in strategies; conflict-resolution rules; tree-wide caps; cancellation as durable intent with mutation reconciliation. *Issues:*
-- Figure 18-1's child tasks are labeled "screening", "tax", and "security" (`supervisor-worker.gv`). These are supplier-onboarding labels, not the Harborlight specialists named in `:43` (C18-R09).
+- Figure 18-1's child tasks are labeled "screening", "tax", and "security" (`supervisor-worker.gv`). These are generic labels that match no case in the book, and not the Harborlight specialists named in `:43` (C18-R09). [verified: corrected — the original called them "supplier-onboarding labels"; the supplier thread in Ch 01 and AP-07 mentions only "sanctions screening", never "tax" or "security" child tasks]
 - `:47` "Northstar caps depth, children, …" restates AP-11's correction without pointing to it (C18-R14).
 - "a child with an executing mutation must reconcile" needs a forward pointer to Ch 22's unknown-outcome reconciliation.
 
@@ -59,9 +59,9 @@ The reader arrives having seen AP-08 (chat as workflow) and AP-11 (budgets reset
 **### Recommended orchestration rules (`:74–82`).** *Role:* normative rules. *Issues:*
 - **Creation** uses "AgentManifest". That name is undefined; the book's term is AgentSpec (map T8).
 - **Delegation** is a third field list for the child task.
-- **Handoff** says "atomically transfer … and issue a new capability envelope" but omits Ch 11's acknowledge/reject step and "the previous owner remains accountable until acknowledgment" (`04-part-iv.md:195`, `:273`). That is drift.
+- **Handoff** says "atomically transfer … and issue a new capability envelope" but omits Ch 11's acknowledge/reject step and its rule that "until then, the current owner stays accountable" (`04-part-iv.md:195`, `:273`). That is drift. [verified: corrected — the earlier quotation was a paraphrase, not Ch 11's wording]
 - **Termination** lists causes but no states.
-- **Plan changes** re-specifies Ch 12 § Runtime revision.
+- **Plan changes** re-specifies Ch 12 § Runtime revision algorithm (`04-part-iv.md:522`).
 - **Coordination** and **Shared state** are good and unique in this form.
 
 *Verdict:* keep Coordination and Shared state. Point Handoff to Ch 11 and Plan changes to Ch 12. Replace Termination with the lifecycle (C18-R03, R05, R08).
@@ -85,7 +85,7 @@ The reader arrives having seen AP-08 (chat as workflow) and AP-11 (budgets reset
 - Unique and valuable: per-run serialization, dispatch keys, manifest-level delegation defaults, hot-run mitigation, immutable terminal state plus artifact hash.
 - Generic boilerplate repeated across chapters (map §5.1): partition by tenant + run, no global lock, strong vs eventual consistency.
 
-`risk_class` (`:146`) is used before Ch 22 defines it. *Verdict:* condense (C18-R11).
+`risk_class` (`:146`) is used before Ch 22 § Risk classes (`06-part-vi.md:714`) defines the scale; the term has already appeared undefined in Ch 01 (`01-part-i.md:734`) and the Ch 12 Plan IR JSON (`04-part-iv.md:465`), so Ch 18 is one more undefined use, not the first (see D-01 for the gloss rule). *Verdict:* condense (C18-R11). [verified: softened — not the first pre-definition use]
 
 **§ What the evidence lets us conclude (`:153–159`).** *Issues:*
 - The one claim ("Multi-agent structure does not inherently improve quality … evaluate against the strongest single-agent baseline") is attributed to R28. R28's recorded scope is "Reports multi-agent research architecture and token/context trade-offs". The quality claim and the baseline rule are book-authored recommendations, so the citation over-reaches its scope (AGENTS.md § Citation safety).
@@ -122,7 +122,7 @@ The card's definition ("conversation is advisory, while workflow state determine
 - *Put the idea to work:* two good exercises. #2 deliberately bridges to Ch 19's remote task.
 - *Questions:*
   - Q1 reinforces the chapter's core claim. That is acceptable.
-  - Q2 (`:377`) duplicates Ch 03's Q (`01-part-i.md:1307`) and Ch 11's Handoff card "Do not use when" (`04-part-iv.md:278`). Its answer defines handoff as "conversational control transfer", which is Ch 03's meaning and contradicts Ch 11's (durable, acknowledged ownership transfer).
+  - Q2 (`:377`) overlaps Ch 03's Q "When is a handoff actually a new task?" (`01-part-i.md:1307`) and Ch 11's Handoff card "Do not use when" (`04-part-iv.md:278`), which draws the same agent-as-tool / handoff / durable-child-task distinction. Its answer defines handoff as "conversational control transfer", which omits Ch 11's acknowledged, recorded ownership transfer (`04-part-iv.md:195`, `:273`); note that Ch 11's own card (`:278`) also contrasts a durable child task with "conversational transfer", so this is under-specification relative to Ch 11 rather than a flat contradiction. [verified: softened — "duplicates" and "contradicts" overstated; Ch 11 itself uses the conversational-transfer phrasing at `:278`]
   - Q3 is good as a bridge to Ch 21.
   - Q4 is good.
   - Q5 (`:380`, "What does an A2A or MCP protocol not solve?") is answered by Ch 19 § Two protocols, two responsibilities and belongs there.
@@ -167,9 +167,9 @@ The card's definition ("conversation is advisory, while workflow state determine
 
 | Ch 18 location | Other location | Verdict | Action / owner |
 | --- | --- | --- | --- |
-| § Monotonic child authority (`:280–347`) | Ch 21 § Capability-envelope subset proof (`06-part-vi.md:528–595`); identical by `diff` | **Redundancy** (exact duplicate) | Ch 21 is canonical (agrees with concept map S11). Ch 18 removes it (C18-R01). Ch 21 should keep its code and add a back-pointer to Ch 18's Task Service (Ch 21 review). |
+| § Monotonic child authority (`:280–347`) | Ch 21 § Capability-envelope subset proof (`06-part-vi.md:528–595`); identical by `diff` | **Redundancy** (exact duplicate) | Ch 21 is canonical (agrees with concept map S11). Ch 18 removes it (C18-R01). Ch 21 keeps the code as a registered example with `book_chapters: [21]` only (C21-R07, D-17) and adds a back-pointer to Ch 18's Task Service. [verified: amended — C21-R07 moves the code to `examples/`, so "keep its code" means keep it as the registered example, not inline] |
 | `TaskEnvelope` code (`:261`) | Ch 19 `A2ATaskEnvelope` (`:621`); Ch 19 § What the TaskEnvelope needs to carry (`:473`); Appendix C row (`09-appendices.md:68`) | **Redundancy with drift.** The map says the first ten fields are identical, but I count eight shared fields: `owner_agent`→`owner`, `state_version`→`expected_version`, and `capability` and `cancellation_parent_id` dropped in the A2A version. | Ch 18 canonical (agrees with map). Ch 18 receives the field-group table (C18-R04). Ch 19 drops its copies (C19-R03). |
-| Handoff rule (`:78`), topology row (`:70`), Q2 (`:377`), `:handoff` API, OwnershipTransfer | Ch 03 § Three meanings of handoff; Ch 11 § Routing and handoff are different events, § How Handoff works in practice | Topology row and API = reinforcement / application. Rule `:78` = drift (no acknowledgment). Q2 = redundancy that also contradicts Ch 11. | Ch 11 owns handoff semantics. Ch 18 owns the task-service implementation (C18-R05). The Ch 03 vs Ch 11 meaning of "handoff" needs reconciling by the Part I/IV reviews. |
+| Handoff rule (`:78`), topology row (`:70`), Q2 (`:377`), `:handoff` API, OwnershipTransfer | Ch 03 § Three meanings of handoff; Ch 11 § Routing and handoff are different events, § How Handoff works in practice | Topology row and API = reinforcement / application. Rule `:78` = drift (no acknowledgment). Q2 = redundancy that also under-specifies Ch 11's handoff (no acknowledgment; see the softened note under Questions). | Ch 11 owns handoff semantics. Ch 18 owns the task-service implementation (C18-R05). The Ch 03 vs Ch 11 meaning of "handoff" needs reconciling by the Part I/IV reviews. |
 | Router component (`:94`) | Ch 11 route service (`04-part-iv.md:187`, `:224`) | Reinforcement | Add a pointer (C18-R05) |
 | Plan-change rule (`:82`), `plans:revise` (`:108`), Run Coordinator "plan revision" (`:91`) | Ch 12 § The contracts between components (`04-part-iv.md:494–495`), Plan Store (`:482`) | **Redundancy with conflicting endpoint and owner** | Ch 12 canonical (C18-R08) |
 | Termination bullet (`:81`) | Ch 15 § Terminal correctness; Ch 10 dispositions; Ch 19 state mapping | Drift (map T12) | Use Ch 15's run terminals. Task lifecycle in Ch 18 (C18-R03). |
@@ -194,7 +194,7 @@ The card's definition ("conversation is advisory, while workflow state determine
    - **Issue:** The code is byte-identical to Ch 21 § Capability-envelope subset proof and is shown before envelopes are defined.
    - **Why it matters:** The reader parses a 12-field security dataclass without its model, then meets it again three chapters later as if new.
    - **Change:** Delete the H3 and its code block. In § Treat collaboration as durable work (after `:43`), add: "Each child's authority is a *capability envelope*: the maximum actions, resources, purposes, data classes, regions, risk, cost, delegation depth, and lifetime it may use. The Task Service derives it from the parent's envelope by intersection and refuses any child envelope that is not a provable subset. Chapter 21 defines the envelope and gives the subset proof." In § If this fails step 2 (`:352`), append "(Chapter 21 § Capability-envelope subset proof)".
-   - **Related:** Ch 21 keeps the code. The Ch 21 review should add one clause such as "the Task Service in Chapter 18 calls this before creating a child task" and must not remove its copy.
+   - **Related:** Ch 21 keeps the code as the registered example `[[EXAMPLE:capability-envelope]]` with `book_chapters: [21]` only (C21-R07; D-17); Ch 18 carries prose and a pointer and no example marker. The Ch 21 review should add one clause such as "the Task Service in Chapter 18 calls this before creating a child task". [verified: amended — "must not remove its copy" conflicted with C21-R07, which replaces the inline block with an example marker]
 
 2. **C18-R02 — High — Merge**
    - **Location:** `:161–247`, § How Supervisor/Worker works in practice and § How Multi-Agent Collaboration works in practice.
@@ -312,3 +312,33 @@ The card's definition ("conversation is advisory, while workflow state determine
    - **Issue:** Same request as C05-R16.
    - **Change:** Add one line: "If chat is the coordination record or each child gets fresh limits, see AP-08 and AP-11 in Chapter 17."
    - **Related:** C17-R03, C18-R07.
+
+## Verification log
+
+**Line references:** 71 checked against `source/parts/05-part-v.md`, `04-part-iv.md`, `01-part-i.md`, `02-part-ii.md`, `06-part-vi.md`, `09-appendices.md`, and `assets/diagrams/src/supervisor-worker.gv`; 0 wrong by more than ±3 lines; 1 heading name fixed (Ch 12 § Runtime revision → § Runtime revision algorithm, `04-part-iv.md:522`).
+
+**Claims removed:** none.
+
+**Claims softened:**
+- Figure 18-1 labels are "supplier-onboarding labels" → generic labels matching no case (the supplier thread never names tax/security child tasks; only "sanctions screening" in AP-07).
+- Q2 "duplicates" Ch 03 `:1307` and "contradicts" Ch 11 → overlaps, and under-specifies Ch 11 (Ch 11's own card at `04-part-iv.md:278` also says "conversational transfer"). D-06's outcome (Q2 becomes a cancellation question) is unaffected.
+- `risk_class` "used before Ch 22 defines it" → one more undefined use; Ch 01 `:734` and Ch 12 `:465` precede it.
+- Handoff quotation at `:273` corrected to Ch 11's actual words.
+
+**Claims confirmed (most consequential):**
+- `diff` of `05-part-v.md:280–347` against `06-part-vi.md:528–595` is empty: the code block is byte-identical (the H3 titles differ).
+- TaskEnvelope (`:261–274`, 12 fields) vs A2ATaskEnvelope (`:621–636`, 11 fields): 8 fields share a name (`task_id`, `parent_task_id`, `goal`, `acceptance_contract`, `capability_grant_id`, `input_artifact_ids`, `deadline`, `maximum_cost_usd`); 2 renamed (`owner_agent`→`owner`, `state_version`→`expected_version`); `capability` and `cancellation_parent_id` dropped; `status` added. The concept map's "first ten fields identical" is wrong and has already been annotated as corrected at `book-concept-map.md:313`.
+- Four drifting field vocabularies in Ch 18 (`:77`, `:115–127`, `:135`, `:261–274`): `authority_ceiling`/`capability_grant_id`, `acceptance`/`acceptance_contract`, `receiver`/`owner_agent`, `budget.usd`/`maximum_cost_usd` all present as stated.
+- "Durable state machine" (`:25`) with no task states anywhere in `:9–384`; the only local state list is Ch 19 `:531–539`.
+- "Add a specialist only when boundaries differ" appears at all seven cited lines (`:27`, `:32`, `:56`, `:157`, `:179`, `:357`, `:376`).
+- `supervisor-worker.gv` t1–t3 labels are "screening", "tax", "security"; the `config/diagrams.json` description does not name the tasks.
+- `POST /v1/runs/{run_id}/plans:revise` (`:108`) vs Ch 12 `POST /v1/plans/{plan_id}/revisions/{revision}:validate|:commit` (`04-part-iv.md:494–495`); Run Coordinator "plan revision" (`:91`) vs Plan Store (`:482`).
+- R28 scope in `config/references.json` is "Reports multi-agent research architecture and token/context trade-offs"; R33 is cited in the evidence context (`:11`) but omitted from "draws on R28" (`:159`).
+- Ch 11 (`04-part-iv.md:162–375`) has no "## A workable implementation" heading (the next one is Ch 12's at `:475`).
+- Ch 19 (`:386–701`) contains no "Chapter 18" or "task tree" reference.
+- `04-part-iv.md:1821` AP-08 and `:1566` AP-11 sit inside the reviewed range; Ch 17's closing sentence is quoted exactly (`:1873`).
+- Region citations such as `[[EXAMPLE:contracts#step]]` and `# --8<-- region:step` exist, so C18-R04's `contracts#task` region follows the repo convention.
+
+**Recommendations amended:** C18-R01 Related (Ch 21 keeps the code as a registered example with `book_chapters: [21]`, per C21-R07 and D-17, not inline). Cross-chapter table row for § Monotonic child authority updated to match.
+
+**Not verifiable here:** the concept-map "§4 row 52" and "§5.1–§5.3/§7.1" references were confirmed to exist as sections but their row contents were not re-audited; the judgement that Ch 16's decision tree and Appendix A select patterns rather than topologies was not re-read beyond Appendix A item 4 (`09-appendices.md:8`, which matches the supervisor/worker summary).

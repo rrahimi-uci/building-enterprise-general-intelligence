@@ -8,7 +8,7 @@ Chapter 20 has the right core idea and states it well. A detector, a policy poin
 
 - **The chapter's own vocabulary contradicts it.** "Policy and guardrail services own decisions" (`:58`, `:65`), "Defense-in-depth guardrails architecture" (Figure 20-1, `:71`), "Runtime guardrail…" (Figure 20-3, `:91`, which draws an Input Guardrail as the first gate that refuses), and the closing "The guardrail architecture establishes defense in depth" (`:331`). The section heading at `:28` says guardrails are not the boundary, and then the chapter names its architecture after them.
 - **One layer model, three counts.** Figure 20-1 shows 6 layers, the table at `:73–83` has 9, and Ch 23 § Containment layers has 8. Ch 03's protection stack has 7 and the Part VI intro gives a fifth ordering.
-- **The threat catalog is disconnected from the layer model.** The catalog intro promises that each card shows "where the first deterministic refusal should occur" (`:101–106`). No card names a refusal point or a layer. The cards are stock-phrased fragment lists (`:110–234`).
+- **The threat catalog is disconnected from the layer model.** The catalog intro promises that each card shows "where the first deterministic refusal should occur" (`:101–106`). No card names the layer at which that refusal occurs; the runtime-control lists name mechanisms (for example "Egress proxy", "tool eligibility independent of content") without saying which one is the first deterministic refusal. The cards are stock-phrased fragment lists (`:110–234`). [verified: softened — cards do name controls, but none names a layer or singles out the first refusal]
 - **Ch 20 and Ch 23 split the security story badly.** Both assume a compromised model, both list layers, both catalog threats (T-cards here, an 11-row table in Ch 23), and both tell the injected-document story. A clean division is proposed in § Structural Recommendations, and chapter-23.md uses the same split.
 - **The template is out of order.** The chapter has no case box and no design choice (it is the only Part VI chapter without them). Its core § Respond as if the model can be compromised comes after the evidence and code sections.
 
@@ -61,8 +61,8 @@ What the reader brings in: Ch 02 six gates, Ch 03 § Guardrails and authorizatio
 - *Role:* trust boundaries and the request sequence.
 - *Adds:* "Trust is not inherited through a chain" (`:89`), which is excellent, and the SECURITY AND GOVERNANCE box on indirect injection (`:97`).
 - *Issues:*
-  - Figure 20-2 shows 3–4 boundaries, but Ch 04 § Trust boundaries already has the 8-row table, and this chapter never cites it.
-  - `:93` is an 11-clause run-on sentence: the book's fifth end-to-end flow, with a step order that does not match Ch 02's six gates.
+  - Figure 20-2 shows one platform trust boundary with four crossings (user→run, retrieved content→agent, agent→model provider, Tool Gateway→system of record, per `security-boundaries.gv`), but Ch 04 § Trust boundaries already has the 8-row table, and this chapter never cites it. [verified: corrected — "3–4 boundaries" replaced with what the diagram source draws]
+  - `:93` is a 10-clause run-on sentence: the book's fifth end-to-end flow, with a step order that does not match Ch 02's six gates. [verified: corrected — 10 semicolon-separated clauses, not 11]
   - Figure 20-3 makes the Input Guardrail refuse the request ("refuse, nothing dispatched"). That is the opposite of the chapter thesis.
 - *Verdict:* cite Ch 04, cut `:93`, and fix Figure 20-3 (C20-R05, C20-R06).
 
@@ -95,7 +95,7 @@ What the reader brings in: Ch 02 six gates, Ch 03 § Guardrails and authorizatio
 **§ What the evidence lets us conclude (`:258`).**
 - *Role:* citations.
 - *Adds:* "enumerates known classes, not all classes". This is good, and it is the reason Ch 23's threats paragraph (`:1108`) is redundant.
-- *Issue:* the incident lifecycle is uncited. R42 (NIST SP 800-61r3) is registered and is cited only in Ch 23's "draws on" sentence and Ch 27's evidence context.
+- *Issue:* the incident lifecycle is uncited. R42 (NIST SP 800-61r3) is registered and is cited only in Ch 23's "draws on" sentence (`:1189`) and Ch 27's evidence context and "draws on" sentence (`08-part-viii.md:128`, `:348`). [verified: corrected — Ch 27's draws-on line also cites R42]
 - *Verdict:* add an incident row (C20-R10).
 
 **§ A sensible place to start (`:266`).**
@@ -114,13 +114,13 @@ What the reader brings in: Ch 02 six gates, Ch 03 § Guardrails and authorizatio
 - *Verdict:* rename, move earlier, and condense (C20-R10).
 
 **Template sections: § If this fails in production (`:292`), § What to verify before production (`:300`), § Put the idea to work (`:314`), § Questions to bring to design review (`:319`).**
-- *If this fails:* strong. Step 3 (detection failure vs. enforcement failure) is the chapter thesis applied to debugging. Step 1's boundary list matches the 9-layer table, which is good.
+- *If this fails:* strong. Step 3 (detection failure vs. enforcement failure) is the chapter thesis applied to debugging. Step 1's boundary list matches the first eight rows of the 9-layer table (it omits Detection/response, which is reasonable for a triage step). [verified: corrected — eight of nine layers listed at `:294`]
 - *Verify:*
   - The fourth check (approval bound to the exact proposal, `:308`) belongs to Ch 14/22.
   - No check captures the thesis that no detector is the only control in front of a protected operation.
 - *Put the idea to work:* exercise 1 depends on cards mapped to layers (C20-R07). Exercise 2 says "the guardrail is reading content" and should say "the eligibility decision".
 - *Questions:*
-  - Q3 "Why is discovery not authorization?" (`:325`) is a near-duplicate of Ch 08 (`03-part-iii.md:347`).
+  - Q3 "Why is discovery not authorization?" (`:325`) overlaps Ch 08 § Discovery is not permission (`03-part-iii.md:250`); Ch 08's own review question (`:347`) is about discovery versus resolution, not authorization. [verified: corrected — section is at `:250`, and the Ch 08 Q is a different question; "near-duplicate" softened to "overlaps"]
   - The detection-vs-enforcement distinction, the chapter's main idea, has no question.
   - Q1's answer repeats `:69`.
 - *Verdict:* small edits (C20-R11).
@@ -172,7 +172,7 @@ What the reader brings in: Ch 02 six gates, Ch 03 § Guardrails and authorizatio
 | "Assume the model is compromised" | `:22`, `:270` heading | Ch 23 `:1033`, `:1042`, `:1053`; Appendix F #1 | State it once in the Part intro. Ch 20 applies it to detection vs. enforcement, Ch 23 to reach. See S1 below. |
 | Trust boundaries | Figure 20-2 | Ch 04 § Trust boundaries (8 rows) | **Reinforcement**, once Ch 20 cites Ch 04. |
 | Request sequence | Figure 20-3, `:93` | Figure 4-2 `request-sequence`; Ch 02 six gates | Figure 20-3 is **reinforcement** only if it shows the detector/policy/enforcement split (C20-R06). `:93` is redundant. |
-| Discovery ≠ authorization | Q3 `:325` | Ch 08 § Discovery is not permission plus Q (`03-part-iii.md:347`) | **Redundant** question. Replace it (C20-R11). |
+| Discovery ≠ authorization | Q3 `:325` | Ch 08 § Discovery is not permission (`03-part-iii.md:250`); Ch 03 "Tool availability is not authorization" (`01-part-i.md:1082`) | **Overlapping** question; Ch 08 and Ch 03 already carry the rule. Replace it (C20-R11). [verified: corrected — Ch 08's Q at `:347` is discovery vs resolution; section ref fixed] |
 | Incident lifecycle | § Respond… `:270` | Ch 23 `incidents:{id}:contain` API (`:1128`); Ch 27 evidence context citing NIST 800-61 (`08-part-viii.md:128`); Appendix B | Ch 20 is canonical. Ch 23's API is the instrument (reinforcement). Ch 27's evidence context should point to Ch 20 or be removed (Part VIII owner). |
 | "Guardrail" as a whole architecture or enforced rule | `:58`, `:65`, Fig 20-1, Fig 20-3, `:331` | Ch 05 `02-part-ii.md:388`, `:416–418`, Figure 5-2 "policy-to-guardrail", `[[EXAMPLE:rule-as-guardrail]]`; Ch 28 § Illustrative starting guardrails (`08-part-viii.md:639`); Ch 07 platform row "Guardrails … action policy" (`03-part-iii.md:46`); Ch 01 band row "Identity, guardrails, approvals, containment" (`01-part-i.md:497`); Ch 04 plane row (`02-part-ii.md:43`) | **Contradicts the thesis.** Ch 20 fixes its own uses (C20-R02). The others need their owners: Ch 05 "enforced rule", Ch 28 "starting limits", Ch 07 "Detection (guardrails)" with "action policy" moved to a policy row. Ch 01 and Ch 04 can keep "guardrails" alongside identity/approvals, since that use is consistent with detection. |
 
@@ -309,7 +309,7 @@ What the reader brings in: Ch 02 six gates, Ch 03 § Guardrails and authorizatio
 9. **C20-R09 · Medium · Add.**
    - *Location:* `:266–268` § A sensible place to start.
    - *Issue:* the only code is a detector, with no framing, in a chapter whose thesis is that detectors are not the boundary.
-   - *Change:* before the marker, add one or two sentences: "This is a detector. It saves a model call when it fires; it proves nothing when it does not. The enforcement that must hold regardless is the Tool Gateway's exact-resource check in Chapter 2's governed Tool Gateway example." Do not add inline code.
+   - *Change:* before the marker, add one or two sentences: "This is a detector. It saves a model call when it fires; it proves nothing when it does not. The enforcement that must hold regardless is the Tool Gateway's eligibility and delegated-action check in Chapter 2's governed Tool Gateway example, and the exact-resource denial of Chapter 3." Do not add inline code. [verified: corrected — `governed_tool_gateway.py` checks tool eligibility, `required_action` against delegated authority, and resource *version*; the exact-resource (MORT-2026-000999) denial is Ch 03 prose, not that example]
    - *Related:* `[[EXAMPLE:governed-tool-gateway]]` (Ch 02).
 
 10. **C20-R10 · High · Move, Rewrite, and Condense.**
@@ -318,7 +318,7 @@ What the reader brings in: Ch 02 six gates, Ch 03 § Guardrails and authorizatio
     - *Change:*
       - Rename to "Respond to an incident from evidence, not from the model's account".
       - Move the section to directly after § Worked example (before § What the evidence lets us conclude).
-      - Cut `:286–290` except its last sentence ("Reconcile which effects actually occurred… regression cases").
+      - Cut `:286–290` except its last two sentences ("Reconcile which effects actually occurred; never infer from the model's final message. Restore a known release and authoritative state, then create privacy-reviewed regression cases."). [verified: corrected — the quoted span is two sentences]
       - Add "(Chapter 23)" to "Narrow kill switch" (`:280`) and "(Chapter 22)" to the Reconcile row (`:282`).
       - Add an evidence row: "Incident lifecycle | Phase structure aligns with NIST SP 800-61r3's integration of incident response into risk management; the agent-specific phases (Revoke, Reconcile) are book-authored recommendations | R42", within R42's recorded scope. Add R42 to the "draws on" sentence.
     - *Related:* Ch 27 evidence context `08-part-viii.md:128` (Part VIII owner: point to Ch 20 or remove the incident claim).
@@ -335,3 +335,27 @@ What the reader brings in: Ch 02 six gates, Ch 03 § Guardrails and authorizatio
     - *Location:* T-04 `:132`, T-05 `:140`, T-10 `:180`, T-11 `:188`.
     - *Issue:* overlapping pairs have no stated distinction.
     - *Change:* add one clause each. T-04: "single-run, crafted for this task". T-05: "persisted in the corpus, affects many runs". T-10: "data is actively sent to a destination". T-11: "data surfaces passively in outputs, logs, traces, or caches".
+
+## Verification log
+
+- **Line references checked:** 71 in this file (all `06-part-vi.md` refs for `:1–331`, plus every cross-chapter ref); 2 fixed (Ch 08 "Discovery is not permission" is `03-part-iii.md:250`, not `:347`; R42 is also cited at `08-part-viii.md:348`).
+- **Claims removed:** none.
+- **Claims softened:**
+  - "No card names a refusal point or a layer" → cards name controls but not the layer or the first refusal.
+  - "Figure 20-2 shows 3–4 boundaries" → one platform boundary with four crossings (from `security-boundaries.gv`).
+  - "`:93` is an 11-clause run-on" → 10 clauses.
+  - "Step 1's boundary list matches the 9-layer table" → matches eight of nine (omits Detection/response).
+  - "Q3 is a near-duplicate of Ch 08" → overlaps Ch 08 § Discovery is not permission and Ch 03 `:1082`; Ch 08's Q `:347` is a different question.
+- **Important claims confirmed:**
+  - Layer counts: Figure 20-1 has 6 layers (`security-depth.gv` l1–l6); the table `:73–83` has 9 rows; Ch 23 § Containment layers `:1061–1068` has 8; Ch 03 protection stack `01-part-i.md:1174–1180` has 7; Ch 23 boundary table `:1156–1162` has 5; Part VI intro `:9–12` lists 5 controls in a different order.
+  - The six "guardrail" uses in C20-R02 are all present verbatim: `:58` "Policy and guardrail services own decisions"; `:65` "Policy, guardrail, and gateway services own decisions"; `:71` "Defense-in-depth guardrails architecture"; `:91` "Runtime guardrail and protected-effect sequence"; `:317` "the guardrail is reading content rather than policy"; `:331` "The guardrail architecture establishes defense in depth". Each conflicts with the detector/policy/enforcement split at `:32–37`.
+  - Figure 20-3 (`guardrail-sequence.mmd`) has participant "Input Guardrail" with the branch `In-->>Agent: refuse, nothing dispatched` before the Policy Engine is reached.
+  - Part VI intro order (authentication → authorization → guardrails → sandboxes → effect ledger, `:9–12`) differs from `:93` (classify/minimize input precedes authorize tool) and from Figure 20-3.
+  - All 16 T-cards use the five stock phrases (16/16 each, grep-counted); none contains the word "Chapter"; T-12 `:202` says "Agent gateway" (lowercase); "Agent Gateway" also appears at `01-part-i.md:525` and `05-part-v.md:561`, matching D-07.
+  - The containment scope list at `:286` and `:310` is verbatim-identical ("pause a tool, MCP server, model route, Skill, memory namespace, tenant, or agent").
+  - Ch 20 is the only Part VI chapter without a case box and design choice (Ch 21 `:337–343`, Ch 22 `:636–642`, Ch 23 `:1025–1031` have both).
+  - `examples/security/input_guardrail.py` docstring: "the important property is where it sits in the pipeline"; it is a string-marker detector.
+  - R42 scope in `config/references.json`: "Supports incident-response integration with organizational risk management." C20-R10's proposed row stays inside that scope and labels the agent-specific phases book-authored.
+  - Ch 19 closes with "Chapter 20 introduces defense in depth across all agentic trust boundaries" (`05-part-v.md:701`).
+- **Recommendations amended:** C20-R09 (the Ch 02 example checks eligibility/delegated action and resource version, not exact resource identity; wording fixed); C20-R10 (quoted retained span is two sentences); C20-R11 (Ch 08 ref). No change affects a §12 decision; C20-R01/R04/R07/R08 remain consistent with D-19, D-07, and D-30.
+- **Not verified:** the map's T4/T10/S17 labels were confirmed to exist in `book-concept-map.md`; their content was not re-audited here.

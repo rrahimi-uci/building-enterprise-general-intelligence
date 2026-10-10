@@ -16,7 +16,7 @@ Chapter 03 owns one argument that no other chapter makes: **the agent framework 
 - the restart test (`:1127–1131`) and the replaceability test (`:1236–1242`)
 - upgrades as behavior changes (`:1219–1234`)
 
-The chapter then spends about 120 lines (`:1067–1217`) previewing mechanisms other chapters own, at near-full depth: the Tool Gateway questions (Ch 21/22), the protected write path (Ch 02/22), the approval record and proposal hash (Ch 14), handoff semantics (Ch 11/18), the guardrail layer stack (Ch 20), retry ownership (Ch 22), and a nine-step execution path (Ch 04/15). I checked these against the downstream text:
+The chapter then spends about 150 lines (`:1067–1217`) previewing mechanisms other chapters own [verified: corrected — the cited span is 151 lines], at near-full depth: the Tool Gateway questions (Ch 21/22), the protected write path (Ch 02/22), the approval record and proposal hash (Ch 14), handoff semantics (Ch 11/18), the guardrail layer stack (Ch 20), retry ownership (Ch 22), and a nine-step execution path (Ch 04/15). I checked these against the downstream text:
 
 - **Duplicates.** § Bind approval to the exact proposal restates Ch 14 `:884` and Ch 14's own enterprise example (`:898`, the same employment-evidence scenario). § Guardrails and authorization… restates Ch 20 § Guardrails help, but they are not the security boundary, with the same injected-document scenario and a seven-layer stack against Ch 20's nine. § One retry owner restates Ch 22 `:839` and § Choose the response that matches the failure. § The same rule applies to writes and § The complete execution path re-sequence Ch 02's gates (8 and 9 steps).
 - **Terminology conflict.** § Three meanings of handoff calls an SDK "framework handoff" a transfer in which "the same activity remains accountable" (`:1163`). Ch 11 defines a handoff as the event in which accountability *changes*, on acknowledgment (`04-part-iv.md:182`, `:195`). Ch 18 says a handoff "atomically transfer[s] the conversation owner and issue[s] a new capability envelope" (`05-part-v.md:78`). These are three meanings of one term.
@@ -26,7 +26,7 @@ The chapter then spends about 120 lines (`:1067–1217`) previewing mechanisms o
   - The unsafe vs. governed tool path and the `MORT-2026-000999` exact-resource example (`:1071–1090`), which no other chapter uses.
   - The six-step boundary debugging order (`:1279–1286`).
 
-**No chapter in Parts II–VIII refers back to Chapter 3** (grep of `02-part-ii.md`–`09-appendices.md`). The pre-teaching is therefore not leveraged anywhere, and trimming it removes nothing later chapters depend on.
+**No chapter prose in Parts II–VIII refers back to Chapter 3** (grep -w of `02-part-ii.md`–`09-appendices.md`; the only chapter-number reference is the "Primary chapters" column of Appendix A's pattern table, e.g. "2–3" for P-05). The pre-teaching is therefore not leveraged anywhere, and trimming it removes nothing later chapters depend on. [verified: corrected — Appendix A's table does list chapter numbers; the prose claim stands]
 
 Ordering defects compound the length:
 
@@ -175,14 +175,14 @@ What, Why, How, and the two tests are delivered well. The bridge from the step r
 - *Verdict:* redundant with Ch 20 § Guardrails help… (`06-part-vi.md:28–45`), which makes the same argument with the same injected-document scenario and adds the detector / policy point / enforcement point distinction.
 - *Issues:*
   - The seven-layer stack (`:1174–1180`) is a fourth layer count (Ch 20 has nine in its table and six in Figure 20-1; Ch 23 has eight).
-  - This is the second of five tellings of the injected document.
+  - This is the second of about five tellings of the injected document (Ch 01 `:98–102`, here, Ch 06 `02-part-ii.md:655`, Ch 20 `06-part-vi.md:38–40` and § Worked example `:236`, Ch 23 exercise `:1288`). [verified: softened — the count depends on what one counts as a telling; the locations are listed]
   - The framework-specific point — SDK guardrails run inside the component being protected against — is implied but never stated.
 
 **§ One retry owner (`:1184`).**
 - *Role:* retry ownership.
 - *Verdict:* redundant with Ch 22 `:839` (retry ownership), § Choose the response that matches the failure (`:823–834`), and AP-04. The framework-specific point (SDK transport retries must be disabled or declared) is absent.
 - *Issues:*
-  - The key-composition example uses `RUN-98217` (`:1197`), while Ch 06/18 use `run_42` (T16).
+  - The key-composition example uses `RUN-98217` (`:1197`), while Ch 06/18 use `run_42` (`02-part-ii.md:742`, `05-part-v.md:117`). T16 standardizes on `RUN-98217`, so the drift is theirs to fix, not Ch 03's. [verified: corrected — T16 adopts Ch 03's identifier]
   - "effect layer" (`:1199`) vs. "effect service" (`:1194`) vs. "effect ledger" (`:1104`) is T24 drift.
   - "LLM Gateway may retry" (`:1192`) refers to Ch 19 with no pointer.
 
@@ -196,7 +196,7 @@ What, Why, How, and the two tests are delivered well. The bridge from the step r
 - *Verdict:* canonical. Keep.
 - *Issues:*
   - The RunManifest table (`:1225–1232`) disagrees with Ch 04 § RunManifest (`02-part-ii.md:176–195`). Ch 04 has no `sdk`/adapter version, and Ch 03 puts `context_manifest` (a per-step record, Ch 06) in a per-run manifest.
-  - `reasoning-standard@4` vs. Ch 04's `route://reasoning-standard@18` (T16).
+  - `reasoning-standard@4` vs. Ch 04's `route://reasoning-standard@18` (`02-part-ii.md:188`). T16 standardizes on `reasoning-standard@4`, so Ch 04 changes, not Ch 03. [verified: corrected — T16 adopts Ch 03's value]
 
 **§ The replaceability test (`:1236`).**
 - *Role:* the second operational test.
@@ -233,7 +233,7 @@ What, Why, How, and the two tests are delivered well. The bridge from the step r
 ## Sparse or Underdeveloped Content
 
 - **Step status vs. domain assessment.** One or two sentences in § The request is bounded… would reconcile the three disposition vocabularies in Part I (C03-R09).
-- **The step-to-gate bridge.** One sentence saying `AgentStepResult.proposed_action` is the Propose gate's output (C03-R05).
+- **The step-to-gate bridge.** One sentence saying an `AgentStepResult` with `status: "proposed_action"` (carrying `decision.tool_call`) is the Propose gate's output (C03-R05). [verified: corrected — `proposed_action` is a `status` value, not a field, in `examples/contracts.py:45`]
 - **Template gaps.** There is no § Put the idea to work. Two exercises would test the chapter's own tests (C03-R18). There is no state-owner row. It is optional and Low priority, but every neighbor has one and C01-R05 explains the format.
 
 Nothing else is thin. The chapter's problem is breadth, not depth.
@@ -254,7 +254,7 @@ Nothing else is thin. The chapter's problem is breadth, not depth.
 - **In from Ch 02.** Ch 02 ends on "the execution seam" (`:896–898`). Ch 03 opens with two evidence blockquotes and a supplier box before its design choice, then a "why" H2 that restates it. The seam metaphor returns only at `:925`.
 - **`:935–939`.** The checkpoint table and example are followed by "Consider Harborlight mortgage case…", which re-introduces the case after the reader has just seen its code.
 - **`:1010` → `:1012`.** The replaceability test is posed and then dropped for 226 lines.
-- **`:1065` → `:1067` → … → `:1203`.** Seven consecutive H2s each open a new concern (tools, resources, writes, state, restart, approval, handoff, guardrails, retry) with no signpost that this is a tour of where the boundary meets the rest of the platform. The reader cannot tell the canonical sections (state, restart) from the previews.
+- **`:1065` → `:1067` → … → `:1203`.** Eleven consecutive H2s (`:1067, :1084, :1092, :1109, :1127, :1133, :1150, :1156, :1168, :1184, :1203`) each open a new concern (tools, resources, writes, state, restart, approval, binding, handoff, guardrails, retry, execution path) with no signpost [verified: corrected — the span holds eleven H2s, not seven] that this is a tour of where the boundary meets the rest of the platform. The reader cannot tell the canonical sections (state, restart) from the previews.
 - **`:1234` → `:1236`.** The replaceability test follows the upgrade section without reference to the restart test (`:1127`), its natural pair.
 - **Out to Ch 04 (`:1312`).** The promise is not kept by Ch 04's opening (`02-part-ii.md:11–18`, no AgentRuntime). Part II's intro (`02-part-ii.md:3`) says "The first Part established that the model is not the system of record", which is a fair recall but does not mention the runtime seam.
 
@@ -280,7 +280,7 @@ Assessment of each Ch 03 section that the map (S5) flags, against the downstream
 | § Reauthorize the exact resource (`:1084`) | Ch 22 Invocation step 2; Ch 20 worked example | Reinforcement (unique example) | All of it, merged with the previous section | Pointer for capability envelope → Ch 21 |
 | § The same rule applies to writes (`:1092`) | Ch 02 § One proposal, six gates; Ch 22 § Invocation sequence | Redundant with drift (8 vs. 6 steps) | `:1107` "successful SDK run is not the business record" plus pointers | The 8-step list → "the six gates (Chapter 2)" |
 | § Human approval: interruption versus record (`:1133`) | Ch 14 § Approval contract (`04-part-iv.md:900–902`), § Records worth preserving (`:944`) | Field list redundant; event table unique | The event table (`:1141–1146`) and `:1148` | The field list → Ch 14 |
-| § Bind approval to the exact proposal (`:1150`) | Ch 14 `:884`, `:898`; AP-06; Ch 22 `06-part-vi.md:673` | Redundant (same scenario) | One sentence | All mechanics → Ch 14 |
+| § Bind approval to the exact proposal (`:1150`) | Ch 14 `:884`, `:898`; AP-06; Ch 22 `06-part-vi.md:673` | Redundant (same scenario as Ch 14 `:898`; AP-06 uses a payment-amount example) [verified: softened] | One sentence | All mechanics → Ch 14 |
 | § Three meanings of handoff (`:1156`) | Ch 11 § Routing and handoff are different events (`04-part-iv.md:180–195`), § How Handoff works in practice (`:260–301`); Ch 18 § Topology decision table (`05-part-v.md:69–70`), rules (`:77–78`), Q (`:377`) | Redundant *and* conflicting on what "handoff" means | The framework rule (`:1166`), reframed as a term mapping | Ownership transfer → Ch 11; durable child task → Ch 18 |
 | § Guardrails and authorization solve different problems (`:1168`) | Ch 20 § Guardrails help, but they are not the security boundary (`06-part-vi.md:28–45`), layer table (`:73–83`), § Worked example (`:236–256`) | Redundant (same argument and scenario, conflicting layer count) | Two sentences on SDK guardrails as in-loop detectors | The layer stack and scenario → Ch 20 |
 | § One retry owner (`:1184`) | Ch 22 § The mechanics that make retries safe (`06-part-vi.md:839–840`), § Choose the response that matches the failure (`:821–834`); AP-04 | Redundant | One paragraph on SDK-local retries | Table and key composition → Ch 22 |
@@ -307,7 +307,7 @@ Proposed order. The canonical framework-boundary argument stays intact; previews
 7. **§ Framework state versus business state** (case fix).
 8. **§ Two tests for the boundary.** Merges § The restart test and § The replaceability test, with a Ch 15 pointer.
 9. **§ Framework upgrades are behavioral changes** (RunManifest table relabeled).
-10. **§ Where the framework meets the rest of the platform.** A new H2 replacing seven H2s, with short H3s:
+10. **§ Where the framework meets the rest of the platform.** A new H2 replacing eight H2s (`:1067, :1084, :1092, :1133, :1150, :1156, :1168, :1184`), with short H3s [verified: corrected — the six H3s below absorb eight H2s, not seven]:
     - *Framework tools are façades* (merged tool and exact-resource sections, minus the question list)
     - *Writes leave the step as proposals* (two sentences plus pointers)
     - *SDK interruption is not approval* (event table plus one sentence pointing to Ch 14)
@@ -369,9 +369,9 @@ Remove § The same rule applies to writes, § Bind approval to the exact proposa
    - **Why it matters:** a third gate sequence (with different counts) undermines Ch 02's canonical model, and the reader never learns where AgentRuntime meets the gates.
    - **Change:**
      - Replace the H2 with the H3 "Writes leave the step as proposals".
-     - Replace `:1094–1105` with: "If the agent concludes that the second pay statement must be requested, the SDK tool call means only that the model proposes it. The step returns it as `AgentStepResult.proposed_action`, and from there it crosses Chapter 2's six gates outside the framework."
+     - Replace `:1094–1105` with: "If the agent concludes that the second pay statement must be requested, the SDK tool call means only that the model proposes it. The step returns an `AgentStepResult` with status `proposed_action` and the call in its decision, and from there it crosses Chapter 2's six gates outside the framework." [verified: corrected — `proposed_action` is a `status` value and the call travels in `decision.tool_call` (`examples/contracts.py:22–47`); there is no `AgentStepResult.proposed_action` field]
      - Keep `:1107`.
-     - In § The request is bounded… after `:1053` add: "A `proposed_action` result is the output of the Propose gate; nothing inside the adapter validates, authorizes, or commits it."
+     - In § The request is bounded… after `:1053` add: "A result with status `proposed_action` is the output of the Propose gate; nothing inside the adapter validates, authorizes, or commits it."
    - **Related:** C02-R03.
 
 6. **C03-R06 — Medium — Remove**
@@ -428,7 +428,7 @@ Remove § The same rule applies to writes, § Bind approval to the exact proposa
     - **Related:** C03-R15.
 
 12. **C03-R12 — Medium — Rewrite**
-    - **Location:** `:1044` "capability ceiling"; `:1041` "Agent definition"; `:1104`, `:1194`, `:1199` effect ledger / effect service / effect layer; `:1144` "Platform approval".
+    - **Location:** `:1044` "capability ceiling"; `:1042` "Agent definition" (Behavior row); `:1104`, `:1194`, `:1199` effect ledger / effect service / effect layer; `:1144` "Platform approval". [verified: corrected — "Agent definition and version" is the Behavior row at `:1042`; `:1041` is the Identity row]
     - **Issue:** T6, T8, T24, and T3 drift inside one chapter.
     - **Change:**
       - "capability envelope (Chapter 21)".
@@ -443,7 +443,7 @@ Remove § The same rule applies to writes, § Bind approval to the exact proposa
     - **Change:**
       - Introduce the table with: "The run manifest (Chapter 4) must include the framework-boundary pins below."
       - Remove the `context_manifest` row and add after the table: "Each step's `ContextManifest` is recorded with its `AgentStepRequest`, not in the run manifest."
-      - Use the case identifiers the synthesizer standardizes (T16) for `run_id` and `model_route`.
+      - Use the case identifiers the synthesizer standardizes (T16) for `run_id` and `model_route`. [verified: T16 adopts this table's own values (`RUN-98217`, `reasoning-standard@4`), so no change to these two rows is needed here; Ch 04 `02-part-ii.md:188` and Ch 06/18's `run_42` change instead]
     - **Cross-chapter:** the Ch 04 reviewer adds `"adapter": {"framework": "openai-agents", "version": "0.22.2"}` (or equivalent) to the RunManifest JSON (`02-part-ii.md:176–195`).
 
 14. **C03-R14 — Medium — Condense / Remove**
@@ -498,7 +498,7 @@ Remove § The same rule applies to writes, § Bind approval to the exact proposa
     - **Change:** **Reconciled (see overall-book-review.md §D-06):** Keep the new Q6 as written. Replace the closing line "Ch 18 keeps its comparison question as canonical": Ch 11's Q4 (C11-R11) is the book's one agent-as-tool / handoff / child-task comparison, and Ch 18 replaces its comparison question with a cancellation question (C18-R05).
       - Question: "When is an SDK handoff not enough?"
       - Answer: "When accountability for finishing must change (record an acknowledged ownership handoff, Chapter 11) or the work needs its own waits, retries, deadlines, or trust boundary (create a durable child task, Chapter 18)."
-    - Ch 18 keeps its comparison question as canonical.
+    - ~~Ch 18 keeps its comparison question as canonical.~~ [verified: superseded by the D-06 note above — Ch 11 Q4 is the one comparison question and Ch 18's becomes a cancellation question (C18-R05)]
 
 20. **C03-R20 — Low — Cross-reference**
     - **Location:** `:1045` (Bounds row) or `:1049`.
@@ -513,3 +513,41 @@ Remove § The same rule applies to writes, § Bind approval to the exact proposa
    - **Issue:** The Ch 08 review asks Ch 03 to show that the step receives resolved Skill digests; no Ch 03 item did.
    - **Change:** Make the Capabilities cell read "Resolved Skill digests (Chapter 8), eligible tool versions, and the capability envelope (Chapter 21)…". Apply it together with C03-R12, which already replaces "capability ceiling".
    - **Related:** C08-R02, C03-R12.
+
+## Verification log
+
+Adversarial second pass over this file against `source/parts/01-part-i.md:900–1312`, the pre-taught sections of Ch 04, 07, 10, 11, 14, 15, 18, 20, 21, 22 (actual text), `examples/contracts.py`, the mortgage tests, and the diagram sources.
+
+**Line references:** about 150 checked; 1 fixed (`:1041` → `:1042` for "Agent definition" in C03-R12). The eleven Northstar lines in C03-R16 and the four employment-verification lines in C03-R17 match grep exactly.
+
+**Claims removed:** none.
+
+**Claims softened or corrected:**
+- "about 120 lines (`:1067–1217`)" → about 150 (the span is 151 lines).
+- "Seven consecutive H2s" (Transition Problems) → eleven, listed; the new section in Structural Recommendations item 10 replaces eight H2s, not seven.
+- "No chapter in Parts II–VIII refers back to Chapter 3": true of prose; Appendix A's pattern table lists "2–3" in its "Primary chapters" column.
+- "second of five tellings of the injected document" → "about five", with locations.
+- `RUN-98217` / `reasoning-standard@4` "drift": T16 standardizes on Ch 03's values, so the fix lands in Ch 04 (`02-part-ii.md:188`) and Ch 06/18 (`run_42`), not here; C03-R13's identifier bullet annotated.
+- "`AgentStepResult.proposed_action`" is not a field: `proposed_action` is a `status` value (`examples/contracts.py:45`) and the proposal travels in `decision.tool_call`. Wording fixed in Sparse Content and C03-R05 (the same fix is applied in chapter-02.md).
+- C03-R19's trailing line "Ch 18 keeps its comparison question as canonical" struck as superseded by the D-06 note the item already carries.
+
+**Important claims confirmed (evidence):**
+- Handoff conflict: Ch 03 `:1163` "the same activity remains accountable"; Ch 11 `04-part-iv.md:182` "A handoff answers 'who is now accountable for finishing it?' … If a specialist never acknowledges the task, the original coordinator still owns…" and `:195` "A handoff … changes the current owner"; Ch 18 `05-part-v.md:78` "atomically transfer the conversation owner and issue a new capability envelope". Three meanings, as stated; consistent with D-06.
+- Approval duplication: Ch 14 `04-part-iv.md:884` ("Human action authorization becomes invalid when any protected field changes. A commit path rechecks…"), `:898` (employment-evidence example), `:900–902` (Approval contract adds before/after diff, separation of duties, edit-and-resubmit), `:944` (Records). Ch 22 `06-part-vi.md:673` repeats the approval/idempotency point.
+- Guardrails: Ch 20 `06-part-vi.md:28–45` makes the detector / policy point / enforcement point argument with "an instruction hidden in a mortgage PDF"; its layer table (`:73–83`) has nine rows; `security-depth.gv` (Figure 20-1) has six layer nodes; Ch 23 § Containment layers (`:1059–1068`) has eight. Ch 03's stack (`:1174–1180`) has seven.
+- Retry: Ch 22 `:839` "Retry ownership: exactly one layer owns retries"; § Choose the response that matches the failure `:821–834`; key derivation `:840`.
+- Gate re-sequencing: Ch 03 lists 8 steps (`:1098–1105`) and 9 (`:1207–1215`); Ch 04 § End-to-end responsibility flow has 8 (`02-part-ii.md:50–57`); Ch 15 § Canonical control flow has 10 (`04-part-iv.md:1158–1167`).
+- Ch 04 never names AgentRuntime (grep of `02-part-ii.md`; only "AgentStep" at `:93`); Ch 07 uses AgentSpec · RunContext (`03-part-iii.md:27, :58`); Appendix C lists "AgentStep | AgentRuntime" (`09-appendices.md:67`).
+- Ch 10 dispositions `04-part-iv.md:49` (answer, needs_input, delegate, proposed_action, budget_exhausted, failed) vs `AgentStepResult.status` (`examples/contracts.py:45`); the C03 adapter test returns `needs_input` with "A second pay statement is missing." (`tests/mortgage_case/contract/test_c03_runtime.py:75–76`).
+- RunManifest drift: Ch 04's JSON (`02-part-ii.md:177–195`) has no sdk/adapter field and uses `route://reasoning-standard@18`; `AgentStepRequest` carries `context_manifest_id` per step (`examples/contracts.py:39`), supporting C03-R13's "per-step" point.
+- `:1118` names only the application and purchase agreement as available and "employment-verification evidence missing"; the C01 test fixture has `("APP-000184", "PAY-000184-01", "PUR-000184")` (`tests/mortgage_case/unit/test_c01.py:14`).
+- Template deviations: Ch 03 has no `## A sensible place to start`, no `## Put the idea to work`, no state-owner table, and § What to verify (`:1262`) precedes § If this fails (`:1277`).
+- "Chapters 4–7 place that boundary" (`:904`): Ch 04's opening (`02-part-ii.md:11–18`) and Part II orientation (`:3`) do not mention the runtime seam.
+
+**Recommendations amended:** C03-R05 (wording of the step-result → gate bridge), C03-R12 (line number), C03-R13 (identifier note), C03-R19 (superseded line struck). All recommendations respect the 8/28/12 topology, keep code in `examples/` (C03-R08 moves a registered marker), and change diagrams only through sources. C03-R08's `[[EXAMPLE:contracts#step]]` move depends on C01-R01's registry edit (`book_chapters` → `[3, 4]`), which the file already records.
+
+**Decisions in overall-book-review.md affected:** none changed. D-13 already states that `AgentStepResult.status` is Ch 03's enum; the corrected `proposed_action` wording follows it. T16's choice of Ch 03's identifiers means C03-R04/R13's "drift" items resolve against Ch 04/06/18, which the Part II and Part V work packages should carry.
+
+**Also confirmed on spot-check:** "Ch 14 never discusses SDK interruptions" (no "interrupt" in `04-part-iv.md:860–1100`). AP-06 (`04-part-iv.md:1774`) binds approval to a payment amount, not the employment-evidence case, so the "same scenario" in the cross-chapter table applies to Ch 14 only (annotated there).
+
+**Could not verify:** the "about 300 lines, down from 413" estimate (413 is exact; 300 is an estimate).

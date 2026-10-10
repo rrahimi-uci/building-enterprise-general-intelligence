@@ -83,7 +83,7 @@ What, Why, the How of validate/authorize/version, and the trade-offs are deliver
 **§ Deterministic acceptance (`:728`).**
 - *Role:* defines the Accept gate.
 - *Adds:* one sentence listing Harborlight's acceptance conditions.
-- *Verdict:* sparse for a concept used in Ch 10, 12, 13, 15, 18, AP-07, and Appendix B with no other definition (map: "Scattered, no single home").
+- *Verdict:* sparse for a concept used in Ch 10, 12, 13, 15, 18, and AP-07 with no other definition (map: "Scattered, no single home"). [verified: corrected — Appendix B removed; its runbook only says "accept, retry safely, compensate" (`09-appendices.md`, Appendix B step 5) and never uses "acceptance criteria"]
 - *Issues:*
   - It does not say what evaluates acceptance (the acceptance engine/workflow guard), what the possible outcomes are, or how acceptance differs from Verify.
   - "Human action authorizations cover the exact proposal" is a forward reference to Ch 14 with no pointer.
@@ -100,7 +100,7 @@ What, Why, the How of validate/authorize/version, and the trade-offs are deliver
 - *Verdict:* valuable, but it interrupts the chapter's flow (gates → authoritative primitives → tool use) and generalizes before the reader has seen the primitives.
 - *Issues:*
   - P2 lists autonomy dimensions without naming them "autonomy". P8 then uses "Autonomy level", which is never defined (map orphan; Ch 01 `:586`, `:603`).
-  - P5 "certified" refers to Ch 08. P6 "memory write, artifact publication" refers to Ch 06 and Ch 18.
+  - P7 "certified" refers to Ch 08 (P5 says "publishes a typed, versioned manifest"). P6 "memory write, artifact publication" refers to Ch 06 and Ch 18. [verified: corrected — "certified" is in principle 7 (`:749`), not principle 5]
   - It is never cross-referenced with the front matter's six-principle contract (`00-front-matter.md:96–107`).
   - The BEST PRACTICE box (`:756`) restates the gate sequence and "same service path a human request would take" (already `:700`). Its last sentence ("If a tool can be invoked without passing that gate, the gate is decorative.") is the only new line.
 
@@ -115,7 +115,7 @@ What, Why, the How of validate/authorize/version, and the trade-offs are deliver
 **§ How Tool Use works in practice (`:785`) and its four H3s.**
 - *Role:* the scannable pattern card.
 - *Adds:* the Tool Gateway pipeline; use / do-not-use; costs; failures; production signals.
-- *Verdict:* this is the right home for the Tool Gateway introduction (map: Ch 02 introduces, Ch 22 specifies). Its pattern sentence (`:793`) repeats Ch 01 `:531–534` almost verbatim, so Ch 01 should cut its copy (C01-R10).
+- *Verdict:* this is the right home for the Tool Gateway introduction (map: Ch 02 introduces, Ch 22 specifies). Its pattern sentence (`:793`) closely paraphrases Ch 01 `:531–534` (same verbs; "enforces idempotency" becomes "invokes a connector, verifies the result"), so Ch 01 should cut its copy (C01-R10). [verified: softened — similar, not verbatim]
 - *Issues:*
   - **§ How the pattern works (`:791`):** step 3 conflates validate, authorize, and approve, contradicting the chapter. The five steps do not line up with the six gates: no explicit Authorize, Commit, Verify, or Accept.
   - **§ Where it helps—and what it costs (`:805`):** fine.
@@ -156,7 +156,7 @@ No other expansion is warranted.
 - **Ch 01 Wednesday (timeout) → Verify, missing a recall** (`:701`). "A timeout resolves to unknown" is the Wednesday story; a three-word recall ("Chapter 1's Wednesday") links them.
 - **Distributed-systems primitives → gates, missing the lead-in** (`:758`). Schema/type system → Validate; policy engine → Authorize; transaction/outbox and idempotency → Commit; effect ledger → Verify; tests/rules engine → Accept.
 - **Design principles → front matter contract, missing the cross-reference** (`:738`).
-- **Six gates → Ch 03 AgentRuntime, outbound missing.** Ch 03 should say that `AgentStepResult.proposed_action` is what enters Validate (owned by C03-R05).
+- **Six gates → Ch 03 AgentRuntime, outbound missing.** Ch 03 should say that an `AgentStepResult` with `status: "proposed_action"` (its `decision.tool_call`) is what enters Validate (owned by C03-R05). [verified: corrected — the registered contract has no `proposed_action` field; `proposed_action` is a value of `AgentStepResult.status` (`examples/contracts.py:45`) and the proposal travels in `decision.tool_call`]
 - **Six gates → later chapters, missing back-references.** No chapter in Parts II–VIII cites "Chapter 2". Ch 04 § End-to-end responsibility flow, Ch 15 § Canonical control flow step 8, Ch 20 `06-part-vi.md:93`, and Ch 22 § Invocation sequence should name "the six gates (Chapter 2)" and say which gate they expand (owners: those chapters' reviewers).
 
 ## Transition Problems
@@ -361,3 +361,34 @@ Remove the H2s § Why a valid-looking output is not enough and § Six gates befo
    - **Issue:** The book-wide card policy (C10-R04) covers every "How X works in practice" card, but this file had no reciprocal item.
    - **Change:** Retitle the H2 "Tool Use at a glance". Delete THE ENGINEERING PROBLEM box (`:789`) and the card's lead sentence. Keep the six gate-aligned steps from C02-R06: here they are the only ordered tool-use sequence, so they stay in the card. Keep the Use when, costs, failure, and signals blocks. Appendix A's P-05 card points here (C16-R10).
    - **Related:** C02-R06, C10-R04, C16-R10.
+
+## Verification log
+
+Adversarial second pass over this file against `source/parts/01-part-i.md:616–898`, the cited downstream chapters, and `examples/contracts.py`.
+
+**Line references:** about 95 checked; 0 fixed. All resolve within ±3 lines (`:1096–1105` and `:777–792` include the lead-in line before the list; acceptable).
+
+**Claims removed:** none.
+
+**Claims softened or corrected:**
+- "P5 'certified'" → P7 (`:749`); P5 is the manifest/discovery principle.
+- `:793` "repeats Ch 01 `:531–534` almost verbatim" → closely paraphrases (same verbs, one clause differs).
+- Deterministic acceptance "used in … Appendix B": Appendix B never uses "acceptance criteria"; dropped from the list.
+- "`AgentStepResult.proposed_action`" is not a field: `proposed_action` is a `status` value (`examples/contracts.py:45`) and the proposal is `decision.tool_call`. Wording fixed in Missing Conceptual Connections; the same wording in C03-R05 is fixed in chapter-03.md.
+
+**Important claims confirmed (evidence):**
+- `:660` argues for gate separation before the sequence is named at `:669`; "deterministic shell" appears in Ch 02 only in the supplier box (`:640`), the Figure 2-1 caption (`:673`), P1 (`:743`), the checkpoint lead (`:833`), and the Q&A (`:886`, `:890`), never as a definition.
+- `:797` step 3 "Validate schema, policy, risk, budget, approval, and resource version" collapses the distinction drawn at `:706–711` and `:783`.
+- `"disposition": "propose_effect"` (`:685`) matches neither `AgentDecision.disposition` (`answer | needs_input | invoke_tool | delegate`, `examples/contracts.py:28`) nor `AgentStepResult.status` (`completed | needs_input | proposed_action | failed`, `:45`). "ToolIntent" occurs only at `:665, :669, :793` and in no example file.
+- Approval sits outside the six gates here but inside Ch 03's eight steps (`:1101`), Ch 15 step 8 "propose → preview → approve → commit" (`04-part-iv.md:1165`), and Ch 22's "validate → authorize → optionally preview/approve → …" (`06-part-vi.md:697`).
+- Ch 04 step 7 (`02-part-ii.md:56`) uses "accepted, blocked, needs-input, failed, or unknown-effect"; D-12 supersedes C02-R05's list item (1), as the file already records.
+- Ch 22 derives idempotency keys from "tenant + run + logical effect" (`06-part-vi.md:840`), and `:773` keys the unique constraint on (tenant_id, tool_id, idempotency_key); the Ch 02 proposal carries no key.
+- `WHAT BLOCKS THE NEXT STEP` occurs once in the book (`:632`). The JSON (`:688, :691`) and the Accept row (`:702`) say employment verification while `:628` and `:834` say pay statement.
+- No prose in Parts II–VIII cites "Chapter 2" (grep -w over `02-part-ii.md`–`09-appendices.md`); Appendix A's "Primary chapters" column lists "2–3" for P-05.
+- The DS table has 14 rows (`:762–775`); Ch 03's framework/platform table has 16 (`:993–1008`).
+
+**Recommendations amended:** none beyond the `proposed_action` wording. C02-R09 already carries the D-13 reconciliation. No recommendation breaks a repo invariant; C02-R04's code changes are to `examples/` and tests.
+
+**Decisions in overall-book-review.md affected:** none. (D-13's "`AgentStepResult.status` is Ch 03's enum" is consistent with the corrected wording.)
+
+**Could not verify:** the "about 40 fewer lines" estimate in Structural Recommendations and the "about eight later chapters" count in C02-R05 are approximations; the uses I found are Ch 10 (`04-part-iv.md:41, :81, :129`), Ch 12 (`:487`), Ch 13 (`:659`), Ch 15 (`:1150`), Ch 18 (`05-part-v.md:81, :169, :478`), and AP-07 (`04-part-iv.md:1817`), i.e. six chapters plus one anti-pattern.

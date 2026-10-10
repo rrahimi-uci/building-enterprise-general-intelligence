@@ -35,6 +35,8 @@ Lead-editor synthesis of the 28 chapter reviews in this folder. It reconciles th
 - A cross-chapter request that no owning review picked up has been added to the owner's file, marked *"Added in reconciliation"* (24 additions).
 - Seven factual or canonical-home statements in `book-concept-map.md` are marked *Corrected in synthesis* or *Superseded in synthesis*.
 
+**How they were verified.** After reconciliation, nine independent fact-checkers re-read every chapter review against the source, the examples, the diagram sources, and the reference registry. Their corrections are inline, as *[verified: …]* notes, and each file closes with a *Verification log*. The decision-affecting corrections are carried into this document; §17 reports the method, the totals, and what changed.
+
 **Line references.** `file:line` means `source/parts/<file>` at commit `0361350`. Within a file, apply edits bottom-up, or re-locate each passage by its quoted text, because earlier edits shift line numbers. Content that is moved remains recoverable from that commit and from the review text.
 
 **Files in this folder.**
@@ -66,7 +68,7 @@ The best passages are the material later chapters should lean on, not re-teach:
 
 Seven book-level problems weaken the flow.
 
-1. **The chapters are written as if each stood alone.** No chapter in Parts II–VIII refers back to Chapters 1–9 by number (verified by grep). Nearly every "Chapter N" reference points forward. Later chapters therefore re-teach Part I–III mechanisms instead of recalling them, and the reader never feels the book accumulate. About 150 of the recommendations add a "(Chapter N)" back-pointer or a one-sentence recall.
+1. **The chapters are written as if each stood alone.** No prose in Parts IV–VIII or the appendices refers back to Chapters 1–9 by number (verified by grep; the only exceptions are Appendix A's "Primary chapters" column, and the three pointers to Part III are all forward ones from earlier chapters: `01-part-i.md:904`, `02-part-ii.md:430`, `:947`). Nearly every "Chapter N" reference points forward. Later chapters therefore re-teach Part I–III mechanisms instead of recalling them, and the reader never feels the book accumulate. About 150 of the recommendations add a "(Chapter N)" back-pointer or a one-sentence recall.
 2. **Pre-teaching, and canonical homes that come late.**
    - Ch 03 previews seven mechanisms at near-full depth.
    - The Unknown-effect rule is taught six times before Ch 22.
@@ -82,7 +84,7 @@ Seven book-level problems weaken the flow.
    - The promised supplier-onboarding comparison never arrives.
    - Identifiers change between adjacent chapters.
    - The checkpoint C01 is never shown.
-7. **Code contradicts the text** in three places (DF-01–DF-03, §13). In addition, 38 fenced code blocks sit in chapter prose, against AGENTS.md.
+7. **Code contradicts or falls short of the text** in three places (DF-01–DF-03, §13): the Ch 13 and AP-05 listings contradict it, and the Ch 22 example omits the chapter's central case (the Unknown outcome). In addition, 38 fenced code blocks sit in chapter prose, against AGENTS.md.
 
 Net effect: the recommended changes are mostly moves, renames, pointers, and deletions, and the book gets shorter.
 - **Largest cuts:** Ch 03 pre-teaching (~110 lines), two-thirds of Ch 16, the Ch 19 LLM Gateway section, Ch 22's second implementation block, and Ch 23's framing and threat table.
@@ -149,7 +151,7 @@ CLOSING PERSPECTIVE  Ch 01's week, resolved ............................. [BREAK
 
 **Forward references that remain, by design.**
 - Ch 07 is an explicit forward map.
-- Six Ch 17 cards preview Parts V–VIII and say so.
+- Nine Ch 17 cards are completed by mechanisms Parts V–VIII build. Seven of them are previewed in Ch 01–15 (AP-03, 04, 05, 11, 12, 15, 16); two name their mechanism without a preview (AP-08, AP-14). C17-R03's Built in lines say so (recount verified against every card).
 - The capability envelope is used in Ch 03, 11, 12, 15, and 18 before Ch 21. It is defined briefly in the Ch 01 vocabulary (C01-R03) and in Ch 18 (C18-R01), and every earlier use gets "(Chapter 21)" (C03-R07, C03-R12, C11-R08, C12-R11, C15-R03).
 - The Unknown rule is stated as a rule in Ch 02, 10, and 15, with pointers, and Ch 22 announces that it now gives the full treatment (C22-R03).
 
@@ -159,7 +161,7 @@ CLOSING PERSPECTIVE  Ch 01's week, resolved ............................. [BREAK
 
 | # | Problem | Evidence | Fix |
 | --- | --- | --- | --- |
-| CP-1 | Chapters never recall earlier chapters by number | Grep: zero references to Ch 1–9 from Parts IV–VIII | Recall pointers throughout; Ch 01 "Developed in" column (C01-R09); Ch 07 "Taught in" column (C07-R01); Ch 04 records table (C04-R04); Ch 17 "Prevented in / Built in" lines (C17-R03); AP pointers (§12 D-29) |
+| CP-1 | Chapters never recall earlier chapters by number | Grep: no prose in Parts IV–VIII or the appendices cites Ch 1–9 by number; the three pointers to Part III (`01-part-i.md:904`, `02-part-ii.md:430`, `:947`) are forward references, and Appendix A's table lists chapter numbers only in a column | Recall pointers throughout; Ch 01 "Developed in" column (C01-R09); Ch 07 "Taught in" column (C07-R01); Ch 04 records table (C04-R04); Ch 17 "Prevented in / Built in" lines (C17-R03); AP pointers (§12 D-29) |
 | CP-2 | "Handoff" has three meanings (Critical) | Ch 03 `:1163`, Ch 11 `:182`, Ch 18 `:78`, `:104`, `:377`; the example's docstring | D-06 |
 | CP-3 | "Guardrail" contradicts the book's own thesis | Ch 05 `:388`+; Ch 20 `:58`, `:65`, Fig 20-1/20-3, `:331`; Ch 28 `:639`; Ch 07 `:46`; Fig 0-1 | C05-R01, C20-R02, R04, R06, C28-R04, C07-R01, C01-R22 |
 | CP-4 | Risk scales unlabeled and unrelated | R0–R4 (Ch 22), tiers 0–4 called "risk classes" (Ch 26), `min_risk_tier: 1`, `"risk_tier": "high"`, integer risk in code | D-01, D-02 |
@@ -167,7 +169,7 @@ CLOSING PERSPECTIVE  Ch 01's week, resolved ............................. [BREAK
 | CP-6 | Record names drift | RunContext, AgentStep, ToolSpec, AgentManifest, EvaluationReport, ValidationReport (orphan), ReleaseBundle, SecretLease, A2ATaskEnvelope | §11; D-05, D-27 |
 | CP-7 | The running case drifts | T15 (missing document), T1 (Northstar), T16 (identifiers), supplier promise unkept, C01 checkpoint unshown | D-20, D-21, D-31, C01-R01, C01-R04 |
 | CP-8 | Transition promises broken | Ch 01's "Figure 4-1 is the same picture"; Ch 03 → Ch 04 AgentRuntime promise; Ch 09 → Ch 10 platform thread; Ch 15 → Ch 16 false claim; Part VI order contradicts Ch 20; Ch 28 closing | C01-R11, C04-R03, C04-R02, C03-R15, C09-R09, D-28, C15-R11, C20-R01, C28-R10 |
-| CP-9 | Code teaches the opposite of the text | DF-01–DF-03, DF-05, DF-09 | §13 |
+| CP-9 | Code contradicts, or omits the central case of, the text it illustrates | DF-01 (omission), DF-02, DF-03, DF-05, DF-09 | §13 |
 | CP-10 | Section titles promise content they lack | Ch 08 title promises versioning; Ch 09's thesis (compatibility) undefined; Ch 25's "loop" heading holds a gate; Ch 17 governance group holds no governance card | C08-R07, C09-R01, C25-R10, C17-R08 |
 
 ---
@@ -237,20 +239,20 @@ R = reinforcement (a new lens, keep); D = redundancy (cut or point).
 | Part IV pattern descriptions | Prose, How-X card, P-card, App A | ReAct ×4 is D; others appear twice | D-04 |
 | Discovery ≠ permission | Ch 02 P5, Ch 05, Ch 08, Ch 11, Ch 19, Ch 22, AP-12, Ch 20 Q3 | R (new instances), except Ch 20 Q3 | C20-R11; pointers C05-R15, C19-R15, C22-R16 |
 | Test layering | Ch 07 figure and text; Ch 25 (×2) | D | C07-R06, C25-R06 |
-| Debugging method | Ch 07, Ch 24, Ch 03 (boundary-specific) | Ch 07 is D; Ch 03 is R | C07-R07, C24-R04 |
+| Debugging method | Ch 07, Ch 24, Ch 03 (boundary-specific) | Ch 07 is D (its list is fuller than Ch 24's but not a superset: Ch 24 has five time categories Ch 07 lacks); Ch 03 is R | C07-R07, C24-R04 |
 | Metric catalog | Ch 24 scorecard, Ch 25 `:432` | D | C25-R05, C24-R02 |
 | Judge discipline | Ch 13 (×4), Ch 25 (×6) | D until the run-vs-release distinction is stated | C13-R05, C25-R02 |
 | Gateway table | Ch 01, Ch 19 | D | C19-R01 |
-| Policy-first model routing | Ch 19, Ch 28 (×3) | D | C28-R07 |
+| Policy-first model routing | Ch 19, Ch 28 (once, the PERFORMANCE AND COST box at `:653`; verified) | D | C28-R07 |
 | Authorization-scoped caching | Ch 06, Ch 19, Ch 21 (×3), Ch 28 (×3) | D | Ch 21 canonical: C06-R10, C19-R01, C21-R02, C28-R08 |
-| Cost per verified success | Ch 10, Ch 28 (12 occurrences) | Item 10 and the box are D; checklist and Q recall are R | C10-R06, C28-R05 |
+| Cost per verified success | Ch 10, Ch 28 (12 occurrences: 7 full restatements, 5 passing) | Item 10 and the box are D; checklist and Q recall are R | C10-R06, C28-R05 |
 | Credentials API | Ch 21, 22, 23 | D | C22-R07, C23-R07 |
 | Sandbox lease | Ch 22, 23 | D | C22-R07 |
 | Governance record and inventory | Ch 23, 25, 26, 27 | Misplaced | C26-R03, C23-R05, C27-R05, C25-R13 |
 | Release content list | Ch 27 (×6) | D | C27-R09 |
 | Regional recovery | Ch 14, Ch 15, Ch 27 (×3) | D | C27-R07, C14-R08, C15-R09 |
 | Learning loop | Ch 25, Ch 27 Learn row | D | C27-R04 |
-| Little's Law | Ch 28 (×3, one wrong), App L | D and an error | C28-R01, R06 |
+| Little's Law | Ch 28 (×3; `:520` is ambiguous and `:524` turns the ambiguity into a permit-sizing error), App L | D and an error | C28-R01, R06 |
 | Multi-agent justification rule | Ch 18 (×7, verified) | Four statements D; checklist and Q R | C18-R02, R06, R07 |
 | Intersection rule | Ch 21 (×5, verified) | D | C21-R02 |
 | Memory | Ch 06 (×5), P-04, AP-13, T-06 | Ch 06 internal D; P-04 conflicts | C06-R04, C16-R04(b) |
@@ -377,7 +379,7 @@ R = reinforcement (a new lens, keep); D = redundancy (cut or point).
 | Merge Ch 09 into Ch 08 | Reject (C09) | Distinct question; topology | — |
 | Move Part III after Part IV | Reject (C07) | Part IV binds to Skills | — |
 | Swap Ch 14 and Ch 15 | Reject (C14) | Renumbering cost for little gain | — |
-| LLM Gateway, Ch 19 → Ch 04 + Ch 28 | Adopt (D-08) | The contract is architecture; routing is cost | Fig 19-1 retired (`gateway-position`); Fig 19-2 becomes a Ch 28 figure |
+| LLM Gateway, Ch 19 → Ch 04 + Ch 28 | Adopt (D-08) | The contract is architecture; routing is cost | Fig 19-1 retired: `gateway-position` must leave `config/diagrams.json` and its rendered PNG/PDF, because `tools/validate_book.py` requires the marker multiset to equal the registry (verified); Fig 19-2 becomes a Ch 28 figure |
 | Telemetry implementation Ch 25 → Ch 24; evaluation content Ch 24 → Ch 25 | Adopt | Each chapter owns its own system | None |
 | Governance implementation Ch 27/Ch 23 → Ch 26 | Adopt | One job per chapter | None |
 | TaskEnvelope and task lifecycle Ch 19 → Ch 18 | Adopt | Local contract before its federated delta | None |
@@ -386,7 +388,7 @@ R = reinforcement (a new lens, keep); D = redundancy (cut or point).
 | Index freshness Ch 06 → Ch 05 | Adopt | Belongs with provenance | None |
 | Baseline stack Ch 27 → App D | Adopt | Duplicate | None |
 | Closing Perspective → directly after Ch 28 (top of `09-appendices.md`) | Adopt pending a build check (D-26) [J] | The ending must be reachable | Check H1 handling in the DOCX and LaTeX builders |
-| Ch 07 figures | Retire Fig 7-3 (`developer-lifecycle`) and Fig 7-5 (`test-pyramid`) | Duplicate journeys and pyramid | Renumber; remove registry entries or mark them retained |
+| Ch 07 figures | Retire Fig 7-3 (`developer-lifecycle`) and Fig 7-5 (`test-pyramid`) | Duplicate journeys and pyramid | Renumber; remove the registry entries and rendered files (the diagram registry has no retained-for-future-use state: the validator requires markers and registry to match exactly) |
 | Internal reorders | Adopt each chapter's Structural Recommendations: Ch 01, 02, 03, 04, 05, 06, 07, 08, 09, 12, 13, 15, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28 | — | Re-check chapter covers for 03, 16, 19, 22, 23, 26, whose arguments change materially (AGENTS.md) |
 
 ---
@@ -441,7 +443,7 @@ Each entry lists the conflict, the options, the decision, the rationale, and the
 - *Conflict:* Ch 26 calls its 0–4 tiers "risk classes". Ch 08 was asked to render `min_risk_tier` as a T-tier, but C08-R06 makes it an R-class ceiling. C22-R05's sentence allowed a low-tier use case to hold an R3 tool, which contradicts C26-R01's floor rule. C26-R02 re-listed Ch 25's human-approval list and pointed to a section that C25-R09 deletes. Several reviews wrote "governance tier" or "governance risk tier".
 - *Decision:* effect risk class R0–R4 (Ch 22); use-case tier T0–T4 (Ch 26), never lower than the most dangerous eligible effect requires (R3/R4 ⇒ ≥T3; R2 ⇒ ≥T2); change class (Ch 25); review depth = use-case tier × change class. The Skill field is `risk_ceiling: R1`; the RunManifest field is `"risk_tier": "T3"`.
 - *Rationale:* each scale has its own subject, and the code semantics (`maximum_risk` as a ceiling) favour an R-class for Skills.
-- *Amended:* C07-R15, C08-R08, C16-R04, C25-R08, C26-R01, C26-R02, C22-R05, C04-R07.
+- *Amended:* C07-R15, C08-R08, C16-R04, C25-R08, C26-R01, C26-R02, C22-R05, C04-R07. In verification, chapter-26.md's cross-chapter row asking Ch 08 to render `min_risk_tier` as a T-tier was marked superseded by `risk_ceiling: R1`.
 
 **D-03 — Run API ownership and fork.**
 - *Conflict:* C04-R08 gave Ch 15 the full operational table and deleted `:update`, `:fork`, and `/audit` from Ch 04. The Ch 14–17 review (C15-R08) keeps a Ch 04 base table with Ch 15 additions. C24-R01 points to Ch 04's `:fork`, which C04-R08 deleted. C14-R02 relies on `:update`.
@@ -469,10 +471,10 @@ Each entry lists the conflict, the options, the decision, the rationale, and the
 - *Conflict:* Ch 25 defines EvaluationResult and ValidationReport. Ch 26–28 assumed ReleaseGateDecision. Ch 08 used EvaluationReport and ReleaseDecision. Ch 27 emitted a DetectionEvent that Ch 25 drops. Ch 26 deferred.
 - *Decision:* Ch 25 defines EvaluationResult (replacing EvalScore and EvaluationReport), ValidationReport (the evidence), and ReleaseGateDecision (the gate output). Ch 27 defines ChangeBundle, ReleaseManifest, EnvironmentBinding, and PromotionDecision. DetectionEvent, LearningRecord, and ObservationRecord are dropped.
 - *Rationale:* define once, in the chapter that produces each record.
-- *Amended:* C07-R15, C08-R10, C26-R10, C27-R10.
+- *Amended:* C07-R15, C08-R10, C26-R10, C27-R10; C04-R04's record table (ChangeBundle and ReleaseManifest → Ch 27, text only, in verification). PromotionDecision is already defined in Ch 27 (`08-part-viii.md:313`), so Ch 25's undefined record names are five, not six.
 
 **D-06 — Handoff.**
-- *Conflict:* Ch 03 ("same activity remains accountable"), Ch 11 (accountability changes on acknowledgment), and Ch 18 (atomic transfer, no acknowledgment; Q2 "conversational control transfer") disagree. C03-R19 kept Ch 18's comparison question canonical, but C18-R05 deletes it. No Ch 18 item changed `:handoff` or OwnershipTransfer.
+- *Conflict:* Ch 03 ("same activity remains accountable"), Ch 11 (accountability changes on acknowledgment), and Ch 18 (atomic transfer, no acknowledgment; Q2 "conversational control transfer") disagree. Verification sharpened the Ch 18 point: Ch 11's own Handoff card cell (`04-part-iv.md:278`, "without conversational transfer") also uses the conversational framing, so Ch 18 Q2 omits the acknowledgment step rather than flatly contradicting Ch 11; the cell is fixed with the chapter (C11-R02, C11-R05). C03-R19 kept Ch 18's comparison question canonical, but C18-R05 deletes it. No Ch 18 item changed `:handoff` or OwnershipTransfer.
 - *Decision:*
   - Ch 11 is canonical. Ch 03 keeps a term mapping (C03-R02's text), and its table moves to Ch 11 (C11-R02).
   - Ch 18's `:handoff` creates a pending transfer that `:accept` commits; OwnershipTransfer gains obligations, deadline, and acknowledgment state.
@@ -499,6 +501,7 @@ Each entry lists the conflict, the options, the decision, the rationale, and the
 **D-10 — Debugging method.**
 - *Conflict:* C24-R04 wanted Ch 07 reduced to a one-line pointer; C07-R07 rewrites Ch 07's list for platform failures.
 - *Decision:* Ch 24 is canonical and absorbs Ch 07's steps. Ch 07 keeps platform-failure triage plus one pointer step. Ch 25 and Ch 24 If-fails sections point to it. Ch 03's boundary-specific order stays.
+- *Note (verified):* Ch 07's list is fuller than Ch 24's but not a superset; Ch 24 already has a weaker diff-before-prose step and five time categories Ch 07 lacks. "Absorbs" therefore means merge the missing Ch 07 steps into Ch 24's list, not replace it.
 - *Amended:* C24-R04.
 
 **D-11 — Test layering and Fig 7-5.**
@@ -517,7 +520,7 @@ Each entry lists the conflict, the options, the decision, the rationale, and the
 - *Decision:*
   - `AgentDecision.disposition` = answer | needs_input | invoke_tool (read) | proposed_action | delegate.
   - Controller stop reasons budget_exhausted | no_progress are returned as `status: failed` with that `error_code`.
-  - `AgentStepResult.status` is Ch 03's enum.
+  - `AgentStepResult.status` is Ch 03's enum. `proposed_action` is a *value* of that enum (`examples/contracts.py:45`), not a field; the proposal itself travels in `decision.tool_call`. (Two chapter reviews had written "`AgentStepResult.proposed_action`"; fixed in verification.)
   - The Ch 02 JSON uses `proposed_action`.
 - *Amended:* C02-R09, C10-R02.
 
@@ -568,7 +571,7 @@ Each entry lists the conflict, the options, the decision, the rationale, and the
 - *Conflict:* reviews deferred T3, and several wrote "human authorization" in replacement text.
 - *Decision:* "approval" (human, proposal-bound); records ApprovalRequest / ApprovalDecision; Approval Service. "Authorization" is reserved for policy decisions. Rename the code in `approval_gate.py`, `approval_verification.py`, and their tests. Fallback if the rename is declined: keep the record names and still say "approval" in prose.
 - *Rationale:* "approval" appears about 250 times against about 20 for "human action authorization"; the API is `/v1/approvals`.
-- *Amended:* C14-R04, C12-R06, C26-R06. Replacement wording in C03-R01, C12-R04, C14-R01/R02/R03/R05, and C22-R06 follows this term when applied.
+- *Amended:* C14-R04, C12-R06, C26-R06; in verification, C04-R04 and C04-R17 (which still read HumanActionAuthorizationRequest/Decision) were marked amended under this decision (ApprovalRequest/ApprovalDecision, "Approval Service"). Replacement wording in C03-R01, C12-R04, C14-R01/R02/R03/R05, and C22-R06 follows this term when applied.
 
 **D-23 — Inline code policy.** [J]
 - *Conflict:* AGENTS.md forbids code in `source/parts`; the chapters contain 38 fenced blocks (29 Python, 1 bash, 1 YAML, 7 JSON). C07-R05 asked for a pseudocode exemption. C17 deferred its six anti-pattern blocks. C18-R04 kept the TaskEnvelope code inline.
@@ -588,7 +591,8 @@ Each entry lists the conflict, the options, the decision, the rationale, and the
 - *Amended:* C12-R11.
 
 **D-26 — Closing Perspective.** [J]
-- *Decision:* adopt C28-R10 and C28-R11. Place it at the top of `09-appendices.md`, before `# PART REFERENCE — APPENDICES`, rebuilt around the Monday–Friday replay with an honest C01–C03 scope line, and list it in the front matter (C01-R26).
+- *Decision:* adopt C28-R10 and C28-R11. Place it at the top of `09-appendices.md`, before `# PART REFERENCE — APPENDICES`, rebuilt around the Monday–Friday replay, and list it in the front matter (C01-R26, amended in verification to this placement rather than "after Appendix L").
+- *Scope line (verified):* it follows the front matter's own wording (`00-front-matter.md:63–72`): the first three checkpoints are implemented; later checkpoints are roadmap targets. It must not say "implements only C01–C03", because `code-gap.md` and `config/examples.json` also record a C24 grounding slice and an offline C04–C28 contract slice. C28-R11(d) was amended accordingly.
 - *Validation:* `validate_book.py` counts only `# PART`, `# NN —`, and `# Appendix X —` headings, so the counts hold. Verify that `build_book.py` and `build_latex.py` render an H1 before the appendix divider on its own page, with no chapter cover.
 
 **D-27 — Manifest chain and Skill binding.**
@@ -619,13 +623,13 @@ Additions made under other decisions: C03-R22, C04-R19, C04-R20, C12-R14, C15-R1
 - (b) **State-owner tables (24):** keep them all. They are explained once (C01-R05) and placed after each chapter's framing paragraph. The "or drop" options in C10-R08 and C12-R09 resolve to "keep".
 - (c) **Double-why openings:** merge them, per C02-R01, C03-R14, C07-R08, C08-R09, C09-R08, C10-R08, C11-R09, C13-R04, C15-R01, C17-R01, C19-R09, C20-R03, C21-R01, C23-R01, C26-R07.
 - (d) **Generic EVIDENCE BOUNDARY boxes:** replace them with a claim row (C10-R10–C13-R10).
-- (e) **Review sections:** use ✓ checklist items and a "Strong answer" header book-wide (C05-R12, C03-R18).
+- (e) **Review sections:** use ✓ checklist items and a "Strong answer" header book-wide (C05-R12, C03-R18). This closes C05-R12's "or keep Ch 05's variant" branch (annotated in verification).
 - (f) **"A sensible place to start":** add a one-sentence lead and no empty H2 wrapper (C08-R12, C10-R12, C14-R10, C21-R07, C22-R04, C23-R09, C27-R13, C28-R12).
 - (g) **Opening boxes:** every chapter has a case box and THE DESIGN CHOICE (C07-R08, C20-R08, C26-R11).
 - (h) **Catalog stock phrasing:** remove it (C16-R04, C17-R04, C20-R07).
 
 **D-31 — Case continuity after C03.**
-- *T15:* use the second pay statement everywhere. C01-R04 lists the eight example and test files. C02-R04, C03-R17, C14-R15, and C15-R13 cover their chapters. The remaining `04-part-iv.md:382` and `:1711` and the `06-part-vi.md` occurrences are mechanical edits in the Part IV and Part VI PRs.
+- *T15:* use the second pay statement everywhere. C01-R04 lists the ten example and test files (verified by grep: `examples/foundations/agent_tool_loop.py`, `examples/observability/mortgage_agents_mlflow.py`, `examples/patterns/bounded_react_loop.py`, six files under `examples/tests/`, and `tests/mortgage_case/contract/test_provider_adapters.py`). C02-R04, C03-R17, C14-R15, and C15-R13 cover their chapters. The remaining prose occurrences are `04-part-iv.md:382`, `:1381` (P-01), and `:1711`, mechanical edits in the Part IV PR; `06-part-vi.md` has none, and `05-part-v.md:392` is a different use (a third-party employment-verification MCP server) that stays.
 - *Roadmap labels:* from Ch 04 onward, case boxes are labeled as the target design (C01-R24, C03-R15, C24-R11).
 - *Identifiers:* §11 T16 [J].
 - *Part IV cumulative case thread* (C13-R11): optional [J].
@@ -656,7 +660,7 @@ Additions made under other decisions: C03-R22, C04-R19, C04-R20, C12-R14, C15-R1
 
 | ID | Defect | Fix |
 | --- | --- | --- |
-| DF-01 | `examples/foundations/effect_idempotency.py` releases the key on any exception; `test_failure_does_not_poison_the_key` asserts a downstream 500 is retryable. This is AP-05 (verified) | C22-R04 |
+| DF-01 | `examples/foundations/effect_idempotency.py` omits the chapter's central case: a dispatched mutation whose outcome is Unknown. Its `try/finally` releases the key on *any* exception, so a `TimeoutError` (outcome unproven) is treated like a received decline and does not fail safe; `EffectOutcomeUnknown` is raised only for an in-flight key. The test's `RuntimeError("downstream 500")` is a received response, so marking it retryable is a defensible Declined, not AP-05. (Verification corrected the earlier "teaches the opposite of its thesis" reading; the defect is the missing Unknown path and the undifferentiated exception handling.) | C22-R04 (High) |
 | DF-02 | Ch 13 inline evaluator–optimizer: `if evaluation.accepted: return`, no deterministic check first, raises instead of escalating (verified) | C13-R01 |
 | DF-03 | AP-05 code: "genuinely absent; now safe to retry" after a null lookup (verified `04-part-iv.md:1756–1764`) | C17-R05 |
 | DF-04 | AP-06 code uses the proposal digest as the idempotency key; prose (payment) and code (evidence package) disagree | C17-R06 |
@@ -694,6 +698,8 @@ Additions made under other decisions: C03-R22, C04-R19, C04-R20, C12-R14, C15-R1
 | DC-13 | Ch 08 "Agent Skills" (SKILL.md) mention only with a registered source | C08-R11 [J] |
 | DC-14 | Ch 20 incident lifecycle uncited; add R42 within scope | C20-R10 |
 
+**DC-10 and DC-14 must land together.** Ch 27 holds the book's only in-text `[R42]` markers (`08-part-viii.md:128` and the draws-on line at `:348`); Ch 20 never cites R42, and Ch 23 lists it only in a draws-on sentence (`06-part-vi.md:1189`) that C23-R10 removes. Applying C27-R06 before C20-R10 would leave R42 uncited and break the registry invariant (every entry cited or marked retained-for-future-use). Either apply C20-R10 in the same release as C27-R06 and C23-R10, or mark R42 retained-for-future-use in `config/references.json` in the interim. (C27-R06's earlier claim that "R42 remains cited in Ch 20/23" was false and has been corrected.)
+
 **Figure–prose contradictions**
 
 | ID | Figure | Fix |
@@ -718,7 +724,8 @@ Additions made under other decisions: C03-R22, C04-R19, C04-R20, C12-R14, C15-R1
 | DG-18 | Fig 25-2 Approve "human"; Fig 25-3 runtime lane ≠ prose | C25-R08, C25-R04 |
 | DG-19 | Fig 26-1 tiers called "risk class"; off-thread domains | C26-R01, C26-R11 |
 | DG-20 | Fig 27-1 "resume by risk tier" | C27-R07 |
-| DG-21 | Fig 28-1 verify → degrade edge | C28-R13 |
+| DG-21 | Fig 28-1 verify → degrade edge (primary conflict with Ch 28's own `:507`; Ch 15 contradicted by omission) | C28-R13 |
+| DG-22 (minor, not reader-visible) | The Part VII `.gv` header comments number the figures differently from the manuscript markers: `runtime-offline.gv` says "Figure 25-2" (marker 25-3), `learning-loop.gv` "25-1" (marker 25-2), `evaluation-gate.gv` "25-3" (marker 25-1). Captions come from the markers | Fix the comments when C25-R04 and C25-R08 edit those sources |
 
 **Inline code against AGENTS.md (38 blocks in chapter prose)**
 
@@ -752,7 +759,7 @@ The bash and text blocks in Appendices I and J are maintainer content; see WP-A 
 
 | Rank | Improvement | IDs |
 | --- | --- | --- |
-| 1 | Make the code stop teaching the opposite of the book | DF-01 C22-R04; DF-02 C13-R01; DF-03 C17-R05; with DF-06/DF-07 C10-R02, C12-R03 |
+| 1 | Make the code match the book: give the Ch 22 example its Unknown path and fail-safe exception handling, and stop the Ch 13 and AP-05 listings teaching the opposite of the text | DF-01 C22-R04; DF-02 C13-R01; DF-03 C17-R05; with DF-06/DF-07 C10-R02, C12-R03 |
 | 2 | Settle "handoff" | D-06: C11-R01–R03, C03-R02, C18-R05, C18-R16 |
 | 3 | Fix "guardrail" everywhere the book contradicts itself | C20-R02, R04, R06; C05-R01; C28-R04; C07-R01; C01-R22 |
 | 4 | Make the three risk scales explicit and related | D-01, D-02: C02-R13, C12-R01, C22-R05, C26-R01, C26-R02, C08-R06 |
@@ -792,7 +799,7 @@ The bash and text blocks in Appendices I and J are maintainer content; see WP-A 
 | 0.8 | Inline code (D-23) | No exemption for Python/bash; Ch 01 sketches converted or exempted explicitly; short contract JSON/YAML may stay |
 | 0.9 | Required-analysis tables (D-30a) | Delete or trim per review; stop requiring them |
 | 0.10 | Case identifiers (T16, D-31) | The §11 set |
-| 0.11 | MLflow version claims (C19-R06, C24-R15, C25-R12) | Verify against the release notes and extend R21's scope, or remove |
+| 0.11 | MLflow version claims (C19-R06, C24-R15, C25-R12; the second "3.15.0 introduced" sentence is Appendix I, `09-appendices.md:234`) | Verify against the release notes and extend R21's scope, or remove |
 | 0.12 | Agent Skills mention (C08-R11) | Only with a registered source |
 | 0.13 | Optional ID renames (`rule-as-guardrail`, `policy-to-guardrail`, `guardrail-sequence`) | Caption-only change unless the author wants the renames |
 
@@ -807,7 +814,7 @@ Change shared code that several Parts' prose will describe. Examples or regions 
 2. `examples/patterns/react_engine.py`: typed stop reasons (C10-R02); `plan_compilation.py` adopts `RiskClass` (C12-R03). [M]
 3. `examples/foundations/effect_idempotency.py` and its test: Unknown semantics (C22-R04 code part, DF-01). [M]
 4. `examples/platform/skills_registry.py`: status outside the digest, six states (C08-R05). The `packs` region (C09-R05) rides with Part III. [M]
-5. `pay_statement` replaces `employment_verification` in the 8 example and test files listed in C01-R04. [M]
+5. `pay_statement` replaces `employment_verification` in the ten example and test files listed in C01-R04 (D-31). [M]
 6. Approval record rename in `approval_gate.py`, `approval_verification.py`, and tests (D-22), if 0.3 is confirmed. [J→M]
 7. `config/examples.json`: `contracts` `book_chapters` [1,4] → [3,4] and its docstring (C01-R01). [M]
 
@@ -836,7 +843,7 @@ Recommendation IDs are listed in apply order: structure first, then definitions 
 - **Ch 03.**
   1. Structure: C03-R08, R11, R10, R14, R06.
   2. The consolidated "Where the framework meets the rest of the platform" section: R01, R03, R04, R05, R07. C03-R02 and R19 are applied in WP-IV (they move with the handoff table).
-  3. Definitions: R09, R12, R13, R22.
+  3. Definitions: R09, R12, R13, R22. T16 keeps Ch 03's identifiers, so the identifier-drift items in C03-R04 and C03-R13 are *not* edits to Ch 03: they land in WP-II (Ch 04 `02-part-ii.md:188`, `reasoning-standard@18` → `@4`; Ch 06 `:742`, `run_42`) and WP-V (Ch 18 `05-part-v.md:117`, `:122`, `run_42` → `RUN-98217`).
   4. Case: R16, R17, R15.
   5. Template: R18, R20, R21.
 
@@ -848,8 +855,9 @@ Recommendation IDs are listed in apply order: structure first, then definitions 
   4. R20.
   5. R10 (the `platform` example region with RunManifest/ArtifactRef/CloudEvent and tests; → Phase 1 item 1).
   6. R14–R18.
+  7. T16 identifiers (from C03-R13): `02-part-ii.md:188` `route://reasoning-standard@18` → `@4`, and the policy bundle / knowledge snapshot values in the same JSON (`:187`, `:190`) to the §11 set.
 - **Ch 05.** C05-R03, R05 (Hub move), R04, R02, R01 (`policy-to-guardrail.gv`), R06 with R15, R08 (receives freshness from Ch 06), R07, R09–R14, R16.
-- **Ch 06.** C06-R08, R03, R01 (`context-pipeline.gv` if labels change), R04, R05, R06, R02 (new `context-manifest` example), R10, R09, R11, R12, R14, R13 (no-op). C06-R07 is executed in WP-V.
+- **Ch 06.** C06-R08, R03, R01 (`context-pipeline.gv` if labels change), R04, R05, R06, R02 (new `context-manifest` example), R10, R09, R11, R12, R14, R13 (no-op). C06-R07 is executed in WP-V. T16: `run_42` at `02-part-ii.md:742` → `RUN-98217`.
 
 **WP-III — Part III (Ch 07–09)**
 - **Ch 07.**
@@ -872,15 +880,16 @@ Recommendation IDs are listed in apply order: structure first, then definitions 
 - **Ch 15.** C15-R01, R06, R03, R14, R04, R05, R02, R07, R08, R09, R10, R11, R15, R12, R13.
 - **Ch 16.** C16-R07, R01, R05 (`pattern-decision-tree.gv`), R02, R03, R08, R09; R04 and R10 (Appendix A rebuild in `09-appendices.md`).
 - **Ch 17.** C17-R01, R02, R08, R03, R05, R06, R07, R09 (`anti-ambient-authority.gv`), R04, R10, R11. R12 goes to WP-A. Moving the six code blocks to examples is WP-X [J].
-- **Mechanical T15** fixes at `04-part-iv.md:382` and `:1711`.
+- **Mechanical T15** fixes at `04-part-iv.md:382`, `:1381` (P-01), and `:1711` (verified: these are the only Part IV occurrences outside the chapters C14-R15 and C15-R13 cover).
 
 **WP-V — Part V (Ch 18–19)**
 - **Ch 18.**
   1. C18-R07, R06, R02, R17, R03 (receives the lifecycle from Ch 19), R04 (receives the field-group table; `contracts#task` region), R01 (delete the code), R16, R05, R08 (deletes `plans:revise`, closing C12-R13).
   2. R09 (`supervisor-worker.gv`), R10–R15, R18.
+  3. T16: `run_42` at `05-part-v.md:117` and `:122` → `RUN-98217` (from C03-R13).
 - **Ch 19.**
   1. C19-R09.
-  2. C19-R01(a) and (d): delete Fig 19-1 and the table; retire `gateway-position`; add the bridge. Parts (b) and (c) are executed in WP-II and WP-VIII.
+  2. C19-R01(a) and (d): delete Fig 19-1 and the table; retire `gateway-position` by removing its `config/diagrams.json` entry and rendered PNG/PDF (mandatory: `validate_book.py` fails on any marker/registry mismatch); add the bridge. Parts (b) and (c) are executed in WP-II and WP-VIII.
   3. R03, R05, R04, R02, R07, R08, R06, R10, R11, R13, R15.
   4. R16: receives the adoption code from Ch 06 as a new `artifact-adoption` example and deletes `02-part-ii.md:865–910` (C06-R07).
   5. R12, R14.
@@ -889,7 +898,8 @@ Recommendation IDs are listed in apply order: structure first, then definitions 
 - **Orientation:** C20-R01.
 - **Ch 20.** C20-R03, R08, R04 (`security-depth.gv`), R02, R05, R06 (`guardrail-sequence.mmd`), R07 (receives the T-08/T-16 rows from Ch 23), R10, R09, R11, R12.
 - **Ch 21.** C21-R01, R02, R03, R05, R04, R06, R08, R07 (new `capability-envelope` example, `book_chapters` [21]), R09, R10, R11.
-- **Ch 22.** C22-R01, R02, R03, R08, R05, R06 (`effect-lifecycle.gv`), R07, R09, R13, R14, R15, R16, R04 (prose part; code in Phase 1), R10, R11, R12, R17. Mechanical T15 fixes in `06-part-vi.md`.
+- **Ch 22.** C22-R01, R02, R03, R08, R05, R06 (`effect-lifecycle.gv`), R07, R09, R13, R14, R15, R16, R04 (prose part; code in Phase 1), R10, R11, R12, R17. (No T15 fixes: `06-part-vi.md` has no "employment verification" occurrence.)
+- **R42 pairing:** C20-R10 must land in the same release as C27-R06 (WP-VIII) and C23-R10, or R42 is marked retained-for-future-use first (§13).
 - **Ch 23.** C23-R01, R02, R03, R04, R06, R08, R07, R05, R12, R09 (new `egress-url` and `kill-switch` examples), R13, R10, R11.
 
 **WP-VII — Part VII (Ch 24–25)**
@@ -911,7 +921,7 @@ Recommendation IDs are listed in apply order: structure first, then definitions 
   3. R03: receives Ch 27's governance implementation and Ch 23's field list, and deletes it in Ch 27 (C27-R05).
   4. R13, R09, R10, R11.
 - **Ch 27.**
-  1. C27-R09, R01, R15, R08, R04, R05 (deletion side), R02, R03 (moves the stack to Appendix D), R07 (`release-recovery.gv`), R06, R10, R11, R12.
+  1. C27-R09, R01, R15, R08, R04, R05 (deletion side), R02, R03 (merges the stack into Appendix D; 3 of 10 rows overlap), R07 (`release-recovery.gv`), R06 (→ C20-R10 in WP-VI, or R42 marked retained-for-future-use first; §13), R10, R11, R12.
   2. R13 (new `release-compatibility` and `release-attestation` examples), R14 (receives Ch 04's Q5 and deletes it there, closing C04-R12), R16.
 - **Ch 28.**
   1. C28-R02, R01, R03.
@@ -926,10 +936,10 @@ Recommendation IDs are listed in apply order: structure first, then definitions 
 | A | Rebuild per C16-R04 and C16-R10 (pairing table, Built-in chapters, Part IV pattern rows) | Executed in WP-IV |
 | B | Add an Anti-pattern column; map effect states (absent → Declined, unprovable → InterventionRequired, executing → Executing) | C17-R12; C22 Cross-Chapter Duplication |
 | C | Align with the chapters: RunManifest and ReleaseManifest rows (C27-R01); AgentStepRequest/Result (C03); TaskEnvelope (C18-R04); Effect Service owner (T24); approval records (D-22). Add a "Defined in" column matching C04-R04. Add the missing contracts: Plan IR, SkillManifest, SkillPackManifest, PolicyDecision, CredentialLease, MemoryRecord, ChangeBundle, RoutingDecision, OwnershipTransfer, AcceptanceDecision, EvaluationResult, ValidationReport, ReleaseGateDecision | Map §8 |
-| D | Absorb the Ch 27 baseline stack (C27-R03); merge the two overlapping tables; settle the MLflow MCP Registry citation (C19-R06); keep the A2A AgentSkill and Skills-over-MCP distinction in sync with C08-R11 | Map §7.2 |
+| D | Absorb the Ch 27 baseline stack (C27-R03; a merge, since 3 of its 10 rows already overlap); merge the two overlapping tables; keep the A2A AgentSkill and Skills-over-MCP distinction in sync with C08-R11 | Map §7.2 |
 | E | Register sources for the named research systems or soften the claims | DC-12 |
 | H | Expand the glossary: every term in Ch 01's vocabulary table; the five gateways; RunManifest, ReleaseManifest, ChangeBundle, EnvironmentBinding; capability envelope and credential lease; TaskEnvelope, FederatedTask; the run/workflow/node/activity/step/child-task hierarchy (T5, T28); effect risk class, use-case tier, change class; approval; plane, layer, cell; causal run trace and trajectory; AcceptanceDecision. No Northstar entry. This makes C01-R03's "Appendix H defines further terms" true | — |
-| I | Move maintainer content (C01-R27; § Corrections and closure notes) [J] | — |
+| I | Move maintainer content (C01-R27; § Corrections and closure notes) [J]. Settle the uncited "MLflow 3.15.0 introduced the MCP Registry" sentence at `09-appendices.md:234`, the twin of Ch 19's (C19-R06; Phase 0.11): cite it within a verified scope or remove it | C19-R06 |
 | J | Align its 12-layer list with C04-R01's layer names, or decide whether J belongs in the reader edition [J] | — |
 | K | Check the generator's category for R14 (map §8) | — |
 | L | Keep the formulas; Ch 28 points here (C28-R01, R06) | — |
@@ -956,10 +966,11 @@ Recommendation IDs are listed in apply order: structure first, then definitions 
   | Ch 17 anti-pattern/correction pairs (WP-X) | D-23 |
   | Ch 01 level sketches | [J] |
 
-- **Retire diagrams:** `developer-lifecycle`, `test-pyramid`, `gateway-position`. Remove them from `config/diagrams.json` or mark them retained.
+- **Retire diagrams:** `developer-lifecycle`, `test-pyramid`, `gateway-position`. Remove their `config/diagrams.json` entries and rendered PNG/PDF files in the same PR as the marker deletions. This is not optional: `tools/validate_book.py` requires the marker multiset to equal the registry (verified), and the diagram registry has no retained-for-future-use state.
+- **Diagram source comments:** fix the figure numbers in the `runtime-offline.gv`, `learning-loop.gv`, and `evaluation-gate.gv` header comments when C25-R04/R08 touch them (DG-22).
 - **Edit diagram sources** (then run `make diagrams` and update checksums and captions): `book-map`, `gateway-roles`, `system-overview`, `reference-architecture`, `request-sequence`, `policy-to-guardrail`, `context-pipeline` (if needed), `developer-platform`, `portability`, `dx-golden-path`, `skill-resolution`, `pattern-react`, `pattern-routing`, `pattern-reflection`, `pattern-hitl`, `pattern-decision-tree`, `anti-ambient-authority`, `supervisor-worker`, `security-depth`, `guardrail-sequence`, `effect-lifecycle`, `runtime-offline`, `learning-loop`, `governance-model`, `release-recovery`, `reliability-economics`.
 - **Chapter covers:** re-check `config/chapter-covers.json` labels for Ch 03, 07, 16, 19, 20, 22, 23, 26, and 28 against the revised text, then run `make chapter-covers`.
-- **References:** apply the DC-01–DC-14 fixes within each source's recorded scope; never broaden a scope without verifying the source.
+- **References:** apply the DC-01–DC-14 fixes within each source's recorded scope; never broaden a scope without verifying the source. DC-10 and DC-14 are a pair (§13): removing Ch 27's `[R42]` markers without adding Ch 20's leaves R42 uncited.
 
 ### Phase 5 — validation
 
@@ -989,9 +1000,9 @@ Grep checks before merging the last Part:
 | --- | --- |
 | Every chapter reviewed | 28/28 present; the front matter and all 8 Part orientations are covered; appendices have no dedicated review → covered here (WP-A) |
 | Every `##`/`###` heading considered | Script over 666 non-fenced headings: all matched in their review except the 14 T-cards of Ch 20, which C20-R07 covers as a group (accepted) |
-| Recommendations concrete and located | All 401 original recommendations have a Location and a Change (C15-R12 and C17-R11 combine them under "Locations and changes"); ID sequences have no gaps or duplicates; 14 sampled line references matched the source exactly |
+| Recommendations concrete and located | All 401 original recommendations have a Location and a Change (C15-R12 and C17-R11 combine them under "Locations and changes"); ID sequences have no gaps or duplicates. In synthesis, 14 sampled line references matched the source exactly; in the verification pass (§17), about 2,500 line references, quotations, and existence claims were checked and 23 were corrected, none by more than a few lines or one heading name |
 | Contradictions | 32 decisions; 54 amendments; 24 additions (§12) |
-| Reinforcement vs redundancy (spot checks against source) | Ch 18's "seven statements" of the justification rule (7 confirmed; recommendations correctly spare the checklist and Q); Ch 21 intersection (5 found against 6 claimed; recommendations unaffected); Ch 28 cost per verified success (12 occurrences; recommendations cut only item 10 and the box, keep the recall); the "no back-references to Ch 1–3/7–9" claims (confirmed: zero); Ch 18/21 code identity (confirmed by `diff`); DF-01–DF-03 (confirmed). No misclassification found that would delete legitimate recall |
+| Reinforcement vs redundancy (spot checks against source) | Ch 18's "seven statements" of the justification rule (7 confirmed; recommendations correctly spare the checklist and Q); Ch 21 intersection (5 found against 6 claimed; recommendations unaffected); Ch 28 cost per verified success (12 occurrences, 7 full and 5 passing; recommendations cut only item 10 and the box, keep the recall); the "no back-references to Ch 1–3/7–9" claims (confirmed for prose in Parts IV–VIII and the appendices; Appendix A's table column and three forward pointers from Parts I–II are the only mentions); Ch 18/21 code identity (confirmed by `diff`); DF-02 and DF-03 (confirmed); DF-01 (reclassified in verification from "teaches the opposite" to "omits the Unknown case and does not fail safe on a timeout"; C22-R04 unchanged at High). No misclassification found that would delete legitimate recall |
 | New duplication from additions | Found and fixed: C22-R05 vs C26-R01 scale relation (now consistent); C26-R02 re-listing Ch 25's automation list (now a pointer); Appendix A cards vs chapter cards (C16-R10); Ch 18 and Ch 11 comparison questions (D-06); the Part IV orientation edited three times (D-28). Accepted: index columns on different axes (C01-R09 problems, C07-R01 services, C04-R14 boundaries, C26-R04 review areas, C04-R04 records) |
 | Coherent learning progression | §3 graph; every break has a fixing ID; remaining forward references are deliberate and signposted |
 
@@ -1023,15 +1034,91 @@ Grep checks before merging the last Part:
   - C28-R07.
 - **24 additions:** C02-R19, C03-R22, C04-R19, C04-R20, C05-R15, C05-R16, C06-R14, C10-R14, C12-R14, C13-R12, C14-R16, C15-R14, C15-R15, C16-R10, C18-R16, C18-R17, C18-R18, C21-R11, C22-R16, C22-R17, C24-R17, C26-R13, C27-R15, C27-R16.
 - **Ch 16's Option C fallback** is marked not applicable.
-- **`book-concept-map.md`:** 7 entries marked *Corrected in synthesis* (AgentRuntime in Fig 4-2; Ch 08 lifecycle drift; A2ATaskEnvelope shares 8 fields, not 10; only ReAct appears 4×; six, not ten, Ch 17 cards depend on Parts V–VIII) or *Superseded in synthesis* (Run API home; store table, two places).
+- **`book-concept-map.md`:** 7 entries marked *Corrected in synthesis* (AgentRuntime in Fig 4-2; Ch 08 lifecycle drift; A2ATaskEnvelope shares 8 fields, not 10; only ReAct appears 4×; the Ch 17 dependency count, now 9 completed by Parts V–VIII / 7 previewed / 2 name-only after verification) or *Superseded in synthesis* (Run API home; store table, two places).
+- **Verification pass (§17):** every chapter review carries inline *[verified: …]* notes and a closing Verification log; 43 recommendation entries and five cross-chapter table rows were amended in place; one claim was removed; no recommendation was renumbered or deleted.
 
 **Residual risks and limitations**
 
 - Rendered DOCX and PDF output was not inspected, and no build was run. Diagram and cover changes are specified, not previewed.
 - Line references go stale as soon as the first edit lands. Implementers must re-locate passages by quoted text.
-- Reviewers' word-count deltas and several per-chapter factual claims were accepted without independent re-verification. Only the conflicting or highest-impact claims were checked against source.
+- Reviewers' word-count deltas ("about −300 words", "+400 / −120") remain estimates; the verification pass (§17) checked every line reference, quotation, existence, duplication, and contradiction claim, but not the word budgets.
 - The appendices were never reviewed section by section. WP-A rests on map §8 and cross-chapter requests and may miss local issues.
 - Several decisions depend on the author (§15 Phase 0). If one is reversed (for example, keeping Northstar, keeping "control plane", or keeping HumanActionAuthorization record names), the listed amendments must be re-applied the other way.
 - The D-26 placement of the Closing Perspective needs a builder check; the validators' heading counts are safe.
 - The D-23(b) JSON/YAML allowance interprets AGENTS.md and is the author's to confirm.
 - The citation fixes (DC-xx) require verifying each primary source. Where verification fails, the claim must be weakened or removed, never re-cited speculatively.
+
+---
+
+## 17. Verification pass
+
+**Method.** Nine independent fact-checkers, one per reviewer group (Ch 01–03, 04–06, 07–09, 10–13, 14–17, 18–19, 20–23, 24–25, 26–28), re-read each chapter review adversarially against the source at commit `0361350`: every `file:line` reference and quotation, every "exists / never appears / defined nowhere" claim, every duplication claim (by `diff` or grep), every contradiction claim, the examples and their tests, the diagram sources, `config/examples.json`, `config/diagrams.json`, `config/references.json`, and the two validators. Corrections were made in place as *[verified: …]* notes; recommendation IDs were annotated, never renumbered or deleted. Each file closes with a Verification log. This section carries the results into the synthesis.
+
+**Totals across the 28 files** (summed from the Verification logs; Ch 01–03 report approximate reference counts).
+
+| Chapter | Refs checked | Refs fixed | Claims removed | Claims softened or corrected | Recommendations amended |
+| --- | --- | --- | --- | --- | --- |
+| 01 | ~130 | 1 | 0 | 10 | 2 |
+| 02 | ~95 | 0 | 0 | 4 | 0 |
+| 03 | ~150 | 1 | 0 | 7 | 4 |
+| 04 | 112 | 0 | 0 | 11 | 2 |
+| 05 | 71 | 0 | 0 | 3 | 1 |
+| 06 | 118 | 1 | 1 | 2 | 0 |
+| 07 | 71 | 1 | 0 | 6 | 1 |
+| 08 | 78 | 0 | 0 | 2 | 0 |
+| 09 | 54 | 2 | 0 | 6 | 3 |
+| 10 | 78 | 0 | 0 | 2 | 3 |
+| 11 | 96 | 1 | 0 | 4 | 0 (+1 table row) |
+| 12 | 112 | 0 | 0 | 2 | 2 (+1 table row) |
+| 13 | 104 | 1 | 0 | 3 | 0 (+1 table row) |
+| 14 | 71 | 6 | 0 | 1 | 1 |
+| 15 | 78 | 0 | 0 | 3 | 0 |
+| 16 | 52 | 0 | 0 | 4 | 0 |
+| 17 | 96 | 1 | 0 | 5 | 2 |
+| 18 | 71 | 0 (1 heading name) | 0 | 4 | 1 (+1 table row) |
+| 19 | 88 | 1 | 0 | 3 | 4 |
+| 20 | 71 | 2 | 0 | 5 | 3 |
+| 21 | 68 | 0 | 0 | 1 | 0 |
+| 22 | 94 | 1 | 0 | 5 | 2 |
+| 23 | 83 | 0 | 0 | 0 | 1 |
+| 24 | 78 | 0 | 0 | 7 | 3 |
+| 25 | 71 | 0 | 0 | 7 | 3 |
+| 26 | 62 | 0 | 0 | 3 (+1 table row) | 1 |
+| 27 | 118 | 1 | 0 | 2 | 1 |
+| 28 | 131 | 3 | 0 | 6 | 3 |
+| **Total** | **≈2,500** | **23** (+1 heading name) | **1** | **≈118** | **43** (+5 table rows) |
+
+Every fixed line reference was off by a few lines or named the wrong heading; none pointed at the wrong passage. The one removed claim (Ch 06: the two context pipelines "deduplicate in a different order") was a duplication detail inside C06-R01, whose recommendation stands on the labeling-order difference that remains.
+
+**Most consequential corrections (one line each).**
+- DF-01 / C22-R04: `effect_idempotency.py` does not teach the opposite of its thesis; it omits the Unknown case and its `finally` does not fail safe for a `TimeoutError`; the test's `RuntimeError("downstream 500")` is a received response. Priority unchanged (High).
+- Ch 17 dependency recount: 7 grounded / 7 previewed / 2 name-only; nine cards completed by Parts V–VIII (§3, §16, map S2).
+- D-31 / C01-R04: `employment_verification` is in ten code files, not eight; `06-part-vi.md` has no occurrence; `04-part-iv.md:1381` (P-01) was missing.
+- D-26 / C28-R11(d): the Closing Perspective scope line follows the front matter's wording; "implements only C01–C03" would be false (C24 grounding slice; offline C04–C28 contract slice).
+- D-13: `proposed_action` is a value of `AgentStepResult.status`, not a field (two reviews corrected).
+- DC-10 / DC-14: Ch 27 holds the only in-text `[R42]` markers; C27-R06 and C20-R10 must land together or R42 is marked retained-for-future-use (the earlier "R42 remains cited in Ch 20/23" was false).
+- C19-R01(a): retiring `gateway-position` from `config/diagrams.json` is mandatory, not optional (validator multiset check).
+- C19-R06: the second "MLflow 3.15.0 introduced" sentence is Appendix I (`09-appendices.md:234`), not Appendix D.
+- D-08 / C28-R07: Ch 28 restates policy-first routing once (`:653`), not three or four times; decision unchanged.
+- D-06: Ch 11's own Handoff card cell (`:278`) also says "conversational transfer", so Ch 18 Q2 omits acknowledgment rather than contradicting Ch 11; decision unchanged.
+- T16: C03-R04/R13's identifier drift resolves against Ch 04/06/18, so those edits move from WP-I to WP-II and WP-V.
+- D-10: Ch 07's debugging list is fuller than Ch 24's but not a superset; "absorb" means merge.
+- D-05: PromotionDecision is defined in Ch 27 (`:313`); Ch 25's undefined record names are five. C04-R04's ChangeBundle owner corrected to Ch 27.
+- Counts: cost per verified success ×12 (7 full + 5 passing); span-kind lists 6 full + 1 short; state-owner tables 24; If-fails sections 26 (Ch 16/17 have none); Ch 09 is the shortest chapter outright (1,134 words) and its case box names five Skills, not six; Ch 11/13 inline code has seven unused imports, not five.
+- CP-1: "no chapter refers back to Ch 1–9" holds for prose in Parts IV–VIII and the appendices; Appendix A's table column and three forward pointers (`01-part-i.md:904`, `02-part-ii.md:430`, `:947`) are the only mentions.
+- C28-R01: the Little's Law problem is an ambiguity at `:520` that `:524` turns into a permit-sizing error, not a conceptual error.
+- Ch 19 `:438` (MCP Gateway "wraps mutating calls in effect semantics") contradicts Ch 19's own component table (`:563–564`) as well as Ch 01, which strengthens C19-R02.
+- A2A 1.0.1 TaskState names were supplied for C19-R04 (SUBMITTED, WORKING, COMPLETED, FAILED, CANCELED, INPUT_REQUIRED, REJECTED, AUTH_REQUIRED); the current mapping table omits REJECTED and AUTH_REQUIRED.
+- Minor, new: the Part VII `.gv` header comments number the figures differently from the markers (DG-22; not reader-visible).
+
+**Decisions in §12 affected.** No decision was reversed. The following were annotated or sharpened: D-02 (the Ch 08 `min_risk_tier` row in chapter-26.md marked superseded), D-05 (C04-R04 added to the amended list; PromotionDecision already defined), D-06 (wording of the Ch 18 conflict; Ch 11 card cell), D-10 (not a superset), D-13 (value, not field), D-17 (C18-R01's Related aligned with C21-R07), D-22 (C04-R04 and C04-R17 marked amended), D-26 (scope-line wording; C01-R26 placement), D-30(e) (closes C05-R12's branch), D-31 (ten files; `:1381`; no Part VI edits; `05-part-v.md:392` stays). Outside §12: the T16 work-package assignment (WP-I → WP-II/WP-V), the DC-10/DC-14 pairing, and the C19-R01(a) registry removal became unconditional.
+
+**What remained unverifiable.**
+- The MLflow 3.15.x release-note claims (Ch 19 `:446`, Appendix I `:234`, Ch 24 `:58` "disabled by default", Ch 25 `:277` dataset versions and scorer ensembles) and whether an MLflow MCP Registry document exists that could become a registry entry (C19-R06, C24-R15, C25-R12; Phase 0.11).
+- Rendered DOCX and PDF output, including whether `build_book.py` and `build_latex.py` render the uncounted Closing Perspective H1 before the appendices divider correctly (D-26).
+- Word-budget estimates in the chapter reviews.
+- Whether `tools/check_references.py` would catch an uncited R42 (its regex may count Appendix K's own bibliography markers), which is why the DC-10/DC-14 pairing is recorded explicitly rather than left to the validator.
+- Concept-map row identifiers cited by the reviews were confirmed to exist but their contents were not re-audited beyond what each claim required.
+- A few judgements were left as judgements and labeled: the three-owner platform model (C07-R02, C08-R01) is an inference, not a manuscript statement; whether `resolve_pack`'s replay mode is "Chapter 8's compatibility window in code" (C09-R05) is an interpretation.
+
+**Outcome.** No major finding was overturned. All 32 decisions, the 15 ranked improvements, and the work-package structure stand. One top-ranked finding (DF-01) was re-characterized without changing its recommendation or priority, one count-based claim (Ch 17's forward cards) was recounted, and the remaining corrections are to evidence, wording, file lists, and line numbers.

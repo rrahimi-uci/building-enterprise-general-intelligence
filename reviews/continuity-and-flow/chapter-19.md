@@ -59,7 +59,7 @@ The reader arrives with Ch 18's task tree, TaskEnvelope, and narrowing rule, wit
 2. `:436` is a one-sentence orphan paragraph that the table already says.
 3. `:438` gives the MCP Gateway effect wrapping, which contradicts Ch 01 (`01-part-i.md:531–536`, `:552`) and Figure 1-4's Tool Gateway → MCP Gateway edge.
 4. `:438` names an "A2A Gateway" with no relationship to Ch 01's "Agent Gateway".
-5. MCP authorization essentials (audience binding, no token passthrough) appear only in the evidence table (`:600`) and in Ch 22 (`06-part-vi.md:724`), never in this section's prose.
+5. MCP authorization essentials (audience binding, no token passthrough) appear only in the evidence table (`:600`), in Ch 22 (`06-part-vi.md:724`), and in Appendix D's MCP row (`09-appendices.md:111`), never in this section's prose. [verified: corrected — Appendix D also carries the passthrough caveat]
 
 *Verdict:* keep the table. Rewrite `:430–438` (C19-R02, R07, R10).
 
@@ -129,7 +129,7 @@ The reader arrives with Ch 18's task tree, TaskEnvelope, and narrowing rule, wit
 **§ What the LLM Gateway needs to enforce (`:567–581`).** *Role:* the only full LLM Gateway contract in the book. *Adds:* an 11-row capability table. It is valuable, but its home is the architecture: Ch 04 already has a "Model plane" layer (`02-part-ii.md:137`) and a "Platform → model vendor" trust boundary (`:153`) with no contract behind them. *Verdict:* move to Ch 04 (C19-R01).
 
 **§ Filter for policy before optimizing cost or quality (`:583–589`) with Figure 19-2.** *Role:* policy-first model routing. *Issues:*
-- Ch 28 restates the rule three times: item 4 "Route models" (`08-part-viii.md:576`), item 6 "Cache safely" (`:578`), and the PERFORMANCE AND COST box (`:653`), which paraphrases Figure 19-2's own source comment.
+- Ch 28 restates the rule once, in the PERFORMANCE AND COST box (`:653`, "Route on policy first, then on price"), which paraphrases Figure 19-2's own source comment ("model choice is a governance decision before it is an economic one"). Item 4 "Route models" (`08-part-viii.md:576`) covers routing on cost and difficulty without the policy-first rule, and item 6 "Cache safely" (`:578`) is about cache keys, not routing. [verified: corrected — "three times" overstated; only the box states policy-first routing]
 - The cache-key sentence (`:589`) is a fourth statement of authorization-scoped caching (Ch 06, Ch 21, Ch 28; map registry).
 
 *Verdict:* move to Ch 28 and drop the cache sentence (C19-R01).
@@ -202,7 +202,7 @@ The reader arrives with Ch 18's task tree, TaskEnvelope, and narrowing rule, wit
 | --- | --- | --- | --- |
 | § What belongs at the LLM Gateway… table (`:558–565`) + Figure 19-1 | Ch 01 § Each control point… table (`01-part-i.md:522–529`) + Figure 1-4 | **Redundancy with drift.** "Orchestration layer" row added; Figure 19-1 omits the Agent and MCP Gateways. | Ch 01 canonical. Delete both from Ch 19 (C19-R01). |
 | § What the LLM Gateway needs to enforce (`:569–581`) | Ch 04 Model plane row (`02-part-ii.md:137`), "Platform → model vendor" boundary (`:153`), "model gateway" in cells (`:87`); Ch 07 platform row (`03-part-iii.md:47`) | Ch 19 holds the only contract; the others are mentions | **Move to Ch 04** (C19-R01). The Ch 04 review owns the insertion and the "model gateway" → "LLM Gateway" rename. |
-| § Filter for policy… + Figure 19-2 + § What to measure… | Ch 28 item 4 (`08-part-viii.md:576`), item 6 (`:578`), PERFORMANCE AND COST box (`:653`) | **Redundancy** (the same rule stated four times) | **Move to Ch 28** (C19-R01). The Ch 28 review owns the insertion, which replaces the box. |
+| § Filter for policy… + Figure 19-2 + § What to measure… | Ch 28 item 4 (`08-part-viii.md:576`), PERFORMANCE AND COST box (`:653`) | **Redundancy** (the policy-first rule is stated in Ch 19 prose, in Figure 19-2's source comment, and in the Ch 28 box; Ch 28 item 4 is the routing step it should attach to) | **Move to Ch 28** (C19-R01). The Ch 28 review owns the insertion, which replaces the box. [verified: softened — "four times" counted item 6, which is about caching] |
 | `:589` cache-key sentence; `:577` Caching row | Ch 06 § Scalability and token economics; Ch 21 § Consistency and revocation policy; Ch 28 item 6, `:637`, Q `:732` | Redundancy (map: Ch 21 canonical) | Drop from the moved material. Keep one Caching row in the Ch 04 table with "(Chapter 21)". |
 | § What the TaskEnvelope needs to carry (`:473–484`) | Ch 18 code (`:261`), JSON (`:115`), Delegation rule (`:77`); Appendix C (`09-appendices.md:68`) | Canonical content in the wrong chapter | **Move to Ch 18** (C18-R04, C19-R03) |
 | `A2ATaskEnvelope` (`:621–636`) | Ch 18 `TaskEnvelope` (`:261–274`) | **Redundancy with drift.** Correcting the concept map: 8 shared fields, not 10 identical. | Remove (C19-R03) |
@@ -211,14 +211,14 @@ The reader arrives with Ch 18's task tree, TaskEnvelope, and narrowing rule, wit
 | Evidence row "MCP authorization" (`:600`) | Ch 22 MCP paragraph (`06-part-vi.md:724`) | Redundancy (map: Ch 19 canonical for the MCP Gateway) | Ch 19 states it in prose (C19-R02). The Ch 22 review reduces its paragraph to a pointer. |
 | § Registry model "Discovery never substitutes…" | Ch 08 § Discovery is not permission; AP-12 | Reinforcement (applies the rule to servers and peers) | Cross-reference (C19-R15) |
 | Q4 / `:adoptResult` / RemoteArtifact | Ch 06 § Cross-boundary artifact adoption policy (code only) | Split concept | Ch 19 canonical. Move the Ch 06 code here (C19-R16). The Ch 06 review deletes it there. |
-| § MLflow MCP Registry note (`:444–446`) | Appendix D MLflow row (`09-appendices.md:90`) and `:234` | Redundancy of the maturity caveat | Keep the caveat in Appendix D (C19-R06) |
+| § MLflow MCP Registry note (`:444–446`) | Appendix D MLflow row (`09-appendices.md:90`) and Appendix I (`:234`, "MLflow 3.15.0 introduced the MCP Registry") | Redundancy of the maturity caveat; the uncited "3.15.0 introduced" claim also appears in Appendix I | Keep the caveat in Appendix D (C19-R06) [verified: corrected — `:234` is in Appendix I, not Appendix D] |
 | T-12 / T-13 (`06-part-vi.md:196–210`) | Ch 19 gateways | Reinforcement (threat view) | None, except the name (C19-R07) |
 
 ## Structural Recommendations
 
 1. **Take the LLM Gateway out.** The contract goes to Ch 04 and routing plus metrics go to Ch 28. Ch 19 keeps one bridging sentence. This agrees with concept map S4, which gives (a) Ch 04 and (b) Ch 28 as alternatives. I recommend splitting along that line rather than choosing one, for two reasons:
    - The enforcement contract is an architecture control point. Ch 04 already names the Model plane and the vendor trust boundary but defines neither, and placing it there removes the Ch 01/03/07 forward dependency.
-   - Policy-first routing is already restated three times in Ch 28.
+   - Policy-first routing is already restated in Ch 28's PERFORMANCE AND COST box, and Ch 28 item 4 is the routing step it belongs to. [verified: softened — was "three times"]
 
    Both Ch 01 (already overloaded, map §2) and Ch 23 were considered and rejected. Ch 23's containment layers can cite the Ch 04 table for provider-bound redaction. This mildly diverges from the map's registry line "Routing (model) — wherever the LLM Gateway lands": routing lands in Ch 28, while the Ch 04 table keeps its "deterministic eligibility before optimization" row as the one-line rule.
 2. **Make Ch 19 the federated delta of Ch 18.** The TaskEnvelope and the local lifecycle move to Ch 18. Ch 19 keeps FederatedTask, the state mapping, the peer and trust records, and adoption.
@@ -237,10 +237,10 @@ The reader arrives with Ch 18's task tree, TaskEnvelope, and narrowing rule, wit
 
 1. **C19-R01 — High — Move + Remove**
    - **Location:** `05-part-v.md:552–593`, § What belongs at the LLM Gateway—and what does not, § What the LLM Gateway needs to enforce, § Filter for policy before optimizing cost or quality, § What to measure at the LLM Gateway. Also `:404–405`.
-   - **Issue:** This is an LLM Gateway mini-chapter inside the MCP/A2A chapter. It duplicates Ch 01's table and Figure 1-4, and the gateway is defined 15 chapters after first use.
+   - **Issue:** This is an LLM Gateway mini-chapter inside the MCP/A2A chapter. It duplicates Ch 01's table and Figure 1-4, and the gateway is defined 18 chapters after its first use (Ch 01 `01-part-i.md:526`). [verified: corrected — was "15 chapters"]
    - **Why it matters:** The reader's mental model of Ch 19 ("protocols terminate at local gateways") is diluted, and the model plane has no contract where the architecture is taught.
    - **Change:** **Reconciled (see overall-book-review.md §D-08):** As stated, with names aligned to C04-R01/R05. (b) Place the H3 under § From planes to deployable layers, after the layer table, titled "### What the LLM Gateway enforces" (layer: Model access; plane: Gateways and integration); Ch 04's side is C04-R19. (c) The move into Ch 28 is decided; C28-R07 implements it. (d) Write "…the LLM Gateway that terminates it sits in the Gateways and integration plane (Chapter 4), and model routing is treated as a cost decision in Chapter 28."
-     - (a) **Delete** `:556–565` (Figure 19-1 and the component table). Retire `gateway-position` from `config/diagrams.json`, or leave it unused only if the registry permits that. Ch 01 Figure 1-4 is canonical.
+     - (a) **Delete** `:556–565` (Figure 19-1 and the component table). Retire `gateway-position` from `config/diagrams.json` and remove its rendered assets; `tools/validate_book.py` requires the set of `[[DIAGRAM:…]]` markers to equal the registry exactly and derives the expected DOCX image count from the registry, so an unused registered diagram fails validation. Ch 01 Figure 1-4 is canonical. [verified: amended — the "leave it unused" option is not permitted by the validator]
      - (b) **Move to Ch 04** (owner: the Ch 04 review): `:554` (scope paragraph, keeping "It does not own business workflow, tool effects, agent delegation, or the external API perimeter"), the `:569–581` capability table, and `:593`'s last sentence ("Centralization adds latency…"). Place them as a new H3 under § A practical reference architecture, after § Architecture layers (`02-part-ii.md:128`), titled along the lines of "### What the model plane enforces: the LLM Gateway". Change the Caching row's Control to "Key every security and semantic dependency (Chapter 21)".
      - (c) **Move to Ch 28** (owner: the Ch 28 review): `:587`, `:589`'s first sentence (the route record), Figure 19-2 (renumbered), and `:593`'s metric list. They replace the PERFORMANCE AND COST box (`08-part-viii.md:653`) and expand item 4 "Route models" (`:576`). Drop `:589`'s cache sentences; Ch 28 item 6 already covers them.
      - (d) In Ch 19, replace `:404–405` with: "Model providers are a third external boundary; the LLM Gateway that terminates it is part of the model plane (Chapter 4), and model routing is treated as a cost decision in Chapter 28."
@@ -270,7 +270,7 @@ The reader arrives with Ch 18's task tree, TaskEnvelope, and narrowing rule, wit
    - **Issue:** Column 1 is the local lifecycle, which now lives in Ch 18. Column 2 paraphrases A2A states and omits remote rejection and auth-required outcomes.
    - **Change:**
      - Add a lead-in: "Local states are the task lifecycle of Chapter 18; the gateway maps each remote state onto one of them."
-     - Replace column 2 entries with the exact task-state names of the pinned A2A 1.0.1 specification (verify against R07 before editing).
+     - Replace column 2 entries with the exact task-state names of the pinned A2A 1.0.1 specification: `TASK_STATE_SUBMITTED`, `WORKING`, `COMPLETED`, `FAILED`, `CANCELED`, `INPUT_REQUIRED`, `REJECTED`, `AUTH_REQUIRED` (§4.1.3 of R07, checked 2026-10-10; there is no "waiting" or "cancel_requested" state).
      - Add a row for remote rejection → Failed (parent applies its join policy).
      - Add a row for authentication-required → NeedsInput (routed to the credential/approval path, not the user prompt).
    - **Related:** C18-R03.
@@ -290,7 +290,7 @@ The reader arrives with Ch 18's task tree, TaskEnvelope, and narrowing rule, wit
    - **Change:**
      - Delete the note H3.
      - Append to § Registry model (`:442`): "An operational registry—for example MLflow's experimental MCP Registry (Appendix D)—can host these entries; it holds metadata, not authorization."
-     - Either add a registry entry for the MLflow MCP Registry documentation or release to `config/references.json` and cite it in Appendix D's MLflow row, or remove "3.15.0 introduced" there.
+     - Either add a registry entry for the MLflow MCP Registry documentation or release to `config/references.json` and cite it in Appendix D's MLflow row (`09-appendices.md:90`) and Appendix I (`:234`), or remove "3.15.0 introduced" from Appendix I `:234` (the only other place the version claim is made). [verified: corrected — the "3.15.0 introduced" wording is in Appendix I, not Appendix D's row]
      - Delete the adapter excerpt from Ch 19. If the author wants to keep it, register it as `examples/observability/mlflow_mcp_registry.py` in `config/examples.json` with a behavioural test, and cite it from Appendix D, not from Ch 19.
 
 7. **C19-R07 — Medium — Add (definition)**
@@ -349,8 +349,38 @@ The reader arrives with Ch 18's task tree, TaskEnvelope, and narrowing rule, wit
 16. **C19-R16 — Low — Move (from Ch 06)**
     - **Location:** `:605`, § A sensible place to start. Source: `02-part-ii.md:865–910`, Ch 06 § Cross-boundary artifact adoption policy.
     - **Issue:** Once C19-R03 and C19-R06 are applied, the section is empty. The book's only adoption code sits in Ch 06 with no prose, while adoption is taught here (`:adoptResult`, `CompletedPendingValidation`, Q4).
-    - **Change:** **Reconciled (see overall-book-review.md §D-18):** Registering the code is required, not optional: move it to `examples/` (for example `examples/federation/artifact_adoption.py`) with a behavioural test (cross-tenant refusal, region or purpose mismatch, untrusted provenance, hash mismatch), register it for chapter 19, and cite `[[EXAMPLE:artifact-adoption]]` under the H3. No inline code.
+    - **Change:** **Reconciled (see overall-book-review.md §D-18):** Registering the code is required, not optional: move it to `examples/` (for example `examples/federation/artifact_adoption.py`; `federation/` would be a new package, or use the existing `examples/security/` or `examples/platform/`) with a behavioural test (cross-tenant refusal, region or purpose mismatch, untrusted provenance, hash mismatch), register it for chapter 19, and cite `[[EXAMPLE:artifact-adoption]]` under the H3. No inline code.
       - Move the `ArtifactDescriptor` / `AdoptionPolicy` / `authorize_artifact_adoption` excerpt here as "### Remote artifact adoption check".
       - Introduce it with: "`:adoptResult` runs this check after schema, hash, and scan validation and before the parent workflow may depend on the artifact."
       - Ideally register it in `examples/` with a test rather than keeping it inline.
     - **Related:** The Ch 06 review deletes the excerpt there (agrees with concept map S8).
+
+## Verification log
+
+**Line references:** 88 checked against `source/parts/05-part-v.md`, `01-part-i.md`, `02-part-ii.md`, `03-part-iii.md`, `04-part-iv.md`, `06-part-vi.md`, `08-part-viii.md`, `09-appendices.md`, `config/references.json`, `config/examples.json`, and the three diagram sources; 1 fixed (`09-appendices.md:234` is Appendix I, not Appendix D); 0 others off by more than ±3 lines.
+
+**Claims removed:** none.
+
+**Claims softened:**
+- "Ch 28 restates the rule three times" / "the same rule stated four times" → once (the PERFORMANCE AND COST box `:653`); item 4 `:576` has no policy-first rule and item 6 `:578` is about cache keys. Applies to the section review, the cross-chapter table, and Structural Recommendation 1. C19-R01(c) (move routing to Ch 28 item 4, replacing the box) is unchanged.
+- "MCP authorization essentials appear only in the evidence table and Ch 22" → also Appendix D's MCP row (`09-appendices.md:111`).
+- "defined 15 chapters after first use" → 18 (first use Ch 01 `:526`).
+
+**Claims confirmed (most consequential):**
+- `:438` contradiction: Ch 19 says the MCP Gateway "wraps mutating calls in effect semantics"; Ch 01 `:552` ARCHITECTURE GUIDANCE says "A tool invoked over MCP still passes the Tool Gateway"; Ch 01's table gives the MCP Gateway "What it does not decide: Whether the resulting effect is authorized"; `gateway-roles.gv` routes `tool -> mcp` and its header comment says "An MCP tool call still passes the Tool Gateway". Ch 19's own component table (`:563–564`) also gives idempotency and effect receipts to the Tool Gateway, not the MCP Gateway, so the sentence contradicts the chapter itself as well as Ch 01.
+- Figure 19-1 (`gateway-position.gv`) has nodes agent, api, tool, llm, sys, prov only; edge `api -> agent`. Figure 1-4 has `api -> task(Agent Gateway) -> agent` and an MCP Gateway node. Drift confirmed.
+- Ch 19 component table (`:558–565`) adds an "Orchestration layer" row absent from Ch 01 `:522–529` (and omits Ch 01's Human approval gate row).
+- `ServerManifest` occurs exactly once in `source/parts/` and nowhere in `examples/` or `config/` (`05-part-v.md:414`).
+- "Agent Gateway" occurs in prose three times (`01-part-i.md:525`, `05-part-v.md:561`, `06-part-vi.md:202` as "Agent gateway") plus `gateway-roles.gv`, matching D-07.
+- MLflow "3.15.0 introduced" (`:446`): no `[Rxx]` on the paragraph; the only MLflow registry entries are R20 (evaluation docs, 3.x) and R21 (3.15.2 release, scope "Pins the reproducibility baseline used for book examples"). The same uncited claim is in Appendix I `09-appendices.md:234`. `register_mcp_server` appears nowhere in `examples/` or `config/examples.json`.
+- A2A 1.0.1 (R07, fetched 2026-10-10) TaskState values are SUBMITTED, WORKING, COMPLETED, FAILED, CANCELED, INPUT_REQUIRED, REJECTED, AUTH_REQUIRED (plus UNSPECIFIED); the `A2ATaskEnvelope` enum's "waiting" and "cancel_requested" are not A2A states, and the state-mapping table (`:531–539`) omits REJECTED and AUTH_REQUIRED. The evidence row's operation list (`:601`) matches the spec's SendMessage, GetTask, ListTasks, CancelTask, SubscribeToTask.
+- Field comparison with Ch 18's `TaskEnvelope`: 8 shared names, 2 renamed, 2 dropped, `status` added (see chapter-18.md log).
+- Ch 19 (`:386–701`) never mentions "Chapter 18" or "task tree"; the only chapter cross-reference in it is to Chapter 20 (`:701`).
+- Ch 04 "Model plane" layer (`02-part-ii.md:137`), "Platform → model vendor" boundary (`:153`), "model gateway" at `:22`/`:87`; Ch 07 LLM Gateway row (`03-part-iii.md:47`); Ch 03 uses at `01-part-i.md:1192`, `:1286`.
+- W3C trace context and span links first appear in Ch 19 `:547`; the definition is Ch 24 (`07-part-vii.md:136`).
+- `authorize_artifact_adoption` exists only at `02-part-ii.md:895` (Ch 06 § Cross-boundary artifact adoption policy, code directly under the H3 with no prose).
+- `tools/validate_book.py` requires the marker multiset to equal the diagram registry and derives the expected DOCX image count from the registry, so retiring `gateway-position` must include the registry entry (C19-R01(a) amended).
+
+**Recommendations amended:** C19-R01(a) (retiring the diagram is mandatory); C19-R04 (exact A2A state names supplied); C19-R06 (the "3.15.0 introduced" removal targets Appendix I `:234`); C19-R16 (package path note).
+
+**Not verifiable here:** whether an MLflow MCP Registry document exists that could become a registry entry (not fetched; the recommendation leaves both options open). The concept-map row and section references (S4, S8, §4 row 3, T12) were confirmed to exist but their contents were not re-audited beyond what the claims required.

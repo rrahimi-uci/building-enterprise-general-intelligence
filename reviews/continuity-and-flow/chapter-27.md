@@ -4,13 +4,13 @@ Reviewed: `source/parts/08-part-viii.md:126–461`. Context read: Ch 26 close (`
 
 ## Overall Assessment
 
-The core of Chapter 27 is excellent and unique. It covers "treat the full behavior as the release", rollback that changes *assignment* rather than history, and the tool-schema walkthrough (`:154–180`). This is the book's canonical home for release semantics, and the walkthrough table is the clearest worked example in Part VIII.
+The core of Chapter 27 is excellent and unique. It covers "treat the full behavior as the release", rollback that changes *assignment* rather than history, and the tool-schema walkthrough (`:168–180`) [verified: corrected — `:154–160` is § Treat the full behavior; the walkthrough H3 starts at `:168`]. This is the book's canonical home for release semantics, and the walkthrough table is the clearest worked example in Part VIII.
 
 The chapter is overloaded with material that belongs elsewhere or is already taught:
 
 - a deployment topology that re-teaches Ch 04's control-plane/cell split under a conflicting name;
 - generic deployment guidance (isolation, secrets, worker classes) owned by Ch 21/23/28;
-- a technology stack that duplicates Appendix D;
+- a technology stack that overlaps Appendix D on three of its ten rows (durable workflow, agent harness, telemetry/evals) and is otherwise off-topic for a release chapter [verified: softened — Appendix D's tables (`09-appendices.md:81–89`, `:98–112`) cover agent frameworks, durable runtimes, MLflow, MCP, and OTel only; the stack's events, policy, identity, state, artifacts, retrieval, and sandboxing rows have no Appendix D counterpart];
 - a promotion "Learn" stage that re-teaches Ch 25's loop;
 - the whole governance implementation, which belongs to Ch 26;
 - compatibility bullets that repeat Ch 15.
@@ -72,7 +72,7 @@ Verdict: keep, renamed, with a recall (C27-R02).
 
 Verdict: condense to the four release-relevant bullets (C27-R03).
 
-**### Suggested baseline stack—not a mandate (`:208–221`).** A technology-selection table that duplicates Appendix D's framework tables (`09-appendices.md:81`, `:98`) and is unrelated to release flow. Verdict: move to Appendix D (map S10) (C27-R03).
+**### Suggested baseline stack—not a mandate (`:208–221`).** A technology-selection table that overlaps Appendix D's framework tables (`09-appendices.md:81`, `:98`) on its durable-workflow, agent-harness, and telemetry rows, adds seven infrastructure rows Appendix D lacks, and is unrelated to release flow. Verdict: move to Appendix D as a merge, not a deletion (map S10) (C27-R03). [verified: softened — "duplicates" overstated the overlap]
 
 **§ Version every artifact that can change behavior (`:223–233`).** A Required-analysis table. The "Recommended architecture" row contains the RunManifest sentence that contradicts `:158`. "Failure scenarios" duplicates the walkthrough. "Enterprise example: regulated underwriting" is effectively Harborlight, unnamed. "Design alternatives" and "Trade-offs" carry the only new content. Verdict: delete the table and keep two sentences (C27-R09).
 
@@ -164,7 +164,7 @@ Nothing else needs expansion. The chapter's problem is excess, not sparseness.
 | Ch 21 isolation and credentials (`06-part-vi.md:432`, `:506`) | Tenant isolation, secrets | Ch 27 `:202`, `:204` D | Delete from Ch 27 (C27-R03) |
 | Ch 26 (whole chapter) | Governance | Ch 27 `:266–274`, `:288`, `:302–303`, `:316–317` misplaced | Move to Ch 26 (C26-R03, C27-R05) |
 | Ch 20 incident lifecycle (`06-part-vi.md:272`) | Detect → … → Recover → Learn | Ch 27 evidence context promises it | C27-R06 |
-| Appendix D (`09-appendices.md:81`, `:98`) | Framework landscape | Ch 27 `:208–221` D | Move to Appendix D (Appendices reviewer merges) |
+| Appendix D (`09-appendices.md:81`, `:98`) | Framework landscape | Ch 27 `:208–221` partial D (3 of 10 rows); the other 7 rows are new to Appendix D | Move to Appendix D (Appendices reviewer merges; nothing is simply deleted) [verified: softened] |
 | Appendix C ReleaseManifest/RunManifest (`09-appendices.md:65`, `:75`) | Contract summary | R, with drift | Appendices reviewer aligns to C27-R01 |
 | Appendix L Supply chain/Durability rows (`09-appendices.md:552`, `:556`) | Acceptance evidence | R | Keep |
 
@@ -247,7 +247,7 @@ This agrees with map S10 (governance → Ch 26, stack → Appendix D, topology �
      - Replace `:128` with: "Evidence context: SBOMs describe components and SLSA provenance describes how an artifact was built; the release controls here use both [R17][R18]. Regional recovery mechanics are book-authored recommendations."
      - Change `:348` to "draws on R17; R18".
      - In the new § Regional recovery (C27-R07), add without citation: "Regional recovery is the Recover stage of Chapter 20's incident lifecycle."
-     - R42 remains cited in Ch 20/23 (`06-part-vi.md:1189`), so the registry stays consistent. Run the citation validator after the change.
+     - R42 is listed in Ch 23's "draws on" sentence (`06-part-vi.md:1189`) but has no bracketed `[R42]` claim anywhere in Ch 20 or Ch 23 (DC-07); Ch 27 `:128` is currently the only in-chapter `[R42]` marker in the book (grep confirmed). C27-R06 therefore depends on C20-R10 (DC-14) adding `[R42]` to Ch 20's incident lifecycle within its recorded scope; apply the two together, or mark R42 retained-for-future-use, and run `tools/check_references.py` afterward. [verified: corrected — "remains cited in Ch 20/23" was false; only the draws-on sentence lists it]
    - **Related sections:** Ch 20 `06-part-vi.md:272`.
 
 7. **C27-R07 — Medium — Move/Rewrite.** Location: `08-part-viii.md:166` (in ### Rollback and active runs); Q5 `:457`; `:206`; Figure 27-1 (`release-recovery.gv` edge `recovery -> worker` label "resume by risk tier").
@@ -348,3 +348,23 @@ This agrees with map S10 (governance → Ch 26, stack → Appendix D, topology �
    - **Issue:** Same request as C05-R16.
    - **Change:** Add one line: "If a model or prompt swap shipped as configuration, or a release was changed in place, see AP-15 and AP-16 in Chapter 17."
    - **Related:** C17-R03.
+
+## Verification log
+
+- **Line references checked:** 118 (every reference to `08-part-viii.md`, `02-part-ii.md`, `03-part-iii.md`, `04-part-iv.md`, `06-part-vi.md`, `07-part-vii.md`, `09-appendices.md`, `01-part-i.md`, and `release-recovery.gv`); 1 fixed (`:154–180` → `:168–180` for the walkthrough). All quoted phrases checked are verbatim (`:158`, `:230`, `:346`, `:434`, `07-part-vii.md:365`, Figure label "resume by risk tier").
+- **Claims removed:** none.
+- **Claims corrected or softened:**
+  - "technology stack duplicates Appendix D" → partial overlap (3 of 10 rows); the move is a merge (Overall, § Suggested baseline stack, cross-chapter table).
+  - C27-R06: "R42 remains cited in Ch 20/23" was false; only Ch 23's draws-on sentence lists it, and Ch 27 `:128` is the book's only `[R42]` marker. Dependency on C20-R10 recorded.
+- **Important claims confirmed:**
+  - RunManifest/ReleaseManifest conflation: `:158` "pins the manifest to each run", `:230` "Resolve every run to an immutable RunManifest", `:310` ReleaseBundle record, `:376` `compatible(run: ReleaseManifest, worker: ReleaseManifest)`, `:434` "pinned to an immutable ReleaseManifest"; Ch 04's RunManifest JSON (`02-part-ii.md:172–196`) has no release field (read in full; Appendix C `:65` does list "release", which is the drift the table notes).
+  - "Execution plane": Ch 27 `:186`, `:191`, `:200`, `:455`; Ch 04 `:118`, `:140` use it for the sandbox layer and `:87` says "regional execution cells" — whole-book grep returned exactly these six lines.
+  - Ch 27 never uses "ChangeBundle" — grep returned nothing in `08-part-viii.md`.
+  - Regional recovery drift: `:166` lacks "Stop admission"; Q5 `:457` has it; `:178` and `:206` carry partial sequences.
+  - § Keep releases immutable (`:146–152`) has no prose; § A deployment shape (`:182`) is an empty wrapper; § A sensible place to start (`:350–352`) has no lead — read.
+  - `verify_release_artifact` (`:408–424`) compares digest and identity strings only; `:346` says "verify signatures" — read.
+  - Ch 25 Q `07-part-vii.md:490–491` duplicate Ch 27 Q1/Q2 and `:158`/`:164` — read both.
+  - Bullet 5 (`:272`) is covered by Ch 24 `07-part-vii.md:62` and Content Vault `:349`; bullet 7 (`:274`) by Ch 25 `:389`, `:436` — read.
+  - R42 scope (`09-appendices.md:507`, `config/references.json`): "Supports incident-response integration with organizational risk management" — the evidence-context sentence at `:128` stays within scope only as an incident-lifecycle claim, which the chapter does not make; the overreach claim stands.
+- **Recommendations amended:** C27-R06 (dependency on C20-R10). No recommendation breaks the 8/28/12 topology; C27-R13 moves code to `examples/` per AGENTS.md; C27-R07's figure change edits the `.gv` source.
+- **Not verified:** whether `tools/check_references.py` counts Appendix K's own `[Rxx]` bibliography markers as citations (its regex runs over the whole manuscript); if it does, the validator would not catch an uncited R42, which is why the dependency is recorded explicitly.

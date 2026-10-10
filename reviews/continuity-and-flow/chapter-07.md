@@ -4,7 +4,7 @@ Reviewed: `source/parts/03-part-iii.md:1–177` (Part III orientation at 1–7, 
 
 ## Overall Assessment
 
-Ch 07 is supposed to frame Part III. In practice it reads as a catalog. Its ~1,840 words are mostly lists: a 16-row capability table, three different stage lists for the same journey (Figure 7-3, Figure 7-4, the golden-path table), a test pyramid, a run-on sentence listing nine stages, and two pseudocode listings. It has only three explanatory paragraphs.
+Ch 07 is supposed to frame Part III. In practice it reads as a catalog. Its ~1,840 words are mostly lists: a 16-row capability table, three different stage lists for the same journey (Figure 7-3, Figure 7-4, the golden-path table), a test pyramid, a run-on sentence listing nine stages, and two pseudocode listings. Only about five of its paragraphs explain anything (`:15–19`, `:23`, `:31`, `:85–91`, `:95`); the rest of the prose is list-sentences (`:58`, `:64`, `:114`, `:131`). [verified: corrected — "only three explanatory paragraphs" undercounted]
 
 It makes four contributions no other chapter makes:
 - the platform-versus-application responsibility split (`:35–52`);
@@ -14,7 +14,7 @@ It makes four contributions no other chapter makes:
 
 These four should stay. Five problems weaken the chapter:
 
-1. **It is a map without coordinates.** Twelve of the 16 capability rows are taught in Ch 14–27: Workflow, MCP, A2A, Skills, Identity, Guardrails, LLM Gateway, Evaluation, Observability, Durable Execution, HITL, and Deployment. The table points to none of them, so the reader meets a list of things they cannot interpret yet.
+1. **It is a map without coordinates.** At least twelve of the 16 capability rows are taught in later chapters: Skills in Ch 8–9, and Workflow, MCP, A2A, Identity, Guardrails, LLM Gateway, Evaluation, Observability, Durable Execution, HITL, and Deployment in Ch 14–27 (Tool SDK is introduced in Ch 02 but its contract is Ch 22). The table points to none of them, so the reader meets a list of things they cannot interpret yet. [verified: corrected — Skills is taught in Ch 8–9, not Ch 14–27]
 2. **It re-teaches its neighbors.** § Keep contracts stable while frameworks change restates Ch 03's AgentRuntime seam. § Test the contracts before you test the model is a third test pyramid (Ch 25 has two). § If this fails in production is the first-divergence debugging method that Ch 24 owns.
 3. **The two-column ownership model is incomplete.** Ch 08–09 rely on a third owner, the domain-capability owner of Skills and Skill Packs. Ch 04 already federates Skills to "accountable owners" (`02-part-ii.md:73`). Ch 07 files Skill content under "application-specific", and Figure 7-1 lists no Skills on the team-owned layer.
 4. **Contract names drift.** `RunContext` (`:27`, `:58`, and Figures 7-1/7-2) and `ToolSpec` (both figures) are orphans. Ch 03 uses AgentStepRequest/AgentStepResult, and Ch 22 uses ToolManifest.
@@ -88,7 +88,7 @@ The current text covers What, Why, and the How tables. It leaves out When and Tr
 - *Issues:* its contract list drifts from Ch 03. It has no bridge from the capability table above it.
 
 **`## How a capability moves from idea to production` (`:60`).**
-- *Role:* lifecycle. Figure 7-3 plus a single 75-word sentence listing nine stages.
+- *Role:* lifecycle. Figure 7-3 plus a single 55-word sentence listing nine semicolon-separated stages. [verified: corrected — the sentence is 55 words, not 75]
 - *Verdict:* redundant inside the chapter.
 - *Issues:* Figure 7-3's stages are Local, Test, Evaluate, Policy gate, Stage, Canary, Production, Rollback. Figure 7-4's six stages and the eight-row table at `:99–108` cover the same journey with different names. "ChangeBundles", "SBOM", and "provenance" appear with no pointer to Ch 25/27. Merge (C07-R04).
 
@@ -107,33 +107,33 @@ The current text covers What, Why, and the How tables. It leaves out When and Tr
 - *Verdict:* keep it as the single stage list.
 - *Issues:*
   - "Select template and risk tier" (`:101`) does not say which scale.
-  - "ValidationReport" (`:106`) is an orphan (concept map §4 row 62).
+  - "ValidationReport" (`:106`) is used in Ch 07, 20, 25, and 26 but defined nowhere (concept map §4 row 62 calls this an orphan in that sense). [verified: corrected — "orphan" clarified; the term occurs six times across four chapters]
   - Figure 7-4's labels (scaffold, run locally, add tools, evaluate, promote, operate) do not match the table's stages (Scaffold, Develop, Debug, Evaluate, Package, Promote, Operate, Improve).
   - The trade-offs and the escape hatch are missing (C07-R09).
 
 **`## Test the contracts before you test the model` (`:110`).**
 - *Role:* testing. Figure 7-5 (four tiers) plus a paragraph that lists six levels.
 - *Verdict:* redundant against Ch 25 § Evaluation pyramid (7 levels, `07-part-vii.md:295`) and § Layer tests from contracts to outcomes (9 levels, `:305`). The figure and paragraph also disagree with each other (4 against 6).
-- *Issues:* "timeout/unknown-effect semantics" is used before Ch 22. The platform-specific point, that the platform supplies the harnesses, is never stated. Condense (C07-R06).
+- *Issues:* "timeout/unknown-effect semantics" is used here with no pointer; the term "unknown effect" has appeared since Ch 01 (`01-part-i.md:730`) and Ch 04 (`02-part-ii.md:56`), but the effect-state semantics are defined only in Ch 22. [verified: softened — the term is not new here, only its semantics are forward] The platform-specific point, that the platform supplies the harnesses, is never stated. Condense (C07-R06).
 
 **`## CLI and delivery workflow` (`:116`).**
 - *Role:* the command-line view of the golden path, plus the pinning and binding paragraph.
 - *Verdict:* the listing is useful next to the SDK example. The paragraph at `:131` is restated almost word for word in the checklist at `:150–154`.
-- *Issues:* "A model/provider swap is a behavior change" appears at `:131`, `:154`, and `:171`, and again in Ch 03 (`01-part-i.md:1219`), AP-15, and Ch 27 (`08-part-viii.md:154`). The pin list duplicates Ch 27 § Versioned objects (`08-part-viii.md:235`).
+- *Issues:* "A model/provider swap is a behavior change" appears at `:131`, `:154`, and `:171`, and again as AP-15 (`04-part-iv.md:1847`) and in Ch 27 § Treat the full behavior as the release (`08-part-viii.md:154`, the model route as part of the release); Ch 03 (`01-part-i.md:1219`) makes the parallel claim for SDK upgrades, not model swaps. The pin list overlaps substantially with Ch 27 § Versioned objects (`08-part-viii.md:235`), which lacks Ch 07's SDK, adapter, and MCP-server items. [verified: softened — Ch 03 is the framework-upgrade analogue; the pin lists overlap rather than duplicate]
 
 **`## What the evidence lets us conclude` (`:133`).**
 - *Role:* claim table.
 - *Verdict:* fine.
-- *Issues:* the conformance list appears here for the third of four times (`:58`, `:137`, `:156`, `:173`). The evidence row itself is the right home for the claim.
+- *Issues:* the conformance list appears here for the third of four times (`:58`, `:137` in a shortened five-item form, `:156`, `:173`). The evidence row itself is the right home for the claim.
 
 **`## If this fails in production` (`:141`).**
 - *Role:* failure triage.
-- *Verdict:* redundant against Ch 24 § Debugging method (`07-part-vii.md:64`) and Ch 03 § If this fails in production (`01-part-i.md:1277`). It also has nothing to do with platforms: none of the four steps diagnoses a paved-road failure such as a bypass, environment drift, or an adapter conformance gap. Rewrite (C07-R07).
+- *Verdict:* redundant against Ch 24 § Debugging method (`07-part-vii.md:64`: start from the violated outcome, find the first divergent transition, compare manifests before prose). Ch 03 § If this fails in production (`01-part-i.md:1277`) is a different, boundary-ordered method (workflow → adapter → model → gateway → effect → retry owner), not a duplicate. [verified: softened — the Ch 03 list is distinct] It also has nothing to do with platforms: none of the four steps diagnoses a paved-road failure such as a bypass, environment drift, or an adapter conformance gap. Rewrite (C07-R07).
 
 **Template sections: `## What to verify before production` (`:148`), `## Put the idea to work` (`:160`), `## Questions to bring to design review` (`:165`).**
 - The checklist is good. Items 1–3 deliberately reinforce `:131`, which is acceptable once `:131` is condensed. Item 5 is the chapter's best gate.
 - The exercises are good. "Sixteen" in exercise 1 must track any row merge (C07-R01). Exercise 2 has no supporting example (C07-R14).
-- In the questions, Q1 duplicates Ch 03's thesis, Q3 duplicates AP-15 and Ch 27, and Q5 duplicates the evidence row. Q2 and Q4 are good. See C07-R11.
+- In the questions, Q1 duplicates Ch 03's thesis, Q3 duplicates AP-15 and overlaps Ch 27 Q1 ("Why is 'roll back the model' usually incomplete?", a related but different question), and Q5 duplicates the evidence row. [verified: softened — Ch 27 has no model-swap question; Q1 is an overlap] Q2 and Q4 are good. See C07-R11.
 
 **`## Where this leads next` (`:175`).**
 - *Verdict:* accurate, but it does not name the gap Ch 08 fills: the road standardizes how an agent is built, not how reusable behavior travels between agents (C07-R12).
@@ -144,7 +144,7 @@ The current text covers What, Why, and the How tables. It leaves out When and Tr
 - **The third ownership tier.** Ch 08–09 depend on it, and Ch 07 never names it (C07-R02).
 - **Tool SDK → ToolManifest → Tool Gateway.** The reader should learn here that the developer-facing SDK and the runtime gateway are two sides of one contract. Today that is left implicit (C07-R10).
 - **No executable example.** The chapter's single evidence claim is that only conformance tests prove parity, and exercise 2 asks for such a test, yet the chapter shows none (C07-R14).
-- **Not sparse, but over-listed:** the 75-word run-on stage sentence (`:64`) and the six-level test sentence (`:114`) pack too much into one sentence each. Both should be removed rather than expanded.
+- **Not sparse, but over-listed:** the 55-word run-on stage sentence (`:64`) and the six-level test sentence (`:114`) pack too much into one sentence each. Both should be removed rather than expanded.
 
 ## Missing Conceptual Connections
 
@@ -191,7 +191,7 @@ The current text covers What, Why, and the How tables. It leaves out When and Tr
 | § What teams should be able to rely on (`:29–52`), Figure 7-1 | Ch 04 § The decisions that shape the system (`02-part-ii.md:73`); § Architecture layers (`:130–142`); Figure 4-1 | R if Ch 07 frames the table as the ownership split and cites Ch 04. Figure 7-1 is a fourth "whole system" picture (concept map §7.1); acceptable only because its axis is ownership, not request flow. |
 | Golden path (`:97–108`) | Ch 25 § A safe improvement loop starts with evidence (`07-part-vii.md:244`); Ch 27 § Promotion and continuous-improvement loop (`08-part-viii.md:251`) | R (the developer view) once "Promote" and "Improve" point to Ch 27 and Ch 25 |
 | Capability table "LLM Gateway" row (`:47`) | Ch 19 § What belongs at the LLM Gateway… (`05-part-v.md:552`) | R; the pointer target follows wherever concept map S4 lands |
-| Q3 model swap (`:171`) | AP-15; Ch 27 Q1 (concept map §5.2) | D. Replace. |
+| Q3 model swap (`:171`) | AP-15 (`04-part-iv.md:1847`); Ch 27 Q1 is an overlap, not a duplicate (concept map §5.2 marks it ≈) | D against AP-15. Replace. [verified: softened — Ch 27 Q1 asks about rollback scope, not model swaps] |
 
 ## Structural Recommendations
 
@@ -324,7 +324,7 @@ Retire Figure 7-3 (`developer-lifecycle`) and Figure 7-5 (`test-pyramid`) from C
    - **Issue:** The opening says "why" twice, and the Part III opening boxes are missing.
    - **Why it matters to the reader's mental model:** The concrete three-teams case is the hook. Right now it comes second.
    - **Change:**
-     - Keep the `:13` heading. Its body becomes the `:23` paragraph followed by `:18–19` ("The goal is not… clever shortcut.").
+     - Keep the `:13` heading. Its body becomes the `:23` paragraph followed by `:17–19` ("The goal is not… clever shortcut."). [verified: corrected — the sentence starts on `:17`]
      - Delete the `:21` heading and the first two sentences at `:15–17` ("Without a platform…" and "This chapter describes… delivery practices.").
      - Add a THE DESIGN CHOICE box after the evidence context: "Give teams platform-owned contracts, conformance-tested adapters, and a golden path that emits evidence at every stage; leave domain behavior, topology, and acceptance to the team."
      - If the synthesizer standardizes on case boxes (concept map T1/S12), add one too: "A second Harborlight team begins an agent for the compliance review and starts copying the mortgage team's SDK wrapper."
@@ -393,3 +393,27 @@ Retire Figure 7-3 (`developer-lifecycle`) and Figure 7-5 (`test-pyramid`) from C
       - `:101`: change "Select template and risk tier" to "Select template and governance tier (Chapter 26)".
       - `:106`: change "ValidationReport and risk approval" to "Promotion decision with evaluation evidence and risk approval". Use whatever record name the Ch 25 review makes canonical (concept map T23).
     - **Related sections:** Ch 26 § Match the control to the risk; Ch 25.
+
+## Verification log
+
+- **Line refs checked:** 71 in-chapter (`03-part-iii.md`) and cross-chapter references; 1 fixed (C07-R08 `:18–19` → `:17–19`). All other cited lines and section headings exist where stated, including `02-part-ii.md:73`, `:650`, `:947`; `01-part-i.md:1012`, `:1055`, `:1219`, `:1228`, `:1236`, `:1277`; `04-part-iv.md:220`, `:410`, `:1159`, `:1487`, `:1493`; `07-part-vii.md:64`, `:244`, `:295`, `:305`; `08-part-viii.md:154`, `:235`, `:251`; and the headings named in C07-R01–R15 (Ch 02 § How Tool Use works in practice, Ch 20 § Guardrails help…, Ch 22 § What a ToolManifest must declare, Ch 26 § Match the control to the risk and § Make review predictable and proportional).
+- **Claims removed:** none.
+- **Claims softened (6):**
+  - "only three explanatory paragraphs" → about five, with the list-sentences named.
+  - "Twelve of the 16 rows are taught in Ch 14–27" → Skills is Ch 8–9; the forward-row count is "at least twelve".
+  - "75-word sentence" at `:64` → 55 words (two places).
+  - "ValidationReport is an orphan" → used in four chapters, defined nowhere.
+  - "'timeout/unknown-effect semantics' is used before Ch 22" → the term appears from Ch 01; only its semantics are forward.
+  - Model-swap and pin-list duplication: Ch 03 `:1219` is the SDK-upgrade analogue; Ch 27 § Versioned objects overlaps rather than duplicates; Ch 27 Q1 is a related question, not a model-swap duplicate (Ch 27 has no "swap" question; the concept map marks it ≈). § If this fails: Ch 03's list is a distinct boundary-ordered method, so the redundancy is with Ch 24 only (consistent with D-10).
+- **Confirmed, consequential:**
+  - Ch 07 is 1,838 words; the capability table has 16 rows (`:37–52`); exercise 1 says "sixteen" (`:162`).
+  - `RunContext` occurs only at `:27` and `:58` in the whole book; `ToolSpec` occurs in no source file, only in `developer-platform.gv` and `portability.gv`. Both figure sources use "AgentSpec · ToolSpec · RunContext"; `developer-platform.gv`'s team-owned band lists Domain agents, Domain tools, Prompts, Eval datasets (no Skills), and "Skill registry" sits in the platform band.
+  - Figure 7-3 (`developer-lifecycle.gv`) nodes: Local, Test, Evaluate, Policy gate, Stage, Canary, Production, Rollback. Figure 7-4 (`dx-golden-path.gv`) nodes: scaffold, run locally, add tools, evaluate, promote, operate, against the table's eight stages. Figure 7-5 (`test-pyramid.gv`) has four tiers; `:114` lists six levels; Ch 25 has 7 bullets (`:295`) and a 9-row table (`:305`).
+  - `[[DIAGRAM:developer-lifecycle]]` and `[[DIAGRAM:test-pyramid]]` each occur once in the book (`:62`, `:112`), so retiring them removes the only uses. Figure 27-1 is `release-recovery` (`08-part-viii.md:148`).
+  - Guardrails row (`:46`) contains "action policy"; Ch 20 § Guardrails help, but they are not the security boundary (`06-part-vi.md:28`) exists.
+  - Identifier drift: `mortgage_evidence_review@0.1.0` (`:72`) vs `mortgage-evidence-agent@0.1.0` (`01-part-i.md:1228`, `02-part-ii.md:184`); `mortgage-evidence-review@0.1.0` (`:77`) vs `mortgage.evidence.read` (`:215`); `read_mortgage_case` (`:78`) vs `mortgage.case.read@1` (`:226`).
+  - `:131` is restated almost word for word in checklist items `:150`, `:152`, `:154`.
+  - No case box or THE DESIGN CHOICE box opens Ch 07; Ch 08 (`:181–187`) and Ch 09 (`:358–364`) have both.
+  - `examples/runtime/` exists (`step_execution.py`, `durable_state.py`) and `[[EXAMPLE:step-execution#core]]` is cited at `01-part-i.md:1063`, so C07-R14's placement and non-duplication note are sound.
+- **Recommendations amended:** C07-R08 line range only. All reconciled items (D-08, D-11, D-23, D-02/D-05) are consistent with overall-book-review.md §12 as written; no recommendation breaks the 8/28/12 topology, the examples/ rule, or diagram-source rule.
+- **Could not verify:** the judgement that the chapter "needs about −300 words"; the owner label `mortgage-platform-team` (`:218`) is cited as evidence of a "domain-capability owner", but the name itself reads as a platform team, so C07-R02's third-owner model is an inference from Ch 04 `:73` and Ch 08's reuse model rather than from that label.

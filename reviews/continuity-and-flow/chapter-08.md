@@ -26,9 +26,9 @@ The chapter underdelivers on the word in its own title, "versioned", and on the 
 5. **Five internal contradictions:**
    - `lifecycle: active` sits inside a manifest that is "immutable" and digested (`:217`, `:238`), and the example code includes `status` in the digest.
    - "Deprecated: still resolvable for runs already using it" (`:289`) contradicts "the digest is what a run actually pins" (`:242`).
-   - YAML `min_risk_tier` (`:233`) means the opposite of the code's `maximum_risk` ceiling.
+   - YAML `min_risk_tier` (`:233`) is unexplained and reads as a floor, the opposite of the code's `maximum_risk` ceiling (`resolve` admits only `requirement.maximum_risk <= skill.maximum_risk`).
    - The prose has six lifecycle states, while the code's `status` (in this chapter's own example, not only Ch 09) has four.
-   - "Discovery is semantic and permissive" (`:257`) contradicts Ch 05's "filter during discovery" (`02-part-ii.md:430`) and AP-12 (`04-part-iv.md:1697`).
+   - "Discovery is semantic and permissive" (`:257`) conflicts in wording with Ch 05's "Filtering during discovery matters more than it looks. A capability the caller may not invoke should never appear" (`02-part-ii.md:430`) and with AP-12's eligibility-filtered shortlist (`04-part-iv.md:1697`). [verified: corrected — misquote fixed; softened to a wording conflict, since `:271` and `:274–277` already deny the model any choice among candidates]
 
 The chapter needs about 400 words of added mechanism (C08-R01–R03, R07) and about 120 words of cuts (R09). The topology should stay as it is.
 
@@ -368,3 +368,24 @@ The net change is about +400 / −120 words.
       - Replace Q3 with "Does resolving a Skill authorize its tool calls?" Strong answer: "No. Resolution selects which Skill version may run; every tool call it proposes still passes the Tool Gateway's validation, authorization, and effect controls."
       - Change Q4's answer to the `:292` list plus "(levels in Chapter 25)".
     - **Related sections:** C08-R02.
+
+## Verification log
+
+- **Line refs checked:** 78 in-chapter and cross-chapter references; 0 fixed. All cited lines exist as described, including `01-part-i.md:747`, `:1039`, `:1044`, `:1119`/`:1231` (`mortgage-policy@2026.09`), `:1225`; `02-part-ii.md:134`, `:172–195`, `:430`, `:650`; `04-part-iv.md:410`, `:1159`, `:1204` (Version Router), `:1691`, `:1697`; `05-part-v.md:471`, `:505`, `:507`, `:521`, `:522`, `:545`; `06-part-vi.md:286` (in Ch 20), `:325`, `:709`, `:714`, `:732–733`, `:766`, `:1067`, `:1226`; `07-part-vii.md:295`, `:305`, `:420`; `08-part-viii.md:62`, `:154`, `:162`, `:240`, `:366`; `09-appendices.md:289–290`; and the headings used in C08-R02 (Ch 02 § One proposal, six gates; Ch 03 § The request is bounded before the model sees it; Ch 04 § RunManifest; Ch 05 § Capability and API catalog; Ch 06 § The trust hierarchy of instructions).
+- **Claims removed:** none.
+- **Claims softened (2):**
+  - Overall item 5, "contradicts Ch 05's 'filter during discovery'": the quotation was inexact ("Filtering during discovery matters more than it looks…") and the conflict is one of wording, since `:271` and `:274–277` already deny the model a choice among candidates. The R04 recommendation already said "in wording"; the overall now matches it.
+  - `min_risk_tier` "means the opposite": the field is unexplained; it reads as a floor against the code's ceiling (`requirement.maximum_risk <= skill.maximum_risk`, `skills_registry.py:139`).
+- **Confirmed, consequential (checked against `examples/platform/skills_registry.py` and `examples/tests/test_skills_registry.py`):**
+  - `SkillManifest.status` and `SkillPackManifest.status` are `Literal["draft", "active", "deprecated", "revoked"]` (four states, `:65`, `:94`) against the prose's six (`:281`).
+  - `validate_digest` hashes `model_dump(mode="json", exclude={"digest"})` (`:76`), so `status` is inside the digest and a draft→active transition changes it. No test asserts digest stability across a status change; the eight tests cover SemVer precedence, prerelease ordering, region, risk ceiling, requirement bounds, non-active exclusion, no-candidate failure, and invalid versions.
+  - `resolve(self, requirement)` (`:131`) takes no run envelope, filters on `status == "active"`, capability, purpose, region, `maximum_risk`, and data classes, then returns the highest `_semver_key`; the comment at `:144` says production also uses evaluation, health, cost, and rollout policy. This matches C08-R12's two sentences.
+  - `register_pack` enforces "active pack must reference only active skills" (`:123–127`); `resolve_pack` admits deprecated content only with `allow_deprecated_for_replay` (`:147–164`). `SkillRequirement.maximum_risk` and `PlanNode.risk_class` are both `Field(ge=0, le=4)` in `examples/contracts.py:56`, `:66`.
+  - `config/examples.json` registers `skills-registry` with `book_chapters: [8]` and a single region `resolution`; the region in the source (`:103–167`) covers `SkillRegistry` only, so `SkillPackManifest` is outside any region (relevant to C09-R05).
+  - The YAML carries `lifecycle: active` (`:238`), `side_effect_class: read_only` (`:219`), `min_risk_tier: 1` (`:233`), and `mortgage-policy@approved-2026.09` (`:227`) against Ch 03's `mortgage-policy@2026.09`.
+  - Lifecycle table: Active's "What moves it forward" is "—" (`:288`); Deprecated says "Still resolvable for runs already using it" (`:289`); Revoked says "Not resolvable by anything new" (`:290`) while `:292` says early revocation "can affect a run already in flight".
+  - Certification list at `:292` has 8 items; Q4 (`:349`) has 10; checklist `:335` has 5. "Support window" (`:327`) vs "compatibility window" (`:289`, `:292`) within the chapter. "Portable" occurs in Ch 08 only in Q3 (`:348`).
+  - Ch 04's RunManifest JSON (`02-part-ii.md:177–195`) has `prompt_bundle` and no Skill field. Ch 26 tiers 3–4 require "exact approval" and "Executive/risk approval" (`08-part-viii.md:67–68`), so the `:281` tension is real.
+  - `skill-resolution.gv` labels the catalog node "semantic, permissive", as C08-R04 states.
+- **Recommendations amended:** none. All reconciled items (D-01, D-02, D-05, D-32 as cited) are consistent with §12; C08-R05's example change is an `examples/` edit with a test, and C08-R11 is correctly conditional on a registered source (DC-13).
+- **Could not verify:** "many 2026 readers will associate the word" with the SKILL.md format (a market claim, not checkable here); the word estimate "+400 / −120".

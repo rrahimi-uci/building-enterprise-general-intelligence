@@ -1,6 +1,6 @@
 # Chapter 05 — Give Knowledge an Owner: Continuity and Flow Review
 
-Reviewed: `source/parts/02-part-ii.md:342–585`. For transitions I also read Ch 04's knowledge-related tables and closing (`02-part-ii.md:36–44`, `:113–142`, `:228–242`, `:338–340`) and Ch 06 in full (`:587–947`), especially § Semantic knowledge's hand-off to it. I also checked Ch 03's retrieval-as-tool example (`01-part-i.md:1061`), Ch 08 § The Skill manifest (`03-part-iii.md:206–208`), Ch 22's ToolManifest, AP-09 (`04-part-iv.md:1624`), and the example registry entries for the seven `examples/knowledge/*` listings.
+Reviewed: `source/parts/02-part-ii.md:342–585`. For transitions I also read Ch 04's knowledge-related tables and closing (`02-part-ii.md:36–44`, `:113–142`, `:228–242`, `:338–340`) and Ch 06 in full (`:587–947`), especially § Semantic knowledge's hand-off to it. I also checked Ch 03's retrieval-as-tool example (`01-part-i.md:1061`), Ch 08 § The Skill manifest (`03-part-iii.md:206–208`), Ch 22's ToolManifest, AP-09 (`04-part-iv.md:1624`), and the example registry entries for the six `examples/knowledge/*` listings. [verified: corrected — six registered knowledge examples (`config/examples.json:310–370`), all six cited by Ch 05]
 
 ## Overall Assessment
 
@@ -14,7 +14,7 @@ Its code is all in tested `examples/`. The prose is tight.
 
 The problems are mostly about connections rather than content:
 
-1. **Terminology that contradicts the book's thesis.** "Guardrail" is used for an enforced rule (`:388`, `:418`, `:449`, `:459`, `:547`), the opposite of Ch 03 and Ch 20's "a guardrail is a detector, not the boundary".
+1. **Terminology that contradicts the book's thesis.** "Guardrail" is used for an enforced rule (`:388`, `:418`, `:449`, `:459`, `:547`, plus the example id at `:416`), the opposite of Ch 03 § Guardrails and authorization solve different problems (`01-part-i.md:1168–1182`: a guardrail "may stop a bad proposal early; only the authoritative boundary can prevent" the effect) and Ch 20 § Guardrails help, but they are not the security boundary (`06-part-vi.md:30–36`: "Guardrails are useful detectors"). [verified: corrected — the quoted phrase was a paraphrase, not book text; replaced with the actual wording and locations]
 2. **Three taxonomies that are never mapped to each other:** four consumption modes (`:373–378`), six representations (the H3s at `:390–432`), and six Hub views (`:528–535`). The Hub, the chapter's architectural synthesis, arrives *after* § A sensible place to start.
 3. **An unreconciled boundary with Ch 06 and Ch 03.** Ch 05 says agents "ask one service" (`:526`). Ch 06 has a Context Assembler and a Retrieval Broker do the asking, and Ch 03 retrieves policy through a Tool Gateway façade. Nobody says these are one resolution surface.
 4. **A weak link back to Ch 04.** The chapter never says which plane it fills or how its pinned knowledge versions reach the RunManifest.
@@ -80,7 +80,7 @@ The reader should leave with:
 
 **§ Why provenance determines what you can trust (`:490–509`).** *Role:* governance metadata fields and the SECURITY box. *Verdict:* good. *Issues:*
 
-- "Provenance" here means content lineage. Ch 09, 23, and 27 use it for build provenance (SLSA) without distinguishing the two (map §3).
+- "Provenance" here means content lineage. Ch 09 ("signed provenance", `03-part-iii.md:430`), Ch 23 and Ch 27 (SLSA, `06-part-vi.md:1023`, `08-part-viii.md:346`) use it for build provenance without distinguishing the two (map §3). [verified: corrected — Ch 09 does not name SLSA; it says "signed provenance"]
 - The section is the natural home for "the index is a disposable projection of the source revision" and for ingestion freshness. Both currently sit in Ch 06 (`:760`, `:769`), which leaves the Part intro's "how knowledge stays current" (`:5`) under-delivered in this chapter.
 
 **§ What the evidence lets us conclude (`:511–518`).** Well-scoped claims. No issues.
@@ -171,6 +171,7 @@ I disagree with the map on one point. It calls Ch 05 "otherwise self-contained".
      - `:547`: "Is any rule evaluated at the effect boundary?"
      - Renaming the example id `rule-as-guardrail` → `rule-at-effect-boundary` (and the diagram id `policy-to-guardrail`) is optional. If done, update `config/examples.json` and `config/diagrams.json`.
    - *Related:* map T10.
+   - [verified: whole-book grep — "guardrail" appears 37 times. Ch 03 (`01-part-i.md:999`, `:1168–1182`) and Ch 20 (`06-part-vi.md:30–36`, `:317`) use the detector sense. Ch 01 `:497`, Ch 04 `:43`, and the "Guardrails" nodes in the Security/Trust spines of Figures 1-3 and 4-1 list "guardrails" loosely as one security control among several; Ch 20's Figure 20-1/20-3 titles ("Defense-in-depth guardrails architecture", "Runtime guardrail and protected-effect sequence") and Ch 28's "Illustrative starting guardrails" heading (renamed under D-32) are loose too. Ch 05's eight uses (incl. the example id and Figure 5-2) are the only ones that make a guardrail the enforcing control, so C05-R01 stands as written; the loose listings elsewhere are T10's remit, not this chapter's.]
 
 2. **C05-R02 — High — Add.**
    - *Location:* § Reference architecture: the Enterprise Knowledge Hub, after `:537`.
@@ -244,7 +245,7 @@ I disagree with the map on one point. It calls Ch 05 "otherwise self-contained".
 
 12. **C05-R12 — Low — Rewrite.**
     - *Location:* `:556–563`, `:574`.
-    - *Change:* align with the book-wide template: ✓ items, and a "Strong answer" header. Alternatively, adopt "What a good answer demonstrates" book-wide; that is the synthesizer's decision.
+    - *Change:* align with the book-wide template: ✓ items, and a "Strong answer" header. Alternatively, adopt "What a good answer demonstrates" book-wide; that is the synthesizer's decision. [verified: overall-book-review.md §D-30(e) decides ✓ items and "Strong answer" book-wide, so the alternative branch is closed. Ch 05 is the only chapter with the other header (grep), and the only one whose verify list uses plain bullets.]
 
 13. **C05-R13 — Low — Add.**
     - *Location:* `:354` (first paragraph of § Why retrieval alone is not a knowledge strategy).
@@ -265,3 +266,33 @@ I disagree with the map on one point. It calls Ch 05 "otherwise self-contained".
    - **Issue:** The Ch 17 review asks home chapters to add one anti-pattern pointer to their If-fails lists (C17-R03 mapping).
    - **Change:** Add one line: "If the vector index is being treated as the source of truth, the repair is structural; see AP-09 in Chapter 17." Do not replace the list.
    - **Related:** C17-R03.
+
+## Verification log
+
+Second pass against `source/parts/02-part-ii.md:342–585` and `:587–947`, `01-part-i.md`, `03-part-iii.md`, `04-part-iv.md`, `06-part-vi.md`, `08-part-viii.md`, `assets/diagrams/src/policy-to-guardrail.gv`, `examples/knowledge/`, `config/examples.json`, and overall-book-review.md §12.
+
+**Line references:** 71 checked; 0 off by more than 3 lines; 0 renumbered. Quotations checked verbatim (`:346`, `:355–359`, `:386`, `:388`, `:392`, `:412`, `:418`, `:430`, `:443`, `:488`, `:526`, `:547`, `:551`, `:585`, `01-part-i.md:1061`).
+
+**Claims removed:** none.
+
+**Claims softened:** none.
+
+**Claims corrected (3):** "seven `examples/knowledge/*` listings" → six; the quoted "a guardrail is a detector, not the boundary" was a paraphrase → replaced with the book's wording and locations; "Ch 09, 23, and 27 … (SLSA)" → Ch 09 says "signed provenance", only Ch 23 and 27 name SLSA.
+
+**Important claims confirmed:**
+
+- Ch 05 contains no fenced code; all six examples are registered and tested (`config/examples.json:310–370`).
+- Four modes (`:375–378`), six representation H3s (`:390`, `:396`, `:406`, `:420`, `:424`, `:432`), six Hub views (`:530–535`); none is mapped to another, and the Hub H2 (`:524`) follows § A sensible place to start (`:520`).
+- `:386` lists extract → preserve span → owner verifies → compile → record version; § Turn policy prose (`:451–459`) has Extract / Prove / Project with no owner-approval step.
+- `:392` promises Ch 06 owns "chunking, reranking"; in Ch 06 "chunk" occurs only at `:732` (field) and `:769` (ingestion stage), "reranking" only at `:761`.
+- Ch 05 opening (`:344–359`) never mentions Ch 04, a plane, or Figure 4-1; Ch 04 `:340` says "names a knowledge plane", a name no plane has.
+- Ch 06 names a Retrieval Broker (`:707`) and `POST /v1/knowledge:search` (`:716`) with no reference to the Hub; Ch 03 routes policy retrieval through a Tool Gateway façade (`01-part-i.md:1061`).
+- "run manifest" lowercase at `:549` and `:562`; the RunManifest `knowledge_snapshots` field is at `:190`.
+- "effect class" (`:551`) is not defined anywhere; Ch 08's Skill manifest says "side-effect class" (`03-part-iii.md:208`).
+- Ch 05 is the only chapter with the "What a good answer demonstrates" header and plain-bullet verify items.
+- Ch 08 § Discovery is not permission (`03-part-iii.md:250`) and AP-12 (`04-part-iv.md:1691`) exist, as C05-R15 assumes; AP-09 is at `04-part-iv.md:1624`.
+- `policy-to-guardrail.gv:15` carries the label "Guardrail at the effect boundary", so C05-R01's diagram edit is needed.
+
+**Recommendations amended:** C05-R12 (D-30(e) closes the alternative). C05-R01 gained a book-wide scope note; its change list is unchanged. C05-R02/R06/R13 depend on C04-R01's plane name ("Knowledge, context, and memory"), which is unchanged. C05-R15 and C05-R16 match D-29. No recommendation touches topology, inline code, rendered diagrams (C05-R01 edits the `.gv` source and runs `make diagrams`), or citation scope.
+
+**Not verified:** map §2/§3/§4 row numbers and T10; the claim that Ch 08 and Ch 22 "own" the Skill manifest and ToolManifest was checked only to the extent that both define them (`03-part-iii.md:206`, `06-part-vi.md:702`).

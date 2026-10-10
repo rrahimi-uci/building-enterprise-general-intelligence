@@ -6,9 +6,9 @@ Reviewed: `source/parts/02-part-ii.md:1–340` (Part II orientation and Chapter 
 
 Ch 04 is meant to be the book's map: the chapter where every later contract gets an owner and a place. The parts it needs are all present: the plane table, the ownership table, the layer table, the trust boundaries, the contracts, and the store table. As written, though, it reads as a set of reference tables in a confusing order rather than as a map. There are four main problems.
 
-1. **Three decompositions with three vocabularies.** The plane table (`:36–44`), Figure 4-1, and the layer table (`:130–142`) name the same things differently. Five layers are called "…plane", and a sixth meaning of "plane" (the "global definition and governance plane", `:87`) arrives mid-chapter. Ch 01 tells the reader Figure 4-1 is "this same picture at higher resolution" (`01-part-i.md:510`). It is not: no band name in Figure 1-3 survives unchanged in Figure 4-1.
+1. **Three decompositions with three vocabularies.** The plane table (`:36–44`), Figure 4-1, and the layer table (`:130–142`) name the same things differently. Five layers are called "…plane", and a third sense of "plane" (the deployment tier: "global definition and governance plane" at `:87`, "global control plane" at `:26` and `:333`) arrives mid-chapter. [verified: corrected — "sixth meaning" overcounted; the chapter uses "plane" in three senses (ownership plane, layer called plane, deployment tier), matching C04-R12] Ch 01 tells the reader Figure 4-1 is "this same picture at higher resolution" (`01-part-i.md:510`). It is not: no band name in Figure 1-3 survives unchanged in Figure 4-1 (the closest is "Systems of record" → "Systems of record and providers").
 2. **The Ch 03 seam disappears.** Ch 03 closes by promising to place the AgentRuntime boundary in the architecture (`01-part-i.md:1312`). The Ch 04 prose never names AgentRuntime, AgentStepRequest, or AgentStepResult. The "Agent Runtime" participant appears only in Figure 4-2, and "bounded agent workers" appears only in Figure 4-1 and at `:87`.
-3. **Contracts without owners or pointers.** About 20 records are listed (`:38–44`, `:93`) with no defining chapter. Several of them (RunManifest, the effect receipt, the event envelope, the Run API) are later re-specified with drift in Ch 03, 15, 22, and 27. The effect receipt contradicts itself (`:204`). The chapter's own example, `[[EXAMPLE:contracts]]` (`:256`), contains none of the contracts the chapter defines.
+3. **Contracts without owners or pointers.** About 20 records are listed (`:38–44`, `:93`) with no defining chapter. Several of them (RunManifest, the effect receipt, the event envelope, the Run API) are later re-specified with drift in Ch 03, 15, 22, and 27. The effect receipt paragraph blurs the downstream receipt and the platform's effect state (`:204`). [verified: softened — see § Effect receipt] The chapter's own example, `[[EXAMPLE:contracts]]` (`:256`), contains none of the contracts the chapter defines.
 4. **Order.** The opening callouts sit mid-chapter (`:75–83`). Two H2s are empty wrappers (`:97`, `:157`). The layer explanation points back to "the plane table above" across five sections (`:104`). The Run API paragraph (`:89`) is 70 lines away from the Run API table (`:159`).
 
 None of these problems needs new material. They need renaming, reordering, pointers, and handing detail to its later homes.
@@ -41,7 +41,7 @@ The reader should leave holding one picture, with one name per box, and an index
 **§ The planes and the ownership map (`:20–26`).** *Role:* defines planes versus layers. *Adds:* the key distinction, plus the warning that a model gateway "should not own business workflow simply because every call passes through it" (`:22`). *Verdict:* the right idea in the wrong container. *Issues:*
 
 - The heading promises the map, but the map (the plane table) is in the next section.
-- The parenthetical "identity, policy, execution, knowledge, or operations" names five examples that match none of the seven plane names.
+- The parenthetical "identity, policy, execution, knowledge, or operations" names five examples, none of which is a plane name as written; only "operations" echoes one ("Evaluation and operations"). [verified: softened — "match none" overstated the mismatch]
 - The state-owner table (`:24–26`) is the section's only other content. It is never explained (map §5.1), and it previews "global control plane to regional execution cell" before cells are introduced.
 
 **§ What the architecture is trying to protect (`:28–44`).** *Role:* Figure 4-1 plus the plane table. *Adds:* the seven planes and their records and boundaries. This is the chapter's core. *Verdict:* essential content with a mismatched heading and figure. *Issues:*
@@ -49,14 +49,14 @@ The reader should leave holding one picture, with one name per box, and an index
 - Figure 4-1's bands (`reference-architecture.gv:32–145`) are not the planes. It has "Edge and admission" (a layer), "Run control and durable execution" (two layers fused), "Knowledge, context and memory" (the plane table says "Context, RAG, memory, Skills"), "Trust and governance" (the layer name; the plane is "Security and governance"), "Evidence and improvement" (the plane is "Evaluation and operations"), and "Systems of record and providers" (not a plane).
 - `:34` says "each layer names the components the plane owns", which conflates the two decompositions the chapter later says not to confuse (`:101–102`).
 - "Skills" is placed in the context plane (`:41`), yet the layer table puts the "prompt/skill catalog" in the Agent control plane (`:134`), and Ch 08 makes the Skill a registry-released capability. Skills therefore have two owning planes.
-- None of the ~12 records in the table has a chapter pointer (map §4 row 19).
+- None of the ~18 records in the table has a chapter pointer (map §4 row 19). [verified: corrected — the Authoritative records column names 18 records, not ~12]
 
 **§ End-to-end responsibility flow (`:46–57`).** *Role:* walks one request through the architecture. *Adds:* Figure 4-2 and eight steps. *Verdict:* useful, but it does not yet do the Ch 04-specific job. *Issues:*
 
 - The steps never name the plane or record that owns each step, which is what would distinguish them from Ch 03 § The complete execution path (9 steps) and Ch 15 § Canonical control flow (10).
 - Step 4 says "Let the model propose… Policy determines eligible models, tools…", which places eligibility after the proposal. Ch 06 (`:656–658`) and Ch 03 (`01-part-i.md:1044`) fix eligibility before the step.
 - Step 7's terminal vocabulary (accepted / blocked / needs-input / failed / unknown-effect) is a fourth vocabulary (map T12).
-- Figure 4-2 (`request-sequence.mmd`) has the *Agent Runtime* resolve context from *Policy & Identity* after receiving the bounded step. That contradicts Ch 03 (the AgentStepRequest already carries an authorized ContextManifest) and Ch 06 (a Context Service assembles it). The figure also shows no approval hop, although step 5 has one.
+- Figure 4-2 (`request-sequence.mmd`) has the *Agent Runtime* resolve context from *Policy & Identity* after receiving the bounded step. That contradicts Ch 03 (the AgentStepRequest already carries an authorized ContextManifest) and Ch 06 (a Context Service assembles it). The figure also shows no human-approval hop (its only authorization hop is Run → Policy & Identity, `request-sequence.mmd:20–21`), although step 5 binds protected changes to a human authorization. [verified: corrected — the figure does have a policy-authorization hop; what is missing is the human approval]
 
 **§ Where truth lives (`:59–69`).** *Role:* the model-may / model-may-not table per concern. *Adds:* the canonical "truth ownership" table (map §3). *Verdict:* keep it as the canonical home. *Issues:* component names drift from their later homes: "Durable Run Service", "Tool/effect service" (Ch 22: Effect Service), and "Proposal and human action authorization service" (Ch 14: Human Action Authorization Service). Map T24 and T25 apply.
 
@@ -68,14 +68,14 @@ The reader should leave holding one picture, with one name per box, and an index
 
 **§ Turn the diagram into enforceable contracts (`:85–95`).** *Role:* introduces the global control versus regional cell split and the Run API semantics. *Verdict:* two topics fused, and the chapter's headline design choice is under-explained. *Issues:*
 
-- "Global definition and governance plane" adds a sixth meaning of "plane".
+- "Global definition and governance plane" adds a third sense of "plane" (deployment tier). [verified: corrected — was "sixth"; consistent with C04-R12]
 - What a *cell* is, and why runs have a home cell, is explained only in the Q&A answers (`:333`, `:335`).
 - The Run API paragraph (`:89`) is separated from its table (`:159`).
 
 **§ Core authoritative records (`:91–95`).** *Role:* lists the 14 records that need single owners. *Verdict:* the most valuable list in the chapter, but it is unusable as written. *Issues:*
 
 - No owners, no planes, no chapter pointers.
-- Names drift: "AgentStep" (T9); "EvaluationReport" is an orphan (T23); WorkflowExecution belongs to Ch 15.
+- Names drift: "AgentStep" (T9); "EvaluationReport" is never defined and appears only here and in Ch 08's `evaluate()` signature (`03-part-iii.md:299`), while Ch 25 uses EvaluationResult (T23, D-05) [verified: corrected — not a strict orphan; one other occurrence]; WorkflowExecution belongs to Ch 15 (`04-part-iv.md:1224`).
 - The scale paragraph (`:95`) has nothing to do with "records" and belongs with cells.
 
 **§ A practical reference architecture (`:97`).** An empty wrapper H2. Remove it.
@@ -110,11 +110,11 @@ The reader should leave holding one picture, with one name per box, and an index
 
 **§ Artifact contract (`:198–200`).** *Role:* the artifact field list. *Verdict:* fine. It is the only full statement in the book. Dense, but it earns its place.
 
-**§ Effect receipt (`:202–204`).** *Role:* previews the effect receipt. *Verdict:* redundant with Ch 22 and internally contradictory. *Issues:* the receipt carries a "committed/declined/unknown state", yet the next sentence says "a timeout without a receipt is unknown". If unknown means there is no receipt, a receipt cannot report unknown. Ch 22 separates the downstream receipt (proof) from the EffectRecord state (`06-part-vi.md:671`, `:769`, `:870`); Ch 04 merges them. Its state set (3) also differs from Ch 22's nine (T13).
+**§ Effect receipt (`:202–204`).** *Role:* previews the effect receipt. *Verdict:* redundant with Ch 22, and it blurs the receipt and the effect state. *Issues:* the receipt carries a "committed/declined/unknown state", and the next sentence says "a timeout without a receipt is unknown". The two sentences are not strictly contradictory (unknown can arise from a receipt or from its absence), but together they make the downstream receipt the carrier of effect state. [verified: softened — the text never says "unknown" means "no receipt", so the self-contradiction claim was overstated; the receipt-versus-EffectRecord conflation stands] Ch 22 separates the downstream receipt (proof) from the EffectRecord state (`06-part-vi.md:671`, `:769`, `:870`); Ch 04 merges them. Its state set (3) also differs from Ch 22's nine (T13).
 
 **§ Event contract (`:206–226`).** *Role:* the CloudEvents envelope. *Verdict:* this is the envelope's canonical home (map §3), but there are two shapes in one chapter. *Issues:*
 
-- The JSON has `correlation_id`, `causation_id`, `dataref`, and `datahash`. The Python model at `:270–290` has none of these and makes `data: dict` required. That contradicts the reference-not-payload rule at `:89` and `:200`.
+- The JSON has `correlation_id`, `causation_id`, `dataref`, and `datahash`. The Python model at `:270–290` has none of these and makes `data: dict` required. That diverges from the JSON's own `dataref`/`datahash` design and sits uneasily with the by-reference rule at `:89` and `:200`, which is stated for large payloads. [verified: softened — the `:89`/`:200` rule covers large inputs and artifacts, so a required `data` dict is a divergence, not a contradiction]
 - There is no prose. "Commands versus facts" is never said, although Ch 22's checklist assumes it (map §4 row 59).
 - Ch 15 § Event architecture (`04-part-iv.md:1198`) re-lists the same fields.
 
@@ -122,7 +122,7 @@ The reader should leave holding one picture, with one name per box, and an index
 
 - There is no row for the conversation store or the governed memory service, which Ch 06 introduces (`:683`, `:687`). Memory therefore has no physical home in the platform's store table.
 
-**§ What the evidence lets us conclude (`:244–250`).** One claim, R04. R03 (outbox) is cited only in the stray evidence box. *Verdict:* adequate.
+**§ What the evidence lets us conclude (`:244–250`).** One claim, R04. R03 (outbox) is cited in the stray evidence box (`:75`) and in the `:250` sources sentence, but has no claim row. [verified: corrected — `:250` also cites R03] *Verdict:* adequate.
 
 **§ A sensible place to start (`:252`) / § Core platform data contracts (`:254–256`) / § CloudEvents and outbox contracts (`:258–303`).** *Verdict:* mismatched. *Issues:*
 
@@ -191,8 +191,8 @@ Do not expand the Artifact contract, the trust boundaries, or the store table. T
 | § Event contract + § CloudEvents and outbox contracts | Ch 15 § Event architecture (`04-part-iv.md:1198`, same field list); Ch 22 OutboxRecord/InboxReceipt (`06-part-vi.md:871–872`) | D | Envelope: Ch 04. Outbox and inbox delivery semantics: Ch 22. Ch 15 points to both |
 | § Trust boundaries | Ch 20 § Follow the request across each trust boundary + Figure 20-2 | R (Ch 20 adds threats), but uncited | Ch 04 table; Ch 20 cites it (Ch 20 review) |
 | Cells (`:87`), Q2, Q5 | Ch 27 § A production topology… (`08-part-viii.md:186–200`), Q (`:455`) | D | Ch 04 design rationale (Q2 stays); Ch 27 operations (receives Q5, drops its `:455` Q) |
-| § Where each kind of state belongs | Ch 06 § State taxonomy and storage (`02-part-ii.md:679`); Ch 15 § Records worth preserving | Partial D, on different axes | **I disagree with the map** (which says Ch 06 absorbs the Ch 04 table). Ch 04's table is about physical stores, consistency, secrets, KMS, broker, cache, and WORM. These are platform-wide and fit no context chapter, and Ch 01 `:594` points readers here. Keep it canonical in Ch 04; Ch 06 trims its taxonomy to context sources and points here (C06-R03) |
-| Figure 4-2 | Figure 20-3 `guardrail-sequence` | Near-identical sequence | Ch 20 review decides; Ch 04's figure is the base |
+| § Where each kind of state belongs | Ch 06 § State taxonomy and storage (`02-part-ii.md:679`); Ch 15 § Records worth preserving | Partial D, on different axes | **I disagree with the map** (which says Ch 06 absorbs the Ch 04 table). Ch 04's table is about physical stores, consistency, secrets, KMS, broker, cache, and WORM. These are platform-wide and fit no context chapter, and Ch 01's exercise at `:594` ("label every authoritative store") is served by this table. [verified: softened — `:594` does not name Ch 04; it is an exercise this table answers] Keep it canonical in Ch 04; Ch 06 trims its taxonomy to context sources and points here (C06-R03) |
+| Figure 4-2 | Figure 20-3 `guardrail-sequence` | Overlapping: both share the authorize → Tool Gateway → commit → receipt → effect-record tail; Figure 20-3 adds an input-guardrail hop and an approval hop, starts at the Agent Runtime rather than the user, and has no run-service opening [verified: softened — was "near-identical"; the two `.mmd` sources differ in participants and in their first half] | Ch 20 review decides; Ch 04's figure is the base |
 | Layer table "Model plane / Capability plane" gateways | Ch 01 § Each control point…; Ch 19 LLM Gateway table | D on names | Names follow Ch 01's gateway set (T4). If map S4(a) is adopted, an LLM Gateway H3 lands after § Architecture layers |
 
 ## Structural Recommendations
@@ -276,7 +276,9 @@ Adopt map S7 with this concrete order (current line numbers in brackets):
      | HumanActionAuthorizationRequest/Decision | Security and governance | Ch 14 |
      | Artifact | Runtime and workflow (the producing run owns the version; the artifact store holds the bytes) | Ch 04 |
      | EvaluationResult (replaces "EvaluationReport") | Evaluation and operations | Ch 25 |
-     | ReleaseManifest, ChangeBundle | Evaluation and operations | Ch 27/25 |
+     | ReleaseManifest, ChangeBundle | Evaluation and operations | Ch 27 |
+
+     [verified: corrected — ChangeBundle was "Ch 27/25"; overall-book-review.md §D-05 has Ch 27 define both ChangeBundle and ReleaseManifest. Under §D-22 the HumanActionAuthorizationRequest/Decision row is written as ApprovalRequest/ApprovalDecision (Approval Service) when applied.]
 
      Keep the closing clause "each has one owner, version, retention policy, and consistency boundary". Move the scale paragraph (`:95`) to the cells section (C04-R12). Shorten the plane table's records column to names only, since pointers now live in this table.
    - *Related:* map T9, T23; C04-R02; and the human action authorization service placement at `:135` vs `:43`, which must name one owning plane.
@@ -389,7 +391,7 @@ Adopt map S7 with this concrete order (current line numbers in brackets):
 
 17. **C04-R17 — Low — Rewrite.**
     - *Location:* `:63`, `:66`, `:67` (§ Where truth lives).
-    - *Change:* use the canonical component names, "Run Service", "Effect Service (Chapter 22)", and the human-authorization service name chosen under T3/T25 (Ch 14). Apply the same to `:135`.
+    - *Change:* use the canonical component names, "Run Service", "Effect Service (Chapter 22)", and the human-authorization service name chosen under T3/T25 (Ch 14). Apply the same to `:135`. [verified: overall-book-review.md §D-22 settles the name as "Approval Service", with records ApprovalRequest / ApprovalDecision; Ch 14 currently says "Human Action Authorization Service" at `04-part-iv.md:884`]
 
 18. **C04-R18 — Low — Rewrite.**
     - *Location:* `:340` (§ Where this leads next).
@@ -407,3 +409,44 @@ Adopt map S7 with this concrete order (current line numbers in brackets):
    - **Issue:** The Ch 08 and Ch 09 reviews ask Ch 04 to record Skill and pack pins and to stop conflating prompts with Skills; no Ch 04 item did.
    - **Change:** Add `"skills": ["mortgage.evidence.read@0.1.0#sha256:…"]` and `"skill_pack": "mortgage-evidence@…#sha256:…"` to the RunManifest. At `:134`, replace "prompt/skill catalog" with "prompt bundle registry and Skill Registry (Chapter 8)" (in the layer C04-R01 renames "Agent registry and release").
    - **Related:** C08-R02, C08-R03, C09-R02(d), C09-R10, C04-R07, C27-R15.
+
+## Verification log
+
+Second pass against `source/parts/02-part-ii.md:1–340`, `01-part-i.md`, `03-part-iii.md`, `04-part-iv.md`, `05-part-v.md`, `06-part-vi.md`, `07-part-vii.md`, `08-part-viii.md`, `09-appendices.md`, `assets/diagrams/src/{reference-architecture.gv,request-sequence.mmd,system-overview.gv,guardrail-sequence.mmd}`, `examples/contracts.py`, `config/examples.json`, and overall-book-review.md §12.
+
+**Line references:** 112 checked; 0 off by more than 3 lines; 0 renumbered. All quotations checked verbatim (`:22`, `:34`, `:53`, `:56`, `:89`, `:93`, `:101–107`, `:200`, `:204`, `:340`, `01-part-i.md:510`, `:1312`, `05-part-v.md:554`).
+
+**Claims removed:** none.
+
+**Claims softened (7):**
+
+- "sixth meaning of plane" → third sense (ownership plane, layer-called-plane, deployment tier); two places.
+- "five examples that match none of the seven plane names" → only "operations" echoes one.
+- Figure 4-2 "shows no approval hop" → no *human*-approval hop; the policy hop exists (`request-sequence.mmd:20–21`).
+- Effect receipt "contradicts itself" → blurs receipt and effect state; the two sentences are compatible.
+- Event Python `data: dict` "contradicts" the by-reference rule → diverges from it; the rule is stated for large payloads.
+- Ch 01 `:594` "points readers here" → an exercise this table serves; it does not name Ch 04.
+- Figure 4-2 vs Figure 20-3 "near-identical" → overlapping tail only; different participants and opening.
+
+**Claims corrected (4):** records in the plane table ~12 → 18; "EvaluationReport is an orphan" → also at `03-part-iii.md:299`, never defined; "R03 cited only in the evidence box" → also at `:250`; C04-R04 ChangeBundle "Ch 27/25" → Ch 27 (D-05).
+
+**Important claims confirmed:**
+
+- Ch 04 prose never names AgentRuntime, AgentStepRequest, or AgentStepResult (grep of `:9–340`; only "bounded agent workers" at `:87` and the "Agent Runtime" participant in `request-sequence.mmd:8`).
+- No Figure 1-3 band name (`system-overview.gv`) survives unchanged in Figure 4-1 (`reference-architecture.gv:49–134`); Ch 01 `:510` claims "this same picture at higher resolution".
+- Two empty H2 wrappers at `:97` and `:157`; `:104` "the plane table above" is 68 lines after `:36`; Run API paragraph `:89` is 70 lines before the table at `:159`.
+- Figure 4-2 has the Agent Runtime resolve context from Policy & Identity *after* "bounded step" (`request-sequence.mmd:15–17`), against Ch 03 `01-part-i.md:1043` (AgentStepRequest already carries the authorized ContextManifest) and Ch 06 `:656–658`.
+- Run API drift is exact: Ch 04 alone has `:update`, `:fork`, `/audit`; Ch 15 (`04-part-iv.md:1208–1218`) alone has `events:ingest`, `:pause`, `:resume`, `:migrate`, `/history`; `:forkReplay` is at `07-part-vii.md:366` (Ch 25).
+- Ch 03's RunManifest table (`01-part-i.md:1225–1232`) pins `sdk` and `context_manifest`; the Ch 04 JSON has neither, and the identifiers differ (`reasoning-standard@18` vs `@4`; `enterprise-agent@2026.09.3` vs `mortgage-policy@2026.09`).
+- Ch 22 has nine effect states (`06-part-vi.md:669`) and separates the receipt (`:671`) from the EffectRecord (`:769`, `:870`); OutboxRecord/InboxReceipt are Ch 22 records (`:871–872`).
+- The event JSON (`:210–225`) has `correlation_id`, `causation_id`, `dataref`, `datahash`; the Python at `:270–283` has none and requires `data`.
+- Ch 20 § Follow the request across each trust boundary (`06-part-vi.md:85–107`) cites no chapter.
+- `examples/contracts.py` holds EvidenceRef, ToolCall, AgentDecision, AgentStepRequest/Result (region `step`, cited by Ch 01 at `01-part-i.md:572`), SkillRequirement, PlanNode, CandidatePlan; its docstring calls this "the full platform set" chapter 04 needs and `config/examples.json` registers it for chapters [1, 4]. ToolCall (`:42`) is the only overlap with the chapter's records; none of the chapter's own contracts (RunManifest, Artifact, receipt, event) is in it. This strengthens C04-R10.
+- Ch 27 uses "regional execution planes" (`08-part-viii.md:186`, `:455`), so the C04-R01 note to Ch 27 is needed. Ch 27 `:195` explains continue-on-last-known-good; Ch 27 Q at `:455` duplicates Ch 04 Q2.
+- RunManifest / "run manifest" appears in Ch 01, 03, 04, 05, 09, 15, 24, 27 and Appendices B, C: "8+ chapters" holds.
+- Ch 06 introduces the conversation store (`:683`) and governed memory service (`:687`); the Ch 04 store table has no row for either.
+- "Model gateway" at `:22`, `:87`, `:137`; "LLM Gateway" in `reference-architecture.gv:114`, Ch 01 and Ch 19.
+
+**Recommendations amended:** C04-R04 (ChangeBundle owner → Ch 27; D-22 names noted); C04-R17 (D-22 settles the service name). All other recommendations were checked against §12: C04-R05 (D-20), C04-R07 (D-02, D-27), C04-R08 (D-03), C04-R09 (D-16), C04-R12 (D-09, D-24), C04-R13 (D-15), C04-R19 (D-08), C04-R20 (D-27) are consistent; the Structural Recommendations' "From planes to deployable layers" rename matches D-32. No recommendation breaks the 8/28/12 topology, puts code inline (C04-R10 moves code out), hand-edits a rendered diagram, or widens a citation scope.
+
+**Not verified:** map T11/T16/T23 and §4 row numbers (the concept map was not in scope); the C04-R14 "Developed in" chapter assignments are reasonable but were not traced to each chapter's section headings.

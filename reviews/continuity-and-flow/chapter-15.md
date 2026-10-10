@@ -27,7 +27,7 @@ Its problems are organizational and boundary-related, not conceptual:
    - Ch 03's restart test, as a COMMON PITFALL (`:1265`)
 3. **It never connects to the rest of Part IV.**
    - § Canonical control flow is where the Part's patterns compose into one run: plan → Ch 12, execute/ReAct → Ch 10/11, validate → Ch 13, wait → Ch 14. It names none of them.
-   - The closing sentence, "The core patterns are now defined", is false. Ch 16's P-06–P-11 are built in Ch 18–28.
+   - The closing sentence, "The core patterns are now defined", is false. Ch 16's P-06, P-07, P-09, and P-10 are built in Ch 18–28, and P-08 and P-11 only partly in Ch 15 (see chapter-16.md's card table). [verified: softened — P-08 and P-11 are partly grounded by Ch 03/04/15]
 4. **Terminal states have no canonical home.** The map assigns Ch 15 as the home for run terminals (§6 T12). § Terminal correctness gives three sentences. Meanwhile Ch 19 calls its state list "canonical local state" (`05-part-v.md:531`) with no earlier definition.
 
 ## Intended Reader Mental Model
@@ -75,7 +75,7 @@ The chapter delivers What, Why, How, When, and Trade-offs. The Relationships are
 
 **### Canonical control flow (`:1156`).** Role: ten-step lifecycle. It adds the end-to-end sequence the reader will reuse. *Issues:*
 - (a) There are no links to the Part IV patterns that occupy steps 4, 5, 7, and 8.
-- (b) Step 1 "requested autonomy" uses the orphan "autonomy level" concept (§4 row 4).
+- (b) Step 1 "requested autonomy" uses the "autonomy level" concept, which Ch 02's design principles (`01-part-i.md:744`, `:750`) and Ch 04's Run API ("autonomy request", `02-part-ii.md:163`) name but no chapter defines as a scale (§4 row 4). [verified: softened — "orphan" overstated it; the term is used earlier, just never defined]
 - (c) Step 2 "Snapshot" is the RunManifest (Ch 04) but is not named as such.
 - (d) Step 3 "maximum capability envelope" and step 5 "downscoped credential" depend on Ch 21; step 4 "risk classes" depends on Ch 22 (§4 row 37).
 - (e) Step 8 "propose → preview → approve → commit" is a fourth name for the six gates (§6 T14).
@@ -97,7 +97,7 @@ The chapter delivers What, Why, How, When, and Trade-offs. The Relationships are
 
 **### Event architecture (`:1196`).** Role: CloudEvents envelope, outbox/inbox, DLQ. *Issues:*
 - It re-specifies Ch 04 § Event contract (`02-part-ii.md:206`) and § CloudEvents and outbox contracts (`:258`).
-- Its field list differs from Ch 04's JSON.
+- Its field list differs from Ch 04's `CloudEvent` model (`02-part-ii.md:270–284`): Ch 15 adds correlation_id, causation_id, and a payload reference, and omits specversion and datacontenttype. [verified: corrected — Ch 04's envelope is the Python model in § CloudEvents and outbox contracts, not a JSON block]
 - Outbox/inbox semantics are owned by Ch 22 (map §3).
 
 Unique here: the correlation key must resolve to a wait registration, and "a dead-letter queue is quarantine and diagnosis—not a substitute for domain compensation".
@@ -145,7 +145,7 @@ Redundant: the home-region/failover bullet (`:1247`) restates Ch 27 § Rollback 
 **§ Questions to bring to design review (`:1342`).** Five strong rows. Row 4 (cancellation with a possible write) is the best summary of terminal correctness. Row 5 overlaps Ch 27 and needs a pointer, not removal.
 
 **§ Where this leads next (`:1352`).** "The core patterns are now defined; Chapter 16 compares them by the obligation each protects…" This is **inaccurate**:
-- Ch 16's cards P-06–P-11 rely on Ch 18–28 (§4 rows 39–45).
+- Ch 16's cards P-06, P-07, P-09, and P-10 rely on Ch 18–28, and P-08 and P-11 partly (§4 rows 39–45). [verified: softened]
 - Ch 16's catalog omits routing, plan compilation, critique, and human review (Ch 11–14).
 
 ## Sparse or Underdeveloped Content
@@ -342,3 +342,26 @@ Re-sequence the H2s so that the headings match the content and the lifecycle com
    - **Issue:** The card policy (C10-R04) had no Ch 15 reciprocal.
    - **Change:** Retitle the H2 "Durable execution at a glance". Delete THE ENGINEERING PROBLEM box and the lead sentence. Keep the tables and signals, including the "Unknown mutation → Freeze dependents and reconcile" row. Appendix A's P-11 card points here (C16-R10).
    - **Related:** C10-R04, C16-R10.
+
+## Verification log
+
+Second-pass fact check against `source/parts/*.md`, `source/original/*-source.md`, `config/references.json`, `examples/runtime/durable_state.py`, and `config/examples.json`.
+
+- **Line references checked / fixed:** 78 checked; 0 fixed. Ch 04 `:update` is at `02-part-ii.md:168` (review says `:167`; within tolerance). Ch 04 Run API `:159–170`, § Event contract `:206`, § CloudEvents and outbox contracts `:258`, Ch 27 `:162–166` and `:320–326`, Ch 19 `:529–539`, Ch 03 `:1127–1131` and `:1203–1217`, Ch 01 `:445` all confirmed.
+- **Claims removed:** none.
+- **Claims softened:**
+  - "Ch 16's P-06–P-11 are built in Ch 18–28" (twice): P-08 (EffectRecord, named in Ch 03/04; unknown state previewed in Ch 04 `:204` and Ch 15 `:1253`) and P-11 (Ch 15) are partly grounded.
+  - "orphan 'autonomy level' concept": the term appears in Ch 02's principles and Ch 04's Run API; it is undefined, not unused.
+  - "Its field list differs from Ch 04's JSON": made precise (Ch 04's envelope is a Python model; the exact field differences are now listed).
+- **Important claims confirmed:**
+  - `### Event-driven resume flow` (`:1194`) is an empty heading followed directly by `### Event architecture` (`:1196`); it is equally empty in both originals (`v3.0-source.md:3030`, `v3.1-source.md:3032`).
+  - `## The lifecycle of a durable run` (`:1154`) wraps exactly one H3; `## A sensible place to start` (`:1312`) is an empty H2 over one H3; `### Terminal correctness` (`:1150–1152`) is three sentences under § Durable state is more than chat history.
+  - Checkpoint field drift: `:1185` "effect ledger cursor … version pins" vs `:1230` "artifact/effect cursors, code compatibility range".
+  - Run API overlap: five of Ch 15's nine rows (POST runs, GET run, `:signal`, `:cancel`, history) match Ch 04 `02-part-ii.md:163–167`; Ch 04 names history `GET /v1/runs/{id}/events`, Ch 15 `GET …/history?cursor`.
+  - R04 `supports` is "a portable event envelope and event identity semantics"; R02 is "crash-resilient workflow execution, replay, durable timers, and long-running processes". Neither mentions RTO/RPO, failover, or DR, so the `:1259` row exceeds both scopes.
+  - Exercise 1 `:1339` says "ten-day"; the case box `:1119` says "nine days".
+  - "Canonical local state" first appears in Ch 19 (`05-part-v.md:509`, `:531`); nothing earlier defines it. Ch 01 `:445` does route Compensation to Chapter 15, while the Compensating/Compensated states are defined in Ch 22 `06-part-vi.md:669`.
+  - `:1247` restates Ch 27 `08-part-viii.md:166` (fence, restore, reconcile, resume); `:1248` overlaps `08-part-viii.md:322–323` and Q5 `:1350`.
+  - "Chapter 16" is cited by number nowhere in the book except `:1354`; Ch 16 has no card for routing, plan compilation, critique, or human review.
+- **Recommendations amended:** none in substance. C15-R04 already carries the D-14 reconciliation; C15-R08 matches D-03; C15-R09's heading pointer must follow D-32 ("Roll back assignment, not history") when applied.
+- **Not verified:** the map's "fourth of five pre-teachings" count for the unknown-effect rule, and §4/§6 row identifiers, were taken as given.

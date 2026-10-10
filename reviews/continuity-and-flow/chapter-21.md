@@ -87,7 +87,7 @@ What the reader brings in:
 **§ A workable implementation (`:438`), § Who should own each decision (`:440`).**
 - *Role:* seven components.
 - *Issues:*
-  - "Connector Gateway/PEP" (`:448`) is the Tool Gateway under another name (map T4). "PEP" is never expanded, and it is Ch 20's "enforcement point".
+  - "Connector Gateway/PEP" (`:448`) is the Tool Gateway under another name (map T4). "PEP" is not expanded before this chapter (Ch 04 `02-part-ii.md:141` uses "PDP/PEP" unexpanded; Ch 23 `:1114` is the first to write "policy enforcement points"), and it is Ch 20's "enforcement point". [verified: corrected — "never expanded" was too strong; Ch 23 expands it later]
   - "Authorization Service/PDP" is Ch 20's "policy point".
   - "Access Broker/STS" is the same component as Ch 22's "Credential Broker" (`:735`).
 - *Verdict:* rename and cross-link (C21-R04).
@@ -309,3 +309,22 @@ Reorder the chapter so that each concept is defined before it is used:
    - **Issue:** Same request as C05-R16.
    - **Change:** Add one line: "If a shared service account or a broad token stands in for the subject, see AP-03 in Chapter 17."
    - **Related:** C17-R03, C21-R10.
+
+## Verification log
+
+- **Line references checked:** 68 (all `06-part-vi.md` refs for `:333–632`, plus Ch 03, 06, 11, 12, 17, 18, 19, 22, 23, 28 cross-refs); 0 fixed.
+- **Claims removed:** none.
+- **Claims softened:**
+  - "'PEP' is never expanded" → not expanded before Ch 21; Ch 23 `:1114` spells it out.
+- **Important claims confirmed:**
+  - Two triads: `:353` heading "Keep the user, workload, and grant distinct" over a paragraph defining authentication / authorization / delegation (`:355–359`); `:365` heading "Three identities every decision should preserve" over subject / actor / purpose (`:371–377`); "dual principal" at `:396`.
+  - RBAC/ABAC stated at `:369` and again at `:379–383`; caching at `:387`, `:407`, `:495–497`; intersection/narrowing at `:385`, `:396`, `:407`, `:424`, `:511`, `:626` (plus checklist `:609`).
+  - The subset-proof code `:528–595` is byte-identical to Ch 18 `05-part-v.md:280–347` (`diff` empty).
+  - CapabilityEnvelope record `:486` lists explicit denies and parent grant; the code has `maximum_cost_usd` and `delegation_depth` instead; CredentialLease `:488` has no credential kind.
+  - Evidence: context cites R08/R09/R10 (`:335`); the claim row cites R06; R08 (`:517`); "draws on" lists R06; R08; R09 (`:519`). R10 appears nowhere else in the chapter. C21-R09's proposed row matches R09's scope ("resource indicators used to constrain token audience") and R10's ("protected-resource metadata used in authorization discovery").
+  - `:625` is the only prose statement of envelope (scope) versus credential (proof).
+  - Ch 03 `MORT-2026-000999` denial is at `01-part-i.md:1084–1090`; `:1041` carries the Identity field group; `:1067–1082` the six gateway questions.
+  - Name drift confirmed: "run envelope" `03-part-iii.md:268`, `04-part-iv.md:335`, `:565`; `authority_envelope_id` `04-part-iv.md:456`; "authority ceiling" `05-part-v.md:77`, `:102`; `capability_grant_id` `05-part-v.md:268`, `:627`; "capability lease" P-07 `04-part-iv.md:1441`. AP-03 is `04-part-iv.md:1671`, inside Ch 17 (`:1499`).
+  - Ch 22's SECURITY box `:908–910` restates grant ∩ actor policy.
+- **Recommendations amended:** none. C21-R07 remains consistent with D-17 and D-23; C21-R11 with D-29.
+- **Not verified:** the Ch 06 "authorization precedes retrieval" wording at `02-part-ii.md:613` was located by heading only; the Ch 19 caching row `05-part-v.md:577` and Ch 28 Q `08-part-viii.md:732` were confirmed to exist but not compared in detail.
