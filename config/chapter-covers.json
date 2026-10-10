@@ -2083,7 +2083,7 @@
      {
       "id": "acc",
       "label": "Acceptance engine",
-      "sub": "external stop rule",
+      "sub": "decides acceptance",
       "kind": "control",
       "at": [
        8.0,
@@ -2183,7 +2183,7 @@
      {
       "from": "ctl",
       "to": "acc",
-      "label": "stop?"
+      "label": "answer"
      },
      {
       "from": "acc",
@@ -2622,7 +2622,7 @@
      },
      {
       "id": "appr",
-      "label": "Consent / approval",
+      "label": "New approval",
       "sub": "if risk or authority expands",
       "kind": "human",
       "at": [

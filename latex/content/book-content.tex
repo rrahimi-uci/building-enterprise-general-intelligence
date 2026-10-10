@@ -4698,7 +4698,7 @@ What is the main pack anti-pattern? & A monolithic prompt-and-tools bundle with 
 
 The platform and capability model are complete; Chapter 10 begins the pattern sequence with the smallest bounded reasoning loop.\par
 
-\BookPartPage{IV}{PATTERNS THAT WORK—AND THOSE THAT FAIL}{Patterns are shortcuts for thinking, but they are only helpful when their boundaries are visible. This Part starts with the loop shapes teams reach for, then follows routing, planning, reflection, human review, and durable work. It ends with a catalog of patterns and failure shapes so a design review can ask not only “what could work?” but also “how would this fail in production?”}
+\BookPartPage{IV}{PATTERNS THAT WORK—AND THOSE THAT FAIL}{Patterns are shortcuts for thinking, but they are only helpful when their boundaries are visible. Every pattern in Chapters 10–15 places a model step inside the platform of Part III: the step receives a resolved slice of Skills and tools (Chapters 8–9), its outputs cross the six gates (Chapter 2), and the framework stays behind AgentRuntime (Chapter 3). Each chapter answers three questions: what the model may decide, what the controller owns, and how the pattern stops and is accepted. The Part starts with the smallest bounded loop, then follows routing, planning, reflection, human review, and durable work. It ends by comparing and combining these patterns, then naming the failure shapes they prevent—several corrected by mechanisms Parts V–VIII build—so a design review can ask not only “what could work?” but also “how would this fail in production?”}
 
 \BookChapterCover{cover-images/chapter-10-use-react-without-creating-a-runaway-loop.png}
 
@@ -4718,13 +4718,7 @@ A loan officer asks why a mortgage case is not ready for underwriting. One retri
 Use ReAct only for information-dependent next steps and impose external turn, tool, time, cost, and no-progress limits.
 \end{bookcallout}
 
-\section{Why useful reasoning loops still need hard limits}
-
-ReAct is valuable when the next question depends on the last observation. It is dangerous when the loop is allowed to decide its own limits or call tools without a clear stopping rule. This chapter keeps the useful feedback loop and puts turns, tools, time, cost, progress, and acceptance under external control.\par
-
-\section{Use ReAct only when observations change the next step}
-
-Use ReAct when a new observation can genuinely change the next useful question. If the sequence is already known—read the case, validate required fields, calculate a ratio, request approval—a durable workflow is clearer and usually cheaper. That avoids paying a model to rediscover a process the organization already understands. Even when ReAct is justified, the controller should stop when the loop repeats, exhausts its budget, or cannot obtain missing evidence.\par
+ReAct is valuable when the next question depends on the last observation. It is dangerous when the loop is allowed to decide its own limits or call tools without a clear stopping rule.\par
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -4732,67 +4726,51 @@ Use ReAct when a new observation can genuinely change the next useful question. 
 \begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-External loop controller and acceptance engine & observation/model and model/tool & turn · tool permit · run budget & one bounded loop & AgentDecision · Observation · ReActLimits \\
+External loop controller and acceptance engine & observation/model and model/tool & turn · tool permit · run budget & one bounded loop & AgentDecision · Observation · AgentStepResult · ReActLimits \\
 \end{tabular}
 \BookTableEnd
+
+\section{Use ReAct only when observations change the next step}
+
+Use ReAct when a new observation can genuinely change the next useful question. If the sequence is already known—read the case, validate required fields, calculate a ratio, request approval—a durable workflow is clearer and usually cheaper. That avoids paying a model to rediscover a process the organization already understands. Even when ReAct is justified, the controller should stop when the loop repeats, exhausts its budget, or cannot obtain missing evidence. The tools a ReAct step can call are the slice resolved for that step from its pinned Skills (Chapter 8) and exposed through the Tool Gateway (Chapter 2); the loop never discovers tools on its own.\par
 
 \section{Keep the feedback loop inside external limits}
 
 \BookDiagram{assets/diagrams/pattern-react.pdf}{Figure 10-1 — Bounded ReAct: the loop is inside, the limits are outside}{pattern-react}
 
-Read the figure for what is \emph{not} in the loop. The controller admits each turn and owns the budgets; a mutation leaves as a proposal rather than executing inline; and the decision to stop belongs to the acceptance engine, not to the model's wording.\par
-
-ReAct interleaves reasoning, action, and observation. Its value is conditional adaptivity: after reading the application projection, the agent may decide that another income source is unnecessary, or that a contradictory address requires another authorized document. The pattern becomes harmful when it substitutes an unconstrained loop for a known process.\par
-
-Northstar stores only typed decisions, tool intents, observations, evidence references, and stop reasons—not private chain-of-thought. The external controller maintains counters and normalized signatures. If an agent repeats the same tool and canonical arguments against the same source revision, or if accepted evidence does not change across turns, the controller records no progress and terminates or escalates.\par
-
-\subsection{Acceptance and failure semantics}
-
-A ReAct activity can return answer, needs\_input, delegate, proposed\_action, budget\_exhausted, or failed. A mutating action never executes inside the unconstrained loop; it becomes a proposal for deterministic policy, approval, effect, and workflow processing. If a read tool times out, bounded retry may be safe. If a mutation times out, the loop stops because the effect is unknown.\par
-
-\subsection{Capacity model}
-
-Plan capacity in turns per successful outcome, not only requests per second. Track model tokens, tool calls, connector time, observation bytes, and repeated-action rate. Per-tenant permits and hard per-run limits prevent one pathological loop from consuming a worker pool.\par
-
-\begin{bookcost}[Performance and cost]
-A ReAct loop's cost is set by its trajectory, not its prompt. Each observation re-enters the context, so an n-step loop is roughly quadratic in tokens. Cap the step count, summarize observations before they re-enter, and measure cost per \emph{completed task} rather than per call — a cheap call that loops eight times is not cheap.
-\end{bookcost}
-
-\section{What the evidence lets us conclude}
-
-\begin{bookcaution}[Evidence boundary]
-This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
-\end{bookcaution}
-
-The discussion above draws on R01; R13. Appendix K lists the complete sources and records their authority, version, and scope.\par
-
-\begin{bookantipattern}[Common pitfall]
-Unbounded retries disguised as reasoning. When a tool fails and the model is free to try again, the loop can burn its whole budget rediscovering the same error. Return failures as typed data the model can read, cap attempts per tool, and make the cap a run-level budget rather than a per-call one.
-\end{bookantipattern}
-
-\section{How ReAct works in practice}
-
-\begin{bookcallout}[The Engineering Problem]
-The system cannot know every information-gathering step in advance because the next action depends on the previous observation.
-\end{bookcallout}
-
-\subsection{How the pattern works}
-
-A bounded controller alternates model decision and governed tool invocation. The controller—not the model—owns turns, budgets, state, repeated-action detection, and acceptance.\par
+Read the figure for what is \emph{not} in the loop. The controller admits each turn and owns the budgets; a mutation leaves as a proposal rather than executing inline; and the controller decides when the loop stops (limits, no progress, a terminal decision), while the acceptance engine—not the model's wording—decides whether the result is accepted (Chapter 13). Each turn follows the same sequence:\par
 
 \begin{enumerate}
 
 \item Load goal, authorized context, budgets, and acceptance criteria.
 
-\item Ask for one typed action or terminal disposition.
+\item Ask for one typed action or terminal decision.
 
 \item Validate the action at the Tool Gateway; execute reads and return mutations as proposals.
 
 \item Sanitize and append the observation.
 
-\item Accept, continue, request input, or terminate on an external rule.
+\item Continue, or end the activity on a terminal decision or an external rule; an answer goes to the acceptance engine.
 
 \end{enumerate}
+
+ReAct interleaves reasoning, action, and observation. Its value is conditional adaptivity: after reading the application projection, the agent may decide that another income source is unnecessary, or that a contradictory address requires another authorized document. The pattern becomes harmful when it substitutes an unconstrained loop for a known process.\par
+
+The platform stores only typed decisions, tool intents, observations, evidence references, and stop reasons—not private chain-of-thought. Each observation is a typed, sanitized result or artifact reference carrying provenance, version, and classification, and it re-enters context as untrusted data (Chapter 6). The external controller maintains counters and normalized signatures. If an agent repeats the same tool and canonical arguments against the same source revision, or if accepted evidence does not change across turns, the controller records no progress and terminates or escalates. Information gain is the new accepted evidence a turn produces; a turn with none counts toward the no-progress threshold.\par
+
+\subsection{Acceptance and failure semantics}
+
+Each turn, the model returns one typed decision, carried in \lstinline[style=bookinline]!AgentStepResult.decision! (Chapter 3): \lstinline[style=bookinline]!invoke_tool! for a read, \lstinline[style=bookinline]!proposed_action! for a mutation, \lstinline[style=bookinline]!answer!, \lstinline[style=bookinline]!needs_input!, or \lstinline[style=bookinline]!delegate!. A read runs inside the loop; a proposed action leaves it as a proposal for the six gates of Chapter 2; \lstinline[style=bookinline]!delegate! asks the controller for a route or handoff (Chapter 11). The controller ends the activity with the model's terminal decision or with its own stop reason, \lstinline[style=bookinline]!budget_exhausted! or \lstinline[style=bookinline]!no_progress!, returned as the Chapter 3 step status \lstinline[style=bookinline]!failed! with that \lstinline[style=bookinline]!error_code! rather than as an exception; the workflow, not the loop, decides whether a stop reason opens an intervention (Chapter 14). A read that times out may be retried within the run budget. A proposed mutation is executed by the workflow outside the loop; if that execution times out, the effect is unknown and is reconciled before the loop resumes (Chapter 22).\par
+
+\begin{bookantipattern}[Common pitfall]
+Unbounded retries disguised as reasoning. When a tool fails and the model is free to try again, the loop can burn its whole budget rediscovering the same error. Return failures as typed data the model can read, cap attempts per tool (see AP-04), and make the cap a run-level budget rather than a per-call one.
+\end{bookantipattern}
+
+\subsection{Capacity model}
+
+Plan capacity in turns per verified success (Chapter 28), not only requests per second. A loop's cost is set by its trajectory, not its prompt: each observation re-enters the context, so an n-step loop is roughly quadratic in tokens, and a cheap call that loops eight times is not cheap. Cap the step count, summarize observations before they re-enter, and track model tokens, tool calls, connector time, observation bytes, and repeated-action rate. Per-tenant permits and hard per-run limits prevent one pathological loop from consuming a worker pool. Per-loop caps do not compose across delegation; budgets must be withdrawn from the parent (AP-11).\par
+
+\section{ReAct at a glance}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -4857,7 +4835,13 @@ Budget exhaustion & External turn, call, token, time, and cost enforcement. \\
 
 \end{itemize}
 
+\section{What the evidence lets us conclude}
+
+The discussion above draws on R01. Appendix K lists the complete sources and records their authority, version, and scope.\par
+
 \section{A sensible place to start}
+
+Two versions of the same loop follow. The first is an OpenAI Agents SDK version in which the run budget lives in the tool context.\par
 
 \BookSnake · Bounded ReAct loop with an explicit run budget\par
 
@@ -4920,7 +4904,7 @@ async def run(question: str, *, budget: RunBudget, model=None) -> str:
     return result.final_output
 \end{lstlisting}
 
-\subsection{Bounded ReAct controller}
+The second is the framework-neutral controller the chapter describes: it owns turns, tool budget, and repeat detection, runs only reads, and returns a typed stop reason instead of raising.\par
 
 \BookSnake · A ReAct controller that owns the budgets\par
 
@@ -5007,15 +4991,17 @@ class ReActEngine:
 
 \item Identify the first repeated action-observation signature.
 
-\item Check whether the stop decision came from acceptance criteria or model wording.
+\item Check whether the loop stopped on an external rule and whether acceptance came from the acceptance criteria rather than the model's wording.
 
 \end{enumerate}
+
+If limits reset at each delegation hop or every layer retries, see AP-11 and AP-04 in Chapter 17.\par
 
 \section{What to verify before production}
 
 \textbf{\ensuremath{\checkmark}} The information need truly requires iterative observation.\par
 
-\textbf{\ensuremath{\checkmark}} The controller owns limits, state, tool invocation, and acceptance.\par
+\textbf{\ensuremath{\checkmark}} The controller owns limits, state, and tool invocation; acceptance is decided outside the loop.\par
 
 \textbf{\ensuremath{\checkmark}} Observations are typed, sanitized, versioned, and provenance-linked.\par
 
@@ -5050,14 +5036,14 @@ When is ReAct the right pattern? & When the next information need genuinely depe
 Why must the controller sit outside the model? & It owns budgets, tool eligibility, invocation, state, no-progress detection, and terminal transitions. \\
 How do you stop a ReAct loop that keeps rephrasing the same request? & Normalize action-observation signatures, count repeats, evaluate information gain, and terminate or escalate at a deterministic threshold. \\
 \rowcolor{BookLight}
-What should an observation contain? & A typed, sanitized result or artifact reference with provenance, version, classification, and explicit error semantics. \\
+What should an observation contain? & The observation contract in § Keep the feedback loop inside external limits, plus explicit error semantics. \\
 When should ReAct not be used? & For a known workflow, a single retrieval, a protected transaction, or a task whose acceptance can be computed directly. \\
 \end{longtable}
 \BookTableEnd
 
 \section{Where this leads next}
 
-A bounded reason–act loop handles local uncertainty; Chapter 11 adds routing and handoff when known paths or specialists should own the work.\par
+A bounded reason–act loop handles local uncertainty. When a turn returns \lstinline[style=bookinline]!delegate!, or a known path or specialist should own the work, Chapter 11 adds routing and handoff.\par
 
 \BookChapterCover{cover-images/chapter-11-route-the-work-without-losing-ownership.png}
 
@@ -5071,13 +5057,7 @@ Some requests are policy questions, others are document defects, evidence disput
 Use deterministic route eligibility and fallback; record handoff as an explicit ownership transition.
 \end{bookcallout}
 
-\section{Why choosing a worker is different from handing off responsibility}
-
-Routing sounds like a classification problem until a real request is late, ambiguous, or already halfway through a workflow. This chapter separates the choice of a specialist from the transfer of responsibility, then makes fallbacks, deadlines, authority, and the final response explicit. That is what prevents a handoff from becoming a message that nobody owns.\par
-
-\section{Routing and handoff are different events}
-
-A routing decision answers “who is best placed to do this?” A handoff answers “who is now accountable for finishing it?” Those are not the same event. If a specialist never acknowledges the task, the original coordinator still owns the deadline and user response. Recording the transfer prevents work from disappearing into a queue while every component assumes someone else has it.\par
+Routing sounds like a classification problem until a real request is late, ambiguous, or already halfway through a workflow. This chapter separates the choice of a specialist from the transfer of responsibility, then makes fallbacks, deadlines, authority, and the final response explicit.\par
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -5085,53 +5065,19 @@ A routing decision answers “who is best placed to do this?” A handoff answer
 \begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-Route service and workflow ownership record & classifier to privileged route; owner transfer & route class · specialist queue & one route or handoff & RouteDecision · Handoff · CapabilityEnvelope \\
+Route service and workflow ownership record & classifier to privileged route; owner transfer & route class · specialist queue & one route or handoff & RoutingDecision · OwnershipTransfer · CapabilityEnvelope \\
 \end{tabular}
 \BookTableEnd
 
+\section{Routing and handoff are different events}
+
+A routing decision answers “who is best placed to do this?” A handoff answers “who is now accountable for finishing it?” Those are not the same event. Agent frameworks also use the word handoff for passing a conversation to another agent inside one run (Chapter 3). That framework handoff moves control, not accountability. It becomes a handoff in this chapter's sense only when the platform records the transfer and the recipient acknowledges it. If a specialist never acknowledges the task, the original coordinator still owns the deadline and user response. Recording the transfer prevents work from disappearing into a queue while every component assumes someone else has it.\par
+
 \section{A routing decision cannot grant permission}
 
-\BookDiagram{assets/diagrams/pattern-routing.pdf}{Figure 11-1 — Routing selects a specialist; policy decides whether it may act}{pattern-routing}
+\BookDiagram{assets/diagrams/pattern-routing.pdf}{Figure 11-1 — Routing selects a specialist from an eligible set; authorization decides whether it may act}{pattern-routing}
 
-A router reduces heterogeneity by selecting an implementation: policy explanation, document validation, income verification, or human triage. The model may classify semantic intent, but the eligible set is assembled first from purpose, authority, risk, data region, release status, service health, and capacity. A route cannot grant a capability that was absent from the run envelope.\par
-
-A \textbf{handoff} is a different event. It changes the current owner of an interaction or task. Northstar records old owner, new owner, state version, unresolved obligations, artifact references, child capability envelope, deadline, and cancellation lineage. The recipient acknowledges or rejects the transfer. Until acknowledgment, the previous owner remains accountable.\par
-
-\subsection{Confidence and fallback}
-
-Confidence is calibrated on a versioned domain dataset. Below a threshold, the route service requests clarification, applies a deterministic safe default, or sends the request to human triage. High confidence does not bypass policy. For privileged routes, both route eligibility and exact invocation authorization are required.\par
-
-\subsection{Anti-patterns}
-
-\begin{itemize}
-
-\item \textbf{Persona routing:} selecting among nearly identical prompts with no different capability boundary.
-
-\item \textbf{Handoff by chat message:} telling another agent “you own this now” without durable state.
-
-\item \textbf{Privilege through selection:} showing a model an admin route and treating its selection as authorization.
-
-\item \textbf{No fallback:} forcing a best guess even when the request is out of distribution.
-
-\end{itemize}
-
-\section{What the evidence lets us conclude}
-
-\begin{bookcaution}[Evidence boundary]
-This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
-\end{bookcaution}
-
-The discussion above draws on R29; R07. Appendix K lists the complete sources and records their authority, version, and scope.\par
-
-\section{How Routing works in practice}
-
-\begin{bookcallout}[The Engineering Problem]
-Different requests need different workflows, models, Skills, agents, risk controls, or human queues.
-\end{bookcallout}
-
-\subsection{How the pattern works}
-
-A classifier proposes a route from a precomputed eligible catalog. A deterministic validator checks confidence, policy, health, capacity, and fallback before selection.\par
+A router reduces heterogeneity by selecting an implementation: policy explanation, document validation, income verification, or human triage. A ReAct step that returns \lstinline[style=bookinline]!delegate! (Chapter 10) arrives here as a routing request. The model may classify semantic intent, but the eligible set is assembled first from purpose, authority, risk, data region, release status, service health, and capacity—deterministically, before any model sees the options, the same way Skill resolution works (Chapter 8). A route cannot grant a capability that was absent from the run's capability envelope (Chapter 21). Choosing which model serves a step follows the same eligibility-first rule but belongs to the LLM Gateway (Chapter 4), and model-routing economics to Chapter 28. In order:\par
 
 \begin{enumerate}
 
@@ -5147,6 +5093,53 @@ A classifier proposes a route from a precomputed eligible catalog. A determinist
 
 \end{enumerate}
 
+\subsection{Confidence and fallback}
+
+Confidence is calibrated on a versioned domain dataset. Below a threshold, the route service requests clarification, applies a deterministic safe default, or sends the request to a human triage queue (Chapter 14). High confidence does not bypass policy. For privileged routes, both route eligibility and exact invocation authorization are required.\par
+
+\section{Handoff transfers accountability}
+
+A handoff is needed when another agent or human must become the current interaction or task owner rather than merely provide an answer to the original controller. Frameworks make it easy for one agent to involve another, but the word hides different ownership models.\par
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Case} & \color{white}\bfseries \textbf{What happens} & \color{white}\bfseries \textbf{Correct abstraction} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Case} & \color{white}\bfseries \textbf{What happens} & \color{white}\bfseries \textbf{Correct abstraction} \\
+\endhead
+Specialist as a tool & The evidence agent asks a sanctions specialist for analysis and retains responsibility for the final disposition & Agent-as-tool or equivalent local delegation \\
+\rowcolor{BookLight}
+Framework handoff (control only) & A triage agent transfers the bounded conversation to an income-verification specialist; control changes locally but the same activity remains accountable & Framework handoff, with the same external budget and cancellation boundary \\
+Accountable handoff (this chapter) & A document-defect specialist takes over the case's evidence follow-up, including its deadline and the final response to the loan officer & Recorded, acknowledged ownership transfer \\
+\rowcolor{BookLight}
+Durable delegation & A fraud investigation needs independent ownership, waits, retries, deadlines, human review, or a cross-service trust boundary & Durable \lstinline[style=bookinline]!TaskEnvelope! and child workflow (Chapter 18) \\
+\end{longtable}
+\BookTableEnd
+
+An accountable handoff changes the current owner of an interaction or task. The current owner creates a typed transfer that records old owner, new owner, state version, unresolved obligations, artifact references, child capability envelope, deadline, cancellation lineage, and acceptance contract.\par
+
+\begin{enumerate}
+
+\item Decide that ownership—not just expertise—must transfer.
+
+\item Persist the handoff proposal.
+
+\item Validate recipient, authority, compatibility, and capacity.
+
+\item Require the recipient to acknowledge or reject; until then, the current owner stays accountable.
+
+\item On acknowledgment, atomically change owner and emit an event; on rejection or timeout, keep the current owner.
+
+\end{enumerate}
+
+A transfer is proposed, then acknowledged, rejected, or expired; only acknowledgment changes the owner. Chapter 18 implements this protocol as the Ownership Service and its \lstinline[style=bookinline]!tasks/{id}:handoff! and \lstinline[style=bookinline]!:accept! operations; Chapter 21 explains how the child capability envelope is derived.\par
+
+\section{Routing at a glance}
+
 \needspace{5\baselineskip}
 \BookTableStart
 \small
@@ -5157,7 +5150,7 @@ A classifier proposes a route from a precomputed eligible catalog. A determinist
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
 \endhead
-Use when candidate paths have materially different capabilities, owners, SLOs, cost, or risk. & Avoid model routing when a stable deterministic rule is sufficient or misrouting has unacceptable consequences. \\
+Use when candidate paths have materially different capabilities, owners, SLOs, cost, or risk. & Avoid a learned router when a stable deterministic rule is sufficient or misrouting has unacceptable consequences. \\
 \end{longtable}
 \BookTableEnd
 
@@ -5186,7 +5179,9 @@ Learned classification & Handles semantic ambiguity; requires fallback and monit
 Low-confidence guess & Clarify, default, or human triage. \\
 \rowcolor{BookLight}
 Route drift & Versioned datasets and confusion-matrix monitoring. \\
-Privileged route selection & Eligibility before classification and exact authorization after selection. \\
+Privileged route selection (AP-12) & Eligibility before classification and exact authorization after selection. \\
+\rowcolor{BookLight}
+Persona routing & Route only between implementations with different capabilities, owners, or controls. \\
 \end{tabular}
 \BookTableEnd
 
@@ -5208,29 +5203,7 @@ Privileged route selection & Eligibility before classification and exact authori
 
 \end{itemize}
 
-\section{How Handoff works in practice}
-
-\begin{bookcallout}[The Engineering Problem]
-Another agent or human must become the current interaction or task owner rather than merely provide an answer to the original controller.
-\end{bookcallout}
-
-\subsection{How the pattern works}
-
-The current owner creates a typed transfer containing state references, unresolved obligations, narrowed authority, deadline, cancellation lineage, and acceptance contract.\par
-
-\begin{enumerate}
-
-\item Decide that ownership—not just expertise—must transfer.
-
-\item Persist the handoff proposal.
-
-\item Validate recipient, authority, compatibility, and capacity.
-
-\item Require the recipient to acknowledge or reject; until then, the current owner stays accountable.
-
-\item On acknowledgment, atomically change owner and emit an event; on rejection or timeout, keep the current owner.
-
-\end{enumerate}
+\section{Handoff at a glance}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -5268,7 +5241,7 @@ Independent interaction & Reduces supervisor bottlenecks; complicates cancellati
 \begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-Orphaned task & Atomic ownership state and acknowledgment timeout. \\
+Orphaned task (AP-08) & Atomic ownership state and acknowledgment timeout. \\
 \rowcolor{BookLight}
 Authority expansion & Child grant intersection and exact reauthorization. \\
 Context loss & Typed artifact and obligation references instead of transcript copying. \\
@@ -5293,9 +5266,29 @@ Context loss & Typed artifact and obligation references instead of transcript co
 
 \end{itemize}
 
+\section{What the evidence lets us conclude}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
+\endhead
+Framework handoff & The OpenAI Agents SDK documents handoffs as a framework primitive for passing control between agents; recording ownership, acknowledgment, and authority narrowing around it is this book's recommendation. & R29 \\
+\end{longtable}
+\BookTableEnd
+
+The discussion above draws on R29. Appendix K lists the complete sources and records their authority, version, and scope.\par
+
 \section{A sensible place to start}
 
-\BookSnake · Routing by handoff: transferring ownership, not context\par
+The first listing uses the SDK's framework handoff to switch agents within one run. It moves control, not accountability; the platform records ownership around it (see § Handoff transfers accountability).\par
+
+\BookSnake · Framework handoff: passing control to a specialist within one run\par
 
 \needspace{351.2pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
@@ -5337,35 +5330,49 @@ async def run(request: str, *, model=None):
     return result.final_output, result.last_agent.name
 \end{lstlisting}
 
-\subsection{Deterministic route validation}
+The second computes the eligible set before the model proposes a route, then validates the proposal and falls back instead of guessing.\par
 
-\BookSnake · implementation excerpt\par
+\BookSnake · Eligibility-first routing with validation and fallback\par
 
-\needspace{231.6pt}
+\needspace{360.4pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
-from __future__ import annotations
-import hashlib
-import json
-from dataclasses import dataclass
-from typing import Awaitable, Callable, Protocol
-from .contracts import AgentDecision
-
-class Route:
-    name: str
-    capability: str
-    maximum_risk: int
-
 class DeterministicRouter:
-    def __init__(self, routes: tuple[Route, ...]) -> None:
-        self.routes = {route.name: route for route in routes}
+    """Eligibility first, model proposal second, deterministic validation last."""
 
-    def accept_model_route(
-        self, proposed: str, allowed_capabilities: frozenset[str], risk: int
-    ) -> Route:
-        route = self.routes[proposed]
-        if route.capability not in allowed_capabilities or risk > route.maximum_risk:
-            raise PermissionError("proposed route is outside the run envelope")
-        return route
+    def __init__(
+        self, routes: tuple[Route, ...], fallback: str, threshold: float = 0.8
+    ) -> None:
+        self.routes = routes
+        self.fallback = fallback  # e.g. a human triage queue; always available
+        self.threshold = threshold
+
+    def eligible(
+        self, allowed_capabilities: frozenset[str], risk: RiskClass
+    ) -> tuple[Route, ...]:
+        return tuple(
+            route for route in self.routes
+            if route.capability in allowed_capabilities
+            and risk <= route.risk_ceiling
+            and route.healthy
+        )
+
+    async def route(
+        self,
+        request: str,
+        classify: Classifier,
+        allowed_capabilities: frozenset[str],
+        risk: RiskClass,
+    ) -> RoutingDecision:
+        names = tuple(r.name for r in self.eligible(allowed_capabilities, risk))
+        if not names:
+            return RoutingDecision(self.fallback, True, "no_eligible_route", names)
+        proposal = await classify(request, names)
+        if proposal.route not in names:
+            # Selecting a route is never authorization: outside the set, fall back.
+            return RoutingDecision(self.fallback, True, "not_eligible", names)
+        if proposal.confidence < self.threshold:
+            return RoutingDecision(self.fallback, True, "low_confidence", names)
+        return RoutingDecision(proposal.route, False, proposal.reason, names)
 \end{lstlisting}
 
 \section{If this fails in production}
@@ -5376,7 +5383,7 @@ class DeterministicRouter:
 
 \item Inspect the confidence threshold and fallback actually used.
 
-\item Verify ownership and cancellation after a handoff.
+\item Confirm the old owner remained accountable until the recipient's acknowledgment was recorded, and that cancellation reached the current owner.
 
 \end{enumerate}
 
@@ -5388,7 +5395,7 @@ class DeterministicRouter:
 
 \textbf{\ensuremath{\checkmark}} Routing and handoff are separate contracts.\par
 
-\textbf{\ensuremath{\checkmark}} Ownership, state, authority, deadlines, and cancellation transfer atomically.\par
+\textbf{\ensuremath{\checkmark}} Ownership changes only on recorded acknowledgment; state, narrowed authority, deadlines, and cancellation move with it atomically.\par
 
 \textbf{\ensuremath{\checkmark}} Route decisions and outcomes are measured by slice.\par
 
@@ -5419,7 +5426,7 @@ How does routing differ from a handoff? & Routing selects an eligible implementa
 Should the model see every route? & No. Give it a minimal eligible set derived from purpose, authority, health, region, risk, and release policy. \\
 What should happen below a confidence threshold? & Use a deterministic default, request clarification, or route to a human queue; do not select a privileged specialist by guesswork. \\
 \rowcolor{BookLight}
-How do you make routing debuggable? & Record candidates, eligibility filters, proposed route, confidence, validator decision, fallback, version, latency, and outcome. \\
+When is a handoff the wrong choice? & When the parent still owns the outcome (agent-as-tool) or the work needs independent recovery without conversational transfer (durable child task, Chapter 18). \\
 When is a static router better? & When classes are stable, risk is high, compliance requires predictability, or a simple rule already separates the work. \\
 \end{longtable}
 \BookTableEnd
@@ -5439,7 +5446,7 @@ Routing selects among known capabilities; Chapter 12 addresses tasks whose decom
 \end{bookquote}
 
 \begin{bookcallout}[Where The Mortgage Case Stands]
-A mortgage application with missing employment evidence, an asset discrepancy, and a property check requires adaptive sequencing. Harborlight lets a planner propose a graph but compiles that graph before any node becomes schedulable.
+A mortgage application with a missing second pay statement, an asset discrepancy, and a property check requires adaptive sequencing. Harborlight lets a planner propose a graph but compiles that graph before any node becomes schedulable.
 \end{bookcallout}
 
 \begin{bookcallout}[The Design Choice]
@@ -5448,9 +5455,7 @@ Use a typed Plan IR and deterministic compiler; freeze committed past work acros
 
 \section{Why a plausible plan still needs to be compiled}
 
-Planning earns its complexity only when the work cannot be known in advance. Even then, a model-proposed plan is not permission to run arbitrary steps. This chapter treats the plan as an intermediate representation: validate it, authorize it, compile it into executable nodes, and freeze the work that has already committed. The distinction matters whenever the plan changes halfway through a long-running case.\par
-
-\section{From candidate plan to executable work}
+Planning earns its complexity only when the work cannot be known in advance. When a stable route exists, route deterministically (Chapter 11); invoke the planner only at entry, at material uncertainty, or after a failure invalidates the current plan. Even then, a model-proposed plan is not permission to run arbitrary steps. This chapter treats the plan as an intermediate representation: validate it, check it stays within the run's authority, compile it into executable nodes, and freeze the work that has already committed. The distinction matters whenever the plan changes halfway through a long-running case.\par
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -5464,44 +5469,19 @@ Plan Service and durable workflow & planner proposal to deterministic compiler &
 
 \section{Treat planning like compilation—not authorization}
 
-The compiler analogy is useful because a plan has the same gap as source code: it may express a sensible intention and still be unsafe or impossible to execute. The plan compiler resolves capabilities, checks dependencies, rejects cycles, attaches budgets and deadlines, and verifies that each step stays inside the run’s authority. Runtime checks still matter because a case version, policy decision, or approval can become stale before a later step begins.\par
+The compiler analogy is useful because a plan has the same gap as source code: it may express a sensible intention and still be unsafe or impossible to execute. Models confuse a coherent narrative with a feasible, authorized execution graph. The plan compiler resolves capabilities, checks dependencies, rejects cycles, attaches budgets and deadlines, and verifies that each step stays inside the run's capability envelope (Chapter 21). A compiled plan proves its steps fit inside the envelope; it does not authorize them. Each dispatch still receives an exact authorization decision at the Tool Gateway (Chapter 2) against the current resource version, because a case version, policy decision, or approval can become stale before a later step begins.\par
 
 \BookDiagram{assets/diagrams/pattern-planning.pdf}{Figure 12-1 — A candidate plan becomes typed IR and is validated before any step runs}{pattern-planning}
 
-The planner describes desired work; the compiler determines whether that work is legal and executable. Northstar Plan IR nodes name capability requirements rather than concrete credentials. Compilation binds each requirement to an eligible Skill and tool release, verifies input/output schemas, calculates critical path and maximum cost, checks graph and terminal properties, and emits a signed immutable plan revision.\par
+The planner describes desired work; the compiler determines whether that work is legal and executable. Plan IR nodes name capability requirements rather than concrete credentials. Compilation binds each capability requirement to an eligible Skill and tool release (Chapter 8), calculates critical path and maximum cost, and emits an immutable plan revision signed by the compiler so the scheduler can verify that what runs is what was validated.\par
 
 Resource feasibility matters. A valid graph can still miss the deadline if it requires too many browser sessions, serialized vendor calls, or human approvals. The compiler checks workload queues, concurrency classes, rate limits, regional placement, and time windows before committing a plan. Scheduling remains a workflow responsibility.\par
 
-\subsection{Replanning contract}
+The alternatives run from a fixed workflow, rules engine, and router through plan-and-execute, ReAct, graph search, and planner/executor/critic to code generation. Fixed workflows maximize predictability; dynamic planning increases coverage at a higher evaluation, security, and cost burden.\par
 
-New evidence can invalidate future work. Replanning starts from an explicit set of immutable facts: accepted artifacts, committed effects, approval decisions, and current resource versions. The new revision includes a diff, rationale, superseded nodes, reused artifacts, changed budget, and compiler evidence. It cannot rewrite history.\par
+\section{What should be agentic?}
 
-\section{Planning, dynamic execution, and deterministic boundaries}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Required analysis} & \color{white}\bfseries \textbf{Design conclusion} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Required analysis} & \color{white}\bfseries \textbf{Design conclusion} \\
-\endhead
-Problem & Allow useful adaptation without letting the model rewrite policy, invent capabilities, or turn every step into expensive nondeterministic reasoning. \\
-\rowcolor{BookLight}
-Why it is difficult & A plan is based on incomplete information; tool results change the world; models confuse a coherent narrative with a feasible, authorized execution graph. \\
-Design alternatives & Fixed workflow; rules engine; model router; plan-and-execute; ReAct loop; graph search; planner/executor/critic; code generation. \\
-\rowcolor{BookLight}
-Recommended architecture & Use a typed, versioned plan IR. The model proposes goals, dependencies, and candidate capabilities; deterministic validators compile the plan into workflow nodes. Runtime adaptation creates an auditable plan revision bounded by the original authority and budget unless a new grant is obtained. \\
-Trade-offs & Fixed workflows maximize predictability but cover less ambiguity. Dynamic planning increases task coverage and maintenance flexibility while raising evaluation, security, and cost burdens. \\
-\rowcolor{BookLight}
-Failure scenarios & Infinite replan loop; plan references nonexistent tool; planner broadens scope; stale precondition; generated code bypasses gateway; critic repeatedly rewrites a correct result. \\
-Enterprise example & An incident agent may choose which diagnostic queries to run and revise hypotheses as evidence arrives, but production changes remain pre-modeled operations with change-window, policy, and approval checks. \\
-\end{longtable}
-\BookTableEnd
-
-\subsection{What should be agentic?}
+The same split decides every pattern in this Part; in a plan it is encoded as the node \lstinline[style=bookinline]!kind!.\par
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -5534,7 +5514,7 @@ Acceptance tests and reconciliation & Code/tests; model judge only as a suppleme
 \end{longtable}
 \BookTableEnd
 
-\subsection{Plan IR}
+\section{Plan IR}
 
 JSON · implementation excerpt\par
 
@@ -5544,7 +5524,7 @@ JSON · implementation excerpt\par
   "plan_id": "plan_...",
   "revision": 3,
   "goal": "...",
-  "authority_envelope_id": "cap_...",
+  "capability_envelope_id": "cap_...",
   "budget": {"usd": 12, "steps": 40, "wall_clock_seconds": 7200},
   "nodes": [{
     "id": "n7",
@@ -5561,7 +5541,51 @@ JSON · implementation excerpt\par
 }
 \end{lstlisting}
 
-A deterministic compiler rejects missing schemas, unbounded loops, unauthorized capabilities, budget overflow, inconsistent data classification, unhandled terminal paths, and any cycle that is not an explicitly bounded loop. A dynamic node may choose among an allowlisted capability set; it cannot call arbitrary network endpoints.\par
+The shared contract models \lstinline[style=bookinline]!CandidatePlan! and \lstinline[style=bookinline]!PlanNode! (\lstinline[style=bookinline]!examples/contracts.py!) define these fields; the compiler at the end of this chapter checks them.\par
+
+Each node kind is executed by a mechanism defined elsewhere: \lstinline[style=bookinline]!llm_activity! is a bounded model step (Chapter 10) whose output is accepted as in Chapter 13; \lstinline[style=bookinline]!tool_activity! crosses the six gates (Chapter 2) with effect semantics from Chapter 22; \lstinline[style=bookinline]!gate! is a human approval (Chapter 14); \lstinline[style=bookinline]!wait! is a durable timer or signal (Chapter 15); \lstinline[style=bookinline]!child_task! and \lstinline[style=bookinline]!join! are durable delegation and fan-in (Chapter 18).\par
+
+\lstinline[style=bookinline]!risk_class! uses the book's five effect classes: R0 pure transform, R1 low-sensitivity read, R2 sensitive read or reversible draft, R3 external communication or material reversible change, R4 irreversible, privileged, or financial action, where the agent may only propose (full controls in Chapter 22 § Risk classes).\par
+
+\subsection{Compile-time checks}
+
+\begin{itemize}
+
+\item Every node has a pinned implementation or an allowlisted runtime selector, typed inputs/outputs, timeout, retry owner, budget, risk class, acceptance rule, and terminal failure path. A pack Skill the run may not resolve is refused here, naming the rule, never mid-run (Chapter 9).
+
+\item Every capability lies inside the run's capability envelope. A dynamic node may choose only among an allowlisted capability set; it cannot call arbitrary network endpoints.
+
+\item Data-flow classification can stay equal or become more restrictive. A node cannot send restricted data to a capability whose manifest/region/purpose is incompatible.
+
+\item Mutating nodes require idempotency/effect semantics (Chapter 22) and any policy-required preview, approval (Chapter 14), or compensation. An R4 (irreversible or privileged) commit remains a deterministic domain operation.
+
+\item Loops require a deterministic guard plus maximum iterations, wall time, cost, and a no-progress detector using the no-progress signatures of Chapter 10; unbounded loops and unhandled terminal paths are rejected. Delegation depth and parallel fan-out are statically bounded; see AP-11 for why per-child limits do not compose.
+
+\item The compiler estimates critical path, maximum fan-out, worst-case calls/cost, and required quota. Admission (Chapter 28) may reject, defer, or require approval before commit.
+
+\end{itemize}
+
+\section{Revise without rewriting history}
+
+New evidence can invalidate future work. Replanning starts from an explicit set of immutable facts: accepted artifacts, committed effects, approval decisions, and current resource versions. The new revision includes a diff, rationale, superseded nodes, reused artifacts, changed budget, and compiler evidence. It cannot rewrite history.\par
+
+\begin{enumerate}
+
+\item Persist the triggering observation/failure and current state version.
+
+\item Freeze completed effects and accepted artifacts; mark nodes whose assumptions changed as invalidated.
+
+\item Ask the planner only for the affected horizon, not the entire run.
+
+\item Compile and diff the candidate against the committed revision.
+
+\item Reuse nodes only when implementation, inputs, policy, data revisions, and acceptance remain compatible.
+
+\item Obtain a new approval (Chapter 14) if risk, purpose, destination, spend, or authority expands.
+
+\item Atomically commit the revision and reservations, then schedule newly ready nodes.
+
+\end{enumerate}
 
 \section{A workable implementation}
 
@@ -5582,7 +5606,7 @@ Plan Compiler & Validate graph, types, authority, budgets, effects, failure path
 Scheduler & Materialize ready nodes into workflow activities/child tasks under concurrency and quota \\
 \rowcolor{BookLight}
 Replan Controller & Decide when replanning is allowed and define the unchanged/reusable subgraph \\
-Acceptance Engine & Run deterministic checks and policy-approved model graders before satisfying nodes/goals \\
+Acceptance Engine & Run deterministic checks and policy-approved model graders before satisfying nodes/goals (Chapter 13) \\
 \end{tabular}
 \BookTableEnd
 
@@ -5623,7 +5647,7 @@ POST /v1/nodes/\{node\_execution\_id\}:accept & Apply acceptance checks to outpu
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Entity} & \color{white}\bfseries \textbf{Required fields and invariants} \\
 \endhead
-Plan & plan ID, run, goal hash, current committed revision, authority envelope, lifecycle state \\
+Plan & plan ID, run, goal hash, current committed revision, capability envelope, lifecycle state \\
 \rowcolor{BookLight}
 PlanRevision & plan/revision, parent revision, trigger/rationale, planner/model/prompt/context versions, graph hash, created by/time; immutable \\
 PlanNode & stable logical node ID, revision, kind, capability requirement/binding, input selectors, output schema, risk, retry/timeout, acceptance, failure strategy \\
@@ -5631,104 +5655,28 @@ PlanNode & stable logical node ID, revision, kind, capability requirement/bindin
 PlanEdge & revision, from/to node, condition, artifact/data mapping; compiler verifies type compatibility and acyclicity unless loop is explicitly bounded \\
 CapabilityBinding & abstract requirement, chosen agent/tool version, eligibility decision, health snapshot, regional endpoint, expiry \\
 \rowcolor{BookLight}
-BudgetReservation & run/plan/node, resource type, reserved/consumed/released amount, expiry, ledger version \\
+BudgetReservation & See Chapter 28 § Records worth preserving; the compiler requests one per plan node \\
 ValidationFinding & rule ID/severity, object path, message, evidence, required remediation; errors block commit \\
 \rowcolor{BookLight}
 NodeExecution & logical node, plan revision, workflow/activity/task ID, attempt, state, inputs/outputs, accepted result hash, timing/cost \\
 \end{longtable}
 \BookTableEnd
 
-\subsection{Compile-time checks}
-
-\begin{itemize}
-
-\item Every node has a pinned implementation or an allowlisted runtime selector, typed inputs/outputs, timeout, retry owner, budget, risk class, acceptance rule, and terminal failure path.
-
-\item Data-flow classification can stay equal or become more restrictive. A node cannot send restricted data to a capability whose manifest/region/purpose is incompatible.
-
-\item Mutating nodes require idempotency/effect semantics and any policy-required preview/approval/compensation. R4 commit remains a deterministic domain operation.
-
-\item Loops require a deterministic guard plus maximum iterations, wall time, cost, and no-progress detector. Delegation depth and parallel fan-out are statically bounded.
-
-\item The compiler estimates critical path, maximum fan-out, worst-case calls/cost, and required quota. Admission may reject, defer, or require approval before commit.
-
-\end{itemize}
-
-\subsection{Runtime revision algorithm}
-
-\begin{enumerate}
-
-\item Persist the triggering observation/failure and current state version.
-
-\item Freeze completed effects and accepted artifacts; mark nodes whose assumptions changed as invalidated.
-
-\item Ask the planner only for the affected horizon, not the entire run.
-
-\item Compile and diff the candidate against the committed revision.
-
-\item Reuse nodes only when implementation, inputs, policy, data revisions, and acceptance remain compatible.
-
-\item Obtain new consent/approval if risk, purpose, destination, spend, or authority expands.
-
-\item Atomically commit the revision and reservations, then schedule newly ready nodes.
-
-\end{enumerate}
-
 \subsection{Scalability and performance}
 
 \begin{itemize}
 
-\item Planner workers are stateless and queue driven. Plan storage is partitioned by tenant + run; immutable revisions can be cached by graph hash.
-
-\item Cache tool/agent schemas and compatibility matrices by digest. Policy and health are time-sensitive and must be rechecked at commit/dispatch.
+\item Planner workers are stateless and queue driven. Plan storage is partitioned by tenant and run; immutable revisions, schemas, and large graph blobs are stored or cached by digest, while policy and health are rechecked at commit and dispatch.
 
 \item Validate incrementally: a plan revision carries changed nodes/edges, allowing graph, type, cost, and policy analysis to recompute only impacted regions.
 
 \item The scheduler scans no global table. Workflow events enqueue newly ready node IDs; conditional updates ensure each logical node is dispatched once per accepted attempt.
 
-\item For large DAGs, store canonical graph blobs by hash and keep indexed node/dependency projections in the relational store. Operator views are materialized asynchronously.
-
 \item Apply per-run ready-node limits and weighted fair scheduling across tenants. Planning cannot reserve unbounded future capacity; reservations expire and are reclaimed.
-
-\item Use deterministic routing for common/high-confidence cases and invoke the planner only at entry, material uncertainty, or failure boundaries. This reduces model cost and plan churn.
 
 \end{itemize}
 
-\begin{bookarchitecture}[Architecture guidance]
-Separate the plan from its execution. A plan is data: persist it, version it, and let it be inspected and approved before any step commits an effect. Once execution is a separate pass over a stored plan, replay, partial resume, and human amendment all become ordinary operations instead of special cases.
-\end{bookarchitecture}
-
-\section{What the evidence lets us conclude}
-
-\begin{bookcaution}[Evidence boundary]
-This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
-\end{bookcaution}
-
-The discussion above draws on R27; R02; R13. Appendix K lists the complete sources and records their authority, version, and scope.\par
-
-\section{How Planning works in practice}
-
-\begin{bookcallout}[The Engineering Problem]
-The task requires adaptive decomposition or dependency ordering that cannot be fully encoded upfront.
-\end{bookcallout}
-
-\subsection{How the pattern works}
-
-A planner emits a typed Plan IR. A deterministic compiler validates graph integrity, capabilities, schemas, risk, effects, budgets, resources, and terminal paths before the workflow schedules nodes.\par
-
-\begin{enumerate}
-
-\item Create a CandidatePlan with bounded nodes and dependencies.
-
-\item Compile against the run envelope and release catalog.
-
-\item Freeze a plan digest and revision.
-
-\item Schedule ready nodes through durable workflow state.
-
-\item Replan only the uncommitted future when observations invalidate assumptions.
-
-\end{enumerate}
+\section{Planning at a glance}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -5787,9 +5735,27 @@ Plan churn & Revision, no-progress, and cost limits; freeze committed facts. \\
 
 \end{itemize}
 
+\section{What the evidence lets us conclude}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
+\endhead
+Durable scheduling & Durable-execution systems preserve workflow progress, timers, and replay across failures, which is why compiled plans are scheduled through a workflow rather than an in-process loop. & R02 \\
+\end{longtable}
+\BookTableEnd
+
+The discussion above draws on R27; R02. Appendix K lists the complete sources and records their authority, version, and scope.\par
+
 \section{A sensible place to start}
 
-\subsection{Plan IR compiler}
+The compiler below applies the checks above to a candidate plan: capability allowlist, risk ceiling, unknown dependencies, cost, cycles, and a digest of what was validated.\par
 
 \BookSnake · Compiling a validated plan into a budget-bounded envelope\par
 
@@ -5918,7 +5884,7 @@ How do you prevent plausible but endless planning? & External revision, loop, st
 
 \section{Where this leads next}
 
-Planning creates an executable structure; Chapter 13 adds independent evaluation and bounded revision without self-certification.\par
+Planning creates an executable structure, and every plan node ends in acceptance checks; Chapter 13 defines what may decide them—independent evaluation and bounded revision without self-certification.\par
 
 \BookChapterCover{cover-images/chapter-13-use-critique-to-improve-never-to-self-approve.png}
 
@@ -5932,13 +5898,7 @@ The first draft recommendation for the mortgage case is coherent but omits a con
 Use reflection for targeted revision and independent, calibrated acceptance for protected outcomes.
 \end{bookcallout}
 
-\section{Why critique cannot certify its own answer}
-
-Critique can make a draft better, but a generator should not be allowed to grade and approve its own work. This chapter gives reflection a bounded job—find a targeted defect and propose a revision—while an independently defined evaluator and acceptance gate decide whether the result is good enough. That separation controls both false confidence and runaway evaluation cost.\par
-
-\section{Give evaluation its own independent path}
-
-Independent evaluation does not mean asking the same model to reread its answer and declare it better. Generator and evaluator can share the same blind spot, especially when they use the same model family, context, or assumptions. Start with deterministic checks for schema validity, evidence coverage, policy constraints, and arithmetic. Use calibrated model judges only for genuinely qualitative questions, and treat their scores as evidence for a decision made elsewhere.\par
+Critique can make a draft better, but a generator should not be allowed to grade and approve its own work. This chapter gives reflection a bounded job—find a targeted defect and propose a revision—while an independently defined evaluator and acceptance engine decide whether the result is good enough. That separation controls both false confidence and runaway evaluation cost.\par
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -5950,61 +5910,57 @@ Acceptance Engine & generator/evaluator and evaluator/commit & candidate · scor
 \end{tabular}
 \BookTableEnd
 
-\section{Improve the answer without letting the system certify itself}
+\section{Give evaluation its own independent path}
 
-\BookDiagram{assets/diagrams/pattern-reflection.pdf}{Figure 13-1 — A bounded revise loop whose verdict is advisory; promotion happens outside it}{pattern-reflection}
+Independent evaluation does not mean asking the same model to reread its answer and declare it better. Generator and evaluator can share the same blind spot, especially when they use the same model family, context, or assumptions.\par
 
-Reflection asks, “What is missing or inconsistent?” Evaluation asks, “Does this candidate meet an acceptance rubric?” Combining them can improve complex artifacts, but only if the roles are explicit and bounded. Northstar runs executable checks before any model judge: schema, evidence presence, policy, effect state, resource version, arithmetic, and deterministic domain rules.\par
+\section{Reflection revises; an acceptance engine decides}
 
-Qualitative criteria—clarity, completeness, grounded synthesis, or policy-explanation quality—may use calibrated judges. Judge prompt, model route, examples, sampling parameters, and rubric are versioned. Northstar measures variance, human agreement, and failure slices. A model score is evidence for a release or review decision; it is not permission to access data or commit a transaction.\par
+\BookDiagram{assets/diagrams/pattern-reflection.pdf}{Figure 13-1 — A bounded revise loop whose verdict is advisory; acceptance happens outside it}{pattern-reflection}
+
+Reflection asks, “What is missing or inconsistent?” Evaluation asks, “Does this candidate meet an acceptance rubric?” In the mortgage case, the contradictory address is caught by an executable check against the application projection; whether the recommendation overstates confidence is the kind of qualitative criterion a calibrated judge may assess. Combining reflection and evaluation can improve complex artifacts, but only if the roles are explicit and bounded. The platform runs executable checks before any model judge: schema, evidence presence, policy, effect state, resource version, arithmetic, and deterministic domain rules.\par
+
+Qualitative criteria—clarity, completeness, grounded synthesis, or policy-explanation quality—may use calibrated judges. Judge prompt, model route, examples, sampling parameters, and rubric are versioned. A judge used at runtime must already be calibrated: Chapter 25 § Layer tests from contracts to outcomes defines how judges are measured against human labels and gated for release. Inside a run, a judge score is one input to the acceptance decision; it is never permission to access data or commit a transaction (see AP-10).\par
+
+\subsection{The acceptance decision}
+
+The acceptance engine is the only component that may mark a candidate, a plan node (Chapter 12), or a ReAct answer (Chapter 10) as accepted. It takes the candidate, the authoritative state the candidate claims to satisfy, and a versioned set of criteria. It evaluates executable invariants first and calibrated judges only for criteria that cannot be computed. It returns an \lstinline[style=bookinline]!AcceptanceDecision!: accepted, rejected with typed defects, or escalated. For each criterion the decision records the evaluator type—deterministic, or judge with its version—and evidence references. Chapter 2 § Deterministic acceptance lists what Harborlight checks; Chapter 15 § Terminal correctness maps the decision to the run's terminal state.\par
 
 \subsection{Bounded optimization loop}
 
-Each revision targets structured feedback and carries a diff. The loop stops on pass, maximum revisions, maximum spend, deadline, or no-progress. If the evaluator and generator repeatedly disagree, the workflow escalates with both artifacts rather than silently choosing the more persuasive prose.\par
-
-\section{What the evidence lets us conclude}
-
-\begin{bookcaution}[Evidence boundary]
-This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline.
-\end{bookcaution}
-
-The discussion above draws on R20; R13. Appendix K lists the complete sources and records their authority, version, and scope.\par
-
-\section{How Reflection works in practice}
-
-\begin{bookcallout}[The Engineering Problem]
-A first candidate may contain omissions, contradictions, or weak reasoning that targeted critique can expose.
-\end{bookcallout}
-
-\subsection{How the pattern works}
-
-A reflector reviews a candidate against explicit evidence and rubric, emits structured defects, and proposes a bounded revision. It does not commit or certify protected outcomes.\par
+Each revision targets structured feedback and carries a diff. In order:\par
 
 \begin{enumerate}
 
-\item Generate a candidate.
+\item Generate candidate v1.
 
-\item Compare it with evidence and rubric.
+\item Run deterministic checks first.
 
-\item Emit defect types and references.
+\item Run calibrated qualitative evaluation if needed.
 
-\item Revise only supported defects.
+\item Apply actionable feedback to one revision.
 
-\item Stop on pass, no-progress, or revision budget.
+\item Let the acceptance engine accept, reject with defects, or escalate at a bounded threshold.
 
 \end{enumerate}
+
+The loop stops on pass, maximum revisions, maximum spend, deadline, or no-progress (a revision that changes wording but not the failing invariant, the same signature test as Chapter 10). If the evaluator and generator repeatedly disagree, the workflow escalates with both artifacts to a human intervention queue (Chapter 14) rather than silently choosing the more persuasive prose. The loop is runtime adaptation inside a fixed envelope: it may revise the candidate, never the rubric, judge, or thresholds (Chapter 25 § Separate runtime adaptation from offline improvement).\par
+
+\section{Reflection and evaluator–optimizer at a glance}
 
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
+\color{white}\bfseries \textbf{Pattern} & \color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
 \endfirsthead
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
+\color{white}\bfseries \textbf{Pattern} & \color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
 \endhead
-Use when measured offline results show critique improves a specific quality dimension. & Avoid if correctness is executable, the first pass already meets the bar, or added latency has no measured benefit. \\
+Reflection & Measured offline results show critique improves a specific quality dimension. & Correctness is executable, the first pass already meets the bar, or added latency has no measured benefit. \\
+\rowcolor{BookLight}
+Evaluator–optimizer & Documents, plans, code, or analyses where iterative quality gain is measurable and latency permits. & Do not use a model judge as sole authority for permissions, transaction success, security, or computable correctness. \\
 \end{longtable}
 \BookTableEnd
 
@@ -6019,6 +5975,7 @@ Use when measured offline results show critique improves a specific quality dime
 Better completeness & Additional model calls, correlated errors, and longer latency. \\
 \rowcolor{BookLight}
 Structured critique & More debuggable; requires defect taxonomy and evaluation. \\
+Explicit rubric & Improves governance; can overfit to benchmark or judge preferences. \\
 \end{tabular}
 \BookTableEnd
 
@@ -6032,8 +5989,11 @@ Structured critique & More debuggable; requires defect taxonomy and evaluation. 
 \color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
 Self-confirmation & Different rubric, evidence, or evaluator and deterministic checks. \\
 \rowcolor{BookLight}
-Stylistic churn & Diff limits and no-progress detection. \\
 Evidence invention & Require evidence references and reject unsupported additions. \\
+Stylistic churn or endless revision & Diff limits, maximum revisions, cost, time, and no-progress stop. \\
+\rowcolor{BookLight}
+Judge variance & Repeated runs and thresholds; calibration per Chapter 25. \\
+Reward hacking & Holdout tests and diverse scorers; Chapter 25. \\
 \end{tabular}
 \BookTableEnd
 
@@ -6041,142 +6001,106 @@ Evidence invention & Require evidence references and reject unsupported addition
 
 \begin{itemize}
 
-\item candidate version
+\item candidate version and diff size
 
 \item defect taxonomy
 
 \item evidence refs
 
-\item diff size
+\item scorer versions
 
-\item quality delta
+\item per-criterion scores and judge rationale
 
-\item stop reason
+\item quality delta and variance
+
+\item acceptance decision and stop reason
 
 \end{itemize}
 
-\section{How Evaluator–Optimizer works in practice}
-
-\begin{bookcallout}[The Engineering Problem]
-A generated artifact must reach a quality threshold that mixes executable and semantic criteria.
-\end{bookcallout}
-
-\subsection{How the pattern works}
-
-A generator creates candidates; deterministic scorers and calibrated evaluators produce typed feedback; an optimizer revises within a strict iteration budget; an acceptance engine decides.\par
-
-\begin{enumerate}
-
-\item Generate candidate v1.
-
-\item Run deterministic checks first.
-
-\item Run calibrated qualitative evaluation if needed.
-
-\item Apply actionable feedback to one revision.
-
-\item Accept, reject, or escalate at a bounded threshold.
-
-\end{enumerate}
+\section{What the evidence lets us conclude}
 
 \needspace{5\baselineskip}
 \BookTableStart
 \small
-\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
+\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
 \endfirsthead
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Use when} & \color{white}\bfseries \textbf{Do not use when} \\
+\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
 \endhead
-Use for documents, plans, code, or analyses where iterative quality gain is measurable and latency permits. & Do not use a model judge as sole authority for permissions, transaction success, security, or computable correctness. \\
+Evaluation tooling & Current evaluation platforms support datasets, code-based and LLM judges, and human feedback; using judges only as evidence for an independent acceptance decision is this book's recommendation. & R20 \\
 \end{longtable}
 \BookTableEnd
 
-\subsection{Where it helps—and what it costs}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Choice} & \color{white}\bfseries \textbf{Consequence} \\
-Higher quality & Higher cost and latency, plus evaluator calibration work. \\
-\rowcolor{BookLight}
-Explicit rubric & Improves governance; can overfit to benchmark or judge preferences. \\
-\end{tabular}
-\BookTableEnd
-
-\subsection{Where it can fail—and how to contain it}
-
-\needspace{5\baselineskip}
-\BookTableStart
-\small
-\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Failure} & \color{white}\bfseries \textbf{Control} \\
-Reward hacking & Hidden holdout tests, diverse scorers, and human calibration. \\
-\rowcolor{BookLight}
-Judge variance & Repeated runs, confidence intervals, ensembles, and thresholds. \\
-Endless revision & Maximum revisions, cost, time, and no-progress stop. \\
-\end{tabular}
-\BookTableEnd
-
-\subsection{What you need to see in production}
-
-\begin{itemize}
-
-\item scorer versions
-
-\item per-criterion scores
-
-\item judge rationale
-
-\item candidate diffs
-
-\item variance
-
-\item acceptance decision
-
-\end{itemize}
+The discussion above draws on R20. Appendix K lists the complete sources and records their authority, version, and scope.\par
 
 \section{A sensible place to start}
 
-\subsection{Bounded evaluator–optimizer}
+The judge supplies evidence; only the acceptance engine decides.\par
 
-\BookSnake · implementation excerpt\par
+\BookSnake · A bounded evaluator-optimizer whose judge cannot accept\par
 
-\needspace{286.8pt}
+\needspace{553.6pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
-from __future__ import annotations
-import hashlib
-import json
-from dataclasses import dataclass
-from typing import Awaitable, Callable, Protocol
-from .contracts import AgentDecision
+class AcceptanceEngine:
+    """The only component that may accept. Checks decide; scores are evidence."""
 
-class Evaluation:
-    accepted: bool
-    score: float
-    feedback: str
+    def __init__(self, thresholds: dict[str, float]) -> None:
+        self.thresholds = thresholds
 
-class EvaluatorOptimizer:
-    def __init__(
-        self, generator: Generator, evaluator: Evaluator, maximum_revisions: int = 2
-    ) -> None:
-        self.generator = generator
-        self.evaluator = evaluator
-        self.maximum_revisions = maximum_revisions
+    def decide(
+        self, candidate: str, failures: tuple[CheckFailure, ...],
+        scores: tuple[EvaluationResult, ...],
+    ) -> AcceptanceDecision:
+        defects = tuple(f.invariant for f in failures) + tuple(
+            s.criterion for s in scores
+            if s.score < self.thresholds.get(s.criterion, 1.0)
+        )
+        if defects:
+            return AcceptanceDecision("rejected", defects, (candidate,))
+        return AcceptanceDecision("accepted", (), (candidate,))
 
-    async def run(self, task: str) -> tuple[str, Evaluation]:
-        feedback: str | None = None
-        for _ in range(self.maximum_revisions + 1):
-            candidate = await self.generator(task, feedback)
-            evaluation = await self.evaluator(task, candidate)
-            if evaluation.accepted:
-                return candidate, evaluation
-            feedback = evaluation.feedback
-        raise RuntimeError("candidate did not pass bounded evaluation")
+    def escalate(
+        self, previous: str, current: str, defects: tuple[str, ...], reason: str
+    ) -> AcceptanceDecision:
+        return AcceptanceDecision("escalated", defects, (previous, current), reason)
+
+
+@dataclass(frozen=True)
+class RevisionLimits:
+    maximum_revisions: int = 2
+    maximum_cost_usd: float = 1.0
+
+
+async def evaluate_and_revise(
+    task: str, generate: Generator, checks: Checks, judge: Judge,
+    engine: AcceptanceEngine, limits: RevisionLimits = RevisionLimits(),
+) -> AcceptanceDecision:
+    feedback: tuple[str, ...] = ()
+    previous: str | None = None
+    previous_defects: tuple[str, ...] | None = None
+    spent = 0.0
+    for revision in range(limits.maximum_revisions + 1):
+        candidate = await generate(task, feedback)
+        spent += candidate.cost_usd
+        failures = checks(candidate.text)            # executable invariants first
+        scores = () if failures else await judge(candidate.text)  # qualitative only
+        decision = engine.decide(candidate.text, failures, scores)
+        if decision.outcome == "accepted":
+            return decision
+        prior = previous if previous is not None else candidate.text
+        if decision.defects == previous_defects:     # new wording, same failure
+            return engine.escalate(prior, candidate.text, decision.defects, "no_progress")
+        if spent >= limits.maximum_cost_usd:
+            return engine.escalate(prior, candidate.text, decision.defects, "budget_exhausted")
+        if revision == limits.maximum_revisions:
+            return engine.escalate(prior, candidate.text, decision.defects, "maximum_revisions")
+        feedback = tuple(f"{f.invariant}: {f.detail}" for f in failures) + tuple(
+            f"{s.criterion}: {s.rationale}" for s in scores
+        )
+        previous, previous_defects = candidate.text, decision.defects
+    raise AssertionError("unreachable: the last revision always returns")
 \end{lstlisting}
 
 \section{If this fails in production}
@@ -6191,6 +6115,8 @@ class EvaluatorOptimizer:
 
 \end{enumerate}
 
+If the model's own "done" or a judge score is the acceptance decision, see AP-07 and AP-10 in Chapter 17.\par
+
 \section{What to verify before production}
 
 \textbf{\ensuremath{\checkmark}} Generator and evaluator roles, prompts, models, and evidence are distinguishable.\par
@@ -6199,15 +6125,15 @@ class EvaluatorOptimizer:
 
 \textbf{\ensuremath{\checkmark}} Revision count, spend, time, and no-progress are bounded.\par
 
-\textbf{\ensuremath{\checkmark}} Judge calibration and inter-rater agreement are measured.\par
+\textbf{\ensuremath{\checkmark}} Judge calibration and inter-rater agreement are measured (Chapter 25).\par
 
-\textbf{\ensuremath{\checkmark}} Failed candidates and feedback enter a regression corpus.\par
+\textbf{\ensuremath{\checkmark}} Failed candidates and feedback enter a regression corpus (Chapter 25).\par
 
 \section{Put the idea to work}
 
 \begin{enumerate}
 
-\item Implement a bounded evaluator–optimizer with one deterministic and one qualitative scorer.
+\item Add a deadline stop to the evaluator–optimizer example and test that it escalates with both candidate versions.
 
 \item Create a case where reflection worsens a correct answer and define the stop rule.
 
@@ -6237,7 +6163,7 @@ When should you not add reflection? & When the first result already meets an exe
 
 \section{Where this leads next}
 
-Automated evaluation can improve candidates; Chapter 14 identifies decisions that require explicit human authority, correction, or recourse.\par
+Automated evaluation can improve a candidate but cannot settle every decision. When the evaluator and generator disagree, or the action is protected, Chapter 14 puts a person where their judgment matters.\par
 
 \BookChapterCover{cover-images/chapter-14-put-people-where-their-judgment-matters.png}
 

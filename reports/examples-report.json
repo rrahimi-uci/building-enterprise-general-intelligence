@@ -1,6 +1,6 @@
 {
-  "examples": 26,
-  "cited": 26,
+  "examples": 28,
+  "cited": 28,
   "uncited": [],
   "rendered_lines": {
     "contracts": 108,
@@ -11,6 +11,8 @@
     "mlflow-trace-configuration": 34,
     "bounded-react-loop": 55,
     "routing-handoff": 36,
+    "route-validation": 88,
+    "evaluator-optimizer": 108,
     "approval-gate": 86,
     "input-guardrail": 46,
     "mlflow-evaluation": 53,
@@ -41,6 +43,7 @@
     "examples/tests/test_contracts.py",
     "examples/tests/test_durable_state.py",
     "examples/tests/test_effect_idempotency.py",
+    "examples/tests/test_evaluator_optimizer.py",
     "examples/tests/test_governed_tool_gateway.py",
     "examples/tests/test_grounding_verifier.py",
     "examples/tests/test_input_guardrail.py",
@@ -53,6 +56,7 @@
     "examples/tests/test_plan_compilation.py",
     "examples/tests/test_policy_to_rule.py",
     "examples/tests/test_react_engine.py",
+    "examples/tests/test_route_validation.py",
     "examples/tests/test_routing_handoff.py",
     "examples/tests/test_rule_as_guardrail.py",
     "examples/tests/test_set_operations.py",

@@ -13,7 +13,7 @@ async def test_request_is_handed_to_the_owning_specialist():
     answer, decided_by = await run(
         "What evidence is missing from MORT-2026-000184?", model=model
     )
-    assert decided_by == "Mortgage evidence specialist", "ownership must transfer, not just context"
+    assert decided_by == "Mortgage evidence specialist", "control must pass to the specialist"
     assert "second pay statement" in answer
 
 

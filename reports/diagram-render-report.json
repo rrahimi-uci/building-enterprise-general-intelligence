@@ -275,29 +275,29 @@
       ],
       "effective_dpi": 347,
       "vector": true,
-      "sha256": "eb6e2c982093a01d2c71fca8ea3af8af234f25a41d68111b7418c04412571702"
+      "sha256": "1342c365b65b915b19203f0854b6f2b864f6faa30209b9d969f9c20ded30ddc4"
     },
     {
       "id": "pattern-reflection",
       "source": "pattern-reflection.gv",
       "pixels": [
-        2282,
-        1226
+        2283,
+        1522
       ],
       "effective_dpi": 333,
       "vector": true,
-      "sha256": "2226864094dce7c11a766879028b9b0243afd6f1ee7c2982de77862645be2a56"
+      "sha256": "9fbec2c722322b571a9f99dda87e9bb8c298fd553f5f6c21d4f977097e79424f"
     },
     {
       "id": "pattern-routing",
       "source": "pattern-routing.gv",
       "pixels": [
         2293,
-        1434
+        1833
       ],
       "effective_dpi": 335,
       "vector": true,
-      "sha256": "ed6c696fecc9216bced059a168a7737d62d7ac41799fbd15b5433812f6ece4d3"
+      "sha256": "27e8ba9404005895e3f1b1acf2a009ad40d6511e9c046884c2fed6b37780e0ba"
     },
     {
       "id": "policy-to-guardrail",

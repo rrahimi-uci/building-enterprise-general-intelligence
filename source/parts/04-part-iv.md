@@ -1,10 +1,17 @@
 # PART IV — PATTERNS THAT WORK—AND THOSE THAT FAIL
 
 Patterns are shortcuts for thinking, but they are only helpful when their
-boundaries are visible. This Part starts with the loop shapes teams reach for,
+boundaries are visible. Every pattern in Chapters 10–15 places a model step
+inside the platform of Part III: the step receives a resolved slice of Skills
+and tools (Chapters 8–9), its outputs cross the six gates (Chapter 2), and the
+framework stays behind AgentRuntime (Chapter 3). Each chapter answers three
+questions: what the model may decide, what the controller owns, and how the
+pattern stops and is accepted. The Part starts with the smallest bounded loop,
 then follows routing, planning, reflection, human review, and durable work. It
-ends with a catalog of patterns and failure shapes so a design review can ask
-not only “what could work?” but also “how would this fail in production?”
+ends by comparing and combining these patterns, then naming the failure shapes
+they prevent—several corrected by mechanisms Parts V–VIII build—so a design
+review can ask not only “what could work?” but also “how would this fail in
+production?”
 
 # 10 — Use ReAct Without Creating a Runaway Loop
 
@@ -18,71 +25,47 @@ not only “what could work?” but also “how would this fail in production?�
 | --- |
 | **THE DESIGN CHOICE** Use ReAct only for information-dependent next steps and impose external turn, tool, time, cost, and no-progress limits. |
 
-## Why useful reasoning loops still need hard limits
-
 ReAct is valuable when the next question depends on the last observation. It
 is dangerous when the loop is allowed to decide its own limits or call tools
-without a clear stopping rule. This chapter keeps the useful feedback loop and
-puts turns, tools, time, cost, progress, and acceptance under external control.
-
-## Use ReAct only when observations change the next step
-
-Use ReAct when a new observation can genuinely change the next useful question. If the sequence is already known—read the case, validate required fields, calculate a ratio, request approval—a durable workflow is clearer and usually cheaper. That avoids paying a model to rediscover a process the organization already understands. Even when ReAct is justified, the controller should stop when the loop repeats, exhausts its budget, or cannot obtain missing evidence.
-
+without a clear stopping rule.
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
-| External loop controller and acceptance engine | observation/model and model/tool | turn · tool permit · run budget | one bounded loop | AgentDecision · Observation · ReActLimits |
+| External loop controller and acceptance engine | observation/model and model/tool | turn · tool permit · run budget | one bounded loop | AgentDecision · Observation · AgentStepResult · ReActLimits |
+
+## Use ReAct only when observations change the next step
+
+Use ReAct when a new observation can genuinely change the next useful question. If the sequence is already known—read the case, validate required fields, calculate a ratio, request approval—a durable workflow is clearer and usually cheaper. That avoids paying a model to rediscover a process the organization already understands. Even when ReAct is justified, the controller should stop when the loop repeats, exhausts its budget, or cannot obtain missing evidence. The tools a ReAct step can call are the slice resolved for that step from its pinned Skills (Chapter 8) and exposed through the Tool Gateway (Chapter 2); the loop never discovers tools on its own.
 
 ## Keep the feedback loop inside external limits
 
 [[DIAGRAM:pattern-react|Figure 10-1 — Bounded ReAct: the loop is inside, the limits are outside]]
 
-Read the figure for what is *not* in the loop. The controller admits each turn and owns the budgets; a mutation leaves as a proposal rather than executing inline; and the decision to stop belongs to the acceptance engine, not to the model's wording.
+Read the figure for what is *not* in the loop. The controller admits each turn and owns the budgets; a mutation leaves as a proposal rather than executing inline; and the controller decides when the loop stops (limits, no progress, a terminal decision), while the acceptance engine—not the model's wording—decides whether the result is accepted (Chapter 13). Each turn follows the same sequence:
+
+1. Load goal, authorized context, budgets, and acceptance criteria.
+2. Ask for one typed action or terminal decision.
+3. Validate the action at the Tool Gateway; execute reads and return mutations as proposals.
+4. Sanitize and append the observation.
+5. Continue, or end the activity on a terminal decision or an external rule; an answer goes to the acceptance engine.
 
 ReAct interleaves reasoning, action, and observation. Its value is conditional adaptivity: after reading the application projection, the agent may decide that another income source is unnecessary, or that a contradictory address requires another authorized document. The pattern becomes harmful when it substitutes an unconstrained loop for a known process.
 
-Northstar stores only typed decisions, tool intents, observations, evidence references, and stop reasons—not private chain-of-thought. The external controller maintains counters and normalized signatures. If an agent repeats the same tool and canonical arguments against the same source revision, or if accepted evidence does not change across turns, the controller records no progress and terminates or escalates.
+The platform stores only typed decisions, tool intents, observations, evidence references, and stop reasons—not private chain-of-thought. Each observation is a typed, sanitized result or artifact reference carrying provenance, version, and classification, and it re-enters context as untrusted data (Chapter 6). The external controller maintains counters and normalized signatures. If an agent repeats the same tool and canonical arguments against the same source revision, or if accepted evidence does not change across turns, the controller records no progress and terminates or escalates. Information gain is the new accepted evidence a turn produces; a turn with none counts toward the no-progress threshold.
 
 ### Acceptance and failure semantics
 
-A ReAct activity can return answer, needs\_input, delegate, proposed\_action, budget\_exhausted, or failed. A mutating action never executes inside the unconstrained loop; it becomes a proposal for deterministic policy, approval, effect, and workflow processing. If a read tool times out, bounded retry may be safe. If a mutation times out, the loop stops because the effect is unknown.
+Each turn, the model returns one typed decision, carried in `AgentStepResult.decision` (Chapter 3): `invoke_tool` for a read, `proposed_action` for a mutation, `answer`, `needs_input`, or `delegate`. A read runs inside the loop; a proposed action leaves it as a proposal for the six gates of Chapter 2; `delegate` asks the controller for a route or handoff (Chapter 11). The controller ends the activity with the model's terminal decision or with its own stop reason, `budget_exhausted` or `no_progress`, returned as the Chapter 3 step status `failed` with that `error_code` rather than as an exception; the workflow, not the loop, decides whether a stop reason opens an intervention (Chapter 14). A read that times out may be retried within the run budget. A proposed mutation is executed by the workflow outside the loop; if that execution times out, the effect is unknown and is reconciled before the loop resumes (Chapter 22).
+
+|  |
+| --- |
+| **COMMON PITFALL**  Unbounded retries disguised as reasoning. When a tool fails and the model is free to try again, the loop can burn its whole budget rediscovering the same error. Return failures as typed data the model can read, cap attempts per tool (see AP-04), and make the cap a run-level budget rather than a per-call one. |
 
 ### Capacity model
 
-Plan capacity in turns per successful outcome, not only requests per second. Track model tokens, tool calls, connector time, observation bytes, and repeated-action rate. Per-tenant permits and hard per-run limits prevent one pathological loop from consuming a worker pool.
+Plan capacity in turns per verified success (Chapter 28), not only requests per second. A loop's cost is set by its trajectory, not its prompt: each observation re-enters the context, so an n-step loop is roughly quadratic in tokens, and a cheap call that loops eight times is not cheap. Cap the step count, summarize observations before they re-enter, and track model tokens, tool calls, connector time, observation bytes, and repeated-action rate. Per-tenant permits and hard per-run limits prevent one pathological loop from consuming a worker pool. Per-loop caps do not compose across delegation; budgets must be withdrawn from the parent (AP-11).
 
-|  |
-| --- |
-| **PERFORMANCE AND COST**  A ReAct loop's cost is set by its trajectory, not its prompt. Each observation re-enters the context, so an n-step loop is roughly quadratic in tokens. Cap the step count, summarize observations before they re-enter, and measure cost per *completed task* rather than per call — a cheap call that loops eight times is not cheap. |
-
-## What the evidence lets us conclude
-
-|  |
-| --- |
-| **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
-
-The discussion above draws on R01; R13. Appendix K lists the complete sources and records their authority, version, and scope.
-
-|  |
-| --- |
-| **COMMON PITFALL**  Unbounded retries disguised as reasoning. When a tool fails and the model is free to try again, the loop can burn its whole budget rediscovering the same error. Return failures as typed data the model can read, cap attempts per tool, and make the cap a run-level budget rather than a per-call one. |
-
-## How ReAct works in practice
-
-|  |
-| --- |
-| **THE ENGINEERING PROBLEM** The system cannot know every information-gathering step in advance because the next action depends on the previous observation. |
-
-### How the pattern works
-
-A bounded controller alternates model decision and governed tool invocation. The controller—not the model—owns turns, budgets, state, repeated-action detection, and acceptance.
-
-1. Load goal, authorized context, budgets, and acceptance criteria.
-2. Ask for one typed action or terminal disposition.
-3. Validate the action at the Tool Gateway; execute reads and return mutations as proposals.
-4. Sanitize and append the observation.
-5. Accept, continue, request input, or terminate on an external rule.
+## ReAct at a glance
 
 | **Use when** | **Do not use when** |
 | --- | --- |
@@ -113,12 +96,17 @@ A bounded controller alternates model decision and governed tool invocation. The
 * remaining budgets
 * stop reason
 
+## What the evidence lets us conclude
+
+The discussion above draws on R01. Appendix K lists the complete sources and records their authority, version, and scope.
+
 ## A sensible place to start
 
+Two versions of the same loop follow. The first is an OpenAI Agents SDK version in which the run budget lives in the tool context.
 
 [[EXAMPLE:bounded-react-loop]]
 
-### Bounded ReAct controller
+The second is the framework-neutral controller the chapter describes: it owns turns, tool budget, and repeat detection, runs only reads, and returns a typed stop reason instead of raising.
 
 [[EXAMPLE:react-engine#core]]
 
@@ -126,13 +114,15 @@ A bounded controller alternates model decision and governed tool invocation. The
 
 1. List every turn with normalized action, observation, token, time, and cost deltas.
 2. Identify the first repeated action-observation signature.
-3. Check whether the stop decision came from acceptance criteria or model wording.
+3. Check whether the loop stopped on an external rule and whether acceptance came from the acceptance criteria rather than the model's wording.
+
+If limits reset at each delegation hop or every layer retries, see AP-11 and AP-04 in Chapter 17.
 
 ## What to verify before production
 
 **✓** The information need truly requires iterative observation.
 
-**✓** The controller owns limits, state, tool invocation, and acceptance.
+**✓** The controller owns limits, state, and tool invocation; acceptance is decided outside the loop.
 
 **✓** Observations are typed, sanitized, versioned, and provenance-linked.
 
@@ -152,12 +142,12 @@ A bounded controller alternates model decision and governed tool invocation. The
 | When is ReAct the right pattern? | When the next information need genuinely depends on a verified prior observation and the loop can be bounded. |
 | Why must the controller sit outside the model? | It owns budgets, tool eligibility, invocation, state, no-progress detection, and terminal transitions. |
 | How do you stop a ReAct loop that keeps rephrasing the same request? | Normalize action-observation signatures, count repeats, evaluate information gain, and terminate or escalate at a deterministic threshold. |
-| What should an observation contain? | A typed, sanitized result or artifact reference with provenance, version, classification, and explicit error semantics. |
+| What should an observation contain? | The observation contract in § Keep the feedback loop inside external limits, plus explicit error semantics. |
 | When should ReAct not be used? | For a known workflow, a single retrieval, a protected transaction, or a task whose acceptance can be computed directly. |
 
 ## Where this leads next
 
-A bounded reason–act loop handles local uncertainty; Chapter 11 adds routing and handoff when known paths or specialists should own the work.
+A bounded reason–act loop handles local uncertainty. When a turn returns `delegate`, or a known path or specialist should own the work, Chapter 11 adds routing and handoff.
 
 # 11 — Route the Work Without Losing Ownership
 
@@ -169,59 +159,24 @@ A bounded reason–act loop handles local uncertainty; Chapter 11 adds routing a
 | --- |
 | **THE DESIGN CHOICE** Use deterministic route eligibility and fallback; record handoff as an explicit ownership transition. |
 
-## Why choosing a worker is different from handing off responsibility
-
 Routing sounds like a classification problem until a real request is late,
 ambiguous, or already halfway through a workflow. This chapter separates the
 choice of a specialist from the transfer of responsibility, then makes
-fallbacks, deadlines, authority, and the final response explicit. That is what
-prevents a handoff from becoming a message that nobody owns.
-
-## Routing and handoff are different events
-
-A routing decision answers “who is best placed to do this?” A handoff answers “who is now accountable for finishing it?” Those are not the same event. If a specialist never acknowledges the task, the original coordinator still owns the deadline and user response. Recording the transfer prevents work from disappearing into a queue while every component assumes someone else has it.
-
+fallbacks, deadlines, authority, and the final response explicit.
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
-| Route service and workflow ownership record | classifier to privileged route; owner transfer | route class · specialist queue | one route or handoff | RouteDecision · Handoff · CapabilityEnvelope |
+| Route service and workflow ownership record | classifier to privileged route; owner transfer | route class · specialist queue | one route or handoff | RoutingDecision · OwnershipTransfer · CapabilityEnvelope |
+
+## Routing and handoff are different events
+
+A routing decision answers “who is best placed to do this?” A handoff answers “who is now accountable for finishing it?” Those are not the same event. Agent frameworks also use the word handoff for passing a conversation to another agent inside one run (Chapter 3). That framework handoff moves control, not accountability. It becomes a handoff in this chapter's sense only when the platform records the transfer and the recipient acknowledges it. If a specialist never acknowledges the task, the original coordinator still owns the deadline and user response. Recording the transfer prevents work from disappearing into a queue while every component assumes someone else has it.
 
 ## A routing decision cannot grant permission
 
-[[DIAGRAM:pattern-routing|Figure 11-1 — Routing selects a specialist; policy decides whether it may act]]
+[[DIAGRAM:pattern-routing|Figure 11-1 — Routing selects a specialist from an eligible set; authorization decides whether it may act]]
 
-A router reduces heterogeneity by selecting an implementation: policy explanation, document validation, income verification, or human triage. The model may classify semantic intent, but the eligible set is assembled first from purpose, authority, risk, data region, release status, service health, and capacity. A route cannot grant a capability that was absent from the run envelope.
-
-A **handoff** is a different event. It changes the current owner of an interaction or task. Northstar records old owner, new owner, state version, unresolved obligations, artifact references, child capability envelope, deadline, and cancellation lineage. The recipient acknowledges or rejects the transfer. Until acknowledgment, the previous owner remains accountable.
-
-### Confidence and fallback
-
-Confidence is calibrated on a versioned domain dataset. Below a threshold, the route service requests clarification, applies a deterministic safe default, or sends the request to human triage. High confidence does not bypass policy. For privileged routes, both route eligibility and exact invocation authorization are required.
-
-### Anti-patterns
-
-* **Persona routing:** selecting among nearly identical prompts with no different capability boundary.
-* **Handoff by chat message:** telling another agent “you own this now” without durable state.
-* **Privilege through selection:** showing a model an admin route and treating its selection as authorization.
-* **No fallback:** forcing a best guess even when the request is out of distribution.
-
-## What the evidence lets us conclude
-
-|  |
-| --- |
-| **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
-
-The discussion above draws on R29; R07. Appendix K lists the complete sources and records their authority, version, and scope.
-
-## How Routing works in practice
-
-|  |
-| --- |
-| **THE ENGINEERING PROBLEM** Different requests need different workflows, models, Skills, agents, risk controls, or human queues. |
-
-### How the pattern works
-
-A classifier proposes a route from a precomputed eligible catalog. A deterministic validator checks confidence, policy, health, capacity, and fallback before selection.
+A router reduces heterogeneity by selecting an implementation: policy explanation, document validation, income verification, or human triage. A ReAct step that returns `delegate` (Chapter 10) arrives here as a routing request. The model may classify semantic intent, but the eligible set is assembled first from purpose, authority, risk, data region, release status, service health, and capacity—deterministically, before any model sees the options, the same way Skill resolution works (Chapter 8). A route cannot grant a capability that was absent from the run's capability envelope (Chapter 21). Choosing which model serves a step follows the same eligibility-first rule but belongs to the LLM Gateway (Chapter 4), and model-routing economics to Chapter 28. In order:
 
 1. Build the eligible route set.
 2. Classify the request and return route, confidence, and reason.
@@ -229,9 +184,36 @@ A classifier proposes a route from a precomputed eligible catalog. A determinist
 4. Select the route or deterministic fallback.
 5. Measure outcome by route and slice.
 
+### Confidence and fallback
+
+Confidence is calibrated on a versioned domain dataset. Below a threshold, the route service requests clarification, applies a deterministic safe default, or sends the request to a human triage queue (Chapter 14). High confidence does not bypass policy. For privileged routes, both route eligibility and exact invocation authorization are required.
+
+## Handoff transfers accountability
+
+A handoff is needed when another agent or human must become the current interaction or task owner rather than merely provide an answer to the original controller. Frameworks make it easy for one agent to involve another, but the word hides different ownership models.
+
+| **Case** | **What happens** | **Correct abstraction** |
+| --- | --- | --- |
+| Specialist as a tool | The evidence agent asks a sanctions specialist for analysis and retains responsibility for the final disposition | Agent-as-tool or equivalent local delegation |
+| Framework handoff (control only) | A triage agent transfers the bounded conversation to an income-verification specialist; control changes locally but the same activity remains accountable | Framework handoff, with the same external budget and cancellation boundary |
+| Accountable handoff (this chapter) | A document-defect specialist takes over the case's evidence follow-up, including its deadline and the final response to the loan officer | Recorded, acknowledged ownership transfer |
+| Durable delegation | A fraud investigation needs independent ownership, waits, retries, deadlines, human review, or a cross-service trust boundary | Durable `TaskEnvelope` and child workflow (Chapter 18) |
+
+An accountable handoff changes the current owner of an interaction or task. The current owner creates a typed transfer that records old owner, new owner, state version, unresolved obligations, artifact references, child capability envelope, deadline, cancellation lineage, and acceptance contract.
+
+1. Decide that ownership—not just expertise—must transfer.
+2. Persist the handoff proposal.
+3. Validate recipient, authority, compatibility, and capacity.
+4. Require the recipient to acknowledge or reject; until then, the current owner stays accountable.
+5. On acknowledgment, atomically change owner and emit an event; on rejection or timeout, keep the current owner.
+
+A transfer is proposed, then acknowledged, rejected, or expired; only acknowledgment changes the owner. Chapter 18 implements this protocol as the Ownership Service and its `tasks/{id}:handoff` and `:accept` operations; Chapter 21 explains how the child capability envelope is derived.
+
+## Routing at a glance
+
 | **Use when** | **Do not use when** |
 | --- | --- |
-| Use when candidate paths have materially different capabilities, owners, SLOs, cost, or risk. | Avoid model routing when a stable deterministic rule is sufficient or misrouting has unacceptable consequences. |
+| Use when candidate paths have materially different capabilities, owners, SLOs, cost, or risk. | Avoid a learned router when a stable deterministic rule is sufficient or misrouting has unacceptable consequences. |
 
 ### Where it helps—and what it costs
 
@@ -246,7 +228,8 @@ A classifier proposes a route from a precomputed eligible catalog. A determinist
 | --- | --- |
 | Low-confidence guess | Clarify, default, or human triage. |
 | Route drift | Versioned datasets and confusion-matrix monitoring. |
-| Privileged route selection | Eligibility before classification and exact authorization after selection. |
+| Privileged route selection (AP-12) | Eligibility before classification and exact authorization after selection. |
+| Persona routing | Route only between implementations with different capabilities, owners, or controls. |
 
 ### What you need to see in production
 
@@ -257,21 +240,7 @@ A classifier proposes a route from a precomputed eligible catalog. A determinist
 * fallback
 * route outcome
 
-## How Handoff works in practice
-
-|  |
-| --- |
-| **THE ENGINEERING PROBLEM** Another agent or human must become the current interaction or task owner rather than merely provide an answer to the original controller. |
-
-### How the pattern works
-
-The current owner creates a typed transfer containing state references, unresolved obligations, narrowed authority, deadline, cancellation lineage, and acceptance contract.
-
-1. Decide that ownership—not just expertise—must transfer.
-2. Persist the handoff proposal.
-3. Validate recipient, authority, compatibility, and capacity.
-4. Require the recipient to acknowledge or reject; until then, the current owner stays accountable.
-5. On acknowledgment, atomically change owner and emit an event; on rejection or timeout, keep the current owner.
+## Handoff at a glance
 
 | **Use when** | **Do not use when** |
 | --- | --- |
@@ -288,7 +257,7 @@ The current owner creates a typed transfer containing state references, unresolv
 
 | **Failure** | **Control** |
 | --- | --- |
-| Orphaned task | Atomic ownership state and acknowledgment timeout. |
+| Orphaned task (AP-08) | Atomic ownership state and acknowledgment timeout. |
 | Authority expansion | Child grant intersection and exact reauthorization. |
 | Context loss | Typed artifact and obligation references instead of transcript copying. |
 
@@ -301,46 +270,29 @@ The current owner creates a typed transfer containing state references, unresolv
 * acknowledgment
 * deadline and cancellation
 
+## What the evidence lets us conclude
+
+| **Claim or correction** | **Grounded statement** | **Source IDs** |
+| --- | --- | --- |
+| Framework handoff | The OpenAI Agents SDK documents handoffs as a framework primitive for passing control between agents; recording ownership, acknowledgment, and authority narrowing around it is this book's recommendation. | R29 |
+
+The discussion above draws on R29. Appendix K lists the complete sources and records their authority, version, and scope.
+
 ## A sensible place to start
 
+The first listing uses the SDK's framework handoff to switch agents within one run. It moves control, not accountability; the platform records ownership around it (see § Handoff transfers accountability).
 
 [[EXAMPLE:routing-handoff]]
 
-### Deterministic route validation
+The second computes the eligible set before the model proposes a route, then validates the proposal and falls back instead of guessing.
 
-🐍 · implementation excerpt
-
-```python
-from __future__ import annotations
-import hashlib
-import json
-from dataclasses import dataclass
-from typing import Awaitable, Callable, Protocol
-from .contracts import AgentDecision
-
-class Route:
-    name: str
-    capability: str
-    maximum_risk: int
-
-class DeterministicRouter:
-    def __init__(self, routes: tuple[Route, ...]) -> None:
-        self.routes = {route.name: route for route in routes}
-
-    def accept_model_route(
-        self, proposed: str, allowed_capabilities: frozenset[str], risk: int
-    ) -> Route:
-        route = self.routes[proposed]
-        if route.capability not in allowed_capabilities or risk > route.maximum_risk:
-            raise PermissionError("proposed route is outside the run envelope")
-        return route
-```
+[[EXAMPLE:route-validation#router]]
 
 ## If this fails in production
 
 1. Recompute the eligible route set from recorded purpose, authority, health, and risk.
 2. Inspect the confidence threshold and fallback actually used.
-3. Verify ownership and cancellation after a handoff.
+3. Confirm the old owner remained accountable until the recipient's acknowledgment was recorded, and that cancellation reached the current owner.
 
 ## What to verify before production
 
@@ -350,7 +302,7 @@ class DeterministicRouter:
 
 **✓** Routing and handoff are separate contracts.
 
-**✓** Ownership, state, authority, deadlines, and cancellation transfer atomically.
+**✓** Ownership changes only on recorded acknowledgment; state, narrowed authority, deadlines, and cancellation move with it atomically.
 
 **✓** Route decisions and outcomes are measured by slice.
 
@@ -366,7 +318,7 @@ class DeterministicRouter:
 | How does routing differ from a handoff? | Routing selects an eligible implementation; handoff transfers responsibility and therefore requires ownership, state, authority, and cancellation semantics. |
 | Should the model see every route? | No. Give it a minimal eligible set derived from purpose, authority, health, region, risk, and release policy. |
 | What should happen below a confidence threshold? | Use a deterministic default, request clarification, or route to a human queue; do not select a privileged specialist by guesswork. |
-| How do you make routing debuggable? | Record candidates, eligibility filters, proposed route, confidence, validator decision, fallback, version, latency, and outcome. |
+| When is a handoff the wrong choice? | When the parent still owns the outcome (agent-as-tool) or the work needs independent recovery without conversational transfer (durable child task, Chapter 18). |
 | When is a static router better? | When classes are stable, risk is high, compliance requires predictability, or a simple rule already separates the work. |
 
 ## Where this leads next
@@ -379,7 +331,7 @@ Routing selects among known capabilities; Chapter 12 addresses tasks whose decom
 
 |  |
 | --- |
-| **WHERE THE MORTGAGE CASE STANDS** A mortgage application with missing employment evidence, an asset discrepancy, and a property check requires adaptive sequencing. Harborlight lets a planner propose a graph but compiles that graph before any node becomes schedulable. |
+| **WHERE THE MORTGAGE CASE STANDS** A mortgage application with a missing second pay statement, an asset discrepancy, and a property check requires adaptive sequencing. Harborlight lets a planner propose a graph but compiles that graph before any node becomes schedulable. |
 
 |  |
 | --- |
@@ -388,14 +340,14 @@ Routing selects among known capabilities; Chapter 12 addresses tasks whose decom
 ## Why a plausible plan still needs to be compiled
 
 Planning earns its complexity only when the work cannot be known in advance.
-Even then, a model-proposed plan is not permission to run arbitrary steps. This
-chapter treats the plan as an intermediate representation: validate it,
-authorize it, compile it into executable nodes, and freeze the work that has
-already committed. The distinction matters whenever the plan changes halfway
-through a long-running case.
-
-## From candidate plan to executable work
-
+When a stable route exists, route deterministically (Chapter 11); invoke the
+planner only at entry, at material uncertainty, or after a failure invalidates
+the current plan. Even then, a model-proposed plan is not permission to run
+arbitrary steps. This chapter treats the plan as an intermediate
+representation: validate it, check it stays within the run's authority, compile
+it into executable nodes, and freeze the work that has already committed. The
+distinction matters whenever the plan changes halfway through a long-running
+case.
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
@@ -403,31 +355,19 @@ through a long-running case.
 
 ## Treat planning like compilation—not authorization
 
-The compiler analogy is useful because a plan has the same gap as source code: it may express a sensible intention and still be unsafe or impossible to execute. The plan compiler resolves capabilities, checks dependencies, rejects cycles, attaches budgets and deadlines, and verifies that each step stays inside the run’s authority. Runtime checks still matter because a case version, policy decision, or approval can become stale before a later step begins.
+The compiler analogy is useful because a plan has the same gap as source code: it may express a sensible intention and still be unsafe or impossible to execute. Models confuse a coherent narrative with a feasible, authorized execution graph. The plan compiler resolves capabilities, checks dependencies, rejects cycles, attaches budgets and deadlines, and verifies that each step stays inside the run's capability envelope (Chapter 21). A compiled plan proves its steps fit inside the envelope; it does not authorize them. Each dispatch still receives an exact authorization decision at the Tool Gateway (Chapter 2) against the current resource version, because a case version, policy decision, or approval can become stale before a later step begins.
 
 [[DIAGRAM:pattern-planning|Figure 12-1 — A candidate plan becomes typed IR and is validated before any step runs]]
 
-The planner describes desired work; the compiler determines whether that work is legal and executable. Northstar Plan IR nodes name capability requirements rather than concrete credentials. Compilation binds each requirement to an eligible Skill and tool release, verifies input/output schemas, calculates critical path and maximum cost, checks graph and terminal properties, and emits a signed immutable plan revision.
+The planner describes desired work; the compiler determines whether that work is legal and executable. Plan IR nodes name capability requirements rather than concrete credentials. Compilation binds each capability requirement to an eligible Skill and tool release (Chapter 8), calculates critical path and maximum cost, and emits an immutable plan revision signed by the compiler so the scheduler can verify that what runs is what was validated.
 
 Resource feasibility matters. A valid graph can still miss the deadline if it requires too many browser sessions, serialized vendor calls, or human approvals. The compiler checks workload queues, concurrency classes, rate limits, regional placement, and time windows before committing a plan. Scheduling remains a workflow responsibility.
 
-### Replanning contract
+The alternatives run from a fixed workflow, rules engine, and router through plan-and-execute, ReAct, graph search, and planner/executor/critic to code generation. Fixed workflows maximize predictability; dynamic planning increases coverage at a higher evaluation, security, and cost burden.
 
-New evidence can invalidate future work. Replanning starts from an explicit set of immutable facts: accepted artifacts, committed effects, approval decisions, and current resource versions. The new revision includes a diff, rationale, superseded nodes, reused artifacts, changed budget, and compiler evidence. It cannot rewrite history.
+## What should be agentic?
 
-## Planning, dynamic execution, and deterministic boundaries
-
-| **Required analysis** | **Design conclusion** |
-| --- | --- |
-| Problem | Allow useful adaptation without letting the model rewrite policy, invent capabilities, or turn every step into expensive nondeterministic reasoning. |
-| Why it is difficult | A plan is based on incomplete information; tool results change the world; models confuse a coherent narrative with a feasible, authorized execution graph. |
-| Design alternatives | Fixed workflow; rules engine; model router; plan-and-execute; ReAct loop; graph search; planner/executor/critic; code generation. |
-| Recommended architecture | Use a typed, versioned plan IR. The model proposes goals, dependencies, and candidate capabilities; deterministic validators compile the plan into workflow nodes. Runtime adaptation creates an auditable plan revision bounded by the original authority and budget unless a new grant is obtained. |
-| Trade-offs | Fixed workflows maximize predictability but cover less ambiguity. Dynamic planning increases task coverage and maintenance flexibility while raising evaluation, security, and cost burdens. |
-| Failure scenarios | Infinite replan loop; plan references nonexistent tool; planner broadens scope; stale precondition; generated code bypasses gateway; critic repeatedly rewrites a correct result. |
-| Enterprise example | An incident agent may choose which diagnostic queries to run and revise hypotheses as evidence arrives, but production changes remain pre-modeled operations with change-window, policy, and approval checks. |
-
-### What should be agentic?
+The same split decides every pattern in this Part; in a plan it is encoded as the node `kind`.
 
 | **Work** | **Recommended mechanism** | **Reason** |
 | --- | --- | --- |
@@ -444,7 +384,7 @@ New evidence can invalidate future work. Replanning starts from an explicit set 
 | Summarization and user explanation | LLM grounded in evidence | Natural-language generation is appropriate |
 | Acceptance tests and reconciliation | Code/tests; model judge only as a supplement | Avoid self-certification and judge bias |
 
-### Plan IR
+## Plan IR
 
 JSON · implementation excerpt
 
@@ -453,7 +393,7 @@ JSON · implementation excerpt
   "plan_id": "plan_...",
   "revision": 3,
   "goal": "...",
-  "authority_envelope_id": "cap_...",
+  "capability_envelope_id": "cap_...",
   "budget": {"usd": 12, "steps": 40, "wall_clock_seconds": 7200},
   "nodes": [{
     "id": "n7",
@@ -470,7 +410,32 @@ JSON · implementation excerpt
 }
 ```
 
-A deterministic compiler rejects missing schemas, unbounded loops, unauthorized capabilities, budget overflow, inconsistent data classification, unhandled terminal paths, and any cycle that is not an explicitly bounded loop. A dynamic node may choose among an allowlisted capability set; it cannot call arbitrary network endpoints.
+The shared contract models `CandidatePlan` and `PlanNode` (`examples/contracts.py`) define these fields; the compiler at the end of this chapter checks them.
+
+Each node kind is executed by a mechanism defined elsewhere: `llm_activity` is a bounded model step (Chapter 10) whose output is accepted as in Chapter 13; `tool_activity` crosses the six gates (Chapter 2) with effect semantics from Chapter 22; `gate` is a human approval (Chapter 14); `wait` is a durable timer or signal (Chapter 15); `child_task` and `join` are durable delegation and fan-in (Chapter 18).
+
+`risk_class` uses the book's five effect classes: R0 pure transform, R1 low-sensitivity read, R2 sensitive read or reversible draft, R3 external communication or material reversible change, R4 irreversible, privileged, or financial action, where the agent may only propose (full controls in Chapter 22 § Risk classes).
+
+### Compile-time checks
+
+* Every node has a pinned implementation or an allowlisted runtime selector, typed inputs/outputs, timeout, retry owner, budget, risk class, acceptance rule, and terminal failure path. A pack Skill the run may not resolve is refused here, naming the rule, never mid-run (Chapter 9).
+* Every capability lies inside the run's capability envelope. A dynamic node may choose only among an allowlisted capability set; it cannot call arbitrary network endpoints.
+* Data-flow classification can stay equal or become more restrictive. A node cannot send restricted data to a capability whose manifest/region/purpose is incompatible.
+* Mutating nodes require idempotency/effect semantics (Chapter 22) and any policy-required preview, approval (Chapter 14), or compensation. An R4 (irreversible or privileged) commit remains a deterministic domain operation.
+* Loops require a deterministic guard plus maximum iterations, wall time, cost, and a no-progress detector using the no-progress signatures of Chapter 10; unbounded loops and unhandled terminal paths are rejected. Delegation depth and parallel fan-out are statically bounded; see AP-11 for why per-child limits do not compose.
+* The compiler estimates critical path, maximum fan-out, worst-case calls/cost, and required quota. Admission (Chapter 28) may reject, defer, or require approval before commit.
+
+## Revise without rewriting history
+
+New evidence can invalidate future work. Replanning starts from an explicit set of immutable facts: accepted artifacts, committed effects, approval decisions, and current resource versions. The new revision includes a diff, rationale, superseded nodes, reused artifacts, changed budget, and compiler evidence. It cannot rewrite history.
+
+1. Persist the triggering observation/failure and current state version.
+2. Freeze completed effects and accepted artifacts; mark nodes whose assumptions changed as invalidated.
+3. Ask the planner only for the affected horizon, not the entire run.
+4. Compile and diff the candidate against the committed revision.
+5. Reuse nodes only when implementation, inputs, policy, data revisions, and acceptance remain compatible.
+6. Obtain a new approval (Chapter 14) if risk, purpose, destination, spend, or authority expands.
+7. Atomically commit the revision and reservations, then schedule newly ready nodes.
 
 ## A workable implementation
 
@@ -484,7 +449,7 @@ A deterministic compiler rejects missing schemas, unbounded loops, unauthorized 
 | Plan Compiler | Validate graph, types, authority, budgets, effects, failure paths, and determinism boundaries |
 | Scheduler | Materialize ready nodes into workflow activities/child tasks under concurrency and quota |
 | Replan Controller | Decide when replanning is allowed and define the unchanged/reusable subgraph |
-| Acceptance Engine | Run deterministic checks and policy-approved model graders before satisfying nodes/goals |
+| Acceptance Engine | Run deterministic checks and policy-approved model graders before satisfying nodes/goals (Chapter 13) |
 
 ### The contracts between components
 
@@ -502,70 +467,23 @@ A deterministic compiler rejects missing schemas, unbounded loops, unauthorized 
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
-| Plan | plan ID, run, goal hash, current committed revision, authority envelope, lifecycle state |
+| Plan | plan ID, run, goal hash, current committed revision, capability envelope, lifecycle state |
 | PlanRevision | plan/revision, parent revision, trigger/rationale, planner/model/prompt/context versions, graph hash, created by/time; immutable |
 | PlanNode | stable logical node ID, revision, kind, capability requirement/binding, input selectors, output schema, risk, retry/timeout, acceptance, failure strategy |
 | PlanEdge | revision, from/to node, condition, artifact/data mapping; compiler verifies type compatibility and acyclicity unless loop is explicitly bounded |
 | CapabilityBinding | abstract requirement, chosen agent/tool version, eligibility decision, health snapshot, regional endpoint, expiry |
-| BudgetReservation | run/plan/node, resource type, reserved/consumed/released amount, expiry, ledger version |
+| BudgetReservation | See Chapter 28 § Records worth preserving; the compiler requests one per plan node |
 | ValidationFinding | rule ID/severity, object path, message, evidence, required remediation; errors block commit |
 | NodeExecution | logical node, plan revision, workflow/activity/task ID, attempt, state, inputs/outputs, accepted result hash, timing/cost |
 
-### Compile-time checks
-
-* Every node has a pinned implementation or an allowlisted runtime selector, typed inputs/outputs, timeout, retry owner, budget, risk class, acceptance rule, and terminal failure path.
-* Data-flow classification can stay equal or become more restrictive. A node cannot send restricted data to a capability whose manifest/region/purpose is incompatible.
-* Mutating nodes require idempotency/effect semantics and any policy-required preview/approval/compensation. R4 commit remains a deterministic domain operation.
-* Loops require a deterministic guard plus maximum iterations, wall time, cost, and no-progress detector. Delegation depth and parallel fan-out are statically bounded.
-* The compiler estimates critical path, maximum fan-out, worst-case calls/cost, and required quota. Admission may reject, defer, or require approval before commit.
-
-### Runtime revision algorithm
-
-1. Persist the triggering observation/failure and current state version.
-2. Freeze completed effects and accepted artifacts; mark nodes whose assumptions changed as invalidated.
-3. Ask the planner only for the affected horizon, not the entire run.
-4. Compile and diff the candidate against the committed revision.
-5. Reuse nodes only when implementation, inputs, policy, data revisions, and acceptance remain compatible.
-6. Obtain new consent/approval if risk, purpose, destination, spend, or authority expands.
-7. Atomically commit the revision and reservations, then schedule newly ready nodes.
-
 ### Scalability and performance
 
-* Planner workers are stateless and queue driven. Plan storage is partitioned by tenant + run; immutable revisions can be cached by graph hash.
-* Cache tool/agent schemas and compatibility matrices by digest. Policy and health are time-sensitive and must be rechecked at commit/dispatch.
+* Planner workers are stateless and queue driven. Plan storage is partitioned by tenant and run; immutable revisions, schemas, and large graph blobs are stored or cached by digest, while policy and health are rechecked at commit and dispatch.
 * Validate incrementally: a plan revision carries changed nodes/edges, allowing graph, type, cost, and policy analysis to recompute only impacted regions.
 * The scheduler scans no global table. Workflow events enqueue newly ready node IDs; conditional updates ensure each logical node is dispatched once per accepted attempt.
-* For large DAGs, store canonical graph blobs by hash and keep indexed node/dependency projections in the relational store. Operator views are materialized asynchronously.
 * Apply per-run ready-node limits and weighted fair scheduling across tenants. Planning cannot reserve unbounded future capacity; reservations expire and are reclaimed.
-* Use deterministic routing for common/high-confidence cases and invoke the planner only at entry, material uncertainty, or failure boundaries. This reduces model cost and plan churn.
 
-|  |
-| --- |
-| **ARCHITECTURE GUIDANCE**  Separate the plan from its execution. A plan is data: persist it, version it, and let it be inspected and approved before any step commits an effect. Once execution is a separate pass over a stored plan, replay, partial resume, and human amendment all become ordinary operations instead of special cases. |
-
-## What the evidence lets us conclude
-
-|  |
-| --- |
-| **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
-
-The discussion above draws on R27; R02; R13. Appendix K lists the complete sources and records their authority, version, and scope.
-
-## How Planning works in practice
-
-|  |
-| --- |
-| **THE ENGINEERING PROBLEM** The task requires adaptive decomposition or dependency ordering that cannot be fully encoded upfront. |
-
-### How the pattern works
-
-A planner emits a typed Plan IR. A deterministic compiler validates graph integrity, capabilities, schemas, risk, effects, budgets, resources, and terminal paths before the workflow schedules nodes.
-
-1. Create a CandidatePlan with bounded nodes and dependencies.
-2. Compile against the run envelope and release catalog.
-3. Freeze a plan digest and revision.
-4. Schedule ready nodes through durable workflow state.
-5. Replan only the uncommitted future when observations invalidate assumptions.
+## Planning at a glance
 
 | **Use when** | **Do not use when** |
 | --- | --- |
@@ -595,10 +513,17 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 * critical path
 * replan diff and reason
 
+## What the evidence lets us conclude
+
+| **Claim or correction** | **Grounded statement** | **Source IDs** |
+| --- | --- | --- |
+| Durable scheduling | Durable-execution systems preserve workflow progress, timers, and replay across failures, which is why compiled plans are scheduled through a workflow rather than an in-process loop. | R02 |
+
+The discussion above draws on R27; R02. Appendix K lists the complete sources and records their authority, version, and scope.
+
 ## A sensible place to start
 
-
-### Plan IR compiler
+The compiler below applies the checks above to a candidate plan: capability allowlist, risk ceiling, unknown dependencies, cost, cycles, and a digest of what was validated.
 
 [[EXAMPLE:plan-compilation#core]]
 
@@ -637,7 +562,7 @@ A planner emits a typed Plan IR. A deterministic compiler validates graph integr
 
 ## Where this leads next
 
-Planning creates an executable structure; Chapter 13 adds independent evaluation and bounded revision without self-certification.
+Planning creates an executable structure, and every plan node ends in acceptance checks; Chapter 13 defines what may decide them—independent evaluation and bounded revision without self-certification.
 
 # 13 — Use Critique to Improve—Never to Self-Approve
 
@@ -649,61 +574,49 @@ Planning creates an executable structure; Chapter 13 adds independent evaluation
 | --- |
 | **THE DESIGN CHOICE** Use reflection for targeted revision and independent, calibrated acceptance for protected outcomes. |
 
-## Why critique cannot certify its own answer
-
 Critique can make a draft better, but a generator should not be allowed to
 grade and approve its own work. This chapter gives reflection a bounded job—find a targeted defect and propose a revision—while an independently defined
-evaluator and acceptance gate decide whether the result is good enough. That
+evaluator and acceptance engine decide whether the result is good enough. That
 separation controls both false confidence and runaway evaluation cost.
-
-## Give evaluation its own independent path
-
-Independent evaluation does not mean asking the same model to reread its answer and declare it better. Generator and evaluator can share the same blind spot, especially when they use the same model family, context, or assumptions. Start with deterministic checks for schema validity, evidence coverage, policy constraints, and arithmetic. Use calibrated model judges only for genuinely qualitative questions, and treat their scores as evidence for a decision made elsewhere.
-
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
 | Acceptance Engine | generator/evaluator and evaluator/commit | candidate · scorer pool · slice | one revision cycle | EvaluationResult · Rubric · AcceptanceDecision |
 
-## Improve the answer without letting the system certify itself
+## Give evaluation its own independent path
 
-[[DIAGRAM:pattern-reflection|Figure 13-1 — A bounded revise loop whose verdict is advisory; promotion happens outside it]]
+Independent evaluation does not mean asking the same model to reread its answer and declare it better. Generator and evaluator can share the same blind spot, especially when they use the same model family, context, or assumptions.
 
-Reflection asks, “What is missing or inconsistent?” Evaluation asks, “Does this candidate meet an acceptance rubric?” Combining them can improve complex artifacts, but only if the roles are explicit and bounded. Northstar runs executable checks before any model judge: schema, evidence presence, policy, effect state, resource version, arithmetic, and deterministic domain rules.
+## Reflection revises; an acceptance engine decides
 
-Qualitative criteria—clarity, completeness, grounded synthesis, or policy-explanation quality—may use calibrated judges. Judge prompt, model route, examples, sampling parameters, and rubric are versioned. Northstar measures variance, human agreement, and failure slices. A model score is evidence for a release or review decision; it is not permission to access data or commit a transaction.
+[[DIAGRAM:pattern-reflection|Figure 13-1 — A bounded revise loop whose verdict is advisory; acceptance happens outside it]]
+
+Reflection asks, “What is missing or inconsistent?” Evaluation asks, “Does this candidate meet an acceptance rubric?” In the mortgage case, the contradictory address is caught by an executable check against the application projection; whether the recommendation overstates confidence is the kind of qualitative criterion a calibrated judge may assess. Combining reflection and evaluation can improve complex artifacts, but only if the roles are explicit and bounded. The platform runs executable checks before any model judge: schema, evidence presence, policy, effect state, resource version, arithmetic, and deterministic domain rules.
+
+Qualitative criteria—clarity, completeness, grounded synthesis, or policy-explanation quality—may use calibrated judges. Judge prompt, model route, examples, sampling parameters, and rubric are versioned. A judge used at runtime must already be calibrated: Chapter 25 § Layer tests from contracts to outcomes defines how judges are measured against human labels and gated for release. Inside a run, a judge score is one input to the acceptance decision; it is never permission to access data or commit a transaction (see AP-10).
+
+### The acceptance decision
+
+The acceptance engine is the only component that may mark a candidate, a plan node (Chapter 12), or a ReAct answer (Chapter 10) as accepted. It takes the candidate, the authoritative state the candidate claims to satisfy, and a versioned set of criteria. It evaluates executable invariants first and calibrated judges only for criteria that cannot be computed. It returns an `AcceptanceDecision`: accepted, rejected with typed defects, or escalated. For each criterion the decision records the evaluator type—deterministic, or judge with its version—and evidence references. Chapter 2 § Deterministic acceptance lists what Harborlight checks; Chapter 15 § Terminal correctness maps the decision to the run's terminal state.
 
 ### Bounded optimization loop
 
-Each revision targets structured feedback and carries a diff. The loop stops on pass, maximum revisions, maximum spend, deadline, or no-progress. If the evaluator and generator repeatedly disagree, the workflow escalates with both artifacts rather than silently choosing the more persuasive prose.
+Each revision targets structured feedback and carries a diff. In order:
 
-## What the evidence lets us conclude
+1. Generate candidate v1.
+2. Run deterministic checks first.
+3. Run calibrated qualitative evaluation if needed.
+4. Apply actionable feedback to one revision.
+5. Let the acceptance engine accept, reject with defects, or escalate at a bounded threshold.
 
-|  |
-| --- |
-| **EVIDENCE BOUNDARY**  This chapter presents an architectural recommendation, not a protocol mandate. Validate the pattern against the workload, threat model, evaluation set, and strongest simpler baseline. |
+The loop stops on pass, maximum revisions, maximum spend, deadline, or no-progress (a revision that changes wording but not the failing invariant, the same signature test as Chapter 10). If the evaluator and generator repeatedly disagree, the workflow escalates with both artifacts to a human intervention queue (Chapter 14) rather than silently choosing the more persuasive prose. The loop is runtime adaptation inside a fixed envelope: it may revise the candidate, never the rubric, judge, or thresholds (Chapter 25 § Separate runtime adaptation from offline improvement).
 
-The discussion above draws on R20; R13. Appendix K lists the complete sources and records their authority, version, and scope.
+## Reflection and evaluator–optimizer at a glance
 
-## How Reflection works in practice
-
-|  |
-| --- |
-| **THE ENGINEERING PROBLEM** A first candidate may contain omissions, contradictions, or weak reasoning that targeted critique can expose. |
-
-### How the pattern works
-
-A reflector reviews a candidate against explicit evidence and rubric, emits structured defects, and proposes a bounded revision. It does not commit or certify protected outcomes.
-
-1. Generate a candidate.
-2. Compare it with evidence and rubric.
-3. Emit defect types and references.
-4. Revise only supported defects.
-5. Stop on pass, no-progress, or revision budget.
-
-| **Use when** | **Do not use when** |
-| --- | --- |
-| Use when measured offline results show critique improves a specific quality dimension. | Avoid if correctness is executable, the first pass already meets the bar, or added latency has no measured benefit. |
+| **Pattern** | **Use when** | **Do not use when** |
+| --- | --- | --- |
+| Reflection | Measured offline results show critique improves a specific quality dimension. | Correctness is executable, the first pass already meets the bar, or added latency has no measured benefit. |
+| Evaluator–optimizer | Documents, plans, code, or analyses where iterative quality gain is measurable and latency permits. | Do not use a model judge as sole authority for permissions, transaction success, security, or computable correctness. |
 
 ### Where it helps—and what it costs
 
@@ -711,112 +624,49 @@ A reflector reviews a candidate against explicit evidence and rubric, emits stru
 | --- | --- |
 | Better completeness | Additional model calls, correlated errors, and longer latency. |
 | Structured critique | More debuggable; requires defect taxonomy and evaluation. |
-
-### Where it can fail—and how to contain it
-
-| **Failure** | **Control** |
-| --- | --- |
-| Self-confirmation | Different rubric, evidence, or evaluator and deterministic checks. |
-| Stylistic churn | Diff limits and no-progress detection. |
-| Evidence invention | Require evidence references and reject unsupported additions. |
-
-### What you need to see in production
-
-* candidate version
-* defect taxonomy
-* evidence refs
-* diff size
-* quality delta
-* stop reason
-
-## How Evaluator–Optimizer works in practice
-
-|  |
-| --- |
-| **THE ENGINEERING PROBLEM** A generated artifact must reach a quality threshold that mixes executable and semantic criteria. |
-
-### How the pattern works
-
-A generator creates candidates; deterministic scorers and calibrated evaluators produce typed feedback; an optimizer revises within a strict iteration budget; an acceptance engine decides.
-
-1. Generate candidate v1.
-2. Run deterministic checks first.
-3. Run calibrated qualitative evaluation if needed.
-4. Apply actionable feedback to one revision.
-5. Accept, reject, or escalate at a bounded threshold.
-
-| **Use when** | **Do not use when** |
-| --- | --- |
-| Use for documents, plans, code, or analyses where iterative quality gain is measurable and latency permits. | Do not use a model judge as sole authority for permissions, transaction success, security, or computable correctness. |
-
-### Where it helps—and what it costs
-
-| **Choice** | **Consequence** |
-| --- | --- |
-| Higher quality | Higher cost and latency, plus evaluator calibration work. |
 | Explicit rubric | Improves governance; can overfit to benchmark or judge preferences. |
 
 ### Where it can fail—and how to contain it
 
 | **Failure** | **Control** |
 | --- | --- |
-| Reward hacking | Hidden holdout tests, diverse scorers, and human calibration. |
-| Judge variance | Repeated runs, confidence intervals, ensembles, and thresholds. |
-| Endless revision | Maximum revisions, cost, time, and no-progress stop. |
+| Self-confirmation | Different rubric, evidence, or evaluator and deterministic checks. |
+| Evidence invention | Require evidence references and reject unsupported additions. |
+| Stylistic churn or endless revision | Diff limits, maximum revisions, cost, time, and no-progress stop. |
+| Judge variance | Repeated runs and thresholds; calibration per Chapter 25. |
+| Reward hacking | Holdout tests and diverse scorers; Chapter 25. |
 
 ### What you need to see in production
 
+* candidate version and diff size
+* defect taxonomy
+* evidence refs
 * scorer versions
-* per-criterion scores
-* judge rationale
-* candidate diffs
-* variance
-* acceptance decision
+* per-criterion scores and judge rationale
+* quality delta and variance
+* acceptance decision and stop reason
+
+## What the evidence lets us conclude
+
+| **Claim or correction** | **Grounded statement** | **Source IDs** |
+| --- | --- | --- |
+| Evaluation tooling | Current evaluation platforms support datasets, code-based and LLM judges, and human feedback; using judges only as evidence for an independent acceptance decision is this book's recommendation. | R20 |
+
+The discussion above draws on R20. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
+The judge supplies evidence; only the acceptance engine decides.
 
-### Bounded evaluator–optimizer
-
-🐍 · implementation excerpt
-
-```python
-from __future__ import annotations
-import hashlib
-import json
-from dataclasses import dataclass
-from typing import Awaitable, Callable, Protocol
-from .contracts import AgentDecision
-
-class Evaluation:
-    accepted: bool
-    score: float
-    feedback: str
-
-class EvaluatorOptimizer:
-    def __init__(
-        self, generator: Generator, evaluator: Evaluator, maximum_revisions: int = 2
-    ) -> None:
-        self.generator = generator
-        self.evaluator = evaluator
-        self.maximum_revisions = maximum_revisions
-
-    async def run(self, task: str) -> tuple[str, Evaluation]:
-        feedback: str | None = None
-        for _ in range(self.maximum_revisions + 1):
-            candidate = await self.generator(task, feedback)
-            evaluation = await self.evaluator(task, candidate)
-            if evaluation.accepted:
-                return candidate, evaluation
-            feedback = evaluation.feedback
-        raise RuntimeError("candidate did not pass bounded evaluation")
-```
+[[EXAMPLE:evaluator-optimizer#core]]
 
 ## If this fails in production
 
 1. Compare generator and evaluator evidence to detect shared blind spots.
 2. Inspect score variance across repeated judge runs and slices.
 3. Detect revisions that change wording but not the failing invariant.
+
+If the model's own "done" or a judge score is the acceptance decision, see AP-07 and AP-10 in Chapter 17.
 
 ## What to verify before production
 
@@ -826,13 +676,13 @@ class EvaluatorOptimizer:
 
 **✓** Revision count, spend, time, and no-progress are bounded.
 
-**✓** Judge calibration and inter-rater agreement are measured.
+**✓** Judge calibration and inter-rater agreement are measured (Chapter 25).
 
-**✓** Failed candidates and feedback enter a regression corpus.
+**✓** Failed candidates and feedback enter a regression corpus (Chapter 25).
 
 ## Put the idea to work
 
-1. Implement a bounded evaluator–optimizer with one deterministic and one qualitative scorer.
+1. Add a deadline stop to the evaluator–optimizer example and test that it escalates with both candidate versions.
 2. Create a case where reflection worsens a correct answer and define the stop rule.
 
 ## Questions to bring to design review
@@ -847,7 +697,7 @@ class EvaluatorOptimizer:
 
 ## Where this leads next
 
-Automated evaluation can improve candidates; Chapter 14 identifies decisions that require explicit human authority, correction, or recourse.
+Automated evaluation can improve a candidate but cannot settle every decision. When the evaluator and generator disagree, or the action is protected, Chapter 14 puts a person where their judgment matters.
 
 # 14 — Put People Where Their Judgment Matters
 
