@@ -4,7 +4,12 @@ from __future__ import annotations
 import pytest
 
 from examples.contracts import RiskClass, SkillRequirement
-from examples.platform.skills_registry import SkillManifest, SkillPackManifest, SkillRegistry
+from examples.platform.skills_registry import (
+    SkillManifest,
+    SkillPackManifest,
+    SkillPackRegistry,
+    SkillRegistry,
+)
 
 
 def skill(version: str, *, risk=RiskClass.R3, regions=("us",),
@@ -87,8 +92,8 @@ def test_lifecycle_state_lives_outside_the_digest():
     assert manifest.digest == digest, "promotion and revocation never move the digest"
 
 
-def test_an_active_pack_references_only_active_skills():
-    r = SkillRegistry()
+def _pack_registry():
+    r = SkillPackRegistry()
     key = r.register_skill(skill("1.0.0"))
     pack = r.register_pack(SkillPackManifest(
         pack_id="mortgage-evidence", version="1.0.0", domain="mortgage",
@@ -96,11 +101,39 @@ def test_an_active_pack_references_only_active_skills():
         policy_bundle_ref="policy://mortgage@2026.09",
         evaluation_suite_ref="mortgage-evidence-regression@1",
     ))
+    return r, key, pack
+
+
+def test_an_active_pack_references_only_active_skills():
+    r, key, pack = _pack_registry()
     with pytest.raises(ValueError, match="only active skills"):
         r.set_pack_state(pack, "active")
     r.set_skill_state(key, "active")
     r.set_pack_state(pack, "active")
     assert r.resolve_pack(pack)[0].version == "1.0.0"
+
+
+def test_a_pack_cannot_pin_an_unknown_skill():
+    r = SkillPackRegistry()
+    with pytest.raises(ValueError, match="unknown skills"):
+        r.register_pack(SkillPackManifest(
+            pack_id="mortgage-evidence", version="1.0.0", domain="mortgage",
+            owner="mortgage-platform-team", skill_versions=("ghost@1.0.0",),
+            policy_bundle_ref="policy://mortgage@2026.09",
+            evaluation_suite_ref="mortgage-evidence-regression@1",
+        ))
+
+
+def test_a_deprecated_pack_resolves_only_for_replay():
+    r, key, pack = _pack_registry()
+    r.set_skill_state(key, "active")
+    r.set_pack_state(pack, "active")
+    r.set_pack_state(pack, "deprecated")
+    r.set_skill_state(key, "deprecated")
+    # New work cannot resolve it; a run that pinned it may replay it.
+    with pytest.raises(LookupError):
+        r.resolve_pack(pack)
+    assert r.resolve_pack(pack, allow_deprecated_for_replay=True)[0].version == "1.0.0"
 
 
 def test_no_eligible_skill_raises_rather_than_guessing():
