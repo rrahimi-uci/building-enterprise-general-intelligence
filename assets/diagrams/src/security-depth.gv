@@ -1,29 +1,39 @@
-// Figure 20-1 — Defense-in-depth guardrails architecture.
-// Message: no single control is trusted. Each layer assumes the one above it
-// failed, and the last one sits at the effect boundary where it cannot be skipped.
+// Figure 20-1 — Defense-in-depth layers.
+// Message: no single control is trusted. The nine layers match the table in
+// Chapter 20; each has its own control and evidence, and the tools/effects
+// layer is the effect boundary, which cannot be skipped.
 digraph security_depth {
   rankdir = TB
-  graph [ranksep=0.14]
+  graph [ranksep=0.12]
   node [shape=plaintext, style="", margin=0]
   edge [style=invis]
 
-  l1 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#4A6078" BGCOLOR="#EEF4FA">
+  l1 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#4A6078" BGCOLOR="#EEF4FA">
      <TR><TD WIDTH="60" BGCOLOR="#4A6078"><FONT COLOR="white"><B> 1 </B></FONT></TD>
-         <TD WIDTH="290" ALIGN="LEFT"><B>Input inspection</B> — untrusted content, injection patterns</TD></TR></TABLE>>]
-  l2 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#0B6076" BGCOLOR="#E6F5F9">
+         <TD WIDTH="330" ALIGN="LEFT"><B>Channel/input</B> — authentication, injection and jailbreak detection</TD></TR></TABLE>>]
+  l2 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#0B6076" BGCOLOR="#E6F5F9">
      <TR><TD WIDTH="60" BGCOLOR="#0B6076"><FONT COLOR="white"><B> 2 </B></FONT></TD>
-         <TD WIDTH="290" ALIGN="LEFT"><B>Context authorization</B> — only evidence this subject may see</TD></TR></TABLE>>]
-  l3 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#1450A3" BGCOLOR="#EAF3FB">
+         <TD WIDTH="330" ALIGN="LEFT"><B>Context/memory</B> — source trust, ACL, provenance, poisoning</TD></TR></TABLE>>]
+  l3 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#1450A3" BGCOLOR="#EAF3FB">
      <TR><TD WIDTH="60" BGCOLOR="#1450A3"><FONT COLOR="white"><B> 3 </B></FONT></TD>
-         <TD WIDTH="290" ALIGN="LEFT"><B>Output contract</B> — typed proposal, never free text</TD></TR></TABLE>>]
-  l4 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#8A5600" BGCOLOR="#FFF4DF">
-     <TR><TD WIDTH="60" BGCOLOR="#8A5600"><FONT COLOR="white"><B> 4 </B></FONT></TD>
-         <TD WIDTH="290" ALIGN="LEFT"><B>Policy evaluation</B> — action, subject, resource, scope</TD></TR></TABLE>>]
-  l5 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#A62C2C" BGCOLOR="#FCECEC">
-     <TR><TD WIDTH="60" BGCOLOR="#A62C2C"><FONT COLOR="white"><B> 5 </B></FONT></TD>
-         <TD WIDTH="290" ALIGN="LEFT"><B>Effect boundary</B> — the control that cannot be skipped</TD></TR></TABLE>>]
-  l6 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#6A2E6E" BGCOLOR="#F7ECF8">
-     <TR><TD WIDTH="60" BGCOLOR="#6A2E6E"><FONT COLOR="white"><B> 6 </B></FONT></TD>
-         <TD WIDTH="290" ALIGN="LEFT"><B>Evidence and audit</B> — what happened, provably</TD></TR></TABLE>>]
-  l1 -> l2 -> l3 -> l4 -> l5 -> l6
+         <TD WIDTH="330" ALIGN="LEFT"><B>Model/output</B> — approved route, schema, content safety, DLP</TD></TR></TABLE>>]
+  l4 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#0D6E69" BGCOLOR="#E7F5F3">
+     <TR><TD WIDTH="60" BGCOLOR="#0D6E69"><FONT COLOR="white"><B> 4 </B></FONT></TD>
+         <TD WIDTH="330" ALIGN="LEFT"><B>Agent/workflow</B> — budgets, deadlines, loop and fan-out caps</TD></TR></TABLE>>]
+  l5 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#8A5600" BGCOLOR="#FFF4DF">
+     <TR><TD WIDTH="60" BGCOLOR="#8A5600"><FONT COLOR="white"><B> 5 </B></FONT></TD>
+         <TD WIDTH="330" ALIGN="LEFT"><B>Identity/policy</B> — subject and workload identity, RBAC/ABAC</TD></TR></TABLE>>]
+  l6 [label=<<TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#A62C2C" BGCOLOR="#FCECEC">
+     <TR><TD WIDTH="60" BGCOLOR="#A62C2C"><FONT COLOR="white"><B> 6 </B></FONT></TD>
+         <TD WIDTH="330" ALIGN="LEFT"><B>Tools/effects</B> — the effect boundary that cannot be skipped</TD></TR></TABLE>>]
+  l7 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#1450A3" BGCOLOR="#EAF3FB">
+     <TR><TD WIDTH="60" BGCOLOR="#1450A3"><FONT COLOR="white"><B> 7 </B></FONT></TD>
+         <TD WIDTH="330" ALIGN="LEFT"><B>Execution/egress</B> — sandbox, secrets isolation, destination policy</TD></TR></TABLE>>]
+  l8 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#4A6078" BGCOLOR="#EEF4FA">
+     <TR><TD WIDTH="60" BGCOLOR="#4A6078"><FONT COLOR="white"><B> 8 </B></FONT></TD>
+         <TD WIDTH="330" ALIGN="LEFT"><B>Supply chain/release</B> — locks, SBOM, signatures, provenance</TD></TR></TABLE>>]
+  l9 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#6A2E6E" BGCOLOR="#F7ECF8">
+     <TR><TD WIDTH="60" BGCOLOR="#6A2E6E"><FONT COLOR="white"><B> 9 </B></FONT></TD>
+         <TD WIDTH="330" ALIGN="LEFT"><B>Detection/response</B> — monitoring, containment, revocation</TD></TR></TABLE>>]
+  l1 -> l2 -> l3 -> l4 -> l5 -> l6 -> l7 -> l8 -> l9
 }

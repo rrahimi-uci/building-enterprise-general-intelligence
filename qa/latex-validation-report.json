@@ -4,7 +4,7 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7",
-    "content_tex_sha256": "d43835396a9c38e47da61030ac5b9247ccba1e389eaf5aa40a05ccf148782f1c",
+    "content_tex_sha256": "b781dea4d330ad9803ce1b8eb22cc7f9928ce07ae5b725be88de48c57805267d",
     "style_sha256": "7a1273ba38763881c8ed2ede7ad741ea49ca031d7bb5f8fc354e413a88d840c8",
     "narrative_parts": 8,
     "appendix_dividers": 1,
@@ -12,15 +12,15 @@
     "chapter_covers": 28,
     "appendices": 12,
     "diagrams": 42,
-    "code_blocks": 61,
-    "longtables": 152,
-    "compact_tables": 102,
+    "code_blocks": 60,
+    "longtables": 148,
+    "compact_tables": 101,
     "callout_tables": 72,
     "citation_occurrences": 113,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 326,
-    "markdown_code_blocks": 61,
+    "markdown_tables": 321,
+    "markdown_code_blocks": 60,
     "image_quality": [
       {
         "file": "assets/cover/cover-v1.0.0.png",
@@ -265,10 +265,10 @@
       {
         "file": "assets/diagrams/security-depth.png",
         "pixels": [
-          2283,
-          1459
+          2266,
+          1928
         ],
-        "effective_dpi": 323.4
+        "effective_dpi": 321.0
       },
       {
         "file": "assets/diagrams/security-boundaries.png",
@@ -282,7 +282,7 @@
         "file": "assets/diagrams/guardrail-sequence.png",
         "pixels": [
           2055,
-          1376
+          1234
         ],
         "effective_dpi": 291.1
       },
@@ -297,10 +297,10 @@
       {
         "file": "assets/diagrams/effect-lifecycle.png",
         "pixels": [
-          2979,
+          3203,
           3212
         ],
-        "effective_dpi": 422.0
+        "effective_dpi": 453.7
       },
       {
         "file": "assets/diagrams/sandbox-egress.png",

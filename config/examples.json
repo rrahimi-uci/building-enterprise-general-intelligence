@@ -224,6 +224,46 @@
       ]
     },
     {
+      "id": "capability-envelope",
+      "book_chapters": [21],
+      "path": "examples/security/capability_envelope.py",
+      "language": "python",
+      "title": "Capability-envelope subset proof",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_capability_envelope.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ]
+    },
+    {
+      "id": "egress-url",
+      "book_chapters": [23],
+      "path": "examples/security/egress_url.py",
+      "language": "python",
+      "title": "Default-deny URL authorization for an egress grant",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_egress_url.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "kill-switch",
+      "book_chapters": [23],
+      "path": "examples/security/kill_switch.py",
+      "language": "python",
+      "title": "Scoped operational kill switch",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_kill_switch.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ]
+    },
+    {
       "id": "mlflow-evaluation",
       "book_chapters": [25],
       "path": "examples/observability/mlflow_evaluation.py",

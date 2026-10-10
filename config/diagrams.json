@@ -110,7 +110,7 @@
     {
       "id": "guardrail-sequence",
       "file": "assets/diagrams/guardrail-sequence.png",
-      "sha256": "f5e08560369cbd8b629423e7b1e7b67a10bb6c89b5e35d9a3be86092fe874bff",
+      "sha256": "19213cd981b5270f406bf88d72f4ac3a0dda5c054f8639ce85037a5d18a13c85",
       "source": "assets/diagrams/src/guardrail-sequence.mmd",
       "vector": "assets/diagrams/guardrail-sequence.pdf"
     },
@@ -268,7 +268,7 @@
     {
       "id": "security-depth",
       "file": "assets/diagrams/security-depth.png",
-      "sha256": "82e0ca96cd7be9e0bdbce41573d63ef8c67c8f7a130ecef61f21f489f3650da3",
+      "sha256": "f3fda106a8fd925e9fb86eec486ac75d980c465b24034285dd3cfc27524492fb",
       "source": "assets/diagrams/src/security-depth.gv",
       "vector": "assets/diagrams/security-depth.pdf"
     },
@@ -286,7 +286,7 @@
       "source": "assets/diagrams/src/effect-lifecycle.gv",
       "vector": "assets/diagrams/effect-lifecycle.pdf",
       "description": "Protected effect lifecycle with approval, idempotency, unknown outcomes, reconciliation, and compensation",
-      "sha256": "68eea51546aeabbcd2bfabfc064bec9153f7205cd86245d9e99f9962f5cdbb39"
+      "sha256": "fcd56b704b586f8bb2b8855c293b857914920a4f76e4bd6923e968d3efd72a8a"
     },
     {
       "id": "sandbox-egress",
