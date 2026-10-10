@@ -120,6 +120,7 @@ make pdf        # three-pass XeLaTeX -> dist/*-LaTeX.pdf
 │   ├── book.json                 # metadata, layout, typography, colors
 │   ├── diagrams.json             # diagram registry
 │   ├── part-visuals.json         # Part divider panel registry
+│   ├── chapter-covers.json       # chapter cover visual specs (one per chapter)
 │   ├── examples.json             # code-example registry
 │   ├── mortgage_stages.json      # C01–C28 checkpoint registry
 │   ├── references.json           # source-of-truth citation registry
@@ -129,6 +130,7 @@ make pdf        # three-pass XeLaTeX -> dist/*-LaTeX.pdf
 │   ├── diagrams/                 # rendered diagrams: PDF for print, PNG for DOCX
 │   │   └── src/                  # ← editable diagram sources (.gv, .mmd)
 │   └── parts/                    # generated Part divider panels
+├── cover-images/                 # generated Letter-size chapter cover visuals
 │
 ├── book/manuscript.md            # generated canonical assembly; do not hand-edit
 ├── dist/                         # generated Markdown, DOCX, and .tex entry point
@@ -202,6 +204,7 @@ Committed — tracked release evidence, listed in `CHECKSUMS.sha256`:
 - `assets/cover/cover-v2.1.0.png`
 - `assets/parts/part-*.png` — Part divider panels, cropped from `source/part-visuals/`
 - `assets/diagrams/*.pdf` and `*.png` — rendered from `assets/diagrams/src/` by `make diagrams`
+- `cover-images/chapter-*.png` — chapter cover visuals, rendered from `config/chapter-covers.json` by `make chapter-covers`
 - `templates/book-style-template.docx`
 
 Not committed — regenerable, and gitignored so rebuilds do not churn binaries
