@@ -4,6 +4,16 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Fix three book-wide DOCX/LaTeX rendering defects
+
+- Markdown backslash escapes (`artifact\_id`, `a \< b`) printed literally in
+  the DOCX (about 125 identifiers) and `\<` printed in the LaTeX edition.
+  Both builders now unescape them outside code spans.
+- Numbered lists continued one sequence across the whole DOCX (Chapter 2's
+  ten principles rendered as 37–46). Each list now restarts at 1.
+- Hard-wrapped list items rendered as a bullet followed by stray body
+  paragraphs. Indented continuation lines now join their item in both builders.
+
 ### Connect Chapter 2's opening callouts into one narrative
 
 - Added a framing paragraph before Chapter 2's four opening callout boxes
