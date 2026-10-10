@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the XeLaTeX representation of Book v2.1.0.
+"""Generate the XeLaTeX representation of Book v1.0.0.
 
 The canonical Markdown remains the semantic source. This tool converts the
 restricted publication Markdown vocabulary into a styled, self-contained
@@ -34,7 +34,7 @@ def book_release(root: Path) -> str:
     return json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]["version"]
 
 
-BASENAME = "Enterprise-General-Intelligence-v2.1.0"
+BASENAME = "Enterprise-General-Intelligence-v1.0.0"
 
 
 def sha256(path: Path) -> str:
@@ -471,7 +471,7 @@ def write_compile_files(root: Path) -> None:
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
-ENTRY="latex/Enterprise-General-Intelligence-v2.1.0.tex"
+ENTRY="latex/Enterprise-General-Intelligence-v1.0.0.tex"
 OUT="latex/build"
 mkdir -p "$OUT"
 if command -v latexmk >/dev/null 2>&1; then
@@ -482,7 +482,7 @@ else
   echo "XeLaTeX is required. Use the included Dockerfile.latex or CI workflow." >&2
   exit 2
 fi
-cp "$OUT/Enterprise-General-Intelligence-v2.1.0.pdf" "dist/Enterprise-General-Intelligence-v2.1.0-LaTeX.pdf"
+cp "$OUT/Enterprise-General-Intelligence-v1.0.0.pdf" "dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf"
 """
     (latex_dir / "compile.sh").write_text(compile_script, encoding="utf-8", newline="\n")
     (latex_dir / "compile.sh").chmod(0o755)
@@ -562,7 +562,7 @@ def main() -> int:
     reference_dir = latex_dir / "reference"
     reference_dir.mkdir(parents=True, exist_ok=True)
     if reference_pdf.exists():
-        shutil.copy2(reference_pdf, reference_dir / "DOCX-layout-reference-v1.0.0.pdf")
+        shutil.copy2(reference_pdf, reference_dir / "DOCX-layout-reference-draft.pdf")
 
     report = {
         "release": book_release(root),

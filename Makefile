@@ -4,8 +4,8 @@
 # run against a system Python that is missing python-docx, Pillow, or fontTools.
 PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 ROOT := $(CURDIR)
-ZIP ?= $(abspath ../Enterprise-Agentic-AI-Book-v2.1.0-Complete-Package-with-LaTeX.zip)
-TEX_ENTRY := latex/Enterprise-General-Intelligence-v2.1.0.tex
+ZIP ?= $(abspath ../Enterprise-Agentic-AI-Book-v1.0.0-Complete-Package-with-LaTeX.zip)
+TEX_ENTRY := latex/Enterprise-General-Intelligence-v1.0.0.tex
 
 .DEFAULT_GOAL := help
 

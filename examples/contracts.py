@@ -1,7 +1,7 @@
 """The provider-neutral contracts every agent step and platform API shares.
 
 One file, two views. Chapter 02 needs the agent-step subset; chapter 04 needs
-the full platform set. Before v2.0.0 these were two listings that had already
+the full platform set. In earlier drafts these were two listings that had already
 drifted apart -- the shorter one was not even a prefix of the longer.
 """
 from __future__ import annotations

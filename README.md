@@ -1,6 +1,6 @@
 # Building an Enterprise General Intelligence Platform
 
-**Book v2.1.0 development system**  
+**Book v1.0.0 development system**  
 Author: **Reza Rahimi, PhD**  
 Release date: 2026-09-13
 
@@ -17,7 +17,7 @@ One canonical source in `source/parts/*.md` produces three synchronized represen
 5. **Render:** `tools/build_book.py` generates DOCX from the assembled manuscript and configuration.
 6. **Validate before release:** never hand-edit generated DOCX or distributable Markdown.
 
-`source/original/` is immutable provenance. `tools/prepare_manuscript.py` is the frozen one-time v3.1-to-**v1.0.0** migration/bootstrap tool. It still emits the v1.0.0 topology and metadata and has deliberately not been updated for v2.1.0; never run it during ordinary editing, because it would regenerate `source/parts` from the legacy source and undo the v2.1.0 restructure.
+`source/original/` is immutable provenance. `tools/prepare_manuscript.py` is the frozen one-time v3.1-to-**v1.0.0** migration/bootstrap tool. It still emits the v1.0.0 topology and metadata and has deliberately not been updated for v1.0.0; never run it during ordinary editing, because it would regenerate `source/parts` from the legacy source and undo the v1.0.0 restructure.
 
 ## Quick start
 
@@ -195,11 +195,11 @@ Online link checking is intentionally optional because reproducible offline buil
 
 Committed — tracked release evidence, listed in `CHECKSUMS.sha256`:
 
-- `dist/Enterprise-General-Intelligence-v2.1.0.md`
-- `dist/Enterprise-General-Intelligence-v2.1.0.docx`
-- `dist/Enterprise-General-Intelligence-v2.1.0.tex`
+- `dist/Enterprise-General-Intelligence-v1.0.0.md`
+- `dist/Enterprise-General-Intelligence-v1.0.0.docx`
+- `dist/Enterprise-General-Intelligence-v1.0.0.tex`
 - `latex/content/book-content.tex`
-- `assets/cover/cover-v2.1.0.png`
+- `assets/cover/cover-v1.0.0.png`
 - `assets/diagrams/*.pdf` and `*.png` — rendered from `assets/diagrams/src/` by `make diagrams`
 - `cover-images/chapter-*.png` — chapter cover visuals, rendered from `config/chapter-covers.json` by `make chapter-covers` and embedded as the page before each chapter in the DOCX and XeLaTeX editions
 - `templates/book-style-template.docx`
@@ -213,7 +213,7 @@ through history:
 - `qa/render/*.pdf` and `qa/render/visual-contact-sheet.png` — QA only
 
 To get a published PDF without building it locally, download the
-`enterprise-agentic-ai-book-v2.1.0-xelatex` artifact from the **Build XeLaTeX
+`enterprise-agentic-ai-book-v1.0.0-xelatex` artifact from the **Build XeLaTeX
 edition** workflow run, or take it from the release assets.
 
 ## Determinism
@@ -224,7 +224,7 @@ Expected differences are allowed only after canonical source, configuration, ass
 
 ## Notion synchronization
 
-Notion is a published representation, not the build source. Publish only after local validation. The Notion release page must identify Book v2.1.0, author, release date, structure counts, citation count, checksums, QA status, and attach the exact ZIP/DOCX/Markdown/cover produced by this package. Preserve child-page blocks and permissions. If private source material would be copied to a broader destination, obtain confirmation first.
+Notion is a published representation, not the build source. Publish only after local validation. The Notion release page must identify Book v1.0.0, author, release date, structure counts, citation count, checksums, QA status, and attach the exact ZIP/DOCX/Markdown/cover produced by this package. Preserve child-page blocks and permissions. If private source material would be copied to a broader destination, obtain confirmation first.
 
 ## Troubleshooting
 

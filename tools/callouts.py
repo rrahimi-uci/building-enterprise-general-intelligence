@@ -27,7 +27,7 @@ import re
 
 # marker -> (latex environment, docx shading, printed title)
 KINDS: dict[str, tuple[str, str, str]] = {
-    # --- guidance boxes, introduced in v2.0.0 ---------------------------
+    # --- guidance boxes, introduced in earlier drafts ---------------------------
     "BEST PRACTICE": ("bookbestpractice", "E7F5F3", "Best practice"),
     "ARCHITECTURE GUIDANCE": ("bookarchitecture", "EAF3FB", "Architecture guidance"),
     "DEVELOPER GUIDELINE": ("bookdeveloper", "EDF3FC", "Developer guideline"),
@@ -37,7 +37,7 @@ KINDS: dict[str, tuple[str, str, str]] = {
     "ANTI-PATTERN": ("bookantipattern", "FFF4DF", "Anti-pattern"),
     "PERFORMANCE AND COST": ("bookcost", "F6F5E3", "Performance and cost"),
     "OBSERVABILITY TIP": ("bookobservability", "E6F5F9", "Observability tip"),
-    # --- narrative and evidence callouts carried over from v1.0.0 -------
+    # --- narrative and evidence callouts carried over from earlier drafts -------
     "NORTHSTAR AT THIS POINT": ("bookcallout", "EAF3FB", "Northstar at this point"),
     "MORTGAGE CASE AT THIS POINT": ("bookcallout", "EAF3FB", "Mortgage case at this point"),
     "NORTH-STAR RULE": ("bookcallout", "EAF3FB", "North-star rule"),

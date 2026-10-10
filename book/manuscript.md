@@ -2,7 +2,7 @@
 
 # Building an Enterprise General Intelligence Platform
 
-Book v2.1.0 · Publication Release · September 2026
+Book v1.0.0 · Publication Release · September 2026
 
 **Reza Rahimi, PhD**
 
@@ -43,7 +43,7 @@ Use the book as an engineering foundation rather than a prescription. Take the e
 
 ## How this edition is maintained
 
-A book about governed systems should be maintainable in the same disciplined way. The accompanying Book v2.1.0 package includes the canonical Markdown, generated DOCX, diagrams, cover assets, references, styles, templates, build and validation tools, and release evidence needed to reproduce this edition.
+A book about governed systems should be maintainable in the same disciplined way. The accompanying Book v1.0.0 package includes the canonical Markdown, generated DOCX, diagrams, cover assets, references, styles, templates, build and validation tools, and release evidence needed to reproduce this edition.
 
 The canonical Markdown is the source of truth. Make substantive changes there and in the relevant registries, then regenerate the DOCX and LaTeX editions through the build process. That keeps references, diagrams, formatting, and structure aligned—even when people and AI agents both contribute.
 
@@ -2113,7 +2113,7 @@ The discussion above draws on R03; R04. Appendix K lists the complete sources an
 """The provider-neutral contracts every agent step and platform API shares.
 
 One file, two views. Chapter 02 needs the agent-step subset; chapter 04 needs
-the full platform set. Before v2.0.0 these were two listings that had already
+the full platform set. In earlier drafts these were two listings that had already
 drifted apart -- the shorter one was not even a prefix of the longer.
 """
 from __future__ import annotations

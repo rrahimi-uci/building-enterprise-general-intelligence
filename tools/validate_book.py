@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline structural, semantic, asset, and DOCX validation for Book v2.1.0."""
+"""Offline structural, semantic, asset, and DOCX validation for Book v1.0.0."""
 from __future__ import annotations
 import argparse, hashlib, json, re, sys, zipfile
 from pathlib import Path
@@ -45,7 +45,7 @@ def check_table_shapes(text: str) -> list[str]:
 def docx_callout_contrast(docx_path):
     """Every shaded callout cell must carry readable body text.
 
-    Earlier v2.1.0 builds shaded narrative/design-decision callouts navy while
+    Earlier drafts shaded narrative/design-decision callouts navy while
     the paragraph style inherited Normal's dark ink. The LaTeX
     contrast gate never saw it because it only reads the LaTeX palette, so the
     DOCX edition needs its own check.
@@ -85,7 +85,7 @@ def docx_callout_contrast(docx_path):
 def main() -> int:
     ap=argparse.ArgumentParser(); ap.add_argument('--root',default=str(Path(__file__).resolve().parents[1])); args=ap.parse_args()
     root=Path(args.root).resolve(); errors=[]; warnings=[]; checks={}
-    md=root/'book/manuscript.md'; distmd=root/'dist/Enterprise-General-Intelligence-v2.1.0.md'; docx_path=root/'dist/Enterprise-General-Intelligence-v2.1.0.docx'
+    md=root/'book/manuscript.md'; distmd=root/'dist/Enterprise-General-Intelligence-v1.0.0.md'; docx_path=root/'dist/Enterprise-General-Intelligence-v1.0.0.docx'
     required=[root/'README.md',root/'AGENTS.md',root/'CHANGELOG.md',root/'styles/DESIGN-SYSTEM.md',root/'styles/CROSS-FORMAT-CONTRACT.md',root/'config/book.json',root/'config/references.json',root/'config/reference-verification.json',root/'config/diagrams.json',md,distmd,docx_path,root/f"assets/cover/cover-v{book_release(root)}.png",root/'templates/book-style-template.docx']
     missing=[p.relative_to(root).as_posix() for p in required if not p.exists()]
     if missing: errors.append(f"Missing required files: {missing}")
@@ -96,8 +96,7 @@ def main() -> int:
     if '\r' in text: errors.append('Canonical Markdown contains CR characters')
     if distmd.exists() and distmd.read_bytes()!=md.read_bytes(): errors.append('Canonical and distributable Markdown are not byte-identical')
     checks['parts']=len(re.findall(r'^# PART [IVXLCDM]+ — ',text,re.M)); checks['chapters']=len(re.findall(r'^# \d{2} — ',text,re.M)); checks['appendices']=len(re.findall(r'^# Appendix [A-Z] — ',text,re.M))
-    # v2.1.0 topology: four single-chapter Parts dissolved, four chapter pairs
-    # merged, Appendices L and N cut and M folded into K.
+    # Current topology: 8 Parts, 28 chapters, 12 appendices (Appendix M folded into K).
     expected={'parts':8,'chapters':28,'appendices':12}
     for k,v in expected.items():
         if checks[k]!=v: errors.append(f"Expected {v} {k}, found {checks[k]}")
@@ -127,9 +126,8 @@ def main() -> int:
     if text.count('```')%2: errors.append('Unbalanced fenced code blocks')
     checks['code_blocks']=len(re.findall(r'^```[^\n]*$',text,re.M))//2
     errors.extend(check_table_shapes(text))
-    # Legacy pre-1.0 labels. The negative lookahead stops the real v2.1.0 release
-    # string from matching the v2.0 legacy pattern.
-    stale=sorted(set(re.findall(r'\bv(?:2\.[01]|3\.[01])(?!\.\d)\b',text)))
+    # Labels from pre-release drafts (v2.x, v3.x) must not survive in the manuscript.
+    stale=sorted(set(re.findall(r'\bv(?:2|3)\.\d+(?:\.\d+)?\b',text)))
     if stale: errors.append(f"Stale release labels remain: {stale}")
     for bad in ['25 August 2026','MLflow 3.16.0 exists','Amazon Bedrock Agents / AgentCore']:
         if bad in text: errors.append(f"Unsupported/stale claim remains: {bad}")
@@ -198,14 +196,14 @@ def main() -> int:
             if cp.title!=expected_title: errors.append(f"DOCX title metadata is {cp.title!r}, expected {expected_title!r}")
             if cp.author!='Reza Rahimi, PhD': errors.append(f"Unexpected DOCX author metadata: {cp.author}")
         except Exception as exc: errors.append(f"DOCX validation error: {exc}")
-    pdf=root/'qa/render/Enterprise-General-Intelligence-v2.1.0.pdf'
+    pdf=root/'qa/render/Enterprise-General-Intelligence-v1.0.0.pdf'
     if pdf.exists():
         try:
             import pymupdf
             d=pymupdf.open(pdf); checks['pdf_pages']=len(d)
-            # 213 was the v1.0.0 LibreOffice baseline. v2.1.0 deliberately changed the
-            # topology, so asserting it would warn about the expected result; the page
-            # count is recorded as a measurement until a v2.1.0 baseline is rendered
+            # 213 was the pre-release draft's LibreOffice baseline. The topology has since
+            # changed, so asserting it would warn about the expected result; the page
+            # count is recorded as a measurement until a current baseline is rendered
             # with `make qa-pdf`. Structural and blank-page checks below still apply.
             blank=[]
             for i,p in enumerate(d):
@@ -217,7 +215,7 @@ def main() -> int:
     report={'release':book_release(root),'validated_on':'2026-09-13','checks':checks,'errors':errors,'warnings':warnings,'pass':not errors}
     (root/'qa').mkdir(exist_ok=True); (root/'reports').mkdir(exist_ok=True)
     (root/'qa/validation-report.json').write_text(json.dumps(report,indent=2)+"\n",encoding='utf-8')
-    summary=["# Validation Summary — Book v2.1.0","",f"**Result:** {'PASS' if not errors else 'FAIL'}","", "## Measurements","",* [f"- **{k}:** `{v}`" for k,v in checks.items()],"","## Errors","",*([f"- {x}" for x in errors] or ["- None."]),"","## Warnings","",*([f"- {x}" for x in warnings] or ["- None."])]
+    summary=["# Validation Summary — Book v1.0.0","",f"**Result:** {'PASS' if not errors else 'FAIL'}","", "## Measurements","",* [f"- **{k}:** `{v}`" for k,v in checks.items()],"","## Errors","",*([f"- {x}" for x in errors] or ["- None."]),"","## Warnings","",*([f"- {x}" for x in warnings] or ["- None."])]
     (root/'reports/validation-summary.md').write_text('\n'.join(summary)+'\n',encoding='utf-8')
     print(json.dumps(report,indent=2)); return 0 if not errors else 1
 

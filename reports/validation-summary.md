@@ -1,11 +1,11 @@
-# Validation Summary — Book v2.1.0
+# Validation Summary — Book v1.0.0
 
 **Result:** PASS
 
 ## Measurements
 
-- **canonical_markdown_sha256:** `e59038bc0adaf8c4b80eb6fe2f926ff9a702eea03bce5c4efe40ebb90aae6523`
-- **canonical_markdown_bytes:** `712793`
+- **canonical_markdown_sha256:** `6c67fd4c20543ca28c8ee2088973e7a421e504dc2679354f12c0e8fa32630388`
+- **canonical_markdown_bytes:** `712797`
 - **parts:** `8`
 - **chapters:** `28`
 - **appendices:** `12`
@@ -16,8 +16,8 @@
 - **diagram_markers:** `45`
 - **registered_diagrams:** `45`
 - **cover_dimensions:** `[2550, 3300]`
-- **docx_sha256:** `7359a3af5ba764b8edb85843ffd6c302c2dcacfdb0b55341bccfe5a763ed6431`
-- **docx_bytes:** `43610058`
+- **docx_sha256:** `b37b4327f6e25c3403681d77f8f3a92340b5cceb66c95fc6456d398f436f9250`
+- **docx_bytes:** `43609202`
 - **docx_paragraphs:** `3131`
 - **docx_tables:** `421`
 - **docx_inline_images:** `74`

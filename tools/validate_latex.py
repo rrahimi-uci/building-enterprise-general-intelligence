@@ -24,7 +24,7 @@ def book_release(root: Path) -> str:
     return json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]["version"]
 
 
-BASENAME = "Enterprise-General-Intelligence-v2.1.0"
+BASENAME = "Enterprise-General-Intelligence-v1.0.0"
 
 
 def sha256(path: Path) -> str:
@@ -135,7 +135,7 @@ def main() -> int:
         errors.append("Reference targets do not cover all citation identifiers")
     if main_text.count(r"\mainmatter") + content.count(r"\mainmatter") != 1 or content.count(r"\appendix") != 1:
         errors.append("Front/main/appendix matter transitions are invalid")
-    for required_text in ("Reza Rahimi, PhD", "Enterprise General Intelligence", "Book v2.1.0"):
+    for required_text in ("Reza Rahimi, PhD", "Enterprise General Intelligence", "Book v1.0.0"):
         if required_text not in main_text:
             errors.append("Missing publication identity text: " + required_text)
     # Derive the expected count from the manuscript rather than hard-coding it.
@@ -350,19 +350,19 @@ def main() -> int:
     measurements["contrast_tests"] = contrast_results
 
 
-    reference_pdf = root / "latex" / "reference" / "DOCX-layout-reference-v1.0.0.pdf"
+    reference_pdf = root / "latex" / "reference" / "DOCX-layout-reference-draft.pdf"
     if reference_pdf.exists():
         try:
             import pymupdf
             pdf = pymupdf.open(reference_pdf)
             measurements["cross_format_reference_pdf_pages"] = len(pdf)
             measurements["cross_format_reference_page_size"] = [round(pdf[0].rect.width, 1), round(pdf[0].rect.height, 1)] if pdf else None
-            # This is the v1.0.0 cross-format baseline, kept for comparison. It is
-            # deliberately not re-asserted against the current page count: v2.1.0
-            # changed the topology, so a difference is expected rather than a defect.
-            # Regenerate the v2.1.0 baseline with `make qa-pdf` where LibreOffice exists.
+            # This is the pre-release draft's cross-format baseline, kept for comparison. It is
+            # deliberately not re-asserted against the current page count: the
+            # topology has since changed, so a difference is expected rather than a defect.
+            # Regenerate the current baseline with `make qa-pdf` where LibreOffice exists.
             if len(pdf) != 213:
-                warnings.append("v1.0.0 reference layout PDF is no longer the 213-page baseline it should be")
+                warnings.append("draft reference layout PDF is no longer the 213-page baseline it should be")
             pdf.close()
         except Exception as exc:
             warnings.append("Could not inspect reference PDF: " + str(exc))
@@ -387,7 +387,7 @@ def main() -> int:
     }
     (root / "qa" / "latex-validation-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     lines = [
-        "# LaTeX Validation — Book v2.1.0", "",
+        "# LaTeX Validation — Book v1.0.0", "",
         "**Source result:** " + ("PASS" if not errors else "FAIL"),
         "**Target engine:** XeLaTeX", "",
         "## Structural measurements", "",

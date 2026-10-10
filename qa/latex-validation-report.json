@@ -1,11 +1,11 @@
 {
-  "release": "2.1.0",
+  "release": "1.0.0",
   "validated_on": "2026-09-13",
   "format": "XeLaTeX",
   "measurements": {
-    "main_tex_sha256": "37b9dbbd1abd8d0c66eb6f20e61eaedbc253e951f556a8d7a523b8458b5cdd2a",
-    "content_tex_sha256": "f4f9aaac8901240c0e7d85ddaecfd4729790f68ae6be1be2b9259f9dccb536de",
-    "style_sha256": "54d4efe867d3a09edd804f8fac1b0dea9d1bece35b9d106aed7c9492c9597314",
+    "main_tex_sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7",
+    "content_tex_sha256": "edfd1e9a530ccfff362ab3267d1a4c292dd761597d2a4e2115567bda31a75455",
+    "style_sha256": "7a1273ba38763881c8ed2ede7ad741ea49ca031d7bb5f8fc354e413a88d840c8",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
@@ -23,7 +23,7 @@
     "markdown_code_blocks": 70,
     "image_quality": [
       {
-        "file": "assets/cover/cover-v2.1.0.png",
+        "file": "assets/cover/cover-v1.0.0.png",
         "pixels": [
           2550,
           3300
