@@ -1,6 +1,6 @@
 {
-  "diagrams": 45,
-  "with_vector": 45,
+  "diagrams": 44,
+  "with_vector": 44,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -144,17 +144,6 @@
       "effective_dpi": 331,
       "vector": true,
       "sha256": "604e272b394b0341cddb37cb170b3c493aee757e2dfdfc38fbfa486c33aa77a0"
-    },
-    {
-      "id": "gateway-position",
-      "source": "gateway-position.gv",
-      "pixels": [
-        2389,
-        2164
-      ],
-      "effective_dpi": 349,
-      "vector": true,
-      "sha256": "9abc8f1a3c4a1c4c8f2d16ef95a01150ef73e65b2a30579155fbe3a78b75ade3"
     },
     {
       "id": "gateway-roles",
@@ -473,7 +462,7 @@
       ],
       "effective_dpi": 471,
       "vector": true,
-      "sha256": "c4009fa0a6d7ecdd907b1e096d4cb6d7421c66a02e6349d85744e59d2aee578b"
+      "sha256": "c0f2d101eb6e854fc45f81ec193ab8286313c9d05c582d1407c7ed95f6b06292"
     },
     {
       "id": "system-overview",

@@ -4,23 +4,23 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7",
-    "content_tex_sha256": "06f42ff1c0ccf562e3d93be9be391d6ac0c490ecbbe7b1f4dbfa7b5dad6e5af9",
+    "content_tex_sha256": "2deb30ca55913beb95ed0ac062d779cf9ada2a45d8d58ed60251be2f464ddd6f",
     "style_sha256": "7a1273ba38763881c8ed2ede7ad741ea49ca031d7bb5f8fc354e413a88d840c8",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "chapter_covers": 28,
     "appendices": 12,
-    "diagrams": 45,
-    "code_blocks": 70,
+    "diagrams": 44,
+    "code_blocks": 67,
     "longtables": 142,
-    "compact_tables": 105,
-    "callout_tables": 95,
+    "compact_tables": 100,
+    "callout_tables": 93,
     "citation_occurrences": 109,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 342,
-    "markdown_code_blocks": 70,
+    "markdown_tables": 335,
+    "markdown_code_blocks": 67,
     "image_quality": [
       {
         "file": "assets/cover/cover-v1.0.0.png",
@@ -269,14 +269,6 @@
           1442
         ],
         "effective_dpi": 456.7
-      },
-      {
-        "file": "assets/diagrams/gateway-position.png",
-        "pixels": [
-          2389,
-          2164
-        ],
-        "effective_dpi": 338.4
       },
       {
         "file": "assets/diagrams/model-routing.png",

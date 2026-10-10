@@ -2125,9 +2125,11 @@ from __future__ import annotations
 from datetime import datetime
 from decimal import Decimal
 from enum import IntEnum
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Callable, Literal
 
-from pydantic import BaseModel, BeforeValidator, Field, PlainSerializer, field_validator
+from pydantic import (
+    BaseModel, BeforeValidator, ConfigDict, Field, PlainSerializer, field_validator,
+)
 
 class EvidenceRef(BaseModel):
     uri: str
@@ -2220,6 +2222,75 @@ class PlanNode(BaseModel):
 class CandidatePlan(BaseModel):
     revision: int = Field(ge=1)
     nodes: tuple[PlanNode, ...] = Field(min_length=1, max_length=100)
+
+class TaskEnvelope(BaseModel):
+    """The one child-task contract (Chapter 18), grouped as the field-group table."""
+
+    model_config = ConfigDict(frozen=True)
+
+    # Identity
+    task_id: str
+    run_id: str
+    parent_task_id: str | None = None
+    tenant_id: str
+    subject_id: str
+    owner_agent: str  # receiving agent@version
+    # Goal
+    goal: str
+    acceptance_contract: str
+    deadline: datetime
+    # Data and contract
+    input_artifact_ids: tuple[str, ...] = ()
+    output_schema: str
+    # Authority: the capability envelope this task may use (Chapter 21)
+    capability_grant_id: str
+    delegation_depth: int = Field(ge=0)  # further delegation levels allowed
+    # Budgets
+    maximum_cost_usd: Decimal = Field(ge=0)
+    # Reliability
+    idempotency_key: str
+    depends_on: tuple[str, ...] = ()
+    cancellation_parent_id: str | None = None
+    state_version: int = 0
+    # Observability
+    trace_context: str  # W3C traceparent
+
+
+SubsetCheck = Callable[[str, str], bool]  # (parent grant, child grant) -> provably narrower?
+
+
+class TaskConflict(Exception):
+    """An idempotency key was reused for a different task."""
+
+
+class TaskService:
+    def __init__(self, is_subset: SubsetCheck) -> None:
+        self._is_subset = is_subset
+        self._by_key: dict[tuple[str, str], TaskEnvelope] = {}
+        self._remaining: dict[str, Decimal] = {}
+
+    def create_child(self, parent: TaskEnvelope, child: TaskEnvelope) -> TaskEnvelope:
+        existing = self._by_key.get((child.run_id, child.idempotency_key))
+        if existing is not None:
+            if existing != child:
+                raise TaskConflict(child.idempotency_key)
+            return existing  # redelivery: same task, no second withdrawal
+        if (child.run_id, child.parent_task_id) != (parent.run_id, parent.task_id):
+            raise ValueError("child must name its parent task and run")
+        if (child.tenant_id, child.subject_id) != (parent.tenant_id, parent.subject_id):
+            raise PermissionError("tenant and subject cannot change")
+        if child.delegation_depth >= parent.delegation_depth:
+            raise PermissionError("delegation depth was not reduced")
+        if child.deadline > parent.deadline:
+            raise PermissionError("child deadline exceeds the parent's")
+        remaining = self._remaining.get(parent.task_id, parent.maximum_cost_usd)
+        if child.maximum_cost_usd > remaining:
+            raise PermissionError("budget exceeds the parent's remaining budget")
+        if not self._is_subset(parent.capability_grant_id, child.capability_grant_id):
+            raise PermissionError("capability envelope is not a subset of the parent's")
+        self._remaining[parent.task_id] = remaining - child.maximum_cost_usd
+        self._by_key[(child.run_id, child.idempotency_key)] = child
+        return child
 ```
 
 ### CloudEvents and outbox contracts
@@ -6179,14 +6250,14 @@ protocol can move a message without granting permission to act.
 
 Multiple agents can shorten a workflow, but conversation alone does not tell
 you who owns a task, who may cancel it, or which result wins when specialists
-disagree. This chapter makes collaboration a durable state machine with one
-owner per task, narrowed child authority, explicit joins, and visible conflict
-handling. Use it when parallelism is buying real value—not simply because more
-agents make a diagram look sophisticated.
+disagree. Chapter 17 showed the two ways this goes wrong: chat used as the
+workflow (AP-08) and budgets that reset at every hop (AP-11). This chapter
+builds the replacement: a task tree with one owner per task, narrowing
+authority, explicit joins, and durable cancellation.
 
 ## What every collaboration must make explicit
 
-Every additional agent introduces another scheduler, context boundary, identity, budget, and failure mode. That cost is justified when a specialist has meaningfully different expertise, data access, tools, ownership, latency, or scaling needs. It is not justified merely because a multi-agent conversation looks modular. The collaboration contract makes the cost visible by requiring each task to have one owner, one authority envelope, explicit artifacts, and a rule for joining or canceling work.
+Every additional agent introduces another scheduler, context boundary, identity, budget, and failure mode. That cost is justified when a specialist has meaningfully different expertise, data access, tools, ownership, latency, or scaling needs. It is not justified merely because a multi-agent conversation looks modular. The collaboration contract makes the cost visible by requiring each task to have one owner, one capability envelope, explicit artifacts, and a rule for joining or canceling work.
 
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
@@ -6199,21 +6270,15 @@ Every additional agent introduces another scheduler, context boundary, identity,
 
 Harborlight’s supervisor owns the evidence-package outcome and creates durable child tasks for document extraction, income verification, property review, and policy explanation. Each child receives only the capability, evidence, budget, deadline, and cancellation scope it needs.
 
+Each child's authority is a *capability envelope*: the maximum actions, resources, purposes, data classes, regions, risk, cost, delegation depth, and lifetime it may use. The Task Service derives it from the parent's envelope by intersection and refuses any child envelope that is not a provable subset. Chapter 21 defines the envelope and gives the subset proof.
+
 Fan-in is explicit: wait for all, quorum, first valid, or fallback. Artifact conflicts use deterministic precedence, source freshness, confidence thresholds, or human resolution. Free-form conversation may help agents explain results, but it cannot replace task status, ownership, artifact, or effect records.
 
-Nested delegation multiplies cost and risk. Northstar caps depth, children, concurrency, total turns, total tokens, external calls, and wall-clock time across the entire task tree. Parent cancellation propagates as durable intent; a child with an executing mutation must reconcile before acknowledging final cancellation.
+Nested delegation multiplies cost and risk. The Task Service caps depth, children, concurrency, total turns, total tokens, external calls, and wall-clock time across the entire task tree (the AP-11 correction). Parent cancellation propagates as durable intent; a child with an executing mutation must reconcile before acknowledging final cancellation (Chapter 22 § A reliable protocol for changing the outside world).
 
 ## Choose a topology—and define how the work ends
 
-| **Required analysis** | **Design conclusion** |
-| --- | --- |
-| Problem | Divide work without creating ambiguous ownership, recursive loops, duplicated side effects, or unnecessary agent chatter. |
-| Why it is difficult | Task boundaries are semantic; model routing is fallible; every new agent adds context transfer, policy, latency, cost, and failure surfaces. |
-| Design alternatives | Single augmented agent; deterministic chain/DAG; router with specialists; manager using agents as tools; conversational handoff; peer swarm/blackboard. |
-| Recommended architecture | Default to one agent inside a typed workflow. Add a specialist only when its instructions, tools, policy, context window, owner, deployment, or SLO differ. Use manager-as-tools for bounded work; use handoff only when user-facing ownership truly transfers. Avoid peer swarms for transactional work. |
-| Trade-offs | Central coordination is easier to govern but can bottleneck; decentralized collaboration may increase coverage but weakens determinism, auditability, and cost control. |
-| Failure scenarios | Ping-pong handoffs; orphaned tasks; two agents mutate the same record; context or permission loss; circular delegation; premature “done”; aggregator accepts incompatible artifacts. |
-| Enterprise example | A mortgage-underwriting coordinator delegates document extraction, income verification, property review, and policy explanation, but a deterministic workflow owns the case and only the authorized decision service commits status. |
+Central coordination is easier to govern but can bottleneck; decentralized collaboration may widen coverage at the cost of determinism, auditability, and cost control. Routing and handoff keep the meanings from Chapter 11: routing chooses a worker; handoff transfers accountability and completes only when the recipient acknowledges.
 
 ### Topology decision table
 
@@ -6224,19 +6289,33 @@ Nested delegation multiplies cost and risk. Northstar caps depth, children, conc
 | Deterministic workflow | Steps and invariants are known | Discovery or decomposition cannot be anticipated | Code/state machine owns routing |
 | Router + specialists | Inputs fall into stable classes with distinct prompts/tools | Classification is unstable or branches share nearly all context | Deterministic or model router with confidence threshold |
 | Manager + agents as tools | One coordinator must synthesize a final answer | Specialist should own the user relationship | Parent retains task ownership |
-| Handoff | A specialist must take over the next user-facing branch | The work is a hidden bounded subtask | Ownership token transfers explicitly |
+| Handoff | A specialist must take over the next user-facing branch | The work is a hidden bounded subtask | Ownership transfers only when the recipient accepts |
 | Hierarchical fan-out/fan-in | Subtasks are independent and benefit from parallelism | Shared mutable context or tight ordering dominates | Coordinator sets fan-out and aggregation contract |
 | Peer swarm / group chat | Research exploration where diversity is worth the cost | Regulated decisions, side effects, or strict SLOs | Experimental; hard budgets and sandbox only |
 
 ### Recommended orchestration rules
 
-* **Creation:** instantiate agents from an immutable AgentManifest; never construct production instructions and permissions ad hoc in a prompt.
-* **Delegation:** create a child task with explicit goal, input artifact references, output schema, authority ceiling, budget, deadline, trace context, and parent run ID.
-* **Handoff:** atomically transfer the conversation owner and issue a new capability envelope; preserve the prior agent as history, not as a competing owner.
+* **Creation:** instantiate agents from an immutable AgentSpec; never construct production instructions and permissions ad hoc in a prompt.
+* **Delegation:** create a child task carrying a TaskEnvelope (§ Durable child-task contract).
+* **Handoff:** follow Chapter 11's acknowledged transfer. The Ownership Service records it as an OwnershipTransfer with a narrowed capability envelope; the prior owner remains accountable until the recipient accepts and is kept as history afterward, not as a competing owner.
 * **Coordination:** use a workflow node, not a group chat, to decide readiness, joins, retries, cancellation, and aggregation.
 * **Shared state:** store it in a concurrency-controlled state service. Agents receive snapshots and return proposed patches with expected versions.
-* **Termination:** terminal states are deterministic—acceptance criteria satisfied, user canceled, policy denied, budget/time/step limit reached, or unrecoverable error. The model may recommend completion but cannot invent the terminal transition.
-* **Plan changes:** append a versioned plan revision with rationale and diff; validate new nodes against the original authority envelope. Materially broader scope requires new consent or approval.
+* **Termination:** terminal transitions follow the task lifecycle below; the model may recommend completion but cannot make the transition.
+* **Plan changes:** use Chapter 12's revision protocol; new nodes are validated against the original capability envelope, and materially broader scope needs new approval.
+
+### Task lifecycle
+
+| **State** | **Entered when** | **Who may move it on** |
+| --- | --- | --- |
+| Created/Dispatched | The Task Service persists the TaskEnvelope under its idempotency key and queues it for the receiver | The receiver accepts or rejects; the parent may cancel |
+| Accepted/Running | The receiver calls `:accept` with the expected version; a child workflow starts (Chapter 15) | The owner, by completing, failing, or requesting input |
+| NeedsInput | The owner needs a clarification, document, or approval it cannot obtain itself | The parent or user supplies it; the deadline moves it to Expired |
+| CompletedPendingValidation | The owner submits artifacts through `:complete`; they stay quarantined | The Task Service, after schema, provenance, and acceptance checks |
+| Succeeded | Validation passes and the parent's join adopts the artifacts (Chapter 15 § Terminal correctness) | No one; terminal |
+| CancelRequested → Canceled | The parent persists cancellation intent; Canceled only after any executing mutation reconciles | The Task Service, once children acknowledge and effects settle |
+| Failed / Expired / InterventionRequired | A typed failure (including the receiver's rejection), a passed deadline, or an outcome no rule can settle | No one; the parent applies its join policy, and InterventionRequired opens an intervention task (Chapter 14) |
+
+The receiver may reject, accept, request input, produce partial artifacts, complete, fail, or acknowledge cancellation. Terminal states reuse Chapter 15's run terminal names, and a terminal task accepts no new work; follow-up is a new task. Cancellation propagates downward by default; compensation does not propagate automatically and follows domain policy (Chapter 22).
 
 ## A workable implementation
 
@@ -6245,10 +6324,10 @@ Nested delegation multiplies cost and risk. Northstar caps depth, children, conc
 | **Component** | **Owns** | **Does not own** |
 | --- | --- | --- |
 | Agent Registry | Immutable agent versions, capability declarations, compatibility, ownership | Per-run mutable state |
-| Run Coordinator | Goal lifecycle, plan revision, child-task policy, terminal decision | Provider-specific model calls or connector credentials |
+| Run Coordinator | Goal lifecycle, child-task policy, terminal decision; requests plan revisions from the Plan Service (Chapter 12) | Provider-specific model calls or connector credentials |
 | Task Service | Task records, dependencies, assignment, deadlines, idempotent creation | Business effects performed by the task |
-| Ownership Service | Atomic handoff, leases, cancellation tree, current accountable owner | Natural-language routing judgment |
-| Router | Ranked eligible agents/tools using manifest, health, policy, cost, and locality | Authorization or unrestricted discovery |
+| Ownership Service | Ownership transfers (pending until accepted), leases, cancellation tree, current accountable owner | Natural-language routing judgment |
+| Router | Ranked eligible agents/tools using manifest, health, policy, cost, and locality (Chapter 11's route service) | Authorization or unrestricted discovery |
 | Join/Aggregation Service | Readiness, quorum, schema validation, conflict policy, accepted result | Free-form “consensus” without evidence |
 
 ### The contracts between components
@@ -6256,54 +6335,31 @@ Nested delegation multiplies cost and risk. Northstar caps depth, children, conc
 | **API** | **Purpose and key semantics** |
 | --- | --- |
 | GET /v1/agents/{agent\_id}/versions/{version} | Resolve a pinned manifest; ETag is the manifest digest |
-| POST /v1/runs/{run\_id}/tasks | Idempotently create a child task from goal, contract, inputs, authority ceiling, deadline, budget, and dependency IDs |
-| POST /v1/tasks/{task\_id}:accept | Receiver accepts ownership using expected\_version; starts or binds a child workflow |
-| POST /v1/tasks/{task\_id}:handoff | Atomically transfer owner; requires target agent/version, rationale, remaining budget, and narrowed capability grant |
+| POST /v1/runs/{run\_id}/tasks | Idempotently create a child task from a TaskEnvelope; refuse a capability envelope that is not a subset of the parent's |
+| POST /v1/tasks/{task\_id}:accept | Receiver accepts a new child task or a pending ownership transfer using expected\_version; starts or binds a child workflow (Chapter 15) |
+| POST /v1/tasks/{task\_id}:handoff | Propose an ownership transfer to a target agent/version with rationale, obligations, deadline, remaining budget, and narrowed capability envelope; the transfer stays pending until the recipient calls `:accept` with expected\_version; rejection or expiry leaves the current owner accountable |
 | POST /v1/tasks/{task\_id}:complete | Submit typed result/artifacts; server runs acceptance and provenance checks before terminal transition |
 | POST /v1/tasks/{task\_id}:fail | Record typed failure, retryability, partial artifacts, and recommended parent disposition |
 | POST /v1/tasks/{task\_id}:cancel | Request hierarchical cancellation; response distinguishes requested, acknowledged, and completed |
-| POST /v1/runs/{run\_id}/plans:revise | Append a plan revision with diff, trigger, rationale, and optimistic run version |
 | GET /v1/runs/{run\_id}/graph | Read materialized task/dependency/owner/status graph for UI and operations |
-
-Example child-task request:
-
-JSON · implementation excerpt
-
-```json
-{
-  "idempotency_key": "run_42:mortgage-evidence-review:1",
-  "receiver": {"agent_id": "mortgage-evidence-specialist", "version": "0.1.0"},
-  "goal": "Review the mortgage case under policy US-2026-09",
-  "input_artifacts": [{"uri": "artifact://mortgage-case/MORT-2026-000184", "sha256": "..."}],
-  "output_schema": "schema://mortgage-evidence-result@1",
-  "authority_ceiling": "grant://run_42/mortgage-readonly",
-  "depends_on": ["task_collect_mortgage_evidence"],
-  "deadline": "2026-09-11T03:00:00Z",
-  "budget": {"usd": 2, "steps": 8, "delegation_depth": 0},
-  "acceptance": ["schema-valid", "sources-present", "policy-version-matches"]
-}
-```
 
 ### Records worth preserving
 
 | **Entity** | **Required fields and invariants** |
 | --- | --- |
 | AgentVersion | (tenant\_id, agent\_id, version), digest, instructions digest, tool allowlist, schemas, owner, risk tier, lifecycle state; immutable after release |
-| Task | task ID, tenant/run/parent IDs, logical key, owner agent/version, state, goal, input/output schema refs, deadline, priority, current revision; unique (tenant\_id, run\_id, logical\_key) |
+| Task | task ID, tenant/run/parent IDs, logical key, owner agent/version, state (§ Task lifecycle), goal, input/output schema refs, deadline, priority, current revision; unique (tenant\_id, run\_id, logical\_key) |
 | TaskDependency | from/to task, dependency type, satisfaction condition; graph compiler prevents unauthorized cycles |
 | TaskAttempt | task ID, attempt number, worker/child-workflow ID, start/end, outcome, retry class, trace ID; append-only |
-| OwnershipTransfer | task ID, from/to owner, previous/new authority grant, proposal hash, reason, timestamp, actor; transactionally updates Task.owner |
+| OwnershipTransfer | the handoff record of Chapter 11: task ID, from/to owner, previous/new capability envelope, obligations, deadline, acknowledgment state (proposed, accepted, rejected, expired), proposal hash, reason, timestamp, actor; updates Task.owner only on acceptance |
 | TaskArtifact | task ID, role (input/partial/output/evidence), immutable artifact URI/hash, schema, producer, classification |
 | JoinPolicy | join node, required predecessors, all/quorum/first-valid strategy, timeout, conflict resolver, partial-result policy |
 
 ### State, consistency, and scale
 
-* Partition operational rows, workflow queues, and read models by tenant\_id + run\_id; all tasks in one run should have a stable home shard so parent/child transitions are local.
-* Let the durable workflow instance serialize control decisions for one run. Scale across runs horizontally; do not use a global coordinator or distributed lock for ordinary task ownership.
-* Dispatch by capability + region + risk\_class + priority. A receiver queue contains task references, not full sensitive context; workers fetch authorized artifacts after assignment.
-* Use a strongly consistent transaction for task creation, owner transfer, terminal transition, and budget reservation. Graph/UI projections, search indexes, and analytics may be eventually consistent.
+* Partition by tenant + run so a run's tasks are shard-local; let the run's durable workflow serialize its control decisions; use strongly consistent transactions for task creation, owner transfer, terminal transition, and budget reservation, and eventually consistent projections for the graph and analytics.
+* Dispatch by capability + region + risk class (Chapter 22) + priority. A receiver queue contains task references, not full sensitive context; workers fetch authorized artifacts after assignment.
 * Enforce manifest-level defaults such as max\_delegation\_depth, max\_children\_per\_task, max\_parallel\_children, and max\_plan\_revisions; risk policy may lower them per run.
-* Store the authoritative graph as normalized tasks/edges; publish an incrementally updated materialized projection for fast operator queries. Large evidence and messages remain in object storage.
 * Mitigate “hot runs” by batching status events, limiting concurrent ready nodes, and applying per-run semaphores. A single run should not require more coordinator throughput than its bounded fan-out permits.
 * Idempotent task creation and completion make queue redelivery safe. Task terminal state plus accepted artifact hash is immutable; corrections create a new revision/task rather than reopening history.
 
@@ -6311,29 +6367,23 @@ JSON · implementation excerpt
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Collaboration claim | Multi-agent structure does not inherently improve quality. Add specialists only when capability, ownership, trust, isolation, or parallelism justifies coordination cost, and evaluate against the strongest single-agent baseline. | R28 |
+| Collaboration claim | R28 reports a supervisor/specialist research architecture and its token and context costs; R33 documents a managed supervisor/collaborator pattern. The book's recommendation, not a sourced finding, is to add specialists only when capability, ownership, trust, isolation, or parallelism justifies the cost, and to evaluate against the strongest single-agent baseline. | R28; R33 |
 
-The discussion above draws on R28. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R28; R33. Appendix K lists the complete sources and records their authority, version, and scope.
 
-## How Supervisor/Worker works in practice
-
-|  |
-| --- |
-| **THE ENGINEERING PROBLEM** One outcome requires specialist work that benefits from parallelism or separate capability boundaries while a single component retains overall ownership. |
+## Supervisor/Worker at a glance
 
 ### How the pattern works
-
-The supervisor creates typed child tasks with narrower grants and acceptance criteria. Workers return artifacts; the supervisor's deterministic join validates and aggregates them.
 
 1. Decompose only along meaningful specialist boundaries.
 2. Create durable TaskEnvelopes and child capability envelopes.
 3. Schedule independently with deadlines and cancellation lineage.
-4. Collect artifacts under explicit join semantics.
+4. Collect artifacts under explicit join semantics and adopt them only after schema, provenance, quality, and policy validation.
 5. Resolve conflicts and accept the parent outcome.
 
 | **Use when** | **Do not use when** |
 | --- | --- |
-| Use when specialists differ in tools, data, trust, cost, SLO, ownership, or deployment and parallel work helps. | Avoid when one agent with tools is simpler, context is inseparable, or coordination cost exceeds specialization gain. |
+| Use when specialists differ in tools, data, trust, cost, SLO, ownership, or deployment and parallel work helps. | Avoid when one agent with tools is simpler, context is inseparable, or coordination cost exceeds specialization gain, or when free-form conversation would be the only coordination record. |
 
 ### Where it helps—and what it costs
 
@@ -6349,165 +6399,121 @@ The supervisor creates typed child tasks with narrower grants and acceptance cri
 | Runaway fan-out | Depth, child, concurrency, cost, and time budgets. |
 | Conflicting artifacts | Schema, provenance, version, quorum, precedence, or human resolution. |
 | Child leakage | Narrow grant, data, context, and egress boundaries. |
+| Split ownership | Single current owner and versioned OwnershipTransfer. |
+| Duplicate or reordered status | Idempotent task creation/completion and expected versions. |
+| Ping-pong or circular delegation | Acyclic ownership graph and depth limits. |
 
 ### What you need to see in production
 
 * task tree
-* current owners
+* current owner and owner version
 * grant lineage
 * child state and budget
-* join condition
-* conflicts and resolution
-
-## How Multi-Agent Collaboration works in practice
-
-|  |
-| --- |
-| **THE ENGINEERING PROBLEM** Several autonomous or semi-autonomous components must exchange tasks and artifacts while preserving ownership, authority, evidence, and recovery. |
-
-### How the pattern works
-
-Collaboration uses durable TaskEnvelope, message, status, artifact, cancellation, and join contracts; conversation is advisory, while workflow state determines truth.
-
-1. Create a task with owner, goal, acceptance, grant, budget, and deadline.
-2. Exchange authenticated versioned messages and artifacts.
-3. Persist statuses and correlation independently of chat context.
-4. Adopt artifacts only after schema, provenance, quality, and policy validation.
-5. Join, cancel, escalate, or compensate under explicit rules.
-
-| **Use when** | **Do not use when** |
-| --- | --- |
-| Use across teams, regions, vendors, trust domains, or independently recoverable specialist work. | Avoid free-form agent conversations as the sole coordination mechanism. |
-
-### Where it helps—and what it costs
-
-| **Choice** | **Consequence** |
-| --- | --- |
-| Organizational scale | More protocol, trust, compatibility, and operations work. |
-| Independent ownership | Improves isolation; complicates global optimization and debugging. |
-
-### Where it can fail—and how to contain it
-
-| **Failure** | **Control** |
-| --- | --- |
-| Split ownership | Single current owner and versioned transfer. |
-| Message duplication or reordering | Inbox dedupe, sequence, expected version, and idempotent reducers. |
-| Remote task never completes | Deadline, heartbeat, cancellation, fallback, and intervention. |
-
-### What you need to see in production
-
-* task and message IDs
-* peer identity
-* owner version
-* status history
+* join condition and outcome
 * artifact lineage
-* deadline, cancellation, and join outcome
+* conflicts and resolution
 
 ## A sensible place to start
 
+Start with the one contract every child task carries.
 
 ### Durable child-task contract
 
-🐍 · implementation excerpt
+A TaskEnvelope carries eight field groups:
+
+| **Field group** | **Minimum contents** |
+| --- | --- |
+| Identity | task\_id, parent\_run\_id, tenant, requester subject, caller workload, receiving agent/version |
+| Goal | Bounded objective, non-goals, acceptance criteria, priority, deadline |
+| Data | Immutable input artifact references, content hashes, provenance, classification, permitted purpose |
+| Contract | Input/output schemas, artifact media types, status model (§ Task lifecycle) |
+| Authority | Capability envelope reference (`capability_grant_id`), denied operations, maximum delegation depth, expiry |
+| Budgets | Tokens, currency, wall time, steps, tool calls, parallelism, data-egress limit |
+| Reliability | Idempotency key, dependencies, retry ownership, heartbeat, cancel semantics, compensation owner |
+| Observability | Trace/span context, causation/correlation IDs, sampling class, audit references |
+
+The model below carries one field or more from each group, and the Task Service enforces the three rules that make delegation safe: a reused idempotency key returns the original task, a child's delegation depth and budget come out of its parent's, and the capability-envelope subset check (Chapter 21) runs before any child exists.
+
+🐍 · Provider-neutral agent-step and platform contracts
 
 ```python
-from __future__ import annotations
-from decimal import Decimal
-from datetime import datetime
-from pydantic import BaseModel, Field
 class TaskEnvelope(BaseModel):
+    """The one child-task contract (Chapter 18), grouped as the field-group table."""
+
+    model_config = ConfigDict(frozen=True)
+
+    # Identity
     task_id: str
-    parent_task_id: str | None
-    owner_agent: str
-    capability: str
+    run_id: str
+    parent_task_id: str | None = None
+    tenant_id: str
+    subject_id: str
+    owner_agent: str  # receiving agent@version
+    # Goal
     goal: str
     acceptance_contract: str
-    capability_grant_id: str
-    input_artifact_ids: tuple[str, ...]
     deadline: datetime
+    # Data and contract
+    input_artifact_ids: tuple[str, ...] = ()
+    output_schema: str
+    # Authority: the capability envelope this task may use (Chapter 21)
+    capability_grant_id: str
+    delegation_depth: int = Field(ge=0)  # further delegation levels allowed
+    # Budgets
     maximum_cost_usd: Decimal = Field(ge=0)
-    cancellation_parent_id: str
+    # Reliability
+    idempotency_key: str
+    depends_on: tuple[str, ...] = ()
+    cancellation_parent_id: str | None = None
     state_version: int = 0
-```
-
-### Monotonic child authority
-
-🐍 · implementation excerpt
-
-```python
-from __future__ import annotations
-
-from dataclasses import dataclass
-from decimal import Decimal
-from datetime import datetime, timezone
+    # Observability
+    trace_context: str  # W3C traceparent
 
 
-def _resource_within(child: str, parent: str) -> bool:
-    if parent.endswith("://"):
-        return child.startswith(parent)
-    normalized = parent.rstrip("/")
-    return child == normalized or child.startswith(normalized + "/")
+SubsetCheck = Callable[[str, str], bool]  # (parent grant, child grant) -> provably narrower?
 
 
-@dataclass(frozen=True)
-class CapabilityEnvelope:
-    grant_id: str
-    subject_id: str
-    actor_id: str
-    actions: frozenset[str]
-    resource_prefixes: frozenset[str]
-    purposes: frozenset[str]
-    data_classes: frozenset[str]
-    regions: frozenset[str]
-    maximum_risk: int
-    maximum_cost_usd: Decimal
-    delegation_depth: int
-    expires_at: datetime
-
-    def assert_current(self, now: datetime | None = None) -> None:
-        current = now or datetime.now(timezone.utc)
-        if self.expires_at <= current:
-            raise PermissionError("capability envelope expired")
+class TaskConflict(Exception):
+    """An idempotency key was reused for a different task."""
 
 
-def derive_child(
-    parent: CapabilityEnvelope,
-    child: CapabilityEnvelope,
-    *,
-    now: datetime | None = None,
-) -> CapabilityEnvelope:
-    """Prove monotonic narrowing; actor identity may change, subject may not."""
+class TaskService:
+    def __init__(self, is_subset: SubsetCheck) -> None:
+        self._is_subset = is_subset
+        self._by_key: dict[tuple[str, str], TaskEnvelope] = {}
+        self._remaining: dict[str, Decimal] = {}
 
-    parent.assert_current(now)
-    if child.subject_id != parent.subject_id:
-        raise PermissionError("subject cannot change")
-    if not child.actions <= parent.actions:
-        raise PermissionError("actions broadened")
-    if not child.purposes <= parent.purposes:
-        raise PermissionError("purposes broadened")
-    if not child.data_classes <= parent.data_classes:
-        raise PermissionError("data classes broadened")
-    if not child.regions <= parent.regions:
-        raise PermissionError("regions broadened")
-    if child.maximum_risk > parent.maximum_risk:
-        raise PermissionError("risk ceiling raised")
-    if child.maximum_cost_usd > parent.maximum_cost_usd:
-        raise PermissionError("cost ceiling raised")
-    if child.delegation_depth >= parent.delegation_depth:
-        raise PermissionError("delegation depth was not reduced")
-    if child.expires_at > parent.expires_at:
-        raise PermissionError("lifetime extended")
-    for resource in child.resource_prefixes:
-        if not any(_resource_within(resource, allowed) for allowed in parent.resource_prefixes):
-            raise PermissionError("resource scope broadened")
-    return child
+    def create_child(self, parent: TaskEnvelope, child: TaskEnvelope) -> TaskEnvelope:
+        existing = self._by_key.get((child.run_id, child.idempotency_key))
+        if existing is not None:
+            if existing != child:
+                raise TaskConflict(child.idempotency_key)
+            return existing  # redelivery: same task, no second withdrawal
+        if (child.run_id, child.parent_task_id) != (parent.run_id, parent.task_id):
+            raise ValueError("child must name its parent task and run")
+        if (child.tenant_id, child.subject_id) != (parent.tenant_id, parent.subject_id):
+            raise PermissionError("tenant and subject cannot change")
+        if child.delegation_depth >= parent.delegation_depth:
+            raise PermissionError("delegation depth was not reduced")
+        if child.deadline > parent.deadline:
+            raise PermissionError("child deadline exceeds the parent's")
+        remaining = self._remaining.get(parent.task_id, parent.maximum_cost_usd)
+        if child.maximum_cost_usd > remaining:
+            raise PermissionError("budget exceeds the parent's remaining budget")
+        if not self._is_subset(parent.capability_grant_id, child.capability_grant_id):
+            raise PermissionError("capability envelope is not a subset of the parent's")
+        self._remaining[parent.task_id] = remaining - child.maximum_cost_usd
+        self._by_key[(child.run_id, child.idempotency_key)] = child
+        return child
 ```
 
 ## If this fails in production
 
 1. Build the durable task tree and identify the current owner of every node.
-2. Verify each child grant is a subset of the parent grant.
+2. Verify each child grant is a subset of the parent grant (Chapter 21 § Capability-envelope subset proof).
 3. Inspect join semantics, missing artifacts, duplicates, and conflicts.
+
+If chat is the coordination record or each child gets fresh limits, see AP-08 and AP-11 in Chapter 17.
 
 ## What to verify before production
 
@@ -6519,8 +6525,6 @@ def derive_child(
 
 **✓** Joins define all, quorum, first-valid, or fallback semantics and conflict policy.
 
-**✓** MCP and A2A pass through gateways that verify peers, schemas, artifacts, quotas, and cancellation (Chapter 19).
-
 ## Put the idea to work
 
 1. Design supervisor/worker fan-out with quorum and a deterministic conflict rule.
@@ -6531,14 +6535,14 @@ def derive_child(
 | **Question** | **Strong answer** |
 | --- | --- |
 | When is a multi-agent system justified? | When meaningful boundaries differ—domain, tools, data access, owner, deployment, SLO, or cost—not merely because multiple personas sound sophisticated. |
-| Compare an agent-as-tool, a handoff, and a durable child task. | An in-run specialist with parent control; conversational control transfer; or independently owned durable work with retries, waits, deadlines, and cancellation. |
+| What must happen before a parent cancellation is reported complete? | Cancellation is persisted as durable intent and propagated to every child; children with executing mutations reconcile before acknowledging; the API distinguishes requested, acknowledged, and completed. |
 | How do you prevent delegation from escalating privilege? | Derive child authority by intersection; narrow action, resource, data, time, budget, and depth; reauthorize each invocation; issue scoped last-hop credentials. |
 | How should fan-in be implemented? | Persist child states and artifacts, wait for an explicit join condition, then validate schemas, provenance, conflicts, quality, and policy deterministically. |
-| What does an A2A or MCP protocol not solve? | Business authorization, peer trust, quality, tenant isolation, effect semantics, artifact safety, cancellation guarantees, and audit remain local platform responsibilities. |
+| How do you keep a task tree inside its budget? | Children withdraw from the parent's remaining budget rather than receive fresh limits; depth, children, concurrency, and plan revisions are capped by manifest defaults that risk policy may lower; per-run semaphores bound ready nodes. |
 
 ## Where this leads next
 
-Multi-agent collaboration inside one platform is only part of the problem; Chapter 19 extends those controls to external tools, agents, and model providers.
+Inside one platform, the Task Service enforces these rules directly. Chapter 19 carries the same ownership and narrowing rules to tools and agents outside the platform, where a protocol moves the message but not the trust.
 
 # 19 — Crossing System Boundaries: MCP, A2A, and Local Control
 
@@ -6546,7 +6550,7 @@ Multi-agent collaboration inside one platform is only part of the problem; Chapt
 
 |  |
 | --- |
-| **WHERE THE MORTGAGE CASE STANDS** Harborlight consumes a third-party employment-verification MCP server and delegates property appraisal review to a partner agent through A2A. Protocol conformance makes messages interoperable; it does not make the endpoint trusted or the artifact safe to adopt. |
+| **WHERE THE MORTGAGE CASE STANDS** Harborlight consumes a third-party employment-verification MCP server, and the property-review specialist from Chapter 18 is now a partner-operated agent reached through A2A. Protocol conformance makes messages interoperable; it does not make the endpoint trusted or the artifact safe to adopt. |
 
 |  |
 | --- |
@@ -6556,19 +6560,18 @@ Multi-agent collaboration inside one platform is only part of the problem; Chapt
 
 External protocols make it easier to discover and exchange work with tools and
 agents outside your boundary. They do not make those endpoints trustworthy, or
-their artifacts safe to adopt. This chapter follows an MCP call and an A2A
-task through local gateways, where identity, policy, quotas, provenance, and
-effect semantics are re-established before anything is used. It closes by
-placing the LLM Gateway among those boundaries.
-
-## Re-establish trust at every protocol boundary
-
-A protocol can standardize the envelope without making the sender trustworthy. An MCP server can describe a tool accurately and still be unauthorized for this tenant; an A2A peer can accept a task and still lack the evidence or identity needed to act. Local gateways rebuild authentication, authorization, quotas, provenance, schema validation, and effect handling before adopting anything that crossed the boundary.
-
+their artifacts safe to adopt. An MCP server can describe a tool accurately and
+still be unauthorized for this tenant; an A2A peer can accept a task and still
+lack the evidence or identity needed to act. Model providers are a third
+external boundary; the LLM Gateway that terminates it sits in the Gateways and
+integration plane (Chapter 4), and model routing, which filters by policy
+before it optimizes (Figure 19-1), is treated as a cost decision in Chapter 28.
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
-| MCP and A2A Gateways | local trust domain to external endpoint or peer | endpoint · peer · tenant quota | one remote call or task | ServerManifest · A2ATaskEnvelope · RemoteArtifact |
+| MCP and A2A Gateways | local trust domain to external endpoint or peer | endpoint · peer · tenant quota | one remote call or task | ServerManifest · FederatedTask · RemoteArtifact |
+
+[[DIAGRAM:model-routing|Figure 19-1 — Policy-first model-routing decision tree]]
 
 ## Two protocols, two responsibilities
 
@@ -6584,35 +6587,25 @@ and a mature system runs both.
 | Typical use | "Read this record for me" | "Own this sub-goal and tell me when it is done" |
 | What it does **not** decide | Whether the caller may invoke the tool | Whether the peer may be trusted with the task |
 
-That last row is the one that matters. Neither protocol carries business authorization.
-MCP describes how a tool is discovered and called, not whether this subject may use it for this purpose; A2A
-describes how a task is delegated, not whether this peer should receive it.
-Both therefore terminate at a gateway that supplies the decision the protocol
-omits.
+That last row is the one that matters: neither protocol carries business authorization, so each terminates at a gateway that supplies the decision the protocol omits.
 
-A local agent may use MCP for a capability and A2A to delegate independently owned work.
+The MCP Gateway resolves a pinned ServerManifest, authenticates the endpoint, filters tools to the caller's eligible set, validates schemas, and constrains egress. It validates audience-bound tokens and never passes an inbound token upstream. A mutating MCP call then continues to the Tool Gateway (Chapter 1), which reauthorizes the exact resource, enforces idempotency, and records the effect receipt; the MCP Gateway decides whether the server and tool may be used, not whether the effect may happen.
 
-Northstar terminates both protocols at gateways. The MCP Gateway resolves a pinned server manifest, authenticates the endpoint, filters tools, validates schemas, applies tenant and user policy, constrains egress, and wraps mutating calls in effect semantics. The A2A Gateway verifies peer identity and trust profile, translates local TaskEnvelope to the negotiated protocol, persists status, enforces deadlines and quotas, and scans returned artifacts before local adoption.
+The A2A Gateway is the agent-to-agent control point in Chapter 1's gateway table: it decides whether this external peer may receive or return this task, and it terminates the protocol; inside the platform the same decision is made by the Task Service (Chapter 18). It verifies peer identity and trust profile, translates Chapter 18's TaskEnvelope into an A2A task (adding the remote task and context IDs, peer and card digest, and protocol version, recorded in FederatedTask), persists status, enforces deadlines and quotas, and quarantines returned artifacts until local adoption.
 
 ### Registry model
 
-A server or peer registry entry contains owner, endpoint, protocol version and profile, authentication method, trust material, schemas, supported capabilities, data classifications, regions, risk, rate limits, health, release aliases, evaluation evidence, and revocation state. Discovery never substitutes for authorization.
+A ServerManifest (MCP) or RemoteAgent entry (A2A) contains owner, endpoint, protocol version and profile, authentication method, trust material, schemas, supported capabilities, data classifications, regions, risk, rate limits, health, release aliases, evaluation evidence, and revocation state. It is pinned by digest; a changed manifest is a new version that must pass policy before use. The gateway pins one MCP protocol revision per server and negotiates explicitly; Tasks and Skills over MCP are optional extensions, so durable ownership never depends on them. Discovery never substitutes for authorization (Chapter 8 § Discovery is not permission; AP-12). An operational registry product can host these entries (Appendix D notes the options and their maturity), but it holds metadata, not authorization.
 
-### MLflow MCP Registry note
-
-MLflow 3.15.0 introduced experimental MCP Registry capabilities for registering servers, managing versions and aliases, creating access endpoints, and discovering tools. Northstar can use this as an operational registry surface while retaining business authorization, tenant policy, credential exchange, and effect control in its platform gateways. Because the feature is experimental, pin exact MLflow and registry schema versions and test migration and rollback.
-
-## Pass tasks between agents without losing ownership
+## Delegate work across a trust boundary
 
 | **Required analysis** | **Design conclusion** |
 | --- | --- |
 | Problem | Independent agents need to discover capabilities, delegate work, exchange artifacts, propagate failure, and agree on ownership without exposing internal prompts or state. |
 | Why it is difficult | Natural-language messages are ambiguous; remote agents have separate identities and SLOs; asynchronous tasks outlive connections; protocol interoperability does not guarantee shared authorization or semantics. |
-| Design alternatives | In-process calls; queue topics; shared blackboard; RPC; workflow child runs; MCP tool exposure; A2A tasks and messages. |
 | Recommended architecture | For agents under one platform, use workflow-native child tasks. Across deployment or vendor boundaries, use the A2A Gateway with typed task/artifact envelopes and authenticated async operations. Use MCP for tools/resources. Never use conversation alone as the durable task record. |
 | Trade-offs | Standard protocols reduce integration cost but cover transport more than governance. A gateway may reduce protocol features, yet it supplies policy, tenant binding, quotas, schema validation, and audit. |
 | Failure scenarios | Agent advertises a misleading capability; task status is lost; result schema differs; duplicate delegation starts duplicate work; parent cancels but child continues; remote agent requests broader rights. |
-| Enterprise example | A mortgage platform delegates property appraisal review to a separately operated agent. The remote agent receives authorized document references and read-only scope, returns a signed appraisal artifact, and cannot alter the case or make the lending decision. |
 
 ### Protocol roles
 
@@ -6625,35 +6618,13 @@ MLflow 3.15.0 introduced experimental MCP Registry capabilities for registering 
 | A2A | Agent discovery, messages, stateful tasks, streaming/push updates, artifacts | Internal durable execution, shared business transactions, policy authority |
 | Shared blackboard | Experimental collaboration and broad exploration | Transactional ownership, tenant isolation, deterministic conflict resolution |
 
-A2A’s task/message/artifact model and async operations are useful at remote-agent boundaries. Its agent card is discovery metadata—not proof of trust. Pin the card version or digest, verify issuer and endpoint, and filter advertised skills through enterprise policy.
-
-### What the TaskEnvelope needs to carry
-
-| **Field group** | **Minimum contents** |
-| --- | --- |
-| Identity | task\_id, parent\_run\_id, context\_id, tenant, requester subject, caller workload, receiving agent/version |
-| Goal | Bounded objective, non-goals, acceptance criteria, priority, deadline |
-| Data | Immutable input artifact references, content hashes, provenance, classification, permitted purpose |
-| Contract | Input/output schemas, artifact media types, status model, protocol version |
-| Authority | Allowed capabilities/resources, denied operations, maximum delegation depth, expiry |
-| Budgets | Tokens, currency, wall time, steps, tool calls, parallelism, data-egress limit |
-| Reliability | Idempotency key, retry ownership, heartbeat, cancel semantics, compensation owner |
-| Observability | Trace/span context, causation/correlation IDs, sampling class, audit references |
-
-### Ownership and failure rules
-
-* A task has exactly one current owner and one parent coordinator; leases may move execution, but ownership changes are transactional and audited.
-* The receiver may reject, accept, request input, produce partial artifacts, complete, fail, or acknowledge cancellation. Terminal tasks cannot accept new work; create a new task for follow-up.
-* Cancellation propagates downward by default; compensation does not automatically propagate and must follow domain policy.
-* Child failure is data. The parent chooses fail-fast, quorum, fallback, partial result, targeted retry, or human escalation based on the join contract.
-* Aggregators validate schema, provenance, duplicate claims, evidence quality, and conflict policy. They do not concatenate prose and call it consensus.
-* Shared mutable state is prohibited across trust domains. Exchange immutable artifacts or versioned patches; use optimistic concurrency for authorized updates.
+A2A’s task/message/artifact model and async operations are useful at remote-agent boundaries. Its agent card is discovery metadata—not proof of trust. Pin the card version or digest, verify issuer and endpoint, and filter advertised skills through enterprise policy—an advertised A2A skill is discovery metadata, not a certified Skill in the sense of Chapter 8. Across trust domains, never share mutable state: exchange immutable artifacts or versioned patches under optimistic concurrency.
 
 ## A workable implementation
 
 ### Who should own each decision
 
-The Agent Directory stores validated cards and endpoint metadata; the Peer Trust Registry stores organizational trust and allowed purposes; the A2A Gateway terminates authentication and protocol bindings; the Task Bridge maps remote tasks to internal child workflows; the Artifact Broker exchanges immutable references; the Subscription Dispatcher handles push/status delivery; and the Trace Bridge links remote and local causal graphs.
+The Agent Directory stores validated cards and endpoint metadata for remote agents alongside the Agent Registry's local versions (Chapter 18), and `agents:resolve` queries both; the Peer Trust Registry stores organizational trust and allowed purposes; the A2A Gateway terminates authentication and protocol bindings; the Task Bridge maps remote tasks to internal child workflows; the Artifact Broker exchanges immutable references; the Subscription Dispatcher handles push/status delivery; and the Trace Bridge links remote and local causal graphs.
 
 ### The contracts between components
 
@@ -6662,9 +6633,9 @@ The Agent Directory stores validated cards and endpoint metadata; the Peer Trust
 | POST /v1/peers | Register remote agent issuer/domain, trust material, approved endpoints, allowed skills/purposes, risk ceiling, and data boundary |
 | POST /v1/peers/{peer\_id}:refreshCard | Fetch and verify agent card; new digest remains pending until compatibility/policy checks pass |
 | GET /v1/agents:resolve?skill=...&region=... | Resolve policy-eligible local or remote agents; discovery never returns a grant |
-| POST /v1/federated-tasks | Create an internal durable child task and dispatch an A2A task/message idempotently |
-| GET /v1/federated-tasks/{task\_id} | Return canonical local state, mapped remote state, artifacts, heartbeat, deadlines, and trace links |
-| POST /v1/federated-tasks/{task\_id}/messages | Send typed clarification or additional artifact reference under the existing authority ceiling |
+| POST /v1/federated-tasks | Create a child task through the Task Service (Chapter 18) and dispatch an A2A task/message idempotently |
+| GET /v1/federated-tasks/{task\_id} | Return canonical local state, mapped remote state, artifacts, heartbeat, deadlines, and trace links. Unauthorized callers receive the same response whether or not the task exists |
+| POST /v1/federated-tasks/{task\_id}/messages | Send typed clarification or additional artifact reference under the existing capability envelope |
 | POST /v1/federated-tasks/{task\_id}:cancel | Persist parent cancellation first, relay to peer, and track acknowledgment/terminal state separately |
 | POST /v1/a2a/callbacks | Authenticated ingress for peer status/artifact events with source+event ID deduplication |
 | POST /v1/federated-tasks/{task\_id}:adoptResult | Validate remote terminal artifact and explicitly commit it into the parent workflow |
@@ -6677,7 +6648,7 @@ At an open boundary, expose the standard A2A agent-card and task/message operati
 | --- | --- |
 | RemoteAgent | peer/agent ID, issuer, card URI/digest/version, endpoints/bindings, skills, auth schemes, owner, region, trust/risk status, last verification |
 | PeerTrustPolicy | peer, allowed tenants/purposes/data classes/skills, max risk, required assurance, artifact rules, rate limits, expiry |
-| FederatedTask | local task ID, remote task/context IDs, parent run, peer/agent/version, authority grant, state mapping, idempotency key, deadline, budget, last heartbeat |
+| FederatedTask | local task ID, remote task/context IDs, parent run, peer/agent/version, capability envelope reference, state mapping, idempotency key, deadline, budget, last heartbeat |
 | FederatedMessage | task, direction, message/event IDs, role/type, parts/artifact refs, payload hash, sequence/logical time, verification status |
 | RemoteArtifact | remote and local artifact IDs, URI/reference, media/schema, content hash, producer signature/attestation, classification, scan/validation state |
 | CallbackSubscription | peer/task, endpoint handle, event types, auth key/version, expiry, delivery cursor, failure policy |
@@ -6685,15 +6656,20 @@ At an open boundary, expose the standard A2A agent-card and task/message operati
 
 ### State mapping and ownership
 
-| **Canonical local state** | **Remote interpretation** | **Parent behavior** |
+Local states are the task lifecycle of Chapter 18; the gateway maps each remote state of the pinned A2A 1.0.1 specification onto one of them.
+
+| **Local state** | **A2A task state** | **Parent behavior** |
 | --- | --- | --- |
-| Created/Dispatched | Submitted/message sent | Retry dispatch only with same idempotency key |
-| Accepted/Running | Task working/streaming | Monitor heartbeat and deadline |
-| NeedsInput | Input-required state/message | Route a typed question to parent/user; budget clock follows policy |
-| CompletedPendingValidation | Remote task completed | Quarantine artifacts until schema, provenance, malware, policy, and acceptance checks pass |
-| Succeeded | Local adoption committed | Parent may satisfy dependency |
-| CancelRequested | Cancel sent | Stop issuing new authority; continue monitoring possible effects |
-| Failed/Expired/InterventionRequired | Terminal or ambiguous remote outcome | Apply parent join/reconciliation policy |
+| Created/Dispatched | TASK\_STATE\_SUBMITTED | Retry dispatch only with same idempotency key |
+| Accepted/Running | TASK\_STATE\_WORKING | Monitor heartbeat and deadline |
+| NeedsInput | TASK\_STATE\_INPUT\_REQUIRED | Route a typed question to parent/user; budget clock follows policy |
+| NeedsInput | TASK\_STATE\_AUTH\_REQUIRED | Route to the credential or approval path, not the user prompt |
+| CompletedPendingValidation | TASK\_STATE\_COMPLETED | Quarantine artifacts until schema, provenance, malware, policy, and acceptance checks pass |
+| Succeeded | No remote state; local adoption committed through `:adoptResult` | Parent may satisfy dependency |
+| CancelRequested | CancelTask sent; no terminal state yet | Stop issuing new authority; continue monitoring possible effects |
+| Canceled | TASK\_STATE\_CANCELED | Close only after any possible effect reconciles |
+| Failed | TASK\_STATE\_FAILED or TASK\_STATE\_REJECTED | Apply parent join policy |
+| Expired/InterventionRequired | Deadline passed or remote outcome ambiguous | Apply parent join/reconciliation policy; never resubmit automatically |
 
 ### Scalability, federation, and failure isolation
 
@@ -6706,118 +6682,70 @@ At an open boundary, expose the standard A2A agent-card and task/message operati
 * Bound remote fan-out at the parent. A peer may not recursively delegate unless the task grant explicitly permits a depth and the resulting chain remains visible.
 * Treat missed heartbeat, callback failure, cancellation ambiguity, and artifact validation failure as distinct states; do not automatically resubmit a potentially active remote task.
 
-## What belongs at the LLM Gateway—and what does not
-
-The LLM Gateway is the controlled boundary between enterprise workloads and model providers or self-hosted inference. It normalizes model access and enforces model-specific routing, policy, privacy, economics, observability, and release governance. It does not own business workflow, tool effects, agent delegation, or the external API perimeter.
-
-[[DIAGRAM:gateway-position|Figure 19-1 — LLM Gateway position relative to adjacent gateways]]
-
-| **Component** | **Primary boundary** | **Owns** | **Does not own** |
-| --- | --- | --- | --- |
-| API Gateway | External client → enterprise API | API auth, routing, quota, WAF, protocol termination | Agent semantics or model routing |
-| Agent Gateway | Agent/workload → agent platform | Workload identity, task admission, delegation, tenancy, agent audit | Provider inference controls |
-| LLM Gateway | Workload → model/inference | Provider abstraction, model routing, content/data policy, token/cost control | Durable workflow or business acceptance |
-| Tool Gateway | Agent → enterprise effect | Tool version and schema, re-authorization per subject, idempotency, effect receipts | Which model produced the proposal |
-| MCP Gateway | Platform → MCP server | Server trust, discovery, tool eligibility, scoped credentials, protocol audit | General model inference |
-| Orchestration layer | Run → tasks/activities | State, deadlines, retries, joins, cancellation, compensation | Provider perimeter or policy truth |
-
-## What the LLM Gateway needs to enforce
-
-| **Capability** | **Behavior** | **Control** |
-| --- | --- | --- |
-| Provider abstraction | Normalize requests, streaming, errors, usage, capabilities | Preserve provider/model/version and raw evidence references |
-| Model routing | Select by task, risk, region, quality, latency, cost, health | Deterministic eligibility before optimization; record reason |
-| Authentication and authorization | Authenticate workload and subject context | Audience, tenant, purpose, approved models |
-| Policy enforcement | Enforce use, data, region, model, output, risk rules | External policy decision; never prompt-only policy |
-| PII/secrets protection | Classify, minimize, redact/tokenize, block | Authorized reversible boundary; never log secrets |
-| Rate limits and budgets | Tenant/workload/user quotas, tokens, spend, concurrency, deadline | Hierarchical budgets before provider charge |
-| Caching | Reuse only policy-safe, semantically equivalent results | Key tenant, policy, model/version, prompt, context snapshot, safety |
-| Retries and fallbacks | Classify transient failures; use approved alternatives | One retry owner and shared deadline/budget |
-| Content filtering | Input/output safety, injection, DLP, schema, evidence checks | Filters are evidence; policy still authorizes actions |
-| Model/version governance | Allowlist, aliases, deprecation, eval, canary, rollback | Alias change is a versioned routing release |
-| Logging, tracing, evaluation hooks | Normalized spans, route, usage, policy, cache, scorers | Redaction, evaluator version, scope, uncertainty, override lineage |
-
-## Filter for policy before optimizing cost or quality
-
-[[DIAGRAM:model-routing|Figure 19-2 — Policy-first model-routing decision tree]]
-
-Filter by tenant, purpose, data class, residency, risk, required capabilities, context length, tool/JSON behavior, and approved version. Only then optimize expected accepted-outcome quality under latency and cost budgets. Health and quota further constrain selection. Fallbacks obey the same invariants; “any available model” is not a safe fallback.
-
-Record candidate routes, exclusions/reasons, selected provider/model/version/region, policy digest, budgets, fallback chain, and experiment cohort. Cache keys must include every security and semantic dependency. Never cache a protected decision that depends on current authorization or resource version without preserving that dependency.
-
-## What to measure at the LLM Gateway
-
-Measure route distribution and eligibility, task success/quality by route, schema/tool correctness, refusal/safety, p50/p95/p99 latency, queue/retry amplification, cache hits and unsafe-key rejection, tokens/cost per accepted outcome, policy denials, PII/secrets detections, provider error/fallback, alias/version drift, and trace completeness. Centralization adds latency and blast-radius risk; deploy regionally, isolate tenants/risk classes, use bulkheads, and retain platform-owned contracts even when buying a gateway.
-
 ## What the evidence lets us conclude
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | MCP correction | Use MCP 2026-07-28 for new designs: the core is stateless, initialize and Mcp-Session-Id are removed, requests carry protocol/capability metadata, and server/discover supports version selection. Application state uses explicit handles. Tasks and Skills over MCP are optional extensions, not core guarantees. | R05 |
 | MCP authorization | Use protected-resource and authorization-server discovery, PKCE, audience/resource binding, short-lived tokens, step-up scopes, issuer validation, and SSRF-safe metadata retrieval. Token passthrough to an upstream API is forbidden. | R06; R09; R10 |
-| A2A correction | Pin A2A 1.0.1. Normative operations include SendMessage, GetTask, ListTasks, CancelTask, and SubscribeToTask; local /v1 bridges are Northstar APIs, not A2A endpoints. Cancellation is best effort and authorization must prevent task-existence leakage. | R07 |
+| A2A correction | Pin A2A 1.0.1. Normative operations include SendMessage, GetTask, ListTasks, CancelTask, and SubscribeToTask; local /v1 bridges are platform APIs, not A2A endpoints. Cancellation is best effort and authorization must prevent task-existence leakage. | R07 |
 
 The discussion above draws on R05; R06; R07; R09; R10. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
+Start where remote work re-enters the platform.
 
-### A2A task envelope
+### Remote artifact adoption check
 
-🐍 · implementation excerpt
+`:adoptResult` runs this check after schema and scan validation and before the parent workflow may depend on the artifact.
+
+🐍 · Adopting a remote artifact under local policy
 
 ```python
-from __future__ import annotations
-
 from datetime import datetime
-from decimal import Decimal
-from typing import Literal
-from pydantic import BaseModel, Field
+
+from pydantic import BaseModel
 
 
-class A2ATaskEnvelope(BaseModel):
-    task_id: str
-    parent_task_id: str | None = None
-    owner: str
-    goal: str
-    acceptance_contract: str
-    capability_grant_id: str
-    input_artifact_ids: tuple[str, ...]
-    deadline: datetime
-    maximum_cost_usd: Decimal = Field(ge=0)
-    status: Literal[
-        "submitted", "working", "waiting", "completed",
-        "failed", "cancel_requested", "canceled",
-    ] = "submitted"
-    expected_version: int = 0
-```
+class ArtifactDescriptor(BaseModel):
+    artifact_id: str
+    tenant_id: str
+    data_classes: frozenset[str]
+    region: str
+    allowed_purposes: frozenset[str]
+    provenance_digest: str
+    content_sha256: str
+    expires_at: datetime
+    legal_hold: bool = False
 
-### MLflow MCP Registry adapter
 
-🐍 · implementation excerpt
+class AdoptionPolicy(BaseModel):
+    tenant_id: str
+    allowed_data_classes: frozenset[str]
+    allowed_regions: frozenset[str]
+    purpose: str
+    trusted_provenance_digests: frozenset[str]
 
-```python
-import mlflow
 
-def register_mortgage_mcp_server():
-    """MLflow 3.15 MCP Registry is experimental; pin exact versions in releases."""
-    return mlflow.genai.register_mcp_server(
-        server_json={
-            "name": "com.harborlight/mortgage-tools",
-            "version": "1.2.0",
-            "description": "Governed mortgage evidence tools",
-            "remotes": [
-                {"url": "https://mcp.harborlight.example/mortgage", "type": "streamable-http"}
-            ],
-        },
-        status="active",
-        create_access_endpoints_from_remotes=True,
-    )
-
-def resolve_production_mcp_server():
-    return mlflow.genai.get_mcp_server_version_by_alias(
-        name="com.harborlight/mortgage-tools", alias="production"
-    )
+def authorize_artifact_adoption(
+    artifact: ArtifactDescriptor, policy: AdoptionPolicy, *,
+    observed_sha256: str, now: datetime,
+) -> None:
+    if observed_sha256 != artifact.content_sha256:
+        raise PermissionError("artifact content does not match its declared hash")
+    if artifact.tenant_id != policy.tenant_id:
+        raise PermissionError("cross-tenant artifact adoption denied")
+    if not artifact.data_classes <= policy.allowed_data_classes:
+        raise PermissionError("artifact classification exceeds policy")
+    if artifact.region not in policy.allowed_regions:
+        raise PermissionError("artifact region is not allowed")
+    if policy.purpose not in artifact.allowed_purposes:
+        raise PermissionError("artifact purpose is not allowed")
+    if artifact.provenance_digest not in policy.trusted_provenance_digests:
+        raise PermissionError("artifact provenance is not trusted")
+    if now > artifact.expires_at and not artifact.legal_hold:
+        raise PermissionError("artifact expired")
 ```
 
 ## If this fails in production
@@ -6841,7 +6769,7 @@ def resolve_production_mcp_server():
 ## Put the idea to work
 
 1. Wrap an MCP tool with local MCP Gateway policy.
-2. Define an A2A TaskEnvelope with status, cancellation, and artifact adoption semantics.
+2. Map a local TaskEnvelope to a FederatedTask, including state mapping, cancellation, and artifact adoption.
 
 ## Questions to bring to design review
 
@@ -6855,7 +6783,7 @@ def resolve_production_mcp_server():
 
 ## Where this leads next
 
-Gateways control protocol and model access, but not the entire attack surface; Chapter 20 introduces defense in depth across all agentic trust boundaries.
+Gateways control what crosses a protocol boundary, but not the entire attack surface; Chapter 20 introduces defense in depth across all agentic trust boundaries.
 
 # PART VI — SECURITY, IDENTITY, AND CONTROL
 

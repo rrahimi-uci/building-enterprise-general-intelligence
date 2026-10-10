@@ -11,20 +11,36 @@
   "examples": [
     {
       "id": "contracts",
-      "book_chapters": [3, 4],
+      "book_chapters": [3, 4, 18],
       "path": "examples/contracts.py",
       "language": "python",
       "title": "Provider-neutral agent-step and platform contracts",
       "verify": "test",
       "tests": [
-        "examples/tests/test_contracts.py"
+        "examples/tests/test_contracts.py",
+        "examples/tests/test_task_envelope.py"
       ],
       "libraries": [
         "pydantic==2.13.5"
       ],
       "regions": {
-        "step": "The agent-step subset used in the foundations chapter."
+        "step": "The agent-step subset used in the foundations chapter.",
+        "task": "The child-task contract and the Task Service checks used in the multi-agent chapter."
       }
+    },
+    {
+      "id": "artifact-adoption",
+      "book_chapters": [19],
+      "path": "examples/federation/artifact_adoption.py",
+      "language": "python",
+      "title": "Adopting a remote artifact under local policy",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_artifact_adoption.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ]
     },
     {
       "id": "agent-tool-loop",

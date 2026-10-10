@@ -9,11 +9,11 @@
 - **appendix_dividers:** `1`
 - **chapters:** `28`
 - **appendices:** `12`
-- **diagrams:** `45`
-- **code_blocks:** `70`
+- **diagrams:** `44`
+- **code_blocks:** `67`
 - **longtables:** `142`
-- **compact_tables:** `105`
-- **callout_tables:** `95`
+- **compact_tables:** `100`
+- **callout_tables:** `93`
 - **citation_occurrences:** `109`
 - **bundled_fonts:** `8`
 

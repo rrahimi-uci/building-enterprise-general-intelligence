@@ -15,11 +15,11 @@ digraph supervisor_worker {
   sup [label="Supervisor\nowns the outcome, always", fillcolor="#E7F5F3",
        color="#0D6E69", width=2.6]
 
-  t1 [label="Child task\nscreening", shape=note, style=filled,
+  t1 [label="Child task\ndocument extraction", shape=note, style=filled,
       fillcolor="#EDF3FC", color="#1450A3"]
-  t2 [label="Child task\ntax", shape=note, style=filled,
+  t2 [label="Child task\nincome verification", shape=note, style=filled,
       fillcolor="#EDF3FC", color="#1450A3"]
-  t3 [label="Child task\nsecurity", shape=note, style=filled,
+  t3 [label="Child task\nproperty review", shape=note, style=filled,
       fillcolor="#EDF3FC", color="#1450A3"]
 
   w1 [label="Worker A", fillcolor="#E6F5F9", color="#0B6076"]
