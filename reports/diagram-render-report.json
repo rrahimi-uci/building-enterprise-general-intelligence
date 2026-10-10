@@ -6,12 +6,12 @@
       "id": "anti-ambient-authority",
       "source": "anti-ambient-authority.gv",
       "pixels": [
-        2364,
-        1876
+        2330,
+        1685
       ],
-      "effective_dpi": 345,
+      "effective_dpi": 340,
       "vector": true,
-      "sha256": "4edf74b9fc8d685d13d3d4e07ccd17e965dd4e2f0f157a84155f2e9091f73262"
+      "sha256": "82ed3fa644591b113971f24c9f383d7e9d2fbef60b98fcbc3c75f5695cc533ea"
     },
     {
       "id": "anti-approval-binding",
@@ -226,12 +226,12 @@
       "id": "pattern-decision-tree",
       "source": "pattern-decision-tree.gv",
       "pixels": [
-        2366,
-        1946
+        2321,
+        4264
       ],
-      "effective_dpi": 345,
+      "effective_dpi": 339,
       "vector": true,
-      "sha256": "602b3dcef2c3298f48c91073a8c9125fc217a380e7da9c444a50b028079b27b5"
+      "sha256": "05f976967bf14a61ca3f603675909106cfc5651a2cfb373aad99fba30495fc88"
     },
     {
       "id": "pattern-durable",
@@ -253,7 +253,7 @@
       ],
       "effective_dpi": 347,
       "vector": true,
-      "sha256": "f757ce7ef70d0a8680b34391726f0f274ea9c1a0db9063d2e55a4c684545c3de"
+      "sha256": "a0fa5848a80112466e673dd6b2c62ec549634f69fa81ad01435ecdff9e10bb33"
     },
     {
       "id": "pattern-planning",

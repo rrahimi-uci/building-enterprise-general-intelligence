@@ -6,15 +6,15 @@
       "file": "assets/diagrams/anti-ambient-authority.png",
       "source": "assets/diagrams/src/anti-ambient-authority.gv",
       "vector": "assets/diagrams/anti-ambient-authority.pdf",
-      "description": "AP-03 ambient authority versus a narrowed capability lease",
-      "sha256": "4edf74b9fc8d685d13d3d4e07ccd17e965dd4e2f0f157a84155f2e9091f73262"
+      "description": "AP-03 ambient authority versus a narrowed capability envelope and a short-lived credential lease",
+      "sha256": "82ed3fa644591b113971f24c9f383d7e9d2fbef60b98fcbc3c75f5695cc533ea"
     },
     {
       "id": "anti-approval-binding",
       "file": "assets/diagrams/anti-approval-binding.png",
       "source": "assets/diagrams/src/anti-approval-binding.gv",
       "vector": "assets/diagrams/anti-approval-binding.pdf",
-      "description": "AP-06 Boolean consent versus proposal-bound human action authorization",
+      "description": "AP-06 Boolean consent versus proposal-bound, expiring approval",
       "sha256": "b651f803f7c4f0a86aabdf1a628c6ad916ad3ef0522242e3e1288223df8cf6dd"
     },
     {
@@ -152,8 +152,9 @@
     {
       "id": "pattern-decision-tree",
       "file": "assets/diagrams/pattern-decision-tree.png",
-      "sha256": "602b3dcef2c3298f48c91073a8c9125fc217a380e7da9c444a50b028079b27b5",
+      "sha256": "05f976967bf14a61ca3f603675909106cfc5651a2cfb373aad99fba30495fc88",
       "source": "assets/diagrams/src/pattern-decision-tree.gv",
+      "description": "Pattern selection: questions that choose the shape of the work, then checks that add durable execution, evaluator-optimizer, or approval and intervention, each leaf labelled with its chapter",
       "vector": "assets/diagrams/pattern-decision-tree.pdf"
     },
     {
@@ -169,8 +170,8 @@
       "file": "assets/diagrams/pattern-hitl.png",
       "source": "assets/diagrams/src/pattern-hitl.gv",
       "vector": "assets/diagrams/pattern-hitl.pdf",
-      "description": "The two human controls: proposal-bound approval versus operational intervention",
-      "sha256": "f757ce7ef70d0a8680b34391726f0f274ea9c1a0db9063d2e55a4c684545c3de"
+      "description": "Proposal-bound approval versus intervention raised by the run or taken by an operator on a run in flight",
+      "sha256": "a0fa5848a80112466e673dd6b2c62ec549634f69fa81ad01435ecdff9e10bb33"
     },
     {
       "id": "pattern-planning",

@@ -254,6 +254,80 @@
       }
     },
     {
+      "id": "ap-delegation-budget",
+      "book_chapters": [17],
+      "path": "examples/antipatterns/delegation_budget.py",
+      "language": "python",
+      "title": "AP-11 and its correction: delegation draws on one budget",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_antipatterns.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "ap-state-projection",
+      "book_chapters": [17],
+      "path": "examples/antipatterns/state_projection.py",
+      "language": "python",
+      "title": "AP-02 and its correction: typed state projected into context",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_antipatterns.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "ap-memory-gate",
+      "book_chapters": [17],
+      "path": "examples/antipatterns/memory_gate.py",
+      "language": "python",
+      "title": "AP-13 and its correction: a memory write passes a gate",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_antipatterns.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "ap-retry-owner",
+      "book_chapters": [17],
+      "path": "examples/antipatterns/retry_owner.py",
+      "language": "python",
+      "title": "AP-04 and its correction: one retry owner, one shared budget",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_antipatterns.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "ap-unknown-effect",
+      "book_chapters": [17],
+      "path": "examples/antipatterns/unknown_effect.py",
+      "language": "python",
+      "title": "AP-05 and its correction: a timeout leaves the effect Unknown",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_antipatterns.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "ap-bound-approval",
+      "book_chapters": [17],
+      "path": "examples/antipatterns/bound_approval.py",
+      "language": "python",
+      "title": "AP-06 and its correction: the approval covers this exact proposal",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_antipatterns.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ]
+    },
+    {
       "id": "step-execution",
       "book_chapters": [3],
       "path": "examples/runtime/step_execution.py",

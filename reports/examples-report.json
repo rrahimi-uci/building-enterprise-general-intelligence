@@ -1,6 +1,6 @@
 {
-  "examples": 26,
-  "cited": 26,
+  "examples": 32,
+  "cited": 32,
   "uncited": [],
   "rendered_lines": {
     "contracts": 108,
@@ -19,6 +19,12 @@
     "skills-registry": 188,
     "plan-compilation": 114,
     "approval-verification": 98,
+    "ap-delegation-budget": 28,
+    "ap-state-projection": 27,
+    "ap-memory-gate": 16,
+    "ap-retry-owner": 30,
+    "ap-unknown-effect": 27,
+    "ap-bound-approval": 16,
     "step-execution": 98,
     "durable-state": 91,
     "react-engine": 120,
@@ -34,6 +40,7 @@
   "tests_passed": true,
   "test_files": [
     "examples/tests/test_agent_tool_loop.py",
+    "examples/tests/test_antipatterns.py",
     "examples/tests/test_approval_gate.py",
     "examples/tests/test_approval_verification.py",
     "examples/tests/test_bounded_react_loop.py",
