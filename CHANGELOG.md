@@ -4,6 +4,14 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Apply DOCX review to the appendices
+
+Applied a deep review of the DOCX (Appendices A–L and the closing) to the canonical source:
+
+- Appendix A's "Primary chapters" column pointed seven rows at the wrong chapters (an older numbering); each row now points to the chapters that teach it.
+- Appendix I states Python 3.13, matching `pyproject.toml` and CI; Appendix L's verified-success cost formula has correct precedence and token demand no longer double-counts; Appendix F no longer implies exact replay is possible.
+- Little's Law now cites R43; product and term names are consistent (Claude Agent SDK, PydanticAI, Skill Pack); the closing ends on its argument rather than a naming note.
+
 ### Apply DOCX review to Part VIII
 
 Applied a deep review of the DOCX (Chapters 26–28) to the canonical source:

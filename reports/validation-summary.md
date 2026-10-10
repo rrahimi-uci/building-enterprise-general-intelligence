@@ -4,20 +4,20 @@
 
 ## Measurements
 
-- **canonical_markdown_sha256:** `aeeea32c84c326372f5e91e195a3a0f140afdb0a3642f1d0d4e10ebd7402d9a2`
-- **canonical_markdown_bytes:** `712843`
+- **canonical_markdown_sha256:** `e59038bc0adaf8c4b80eb6fe2f926ff9a702eea03bce5c4efe40ebb90aae6523`
+- **canonical_markdown_bytes:** `712793`
 - **parts:** `8`
 - **chapters:** `28`
 - **appendices:** `12`
 - **code_blocks:** `70`
 - **reference_count:** `48`
-- **citation_occurrences:** `108`
+- **citation_occurrences:** `109`
 - **cited_reference_ids:** `48`
 - **diagram_markers:** `45`
 - **registered_diagrams:** `45`
 - **cover_dimensions:** `[2550, 3300]`
-- **docx_sha256:** `e4529f25d73444b022370789f4afd313847e2e131dba880b8751b6d001879a21`
-- **docx_bytes:** `24426487`
+- **docx_sha256:** `7f8d990dc092d67df1c24dbd37f08c9ef5159dc2ecf742c3ed9f4fad7174291b`
+- **docx_bytes:** `24426477`
 - **docx_paragraphs:** `3055`
 - **docx_tables:** `421`
 - **docx_inline_images:** `54`

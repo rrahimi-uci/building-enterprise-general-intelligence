@@ -12722,21 +12722,21 @@ The architecture narrative is complete. The appendices provide decision aids, ru
 Reasoning & P-01 Bounded ReAct & AP-01 monolith; AP-11 unbounded loops & 10, 16–17 \\
 \rowcolor{BookLight}
 Orchestration & P-02 deterministic spine & AP-08 chat as workflow & 11–15, 17–18 \\
-Context & P-03 ContextManifest & AP-02 prompt database; AP-09 vector truth & 17, 22 \\
+Context & P-03 ContextManifest & AP-02 prompt database; AP-09 vector truth & 5–6, 17 \\
 \rowcolor{BookLight}
-Memory & P-04 tiered memory & AP-13 memory write by default & 17, 22 \\
-Tools & P-05 proposal–commit façade & AP-12 ungated discovery & 17, 24 \\
+Memory & P-04 tiered memory & AP-13 memory write by default & 6, 17 \\
+Tools & P-05 proposal–authorize–commit façade & AP-12 ungated discovery & 2–3, 17, 19, 22 \\
 \rowcolor{BookLight}
-Multi-agent & P-06 typed tasks/join & AP-08 chat workflow & 17–19 \\
-Security & P-07 capability envelope & AP-03 ambient authority; AP-10 judge gate & 17, 21, 23–25 \\
+Multi-agent & P-06 typed tasks/join & AP-08 chat as workflow & 17–19 \\
+Security & P-07 capability envelope & AP-03 ambient authority; AP-10 judge gate & 17, 20–23 \\
 \rowcolor{BookLight}
-Reliability & P-08 effect reconciliation & AP-04 retry everywhere; AP-05 timeout=failure & 15, 17, 24, 27–28 \\
-Observability & P-09 causal run graph & AP-07 model says done; AP-14 unlinked telemetry & 17, 26–28 \\
+Reliability & P-08 effect reconciliation & AP-04 retry everywhere; AP-05 timeout=failure & 15, 17, 22, 27–28 \\
+Observability & P-09 causal run graph & AP-07 model says done; AP-14 unlinked telemetry & 17, 24–25, 27–28 \\
 \rowcolor{BookLight}
 Governance & P-10 risk-tiered gates & AP-06 Boolean approval & 14, 17, 26 \\
 Operations & P-11 durable runtime/backpressure & AP-16 in-place change & 15, 17, 27–28 \\
 \rowcolor{BookLight}
-Architecture & P-12 portable contracts/adapters & AP-15 provider swap as config & 4–7, 17, 20 \\
+Architecture & P-12 portable contracts/adapters & AP-15 provider swap as config & 3–4, 7, 17, 27 \\
 \end{longtable}
 \BookTableEnd
 
@@ -12843,7 +12843,7 @@ LangGraph & Graph-oriented stateful agent orchestration with persistence and int
 Microsoft Agent Framework & Agent and workflow abstractions aligned with Microsoft ecosystems. & Avoid binding public enterprise contracts to framework-specific messages or state. & Use behind adapters when Azure and Microsoft identity/tooling are strategic. \\
 \rowcolor{BookLight}
 Google ADK & Composable agents and tools with Google-cloud integration. & Cloud-native convenience does not replace provider-neutral run, task, policy, effect, and evidence contracts. & Use for Google-centric implementations behind the same platform boundary. \\
-Pydantic AI & Typed Python agent development with model-provider abstractions and durable-execution integrations. & Typed outputs improve validation but do not prove authorization, truth, or effect completion. & Use for strongly typed application adapters and testable agent code. \\
+PydanticAI & Typed Python agent development with model-provider abstractions and durable-execution integrations. & Typed outputs improve validation but do not prove authorization, truth, or effect completion. & Use for strongly typed application adapters and testable agent code. \\
 \rowcolor{BookLight}
 Temporal & Mature durable execution, timers, signals, retries, and workflow history. & Requires deterministic workflow discipline, compatibility strategy, and separate domain effect semantics. & Strong default for long-running enterprise workflows and recoverable coordination. \\
 DBOS & Durable workflows integrated with Python and database-backed execution. & Evaluate operational model, scale envelope, ecosystem maturity, and regional recovery requirements. & Useful when application teams want code-centric durability with a simpler operational footprint. \\
@@ -12870,7 +12870,7 @@ An agent SDK is not automatically a durable workflow engine; a protocol is not a
 \endhead
 OpenAI Agents SDK and Agents API & Clear agent/tool/handoff abstractions, guardrails, tracing, managed and self-orchestrated options; useful manager-vs-handoff distinction & Provider gravity; application still owns business transactions, delegated authorization, cross-system durability, and policy semantics & Model-facing harness behind an enterprise run/tool gateway; use handoffs only for true ownership transfer \\
 \rowcolor{BookLight}
-Anthropic Agent SDK and Managed Agents & Long-horizon harness design, hosted session/event model, sandbox/worker separation, strong guidance to start simple & Managed runtime is beta/evolving; token cost can be high; enterprise effects and cross-vendor state must remain externally governed & High-value research/coding workloads; keep authoritative run/effect/audit state portable \\
+Claude Agent SDK and Managed Agents & Long-horizon harness design, hosted session/event model, sandbox/worker separation, strong guidance to start simple & Managed runtime is beta/evolving; token cost can be high; enterprise effects and cross-vendor state must remain externally governed & High-value research/coding workloads; keep authoritative run/effect/audit state portable \\
 Google ADK • A2A & Multi-language agent/workflow toolkit and an increasingly concrete open remote-agent task protocol; A2A 1.0 defines discovery, tasks, messages, artifacts, streaming, and async updates & Protocol interoperability does not guarantee capability trust, authorization equivalence, transaction semantics, or quality & ADK as one harness option; A2A gateway at cross-team/vendor boundaries with enterprise policy wrapping \\
 \rowcolor{BookLight}
 Microsoft Agent Framework & Converges AutoGen and Semantic Kernel concepts; agents, typed sessions/middleware, graph/functional workflows, long-task harness, telemetry and broad provider integrations & Some language/features remain preview or evolving; Azure-centric managed integrations can increase platform coupling & Good enterprise SDK choice where Microsoft ecosystem and typed middleware matter; still pair with durable/effect architecture \\
@@ -12883,7 +12883,7 @@ CrewAI & Accessible crew/flow mental model, role specialization, event-driven fl
 Dapr Agents & Connects agents to Dapr actors, workflows, state, messaging, resiliency, secrets, and OpenTelemetry; useful cloud-native composition & Adds sidecar/actor operational model; semantics depend on Dapr components and deployment maturity & Teams already standardized on Dapr that want durable, stateful, event-driven agents \\
 \rowcolor{BookLight}
 Amazon Bedrock Agents Classic / AgentCore & Bedrock Agents Classic documents a supervisor/collaborator model; its documentation states that the service is in maintenance mode and closed to new customers, with AgentCore identified for similar capabilities. & AWS lock-in, lifecycle status, and supervisor-centric topology; inspect portability, observability, migration, and service-specific limits. & Existing Classic estates or AWS-native evaluations that explicitly account for maintenance status; wrap source-system authorization and evidence externally. \\
-Temporal, DBOS, Restate and cloud durable runtimes & Crash-resilient execution, timers, retries, signals, workflow state, long waits, and operational visibility & They do not supply agent reasoning, knowledge governance, tool semantics, or business authorization; replay constraints require discipline & Foundational execution substrate beneath or around the chosen agent harness \\
+Temporal, DBOS, Restate, and cloud durable runtimes & Crash-resilient execution, timers, retries, signals, workflow state, long waits, and operational visibility & They do not supply agent reasoning, knowledge governance, tool semantics, or business authorization; replay constraints require discipline & Foundational execution substrate beneath or around the chosen agent harness \\
 \rowcolor{BookLight}
 MCP & Broad tool/resource interoperability with standardized transports and OAuth-based HTTP authorization & Authorization is optional at protocol level; token passthrough/confused-deputy risks; tool trust, risk classification, tenancy, and business policy are out of scope & Tool interoperability behind a controlled gateway—not direct unrestricted production access \\
 OpenTelemetry GenAI conventions & Emerging common vocabulary for model, agent, MCP, span, metric, and event telemetry & Conventions are evolving; full prompt/tool content creates privacy risk; semantic interoperability does not guarantee causal completeness & Canonical instrumentation base plus organization-specific run/effect/policy attributes \\
@@ -12955,7 +12955,7 @@ The common lesson is not that “more agents” is state of the art. It is that 
 
 \textbf{3. Semantic idempotency is domain specific. Required mitigation: define domain-owned logical effect keys, reject argument-hash conflicts, record receipts, and reconcile ambiguous outcomes against the authoritative downstream system.}\par
 
-\textbf{4. Exact model replay cannot be guaranteed when models or providers change. Required mitigation: pin release graphs, retain inputs and outputs by reference and hash, replay deterministic workflow history, and evaluate replacements against immutable cases.}\par
+\textbf{4. Exact model replay cannot be guaranteed. Required mitigation: pin release graphs, retain inputs and outputs by reference and hash, replay deterministic workflow history, and evaluate replacements against immutable cases.}\par
 
 \textbf{5. Long-horizon reliability requires empirical control. Required mitigation: segment trajectories into bounded verified steps, detect no progress and plan drift, simulate correlated failures, and gate releases on repeated-run and tail-risk evidence.}\par
 
@@ -13007,7 +13007,7 @@ Before an agent can mutate an enterprise system, require all of the following:\p
 
 \item Named business, engineering, security, and operational owners.
 
-\item Version-pinned manifest, prompt/skill bundle, workflow, model route, policy, tool schemas, and runtime image.
+\item Version-pinned manifest, prompt/Skill bundle, workflow, model route, policy, tool schemas, and runtime image.
 
 \item Subject+actor authorization and a least-privilege capability envelope.
 
@@ -13066,13 +13066,13 @@ Unknown effect & Mutation whose outcome cannot be proven and must be reconciled.
 
 \BookAppendix{I}{Companion Implementation Guide: Harborlight Mortgage}
 
-Companion code for the book Building an Enterprise General Intelligence Platform.\par
+This appendix explains how to run and verify the book's companion code.\par
 
 \section{Versions used in this guide}
 
 \begin{itemize}
 
-\item Python 3.11+
+\item Python 3.13
 
 \item OpenAI Agents SDK 0.22.2
 
@@ -13105,7 +13105,7 @@ BASH · implementation excerpt\par
 .venv-examples/bin/python -m mortgage_case --chapter 3 --scenario happy_path --offline --json
 \end{lstlisting}
 
-The direct OpenAI Python SDK adapter and OpenAI Agents SDK adapter are optional provider integrations behind provider-neutral contracts. The mandatory path uses the scripted Agents SDK model and a synthetic gateway, while the MLflow example uses a local SQLite tracking URI. No command in the offline profile requires credentials or a network connection.\par
+The direct OpenAI Python SDK adapter and OpenAI Agents SDK adapter are optional provider integrations behind provider-neutral contracts. The default offline path uses the scripted Agents SDK model and a synthetic gateway, while the MLflow example uses a local SQLite tracking URI. No command in the offline profile requires credentials or a network connection.\par
 
 \section{What is included}
 
@@ -13163,7 +13163,7 @@ The direct OpenAI Python SDK adapter and OpenAI Agents SDK adapter are optional 
 
 \end{itemize}
 
-The live provider path still requires credentials and should be treated as an explicit integration test, not as evidence supplied by the offline suite. Treat the book's Skill and SkillPack as platform-owned packaging patterns, not as aliases for A2A AgentSkill metadata or the optional Skills-over-MCP extension.\par
+The live provider path still requires credentials and should be treated as an explicit integration test, not as evidence supplied by the offline suite. Treat the book's Skill and Skill Pack as platform-owned packaging patterns, not as aliases for A2A AgentSkill metadata or the optional Skills-over-MCP extension.\par
 
 \section{Rebuild and verify}
 
@@ -13380,7 +13380,7 @@ A submission is accepted only if all are true:\par
 
 \item Every run is pinned to immutable versions/digests of all behaviorally relevant components.
 
-\item Model outputs cannot directly transition protected workflow state or commit R3/R4 effects.
+\item Model outputs cannot directly transition protected workflow state or commit R3/R4 effects (material or irreversible changes).
 
 \item The identity design preserves both initiating subject and acting workload across delegation.
 
@@ -13659,13 +13659,13 @@ R48 & framework documentation & Book-authored implementation. Supports the repor
 \color{white}\bfseries \textbf{Quantity} & \color{white}\bfseries \textbf{Approximation} & \color{white}\bfseries \textbf{Caution} \\
 Effective work rate & lambda\_eff = lambda\_external × E[nodes] × E[fan-out] × retry\_multiplier & Estimate separately by tenant/risk/route. \\
 \rowcolor{BookLight}
-Offered concurrency & L = lambda\_eff × E[service time] & Little's Law gives mean in-flight work under stable conditions. \\
+Offered concurrency & L = lambda\_eff × E[service time] & Little’s Law gives mean in-flight work under stable conditions \BookCitation{R43}. \\
 Permit pool & permits >= ceil(L / target\_utilization) & Use lower utilization for high-variance or rate-limited dependencies. \\
 \rowcolor{BookLight}
 Retry multiplier & 1 + p\_retry + p\_retry² + … up to the attempt cap & Correlated outages violate independence; simulate them. \\
-Token demand & requests × (input + cached-input + output + tool-schema tokens) & Track by model route and ContextManifest policy. \\
+Token demand & requests × (uncached input + cached input + output tokens) & Count tool schemas as input; track by model route and ContextManifest policy. \\
 \rowcolor{BookLight}
-Verified-success cost & total model + tool + compute + human-review cost / accepted outcomes & Include failed, abandoned, and reconciled runs. \\
+Verified-success cost & (model + tool + compute + human-review cost) / accepted outcomes & Include failed, abandoned, and reconciled runs. \\
 \end{tabular}
 \BookTableEnd
 
@@ -13702,4 +13702,4 @@ Human factors & Accessible approval test, preview fidelity, reviewer calibration
 An enterprise-grade system produces a verified outcome within explicit authority, time, cost, data, and risk boundaries; survives partial failure and change; and preserves evidence sufficient for users, operators, reviewers, and auditors.
 \end{bookcallout}
 
-Harborlight began with one model call. It ends as explicit contracts and control loops: a deterministic shell around bounded intelligence, reusable Skills, durable tasks, governed protocols, narrow authority, verified effects, causal traces, executable evaluation, compatible releases, and measured optimization. Northstar remains a platform codename for the architecture; Harborlight remains the cumulative mortgage case.\par
+Harborlight began with one model call. It ends as explicit contracts and control loops: a deterministic shell around bounded intelligence, reusable Skills, durable tasks, governed protocols, narrow authority, verified effects, causal traces, executable evaluation, compatible releases, and measured optimization.\par
