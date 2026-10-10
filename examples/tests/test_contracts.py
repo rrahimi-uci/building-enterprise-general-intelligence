@@ -8,8 +8,9 @@ import pytest
 from pydantic import ValidationError
 
 from examples.contracts import (
-    AgentDecision, AgentStepRequest, CandidatePlan, EvidenceRef, PlanNode,
-    RiskClass, SkillRequirement, ToolCall,
+    AgentDecision, AgentStepRequest, ArtifactRef, CandidatePlan, CloudEvent,
+    EvidenceRef, PlanNode, RiskClass, RunManifest, SkillRequirement, ToolCall,
+    deduplication_key,
 )
 
 
@@ -87,3 +88,91 @@ def test_plan_nodes_must_declare_their_own_bounds():
                  maximum_attempts=2, risk_class=RiskClass.R1)
     with pytest.raises(ValidationError):
         PlanNode(id="n2", capability="lookup")
+
+
+DIGEST = "sha256:" + "b" * 64
+
+
+def run_manifest(**overrides) -> RunManifest:
+    fields = dict(
+        run_id="RUN-98217", tenant_id="harborlight", subject="user:loan-officer-17",
+        actor="spiffe://harborlight/agent-runtime/prod",
+        purpose="mortgage_pre_underwriting_review", risk_tier="T3",
+        release_manifest=DIGEST, agent="mortgage-evidence-agent@0.1.0",
+        runtime={"adapter": "openai-agents-adapter@1.0.0", "sdk": "openai-agents@0.22.2"},
+        skills=("mortgage.evidence.read@0.1.0#" + DIGEST,),
+        skill_pack="mortgage-evidence@0.1.0#" + DIGEST,
+        model_route="reasoning-standard@4",
+        knowledge_snapshots=("mortgage-policy@approved-2026.09",),
+        capability_envelope="cap_77",
+        budget={"usd": "25", "tokens": 300000, "steps": 80, "delegation_depth": 2},
+        retention_class="regulated-7y", trace_id="trace-1",
+    )
+    fields.update(overrides)
+    return RunManifest(**fields)
+
+
+def test_run_manifest_is_written_once_and_never_edited():
+    manifest = run_manifest()
+    assert manifest.release_manifest == DIGEST
+    # A run that needs different versions is a new run, not an edited manifest.
+    with pytest.raises(ValidationError):
+        manifest.model_route = "reasoning-premium@1"
+
+
+def test_run_manifest_risk_is_a_use_case_tier_not_a_label_or_effect_class():
+    assert run_manifest(risk_tier="T3").risk_tier == "T3"
+    for wrong in ("high", "R3", 3):
+        with pytest.raises(ValidationError):
+            run_manifest(risk_tier=wrong)
+
+
+def test_skills_and_release_are_pinned_by_digest():
+    with pytest.raises(ValidationError):
+        run_manifest(skills=("mortgage.evidence.read@latest",))
+    with pytest.raises(ValidationError):
+        run_manifest(release_manifest="release-2026.09")
+
+
+def test_artifact_reference_carries_version_and_hash():
+    ref = ArtifactRef(artifact_id="art_1", version=1, media_type="application/pdf",
+                      sha256=DIGEST, created_by_run="RUN-98217", tenant_id="harborlight",
+                      classification="confidential", residency="us")
+    with pytest.raises(ValidationError):
+        ref.version = 2  # an artifact version is immutable; a change is a new version
+    with pytest.raises(ValidationError):
+        ArtifactRef(artifact_id="art_1", version=0, media_type="application/pdf",
+                    sha256=DIGEST, created_by_run="RUN-98217", tenant_id="harborlight",
+                    classification="confidential", residency="us")
+
+
+def event(**overrides) -> CloudEvent:
+    fields = dict(
+        id="evt_1", source="urn:harborlight:agent-platform",
+        type="com.harborlight.agent.run.status.changed.v1", subject="run/RUN-98217",
+        time=datetime(2026, 9, 10, 21, 0, tzinfo=timezone.utc), tenant_id="harborlight",
+        correlation_id="RUN-98217", dataref="artifact://event-payload/1", datahash=DIGEST,
+    )
+    fields.update(overrides)
+    return CloudEvent(**fields)
+
+
+def test_event_payload_travels_by_reference_with_its_hash():
+    assert event().data is None
+    with pytest.raises(ValidationError, match="travel together"):
+        event(datahash=None)
+    with pytest.raises(ValidationError, match="travel together"):
+        event(dataref=None)
+
+
+def test_event_source_must_be_a_uri_reference():
+    with pytest.raises(ValidationError, match="URI-reference"):
+        event(source="agent platform")
+
+
+def test_consumers_deduplicate_on_source_and_id():
+    first, redelivered = event(), event()
+    other = event(id="evt_2")
+    seen = {deduplication_key(e) for e in (first, redelivered, other)}
+    assert seen == {("urn:harborlight:agent-platform", "evt_1"),
+                    ("urn:harborlight:agent-platform", "evt_2")}

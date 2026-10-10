@@ -4,6 +4,15 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Part II (Chapters 4–6) continuity pass
+
+- Chapter 4 is now the book's map: it opens on the mortgage case and the Chapter 3 seam, uses the seven plane names in the tables and in Figure 4-1, maps Figure 1-3's bands onto them, renames layers so none is called "plane", and indexes every authoritative record to its owning plane and defining chapter.
+- Chapter 4 receives the LLM Gateway contract from Chapter 19, explains the global control tier and regional execution cells in one section, annotates the end-to-end flow by owning plane (Figure 4-2 now assembles context before the step and shows the optional approval hop), and owns one base Run API table (`/audit` removed).
+- The RunManifest gains prose and moves, with the artifact reference and the single CloudEvent shape, into the new `contracts#platform` example; the inline JSON and Python listings are gone and the effect receipt no longer contradicts Chapter 22.
+- Chapter 5 uses "enforced rule" rather than "guardrail" (text, Figure 5-2, and the example class), adds the owner **Approve** step, moves the Knowledge Hub after provenance with a mode mapping and its two callers, and receives index freshness from Chapter 6.
+- Chapter 6 has one ten-stage pipeline, five context sources, one segment `kind` enum mapped to trust tiers, memory in one section, and one ContextManifest schema in the new `context-manifest` example; the artifact-adoption listing leaves for Chapter 19.
+- Approval terminology, Harborlight case boxes (Northstar removed), "Strong answer" and ✓ template forms, and Chapter 17 anti-pattern pointers are applied across Part II; the Chapter 4–6 covers follow the renamed components.
+
 ### Shared contracts and examples (continuity review, Phase 1)
 
 - `AgentDecision.disposition` gains `proposed_action`: `invoke_tool` is a read, and a mutation leaves the loop as a proposal.

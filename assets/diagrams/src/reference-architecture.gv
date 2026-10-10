@@ -1,9 +1,12 @@
-// Figure 4-1 — Enterprise agentic AI layered reference architecture.
+// Figure 4-1 — The reference architecture as seven ownership planes.
 //
-// Message: probabilistic reasoning sits inside explicit planes; each plane owns
-// named components and one responsibility; authority narrows as a request
-// descends; and governance and evidence are not layers but spines that cross
-// every layer.
+// Message: probabilistic reasoning sits inside explicit planes; each band is one
+// ownership plane with its main components; authority narrows as a request
+// descends; and Security and governance and Evaluation and operations are not
+// bands but spines that cross every plane. Band names match the plane table in
+// Chapter 4 exactly; edge and admission is a sub-row of Experience and channels.
+// The bands are ordered by the request path: context is assembled before the
+// bounded agent step runs, so the knowledge band sits above the agent band.
 //
 // This figure has to work as an architecture diagram rather than a contents
 // list, so each layer is a container holding the components the chapter names,
@@ -29,7 +32,7 @@ digraph reference_architecture {
 
   // ------------------------------------------------- trust spine (left) --
   subgraph cluster_gov {
-    label = <<B>Trust and governance</B>>
+    label = <<B>Security and governance</B>>
     fontsize = 12; fontcolor = "#A62C2C"
     style = filled; fillcolor = "#FBEFEF"; color = "#A62C2C"; penwidth = 1.5
     margin = 8
@@ -39,7 +42,7 @@ digraph reference_architecture {
     v2 [label="PDP / PEP"]
     v3 [label="Guardrails"]
     v4 [label="Secrets · leases"]
-    v5 [label="Approvals"]
+    v5 [label="Approval Service"]
     v6 [label="Audit · WORM"]
     v0 -> v1 -> v2 -> v3 -> v4 -> v5 -> v6 [style=invis]
   }
@@ -55,22 +58,21 @@ digraph reference_architecture {
     e1 [label="API clients"]
     e2 [label="Operator console"]
     e3 [style=invis, label=""]
-  }
 
-  subgraph cluster_edge {
-    label = <<B>Edge and admission</B>>
-    fontsize = 12; fontcolor = "#FFFFFF"
-    style = filled; fillcolor = "#4A6078"; color = "#4A6078"; penwidth = 1.5
-    margin = 8
-    node [fillcolor="#EEF4FA", color="#4A6078"]
-    d0 [label="API gateway · WAF"]
-    d1 [label="Tenant router"]
-    d2 [label="Request validator"]
-    d3 [style=invis, label=""]
+    subgraph cluster_edge {
+      label = <<I>Edge and admission</I>>
+      fontsize = 11; fontcolor = "#FFFFFF"
+      style = "filled,dashed"; fillcolor = "#5C7390"; color = "#EEF4FA"; penwidth = 1.0
+      margin = 6
+      d0 [label="API Gateway · WAF"]
+      d1 [label="Tenant router"]
+      d2 [label="Request validator"]
+      d3 [style=invis, label=""]
+    }
   }
 
   subgraph cluster_run {
-    label = <<B>Run control and durable execution</B>>
+    label = <<B>Runtime and workflow</B>>
     fontsize = 12; fontcolor = "#FFFFFF"
     style = filled; fillcolor = "#0D6E69"; color = "#0D6E69"; penwidth = 1.5
     margin = 8
@@ -90,19 +92,19 @@ digraph reference_architecture {
     a0 [label="AgentSpec"]
     a1 [label="Bounded agent workers"]
     a2 [label="Topology · handoffs"]
-    a3 [style=invis, label=""]
+    a3 [label="Skills"]
   }
 
   subgraph cluster_know {
-    label = <<B>Knowledge, context and memory</B>>
+    label = <<B>Knowledge, context, and memory</B>>
     fontsize = 12; fontcolor = "#FFFFFF"
     style = filled; fillcolor = "#0B6076"; color = "#0B6076"; penwidth = 1.5
     margin = 8
     node [fillcolor="#E6F5F9", color="#0B6076"]
-    k0 [label="Context service"]
-    k1 [label="Search · vector index", shape=cylinder, style=filled]
-    k2 [label="Catalog · lineage"]
-    k3 [label="Memory · Skills"]
+    k0 [label="Context Service"]
+    k1 [label="Knowledge Hub"]
+    k2 [label="Search · vector index", shape=cylinder, style=filled]
+    k3 [label="Memory service"]
   }
 
   subgraph cluster_gw {
@@ -124,14 +126,14 @@ digraph reference_architecture {
     margin = 8
     node [fillcolor="#F7ECF8", color="#6A2E6E"]
     s0 [label="Domain systems", shape=cylinder, style=filled]
-    s1 [label="Effect ledger", shape=cylinder, style=filled]
-    s2 [label="Artifact store", shape=cylinder, style=filled]
+    s1 [label="MCP servers"]
+    s2 [label="Partner agents"]
     s3 [label="Model providers"]
   }
 
   // -------------------------------------------- evidence spine (right) --
   subgraph cluster_obs {
-    label = <<B>Evidence and improvement</B>>
+    label = <<B>Evaluation and operations</B>>
     fontsize = 12; fontcolor = "#8A5600"
     style = filled; fillcolor = "#FFFAF0"; color = "#8A5600"; penwidth = 1.5
     margin = 8
@@ -149,19 +151,19 @@ digraph reference_architecture {
   // Lock the stack into a grid so the labelled flow edges below cannot drag
   // successive layers sideways.
   edge [style=invis, weight=20]
-  e0 -> d0 -> r0 -> a0 -> k0 -> g0 -> s0
-  e1 -> d1 -> r1 -> a1 -> k1 -> g1 -> s1
-  e2 -> d2 -> r2 -> a2 -> k2 -> g2 -> s2
-  e3 -> d3 -> r3 -> a3 -> k3 -> g3 -> s3
+  e0 -> d0 -> r0 -> k0 -> a0 -> g0 -> s0
+  e1 -> d1 -> r1 -> k1 -> a1 -> g1 -> s1
+  e2 -> d2 -> r2 -> k2 -> a2 -> g2 -> s2
+  e3 -> d3 -> r3 -> k3 -> a3 -> g3 -> s3
 
   // ------------------------------------------------------ request path --
   edge [style=solid, weight=1, constraint=false, color="#1450A3", penwidth=1.7,
         arrowsize=0.75, fontsize=9, fontcolor="#123A66"]
   e1 -> d0 [label=" intent"]
   d2 -> r0 [label=" admitted run"]
-  r1 -> a1 [label=" task envelope"]
-  a1 -> k0 [label=" context request"]
-  k0 -> g0 [label=" typed proposal"]
+  r1 -> k0 [label=" assemble context"]
+  k0 -> a1 [label=" AgentStepRequest"]
+  a1 -> g1 [label=" authorized proposal"]
   g1 -> s0 [label=" committed effect"]
 
   // ------------------------------------------- cross-cutting concerns --

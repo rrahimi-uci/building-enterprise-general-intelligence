@@ -24,14 +24,14 @@ class PolicyViolation(Exception):
 class UnknownUnderPolicy(Exception):
     """A required input was missing, so the rule could not be evaluated.
 
-    Refusing here is the whole point: a guardrail that treats 'unknown' as
-    'permitted' is not a guardrail. The three-valued reading -- true, false,
+    Refusing here is the whole point: a rule check that treats 'unknown' as
+    'permitted' is not a control. The three-valued reading -- true, false,
     unknown -- is what keeps a missing field from silently authorizing an effect.
     """
 
 
 @dataclass(frozen=True)
-class Guardrail:
+class EnforcedRule:
     rule: object
 
     def _satisfied(self, facts: dict) -> bool:
@@ -65,10 +65,10 @@ class Guardrail:
             )
 
 
-def guarded_dispatch(effect, facts: dict, guardrails, *, jurisdiction: str, on_date: str):
-    """Every guardrail must pass before the effect is allowed to run."""
-    for guardrail in guardrails:
-        guardrail.enforce(facts, jurisdiction=jurisdiction, on_date=on_date)
+def guarded_dispatch(effect, facts: dict, rules, *, jurisdiction: str, on_date: str):
+    """Every enforced rule must pass before the effect is allowed to run."""
+    for rule in rules:
+        rule.enforce(facts, jurisdiction=jurisdiction, on_date=on_date)
     return effect()
 
 

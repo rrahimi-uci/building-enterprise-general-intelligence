@@ -1,9 +1,9 @@
 {
-  "examples": 26,
-  "cited": 26,
+  "examples": 27,
+  "cited": 27,
   "uncited": [],
   "rendered_lines": {
-    "contracts": 108,
+    "contracts": 217,
     "agent-tool-loop": 54,
     "governed-tool-gateway": 221,
     "effect-idempotency": 79,
@@ -21,6 +21,7 @@
     "approval-verification": 98,
     "step-execution": 98,
     "durable-state": 91,
+    "context-manifest": 122,
     "react-engine": 120,
     "policy-to-rule": 51,
     "grounding-verifier": 42,
@@ -38,6 +39,7 @@
     "examples/tests/test_approval_verification.py",
     "examples/tests/test_bounded_react_loop.py",
     "examples/tests/test_capability_catalog.py",
+    "examples/tests/test_context_manifest.py",
     "examples/tests/test_contracts.py",
     "examples/tests/test_durable_state.py",
     "examples/tests/test_effect_idempotency.py",

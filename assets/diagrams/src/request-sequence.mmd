@@ -1,27 +1,34 @@
 %% Figure 4-2 — Request to verified outcome.
-%% Message: every hop is authorized and recorded; the model proposes, the
-%% platform decides, and the effect is proven before the answer is returned.
+%% Message: every hop is authorized and recorded; context is assembled and
+%% authorized before the bounded step runs; the model proposes, the platform
+%% decides, and the effect is proven before the answer is returned.
 sequenceDiagram
     autonumber
     actor User
     participant Run as Run Service
+    participant Ctx as Context Service
     participant Agent as Agent Runtime
     participant Pol as Policy & Identity
+    participant Appr as Approval Service
     participant Tool as Tool Gateway
     participant Sys as System of Record
 
     User->>Run: request + delegated grant
-    Run->>Run: open run, pin versions
-    Run->>Agent: bounded step
-    Agent->>Pol: resolve authorized context
-    Pol-->>Agent: context manifest id
-    Agent-->>Run: typed tool proposal
+    Run->>Run: admit run, write RunManifest
+    Run->>Ctx: assemble authorized context
+    Ctx-->>Run: context manifest id
+    Run->>Agent: bounded step (AgentStepRequest)
+    Agent-->>Run: typed proposal (AgentStepResult)
     Note over Run,Pol: the model proposes, the platform decides
-    Run->>Pol: authorize action for this subject
+    Run->>Pol: authorize this action for this subject
     Pol-->>Run: grant, or refusal
+    opt protected change
+        Run->>Appr: approval request bound to the proposal
+        Appr-->>Run: approval decision
+    end
     Run->>Tool: invoke with logical effect key
     Tool->>Sys: commit effect
     Sys-->>Tool: receipt
     Tool-->>Run: effect record
-    Run->>Run: verify acceptance criteria
+    Run->>Run: evaluate acceptance criteria
     Run-->>User: verified outcome + evidence

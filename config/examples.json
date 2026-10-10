@@ -23,7 +23,8 @@
         "pydantic==2.13.5"
       ],
       "regions": {
-        "step": "The agent-step subset used in the foundations chapter."
+        "step": "The agent-step subset used in the foundations chapter.",
+        "platform": "The run, artifact, and event contracts of the reference architecture."
       }
     },
     {
@@ -285,6 +286,23 @@
       "libraries": [],
       "regions": {
         "core": "The logic the chapter teaches, without the supporting models."
+      }
+    },
+    {
+      "id": "context-manifest",
+      "book_chapters": [6],
+      "path": "examples/runtime/context_manifest.py",
+      "language": "python",
+      "title": "One sealed ContextManifest per agent step",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_context_manifest.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ],
+      "regions": {
+        "core": "The logic the chapter teaches, without the imports."
       }
     },
     {
