@@ -8221,7 +8221,7 @@ only copy of that record.
 | --- | --- | --- | --- | --- |
 | Trace pipeline; separate audit ledger | sensitive runtime to operations access | trace shard · regional collector | one span/export batch | TraceContext · SpanLink · AuditEvent |
 
-The reader should be able to ask a trace four questions without opening every
+An operator should be able to ask a trace four questions without opening every
 log line: what run was this, which decision changed the path, which activity
 consumed the time or budget, and what evidence proves the final effect? The
 answer comes from stable identifiers and typed links, not from copying every
@@ -8248,7 +8248,7 @@ Start with the violated outcome or SLO, identify the critical path, then find th
 Harborlight reports that a mortgage evidence review took twelve minutes. The
 summary looks plausible, so a request log alone would make the incident appear
 closed. The causal trace instead shows a three-minute queue wait, two retrieval
-attempts caused by a stale index, a four-minute human authorization wait, and a
+attempts caused by a stale index, a four-minute human action authorization wait, and a
 loan-origination connector timeout whose effect record is **Unknown**. The
 operator now has a safe next step: reconcile the LOS before retrying, then
 decide whether the latency problem belongs to capacity, retrieval freshness,
@@ -8264,7 +8264,7 @@ human workflow, or effect recovery.
 
 This example also shows why “trace everything” is not a sufficient design. The
 trace needs the identifiers and state transitions that explain the run, while
-the sensitive payment payload remains in a controlled content or audit store
+the sensitive document payload remains in a controlled content or audit store
 with an authorized reference.
 
 ## Build observability around decisions and effects
@@ -8312,7 +8312,7 @@ Do not treat hidden chain-of-thought as required observability. Record concise d
 ### Trace and replay semantics
 
 * Propagate W3C traceparent/tracestate across HTTP, queues, MCP, and A2A. Use span links when work is triggered asynchronously or crosses an independently rooted remote trace.
-* Record model route/version, prompt/context hashes, tool/agent versions, policy decision IDs, artifact/effect references, retry/cancel/replay flags, cost, and timing. Do not require hidden chain-of-thought.
+* Record model route/version, prompt/context hashes, tool/agent versions, policy decision IDs, artifact/effect references, retry/cancel/replay flags, cost, and timing.
 * Operational replay reuses recorded activity outputs and cannot create live effects. A fork with changed model/prompt/tool is a new run and explicitly mocks or reauthorizes external access.
 * Deterministic correctness checks outrank model graders. Store grader prompt/model/version, raw score evidence, and inter-rater calibration so a later drift analysis is possible.
 
@@ -8335,13 +8335,13 @@ Do not treat hidden chain-of-thought as required observability. Record concise d
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Telemetry maturity | OTLP and the general span model are mature, but the dedicated OpenTelemetry GenAI semantic conventions are still Development. Version the mapping and retain a stable internal event schema. | OTEL-GENAI |
+| Telemetry maturity | OTLP and the general span model are mature, but the dedicated OpenTelemetry GenAI semantic conventions are still in Development. Version the mapping and retain a stable internal event schema. | R19 |
 
-The discussion above draws on OTEL-GENAI; MLFLOW-TRACE. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R19. Appendix K lists the complete sources and records their authority, version, and scope.
 
 |  |
 | --- |
-| **OBSERVABILITY TIP**  Tag every trace with the identifiers your system of record uses — run, tenant, risk class. A trace that cannot be joined to the business record it affected is a performance artifact, not an audit trail. |
+| **OBSERVABILITY TIP**  Tag every trace with the identifiers your system of record uses — run, tenant, risk class. A trace that cannot be joined to the business record it affected can time a run but cannot explain its outcome. |
 
 ## A sensible place to start
 
@@ -8417,7 +8417,7 @@ def traced_step(run_id: str, case_id: str) -> dict[str, str]:
 ### Mortgage Agents SDK integration
 
 The cumulative mortgage runtime makes the boundary concrete: the OpenAI Agents
-SDK performs one bounded, read-only tool loop; the platform gateway owns the
+SDK performs one bounded, read-only tool loop; the Tool Gateway owns the
 synthetic projection; MLflow records the causal AgentRunner, agent, and tool
 spans. The scripted model keeps the example offline, so a trace proves the
 integration and redaction mechanics without claiming a live provider call.
@@ -8557,7 +8557,7 @@ path becomes less safe.
 
 An evaluation compares a candidate against an explicit contract, a baseline,
 and the slices where failure matters. The candidate is not just a prompt: it is
-the versioned set of model route, workflow, tools, policies, context strategy,
+the versioned set of prompt, model route, workflow, tools, policies, context strategy,
 and runtime configuration that could change the trajectory. A release gate
 combines deterministic checks with calibrated quality evidence, then records a
 decision that another operator can reproduce.
@@ -8568,11 +8568,11 @@ change; validate and approve it before deployment; then monitor the result and
 curate the evidence into the next regression set. The loop improves the system
 without granting any model authority to rewrite controls or certify itself.
 
-[[DIAGRAM:evaluation-gate|Figure 25-3 — Candidate evaluation combines deterministic checks, calibrated judges, slices, and a risk-tiered release gate]]
+[[DIAGRAM:evaluation-gate|Figure 25-1 — Candidate evaluation combines deterministic checks, calibrated judges, slices, and a risk-tiered release gate]]
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
-| Evaluation Service and release gate | production evidence to development corpus | dataset version · scorer pool · slice | one case and candidate release | EvaluationCase · Feedback · ReleaseDecision |
+| Evaluation Registry and release gate | production evidence to development corpus | dataset version · scorer pool · slice | one case and candidate release | EvalCase · Feedback · ReleaseGateDecision |
 
 The gate is deliberately not a single score. A candidate can improve a
 language-quality metric while violating an authorization invariant, increasing
@@ -8586,7 +8586,7 @@ Evaluation changes engineering decisions only when it is tied to failures the bu
 
 An agent evaluation case includes input, initial state, user simulation or messages, expected outcome properties, allowed and forbidden tools, required evidence, maximum budgets, failure injections, and slice tags. The result includes final output, complete trajectory, artifacts, policy decisions, effects, human events, latency, cost, and terminal state.
 
-MLflow 3.15.x supports GenAI evaluation, trace-based scorers, code-based scorers, LLM judges, human feedback, and OpenAI Agent tracing integration. Version 3.15.2 adds immutable evaluation-dataset versions and scorer ensembles within the requested 3.15 line. This book pins 3.15.2; newer overall MLflow releases may exist and require separate compatibility validation.
+MLflow 3.15.x supports GenAI evaluation, trace-based scorers, code-based scorers, LLM judges, human feedback, and OpenAI Agents SDK tracing integration. Version 3.15.2 adds immutable evaluation-dataset versions and scorer ensembles. This book pins 3.15.2; newer overall MLflow releases may exist and require separate compatibility validation.
 
 ### Judge the outcome and the path separately
 
@@ -8613,8 +8613,6 @@ readers do not mistake a probabilistic opinion for a proof.
 * **Reliability:** retries, timeouts, duplicates, out-of-order events, unknown effects, cancellation, replay, regional recovery.
 * **Performance:** queue age, tokens, tool calls, latency, cost per success, concurrency, fairness.
 * **Canary and production:** bounded exposure, online monitors, human feedback, failure mining, rollback.
-
-Use executable scorers wherever the expected property is computable. Calibrate model judges against human labels, measure variance and bias, version their complete configuration, and never make them the sole authority for security or transaction correctness.
 
 ### Layer tests from contracts to outcomes
 
@@ -8652,7 +8650,7 @@ The important habit is to preserve the failing trace as a versioned case after
 privacy and purpose review. Otherwise the next improvement can repeat the same
 failure while the dashboard reports only the improved average.
 
-### A workable implementation
+## A workable implementation
 
 ### Who should own each decision
 
@@ -8696,13 +8694,13 @@ failure while the dashboard reports only the improved average.
 
 |  |
 | --- |
-| **BEST PRACTICE**  Build the evaluation set from production failures, not from imagined ones. Every incident should end by contributing a case. A suite assembled up front measures what you expected to be hard; a suite grown from incidents measures what actually is. |
+| **BEST PRACTICE**  Grow the evaluation set from production failures, not only from imagined ones. Every incident should end by contributing a reviewed case. A suite assembled up front measures what you expected to be hard; a suite grown from incidents measures what actually is. |
 
 ## Close the loop without handing control to the model
 
 Continuous improvement joins production evidence to versioned change and release. It does not let an agent rewrite its prompt, memory policy, permissions, evaluator, or code and then certify itself.
 
-[[DIAGRAM:learning-loop|Figure 25-1 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn]]
+[[DIAGRAM:learning-loop|Figure 25-2 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn]]
 
 | **Stage** | **Work and durable output** | **Automation boundary** |
 | --- | --- | --- |
@@ -8712,16 +8710,16 @@ Continuous improvement joins production evidence to versioned change and release
 | Diagnose | Compare successful/failed traces, first divergence, structural/semantic clusters into causal hypothesis | Tools rank; accountable owner confirms cause/business meaning |
 | Recommend | Smallest candidate, predicted benefit, risk, affected contracts, rollback into ChangeBundle draft | Generate drafts; never self-approve/mutate production |
 | Validate | Replay, simulation, unit/contract/security/privacy/adversarial/load/cost/compatibility tests into ValidationReport | CI automates; owners approve datasets, exceptions, residual risk |
-| Approve | Risk class and domain/security/privacy/operations decision into PromotionDecision | Only pre-approved low-risk changes auto-approve |
+| Approve | Risk class and domain/security/privacy/operations decision into PromotionDecision | Only pre-approved low-risk change classes auto-approve; never self-authored behavior |
 | Deploy | Immutable build, bindings, shadow/canary, rollback into ReleaseManifest/deployment | Progressive delivery within approved policy |
 | Monitor | Compare canary/production to baseline across quality, safety, reliability, cost, business | Auto-halt/rollback on tested stop condition |
 | Learn | Record causal result, curate regressions, update taxonomy/runbook into LearningRecord | Metadata may automate; data/policy/architecture changes require governance |
 
 ## Separate runtime adaptation from offline improvement
 
-[[DIAGRAM:runtime-offline|Figure 25-2 — Runtime adaptation and offline improvement boundary]]
+[[DIAGRAM:runtime-offline|Figure 25-3 — Runtime adaptation and offline improvement boundary]]
 
-Runtime adaptation selects only pre-approved routes/fallbacks, reduces optional context, sheds load, stops a loop, asks for input, escalates, or rolls back inside a fixed envelope. It cannot expand permissions, purpose, data access, spend, tools, or model allowlists. Offline improvement creates a new immutable release and may change prompts, context/RAG, memory, tools, skills, model selection, routing, deterministic code, agent topology, workflows, and system architecture after evaluation and approval.
+Runtime adaptation selects only pre-approved routes/fallbacks, reduces optional context, sheds load, stops a loop, asks for input, escalates, or rolls back inside a fixed envelope. It cannot expand permissions, purpose, data access, spend, tools, or model allowlists. Offline improvement creates a new immutable release and may change prompts, context/RAG, memory policy, tools, skills, model selection, routing, deterministic code, agent topology, workflows, and system architecture after evaluation and approval.
 
 ## Choose the right improvement path
 
@@ -8729,10 +8727,10 @@ Runtime adaptation selects only pre-approved routes/fallbacks, reduces optional 
 | --- | --- | --- | --- |
 | Prompts | Omissions, conflicts, unsupported claims | Clarify responsibility, examples, evidence, stop rules | Golden/adversarial replay; behavior/policy review |
 | Context/RAG | Recall/precision, stale/poisoned source, injection correlation | ACL/freshness/ranking/dedup/token/source changes | Retrieval/faithfulness/security tests; data-owner approval |
-| Memory | Correction, leakage, stale/poisoned retrieval | Eligibility, purpose, scope, TTL, verification, deletion | Privacy/security/longitudinal replay |
+| Memory | Correction, leakage, stale/poisoned retrieval | Eligibility, purpose, scope, TTL, verification, deletion | Privacy/security/longitudinal replay; memory-purpose approval |
 | Tools | Wrong choice/args, timeout/retry/unknown effect | Narrow schema/catalog, preconditions, idempotency/reconcile | Contract/failure/load/security; effect/permission approval |
 | Skills | Version-specific or inconsistent behavior | New immutable Skill/dependencies/examples/acceptance | Skill certification and domain owner |
-| Model selection | Quality/cost/latency/refusal/schema drift | Eligibility, threshold, cascade, fallback, context window | Full route evaluation, privacy/residency, canary |
+| Model selection | Quality/cost/latency/refusal/schema drift | Eligibility, threshold, cascade, fallback, context window | Full route evaluation, privacy/residency, canary; allowlist approval |
 | Routing | Misroute/escalation/capacity imbalance | Calibrate, deterministic pre-router, fallback/escalation | Shadow/counterfactual; authority/ownership review |
 | Deterministic code | Repeated stable low-entropy model decision | Extract rule, lookup, calculation, parser, transform | Unit/property/exception tests and domain approval |
 | Agent topology | Duplicate work, fan-out/handoff, unclear owner | Merge agents, supervisor/task service, specialization change | Simulation, ownership/authority, migration review |
@@ -8741,22 +8739,22 @@ Runtime adaptation selects only pre-approved routes/fallbacks, reduces optional 
 
 ## Measure both the outcome and the path
 
-OpenTelemetry/OpenInference traces provide portable telemetry. DeepEval and Ragas cover trajectory, component, tool, RAG, faithfulness, and goal metrics. MLflow supports datasets, evaluators, human/programmatic feedback, experiments, and monitoring. Phoenix supports traces, annotations, datasets, prompt experiments, and replay. LangSmith supports offline/online evaluation and production-trace-to-dataset workflows. Normalize all into platform-owned EvaluationResult; no framework score is release authority.
+OpenTelemetry/OpenInference traces provide portable telemetry. DeepEval and Ragas cover trajectory, component, tool, RAG, faithfulness, and goal metrics. MLflow supports datasets, evaluators, human/programmatic feedback, experiments, and monitoring. Phoenix supports traces, datasets, experiments, evaluation, and prompt versioning. LangSmith supports offline/online evaluation and production-trace-to-dataset workflows. Normalize all into platform-owned EvaluationResult; no framework score is release authority.
 
 Measure task success and deterministic acceptance, correctness, faithfulness, hallucination/unsupported-claim rate, tool-selection precision/recall/F1, argument correctness, retrieval relevance/precision/recall/freshness/evidence coverage, plan quality/adherence, step efficiency, p50/p95/p99 latency by component, tokens, cost per request/accepted outcome, retry amplification, failure/unknown effect, human correction/override/escalation/fatigue, user satisfaction, and business outcome.
 
 ## Automate only when regressions are contained
 
-Every material failure/correction becomes a candidate case after privacy/security/purpose review. Reduce to smallest reproducible cause, define expected outcome/invariants/trajectory/cost/latency, version dataset/evaluator, and run in CI, staging, shadow, and canary. Automate capture, approved redaction/scoring, anomaly detection, clustering, draft recommendations, tests, sandbox/canary, halt, and rollback within envelope. Require human governance for permission/policy/data/memory purpose/protected effects/model allowlist/topology/architecture/evaluator truth/training data/exceptions/wider promotion. Prohibit expanding authority, disabling controls, editing audit evidence, changing approval requirements, or promoting self-authored behavior.
+Every material failure/correction becomes a candidate case after privacy/security/purpose review. Reduce to smallest reproducible cause, define expected outcome/invariants/trajectory/cost/latency, version dataset/evaluator, and run in CI, staging, shadow, and canary. Automate capture, approved redaction/scoring, anomaly detection, clustering, draft recommendations, tests, sandbox runs, approved canaries, halt, and rollback within envelope. Require human governance for permission/policy/data/memory purpose/protected effects/model allowlist/topology/architecture/evaluator truth/training data/exceptions/wider promotion. Prohibit expanding authority, disabling controls, editing audit evidence, changing approval requirements, or promoting self-authored behavior.
 
 ## What the evidence lets us conclude
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| MLflow baseline | This book pins MLflow 3.15.2 as a reproducibility baseline for its examples. It is not labeled latest; feature availability, experimental status, and compatibility must be re-verified against release notes and current documentation before implementation. | MLFLOW-3152; MLFLOW-MCP |
-| Evaluation limit | A passing model judge is probabilistic evidence, not proof. Security, authorization, schema, budget, effect, and acceptance invariants remain deterministic release blockers. Protect against benchmark leakage and tune judges with human feedback. | MLFLOW-EVAL; NIST-GAI |
+| MLflow baseline | This book pins MLflow 3.15.2 as a reproducibility baseline for its examples. It is not labeled latest; feature availability, experimental status, and compatibility must be re-verified against release notes and current documentation before implementation. | R21 |
+| Evaluation limit | A passing model judge is probabilistic evidence, not proof. Security, authorization, schema, budget, effect, and acceptance invariants remain deterministic release blockers. Protect against benchmark leakage and tune judges with human feedback. | R20; R13 |
 
-The discussion above draws on MLFLOW-3152; MLFLOW-EVAL; NIST-GAI. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R13; R20; R21. Appendix K lists the complete sources and records their authority, version, and scope.
 
 |  |
 | --- |
@@ -8886,7 +8884,7 @@ def evaluate_agent(predict_fn, dataset: list[dict[str, object]]):
 
 ## What to verify before production
 
-**✓** All run components link into one causal trajectory.
+**✓** Runtime adaptation stays inside a fixed envelope; every other behavior change ships as an evaluated, approved release.
 
 **✓** Operational telemetry, restricted content, and complete immutable audit evidence are separated.
 
@@ -8906,7 +8904,7 @@ def evaluate_agent(predict_fn, dataset: list[dict[str, object]]):
 | **Question** | **Strong answer** |
 | --- | --- |
 | Why is final-answer evaluation insufficient for agents? | A plausible answer can hide unauthorized retrieval, wrong tools, excessive cost, retry waste, unsafe handoffs, duplicate effects, or missing approval; evaluate the complete trajectory. |
-| How do telemetry and audit differ? | Telemetry diagnoses and may be sampled; audit proves required protected decisions and effects with stronger completeness, integrity, access separation, and retention. |
+| What may runtime adaptation change? | Only pre-approved routes and fallbacks, optional context, loop stops, input requests, and escalation inside a fixed envelope; permissions, data access, tools, and model allowlists change only through an evaluated, approved release. |
 | When are model judges appropriate? | For nuanced quality with versioned rubrics, human calibration, bias tests, repeated runs, and blinding—not as sole authority for security, transactions, or computable correctness. |
 | What belongs in a release bundle? | Agent and prompt, runtime adapter, workflow build, model route and fallbacks, tool and policy versions, schemas, images, knowledge strategy, evaluations, rollout, and rollback policy. |
 | How do you roll back without breaking active runs? | Stop new assignment, restore the prior environment binding, keep build-compatible workers for pinned histories, reconcile side effects, and migrate only through an explicit tested plan. |

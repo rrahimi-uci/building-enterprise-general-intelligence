@@ -4,6 +4,15 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Apply DOCX review to Part VII
+
+Applied a deep review of the DOCX (Chapters 24–25) to the canonical source:
+
+- Tightened the automated vs approval-required line: self-authored behavior never auto-approves, canaries are approved, and the Memory and Model-selection rows name their approval.
+- Ch24 no longer implies a joined trace is an audit trail; the worked example's payload is a document, not a payment.
+- Replaced unresolvable source keys with registry IDs (R13, R19, R20, R21); MLFLOW-TRACE/MLFLOW-MCP have no registry entry and were dropped; Phoenix capabilities narrowed to the source's scope.
+- Ch25 figures numbered in reading order; checklist and design-review items now test runtime adaptation vs governed release.
+
 ### Apply DOCX review to Part VI
 
 Applied a deep review of the DOCX (Chapters 20–23) to the canonical source:
