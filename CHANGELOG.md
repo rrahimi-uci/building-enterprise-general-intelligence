@@ -4,6 +4,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Remove the full-book review plan
+
+- Removed `full-book-review-plan.md`, the closed v2.1.0 review plan and evidence log. Nothing in the tools, Makefile, CI, or book text reads it; `reports/editorial-audit.md` and `reports/technical-validation.md` now note it is recoverable from git history. Its entry drops out of `RELEASE-MANIFEST.json` and `CHECKSUMS.sha256` at the next `make package`.
+
 ### Remove the proposals folder
 
 - Removed `proposals/` (one unreferenced draft, `knowledge-management.md`). Its entry drops out of `RELEASE-MANIFEST.json` and `CHECKSUMS.sha256` at the next `make package`.
