@@ -4,7 +4,7 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7",
-    "content_tex_sha256": "97712b7cbdae81d2d142cb453e2f1e85141f9bea3ab944a5c10d90dcfea07c2c",
+    "content_tex_sha256": "f9d280510822fe99b71916bfbb4259ae090275bb27cea31078075c03620cd519",
     "style_sha256": "7a1273ba38763881c8ed2ede7ad741ea49ca031d7bb5f8fc354e413a88d840c8",
     "narrative_parts": 8,
     "appendix_dividers": 1,
@@ -12,15 +12,15 @@
     "chapter_covers": 28,
     "appendices": 12,
     "diagrams": 43,
-    "code_blocks": 69,
-    "longtables": 149,
+    "code_blocks": 64,
+    "longtables": 152,
     "compact_tables": 107,
-    "callout_tables": 75,
+    "callout_tables": 74,
     "citation_occurrences": 113,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 331,
-    "markdown_code_blocks": 69,
+    "markdown_tables": 333,
+    "markdown_code_blocks": 64,
     "image_quality": [
       {
         "file": "assets/cover/cover-v1.0.0.png",
@@ -89,16 +89,16 @@
       {
         "file": "assets/diagrams/reference-architecture.png",
         "pixels": [
-          4148,
-          2780
+          4209,
+          2789
         ],
-        "effective_dpi": 587.5
+        "effective_dpi": 596.2
       },
       {
         "file": "assets/diagrams/request-sequence.png",
         "pixels": [
           2055,
-          1365
+          1210
         ],
         "effective_dpi": 291.1
       },
@@ -114,7 +114,7 @@
         "file": "assets/diagrams/policy-to-guardrail.png",
         "pixels": [
           2322,
-          2798
+          3195
         ],
         "effective_dpi": 328.9
       },

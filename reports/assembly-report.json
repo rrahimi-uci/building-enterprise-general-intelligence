@@ -12,13 +12,13 @@
     "source/parts/08-part-viii.md",
     "source/parts/09-appendices.md"
   ],
-  "bytes": 734306,
-  "sha256": "eedfed532cefa0b1471f1dd16dac08fb1df3c1bc15395850faa072a2db41e059",
+  "bytes": 740511,
+  "sha256": "f0c8540e1ab2ad1dd14ae4866a047a81c14fa92c50b1647965ba15f95e95257a",
   "parts": 8,
   "chapters": 28,
   "appendices": 12,
   "citation_occurrences": 113,
-  "expanded_examples": 43,
+  "expanded_examples": 44,
   "cited_reference_ids": [
     "R01",
     "R02",
