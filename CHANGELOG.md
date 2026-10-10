@@ -4,6 +4,16 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Apply DOCX review to Part IV
+
+Applied a deep review of the DOCX (Chapters 10–17) to the canonical source:
+
+- Fixed contradictions with the book's core rules: Ch11 handoff now acknowledges before ownership transfers; Ch14's workflow persists (not commits) the proposed effect before approval; Ch10's loop step no longer executes mutations inside the loop.
+- Ch17's "How to read a card" now describes the four parts every card actually uses; the catalog-level pitfall box no longer splits the AP-16 card.
+- Ch14's checklist and design-review questions now test this chapter's material (authorization vs intervention, approval expiry) instead of repeating tool-chapter items.
+- Replaced unresolvable legacy source keys with registry IDs; OAI-HITL has no registry entry and was dropped.
+- Corrected swapped Ch10 headings, empty headings, grammar, and US spelling.
+
 ### Apply DOCX review to Part III
 
 Applied a deep review of the DOCX (Chapters 7–9) to the canonical source:
