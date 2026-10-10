@@ -107,6 +107,7 @@ denies credit and never writes to a real loan-origination system.
 
 | Example | Chapter | Exercises |
 |---|---|---|
+| `foundations/capability_levels.py` | 01 | The prototype and the four agent levels; a retry duplicates an unprotected write |
 | `foundations/agent_tool_loop.py` | 02 | Typed tool, structured output, bounded run |
 | `foundations/governed_tool_gateway.py` | 02 | Validation, authorization, freshness, and effect idempotency |
 | `foundations/effect_idempotency.py` | 22 | Logical effect keys, replay safety, Unknown outcomes |
