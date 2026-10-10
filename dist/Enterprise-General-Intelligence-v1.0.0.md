@@ -49,7 +49,7 @@ Read this as one architecture story, not as a stack of unrelated technology
 surveys. Start with the map, then choose the reader path that matches your
 decision. Most chapters move from a concrete problem through boundaries,
 architecture, implementation, failure modes, measurement, and trade-offs; the
-pattern and anti-pattern catalogs (Chapters 16–17) are reference cards. You
+pattern cards (Appendix A) and anti-pattern catalog (Chapter 17) are reference cards. You
 can use the review questions to test whether the idea survives contact with
 your own system.
 
@@ -1864,7 +1864,7 @@ It applies deterministic eligibility before any optimization; Chapter 28 treats 
 | Orchestrator → tool | Requested action and delegated context | PDP decision, downscoped token, idempotency, dry-run/approval, audit | Chapters 21–22 |
 | Agent → agent | Claims, artifacts, status, requested authority | Authenticated channel, signed task envelope, scope intersection, limits | Chapters 18–19 |
 | Sandbox → network | Code, browser activity, generated payloads | Default-deny egress, DNS/HTTP proxy, quotas, filesystem isolation | Chapter 23 |
-| Platform → model vendor | Prompts, retrieved content, telemetry | Redaction, residency policy, retention controls, vendor allowlist | Chapter 19 |
+| Platform → model vendor | Prompts, retrieved content, telemetry | Redaction, residency policy, retention controls, vendor allowlist | § What the LLM Gateway enforces |
 | Result → destination | Reports, emails, records, deployments | Output classification, provenance, approval, destination authorization | Chapters 14 and 22 |
 
 ## Global control and regional cells
@@ -6209,7 +6209,7 @@ class TaskService:
 ## If this fails in production
 
 1. Build the durable task tree and identify the current owner of every node.
-2. Verify each child grant is a subset of the parent grant (Chapter 21 § Capability-envelope subset proof).
+2. Verify each child grant is a subset of the parent grant (the subset proof in Chapter 21 § A sensible place to start).
 3. Inspect join semantics, missing artifacts, duplicates, and conflicts.
 
 If chat is the coordination record or each child gets fresh limits, see AP-08 and AP-11 in Chapter 17.
@@ -6249,7 +6249,7 @@ Inside one platform, the Task Service enforces these rules directly. Chapter 19 
 
 |  |
 | --- |
-| **WHERE THE MORTGAGE CASE STANDS** Harborlight consumes a third-party employment-verification MCP server, and the property-review specialist from Chapter 18 is now a partner-operated agent reached through A2A. Protocol conformance makes messages interoperable; it does not make the endpoint trusted or the artifact safe to adopt. |
+| **WHERE THE MORTGAGE CASE STANDS** Harborlight consumes a third-party income-verification MCP server, and the property-review specialist from Chapter 18 is now a partner-operated agent reached through A2A. Protocol conformance makes messages interoperable; it does not make the endpoint trusted or the artifact safe to adopt. |
 
 |  |
 | --- |
@@ -7378,7 +7378,7 @@ protocol-level authorization, including the ban on token passthrough.
 
 | **Failure** | **Default response** | **Never do** |
 | --- | --- | --- |
-| Model 429/5xx | Retry with jitter under per-provider budget; route only to an evaluated compatible fallback (Chapter 19) | Retry every branch simultaneously |
+| Model 429/5xx | Retry with jitter under per-provider budget; route only to an evaluated compatible fallback (Chapter 28) | Retry every branch simultaneously |
 | Invalid structured output | One constrained repair attempt, then fallback or fail | Silently coerce materially ambiguous fields |
 | Tool transient error before effect | Retry if manifest declares safe/idempotent | Assume all reads and writes are equivalent |
 | Timeout with unknown effect | Query by idempotency key or reconcile effect ledger before retry | Blindly repeat the mutation |
@@ -7752,7 +7752,7 @@ than abandoned. Its release-side counterpart is Chapter 27's Emergency Control.
 | --- | --- |
 | Content inspection service | Scan and classify inbound and retrieved content; attach labels and taint |
 | Tool Gateway and protocol gateways | Enforce the containment obligations returned with each decision |
-| Access Broker/STS (Chapter 21; the secret broker in Figure 23-1) | Issue credential leases, including leases for stored secrets; this chapter governs how they are injected |
+| Access Broker/STS (Chapter 21) | Issue credential leases, including leases for stored secrets; this chapter governs how they are injected |
 | Sandbox Control Plane | Attest and lease isolated execution |
 | Egress proxy | Resolve, canonicalize, and filter outbound destinations |
 | DLP service | Inspect structured and unstructured payloads |
@@ -8884,7 +8884,7 @@ The tier sets the minimum controls. Review stays predictable when every rule has
 
 Principles and standards are argued; policy-as-code and configuration are executed.
 
-The release gate (Chapter 25's ReleaseGateDecision) takes two inputs: the use case's tier and the change class. In T0–T2 use cases, pre-approved low-risk change classes (metadata, documentation, evaluated prompt wording) may promote automatically on passing gates. A change in Chapter 25's "Require human governance" row (§ Close the loop without handing control to the model) always requires a named approver, whatever the tier. In T3–T4 use cases every behavior change needs the release owner's recorded approval and a canary; T4 adds independent assurance.
+The release gate (Chapter 25's ReleaseGateDecision) takes two inputs: the use case's tier and the change class. In T0–T2 use cases, pre-approved low-risk change classes (metadata, documentation, evaluated prompt wording) may promote automatically on passing gates. A change in the "Require human governance" row of Chapter 25 § Close the loop without handing control to the model always requires a named approver, whatever the tier. In T3–T4 use cases every behavior change needs the release owner's recorded approval and a canary; T4 adds independent assurance.
 
 A design review covers each area below; the chapter in parentheses holds its controls: outcome and acceptance (Chapters 2 and 13), deterministic boundary (2), state and effect ownership (15, 22), identity and delegation (21), context and memory (6), tool, MCP, and A2A trust (19), threats (20), evaluation truth (25), observability and privacy (24), recovery and release (27), capacity and cost (28), human oversight (14), and portability (3).
 
@@ -9653,7 +9653,7 @@ keeps the main argument honest.
 3. Work survives waits/restarts/humans: durable execution.
 4. Specialists collaborate: typed tasks, one owner, artifacts, deterministic join.
 5. Trust/deployment boundary: identity, authorization, protocol gateway, tenancy, audit.
-6. Side effect: proposal/authorize/commit, idempotency, reconciliation, acceptance.
+6. Side effect: the six gates (Chapter 2), idempotency, and reconciliation.
 7. Post-deployment improvement: governed learning; never self-certification.
 
 Figure 16-1 and Chapter 16 cover the Part IV subset of these choices.
@@ -9670,7 +9670,7 @@ Each card names the obligation it protects, the shortcut that fails, the better 
 
 **Better design.** A controller bounds steps, time, tokens, tools, and evidence, and deterministic acceptance decides when the work is done.
 
-**Built in.** Chapter 10; card: § ReAct at a glance.
+**Built in.** Chapter 10; card: Chapter 10 § ReAct at a glance.
 
 ### P-02 — Deterministic spine with semantic nodes
 
@@ -9692,7 +9692,7 @@ Each card names the obligation it protects, the shortcut that fails, the better 
 
 **Better design.** Authorization precedes retrieval, and a manifest records each segment's source, snapshot, provenance, rank, freshness, and token allocation: planner → authorization → retrieval → ranking/dedup → manifest → model.
 
-**Built in.** Chapter 6; see § How context is assembled.
+**Built in.** Chapter 6 § How context is assembled.
 
 ### P-04 — Provenance-bound memory
 
@@ -9702,7 +9702,7 @@ Each card names the obligation it protects, the shortcut that fails, the better 
 
 **Better design.** Working memory stays run-scoped; long-term memory is written only through a gate that requires purpose, scope, TTL, provenance, verification, and a deletion path.
 
-**Built in.** Chapter 6; see § Memory is not a bag of embeddings.
+**Built in.** Chapter 6 § Memory is not a bag of embeddings.
 
 ### P-05 — Tool façade behind the six gates
 
@@ -9819,96 +9819,109 @@ The chapters column lists where each pattern is built, plus Chapter 17 for its a
 
 # Appendix B — When Things Go Wrong: Triage and Runbooks
 
-| **Symptom** | **Inspect first** | **Safe response** |
-| --- | --- | --- |
-| Plausible answer, wrong evidence | ContextManifest, revisions, authorization, trust labels | Rebuild context; reject unsupported claims; add regression case |
-| Repeated tool loop | Action-observation signatures and information gain | Stop on no-progress; reduce tools; route or escalate |
-| Duplicate business write | Effect key, intent hash, idempotency, receipt | Freeze dependents; reconcile; repair retry ownership |
-| Write timed out | Effect state and downstream request ID | Mark unknown; never blind-retry; reconcile |
-| Run stuck after approval | Proposal hash, expiry, version, signal | Reauthorize; reapprove if drifted; repair wait |
-| Cross-tenant retrieval | Tenant key, policy, cache key, artifact lineage | Emergency deny; quarantine; incident response |
-| Old run fails after deploy | RunManifest and compatibility | Compatible worker or tested migration |
-| High p95 latency | Queue, model, retrieval, tool, human, retry path | Fix dominant segment; enforce permits |
-| Judge passes security failure | Scorer precedence | Hard deterministic failure blocks release |
-| Unsafe remote artifact | Peer, grant, schema/hash/classification/scan | Reject adoption; quarantine; review trust profile |
+Each row names the Chapter 17 card that describes the failure's usual cause.
+
+| **Symptom** | **Inspect first** | **Safe response** | **Anti-pattern** |
+| --- | --- | --- | --- |
+| Plausible answer, wrong evidence | ContextManifest, revisions, authorization, trust labels | Rebuild context; reject unsupported claims; add regression case | AP-02, AP-09 |
+| Repeated tool loop | Action-observation signatures and information gain | Stop on no-progress; reduce tools; route or escalate | AP-11 |
+| Duplicate business write | Effect key, intent hash, idempotency, receipt | Freeze dependents; reconcile; repair retry ownership | AP-04 |
+| Write timed out | Effect state and downstream request ID | Mark Unknown; never blind-retry; reconcile | AP-05 |
+| Run stuck after approval | Proposal hash, expiry, version, signal | Reauthorize; reapprove if drifted; repair wait | AP-06 |
+| Cross-tenant retrieval | Tenant key, policy, cache key, artifact lineage | Emergency deny; quarantine; incident response | AP-03 |
+| Old run fails after deploy | RunManifest and compatibility | Compatible worker or tested migration | AP-16 |
+| High p95 latency | Queue, model, retrieval, tool, human, retry path | Fix dominant segment; enforce permits | AP-04 |
+| Judge passes security failure | Scorer precedence | Hard deterministic failure blocks release | AP-10 |
+| Run closed with obligations outstanding | AcceptanceDecision and acceptance criteria | Reopen through intervention; require executable acceptance | AP-07 |
+| Unsafe remote artifact | Peer, grant, schema/hash/classification/scan | Reject adoption; quarantine; review trust profile | — (Chapter 19) |
 
 ## When an effect may have happened but no receipt returned
 
 1. Stop dependent work and preserve cancellation intent.
 2. Load EffectRecord, intent hash, expected version, downstream request ID, and trace.
 3. Query the authoritative downstream system by idempotency key, resource ID, or business predicate.
-4. Classify committed, absent, partial, executing, or unprovable.
-5. Record evidence; accept, retry safely, compensate, or move to InterventionRequired.
+4. Classify the result in Chapter 22's effect states: Committed; Declined (proven absent); Partial; still Executing (check again within the provider's visibility window); or InterventionRequired (unprovable).
+5. Record evidence; then accept a Committed receipt, retry a Declined effect under the same logical key, compensate a Partial one, or open an intervention task (Chapter 14).
 6. Add the failure to simulation and release regression tests.
 
 # Appendix C — Core Platform Contracts at a Glance
 
-| **Contract** | **Owner** | **Key fields** |
-| --- | --- | --- |
-| RunManifest | Run Service | tenant, subject, purpose, release, capability, budgets, region, deadline |
-| WorkflowExecution | Workflow engine | history, build, state version, waits, children, terminal reason |
-| AgentStep | AgentRuntime | agent, context, tools, limits, output, usage |
-| TaskEnvelope | Task Service | owner, goal, acceptance, grant, artifacts, deadline, cancellation |
-| ContextManifest | Context Service | source revisions, hashes, policy, trust, redaction, tokens |
-| CapabilityEnvelope | Authorization | subject, actor, action, resource, purpose, data, region, risk, expiry |
-| ToolManifest | Tool Registry | schemas, risk, effects, approval, credential, runtime, lifecycle |
-| HumanActionAuthorizationRequest / HumanActionAuthorizationDecision | Human Action Authorization Service | proposal hash, preview, evidence, version, expiry, approver policy, decision |
-| EffectRecord | Effect Ledger | logical key, intent hash, state, request ID, receipt, reconciliation |
-| Artifact | Artifact Service | schema, hash, provenance, classification, retention, version |
-| ReleaseManifest | Release Registry | agents, Skills, SDK, workflow, models, tools, policy, schemas, evals |
+Each contract has one owner and one defining chapter, as indexed in Chapter 4 § The contracts that hold the platform together. Key fields are abridged; the defining chapter holds the full record.
+
+| **Contract** | **Owner** | **Key fields** | **Defined in** |
+| --- | --- | --- | --- |
+| RunManifest | Run Service | ReleaseManifest digest; resolved Skill and pack digests, knowledge snapshots, model route, runtime adapter, capability envelope, budget, use-case tier; written once at admission | Chapter 4 |
+| Artifact | Producing run (bytes in the artifact store) | artifact ID, immutable version, schema, content hash, creator run/node/agent, source refs, classification, residency, retention | Chapter 4 |
+| Event (CloudEvent envelope) | Producing service, through its outbox | standard attributes plus `tenant_id`, `correlation_id`, `causation_id`, `traceparent`; payload by `dataref` and `datahash` | Chapter 4 |
+| AgentStepRequest / AgentStepResult | Run Service builds the request; AgentRuntime returns the result | request: identity, behavior pins, ContextManifest, capabilities, bounds, output schema, trace; result: status (`completed`, `needs_input`, `proposed_action`, `failed`), payload, artifact refs, proposed action, usage, error | Chapter 3 |
+| ContextManifest | Context Service | RunManifest digest, node, step request ID, revision, policy version, section caps and allocation, ordered segments (kind, trust tier, source revision, hash, authorization decision), omitted candidates, redactions, manifest hash | Chapter 6 |
+| MemoryRecord | Memory Service | tenant, subject/team scope, type, value, provenance, confidence, consent, purpose allowlist, TTL, status, supersedes | Chapter 6 |
+| Skill manifest | Skill owner; Skill Registry | interface schemas, instructions, required tools and knowledge, data-class and region policy, `risk_ceiling`, evaluation suite and gates, owner, digest; lifecycle lives in SkillRelease | Chapter 8 |
+| SkillPackManifest | Pack owner | pinned Skill digests, dependency constraints, runtime capabilities, data and region policy, risk ceiling, evaluation gates, release aliases, support window; certified by a CompatibilityReport | Chapter 9 |
+| RoutingDecision | Route service (agents); LLM Gateway (models) | candidate routes, exclusions and reasons, selected route, confidence and reason, fallback | Chapters 11 and 28 |
+| OwnershipTransfer | Ownership Service | task, from/to owner, previous/new capability envelope, obligations, deadline, acknowledgment state (proposed, accepted, rejected, expired), proposal hash | Chapter 11 (record in Chapter 18) |
+| Plan IR (CandidatePlan, PlanNode) | Planner proposes; Plan Compiler validates | plan ID, revision, goal, `capability_envelope_id`, budget; nodes with kind, capability ref, dependencies, inputs, output schema, `risk_class`, retry policy, acceptance checks, failure strategy | Chapter 12 |
+| AcceptanceDecision | Acceptance engine | candidate, criteria version, outcome (accepted, rejected with typed defects, escalated), per-criterion evaluator type and evidence refs | Chapter 13 |
+| ApprovalRequest / ApprovalDecision | Approval Service | request: proposal hash, resource and logical effect key, before/after diff, subject and actor, evidence, policy digest, risk class, expected resource version, expiry, allowed responses; decision: proposal hash, approver identity and assurance, decision, reason, signature, time | Chapter 14 |
+| InterventionTask | Assignment/Queue Service | run/node, trigger and reason code, evidence refs, alternatives, allowed responses, assignee, SLA, state/version, response | Chapter 14 |
+| WorkflowExecution | Workflow engine | run ID, workflow type/build, home region/shard, state, state version, history generation | Chapter 15 |
+| TaskEnvelope | Task Service | identity, goal, data, contract, authority (`capability_grant_id`), budgets, reliability (idempotency key, cancellation), observability | Chapter 18 |
+| FederatedTask | A2A Gateway (Task Bridge) | local and remote task IDs, parent run, peer/agent/version, capability envelope ref, state mapping, idempotency key, deadline, budget | Chapter 19 |
+| CapabilityEnvelope | Authorization Service | grant ID, run/task, permitted actions/resources/data classes, explicit denies, purpose, regions, maximum risk class, cost ceiling, delegation depth, expiry, parent grant | Chapter 21 |
+| PolicyDecision | Authorization Service | decision ID, input hash, result, obligations, reason codes, policy digest, evaluated time | Chapter 21 |
+| CredentialLease | Access Broker/STS | opaque handle, kind, grant and decision IDs, audience, scope, expiry, use count, sender binding; secret never in run state | Chapter 21 |
+| ToolManifest | Tool Registry | identity, interface schemas, security, risk class, runtime limits, effect semantics (idempotency key, precondition, receipt, compensation), operations | Chapter 22 |
+| EffectRecord / EffectReceipt | Effect Service | logical key, idempotency key, intent hash, expected version, state (Chapter 22's lifecycle), downstream IDs, receipt, compensation refs | Chapter 22 |
+| OutboxRecord / InboxReceipt | Producing service / consumer | event ID, aggregate version, envelope, publish state; consumer, source/event ID, payload hash, status | Chapter 22 |
+| EvaluationResult / ValidationReport / ReleaseGateDecision | Evaluation Orchestrator; Evaluation/Gate Service | metric, score, evaluator type and version; candidate digest, comparisons, slice regressions; tier, thresholds, decision, waiver, approvers | Chapter 25 |
+| GovernanceRecord / ExceptionWaiver | Governance Inventory; Exception Service | use case, owners, risk tier, autonomy, data classes, effects, controls, evaluations, current release, exceptions, review date; waiver scope, compensating controls, expiry | Chapter 26 |
+| ChangeBundle / ReleaseManifest | Release Bundle Builder | proposed changes, evidence, risk, rollback plan; immutable signed dependency graph including Skill and pack digests, migrations, rollout and rollback | Chapter 27 |
+| EnvironmentBinding / PromotionDecision | Promotion Service | tenant/use case/environment/region, active manifest, traffic weights; gate digest (ReleaseGateDecision), approvers, canary cohort, rollback trigger | Chapter 27 |
+| BudgetReservation | Usage/Cost Ledger | reservation ID, owner run/node, resource, amount, consumed/released, expiry, ledger version | Chapter 28 |
 
 # Appendix D — Choosing an Agent Framework
 
-> **Evidence context:** The landscape summary is based on current framework documentation for OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Amazon Bedrock multi-agent collaboration, LangGraph, LlamaIndex Workflows, PydanticAI durable execution, Dapr Agents, and DBOS. It records declared capabilities, not a comparative production certification. **[R29][R31][R32][R33][R34][R35][R36][R37][R38]**
-
-| **Framework** | **Strength** | **Enterprise caution** | **Recommended placement** |
-| --- | --- | --- | --- |
-| OpenAI Agents SDK | Compact Python runtime for agents, tools, handoffs, guardrails, structured outputs, sessions, tracing, MCP, HITL, RunState, and sandbox surfaces. | SDK state is not enterprise workflow truth; protect credentials, authorization, effects, and long waits outside it. | Bounded AgentRuntime adapter. Book baseline: `openai-agents==0.22.2` with `openai==3.13.0` in the offline profile. |
-| LangGraph | Graph-oriented stateful agent orchestration with persistence and interrupts. | Graph state and persistence semantics still need enterprise identity, effects, policy, release, and audit integration. | Use for application-level graph orchestration when its persistence model fits; keep external writes governed. |
-| Microsoft Agent Framework | Agent and workflow abstractions aligned with Microsoft ecosystems. | Avoid binding public enterprise contracts to framework-specific messages or state. | Use behind adapters when Azure and Microsoft identity/tooling are strategic. |
-| Google ADK | Composable agents and tools with Google-cloud integration. | Cloud-native convenience does not replace provider-neutral run, task, policy, effect, and evidence contracts. | Use for Google-centric implementations behind the same platform boundary. |
-| PydanticAI | Typed Python agent development with model-provider abstractions and durable-execution integrations. | Typed outputs improve validation but do not prove authorization, truth, or effect completion. | Use for strongly typed application adapters and testable agent code. |
-| Temporal | Mature durable execution, timers, signals, retries, and workflow history. | Requires deterministic workflow discipline, compatibility strategy, and separate domain effect semantics. | Strong default for long-running enterprise workflows and recoverable coordination. |
-| DBOS | Durable workflows integrated with Python and database-backed execution. | Evaluate operational model, scale envelope, ecosystem maturity, and regional recovery requirements. | Useful when application teams want code-centric durability with a simpler operational footprint. |
-| MLflow 3.15.x | OpenTelemetry-compatible GenAI tracing, evaluation, scorers, feedback, and experimental MCP Registry surfaces. | Tracing is not audit; model judges need calibration; MCP Registry features require version pinning and maturity review. | Diagnostics and evaluation baseline pinned to 3.15.2 in this edition. |
-
-## What the framework landscape means
+> **Evidence context:** The comparison draws on current documentation for the OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Amazon Bedrock multi-agent collaboration, LangGraph and LangSmith, LlamaIndex Workflows, PydanticAI durable execution, Dapr Agents, Temporal, DBOS, MCP, A2A, OpenTelemetry GenAI conventions, and MLflow. It records declared capabilities, not a comparative production certification. The Claude Agent SDK, CrewAI, and Restate entries have no registered source in this edition; verify their current documentation and maturity before relying on them. **[R02][R05][R06][R07][R19][R20][R21][R25][R29][R31][R32][R33][R34][R35][R36][R37][R38]**
 
 |  |
 | --- |
 | **FRAMEWORKS SOLVE DIFFERENT LAYERS**  An agent SDK is not automatically a durable workflow engine; a protocol is not an authorization system; a trace product is not an audit ledger; and a managed agent runtime does not remove the enterprise’s responsibility for data, policy, and outcome risk. |
 
-| **Architecture/framework** | **Strongest contribution** | **Important gaps or risks** | **Recommended role** |
-| --- | --- | --- | --- |
-| OpenAI Agents SDK and Agents API | Clear agent/tool/handoff abstractions, guardrails, tracing, managed and self-orchestrated options; useful manager-vs-handoff distinction | Provider gravity; application still owns business transactions, delegated authorization, cross-system durability, and policy semantics | Model-facing harness behind an enterprise run/tool gateway; use handoffs only for true ownership transfer |
-| Claude Agent SDK and Managed Agents | Long-horizon harness design, hosted session/event model, sandbox/worker separation, strong guidance to start simple | Managed runtime is beta/evolving; token cost can be high; enterprise effects and cross-vendor state must remain externally governed | High-value research/coding workloads; keep authoritative run/effect/audit state portable |
-| Google ADK • A2A | Multi-language agent/workflow toolkit and an increasingly concrete open remote-agent task protocol; A2A 1.0 defines discovery, tasks, messages, artifacts, streaming, and async updates | Protocol interoperability does not guarantee capability trust, authorization equivalence, transaction semantics, or quality | ADK as one harness option; A2A gateway at cross-team/vendor boundaries with enterprise policy wrapping |
-| Microsoft Agent Framework | Converges AutoGen and Semantic Kernel concepts; agents, typed sessions/middleware, graph/functional workflows, long-task harness, telemetry and broad provider integrations | Some language/features remain preview or evolving; Azure-centric managed integrations can increase platform coupling | Good enterprise SDK choice where Microsoft ecosystem and typed middleware matter; still pair with durable/effect architecture |
-| LangGraph • LangSmith | Explicit graph state, checkpointers, interrupts, stores, time travel, human-in-the-loop, and strong trace/eval workflow | Graph checkpoints may be mistaken for complete enterprise durability; production cloud adds vendor surface; memory semantics remain application-defined | Agent-state machine and developer tooling, optionally inside a separate durable cross-service workflow kernel |
-| PydanticAI | Pythonic typed outputs/dependencies, validation, OpenTelemetry orientation, and integrations with multiple durable backends | Python-centered; durability depends on selected backend and correct activity boundaries | Strong application layer for typed agents when portability across durable engines is valuable |
-| LlamaIndex Workflows | Lightweight event-driven, async workflow model tightly integrated with retrieval/data workflows | Need careful assessment of operational durability, multi-service transactions, identity and governance for the target deployment | Data/retrieval-heavy flows and controlled event-driven pipelines; integrate through platform gateways |
-| CrewAI | Accessible crew/flow mental model, role specialization, event-driven flows, rapid prototyping and enterprise console features | Multi-agent role-play can encourage complexity; verify durability, permission, trace, and effect semantics rather than relying on abstractions | Prototyping and bounded business automations where its flow layer passes platform controls |
-| Dapr Agents | Connects agents to Dapr actors, workflows, state, messaging, resiliency, secrets, and OpenTelemetry; useful cloud-native composition | Adds sidecar/actor operational model; semantics depend on Dapr components and deployment maturity | Teams already standardized on Dapr that want durable, stateful, event-driven agents |
-| Amazon Bedrock Agents Classic / AgentCore | Bedrock Agents Classic documents a supervisor/collaborator model; its documentation states that the service is in maintenance mode and closed to new customers, with AgentCore identified for similar capabilities. | AWS lock-in, lifecycle status, and supervisor-centric topology; inspect portability, observability, migration, and service-specific limits. | Existing Classic estates or AWS-native evaluations that explicitly account for maintenance status; wrap source-system authorization and evidence externally. |
-| Temporal, DBOS, Restate, and cloud durable runtimes | Crash-resilient execution, timers, retries, signals, workflow state, long waits, and operational visibility | They do not supply agent reasoning, knowledge governance, tool semantics, or business authorization; replay constraints require discipline | Foundational execution substrate beneath or around the chosen agent harness |
-| MCP | Broad tool/resource interoperability with standardized transports and OAuth-based HTTP authorization | Authorization is optional at protocol level; token passthrough/confused-deputy risks; tool trust, risk classification, tenancy, and business policy are out of scope | Tool interoperability behind a controlled gateway—not direct unrestricted production access |
-| OpenTelemetry GenAI conventions | Emerging common vocabulary for model, agent, MCP, span, metric, and event telemetry | Conventions are evolving; full prompt/tool content creates privacy risk; semantic interoperability does not guarantee causal completeness | Canonical instrumentation base plus organization-specific run/effect/policy attributes |
+## Compare frameworks by the layer they serve
 
-### Where the industry is heading
+| **Framework or standard** | **Strength** | **Enterprise caution** | **Recommended placement** |
+| --- | --- | --- | --- |
+| OpenAI Agents SDK | Compact Python runtime for agents, tools, handoffs, guardrails, structured outputs, sessions, tracing, MCP, HITL, RunState, and sandbox surfaces; a useful manager-versus-handoff distinction | SDK state is not workflow truth; provider gravity; the application still owns credentials, authorization, effects, durability, and long waits | Bounded AgentRuntime adapter (Chapter 3); an SDK handoff moves control inside one step, never accountability (Chapter 11). Book baseline: `openai-agents==0.22.2` with `openai==3.13.0` in the offline profile |
+| Claude Agent SDK and Managed Agents | Long-horizon harness design, hosted session and event model, sandbox/worker separation, guidance to start simple | Verify feature maturity and cost before adoption; enterprise effects and cross-vendor state stay externally governed | Research and coding workloads behind the same AgentRuntime boundary; keep run, effect, and audit state portable |
+| Google ADK and A2A | Composable agents and tools with Google Cloud integration; A2A 1.0 defines agent cards, tasks, messages, artifacts, bindings, and lifecycle operations | Cloud convenience and protocol interoperability do not supply capability trust, authorization equivalence, transaction semantics, or quality | ADK as one harness option behind the platform boundary; the A2A Gateway at cross-team and vendor boundaries (Chapter 19) |
+| Microsoft Agent Framework | Agent and workflow abstractions that converge AutoGen and Semantic Kernel concepts: typed sessions and middleware, graph workflows, telemetry, broad provider integrations | Some languages and features remain preview; Azure-centric managed integrations increase coupling; do not bind public contracts to framework messages or state | Behind adapters where the Microsoft ecosystem and typed middleware matter; pair with the durable and effect architecture |
+| LangGraph and LangSmith | Explicit graph state, checkpointers, interrupts, stores, time travel, human-in-the-loop, and trace/evaluation workflow | Graph checkpoints are not complete enterprise durability; identity, effects, policy, release, and audit still need integration; memory semantics remain application-defined | Application-level graph orchestration, optionally inside a separate durable workflow; keep external writes governed |
+| PydanticAI | Typed outputs and dependencies, validation, model-provider abstraction, OpenTelemetry orientation, and durable-execution integrations | Typed outputs improve validation but prove neither authorization, truth, nor effect completion; durability depends on the chosen backend and activity boundaries | Strongly typed application adapters and testable agent code |
+| LlamaIndex Workflows | Lightweight event-driven, asynchronous workflows integrated with retrieval and data pipelines | Assess operational durability, multi-service transactions, identity, and governance for the target deployment | Retrieval-heavy flows and controlled event-driven pipelines behind platform gateways |
+| CrewAI | Accessible crew and flow model, role specialization, event-driven flows, rapid prototyping | Role-play can encourage complexity; verify durability, permission, trace, and effect semantics rather than relying on the abstraction | Prototyping and bounded automations whose flow layer passes platform controls |
+| Dapr Agents | Connects agents to Dapr actors, workflows, state, messaging, resiliency, secrets, and OpenTelemetry | Adds a sidecar and actor operational model; semantics depend on Dapr components and deployment maturity | Teams already standardized on Dapr that want durable, stateful, event-driven agents |
+| Amazon Bedrock Agents Classic / AgentCore | Bedrock Agents Classic documents a supervisor/collaborator model; its documentation states that the service is in maintenance mode and closed to new customers, with AgentCore identified for similar capabilities | AWS lock-in, lifecycle status, and supervisor-centric topology; inspect portability, observability, migration, and service-specific limits | Existing Classic estates or AWS-native evaluations that account for maintenance status; wrap source-system authorization and evidence externally |
+| Temporal | Mature durable execution, timers, signals, retries, and workflow history | Requires deterministic workflow discipline, a compatibility strategy, and separate domain effect semantics | Strong default for long-running workflows and recoverable coordination (Chapter 15) |
+| DBOS, Restate, and cloud durable runtimes | Crash-resilient workflows, timers, retries, signals, and long waits; DBOS integrates database-backed execution with Python | Supply no agent reasoning, knowledge governance, tool semantics, or business authorization; evaluate scale envelope, maturity, and regional recovery | Execution substrate beneath the agent harness when a code-centric, simpler operational footprint fits |
+| MLflow 3.15.x | GenAI tracing and evaluation: datasets, judges and scorers, feedback, and production monitoring | Tracing is not audit; model judges need calibration | Diagnostics and evaluation baseline pinned to 3.15.2 in this edition (Chapters 24 and 25) |
+| MCP | Tool and resource interoperability with standard transports and OAuth-based HTTP authorization | Authorization is optional at protocol level; token passthrough and confused-deputy risks; tool trust, risk classification, tenancy, and business policy are out of scope | Behind the MCP Gateway and Tool Gateway (Chapters 19 and 22), never direct unrestricted production access |
+| OpenTelemetry GenAI conventions | Emerging common vocabulary for model, agent, MCP, span, metric, and event telemetry | Conventions are evolving; full prompt and tool content creates privacy risk; semantic interoperability does not guarantee causal completeness | Instrumentation base plus organization-specific run, effect, and policy attributes (Chapter 24) |
+
+## Where the industry is heading
 
 1. **From chains to explicit state:** graph and workflow abstractions are replacing invisible prompt loops.
-2. **From synchronous chat to sessions/tasks:** managed runtimes and A2A now model asynchronous, interruptible, long-running work.
-3. **From bespoke plugins to protocols:** MCP standardizes tools/resources; A2A standardizes remote-agent interaction.
+2. **From synchronous chat to sessions and tasks:** managed runtimes and A2A now model asynchronous, interruptible, long-running work.
+3. **From bespoke plugins to protocols:** MCP standardizes tools and resources; A2A standardizes remote-agent interaction.
 4. **From logs to trajectories:** framework traces and OpenTelemetry conventions increasingly capture handoffs, tools, tokens, and evaluation signals.
 5. **From single-vendor demos to gateways:** enterprises need model, tool, policy, identity, and telemetry gateways to retain control across frameworks.
-6. **From prompt safeguards to capability security:** OWASP’s agentic focus reflects that the central risk is privileged action under manipulated context.
-7. **From “autonomy” to bounded agency:** the strongest public guidance recommends simple composable patterns, explicit workflows, and greater autonomy only where measurable value justifies it.
+6. **From prompt safeguards to capability security:** OWASP’s agentic list centers on privileged action under manipulated context [R15].
+7. **From “autonomy” to bounded agency:** public guidance recommends simple composable patterns and earning orchestration complexity only where measurable value justifies it [R27].
 
-### A practical way to choose
+## A practical way to choose
 
 Choose the smallest harness that expresses the agent behavior, the strongest durable engine that matches the run’s consequences, and enterprise-owned gateways for identity, policy, tools, models, telemetry, and artifacts. Do not force one framework to own all three layers.
 
-### A baseline stack by concern—not a mandate
+## A baseline stack by concern—not a mandate
 
 Each row names typical choices for one concern and the criteria that should decide among them.
 
@@ -9931,16 +9944,15 @@ Each row names typical choices for one concern and the criteria that should deci
 
 | **Research or benchmark** | **What it established** | **Architectural implication** |
 | --- | --- | --- |
-| ReAct | Interleaving reasoning and environment actions improves many interactive tasks compared with reasoning or acting alone | Agent loops need real tool feedback and explicit stop limits; reasoning text does not supply transaction safety |
-| AutoGen | Multi-agent conversation is a flexible composition mechanism for tools, models, and humans | Conversation is useful as an application abstraction, but enterprise ownership and durable task semantics must be added |
-| AgentBench | Agent performance varies substantially across interactive environments and cannot be inferred from static language benchmarks | Evaluate in environment-specific tasks with real tool/state constraints |
-| GAIA | Conceptually simple human tasks involving browsing, files, multimodality, and tools expose robustness gaps | Real-world competence is cross-capability and long-tail; “easy for a human” is not an adequate release assumption |
-| SWE-bench | Real repository issues plus executable tests offer grounded evaluation for coding agents | Prefer domains with objective environmental feedback; still require human review for broader requirements/security |
-| τ-bench | Tool agents must interact with users while following domain policies; repeated-run reliability matters | Test multi-turn policy compliance and consistency, not only final-answer quality |
-| AgentDojo | Tool-integrated agents can be benchmarked jointly for utility and prompt-injection security | Security evals must measure both attack resistance and retained task utility |
-| Long-horizon reliability research | Emerging 2026 work reports sharp degradation and compounding errors as task horizon grows | Decompose, checkpoint, verify, constrain replanning, and measure reliability by horizon; treat current results as evolving research |
+| ReAct [R01] | Interleaving reasoning and environment actions improves many interactive tasks compared with reasoning or acting alone | Agent loops need real tool feedback and explicit stop limits; reasoning text does not supply transaction safety |
+| AutoGen [R49] | Multi-agent conversation is a flexible composition mechanism for tools, models, and humans | Conversation is useful as an application abstraction, but enterprise ownership and durable task semantics must be added |
+| AgentBench [R50] | Across eight interactive environments, agent performance differs widely between models; weak long-term reasoning, decision-making, and instruction following are the main failure causes | Evaluate in environment-specific tasks with real tool and state constraints |
+| GAIA [R51] | Questions that are simple for humans but require browsing, files, multimodality, and tools expose a large gap between humans and tool-equipped models | “Easy for a human” is not an adequate release assumption; test cross-capability, long-tail tasks |
+| SWE-bench [R52] | Real repository issues with executable tests give grounded evaluation for coding agents | Prefer domains with objective environmental feedback; still require human review for broader requirements and security |
+| τ-bench [R53] | Tool agents must interact with users while following domain rules, and they behave inconsistently across repeated trials | Test multi-turn policy compliance and repeated-run consistency, not only final-answer quality |
+| AgentDojo [R54] | Tool-integrated agents can be evaluated jointly for task utility and prompt-injection security | Security evaluations must measure both attack resistance and retained task utility |
 
-The common lesson is not that “more agents” is state of the art. It is that useful agent behavior comes from environment grounding, specialized interfaces, explicit state, executable verification, and bounded iteration. Long trajectories amplify even modest per-step error; therefore architecture must create shorter verified segments and durable recovery points.
+The common lesson is not that “more agents” is state of the art. It is that useful agent behavior comes from environment grounding, specialized interfaces, explicit state, executable verification, and bounded iteration. This book's working hypothesis, not a cited result, is that long trajectories compound even modest per-step error; architecture should therefore create shorter verified segments and durable recovery points, and measure reliability by task horizon.
 
 # Appendix F — Known Limits and the Controls That Contain Them
 
@@ -10000,26 +10012,73 @@ Before an agent can mutate an enterprise system, require all of the following:
 
 # Appendix H — Glossary
 
-| **Term** | **Definition** |
-| --- | --- |
-| Acceptance engine | Deterministic component deciding whether executable terminal criteria are satisfied. |
-| Actor | Workload identity performing an action on behalf of a subject. |
-| AgentRuntime | Provider-neutral interface for one bounded agent step. |
-| Artifact | Immutable output or evidence object with schema, hash, classification, and provenance. |
-| Capability envelope | Maximum delegated authority across action, resource, purpose, data, region, risk, time, spend, and delegation. |
-| ContextManifest | Ordered record of authorized references used for one model context. |
-| Effect | Externally observable mutation with durable intent, state, receipt, and reconciliation. |
-| EvidenceRef | Source revision or artifact reference with hash, provenance, and authorization lineage. |
-| Handoff | Explicit transfer of interaction or task ownership. |
-| InterventionRequired | State used when correctness cannot be established automatically. |
-| Plan IR | Typed proposed-work representation before compilation and scheduling. |
-| Skill | Versioned capability package of contract, instructions, tools, knowledge, policy, workflow, tests, and operations metadata. |
-| Skill Pack | Certified domain distribution of compatible Skills and shared controls. |
-| Subject | Principal whose delegated authority initiates a protected action. |
-| Unknown effect | Mutation whose outcome cannot be proven and must be reconciled. |
+Chapter 1 § The vocabulary this book assumes introduces the core terms; this glossary defines them and the rest of the book's working vocabulary. Records are listed with their fields in Appendix C.
+
+| **Term** | **Definition** | **Chapter** |
+| --- | --- | --- |
+| A2A Gateway | Control point that decides whether an external agent may receive or return a task, and terminates the A2A protocol; internal delegation belongs to the Task Service | 19 |
+| Acceptance criteria | Executable checks over authoritative state that decide whether a run succeeded; evaluated by code, never asserted by the model | 2 |
+| Acceptance engine | The only component that may mark a candidate, plan node, or answer as accepted; runs deterministic checks first and calibrated judges only where a criterion cannot be computed | 13 |
+| AcceptanceDecision | The acceptance engine's record: accepted, rejected with typed defects, or escalated, with evaluator type and evidence per criterion | 13 |
+| Activity | A unit of I/O, such as a model or tool call, that a durable workflow schedules, retries, and records | 15 |
+| Actor | The workload identity performing an action on behalf of a subject | 21 |
+| AgentRuntime | Provider-neutral interface that executes one bounded agent step: `AgentRuntime.execute(AgentStepRequest) → AgentStepResult` | 3 |
+| AgentSpec | The versioned definition of an agent: instructions, required Skills, topology, and owner | 4 |
+| AgentStepRequest / AgentStepResult | The platform contract into and out of one agent step; the result's status is `completed`, `needs_input`, `proposed_action`, or `failed` | 3 |
+| API Gateway | Control point that decides whether a caller is admitted to the platform at all | 1 |
+| Approval | A human decision bound to one exact proposal and its expiry (ApprovalRequest, ApprovalDecision, Approval Service); it never replaces reauthorization at commit | 14 |
+| Artifact | Immutable output or evidence object with schema, hash, classification, and provenance | 4 |
+| Audience binding | Restricting a credential to one intended recipient so it cannot be replayed against another service | 21 |
+| Authorization | The policy decision over subject, actor, purpose, resource, and action; distinct from a human approval | 21 |
+| Canary | Exposing a change to a bounded cohort of real traffic with explicit stop conditions before full release | 27 |
+| Capability envelope | The platform-computed maximum scope a run or child task may use (actions, resources, purpose, data, region, risk, time, spend, delegation), identified by its `grant_id`; a child's envelope is a provable subset of its parent's | 21 |
+| Causal run trace | One run's linked spans across workflow, model, tools, approvals, and effects; links to the authoritative records and replaces none | 24 |
+| Change class | The classification of a proposed change; with the use-case tier it sets review depth | 25 |
+| ChangeBundle | A proposed change to versioned objects; it becomes a ReleaseManifest only when promoted | 27 |
+| Child task | Durable delegated work with one owner, carried by a TaskEnvelope and executed as a child workflow | 18 |
+| Compensation | A new, authorized business action that reverses a committed effect; it never erases the original receipt | 22 |
+| ContextManifest | Record of exactly what one agent step's context contained and why: ordered segments with source, trust tier, authorization decision, and token allocation | 6 |
+| Credential lease | A short-lived, audience-bound credential minted after authorization for one downstream call; the proof that accompanies a capability envelope's scope | 21 |
+| Deterministic shell | The six gates around a model proposal: propose, validate, authorize (including any human approval), commit, verify, accept | 2 |
+| Downscoping | Deriving a narrower credential from a broader one so delegated work never exceeds its delegator's authority | 21 |
+| Effect | An externally observable mutation with durable intent, state, receipt, and reconciliation | 22 |
+| Effect ledger | The Effect Service's durable record of every external change attempted, its idempotency key, and its confirmed outcome | 22 |
+| Effect risk class (R0–R4) | Classification of one tool effect, from R0 pure transform to R4 irreversible, privileged, or financial action that an agent may only propose | 22 |
+| EnvironmentBinding | Says which ReleaseManifest new runs receive for a tenant, use case, environment, and region; rollback changes it | 27 |
+| EvaluationResult | One evaluator's score for one case and attempt, with evaluator type and version | 25 |
+| EvidenceRef | Source revision or artifact reference with hash, provenance, and authorization lineage | 6 |
+| Federated task | A child task that crosses a trust boundary to an external agent through the A2A Gateway | 19 |
+| Global control tier | The deployment tier that publishes signed, immutable definitions and holds no run state | 4 |
+| Guardrail | A probabilistic detector, such as an input or output check; its finding feeds a policy point and never decides authorization | 20 |
+| Handoff | An accountable transfer of task or interaction ownership that takes effect only when the recipient acknowledges; a framework handoff moves control, not accountability | 11 |
+| Idempotency key | A caller-supplied identifier that lets a downstream system recognize a repeated request as the same request | 22 |
+| InterventionRequired | Run, task, or effect state used when correctness cannot be established automatically; it opens an intervention task | 15, 22 |
+| Intervention task | A typed request for human help with an uncertain run; its response is an input to the run and never approves an effect | 14 |
+| Layer | A deployable unit of the architecture (for example, Model access or Durable execution); layers serve the planes | 4 |
+| LLM Gateway | Control point that decides which model may answer under which data policy, and enforces model routing, privacy, budgets, and evidence | 4 |
+| MCP Gateway | Control point that terminates MCP and decides whether an external server and tool are trusted and eligible | 19 |
+| Plan IR | Typed representation of proposed work that is compiled and checked before any node is scheduled | 12 |
+| Plane | An ownership domain; the seven planes give every authoritative record one owner | 4 |
+| Provenance | Where content came from, under what authority it was retrieved, and how far it may be trusted | 5, 6 |
+| Purpose | Why an action is requested; carried with subject and actor so a valid identity cannot be reused for an unrelated operation | 21 |
+| Regional execution cell | The regional unit that holds a run's control, workflow, workers, gateways, context, and effect ledger | 4 |
+| Release gate | The decision whether a candidate may be promoted, recorded as a ReleaseGateDecision | 25 |
+| ReleaseManifest | The immutable, signed graph of every behavior-relevant version in a release; fixes the eligible Skill and pack set | 27 |
+| Run | One admitted unit of work with a RunManifest; it contains a workflow execution whose nodes run activities, agent steps, or child tasks | 4, 15 |
+| RunManifest | Per-run record written once at admission: the ReleaseManifest digest plus what was resolved for this run | 4 |
+| Skill | Versioned capability package: interface, instructions, eligible tools, knowledge, policy, risk ceiling, evaluation, owner, digest | 8 |
+| Skill Pack | Certified, co-released set of compatible Skills with shared policy and evaluations; installing one grants nothing | 9 |
+| Subject | The principal whose delegated authority initiates a protected action | 21 |
+| TaskEnvelope | The contract every child task carries, in eight field groups | 18 |
+| Tool Gateway | Control point that decides whether an effect may happen, for this subject, exactly once; protocol-agnostic | 2, 22 |
+| Trajectory | A run's ordered decisions viewed for evaluation | 25 |
+| Trust tier | The rank of a context segment's origin, from tier 1 system instructions to tier 4 retrieved data that can never direct behavior | 6 |
+| Unknown | Effect state when a mutation may have reached the downstream system and the platform holds neither a receipt nor proof of absence; it blocks retry and dependent work | 22 |
+| Use-case tier (T0–T4) | Classification of a whole use case that sets governance and release depth; never lower than its most dangerous eligible effect requires | 26 |
+| ValidationReport | The release evidence for one candidate: evaluation comparisons, other test results, and slice regressions | 25 |
+| Workflow execution | The durable, replayable history that owns a run's state; one active execution per run generation | 15 |
 
 # Appendix I — Companion Implementation Guide: Harborlight Mortgage
-
 
 This appendix explains how to run and verify the book's companion code.
 
@@ -10028,27 +10087,18 @@ This appendix explains how to run and verify the book's companion code.
 * Python 3.13
 * OpenAI Agents SDK 0.22.2
 * OpenAI Python SDK 3.13.0 (the exact offline-profile pin; the pinned Agents SDK declares the compatible `openai` 3.x range)
-* MLflow 3.15.2 (the pinned example baseline; re-verify current releases before implementation)
+* MLflow 3.15.2 (the pinned example baseline [R21]; re-verify current releases before implementation)
 * Pydantic 2
 
-MLflow 3.15.0 introduced the MCP Registry and multimodal trace judges; 3.15.2 adds immutable evaluation dataset versions and scorer ensembles. The examples deliberately pin versions so a reader can reproduce behavior.
+The examples deliberately pin versions so a reader can reproduce behavior.
 
-## Run the repository examples and tests
+## Run the examples, tests, and demo
 
-BASH · implementation excerpt
+From the repository root:
 
-```bash
-make examples-run
-.venv-examples/bin/python -m pytest tests/mortgage_case -q
-```
-
-## Run the deterministic demo
-
-BASH · implementation excerpt
-
-```bash
-.venv-examples/bin/python -m mortgage_case --chapter 3 --scenario happy_path --offline --json
-```
+1. `make examples-run` executes every registered example's tests.
+2. `.venv-examples/bin/python -m pytest tests/mortgage_case -q` runs the mortgage-case tests.
+3. `.venv-examples/bin/python -m mortgage_case --chapter 3 --scenario happy_path --offline --json` runs the deterministic demo through checkpoint C03.
 
 The direct OpenAI Python SDK adapter and OpenAI Agents SDK adapter are optional
 provider integrations behind provider-neutral contracts. The default offline path
@@ -10068,36 +10118,14 @@ requires credentials or a network connection.
 * `examples/observability/mlflow_evaluation.py` — `mlflow.genai.evaluate` dataset/scorer orchestration
 * `code-gap.md` — chapter-by-chapter C04–C28 implementation roadmap
 
-## Corrections and closure notes
-
-* SDK HITL now returns a structured RunResult; it no longer throws serialized run state in an exception.
-* The protected write tool is actually registered, and it carries an enterprise approval ID and proposal hash to the gateway.
-* MLflow evaluation is a synchronous orchestration call that may invoke an async predictor; the wrapper is no longer incorrectly declared async.
-* Delegated authority now narrows purpose and cost as well as action, resource, data class, region, risk, time, and depth.
-* Mutating tools require stable idempotency keys; ambiguous connector exceptions move effects to unknown for reconciliation.
-* Added proposal-bound approval, CloudEvents/outbox, artifact-adoption policy, supply-chain attestation, kill-switch, and recovery-objective examples.
-* Approval timestamps must be timezone-aware and causal; expiration is an exclusive boundary.
-* Skill and Skill Pack versions use SemVer precedence; duplicate packs fail, and deprecated artifacts require explicit replay mode.
-* ReAct stops repeated identical observations instead of looping to a turn limit.
-* Compiled plans bind the plan to the policy envelope and make conservative cost-reservation semantics explicit.
-* The C01–C03 foundation has 19 focused mortgage unit/contract tests in this revision; the generated example report and CI output remain authoritative for the complete count.
-* The direct OpenAI Responses adapter is contract-tested with a fake client, so the test proves request shape and platform-schema translation without a network call.
-* The MLflow mortgage integration proves that `disable_openai_agent_tracer=False` exposes Agents SDK AgentRunner, agent, and tool spans while `trace_include_sensitive_data=False` prevents raw fixture content from entering model trace payloads.
-
 The live provider path still requires credentials and should be treated as an
-explicit integration test, not as evidence supplied by the offline suite. Treat
-the book's Skill and Skill Pack as platform-owned packaging patterns, not as
-aliases for A2A AgentSkill metadata or the optional Skills-over-MCP extension.
+explicit integration test, not as evidence supplied by the offline suite. As
+Chapter 8 notes, the book's Skill and Skill Pack are platform-owned packaging
+patterns, not aliases for A2A AgentSkill metadata or Skills over MCP.
 
 ## Rebuild and verify
 
-BASH · implementation excerpt
-
-```bash
-.venv-examples/bin/python -m compileall -q mortgage_case examples tests
-make examples-run
-.venv-examples/bin/python -m mortgage_case --chapter 3 --scenario happy_path --offline --json
-```
+Run `.venv-examples/bin/python -m compileall -q mortgage_case examples tests`, then repeat the three commands above. The repository README records the companion code's correction history.
 
 # Appendix J — Prompt and Acceptance Criteria for a Coding Agent
 
@@ -10144,7 +10172,7 @@ For each major problem use this exact structure:
 
 1. **Executive architecture memo** — central thesis, design principles, key decisions, risks, and build/buy boundaries.
 2. **Problem inventory** — severity, affected stakeholders, current failure modes, and measurable success criteria.
-3. **Layered reference architecture** — experience, edge, agent control, run control, durable execution, model, capability/tool, data/knowledge, sandbox, identity/policy, observability/evaluation, and governance layers.
+3. **Layered reference architecture** — experience, edge and admission, agent registry and release, run control, durable execution, model access, tool and protocol access, knowledge and context services, sandboxed execution, trust and governance, and operations and improvement layers (the layers of Chapter 4).
 4. **Execution lifecycle** — run state machine, pause/resume, plan revisions, child tasks, approvals, cancellation, compensation, and terminal semantics.
 5. **Identity and authorization design** — subject+actor model, token exchange, audience binding, scope intersection, tenant isolation, revocation, and long-run credential refresh.
 6. **Data and memory design** — separate conversation, workflow, durable execution, working memory, long-term memory, enterprise knowledge, artifacts, traces, and audit; include retention and deletion.
@@ -10269,7 +10297,7 @@ A submission is accepted only if all are true:
 * Include failure paths and operator actions, not only happy paths.
 * End with a prioritized 30/60/90-day plan, staffing/ownership model, and list of decisions that require enterprise-specific input.
 
-# Appendix K — References
+# Appendix K — References and Evidence Scope
 
 ## Citation policy
 
@@ -10279,6 +10307,12 @@ References are numbered by stable registry identifier. Each citation supports on
 
 * **[R01]** Yao et al. (2023). *ReAct: Synergizing Reasoning and Acting in Language Models*. ICLR 2023 / arXiv:2210.03629. [Primary or authoritative source](https://arxiv.org/abs/2210.03629). Accessed 13 September 2026. **Supports:** Defines ReAct and reports benchmark results for interleaved reasoning and action.
 * **[R43]** Little, John D. C. (1961). *A Proof for the Queuing Formula: L = λW*. Operations Research 9(3). [Primary or authoritative source](https://doi.org/10.1287/opre.9.3.383). Accessed 13 September 2026. **Supports:** Primary source for Little’s Law; book sizing equations remain workload-specific approximations.
+* **[R49]** Wu et al. (2023). *AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation*. arXiv:2308.08155. [Primary or authoritative source](https://arxiv.org/abs/2308.08155). Accessed 10 October 2026. **Supports:** Presents AutoGen, a framework in which multiple agents converse using LLMs, human input, and tools. Supports only the description of multi-agent conversation as a composition mechanism.
+* **[R50]** Liu et al. (2023). *AgentBench: Evaluating LLMs as Agents*. ICLR 2024 / arXiv:2308.03688. [Primary or authoritative source](https://arxiv.org/abs/2308.03688). Accessed 10 October 2026. **Supports:** Introduces an eight-environment agent benchmark and reports wide performance differences between models, attributed mainly to weak long-term reasoning, decision-making, and instruction following.
+* **[R51]** Mialon et al. (2023). *GAIA: a benchmark for General AI Assistants*. arXiv:2311.12983. [Primary or authoritative source](https://arxiv.org/abs/2311.12983). Accessed 10 October 2026. **Supports:** Introduces 466 real-world questions that are simple for humans but require tools, browsing, and multimodality, and reports a large human-versus-model gap.
+* **[R52]** Jimenez et al. (2023). *SWE-bench: Can Language Models Resolve Real-World GitHub Issues?*. ICLR 2024 / arXiv:2310.06770. [Primary or authoritative source](https://arxiv.org/abs/2310.06770). Accessed 10 October 2026. **Supports:** Introduces a benchmark of real GitHub issues evaluated with executable tests.
+* **[R53]** Yao et al. (2024). *τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains*. arXiv:2406.12045. [Primary or authoritative source](https://arxiv.org/abs/2406.12045). Accessed 10 October 2026. **Supports:** Introduces a benchmark of tool agents interacting with users under domain rules and reports inconsistent behavior across repeated trials.
+* **[R54]** Debenedetti et al. (2024). *AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents*. arXiv:2406.13352. [Primary or authoritative source](https://arxiv.org/abs/2406.13352). Accessed 10 October 2026. **Supports:** Introduces an environment for evaluating tool-using agents' task utility and prompt-injection security together.
 
 ## Protocols, identity, and event standards
 
@@ -10289,19 +10323,19 @@ References are numbered by stable registry identifier. Each citation supports on
 * **[R08]** IETF (2020). *OAuth 2.0 Token Exchange*. RFC 8693. [Primary or authoritative source](https://datatracker.ietf.org/doc/html/rfc8693). Accessed 13 September 2026. **Supports:** Defines subject/actor semantics for token exchange, delegation, and impersonation.
 * **[R09]** IETF (2020). *Resource Indicators for OAuth 2.0*. RFC 8707. [Primary or authoritative source](https://datatracker.ietf.org/doc/html/rfc8707). Accessed 13 September 2026. **Supports:** Defines resource indicators used to constrain token audience.
 * **[R10]** IETF (2025). *OAuth 2.0 Protected Resource Metadata*. RFC 9728. [Primary or authoritative source](https://datatracker.ietf.org/doc/html/rfc9728). Accessed 13 September 2026. **Supports:** Defines protected-resource metadata used in authorization discovery.
-* **[R14]** ISO/IEC (2023). *Information technology — Artificial intelligence — Management system*. ISO/IEC 42001:2023. [Primary or authoritative source](https://www.iso.org/standard/42001). Accessed 13 September 2026. **Supports:** Defines requirements for an AI management system and continual improvement.
 * **[R19]** OpenTelemetry (2026). *Generative AI Semantic Conventions*. Development status. [Primary or authoritative source](https://github.com/open-telemetry/semantic-conventions-genai). Accessed 13 September 2026. **Supports:** Defines emerging GenAI spans, events, metrics, agent, provider, and MCP mappings.
 * **[R41]** W3C (2023). *Web Content Accessibility Guidelines (WCAG) 2.2*. W3C Recommendation. [Primary or authoritative source](https://www.w3.org/TR/WCAG22/). Accessed 13 September 2026. **Supports:** Defines accessibility success criteria relevant to human-review interfaces.
-* **[R44]** Object Management Group (2014). *Business Process Model and Notation (BPMN)*. Version 2.0.2, formal, January 2014. [Primary or authoritative source](https://www.omg.org/spec/BPMN/2.0.2). Accessed 13 September 2026. **Supports:** Defines BPMN process modelling notation and its execution semantics. Supports the existence and semantics of the standard only, not any claim about its suitability for agentic planning.
-* **[R45]** Object Management Group (2024). *Decision Model and Notation (DMN)*. Version 1.5, formal, August 2024. [Primary or authoritative source](https://www.omg.org/spec/DMN/1.5). Accessed 13 September 2026. **Supports:** Defines DMN decision tables, hit policies, and FEEL. Supports the existence and semantics of the standard only, not any claim about agent decision quality.
-* **[R46]** Object Management Group (2016). *Case Management Model and Notation (CMMN)*. Version 1.1, formal, December 2016. [Primary or authoritative source](https://www.omg.org/spec/CMMN/1.1). Accessed 13 September 2026. **Supports:** Defines CMMN case modelling for unordered, event-driven work. Supports the existence and semantics of the standard only.
-* **[R47]** Object Management Group (2019). *Semantics of Business Vocabulary and Business Rules (SBVR)*. Version 1.5, formal, December 2019. [Primary or authoritative source](https://www.omg.org/spec/SBVR/1.5). Accessed 13 September 2026. **Supports:** Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only.
+* **[R44]** Object Management Group (2014). *Business Process Model and Notation (BPMN)*. Version 2.0.2, formal, January 2014. [Primary or authoritative source](https://www.omg.org/spec/BPMN/2.0.2). Accessed 14 September 2026. **Supports:** Defines BPMN process modelling notation and its execution semantics. Supports the existence and semantics of the standard only, not any claim about its suitability for agentic planning.
+* **[R45]** Object Management Group (2024). *Decision Model and Notation (DMN)*. Version 1.5, formal, August 2024. [Primary or authoritative source](https://www.omg.org/spec/DMN/1.5). Accessed 14 September 2026. **Supports:** Defines DMN decision tables, hit policies, and FEEL. Supports the existence and semantics of the standard only, not any claim about agent decision quality.
+* **[R46]** Object Management Group (2016). *Case Management Model and Notation (CMMN)*. Version 1.1, formal, December 2016. [Primary or authoritative source](https://www.omg.org/spec/CMMN/1.1). Accessed 14 September 2026. **Supports:** Defines CMMN case modelling for unordered, event-driven work. Supports the existence and semantics of the standard only.
+* **[R47]** Object Management Group (2019). *Semantics of Business Vocabulary and Business Rules (SBVR)*. Version 1.5, formal, December 2019. [Primary or authoritative source](https://www.omg.org/spec/SBVR/1.5). Accessed 14 September 2026. **Supports:** Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only.
 
 ## Security, governance, law, and assurance
 
 * **[R11]** NIST (2020). *Zero Trust Architecture*. NIST SP 800-207. [Primary or authoritative source](https://csrc.nist.gov/pubs/sp/800/207/final). Accessed 13 September 2026. **Supports:** Supports resource-centric, continuously evaluated trust and explicit policy enforcement.
 * **[R12]** NIST (2023). *Artificial Intelligence Risk Management Framework (AI RMF 1.0)*. NIST AI 100-1. [Primary or authoritative source](https://www.nist.gov/itl/ai-risk-management-framework). Accessed 13 September 2026. **Supports:** Defines voluntary Govern, Map, Measure, and Manage risk-management functions.
 * **[R13]** NIST (2024). *Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile*. NIST AI 600-1. [Primary or authoritative source](https://doi.org/10.6028/NIST.AI.600-1). Accessed 13 September 2026. **Supports:** Provides cross-sector generative-AI risk considerations across the AI lifecycle.
+* **[R14]** ISO/IEC (2023). *Information technology — Artificial intelligence — Management system*. ISO/IEC 42001:2023. [Primary or authoritative source](https://www.iso.org/standard/42001). Accessed 13 September 2026. **Supports:** Defines requirements for an AI management system and continual improvement.
 * **[R15]** OWASP GenAI Security Project (2026). *OWASP Top 10 for Agentic Applications*. 2026 edition. [Primary or authoritative source](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/). Accessed 13 September 2026. **Supports:** Prioritizes major agentic-application security risks and mitigations.
 * **[R16]** OWASP Cheat Sheet Series (2026). *AI Agent Security Cheat Sheet*. Living guidance. [Primary or authoritative source](https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html). Accessed 13 September 2026. **Supports:** Provides practical controls for identity, tools, memory, output, and monitoring.
 * **[R17]** SLSA Project (2026). *SLSA Specification*. v1.2. [Primary or authoritative source](https://slsa.dev/spec/v1.2). Accessed 13 September 2026. **Supports:** Defines supply-chain security tracks, levels, and provenance requirements.
@@ -10333,7 +10367,7 @@ References are numbered by stable registry identifier. Each citation supports on
 * **[R36]** Pydantic (2026). *PydanticAI Durable Execution*. Current documentation. [Primary or authoritative source](https://pydantic.dev/docs/ai/capabilities/durable_execution/overview). Accessed 13 September 2026. **Supports:** Documents typed agent integration with durable-execution backends.
 * **[R37]** Dapr (2026). *Dapr Agents*. Current documentation. [Primary or authoritative source](https://docs.dapr.io/developing-ai/dapr-agents). Accessed 13 September 2026. **Supports:** Documents Dapr agent integration with workflows, actors, state, messaging, resiliency, and telemetry.
 * **[R38]** DBOS (2026). *DBOS AI Quickstart*. Current documentation. [Primary or authoritative source](https://docs.dbos.dev/ai/ai-quickstart). Accessed 13 September 2026. **Supports:** Documents durable long-running agent workflows, queues, waits, and framework integrations.
-* **[R48]** Rahimi, R. (2026). *Policy Logic Forge: compiling compliance policy text into typed, source-grounded executable decision logic*. Repository documentation, ARCHITECTURE.md §1.1. [Primary or authoritative source](https://github.com/rrahimi-uci/policy-logic-forge). Accessed 13 September 2026. **Supports:** Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction.
+* **[R48]** Rahimi, R. (2026). *Policy Logic Forge: compiling compliance policy text into typed, source-grounded executable decision logic*. Repository documentation, ARCHITECTURE.md §1.1. [Primary or authoritative source](https://github.com/rrahimi-uci/policy-logic-forge). Accessed 14 September 2026. **Supports:** Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction.
 
 ## Where each claim is supported
 
@@ -10354,7 +10388,7 @@ This matrix defines exactly what each citation is permitted to support. It preve
 | R11 | official guidance | Supports resource-centric, continuously evaluated trust and explicit policy enforcement. | Verified 2026-09-13; re-check living sources before use. |
 | R12 | official guidance | Defines voluntary Govern, Map, Measure, and Manage risk-management functions. | Verified 2026-09-13; re-check living sources before use. |
 | R13 | official guidance | Provides cross-sector generative-AI risk considerations across the AI lifecycle. | Verified 2026-09-13; re-check living sources before use. |
-| R14 | standard | Defines requirements for an AI management system and continual improvement. | Verified 2026-09-13; re-check living sources before use. |
+| R14 | management system standard | Defines requirements for an AI management system and continual improvement. | Verified 2026-09-13; re-check living sources before use. |
 | R15 | community guidance | Prioritizes major agentic-application security risks and mitigations. | Verified 2026-09-13; re-check living sources before use. |
 | R16 | community guidance | Provides practical controls for identity, tools, memory, output, and monitoring. | Verified 2026-09-13; re-check living sources before use. |
 | R17 | community standard | Defines supply-chain security tracks, levels, and provenance requirements. | Verified 2026-09-13; re-check living sources before use. |
@@ -10389,6 +10423,12 @@ This matrix defines exactly what each citation is permitted to support. It preve
 | R46 | standard | Defines CMMN case modelling for unordered, event-driven work. Supports the existence and semantics of the standard only. | Verified 2026-09-14; re-check living sources before use. |
 | R47 | standard | Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only. | Verified 2026-09-14; re-check living sources before use. |
 | R48 | framework documentation | Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction. | Verified 2026-09-14; re-check living sources before use. |
+| R49 | research | Presents AutoGen, a framework in which multiple agents converse using LLMs, human input, and tools. Supports only the description of multi-agent conversation as a composition mechanism. | Verified 2026-10-10; re-check living sources before use. |
+| R50 | research | Introduces an eight-environment agent benchmark and reports wide performance differences between models, attributed mainly to weak long-term reasoning, decision-making, and instruction following. | Verified 2026-10-10; re-check living sources before use. |
+| R51 | research | Introduces 466 real-world questions that are simple for humans but require tools, browsing, and multimodality, and reports a large human-versus-model gap. | Verified 2026-10-10; re-check living sources before use. |
+| R52 | research | Introduces a benchmark of real GitHub issues evaluated with executable tests. | Verified 2026-10-10; re-check living sources before use. |
+| R53 | research | Introduces a benchmark of tool agents interacting with users under domain rules and reports inconsistent behavior across repeated trials. | Verified 2026-10-10; re-check living sources before use. |
+| R54 | research | Introduces an environment for evaluating tool-using agents' task utility and prompt-injection security together. | Verified 2026-10-10; re-check living sources before use. |
 
 # Appendix L — Capacity, Resilience, and Release Acceptance
 

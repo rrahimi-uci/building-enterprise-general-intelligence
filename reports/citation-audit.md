@@ -1,8 +1,8 @@
 # Citation Audit — Book v1.0.0
 
 **Result:** PASS
-**References:** 48
-**Citation occurrences:** 115
+**References:** 54
+**Citation occurrences:** 139
 **Verified:** 2026-09-13
 
 All sources were checked against their recorded claim scope. The audit validates attribution, not the book's independently authored architecture recommendations.
@@ -59,6 +59,12 @@ All sources were checked against their recorded claim scope. The audit validates
 | R46 | verified | OMG specification index page | 1.1 (December 2016) is the latest formal version; CMMN has not been revised since. |
 | R47 | verified | OMG specification index page | 1.5 (December 2019) is the latest formal version. |
 | R48 | verified_with_caveat | direct inspection of the repository at ARCHITECTURE.md §1.1 | Book-authored project. The 44% figure is self-reported from one documented run on one corpus and was read from the source repository, not independently reproduced. |
+| R49 | verified | direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope) |  |
+| R50 | verified | direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope) |  |
+| R51 | verified | direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope) |  |
+| R52 | verified | direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope) |  |
+| R53 | verified | direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope) |  |
+| R54 | verified | direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope) |  |
 
 ## Errors
 

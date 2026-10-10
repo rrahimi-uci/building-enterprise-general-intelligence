@@ -10,11 +10,11 @@
 - **chapters:** `28`
 - **appendices:** `12`
 - **diagrams:** `42`
-- **code_blocks:** `60`
-- **longtables:** `150`
+- **code_blocks:** `57`
+- **longtables:** `149`
 - **compact_tables:** `104`
 - **callout_tables:** `71`
-- **citation_occurrences:** `115`
+- **citation_occurrences:** `139`
 - **bundled_fonts:** `8`
 
 ## Quality controls

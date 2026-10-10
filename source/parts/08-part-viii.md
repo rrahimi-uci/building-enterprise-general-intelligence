@@ -95,7 +95,7 @@ The tier sets the minimum controls. Review stays predictable when every rule has
 
 Principles and standards are argued; policy-as-code and configuration are executed.
 
-The release gate (Chapter 25's ReleaseGateDecision) takes two inputs: the use case's tier and the change class. In T0–T2 use cases, pre-approved low-risk change classes (metadata, documentation, evaluated prompt wording) may promote automatically on passing gates. A change in Chapter 25's "Require human governance" row (§ Close the loop without handing control to the model) always requires a named approver, whatever the tier. In T3–T4 use cases every behavior change needs the release owner's recorded approval and a canary; T4 adds independent assurance.
+The release gate (Chapter 25's ReleaseGateDecision) takes two inputs: the use case's tier and the change class. In T0–T2 use cases, pre-approved low-risk change classes (metadata, documentation, evaluated prompt wording) may promote automatically on passing gates. A change in the "Require human governance" row of Chapter 25 § Close the loop without handing control to the model always requires a named approver, whatever the tier. In T3–T4 use cases every behavior change needs the release owner's recorded approval and a canary; T4 adds independent assurance.
 
 A design review covers each area below; the chapter in parentheses holds its controls: outcome and acceptance (Chapters 2 and 13), deterministic boundary (2), state and effect ownership (15, 22), identity and delegation (21), context and memory (6), tool, MCP, and A2A trust (19), threats (20), evaluation truth (25), observability and privacy (24), recovery and release (27), capacity and cost (28), human oversight (14), and portability (3).
 

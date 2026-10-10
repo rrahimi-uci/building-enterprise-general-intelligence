@@ -211,7 +211,7 @@ The model below carries one field or more from each group, and the Task Service 
 ## If this fails in production
 
 1. Build the durable task tree and identify the current owner of every node.
-2. Verify each child grant is a subset of the parent grant (Chapter 21 § Capability-envelope subset proof).
+2. Verify each child grant is a subset of the parent grant (the subset proof in Chapter 21 § A sensible place to start).
 3. Inspect join semantics, missing artifacts, duplicates, and conflicts.
 
 If chat is the coordination record or each child gets fresh limits, see AP-08 and AP-11 in Chapter 17.
@@ -251,7 +251,7 @@ Inside one platform, the Task Service enforces these rules directly. Chapter 19 
 
 |  |
 | --- |
-| **WHERE THE MORTGAGE CASE STANDS** Harborlight consumes a third-party employment-verification MCP server, and the property-review specialist from Chapter 18 is now a partner-operated agent reached through A2A. Protocol conformance makes messages interoperable; it does not make the endpoint trusted or the artifact safe to adopt. |
+| **WHERE THE MORTGAGE CASE STANDS** Harborlight consumes a third-party income-verification MCP server, and the property-review specialist from Chapter 18 is now a partner-operated agent reached through A2A. Protocol conformance makes messages interoperable; it does not make the endpoint trusted or the artifact safe to adopt. |
 
 |  |
 | --- |

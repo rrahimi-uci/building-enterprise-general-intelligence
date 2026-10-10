@@ -49,7 +49,7 @@ Read this as one architecture story, not as a stack of unrelated technology
 surveys. Start with the map, then choose the reader path that matches your
 decision. Most chapters move from a concrete problem through boundaries,
 architecture, implementation, failure modes, measurement, and trade-offs; the
-pattern and anti-pattern catalogs (Chapters 16–17) are reference cards. You
+pattern cards (Appendix A) and anti-pattern catalog (Chapter 17) are reference cards. You
 can use the review questions to test whether the idea survives contact with
 your own system.
 

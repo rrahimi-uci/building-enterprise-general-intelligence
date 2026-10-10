@@ -4,6 +4,15 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Appendices and final cross-Part pass (continuity review, WP-A)
+
+- Appendix B names the Chapter 17 card behind each symptom and classifies a missing receipt in Chapter 22's effect states.
+- Appendix C lists the contracts the chapters now define (28 rows, from RunManifest to BudgetReservation), each with its owner and a "Defined in" chapter; AgentStep and the HumanActionAuthorization records are gone.
+- Appendix D merges its two framework tables into one, absorbs Chapter 27's stack table as its own section, and drops the uncited MLflow MCP Registry claim; unsourced rows are flagged.
+- Appendix E cites six newly registered, verified papers (R49–R54: AutoGen, AgentBench, GAIA, SWE-bench, τ-bench, AgentDojo); the uncited long-horizon row becomes a stated hypothesis.
+- Appendix H grows to 61 terms with the chapter that develops each; Appendix I drops its bash fences, the uncited "3.15.0 introduced" sentence, and the correction notes (moved to the README); Appendix J uses Chapter 4's layer names; Appendix K files ISO/IEC 42001 under governance, shows each reference's own access date, and carries its full title.
+- Cross-Part fixes: Figure 17-4 shows the evidence-package case and an approval keyed by logical effect; Figure 23-1 names the Access Broker/STS; broken § pointers in Chapters 18 and 26 and Appendix A resolve; Chapter 4's model-vendor boundary and Chapter 22's model fallback point to the chapters that now own them; `code-gap.md` uses approval terminology (D-22).
+
 ### Part V (Chapters 18–19, continuity review)
 
 - Chapter 18 defines the task lifecycle and owns the one TaskEnvelope: its eight field groups move in from Chapter 19, and the code becomes the tested `contracts#task` region (idempotent creation, depth and budget withdrawal, envelope-subset hook).

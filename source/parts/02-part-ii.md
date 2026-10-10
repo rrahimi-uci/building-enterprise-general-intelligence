@@ -157,7 +157,7 @@ It applies deterministic eligibility before any optimization; Chapter 28 treats 
 | Orchestrator → tool | Requested action and delegated context | PDP decision, downscoped token, idempotency, dry-run/approval, audit | Chapters 21–22 |
 | Agent → agent | Claims, artifacts, status, requested authority | Authenticated channel, signed task envelope, scope intersection, limits | Chapters 18–19 |
 | Sandbox → network | Code, browser activity, generated payloads | Default-deny egress, DNS/HTTP proxy, quotas, filesystem isolation | Chapter 23 |
-| Platform → model vendor | Prompts, retrieved content, telemetry | Redaction, residency policy, retention controls, vendor allowlist | Chapter 19 |
+| Platform → model vendor | Prompts, retrieved content, telemetry | Redaction, residency policy, retention controls, vendor allowlist | § What the LLM Gateway enforces |
 | Result → destination | Reports, emails, records, deployments | Output classification, provenance, approval, destination authorization | Chapters 14 and 22 |
 
 ## Global control and regional cells

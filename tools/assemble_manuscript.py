@@ -25,15 +25,23 @@ def replace_between(text: str, start_heading: str, end_heading: str, replacement
     return text[:start] + replacement.rstrip() + "\n\n" + text[end:]
 
 
+def accessed(r: dict) -> str:
+    """Format the recorded verification date, e.g. 2026-09-13 -> 13 September 2026."""
+    months = ("January", "February", "March", "April", "May", "June", "July",
+              "August", "September", "October", "November", "December")
+    year, month, day = (int(x) for x in r["verification"]["checked_on"].split("-"))
+    return f"{day} {months[month - 1]} {year}"
+
+
 def render_reference_sections(text: str, references: list[dict]) -> str:
     category_order = [
         ("Research foundations", {"research"}),
         ("Protocols, identity, and event standards", {"protocol specification", "internet standard", "standard", "observability standard"}),
-        ("Security, governance, law, and assurance", {"official guidance", "community guidance", "community standard", "law", "official legal guidance"}),
+        ("Security, governance, law, and assurance", {"official guidance", "community guidance", "community standard", "management system standard", "law", "official legal guidance"}),
         ("Frameworks, evaluation, and industry implementation guidance", {"framework documentation", "framework release", "vendor documentation", "industry guidance", "industry report", "architecture pattern"}),
     ]
     ref_lines = [
-        "# Appendix K — References", "", "## Citation policy", "",
+        "# Appendix K — References and Evidence Scope", "", "## Citation policy", "",
         "References are numbered by stable registry identifier. Each citation supports only the scoped claim recorded in `config/references.json`; access dates document the verification point for online material. Standards, official guidance, community guidance, vendor documentation, research, and law are deliberately labeled rather than treated as equivalent authority.", "",
     ]
     seen = set()
@@ -44,11 +52,11 @@ def render_reference_sections(text: str, references: list[dict]) -> str:
         ref_lines += ["## " + heading, ""]
         for r in group:
             seen.add(r["id"])
-            ref_lines.append(f"* **[{r['id']}]** {r['author_or_organization']} ({r['year']}). *{r['title']}*. {r['publication_or_version']}. [Primary or authoritative source]({r['url']}). Accessed 13 September 2026. **Supports:** {r['supports']}")
+            ref_lines.append(f"* **[{r['id']}]** {r['author_or_organization']} ({r['year']}). *{r['title']}*. {r['publication_or_version']}. [Primary or authoritative source]({r['url']}). Accessed {accessed(r)}. **Supports:** {r['supports']}")
         ref_lines.append("")
     for r in references:
         if r["id"] not in seen:
-            ref_lines.append(f"* **[{r['id']}]** {r['author_or_organization']} ({r['year']}). *{r['title']}*. {r['publication_or_version']}. [Source]({r['url']}). Accessed 13 September 2026. **Supports:** {r['supports']}")
+            ref_lines.append(f"* **[{r['id']}]** {r['author_or_organization']} ({r['year']}). *{r['title']}*. {r['publication_or_version']}. [Source]({r['url']}). Accessed {accessed(r)}. **Supports:** {r['supports']}")
     # Appendix K absorbs the former Appendix M. The matrix only ever
     # made sense next to the entries it scopes, and splitting them meant a reader
     # checking a citation had to hold two appendix letters in their head.
