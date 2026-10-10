@@ -1,0 +1,233 @@
+{
+  "covers": 28,
+  "page": "US Letter 8.5x11 in",
+  "dpi": 300,
+  "records": [
+    {
+      "file": "cover-images/chapter-01-what-turns-an-llm-call-into-a-production-system.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "8e40590c3e173650a73eba6e5a531283c824762db8ed49656e4b23e60c1936c0"
+    },
+    {
+      "file": "cover-images/chapter-02-from-model-output-to-safe-action.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "d3a4015a5c1d04ba634acbc6cfb16ea9dc5ca58a0070f279ba4a3bc79bc423f1"
+    },
+    {
+      "file": "cover-images/chapter-03-keep-the-agent-framework-in-its-lane.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "bec341d94b1c80d0c6273121adbf2a48146daad972679f2e168c32d15bee2b4a"
+    },
+    {
+      "file": "cover-images/chapter-04-design-the-architecture-around-the-model.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "b7f146e849d65f18f1f12b98c94714efa16bfcd63b38dc417613cc0934d62dbb"
+    },
+    {
+      "file": "cover-images/chapter-05-give-knowledge-an-owner.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "ff9c012dbf37d58c3cd541a0f91b94d321166f741ba4db67b5c63a5c807441cd"
+    },
+    {
+      "file": "cover-images/chapter-06-build-context-without-losing-the-plot.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "f22160b0bd04f2dd1e7e74862738932ab0e62e5c14bc3c16f90a7190b46d94f7"
+    },
+    {
+      "file": "cover-images/chapter-07-build-a-paved-road-for-agent-teams.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "08eae5e1cd10e5bae05359144fe74a0ad84c0acd63f3dbf79ac9c02df757e8d7"
+    },
+    {
+      "file": "cover-images/chapter-08-package-capabilities-as-versioned-skills.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "39f1cc6ca4a8fddaf14c27a2f742cf3d3ce9a9566eab9c8dbf026b7d87814895"
+    },
+    {
+      "file": "cover-images/chapter-09-turn-skills-into-a-coherent-domain-platform.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "6b2bc59d1f009082de0b615aa6bf4d967b504626ee0f74a0f85debec8a7eb667"
+    },
+    {
+      "file": "cover-images/chapter-10-use-react-without-creating-a-runaway-loop.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "07458edd065ccb605d0fff4b5e55ca3e69afd16122a681e043fdc6f3e91e8978"
+    },
+    {
+      "file": "cover-images/chapter-11-route-the-work-without-losing-ownership.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "18014d40e0f8715105d977bcf1183e7d47fa5598eb98f17ce3a1d0a12da97fef"
+    },
+    {
+      "file": "cover-images/chapter-12-turn-proposed-plans-into-safe-executable-work.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "ad013e598ed4ef38c574950fbd6e2c83f49d7d248ba3d5fed2be4655ab33ad52"
+    },
+    {
+      "file": "cover-images/chapter-13-use-critique-to-improve-never-to-self-approve.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "36234ee456481ce55444fd11c747581742a020dce0192519967359b2797fc2c8"
+    },
+    {
+      "file": "cover-images/chapter-14-put-people-where-their-judgment-matters.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "0834f29f4fdb39b6e95f88cad55c3429bc20700d830d5b640376e3cae9bfa6cb"
+    },
+    {
+      "file": "cover-images/chapter-15-keep-long-running-work-alive-through-failure.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "0cea2a57f1f56d0651b1ce4232d11dc53b5239516aae8871677e6299f35ace97"
+    },
+    {
+      "file": "cover-images/chapter-16-choose-patterns-that-fit-real-enterprise-work.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "dd52965bd97393573625bc5d089f03c72a92e5aa338ac8c53c781524d83c92c0"
+    },
+    {
+      "file": "cover-images/chapter-17-architecture-patterns-that-fail-in-production.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "864dd442fc4d917c9f8488c23f13fba03d0f7518acf28ac68dfede1e0d2edd41"
+    },
+    {
+      "file": "cover-images/chapter-18-coordinate-specialists-without-losing-control.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "53473caa479ae7ee8b15998da4ca8ca0412ca18deac3668555432aa0d27cd976"
+    },
+    {
+      "file": "cover-images/chapter-19-crossing-system-boundaries-mcp-a2a-and-local-control.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "3fb25c3e5600a04e605b0855c448fca936a95ea2727d7ae0581a36f6bbe08745"
+    },
+    {
+      "file": "cover-images/chapter-20-security-starts-outside-the-prompt.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "ab68924a2b7f803bb3c79412099d90c8b898e63b2f5ea8a226473f76cc595f12"
+    },
+    {
+      "file": "cover-images/chapter-21-carry-identity-narrow-authority.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "d84ee4539d7b3bb5e6313b27e787c226968950ce223cd35dbc6f7c345b5a7148"
+    },
+    {
+      "file": "cover-images/chapter-22-make-external-effects-safe-to-retry.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "b64f7ca1d72dafdb17915292738b1281abcf9f5faea4429acf3bc026ea845437"
+    },
+    {
+      "file": "cover-images/chapter-23-contain-the-damage-when-a-model-is-manipulated.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "561fe1f45018625da23d07aa461edb7d9713f2f292426076d07cb5e1afc375a6"
+    },
+    {
+      "file": "cover-images/chapter-24-follow-a-run-from-request-to-verified-outcome.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "b06ecab58622b879a11f7ffb95e130e4bfedbeb2da39ef5a9920eb18cc5dc132"
+    },
+    {
+      "file": "cover-images/chapter-25-improve-the-system-without-handing-it-control.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "92a80d132790aa70b5d655833f75b00605b7e491e66e460455420af2aa969fd1"
+    },
+    {
+      "file": "cover-images/chapter-26-make-governance-part-of-how-the-platform-runs.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "29ff391d37c82d1bc738b4c3dd91693c9acfb69e0618cd95f3595beed3b10f36"
+    },
+    {
+      "file": "cover-images/chapter-27-release-new-behavior-without-breaking-work-in-flight.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "6d0f30ad0db911473ac569e4c75bf21681a1df38cae2e3e1404a3bad62fd2009"
+    },
+    {
+      "file": "cover-images/chapter-28-treat-performance-as-a-business-decision.png",
+      "pixels": [
+        2550,
+        3300
+      ],
+      "sha256": "de741d0e17e62d424567ff15e49e8a0bbe9e9a82bf9e346ff3996a89ffc0945f"
+    }
+  ],
+  "errors": [],
+  "pass": true
+}
