@@ -1,0 +1,6339 @@
+{
+ "schema_version": "1.0.0",
+ "note": "Chapter cover visuals: one US Letter portrait page (8.5 x 11 in, 300 dpi) per chapter. Rendered by tools/render_chapter_covers.py into output_dir; edit this file, never the PNGs. Node 'at' is the card centre on a 12 x 8 grid inside the diagram panel; group 'box' is [col0, row0, col1, row1]. Every label is taken from the chapter's own text.",
+ "output_dir": "cover-images",
+ "parts": [
+  {
+   "id": "I",
+   "title": "Foundations"
+  },
+  {
+   "id": "II",
+   "title": "Architecture, Knowledge, and Context"
+  },
+  {
+   "id": "III",
+   "title": "The Developer Platform"
+  },
+  {
+   "id": "IV",
+   "title": "Patterns That Work—and Those That Fail"
+  },
+  {
+   "id": "V",
+   "title": "Working Together Across Boundaries"
+  },
+  {
+   "id": "VI",
+   "title": "Security, Identity, and Control"
+  },
+  {
+   "id": "VII",
+   "title": "Evidence, Evaluation, and Improvement"
+  },
+  {
+   "id": "VIII",
+   "title": "Running the System in the Real World"
+  }
+ ],
+ "chapters": [
+  {
+   "chapter": 1,
+   "part": "I",
+   "file": "chapter-01-what-turns-an-llm-call-into-a-production-system.png",
+   "title": "What Turns an LLM Call into a Production System",
+   "focus": "The model reasons and proposes; the surrounding system owns truth.",
+   "themes": [
+    "Bounded reasoning",
+    "Ownership boundaries",
+    "Governed execution"
+   ],
+   "diagram": {
+    "title": "The boundary around the model",
+    "groups": [
+     {
+      "id": "system",
+      "label": "Surrounding system",
+      "box": [
+       0.0,
+       1.05,
+       11.95,
+       7.85
+      ],
+      "style": "boundary",
+      "tone": "cyan"
+     },
+     {
+      "id": "reasoning",
+      "label": "Bounded reasoning",
+      "box": [
+       1.9,
+       1.55,
+       5.8,
+       3.25
+      ],
+      "style": "zone",
+      "tone": "teal",
+      "label_at": "bottom-left"
+     },
+     {
+      "id": "truth",
+      "label": "Where truth lives",
+      "box": [
+       1.9,
+       3.95,
+       5.8,
+       5.6
+      ],
+      "style": "zone",
+      "tone": "indigo",
+      "label_at": "bottom-left"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "input",
+      "label": "Untrusted input",
+      "sub": "documents · tool results",
+      "kind": "external",
+      "at": [
+       3.85,
+       0.25
+      ]
+     },
+     {
+      "id": "model",
+      "label": "Model",
+      "sub": "interpret · propose",
+      "kind": "model",
+      "at": [
+       3.85,
+       2.4
+      ]
+     },
+     {
+      "id": "workflow",
+      "label": "Durable workflow",
+      "sub": "owns run state",
+      "kind": "service",
+      "at": [
+       9.95,
+       2.4
+      ]
+     },
+     {
+      "id": "policy",
+      "label": "Policy engine",
+      "sub": "permission to act",
+      "kind": "control",
+      "at": [
+       7.1,
+       3.6
+      ],
+      "w": 2.3
+     },
+     {
+      "id": "gateway",
+      "label": "Tool Gateway",
+      "sub": "re-authorize · receipt",
+      "kind": "control",
+      "at": [
+       9.95,
+       4.8
+      ]
+     },
+     {
+      "id": "sor",
+      "label": "System of record",
+      "sub": "current business state",
+      "kind": "store",
+      "at": [
+       3.85,
+       4.8
+      ]
+     },
+     {
+      "id": "ledger",
+      "label": "Effect ledger",
+      "sub": "did it commit?",
+      "kind": "record",
+      "at": [
+       5.2,
+       7.0
+      ]
+     },
+     {
+      "id": "evidence",
+      "label": "Audit evidence",
+      "sub": "reconstruct the run",
+      "kind": "record",
+      "at": [
+       9.95,
+       7.0
+      ]
+     },
+     {
+      "id": "release",
+      "label": "Release control",
+      "sub": "eval · canary · rollback",
+      "kind": "control",
+      "at": [
+       1.3,
+       7.0
+      ],
+      "w": 2.4
+     }
+    ],
+    "edges": [
+     {
+      "from": "input",
+      "to": "model",
+      "label": "read as text"
+     },
+     {
+      "from": "model",
+      "to": "workflow",
+      "label": "proposes"
+     },
+     {
+      "from": "workflow",
+      "to": "gateway",
+      "label": "tool call"
+     },
+     {
+      "from": "policy",
+      "to": "gateway",
+      "label": "permit",
+      "route": "straight"
+     },
+     {
+      "from": "gateway",
+      "to": "sor",
+      "label": "execute"
+     },
+     {
+      "from": "gateway",
+      "to": "ledger",
+      "label": "receipt",
+      "route": "straight",
+      "label_t": 0.55
+     },
+     {
+      "from": "ledger",
+      "to": "evidence",
+      "label": "record"
+     },
+     {
+      "from": "model",
+      "to": "sor",
+      "label": "direct write",
+      "style": "prohibited",
+      "from_side": "bottom",
+      "to_side": "top"
+     },
+     {
+      "from": "release",
+      "to": "model",
+      "label": "eval gate",
+      "style": "feedback",
+      "from_side": "top",
+      "to_side": "left",
+      "route": "ortho",
+      "label_t": 0.45
+     }
+    ],
+    "components": [
+     {
+      "ref": "model",
+      "name": "Bounded reasoning"
+     },
+     {
+      "ref": "workflow",
+      "name": "Durable state"
+     },
+     {
+      "ref": "policy",
+      "name": "Permission to act"
+     },
+     {
+      "ref": "ledger",
+      "name": "Committed-effect proof"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 2,
+   "part": "I",
+   "file": "chapter-02-from-model-output-to-safe-action.png",
+   "title": "From Model Output to Safe Action",
+   "focus": "Treat every model output as a proposal; commit only outside the model.",
+   "themes": [
+    "Typed proposals",
+    "Validate vs authorize",
+    "Deterministic acceptance"
+   ],
+   "diagram": {
+    "title": "Deterministic shell, agentic core",
+    "groups": [
+     {
+      "id": "core",
+      "label": "Agentic core",
+      "box": [
+       0.2,
+       0.3,
+       3.6,
+       2.15
+      ],
+      "style": "zone",
+      "tone": "teal",
+      "label_at": "bottom-left"
+     },
+     {
+      "id": "shell",
+      "label": "Deterministic shell",
+      "box": [
+       3.95,
+       0.3,
+       11.95,
+       7.85
+      ],
+      "style": "boundary",
+      "tone": "cyan"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "model",
+      "label": "LLM reasoning",
+      "sub": "interpret · propose",
+      "kind": "model",
+      "at": [
+       1.9,
+       1.15
+      ]
+     },
+     {
+      "id": "intent",
+      "label": "ToolIntent",
+      "sub": "typed proposal",
+      "kind": "record",
+      "at": [
+       1.9,
+       3.95
+      ]
+     },
+     {
+      "id": "gateway",
+      "label": "Tool Gateway",
+      "sub": "schema · tool version",
+      "kind": "control",
+      "at": [
+       6.05,
+       3.95
+      ]
+     },
+     {
+      "id": "policy",
+      "label": "Policy engine",
+      "sub": "authorization",
+      "kind": "control",
+      "at": [
+       6.05,
+       1.2
+      ]
+     },
+     {
+      "id": "case",
+      "label": "Case version",
+      "sub": "current version",
+      "kind": "store",
+      "at": [
+       10.1,
+       1.2
+      ]
+     },
+     {
+      "id": "domain",
+      "label": "Domain service",
+      "sub": "commits once",
+      "kind": "service",
+      "at": [
+       10.1,
+       3.95
+      ]
+     },
+     {
+      "id": "ledger",
+      "label": "Effect ledger",
+      "sub": "key · receipt",
+      "kind": "record",
+      "at": [
+       10.1,
+       6.75
+      ]
+     },
+     {
+      "id": "accept",
+      "label": "Acceptance engine",
+      "sub": "obligations met?",
+      "kind": "control",
+      "at": [
+       6.05,
+       6.75
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "from": "model",
+      "to": "intent",
+      "label": "emits"
+     },
+     {
+      "from": "intent",
+      "to": "gateway",
+      "label": "proposal"
+     },
+     {
+      "from": "gateway",
+      "to": "policy",
+      "label": "authorize"
+     },
+     {
+      "from": "gateway",
+      "to": "case",
+      "label": "version check",
+      "route": "straight"
+     },
+     {
+      "from": "gateway",
+      "to": "domain",
+      "label": "commit once"
+     },
+     {
+      "from": "domain",
+      "to": "ledger",
+      "label": "receipt",
+      "from_shift": 60,
+      "to_shift": 60
+     },
+     {
+      "from": "ledger",
+      "to": "accept",
+      "label": "verified"
+     },
+     {
+      "from": "intent",
+      "to": "domain",
+      "label": "valid JSON",
+      "style": "prohibited",
+      "from_side": "bottom",
+      "to_side": "bottom",
+      "to_shift": -120,
+      "points": [
+       [
+        1.9,
+        5.35
+       ],
+       [
+        9.417,
+        5.35
+       ]
+      ],
+      "label_t": 0.42
+     },
+     {
+      "from": "gateway",
+      "to": "model",
+      "label": "reconsider",
+      "style": "feedback",
+      "route": "straight",
+      "label_t": 0.3
+     }
+    ],
+    "components": [
+     {
+      "ref": "intent",
+      "name": "Typed proposal"
+     },
+     {
+      "ref": "gateway",
+      "name": "Validate, then authorize"
+     },
+     {
+      "ref": "ledger",
+      "name": "Idempotent effect receipt"
+     },
+     {
+      "ref": "accept",
+      "name": "Deterministic acceptance"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 3,
+   "part": "I",
+   "file": "chapter-03-keep-the-agent-framework-in-its-lane.png",
+   "title": "Keep the Agent Framework in Its Lane",
+   "focus": "Let the framework run the agent; let the platform run the business.",
+   "themes": [
+    "AgentRuntime seam",
+    "Restart test",
+    "Replaceability test"
+   ],
+   "diagram": {
+    "title": "Replace the framework, keep the truth",
+    "groups": [
+     {
+      "id": "contract",
+      "label": "Platform contract layer",
+      "box": [
+       0.15,
+       0.35,
+       7.95,
+       2.45
+      ],
+      "style": "band",
+      "tone": "cyan"
+     },
+     {
+      "id": "swap",
+      "label": "Replaceable layer",
+      "box": [
+       0.15,
+       3.05,
+       7.6,
+       7.85
+      ],
+      "style": "band",
+      "tone": "slate",
+      "label_at": "bottom-left"
+     },
+     {
+      "id": "truth",
+      "label": "Enterprise truth",
+      "box": [
+       8.55,
+       0.35,
+       11.95,
+       7.85
+      ],
+      "style": "band",
+      "tone": "indigo"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "runtime",
+      "label": "AgentRuntime",
+      "sub": "platform-owned seam",
+      "kind": "control",
+      "at": [
+       1.95,
+       1.45
+      ]
+     },
+     {
+      "id": "workflow",
+      "label": "Durable workflow",
+      "sub": "runs the business",
+      "kind": "service",
+      "at": [
+       6.3,
+       1.45
+      ]
+     },
+     {
+      "id": "adapter",
+      "label": "Framework adapter",
+      "sub": "translate · map",
+      "kind": "service",
+      "at": [
+       1.95,
+       4.25
+      ]
+     },
+     {
+      "id": "sdk",
+      "label": "Agent framework",
+      "sub": "runs the agent",
+      "kind": "actor",
+      "at": [
+       6.0,
+       4.25
+      ]
+     },
+     {
+      "id": "session",
+      "label": "SDK session",
+      "sub": "local continuity",
+      "kind": "store",
+      "at": [
+       1.95,
+       6.85
+      ]
+     },
+     {
+      "id": "model",
+      "label": "Model + capabilities",
+      "sub": "façades → Tool Gateway",
+      "kind": "model",
+      "at": [
+       6.0,
+       6.85
+      ]
+     },
+     {
+      "id": "approval",
+      "label": "Approval record",
+      "sub": "proposal-bound",
+      "kind": "record",
+      "at": [
+       10.25,
+       1.7
+      ],
+      "w": 3.0
+     },
+     {
+      "id": "receipt",
+      "label": "Effect receipt",
+      "sub": "effect happened",
+      "kind": "record",
+      "at": [
+       10.25,
+       4.25
+      ],
+      "w": 3.0
+     },
+     {
+      "id": "manifest",
+      "label": "RunManifest",
+      "sub": "pinned versions",
+      "kind": "record",
+      "at": [
+       10.25,
+       6.85
+      ],
+      "w": 3.0
+     }
+    ],
+    "edges": [
+     {
+      "from": "workflow",
+      "to": "runtime",
+      "label": "AgentStepRequest",
+      "offset": -32,
+      "label_t": 0.5,
+      "label_dy": -44
+     },
+     {
+      "from": "runtime",
+      "to": "workflow",
+      "label": "AgentStepResult",
+      "style": "feedback",
+      "offset": 32,
+      "label_t": 0.5,
+      "label_dy": 44
+     },
+     {
+      "from": "runtime",
+      "to": "adapter",
+      "label": "translate"
+     },
+     {
+      "from": "adapter",
+      "to": "sdk",
+      "label": "native objects",
+      "label_t": 0.4,
+      "label_fixed": true
+     },
+     {
+      "from": "sdk",
+      "to": "model",
+      "label": "calls"
+     },
+     {
+      "from": "sdk",
+      "to": "session",
+      "label": "local state",
+      "style": "async",
+      "route": "straight"
+     },
+     {
+      "from": "session",
+      "to": "workflow",
+      "label": "workflow truth",
+      "style": "prohibited",
+      "from_side": "right",
+      "to_side": "bottom",
+      "to_shift": -123,
+      "points": [
+       [
+        4.45,
+        6.85
+       ],
+       [
+        4.45,
+        2.75
+       ],
+       [
+        5.6,
+        2.75
+       ]
+      ],
+      "label_t": 0.45
+     },
+     {
+      "from": "workflow",
+      "to": "approval",
+      "label": "records",
+      "label_t": 0.45
+     },
+     {
+      "from": "workflow",
+      "to": "receipt",
+      "label": "verifies",
+      "route": "straight",
+      "from_side": "right",
+      "to_side": "left",
+      "label_t": 0.55
+     },
+     {
+      "from": "workflow",
+      "to": "manifest",
+      "label": "pins",
+      "route": "straight",
+      "from_side": "right",
+      "to_side": "left",
+      "label_t": 0.72
+     }
+    ],
+    "components": [
+     {
+      "ref": "runtime",
+      "name": "AgentRuntime seam"
+     },
+     {
+      "ref": "adapter",
+      "name": "Replaceable adapter"
+     },
+     {
+      "ref": "session",
+      "name": "Disposable SDK state"
+     },
+     {
+      "ref": "truth",
+      "name": "Durable enterprise truth"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 4,
+   "part": "II",
+   "file": "chapter-04-design-the-architecture-around-the-model.png",
+   "title": "Design the Architecture Around the Model",
+   "focus": "Every record has one owner; the model proposes, never commits.",
+   "themes": [
+    "Planes and ownership",
+    "Trust boundaries",
+    "One authoritative writer"
+   ],
+   "diagram": {
+    "title": "The model proposes; owners decide",
+    "groups": [
+     {
+      "id": "owners",
+      "label": "Authoritative owners",
+      "box": [
+       0,
+       0,
+       12,
+       8
+      ],
+      "style": "boundary",
+      "tone": "cyan"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "model",
+      "label": "Model",
+      "sub": "proposes; owns no record",
+      "kind": "model",
+      "at": [
+       5.3,
+       4.1
+      ]
+     },
+     {
+      "id": "run",
+      "label": "Durable Run Service",
+      "sub": "owns workflow",
+      "kind": "service",
+      "at": [
+       2.1,
+       1.3
+      ]
+     },
+     {
+      "id": "policy",
+      "label": "Identity & policy",
+      "sub": "owns authorization",
+      "kind": "control",
+      "at": [
+       5.3,
+       1.2
+      ]
+     },
+     {
+      "id": "domain",
+      "label": "Domain system",
+      "sub": "owns business truth",
+      "kind": "store",
+      "at": [
+       9.9,
+       1.3
+      ]
+     },
+     {
+      "id": "effects",
+      "label": "Tool/effect service",
+      "sub": "receipt proves effect",
+      "kind": "effect",
+      "at": [
+       10.3,
+       4.1
+      ]
+     },
+     {
+      "id": "human",
+      "label": "Human authorization",
+      "sub": "exact, expiring decision",
+      "kind": "human",
+      "at": [
+       9.6,
+       6.9
+      ]
+     },
+     {
+      "id": "knowledge",
+      "label": "Snapshot catalog",
+      "sub": "governed sources",
+      "kind": "store",
+      "at": [
+       5.3,
+       6.9
+      ]
+     },
+     {
+      "id": "learning",
+      "label": "Eval & release",
+      "sub": "owns learning",
+      "kind": "service",
+      "at": [
+       2.1,
+       5.6
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "from": "model",
+      "to": "run",
+      "label": "semantic result",
+      "route": "straight",
+      "label_t": 0.45
+     },
+     {
+      "from": "model",
+      "to": "policy",
+      "label": "explain scope",
+      "route": "straight",
+      "offset": 95,
+      "label_t": 0.5
+     },
+     {
+      "from": "model",
+      "to": "policy",
+      "label": "grant authority",
+      "style": "prohibited",
+      "route": "straight",
+      "offset": -95,
+      "label_t": 0.5
+     },
+     {
+      "from": "domain",
+      "to": "model",
+      "label": "authorized projection",
+      "route": "straight",
+      "label_t": 0.5
+     },
+     {
+      "from": "model",
+      "to": "effects",
+      "label": "args via run + PDP",
+      "route": "straight",
+      "offset": -40,
+      "label_t": 0.5
+     },
+     {
+      "from": "model",
+      "to": "effects",
+      "label": "assert completion",
+      "style": "prohibited",
+      "route": "straight",
+      "offset": 45,
+      "label_t": 0.5
+     },
+     {
+      "from": "model",
+      "to": "human",
+      "label": "rationale",
+      "route": "straight",
+      "label_t": 0.55
+     },
+     {
+      "from": "knowledge",
+      "to": "model",
+      "label": "evidence",
+      "route": "straight",
+      "label_t": 0.5
+     },
+     {
+      "from": "model",
+      "to": "learning",
+      "label": "recommend",
+      "route": "straight",
+      "offset": -45,
+      "label_t": 0.62
+     },
+     {
+      "from": "model",
+      "to": "learning",
+      "label": "self-deploy",
+      "style": "prohibited",
+      "route": "straight",
+      "offset": 45,
+      "label_t": 0.32
+     }
+    ],
+    "components": [
+     {
+      "ref": "model",
+      "name": "Model only proposes"
+     },
+     {
+      "ref": "policy",
+      "name": "Policy grants authority"
+     },
+     {
+      "ref": "effects",
+      "name": "Receipt proves effect"
+     },
+     {
+      "ref": "owners",
+      "name": "One owner per record"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 5,
+   "part": "II",
+   "file": "chapter-05-give-knowledge-an-owner.png",
+   "title": "Give Knowledge an Owner",
+   "focus": "Turn knowledge into owned, enforceable rules — not just retrievable text.",
+   "themes": [
+    "Knowledge as artifacts",
+    "Provenance and scope",
+    "Rules as guardrails"
+   ],
+   "diagram": {
+    "title": "From context to constraint",
+    "groups": [
+     {
+      "id": "before",
+      "label": "Corpus with search",
+      "box": [
+       3.0,
+       0.3,
+       11.95,
+       3.4
+      ],
+      "style": "band",
+      "tone": "red",
+      "label_at": "top-right"
+     },
+     {
+      "id": "after",
+      "label": "Knowledge as constraint",
+      "box": [
+       3.0,
+       3.9,
+       11.95,
+       7.85
+      ],
+      "style": "band",
+      "tone": "cyan",
+      "label_at": "bottom-right"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "source",
+      "label": "Policy source",
+      "sub": "authoritative prose",
+      "kind": "record",
+      "at": [
+       1.4,
+       3.3
+      ],
+      "w": 2.55
+     },
+     {
+      "id": "index",
+      "label": "Semantic index",
+      "sub": "similarity only",
+      "kind": "store",
+      "at": [
+       4.4,
+       1.25
+      ],
+      "w": 2.4
+     },
+     {
+      "id": "quote",
+      "label": "Model quotes",
+      "sub": "rule as context",
+      "kind": "model",
+      "at": [
+       7.35,
+       2.4
+      ],
+      "w": 2.2
+     },
+     {
+      "id": "proceeds",
+      "label": "Effect proceeds",
+      "sub": "policy violated",
+      "kind": "bad",
+      "at": [
+       10.85,
+       1.25
+      ],
+      "w": 2.0
+     },
+     {
+      "id": "rule",
+      "label": "Typed rule",
+      "sub": "owner, version, scope",
+      "kind": "record",
+      "at": [
+       4.4,
+       4.85
+      ],
+      "w": 2.8
+     },
+     {
+      "id": "intent",
+      "label": "Agent intent",
+      "sub": "proposed action",
+      "kind": "actor",
+      "at": [
+       4.4,
+       6.95
+      ],
+      "w": 2.4
+     },
+     {
+      "id": "guard",
+      "label": "Guardrail",
+      "sub": "at effect boundary",
+      "kind": "control",
+      "at": [
+       7.35,
+       6.0
+      ],
+      "w": 2.2
+     },
+     {
+      "id": "outcome",
+      "label": "Governed action",
+      "sub": "or refusal",
+      "kind": "effect",
+      "at": [
+       10.85,
+       6.0
+      ],
+      "w": 2.0
+     }
+    ],
+    "edges": [
+     {
+      "from": "source",
+      "to": "index",
+      "label": "embed",
+      "route": "straight"
+     },
+     {
+      "from": "index",
+      "to": "quote",
+      "label": "passage",
+      "route": "straight"
+     },
+     {
+      "from": "quote",
+      "to": "proceeds",
+      "label": "not enforced",
+      "style": "prohibited",
+      "route": "straight",
+      "label_t": 0.62
+     },
+     {
+      "from": "source",
+      "to": "rule",
+      "label": "extract, verify",
+      "from_side": "bottom",
+      "to_side": "left",
+      "route": "ortho",
+      "label_t": 0.35
+     },
+     {
+      "from": "rule",
+      "to": "guard",
+      "label": "enforce",
+      "route": "straight",
+      "to_side": "top",
+      "label_t": 0.3,
+      "label_fixed": true
+     },
+     {
+      "from": "intent",
+      "to": "guard",
+      "label": "action",
+      "route": "straight",
+      "from_side": "right",
+      "to_side": "left"
+     },
+     {
+      "from": "guard",
+      "to": "outcome",
+      "label": "permit/refuse"
+     }
+    ],
+    "legend": {
+     "bad": "violation"
+    },
+    "components": [
+     {
+      "ref": "proceeds",
+      "name": "Quoted, then violated"
+     },
+     {
+      "ref": "rule",
+      "name": "Owned, versioned rule"
+     },
+     {
+      "ref": "guard",
+      "name": "Effect-boundary guardrail"
+     },
+     {
+      "ref": "outcome",
+      "name": "Unknown means refuse"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 6,
+   "part": "II",
+   "file": "chapter-06-build-context-without-losing-the-plot.png",
+   "title": "Build Context Without Losing the Plot",
+   "focus": "Assemble each prompt as a disposable, authorized projection of distinct stores.",
+   "themes": [
+    "Authorized projection",
+    "State taxonomy",
+    "Governed memory"
+   ],
+   "diagram": {
+    "title": "The prompt is a projection",
+    "groups": [
+     {
+      "id": "stores",
+      "label": "Distinct stores",
+      "box": [
+       0.1,
+       0.3,
+       3.75,
+       7.85
+      ],
+      "style": "zone",
+      "tone": "indigo"
+     },
+     {
+      "id": "step",
+      "label": "One model step",
+      "box": [
+       7.05,
+       0.3,
+       11.95,
+       2.75
+      ],
+      "style": "zone",
+      "tone": "teal",
+      "label_at": "bottom-right"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "conversation",
+      "label": "Conversation",
+      "sub": "append-only turns",
+      "kind": "store",
+      "at": [
+       1.95,
+       1.3
+      ],
+      "w": 2.95
+     },
+     {
+      "id": "workflow",
+      "label": "Workflow state",
+      "sub": "canonical",
+      "kind": "store",
+      "at": [
+       1.95,
+       3.15
+      ],
+      "w": 2.95
+     },
+     {
+      "id": "memory",
+      "label": "Long-term memory",
+      "sub": "approved, with TTL",
+      "kind": "store",
+      "at": [
+       1.95,
+       5.0
+      ],
+      "w": 2.95
+     },
+     {
+      "id": "knowledge",
+      "label": "Enterprise knowledge",
+      "sub": "source authoritative",
+      "kind": "knowledge",
+      "at": [
+       1.95,
+       6.85
+      ],
+      "w": 2.95
+     },
+     {
+      "id": "assembler",
+      "label": "Context Assembler",
+      "sub": "authorize, then fetch",
+      "kind": "control",
+      "at": [
+       6.0,
+       4.1
+      ],
+      "w": 2.5
+     },
+     {
+      "id": "projection",
+      "label": "Prompt projection",
+      "sub": "ephemeral, token-bounded",
+      "kind": "record",
+      "at": [
+       8.45,
+       1.5
+      ],
+      "w": 2.5
+     },
+     {
+      "id": "model",
+      "label": "Model call",
+      "kind": "model",
+      "at": [
+       10.95,
+       1.5
+      ],
+      "w": 1.75
+     },
+     {
+      "id": "manifest",
+      "label": "ContextManifest",
+      "sub": "refs, hashes, labels",
+      "kind": "record",
+      "at": [
+       9.65,
+       4.1
+      ],
+      "w": 2.6
+     },
+     {
+      "id": "memgate",
+      "label": "Memory write gate",
+      "sub": "scope, consent, provenance",
+      "kind": "control",
+      "at": [
+       8.5,
+       6.6
+      ],
+      "w": 2.6
+     }
+    ],
+    "edges": [
+     {
+      "from": "conversation",
+      "to": "assembler",
+      "label": "recent window",
+      "route": "straight",
+      "label_t": 0.5
+     },
+     {
+      "from": "workflow",
+      "to": "assembler",
+      "label": "state",
+      "route": "straight",
+      "label_t": 0.5
+     },
+     {
+      "from": "memory",
+      "to": "assembler",
+      "label": "policy gate",
+      "route": "straight",
+      "label_t": 0.5
+     },
+     {
+      "from": "knowledge",
+      "to": "assembler",
+      "label": "after ACL",
+      "route": "straight",
+      "label_t": 0.62
+     },
+     {
+      "from": "assembler",
+      "to": "projection",
+      "label": "materialize",
+      "route": "straight"
+     },
+     {
+      "from": "projection",
+      "to": "model",
+      "nodots": true
+     },
+     {
+      "from": "assembler",
+      "to": "manifest",
+      "label": "record"
+     },
+     {
+      "from": "model",
+      "to": "memgate",
+      "label": "candidate fact",
+      "style": "feedback",
+      "from_side": "right",
+      "to_side": "right",
+      "points": [
+       [
+        12.15,
+        1.5
+       ],
+       [
+        12.15,
+        6.6
+       ]
+      ],
+      "label_t": 0.86
+     },
+     {
+      "from": "memgate",
+      "to": "memory",
+      "label": "governed write",
+      "style": "feedback",
+      "from_side": "left",
+      "to_side": "right",
+      "label_t": 0.4
+     },
+     {
+      "from": "conversation",
+      "to": "workflow",
+      "label": "silent promotion",
+      "style": "prohibited"
+     },
+     {
+      "from": "memory",
+      "to": "workflow",
+      "label": "override state",
+      "style": "prohibited"
+     }
+    ],
+    "components": [
+     {
+      "ref": "stores",
+      "name": "Separate state stores"
+     },
+     {
+      "ref": "assembler",
+      "name": "Authorize before fetch"
+     },
+     {
+      "ref": "manifest",
+      "name": "Recorded by reference"
+     },
+     {
+      "ref": "memgate",
+      "name": "Memory is governed write"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 7,
+   "part": "III",
+   "file": "chapter-07-build-a-paved-road-for-agent-teams.png",
+   "title": "Build a Paved Road for Agent Teams",
+   "focus": "Make the safe path easier to reuse than the clever shortcut.",
+   "themes": [
+    "Stable contracts",
+    "Replaceable adapters",
+    "Pinned releases"
+   ],
+   "diagram": {
+    "title": "Rebuilt plumbing vs paved road",
+    "groups": [
+     {
+      "id": "before",
+      "label": "Without a platform",
+      "box": [
+       0.15,
+       0.35,
+       5.75,
+       7.85
+      ],
+      "style": "zone",
+      "tone": "amber"
+     },
+     {
+      "id": "after",
+      "label": "Paved road",
+      "box": [
+       6.3,
+       0.35,
+       11.95,
+       7.85
+      ],
+      "style": "zone",
+      "tone": "cyan"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "team_a",
+      "label": "Own retries",
+      "sub": "inside SDK wrapper",
+      "kind": "actor",
+      "at": [
+       1.65,
+       1.75
+      ],
+      "w": 2.6
+     },
+     {
+      "id": "team_b",
+      "label": "Transcripts only",
+      "sub": "partial audit",
+      "kind": "actor",
+      "at": [
+       1.65,
+       4.1
+      ],
+      "w": 2.6
+     },
+     {
+      "id": "team_c",
+      "label": "Broad credential",
+      "sub": "service-wide tool access",
+      "kind": "actor",
+      "at": [
+       1.65,
+       6.45
+      ],
+      "w": 2.6
+     },
+     {
+      "id": "divergence",
+      "label": "Three meanings",
+      "sub": "failure · audit · authorization",
+      "kind": "record",
+      "tone": "amber",
+      "at": [
+       4.6,
+       4.1
+      ],
+      "w": 2.25,
+      "h": 1.6
+     },
+     {
+      "id": "domain_teams",
+      "label": "Domain teams",
+      "sub": "differentiated behaviour",
+      "kind": "actor",
+      "at": [
+       9.1,
+       1.6
+      ]
+     },
+     {
+      "id": "contracts",
+      "label": "Platform contracts",
+      "sub": "AgentSpec · ToolSpec",
+      "kind": "control",
+      "at": [
+       9.1,
+       4.0
+      ]
+     },
+     {
+      "id": "shared_services",
+      "label": "Shared services",
+      "sub": "identity · policy · tracing",
+      "kind": "service",
+      "at": [
+       7.75,
+       6.6
+      ],
+      "w": 2.55
+     },
+     {
+      "id": "adapters",
+      "label": "Replaceable adapters",
+      "sub": "framework · provider",
+      "kind": "service",
+      "at": [
+       10.55,
+       6.6
+      ],
+      "w": 2.55
+     }
+    ],
+    "edges": [
+     {
+      "from": "team_a",
+      "to": "divergence",
+      "nodots": true
+     },
+     {
+      "from": "team_b",
+      "to": "divergence",
+      "nodots": true
+     },
+     {
+      "from": "team_c",
+      "to": "divergence",
+      "nodots": true
+     },
+     {
+      "from": "domain_teams",
+      "to": "contracts",
+      "label": "use"
+     },
+     {
+      "from": "shared_services",
+      "to": "contracts",
+      "label": "own",
+      "route": "straight"
+     },
+     {
+      "from": "contracts",
+      "to": "adapters",
+      "label": "compile to",
+      "route": "straight"
+     }
+    ],
+    "components": [
+     {
+      "ref": "before",
+      "name": "Rebuilt plumbing"
+     },
+     {
+      "ref": "divergence",
+      "name": "Incompatible meanings"
+     },
+     {
+      "ref": "contracts",
+      "name": "Stable contracts"
+     },
+     {
+      "ref": "shared_services",
+      "name": "Decided once"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 8,
+   "part": "III",
+   "file": "chapter-08-package-capabilities-as-versioned-skills.png",
+   "title": "Package Capabilities as Versioned Skills",
+   "focus": "Version whole capabilities and let evidence, not approval conversations, move each release.",
+   "themes": [
+    "Manifest as contract",
+    "Discovery ≠ permission",
+    "Evidence-gated lifecycle"
+   ],
+   "diagram": {
+    "title": "Evidence-driven Skill lifecycle",
+    "groups": [
+     {
+      "id": "preprod",
+      "label": "Pre-production",
+      "box": [
+       0.15,
+       0.35,
+       11.95,
+       2.75
+      ],
+      "style": "band",
+      "tone": "slate"
+     },
+     {
+      "id": "prod",
+      "label": "Production resolvable",
+      "box": [
+       3.75,
+       3.35,
+       11.95,
+       5.75
+      ],
+      "style": "band",
+      "tone": "cyan"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "draft",
+      "label": "Draft",
+      "sub": "authored, not trusted",
+      "kind": "record",
+      "at": [
+       1.85,
+       1.6
+      ]
+     },
+     {
+      "id": "certified",
+      "label": "Certified",
+      "sub": "evidence exists",
+      "kind": "record",
+      "at": [
+       6.05,
+       1.6
+      ]
+     },
+     {
+      "id": "staged",
+      "label": "Staged",
+      "sub": "non-production traffic",
+      "kind": "record",
+      "at": [
+       10.1,
+       1.6
+      ]
+     },
+     {
+      "id": "active",
+      "label": "Active",
+      "sub": "production runs",
+      "kind": "record",
+      "at": [
+       10.1,
+       4.6
+      ]
+     },
+     {
+      "id": "deprecated",
+      "label": "Deprecated",
+      "sub": "existing runs only",
+      "kind": "record",
+      "at": [
+       6.05,
+       4.6
+      ]
+     },
+     {
+      "id": "revoked",
+      "label": "Revoked",
+      "sub": "nothing new resolves",
+      "kind": "record",
+      "tone": "red",
+      "at": [
+       1.85,
+       4.6
+      ]
+     },
+     {
+      "id": "pause",
+      "label": "Pause or migrate",
+      "sub": "in-flight runs, by risk",
+      "kind": "effect",
+      "at": [
+       1.85,
+       7.0
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "from": "draft",
+      "to": "certified",
+      "label": "suite passes"
+     },
+     {
+      "from": "certified",
+      "to": "staged",
+      "label": "release decision"
+     },
+     {
+      "from": "staged",
+      "to": "active",
+      "label": "canary evidence"
+     },
+     {
+      "from": "active",
+      "to": "deprecated"
+     },
+     {
+      "from": "deprecated",
+      "to": "revoked",
+      "label": "window expires"
+     },
+     {
+      "from": "revoked",
+      "to": "pause",
+      "label": "may trigger",
+      "style": "async"
+     }
+    ],
+    "notes": [
+     {
+      "text": "Lifecycle state decides what resolution may return",
+      "at": [
+       7.85,
+       7.05
+      ],
+      "size": 32,
+      "tone": "cyan"
+     }
+    ],
+    "components": [
+     {
+      "ref": "certified",
+      "name": "Certification evidence"
+     },
+     {
+      "ref": "active",
+      "name": "Production resolvable"
+     },
+     {
+      "ref": "deprecated",
+      "name": "Compatibility window"
+     },
+     {
+      "ref": "revoked",
+      "name": "Revocation stops new resolution"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 9,
+   "part": "III",
+   "file": "chapter-09-turn-skills-into-a-coherent-domain-platform.png",
+   "title": "Turn Skills into a Coherent Domain Platform",
+   "focus": "Ship domain Skills as one pinned pack that grants no authority.",
+   "themes": [
+    "Pinned compatibility",
+    "Install ≠ permission",
+    "One release unit"
+   ],
+   "diagram": {
+    "title": "Installing a pack grants nothing",
+    "groups": [
+     {
+      "id": "pack",
+      "label": "Skill Pack",
+      "box": [
+       0.15,
+       0.35,
+       3.3,
+       7.85
+      ],
+      "style": "boundary",
+      "tone": "cyan"
+     },
+     {
+      "id": "tenant",
+      "label": "Tenant runs",
+      "box": [
+       6.15,
+       0.35,
+       11.95,
+       7.85
+      ],
+      "style": "zone",
+      "tone": "amber"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "skills",
+      "label": "Pinned Skills",
+      "sub": "evidence · validation",
+      "kind": "service",
+      "at": [
+       1.72,
+       1.75
+      ],
+      "w": 2.75
+     },
+     {
+      "id": "manifest",
+      "label": "Pack manifest",
+      "sub": "pins compatible versions",
+      "kind": "record",
+      "at": [
+       1.72,
+       4.25
+      ],
+      "w": 2.75
+     },
+     {
+      "id": "shared",
+      "label": "Shared artifacts",
+      "sub": "policy · evals · runbooks",
+      "kind": "store",
+      "at": [
+       1.72,
+       6.75
+      ],
+      "w": 2.75
+     },
+     {
+      "id": "catalog",
+      "label": "Discovery catalog",
+      "sub": "resolvable, not permitted",
+      "kind": "store",
+      "at": [
+       4.82,
+       4.25
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "resolution",
+      "label": "Policy resolution",
+      "sub": "tenant grants · envelope",
+      "kind": "control",
+      "at": [
+       9.1,
+       1.6
+      ]
+     },
+     {
+      "id": "resolved",
+      "label": "Eligible Skill",
+      "sub": "entitled tenant",
+      "kind": "service",
+      "at": [
+       7.75,
+       4.25
+      ],
+      "w": 2.6
+     },
+     {
+      "id": "refused",
+      "label": "Will not resolve",
+      "sub": "no source entitlement",
+      "kind": "bad",
+      "tone": "slate",
+      "at": [
+       10.55,
+       4.25
+      ],
+      "w": 2.6
+     },
+     {
+      "id": "data_tools",
+      "label": "Data & tools",
+      "sub": "tenant-granted only",
+      "kind": "external",
+      "at": [
+       9.1,
+       6.85
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "from": "manifest",
+      "to": "skills",
+      "label": "pins"
+     },
+     {
+      "from": "manifest",
+      "to": "shared",
+      "label": "pins"
+     },
+     {
+      "from": "skills",
+      "to": "catalog",
+      "label": "install",
+      "route": "straight"
+     },
+     {
+      "from": "catalog",
+      "to": "resolution",
+      "label": "per run",
+      "route": "straight"
+     },
+     {
+      "from": "resolution",
+      "to": "resolved",
+      "label": "eligible",
+      "route": "straight"
+     },
+     {
+      "from": "resolution",
+      "to": "refused",
+      "label": "no grant",
+      "route": "straight"
+     },
+     {
+      "from": "resolved",
+      "to": "data_tools",
+      "label": "own grants",
+      "route": "straight"
+     },
+     {
+      "from": "catalog",
+      "to": "data_tools",
+      "label": "grants nothing",
+      "style": "prohibited",
+      "route": "straight",
+      "label_t": 0.55
+     }
+    ],
+    "components": [
+     {
+      "ref": "pack",
+      "name": "Pinned compatible pack"
+     },
+     {
+      "ref": "catalog",
+      "name": "Install adds catalog"
+     },
+     {
+      "ref": "resolution",
+      "name": "Tenant policy resolution"
+     },
+     {
+      "ref": "refused",
+      "name": "Unentitled Skill refused"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 10,
+   "part": "IV",
+   "file": "chapter-10-use-react-without-creating-a-runaway-loop.png",
+   "title": "Use ReAct Without Creating a Runaway Loop",
+   "focus": "Keep the reasoning loop inside; keep limits and stopping outside.",
+   "themes": [
+    "Fit before loop",
+    "External limits",
+    "Mutations as proposals"
+   ],
+   "diagram": {
+    "title": "Fit, bound, then exit",
+    "groups": [
+     {
+      "id": "g_fit",
+      "label": "Fit test",
+      "box": [
+       0.15,
+       3.05,
+       3.2,
+       7.85
+      ],
+      "style": "zone",
+      "tone": "slate"
+     },
+     {
+      "id": "g_model",
+      "label": "Model proposes",
+      "box": [
+       3.6,
+       0.35,
+       7.05,
+       2.15
+      ],
+      "style": "zone",
+      "tone": "teal"
+     },
+     {
+      "id": "g_ctl",
+      "label": "Controller owns",
+      "box": [
+       3.6,
+       2.6,
+       9.3,
+       7.85
+      ],
+      "style": "boundary",
+      "tone": "cyan",
+      "label_at": "bottom-left"
+     },
+     {
+      "id": "g_exit",
+      "label": "Governed exits",
+      "box": [
+       9.75,
+       0.35,
+       11.95,
+       7.85
+      ],
+      "style": "zone",
+      "tone": "amber",
+      "label_at": "top-right"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "fit",
+      "label": "Next step unknown?",
+      "sub": "depends on observation",
+      "kind": "control",
+      "at": [
+       1.67,
+       4.65
+      ],
+      "w": 2.75
+     },
+     {
+      "id": "wf",
+      "label": "Durable workflow",
+      "sub": "known sequence",
+      "kind": "service",
+      "at": [
+       1.67,
+       6.95
+      ],
+      "w": 2.75
+     },
+     {
+      "id": "dec",
+      "label": "Typed decision",
+      "sub": "AgentDecision",
+      "kind": "model",
+      "at": [
+       5.3,
+       1.25
+      ]
+     },
+     {
+      "id": "gw",
+      "label": "Tool Gateway",
+      "sub": "validate · execute",
+      "kind": "control",
+      "at": [
+       4.85,
+       3.55
+      ],
+      "w": 2.3
+     },
+     {
+      "id": "obs",
+      "label": "Observation",
+      "sub": "untrusted · provenance",
+      "kind": "record",
+      "at": [
+       4.85,
+       6.0
+      ],
+      "w": 2.3
+     },
+     {
+      "id": "ctl",
+      "label": "Loop controller",
+      "sub": "turns · cost · no-progress",
+      "kind": "control",
+      "at": [
+       8.0,
+       4.65
+      ],
+      "w": 2.3
+     },
+     {
+      "id": "acc",
+      "label": "Acceptance engine",
+      "sub": "external stop rule",
+      "kind": "control",
+      "at": [
+       8.0,
+       6.95
+      ],
+      "w": 2.3
+     },
+     {
+      "id": "prop",
+      "label": "Proposed action",
+      "sub": "to policy & approval",
+      "kind": "effect",
+      "at": [
+       10.88,
+       1.25
+      ],
+      "w": 1.95
+     },
+     {
+      "id": "stop",
+      "label": "Terminate / escalate",
+      "sub": "budget · repeats",
+      "kind": "record",
+      "at": [
+       10.88,
+       3.35
+      ],
+      "w": 1.95
+     },
+     {
+      "id": "ans",
+      "label": "Answer",
+      "kind": "record",
+      "at": [
+       10.88,
+       6.95
+      ],
+      "w": 1.85
+     }
+    ],
+    "edges": [
+     {
+      "from": "fit",
+      "to": "wf",
+      "label": "known"
+     },
+     {
+      "from": "fit",
+      "to": "ctl",
+      "label": "adaptive",
+      "label_t": 0.25
+     },
+     {
+      "from": "ctl",
+      "to": "dec",
+      "label": "admits turn",
+      "route": "straight",
+      "offset": 40
+     },
+     {
+      "from": "dec",
+      "to": "ctl",
+      "label": "one action",
+      "route": "straight",
+      "offset": 40
+     },
+     {
+      "from": "ctl",
+      "to": "gw",
+      "label": "invoke",
+      "route": "straight",
+      "from_side": "left",
+      "to_side": "right",
+      "label_t": 0.72,
+      "label_fixed": true
+     },
+     {
+      "from": "gw",
+      "to": "obs"
+     },
+     {
+      "from": "obs",
+      "to": "ctl",
+      "label": "append",
+      "style": "feedback",
+      "from_side": "right",
+      "to_side": "bottom",
+      "to_shift": -140,
+      "points": [
+       [
+        7.2,
+        6.0
+       ]
+      ],
+      "label_t": 0.3
+     },
+     {
+      "from": "ctl",
+      "to": "acc",
+      "label": "stop?"
+     },
+     {
+      "from": "acc",
+      "to": "ans",
+      "label": "accept"
+     },
+     {
+      "from": "dec",
+      "to": "prop",
+      "label": "mutation"
+     },
+     {
+      "from": "ctl",
+      "to": "stop",
+      "label": "no progress",
+      "from_side": "top",
+      "to_side": "left",
+      "from_shift": 120,
+      "route": "ortho",
+      "label_t": 0.72
+     }
+    ],
+    "notes": [
+     {
+      "text": "Loop only when the next step",
+      "at": [
+       1.67,
+       1.45
+      ],
+      "size": 30,
+      "tone": "slate"
+     },
+     {
+      "text": "depends on an observation",
+      "at": [
+       1.67,
+       1.7
+      ],
+      "size": 30,
+      "tone": "slate"
+     }
+    ],
+    "components": [
+     {
+      "ref": "fit",
+      "name": "Fit test first"
+     },
+     {
+      "ref": "ctl",
+      "name": "External loop controller"
+     },
+     {
+      "ref": "prop",
+      "name": "Mutation as proposal"
+     },
+     {
+      "ref": "acc",
+      "name": "External acceptance"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 11,
+   "part": "IV",
+   "file": "chapter-11-route-the-work-without-losing-ownership.png",
+   "title": "Route the Work Without Losing Ownership",
+   "focus": "Selecting a specialist is not transferring responsibility or granting authority.",
+   "themes": [
+    "Eligibility first",
+    "Fallback by design",
+    "Acknowledged ownership"
+   ],
+   "diagram": {
+    "title": "Routing versus handoff",
+    "groups": [
+     {
+      "id": "lane_route",
+      "label": "Routing: who is best placed",
+      "box": [
+       0.15,
+       0.35,
+       11.95,
+       3.8
+      ],
+      "style": "band",
+      "tone": "cyan"
+     },
+     {
+      "id": "lane_handoff",
+      "label": "Handoff: who is accountable",
+      "box": [
+       0.15,
+       4.25,
+       11.95,
+       7.85
+      ],
+      "style": "band",
+      "tone": "amber"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "elig",
+      "label": "Eligible route set",
+      "sub": "purpose · authority · health",
+      "kind": "control",
+      "at": [
+       1.7,
+       1.35
+      ],
+      "w": 2.8
+     },
+     {
+      "id": "cls",
+      "label": "Classify intent",
+      "sub": "route · confidence",
+      "kind": "model",
+      "at": [
+       5.6,
+       1.35
+      ]
+     },
+     {
+      "id": "val",
+      "label": "Route validator",
+      "sub": "threshold · policy",
+      "kind": "control",
+      "at": [
+       9.9,
+       1.35
+      ]
+     },
+     {
+      "id": "spec",
+      "label": "Specialist",
+      "sub": "acts only if authorized",
+      "kind": "service",
+      "at": [
+       7.9,
+       3.0
+      ]
+     },
+     {
+      "id": "fb",
+      "label": "Fallback",
+      "sub": "clarify · default · triage",
+      "kind": "control",
+      "at": [
+       10.75,
+       3.0
+      ],
+      "w": 2.2
+     },
+     {
+      "id": "old",
+      "label": "Current owner",
+      "sub": "accountable until ack",
+      "kind": "actor",
+      "at": [
+       1.7,
+       5.45
+      ],
+      "w": 2.8
+     },
+     {
+      "id": "rec",
+      "label": "Handoff record",
+      "sub": "state · obligations · deadline",
+      "kind": "record",
+      "at": [
+       5.6,
+       5.45
+      ]
+     },
+     {
+      "id": "ack",
+      "label": "Acknowledge?",
+      "sub": "accept or reject",
+      "kind": "control",
+      "at": [
+       9.9,
+       5.45
+      ]
+     },
+     {
+      "id": "new",
+      "label": "New owner",
+      "sub": "narrowed authority",
+      "kind": "actor",
+      "at": [
+       9.9,
+       7.2
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "from": "elig",
+      "to": "cls",
+      "label": "minimal set"
+     },
+     {
+      "from": "cls",
+      "to": "val",
+      "label": "proposed"
+     },
+     {
+      "from": "val",
+      "to": "spec",
+      "label": "select",
+      "route": "straight"
+     },
+     {
+      "from": "val",
+      "to": "fb",
+      "label": "low confidence",
+      "route": "straight",
+      "label_t": 0.45
+     },
+     {
+      "from": "cls",
+      "to": "spec",
+      "label": "selection as authority",
+      "style": "prohibited",
+      "route": "straight"
+     },
+     {
+      "from": "old",
+      "to": "rec",
+      "label": "persist"
+     },
+     {
+      "from": "rec",
+      "to": "ack",
+      "label": "validated"
+     },
+     {
+      "from": "ack",
+      "to": "new",
+      "label": "atomic transfer"
+     },
+     {
+      "from": "ack",
+      "to": "old",
+      "label": "reject",
+      "style": "feedback",
+      "from_side": "top",
+      "to_side": "top",
+      "points": [
+       [
+        9.9,
+        4.7
+       ],
+       [
+        1.7,
+        4.7
+       ]
+      ],
+      "label_t": 0.5
+     },
+     {
+      "from": "old",
+      "to": "new",
+      "label": "chat message",
+      "style": "prohibited",
+      "from_side": "bottom",
+      "to_side": "left",
+      "points": [
+       [
+        1.7,
+        7.2
+       ]
+      ],
+      "label_t": 0.55
+     }
+    ],
+    "components": [
+     {
+      "ref": "elig",
+      "name": "Eligibility before classification"
+     },
+     {
+      "ref": "val",
+      "name": "Deterministic validator"
+     },
+     {
+      "ref": "rec",
+      "name": "Typed handoff record"
+     },
+     {
+      "ref": "ack",
+      "name": "Acknowledged transfer"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 12,
+   "part": "IV",
+   "file": "chapter-12-turn-proposed-plans-into-safe-executable-work.png",
+   "title": "Turn Proposed Plans into Safe, Executable Work",
+   "focus": "Compile every plan revision; replan the future without rewriting history.",
+   "themes": [
+    "Plan as IR",
+    "Deterministic compilation",
+    "Frozen committed past"
+   ],
+   "diagram": {
+    "title": "Replan forward, freeze the past",
+    "groups": [
+     {
+      "id": "g_past",
+      "label": "Frozen past",
+      "box": [
+       0.15,
+       0.35,
+       3.2,
+       7.85
+      ],
+      "style": "boundary",
+      "tone": "indigo"
+     },
+     {
+      "id": "g_replan",
+      "label": "Replan controller",
+      "box": [
+       3.6,
+       0.35,
+       7.05,
+       4.3
+      ],
+      "style": "zone",
+      "tone": "slate",
+      "label_at": "bottom-left"
+     },
+     {
+      "id": "g_propose",
+      "label": "Model proposes",
+      "box": [
+       3.6,
+       4.75,
+       7.05,
+       6.6
+      ],
+      "style": "zone",
+      "tone": "teal",
+      "label_at": "bottom-right"
+     },
+     {
+      "id": "g_commit",
+      "label": "Deterministic commit",
+      "box": [
+       7.45,
+       0.0,
+       11.95,
+       7.85
+      ],
+      "style": "zone",
+      "tone": "cyan",
+      "label_at": "bottom-right"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "eff",
+      "label": "Committed effects",
+      "sub": "immutable facts",
+      "kind": "record",
+      "at": [
+       1.67,
+       2.9
+      ],
+      "w": 2.75
+     },
+     {
+      "id": "art",
+      "label": "Accepted artifacts",
+      "sub": "reusable if compatible",
+      "kind": "record",
+      "at": [
+       1.67,
+       7.0
+      ],
+      "w": 2.75
+     },
+     {
+      "id": "trig",
+      "label": "New evidence",
+      "sub": "observation or failure",
+      "kind": "external",
+      "at": [
+       5.32,
+       1.2
+      ]
+     },
+     {
+      "id": "inv",
+      "label": "Invalidated nodes",
+      "sub": "assumptions changed",
+      "kind": "record",
+      "at": [
+       5.32,
+       3.45
+      ]
+     },
+     {
+      "id": "plan",
+      "label": "Planner",
+      "sub": "affected horizon only",
+      "kind": "model",
+      "at": [
+       5.32,
+       5.7
+      ]
+     },
+     {
+      "id": "sched",
+      "label": "Scheduler",
+      "sub": "ready nodes",
+      "kind": "service",
+      "at": [
+       9.6,
+       0.65
+      ]
+     },
+     {
+      "id": "rev",
+      "label": "Revision N+1",
+      "sub": "immutable · signed",
+      "kind": "record",
+      "at": [
+       9.6,
+       2.35
+      ]
+     },
+     {
+      "id": "appr",
+      "label": "Consent / approval",
+      "sub": "if risk or authority expands",
+      "kind": "human",
+      "at": [
+       9.25,
+       4.05
+      ]
+     },
+     {
+      "id": "comp",
+      "label": "Plan compiler",
+      "sub": "validate · diff",
+      "kind": "control",
+      "at": [
+       9.6,
+       5.7
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "from": "trig",
+      "to": "inv",
+      "label": "invalidates"
+     },
+     {
+      "from": "inv",
+      "to": "plan",
+      "label": "horizon"
+     },
+     {
+      "from": "eff",
+      "to": "plan",
+      "label": "fixed input",
+      "route": "straight",
+      "offset": -55,
+      "label_t": 0.3
+     },
+     {
+      "from": "plan",
+      "to": "eff",
+      "label": "rewrite history",
+      "style": "prohibited",
+      "route": "straight",
+      "offset": -55,
+      "label_t": 0.5
+     },
+     {
+      "from": "plan",
+      "to": "comp",
+      "label": "candidate"
+     },
+     {
+      "from": "art",
+      "to": "comp",
+      "label": "reuse",
+      "from_side": "right",
+      "to_side": "bottom",
+      "points": [
+       [
+        9.6,
+        7.0
+       ]
+      ],
+      "label_t": 0.45
+     },
+     {
+      "from": "comp",
+      "to": "appr",
+      "label": "expands",
+      "from_shift": -60,
+      "to_shift": 0
+     },
+     {
+      "from": "appr",
+      "to": "rev",
+      "to_shift": -60,
+      "from_shift": 0
+     },
+     {
+      "from": "comp",
+      "to": "rev",
+      "label": "atomic commit",
+      "from_side": "right",
+      "to_side": "right",
+      "points": [
+       [
+        11.6,
+        5.7
+       ],
+       [
+        11.6,
+        2.35
+       ]
+      ],
+      "label_t": 0.5
+     },
+     {
+      "from": "rev",
+      "to": "sched",
+      "label": "dispatch"
+     }
+    ],
+    "components": [
+     {
+      "ref": "g_past",
+      "name": "Frozen committed past"
+     },
+     {
+      "ref": "plan",
+      "name": "Affected-horizon planner"
+     },
+     {
+      "ref": "comp",
+      "name": "Deterministic plan compiler"
+     },
+     {
+      "ref": "rev",
+      "name": "Immutable plan revision"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 13,
+   "part": "IV",
+   "file": "chapter-13-use-critique-to-improve-never-to-self-approve.png",
+   "title": "Use Critique to Improve—Never to Self-Approve",
+   "focus": "Let critique improve the draft; let independent evidence decide acceptance.",
+   "themes": [
+    "Bounded revision",
+    "Deterministic checks first",
+    "Independent acceptance"
+   ],
+   "diagram": {
+    "title": "Critique improves, evidence decides",
+    "groups": [
+     {
+      "id": "g_improve",
+      "label": "Bounded improvement",
+      "box": [
+       0.15,
+       0.35,
+       3.95,
+       7.85
+      ],
+      "style": "zone",
+      "tone": "teal"
+     },
+     {
+      "id": "g_eval",
+      "label": "Independent evaluation",
+      "box": [
+       4.4,
+       2.35,
+       7.75,
+       7.85
+      ],
+      "style": "zone",
+      "tone": "cyan"
+     },
+     {
+      "id": "g_decide",
+      "label": "Decided elsewhere",
+      "box": [
+       8.2,
+       0.35,
+       11.95,
+       7.85
+      ],
+      "style": "boundary",
+      "tone": "amber",
+      "label_at": "bottom-left"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "gen",
+      "label": "Generator",
+      "kind": "model",
+      "at": [
+       2.25,
+       1.35
+      ]
+     },
+     {
+      "id": "cand",
+      "label": "Candidate",
+      "sub": "versioned · diff",
+      "kind": "record",
+      "at": [
+       2.25,
+       4.1
+      ]
+     },
+     {
+      "id": "refl",
+      "label": "Reflector",
+      "sub": "structured defects",
+      "kind": "model",
+      "at": [
+       2.25,
+       6.75
+      ]
+     },
+     {
+      "id": "det",
+      "label": "Deterministic checks",
+      "sub": "schema · policy · arithmetic",
+      "kind": "control",
+      "at": [
+       6.07,
+       3.5
+      ],
+      "w": 2.95
+     },
+     {
+      "id": "judge",
+      "label": "Calibrated judge",
+      "sub": "qualitative only",
+      "kind": "model",
+      "at": [
+       6.07,
+       6.4
+      ],
+      "w": 2.95
+     },
+     {
+      "id": "out",
+      "label": "Accepted",
+      "kind": "effect",
+      "at": [
+       10.07,
+       1.35
+      ]
+     },
+     {
+      "id": "acc",
+      "label": "Acceptance engine",
+      "sub": "scores as evidence",
+      "kind": "control",
+      "at": [
+       10.07,
+       3.5
+      ],
+      "w": 3.1
+     },
+     {
+      "id": "esc",
+      "label": "Escalate",
+      "sub": "both artifacts",
+      "kind": "human",
+      "at": [
+       9.55,
+       5.35
+      ]
+     },
+     {
+      "id": "corp",
+      "label": "Regression corpus",
+      "sub": "failed candidates",
+      "kind": "store",
+      "at": [
+       10.07,
+       6.95
+      ],
+      "w": 3.1
+     }
+    ],
+    "edges": [
+     {
+      "from": "gen",
+      "to": "cand"
+     },
+     {
+      "from": "cand",
+      "to": "refl",
+      "label": "critique"
+     },
+     {
+      "from": "refl",
+      "to": "gen",
+      "label": "under cap",
+      "style": "feedback",
+      "from_side": "left",
+      "to_side": "left",
+      "points": [
+       [
+        0.4,
+        6.75
+       ],
+       [
+        0.4,
+        1.35
+       ]
+      ],
+      "label_t": 0.5
+     },
+     {
+      "from": "cand",
+      "to": "det",
+      "label": "first",
+      "route": "straight"
+     },
+     {
+      "from": "det",
+      "to": "judge",
+      "label": "if qualitative"
+     },
+     {
+      "from": "det",
+      "to": "acc"
+     },
+     {
+      "from": "judge",
+      "to": "acc",
+      "label": "evidence",
+      "route": "straight",
+      "label_t": 0.4
+     },
+     {
+      "from": "acc",
+      "to": "out",
+      "label": "accept"
+     },
+     {
+      "from": "acc",
+      "to": "esc",
+      "label": "repeated disagreement",
+      "from_shift": -90
+     },
+     {
+      "from": "acc",
+      "to": "corp",
+      "label": "rejected",
+      "style": "async",
+      "from_side": "right",
+      "to_side": "right",
+      "points": [
+       [
+        11.75,
+        3.5
+       ],
+       [
+        11.75,
+        6.95
+       ]
+      ],
+      "label_t": 0.6
+     },
+     {
+      "from": "gen",
+      "to": "out",
+      "label": "self-approve",
+      "style": "prohibited",
+      "label_t": 0.45
+     }
+    ],
+    "components": [
+     {
+      "ref": "refl",
+      "name": "Bounded reflection"
+     },
+     {
+      "ref": "det",
+      "name": "Deterministic checks first"
+     },
+     {
+      "ref": "judge",
+      "name": "Calibrated judge"
+     },
+     {
+      "ref": "acc",
+      "name": "Independent acceptance"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 14,
+   "part": "IV",
+   "file": "chapter-14-put-people-where-their-judgment-matters.png",
+   "title": "Put People Where Their Judgment Matters",
+   "focus": "Bind every human decision to one immutable proposal, then reauthorize before commit.",
+   "themes": [
+    "Proposal binding",
+    "Durable waits",
+    "Reauthorize at commit"
+   ],
+   "diagram": {
+    "title": "Proposal-bound authorization lifecycle",
+    "groups": [
+     {
+      "id": "g_machine",
+      "label": "Machine proposal",
+      "box": [
+       0.15,
+       0.35,
+       3.6,
+       6.85
+      ],
+      "style": "zone",
+      "tone": "teal"
+     },
+     {
+      "id": "g_human",
+      "label": "Human authority",
+      "box": [
+       4.05,
+       0.35,
+       7.95,
+       6.85
+      ],
+      "style": "boundary",
+      "tone": "amber"
+     },
+     {
+      "id": "g_commit",
+      "label": "Commit path",
+      "box": [
+       8.4,
+       0.35,
+       11.95,
+       6.85
+      ],
+      "style": "zone",
+      "tone": "cyan"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "router",
+      "label": "Approval Policy Router",
+      "sub": "policy-triggered gate",
+      "kind": "control",
+      "at": [
+       1.87,
+       1.5
+      ],
+      "w": 3.0
+     },
+     {
+      "id": "proposal",
+      "label": "Immutable Proposal",
+      "sub": "proposal hash · expiry",
+      "kind": "record",
+      "at": [
+       1.87,
+       4.15
+      ],
+      "w": 3.0
+     },
+     {
+      "id": "wait",
+      "label": "Durable Wait",
+      "sub": "SLA · expiry timers",
+      "kind": "store",
+      "at": [
+       6.0,
+       1.5
+      ]
+     },
+     {
+      "id": "approver",
+      "label": "Approver",
+      "sub": "authority · SoD",
+      "kind": "human",
+      "at": [
+       6.0,
+       3.6
+      ]
+     },
+     {
+      "id": "decision",
+      "label": "Bound Decision",
+      "sub": "hash · append-only",
+      "kind": "record",
+      "at": [
+       6.0,
+       5.7
+      ]
+     },
+     {
+      "id": "commit",
+      "label": "Commit",
+      "sub": "effect receipt",
+      "kind": "effect",
+      "at": [
+       10.17,
+       1.5
+      ]
+     },
+     {
+      "id": "recheck",
+      "label": "Reauthorize",
+      "sub": "hash · authority · version",
+      "kind": "control",
+      "at": [
+       10.17,
+       3.6
+      ]
+     },
+     {
+      "id": "supersede",
+      "label": "Supersede",
+      "sub": "fresh preview",
+      "kind": "control",
+      "at": [
+       10.17,
+       5.7
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "from": "router",
+      "to": "proposal",
+      "label": "requires"
+     },
+     {
+      "from": "proposal",
+      "to": "wait",
+      "label": "persist",
+      "route": "straight"
+     },
+     {
+      "from": "wait",
+      "to": "approver",
+      "label": "notify",
+      "style": "async"
+     },
+     {
+      "from": "approver",
+      "to": "decision",
+      "label": "decide"
+     },
+     {
+      "from": "decision",
+      "to": "recheck",
+      "label": "event",
+      "style": "async",
+      "route": "straight"
+     },
+     {
+      "from": "recheck",
+      "to": "commit",
+      "label": "still valid"
+     },
+     {
+      "from": "recheck",
+      "to": "supersede",
+      "label": "changed"
+     },
+     {
+      "from": "supersede",
+      "to": "proposal",
+      "label": "new proposal",
+      "style": "feedback",
+      "from_side": "bottom",
+      "to_side": "bottom",
+      "points": [
+       [
+        10.17,
+        7.35
+       ],
+       [
+        1.87,
+        7.35
+       ]
+      ],
+      "label_t": 0.5
+     },
+     {
+      "from": "wait",
+      "to": "commit",
+      "label": "timeout",
+      "style": "prohibited"
+     }
+    ],
+    "components": [
+     {
+      "ref": "proposal",
+      "name": "Immutable proposal hash"
+     },
+     {
+      "ref": "wait",
+      "name": "Durable wait, expiry"
+     },
+     {
+      "ref": "decision",
+      "name": "Hash-bound decision"
+     },
+     {
+      "ref": "recheck",
+      "name": "Reauthorize before commit"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 15,
+   "part": "IV",
+   "file": "chapter-15-keep-long-running-work-alive-through-failure.png",
+   "title": "Keep Long-Running Work Alive Through Failure",
+   "focus": "Keep decisions deterministic and replayable; push model and tool calls into recorded activities.",
+   "themes": [
+    "Deterministic workflow",
+    "Replayable history",
+    "Event-driven resume"
+   ],
+   "diagram": {
+    "title": "Deterministic kernel, recorded I/O",
+    "groups": [
+     {
+      "id": "g_ingress",
+      "label": "Event ingress",
+      "box": [
+       0.05,
+       3.0,
+       2.85,
+       7.85
+      ],
+      "style": "zone",
+      "tone": "slate"
+     },
+     {
+      "id": "g_kernel",
+      "label": "Durable workflow kernel",
+      "box": [
+       3.25,
+       0.35,
+       7.85,
+       7.85
+      ],
+      "style": "boundary",
+      "tone": "cyan"
+     },
+     {
+      "id": "g_external",
+      "label": "External I/O",
+      "box": [
+       8.25,
+       0.35,
+       11.95,
+       2.35
+      ],
+      "style": "zone",
+      "tone": "slate",
+      "label_at": "top-right"
+     },
+     {
+      "id": "g_activities",
+      "label": "Bounded activities",
+      "box": [
+       8.25,
+       2.8,
+       11.95,
+       7.85
+      ],
+      "style": "zone",
+      "tone": "blue",
+      "label_at": "bottom-right"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "run_api",
+      "label": "Run API",
+      "sub": "idempotent admission",
+      "kind": "service",
+      "at": [
+       1.45,
+       1.35
+      ],
+      "w": 2.6
+     },
+     {
+      "id": "correlator",
+      "label": "Correlator",
+      "sub": "match waiting run",
+      "kind": "control",
+      "at": [
+       1.45,
+       4.15
+      ],
+      "w": 2.6
+     },
+     {
+      "id": "ingress",
+      "label": "Event Ingress",
+      "sub": "authenticate · inbox",
+      "kind": "service",
+      "at": [
+       1.45,
+       6.85
+      ],
+      "w": 2.6
+     },
+     {
+      "id": "reducer",
+      "label": "Workflow Reducer",
+      "sub": "deterministic only",
+      "kind": "control",
+      "at": [
+       5.55,
+       1.35
+      ],
+      "w": 3.0
+     },
+     {
+      "id": "history",
+      "label": "Event History",
+      "sub": "append-only · checkpoints",
+      "kind": "store",
+      "at": [
+       5.0,
+       4.15
+      ],
+      "w": 2.75
+     },
+     {
+      "id": "wait",
+      "label": "Wait Registration",
+      "sub": "timer · signal · deadline",
+      "kind": "record",
+      "at": [
+       5.75,
+       6.85
+      ],
+      "w": 3.0
+     },
+     {
+      "id": "models_tools",
+      "label": "Models & Tools",
+      "sub": "nondeterministic I/O",
+      "kind": "external",
+      "at": [
+       10.1,
+       1.35
+      ],
+      "w": 3.1
+     },
+     {
+      "id": "activity",
+      "label": "Activities",
+      "sub": "timeout · idempotency key",
+      "kind": "service",
+      "at": [
+       10.1,
+       4.15
+      ],
+      "w": 3.1
+     },
+     {
+      "id": "receipts",
+      "label": "Effect Receipts",
+      "sub": "reconcile before retry",
+      "kind": "record",
+      "at": [
+       10.1,
+       6.85
+      ],
+      "w": 3.1
+     }
+    ],
+    "edges": [
+     {
+      "from": "run_api",
+      "to": "reducer",
+      "label": "admit"
+     },
+     {
+      "from": "reducer",
+      "to": "history",
+      "label": "record",
+      "from_side": "bottom",
+      "to_side": "top",
+      "from_shift": -150,
+      "to_shift": -50
+     },
+     {
+      "from": "history",
+      "to": "reducer",
+      "label": "replay",
+      "style": "feedback",
+      "from_side": "top",
+      "to_side": "bottom",
+      "from_shift": 60,
+      "to_shift": -30
+     },
+     {
+      "from": "reducer",
+      "to": "wait",
+      "label": "persist wait",
+      "from_side": "bottom",
+      "to_side": "top",
+      "from_shift": 190,
+      "to_shift": 155,
+      "route": "ortho",
+      "label_t": 0.75
+     },
+     {
+      "from": "reducer",
+      "to": "activity",
+      "label": "schedule",
+      "route": "straight",
+      "label_t": 0.6
+     },
+     {
+      "from": "activity",
+      "to": "models_tools",
+      "label": "bounded call"
+     },
+     {
+      "from": "activity",
+      "to": "history",
+      "label": "result",
+      "label_t": 0.3
+     },
+     {
+      "from": "activity",
+      "to": "receipts",
+      "label": "effect key"
+     },
+     {
+      "from": "reducer",
+      "to": "models_tools",
+      "label": "direct call",
+      "style": "prohibited"
+     },
+     {
+      "from": "ingress",
+      "to": "correlator",
+      "label": "inbox receipt"
+     },
+     {
+      "from": "correlator",
+      "to": "reducer",
+      "label": "signal",
+      "style": "async",
+      "route": "straight",
+      "label_t": 0.42
+     }
+    ],
+    "components": [
+     {
+      "ref": "reducer",
+      "name": "Deterministic reducer"
+     },
+     {
+      "ref": "history",
+      "name": "Replayable event history"
+     },
+     {
+      "ref": "activity",
+      "name": "Bounded activities"
+     },
+     {
+      "ref": "ingress",
+      "name": "Authenticated event resume"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 16,
+   "part": "IV",
+   "file": "chapter-16-choose-patterns-that-fit-real-enterprise-work.png",
+   "title": "Choose Patterns That Fit Real Enterprise Work",
+   "focus": "Start from the obligation, then choose the smallest pattern that protects it.",
+   "themes": [
+    "Hidden obligations",
+    "Smallest pattern",
+    "Honest trade-offs"
+   ],
+   "diagram": {
+    "title": "Choose by obligation, not fashion",
+    "groups": [
+     {
+      "id": "g_reject",
+      "label": "Tempting paths",
+      "box": [
+       0.15,
+       0.35,
+       11.95,
+       2.55
+      ],
+      "style": "band",
+      "tone": "red"
+     },
+     {
+      "id": "g_review",
+      "label": "Review sequence",
+      "box": [
+       0.15,
+       3.05,
+       11.95,
+       7.85
+      ],
+      "style": "band",
+      "tone": "cyan",
+      "label_at": "bottom-left"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "ceremony",
+      "label": "Combine Every Pattern",
+      "sub": "ceremony and cost",
+      "kind": "bad",
+      "at": [
+       1.75,
+       1.5
+      ]
+     },
+     {
+      "id": "shortcut",
+      "label": "Tempting Shortcut",
+      "sub": "chosen by fashion",
+      "kind": "bad",
+      "tone": "amber",
+      "at": [
+       5.6,
+       1.5
+      ]
+     },
+     {
+      "id": "exposed",
+      "label": "Exposed Failure",
+      "sub": "real failure mode",
+      "kind": "bad",
+      "at": [
+       9.75,
+       1.5
+      ]
+     },
+     {
+      "id": "obligation",
+      "label": "Hidden Obligation",
+      "sub": "cannot be violated",
+      "kind": "control",
+      "at": [
+       1.75,
+       4.45
+      ],
+      "w": 2.8
+     },
+     {
+      "id": "pattern",
+      "label": "Smallest Pattern",
+      "sub": "protects obligation",
+      "kind": "control",
+      "at": [
+       5.6,
+       4.45
+      ]
+     },
+     {
+      "id": "flow",
+      "label": "Runtime Flow",
+      "kind": "service",
+      "at": [
+       9.75,
+       4.45
+      ]
+     },
+     {
+      "id": "cost",
+      "label": "Honest Cost",
+      "sub": "latency · effort",
+      "kind": "record",
+      "at": [
+       5.6,
+       6.95
+      ]
+     },
+     {
+      "id": "watch",
+      "label": "What to Watch",
+      "sub": "failure signals",
+      "kind": "record",
+      "at": [
+       9.75,
+       6.95
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "from": "obligation",
+      "to": "ceremony",
+      "label": "combine all",
+      "style": "prohibited"
+     },
+     {
+      "from": "obligation",
+      "to": "shortcut",
+      "label": "by fashion",
+      "style": "prohibited",
+      "route": "straight",
+      "label_t": 0.45
+     },
+     {
+      "from": "shortcut",
+      "to": "exposed",
+      "label": "leaves"
+     },
+     {
+      "from": "obligation",
+      "to": "pattern",
+      "label": "choose"
+     },
+     {
+      "from": "pattern",
+      "to": "flow",
+      "label": "runs as"
+     },
+     {
+      "from": "flow",
+      "to": "watch",
+      "label": "track"
+     },
+     {
+      "from": "pattern",
+      "to": "cost",
+      "label": "trade-off"
+     },
+     {
+      "from": "watch",
+      "to": "pattern",
+      "label": "tune",
+      "style": "feedback",
+      "route": "straight",
+      "label_t": 0.5
+     }
+    ],
+    "legend": {
+     "bad": "anti-pattern"
+    },
+    "components": [
+     {
+      "ref": "obligation",
+      "name": "Name the obligation"
+     },
+     {
+      "ref": "pattern",
+      "name": "Smallest protecting pattern"
+     },
+     {
+      "ref": "watch",
+      "name": "Watch failure signals"
+     },
+     {
+      "ref": "cost",
+      "name": "State the cost"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 17,
+   "part": "IV",
+   "file": "chapter-17-architecture-patterns-that-fail-in-production.png",
+   "title": "Architecture Patterns That Fail in Production",
+   "focus": "Trace each symptom to its violated boundary, then replace the boundary, not the symptom.",
+   "themes": [
+    "Symptom-first diagnosis",
+    "Responsibility boundaries",
+    "Blast-radius order"
+   ],
+   "diagram": {
+    "title": "From symptom to boundary fix",
+    "groups": [
+     {
+      "id": "g_diagnose",
+      "label": "Diagnose",
+      "box": [
+       0.15,
+       0.35,
+       11.95,
+       2.6
+      ],
+      "style": "band",
+      "tone": "cyan"
+     },
+     {
+      "id": "g_patch",
+      "label": "Symptom patch",
+      "box": [
+       0.15,
+       3.1,
+       3.85,
+       7.85
+      ],
+      "style": "band",
+      "tone": "red",
+      "label_at": "bottom-left"
+     },
+     {
+      "id": "g_correct",
+      "label": "Correct",
+      "box": [
+       4.3,
+       3.1,
+       11.95,
+       7.85
+      ],
+      "style": "band",
+      "tone": "teal"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "symptom",
+      "label": "First Symptom",
+      "sub": "e.g. duplicate write",
+      "kind": "effect",
+      "at": [
+       2.0,
+       1.55
+      ]
+     },
+     {
+      "id": "card",
+      "label": "Anti-Pattern Card",
+      "sub": "AP-01 … AP-16",
+      "kind": "record",
+      "at": [
+       6.0,
+       1.55
+      ]
+     },
+     {
+      "id": "boundary",
+      "label": "Violated Boundary",
+      "sub": "e.g. transport vs effect",
+      "kind": "control",
+      "at": [
+       9.95,
+       1.55
+      ]
+     },
+     {
+      "id": "patch",
+      "label": "Symptom Patch",
+      "sub": "prompt · retry · classifier",
+      "kind": "bad",
+      "tone": "amber",
+      "at": [
+       2.0,
+       5.45
+      ]
+     },
+     {
+      "id": "blast",
+      "label": "Blast-Radius Order",
+      "sub": "AP-04, 05, 06 first",
+      "kind": "control",
+      "at": [
+       6.4,
+       4.5
+      ]
+     },
+     {
+      "id": "replacement",
+      "label": "Boundary Replacement",
+      "sub": "usually deterministic code",
+      "kind": "control",
+      "at": [
+       9.95,
+       4.5
+      ]
+     },
+     {
+      "id": "metric",
+      "label": "Detection Metric",
+      "sub": "repair worked?",
+      "kind": "record",
+      "at": [
+       9.95,
+       6.95
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "from": "symptom",
+      "to": "card",
+      "label": "look up"
+     },
+     {
+      "from": "card",
+      "to": "boundary",
+      "label": "names"
+     },
+     {
+      "from": "symptom",
+      "to": "patch",
+      "label": "fix symptom",
+      "style": "prohibited",
+      "from_shift": -90,
+      "to_shift": -90,
+      "label_t": 0.4
+     },
+     {
+      "from": "patch",
+      "to": "symptom",
+      "label": "returns renamed",
+      "style": "feedback",
+      "from_shift": 90,
+      "to_shift": 90,
+      "label_t": 0.62
+     },
+     {
+      "from": "boundary",
+      "to": "replacement",
+      "label": "replace"
+     },
+     {
+      "from": "blast",
+      "to": "replacement",
+      "label": "prioritize"
+     },
+     {
+      "from": "replacement",
+      "to": "metric",
+      "label": "verify"
+     }
+    ],
+    "legend": {
+     "bad": "anti-pattern"
+    },
+    "components": [
+     {
+      "ref": "symptom",
+      "name": "First visible symptom"
+     },
+     {
+      "ref": "boundary",
+      "name": "Violated boundary"
+     },
+     {
+      "ref": "replacement",
+      "name": "Concrete replacement"
+     },
+     {
+      "ref": "metric",
+      "name": "Repair metric"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 18,
+   "part": "V",
+   "file": "chapter-18-coordinate-specialists-without-losing-control.png",
+   "title": "Coordinate Specialists Without Losing Control",
+   "focus": "Make collaboration durable work with one owner, narrow grants, explicit joins.",
+   "themes": [
+    "Single task owner",
+    "Narrowed authority",
+    "Explicit joins"
+   ],
+   "diagram": {
+    "title": "Conversation advises, workflow decides",
+    "groups": [
+     {
+      "id": "g_workflow",
+      "label": "Workflow state",
+      "box": [
+       0.1,
+       0.75,
+       9.0,
+       7.85
+      ],
+      "style": "boundary",
+      "tone": "cyan",
+      "label_at": "bottom-left"
+     },
+     {
+      "id": "g_advisory",
+      "label": "Advisory conversation",
+      "box": [
+       9.4,
+       0.75,
+       11.95,
+       7.85
+      ],
+      "style": "zone",
+      "tone": "teal",
+      "label_at": "bottom-right"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "own",
+      "label": "Ownership Service",
+      "sub": "handoff · cancel tree",
+      "kind": "control",
+      "at": [
+       1.5,
+       1.75
+      ],
+      "w": 2.55
+     },
+     {
+      "id": "tasks",
+      "label": "Task Service",
+      "sub": "one owner per task",
+      "kind": "service",
+      "at": [
+       4.65,
+       1.75
+      ],
+      "w": 2.3
+     },
+     {
+      "id": "records",
+      "label": "Durable records",
+      "sub": "status · owner · artifacts",
+      "kind": "store",
+      "at": [
+       7.75,
+       1.75
+      ],
+      "w": 2.2
+     },
+     {
+      "id": "coord",
+      "label": "Run Coordinator",
+      "sub": "owns terminal decision",
+      "kind": "control",
+      "at": [
+       1.5,
+       4.25
+      ],
+      "w": 2.55
+     },
+     {
+      "id": "grant",
+      "label": "Child grant",
+      "sub": "narrower than parent",
+      "kind": "control",
+      "at": [
+       4.75,
+       4.25
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "outcome",
+      "label": "Terminal state",
+      "sub": "deterministic transition",
+      "kind": "record",
+      "at": [
+       1.5,
+       6.6
+      ],
+      "w": 2.55
+     },
+     {
+      "id": "join",
+      "label": "Join / Aggregation",
+      "sub": "all · quorum · first-valid",
+      "kind": "control",
+      "at": [
+       4.75,
+       6.6
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "agents",
+      "label": "Specialist agents",
+      "sub": "explain · propose",
+      "kind": "model",
+      "at": [
+       10.67,
+       4.25
+      ],
+      "w": 2.3
+     }
+    ],
+    "edges": [
+     {
+      "from": "own",
+      "to": "tasks",
+      "label": "owner"
+     },
+     {
+      "from": "tasks",
+      "to": "records",
+      "label": "persist"
+     },
+     {
+      "from": "coord",
+      "to": "tasks",
+      "label": "child task",
+      "route": "straight"
+     },
+     {
+      "from": "coord",
+      "to": "grant",
+      "label": "narrow"
+     },
+     {
+      "from": "tasks",
+      "to": "agents",
+      "label": "assign",
+      "route": "straight",
+      "label_t": 0.62
+     },
+     {
+      "from": "grant",
+      "to": "agents",
+      "label": "scoped authority"
+     },
+     {
+      "from": "own",
+      "to": "agents",
+      "label": "cancel intent",
+      "style": "async",
+      "from_side": "top",
+      "to_side": "top",
+      "points": [
+       [
+        1.5,
+        0.3
+       ],
+       [
+        10.67,
+        0.3
+       ]
+      ],
+      "label_t": 0.5
+     },
+     {
+      "from": "agents",
+      "to": "join",
+      "label": "typed artifacts",
+      "route": "straight",
+      "label_t": 0.45
+     },
+     {
+      "from": "join",
+      "to": "coord",
+      "label": "accepted result",
+      "style": "feedback",
+      "route": "straight",
+      "label_t": 0.5
+     },
+     {
+      "from": "coord",
+      "to": "outcome",
+      "label": "commit"
+     },
+     {
+      "from": "agents",
+      "to": "outcome",
+      "label": "declare done",
+      "style": "prohibited",
+      "from_side": "bottom",
+      "to_side": "bottom",
+      "points": [
+       [
+        10.67,
+        7.55
+       ],
+       [
+        1.5,
+        7.55
+       ]
+      ],
+      "label_t": 0.55
+     }
+    ],
+    "components": [
+     {
+      "ref": "tasks",
+      "name": "One owner per task"
+     },
+     {
+      "ref": "grant",
+      "name": "Narrowed child grant"
+     },
+     {
+      "ref": "join",
+      "name": "Explicit join contract"
+     },
+     {
+      "ref": "outcome",
+      "name": "Deterministic termination"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 19,
+   "part": "V",
+   "file": "chapter-19-crossing-system-boundaries-mcp-a2a-and-local-control.png",
+   "title": "Crossing System Boundaries: MCP, A2A, and Local Control",
+   "focus": "Protocols move messages; local gateways re-establish trust before anything is adopted.",
+   "themes": [
+    "Tools vs tasks",
+    "Local authorization",
+    "Artifact adoption"
+   ],
+   "diagram": {
+    "title": "Interoperability does not transfer trust",
+    "groups": [
+     {
+      "id": "g_local",
+      "label": "Local trust domain",
+      "box": [
+       0.0,
+       0.0,
+       7.8,
+       7.85
+      ],
+      "style": "boundary",
+      "tone": "cyan",
+      "label_at": "bottom-left"
+     },
+     {
+      "id": "g_gateways",
+      "label": "Governed gateways",
+      "box": [
+       5.05,
+       0.35,
+       7.6,
+       7.45
+      ],
+      "style": "band",
+      "tone": "amber"
+     },
+     {
+      "id": "g_external",
+      "label": "External endpoints",
+      "box": [
+       8.0,
+       0.35,
+       11.95,
+       7.85
+      ],
+      "style": "zone",
+      "tone": "slate",
+      "label_at": "top-right"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "registry",
+      "label": "Server/peer registry",
+      "sub": "pinned · not a grant",
+      "kind": "store",
+      "at": [
+       2.37,
+       1.35
+      ],
+      "w": 3.0
+     },
+     {
+      "id": "agent",
+      "label": "Local agent",
+      "kind": "actor",
+      "at": [
+       2.37,
+       3.2
+      ],
+      "w": 3.0
+     },
+     {
+      "id": "adopt",
+      "label": "Artifact adoption",
+      "sub": "quarantine · validate",
+      "kind": "control",
+      "at": [
+       2.37,
+       5.05
+      ],
+      "w": 3.0
+     },
+     {
+      "id": "workflow",
+      "label": "Parent workflow",
+      "sub": "canonical local state",
+      "kind": "record",
+      "at": [
+       2.37,
+       6.9
+      ],
+      "w": 3.0
+     },
+     {
+      "id": "mcpgw",
+      "label": "MCP Gateway",
+      "sub": "filter tools · policy",
+      "kind": "control",
+      "at": [
+       6.32,
+       2.2
+      ],
+      "w": 2.35
+     },
+     {
+      "id": "a2agw",
+      "label": "A2A Gateway",
+      "sub": "peer trust · quotas",
+      "kind": "control",
+      "at": [
+       6.32,
+       5.05
+      ],
+      "w": 2.35
+     },
+     {
+      "id": "mcpserver",
+      "label": "MCP server",
+      "sub": "tools · resources · prompts",
+      "kind": "external",
+      "at": [
+       10.3,
+       2.2
+      ],
+      "w": 2.6
+     },
+     {
+      "id": "peer",
+      "label": "A2A peer agent",
+      "sub": "owns delegated task",
+      "kind": "external",
+      "at": [
+       10.3,
+       5.05
+      ],
+      "w": 2.6
+     }
+    ],
+    "edges": [
+     {
+      "from": "registry",
+      "to": "mcpgw",
+      "label": "pinned manifest",
+      "route": "straight",
+      "label_t": 0.42
+     },
+     {
+      "from": "registry",
+      "to": "a2agw",
+      "label": "trust profile",
+      "route": "straight",
+      "label_t": 0.55
+     },
+     {
+      "from": "agent",
+      "to": "mcpgw",
+      "label": "tool call",
+      "route": "straight",
+      "offset": -28,
+      "label_t": 0.3
+     },
+     {
+      "from": "mcpgw",
+      "to": "agent",
+      "label": "validated result",
+      "style": "feedback",
+      "route": "straight",
+      "offset": -28,
+      "label_t": 0.62
+     },
+     {
+      "from": "agent",
+      "to": "a2agw",
+      "label": "TaskEnvelope",
+      "route": "straight",
+      "label_t": 0.62
+     },
+     {
+      "from": "mcpgw",
+      "to": "mcpserver",
+      "label": "scoped call",
+      "offset": -34
+     },
+     {
+      "from": "mcpserver",
+      "to": "mcpgw",
+      "label": "result",
+      "style": "feedback",
+      "offset": 34
+     },
+     {
+      "from": "a2agw",
+      "to": "peer",
+      "label": "A2A task",
+      "offset": -34
+     },
+     {
+      "from": "peer",
+      "to": "a2agw",
+      "label": "status, artifacts",
+      "style": "async",
+      "offset": 34
+     },
+     {
+      "from": "a2agw",
+      "to": "adopt",
+      "label": "quarantine"
+     },
+     {
+      "from": "adopt",
+      "to": "workflow",
+      "label": "commit"
+     },
+     {
+      "from": "peer",
+      "to": "workflow",
+      "label": "shared mutable state",
+      "style": "prohibited",
+      "from_side": "bottom",
+      "to_side": "right",
+      "points": [
+       [
+        10.3,
+        6.9
+       ]
+      ],
+      "label_t": 0.6
+     }
+    ],
+    "components": [
+     {
+      "ref": "registry",
+      "name": "Pinned registry entry"
+     },
+     {
+      "ref": "mcpgw",
+      "name": "Caller-owned tool calls"
+     },
+     {
+      "ref": "a2agw",
+      "name": "Peer-owned delegated tasks"
+     },
+     {
+      "ref": "adopt",
+      "name": "Validate before adoption"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 20,
+   "part": "VI",
+   "file": "chapter-20-security-starts-outside-the-prompt.png",
+   "title": "Security Starts Outside the Prompt",
+   "focus": "Detection may fail; deterministic enforcement must still fail closed.",
+   "themes": [
+    "Detect vs. enforce",
+    "Trust boundaries",
+    "Evidence of control"
+   ],
+   "diagram": {
+    "title": "Detect, decide, enforce",
+    "groups": [
+     {
+      "id": "probabilistic",
+      "label": "Probabilistic",
+      "box": [
+       3.5,
+       0.35,
+       11.95,
+       2.75
+      ],
+      "style": "zone",
+      "tone": "teal"
+     },
+     {
+      "id": "deterministic",
+      "label": "Deterministic controls",
+      "box": [
+       3.5,
+       3.3,
+       11.95,
+       5.75
+      ],
+      "style": "boundary",
+      "tone": "cyan",
+      "label_at": "bottom-left"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "content",
+      "label": "Untrusted content",
+      "sub": "documents, tool results",
+      "kind": "external",
+      "at": [
+       1.6,
+       1.55
+      ],
+      "w": 2.85
+     },
+     {
+      "id": "detector",
+      "label": "Detector",
+      "sub": "may miss",
+      "kind": "control",
+      "at": [
+       5.75,
+       1.55
+      ]
+     },
+     {
+      "id": "model",
+      "label": "Model",
+      "sub": "may be fooled",
+      "kind": "model",
+      "at": [
+       9.9,
+       1.55
+      ]
+     },
+     {
+      "id": "policy",
+      "label": "Policy point",
+      "sub": "decides permission",
+      "kind": "control",
+      "at": [
+       9.9,
+       4.55
+      ]
+     },
+     {
+      "id": "enforce",
+      "label": "Enforcement point",
+      "sub": "fails closed",
+      "kind": "control",
+      "at": [
+       5.75,
+       4.55
+      ]
+     },
+     {
+      "id": "effect",
+      "label": "Protected effect",
+      "sub": "bounded grant",
+      "kind": "effect",
+      "at": [
+       1.6,
+       4.55
+      ],
+      "w": 2.85
+     },
+     {
+      "id": "records",
+      "label": "Decision records",
+      "sub": "receipts, effect state",
+      "kind": "record",
+      "at": [
+       5.75,
+       7.0
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "from": "content",
+      "to": "detector",
+      "label": "inspect"
+     },
+     {
+      "from": "detector",
+      "to": "model",
+      "label": "may pass"
+     },
+     {
+      "from": "model",
+      "to": "policy",
+      "label": "proposal"
+     },
+     {
+      "from": "policy",
+      "to": "enforce",
+      "label": "decision"
+     },
+     {
+      "from": "enforce",
+      "to": "effect",
+      "label": "bounded grant"
+     },
+     {
+      "from": "model",
+      "to": "effect",
+      "label": "no direct path",
+      "style": "prohibited",
+      "from_side": "bottom",
+      "to_side": "top",
+      "from_shift": -100,
+      "points": [
+       [
+        9.331,
+        3.02
+       ],
+       [
+        1.6,
+        3.02
+       ]
+      ],
+      "label_t": 0.45
+     },
+     {
+      "from": "enforce",
+      "to": "records",
+      "label": "decision",
+      "style": "async"
+     },
+     {
+      "from": "effect",
+      "to": "records",
+      "label": "reconcile",
+      "style": "feedback",
+      "from_side": "bottom",
+      "to_side": "left",
+      "route": "ortho"
+     }
+    ],
+    "components": [
+     {
+      "ref": "detector",
+      "name": "Detector"
+     },
+     {
+      "ref": "policy",
+      "name": "Policy point"
+     },
+     {
+      "ref": "enforce",
+      "name": "Enforcement point"
+     },
+     {
+      "ref": "records",
+      "name": "Evidence of control"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 21,
+   "part": "VI",
+   "file": "chapter-21-carry-identity-narrow-authority.png",
+   "title": "Carry Identity, Narrow Authority",
+   "focus": "Carry subject and actor; grant the intersection, never the union.",
+   "themes": [
+    "Dual principal",
+    "Monotonic narrowing",
+    "Last-hop credentials"
+   ],
+   "diagram": {
+    "title": "Authority is an intersection",
+    "groups": [
+     {
+      "id": "identities",
+      "label": "Three identities",
+      "box": [
+       0.1,
+       0.35,
+       3.45,
+       7.0
+      ],
+      "style": "zone",
+      "tone": "amber"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "purpose",
+      "label": "Purpose",
+      "sub": "why it is needed",
+      "kind": "record",
+      "at": [
+       1.77,
+       1.45
+      ],
+      "w": 2.9
+     },
+     {
+      "id": "actor",
+      "label": "Actor",
+      "sub": "acting workload",
+      "kind": "actor",
+      "at": [
+       1.77,
+       3.65
+      ],
+      "w": 2.9
+     },
+     {
+      "id": "subject",
+      "label": "Subject",
+      "sub": "who initiated",
+      "kind": "human",
+      "at": [
+       1.77,
+       5.85
+      ],
+      "w": 2.9
+     },
+     {
+      "id": "rbac_abac",
+      "label": "RBAC + ABAC",
+      "sub": "role, resource, risk",
+      "kind": "control",
+      "at": [
+       6.0,
+       1.2
+      ]
+     },
+     {
+      "id": "pdp",
+      "label": "Policy decision",
+      "sub": "intersection, deny wins",
+      "kind": "control",
+      "at": [
+       6.0,
+       3.65
+      ]
+     },
+     {
+      "id": "model_claim",
+      "label": "Model claim",
+      "sub": "“user asked for it”",
+      "kind": "model",
+      "at": [
+       6.0,
+       6.15
+      ]
+     },
+     {
+      "id": "envelope",
+      "label": "Capability envelope",
+      "sub": "max run authority",
+      "kind": "record",
+      "at": [
+       10.05,
+       1.2
+      ],
+      "w": 3.15
+     },
+     {
+      "id": "lease",
+      "label": "Credential lease",
+      "sub": "short-lived, one audience",
+      "kind": "record",
+      "at": [
+       10.05,
+       3.65
+      ],
+      "w": 3.15
+     },
+     {
+      "id": "connector",
+      "label": "Connector",
+      "sub": "sole lease holder",
+      "kind": "service",
+      "at": [
+       10.05,
+       6.15
+      ],
+      "w": 3.15
+     }
+    ],
+    "edges": [
+     {
+      "from": "purpose",
+      "to": "pdp",
+      "route": "straight"
+     },
+     {
+      "from": "actor",
+      "to": "pdp",
+      "route": "straight"
+     },
+     {
+      "from": "subject",
+      "to": "pdp",
+      "route": "straight"
+     },
+     {
+      "from": "rbac_abac",
+      "to": "pdp",
+      "label": "attributes"
+     },
+     {
+      "from": "model_claim",
+      "to": "pdp",
+      "label": "not an input",
+      "style": "prohibited"
+     },
+     {
+      "from": "pdp",
+      "to": "envelope",
+      "label": "derives",
+      "route": "straight"
+     },
+     {
+      "from": "envelope",
+      "to": "lease",
+      "label": "reauth, then mint"
+     },
+     {
+      "from": "lease",
+      "to": "connector",
+      "label": "last hop"
+     },
+     {
+      "from": "subject",
+      "to": "connector",
+      "label": "no user-token passthrough",
+      "style": "prohibited",
+      "from_side": "bottom",
+      "to_side": "bottom",
+      "points": [
+       [
+        1.77,
+        7.55
+       ],
+       [
+        10.05,
+        7.55
+       ]
+      ],
+      "label_t": 0.5
+     }
+    ],
+    "components": [
+     {
+      "ref": "identities",
+      "name": "Three identities"
+     },
+     {
+      "ref": "pdp",
+      "name": "Intersection, not union"
+     },
+     {
+      "ref": "envelope",
+      "name": "Capability envelope"
+     },
+     {
+      "ref": "lease",
+      "name": "Last-hop lease"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 22,
+   "part": "VI",
+   "file": "chapter-22-make-external-effects-safe-to-retry.png",
+   "title": "Make External Effects Safe to Retry",
+   "focus": "Record each mutation's meaning so a retry cannot silently duplicate or overwrite.",
+   "themes": [
+    "Idempotent effects",
+    "Unknown outcomes",
+    "Tool contracts"
+   ],
+   "diagram": {
+    "title": "Protect before, prove after",
+    "groups": [
+     {
+      "id": "before",
+      "label": "Before dispatch",
+      "box": [
+       0.1,
+       1.95,
+       5.3,
+       7.85
+      ],
+      "style": "band",
+      "tone": "cyan"
+     },
+     {
+      "id": "after",
+      "label": "After dispatch",
+      "box": [
+       8.45,
+       0.35,
+       11.95,
+       7.85
+      ],
+      "style": "band",
+      "tone": "indigo",
+      "label_at": "top-right"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "proposal",
+      "label": "Typed proposal",
+      "sub": "model proposes",
+      "kind": "model",
+      "at": [
+       2.7,
+       0.95
+      ]
+     },
+     {
+      "id": "idem",
+      "label": "Idempotency key",
+      "sub": "logical key + hash",
+      "kind": "control",
+      "at": [
+       2.7,
+       3.0
+      ],
+      "w": 2.9
+     },
+     {
+      "id": "approval",
+      "label": "Approval",
+      "sub": "proposal-bound",
+      "kind": "human",
+      "at": [
+       2.7,
+       4.85
+      ],
+      "w": 2.9
+     },
+     {
+      "id": "precond",
+      "label": "Precondition",
+      "sub": "expected version",
+      "kind": "control",
+      "at": [
+       2.7,
+       6.7
+      ],
+      "w": 2.9
+     },
+     {
+      "id": "system",
+      "label": "Authoritative system",
+      "sub": "e.g. the LOS",
+      "kind": "external",
+      "at": [
+       6.75,
+       5.75
+      ],
+      "w": 2.5
+     },
+     {
+      "id": "verified",
+      "label": "Verified outcome",
+      "sub": "committed · declined · partial",
+      "kind": "record",
+      "at": [
+       10.45,
+       1.5
+      ],
+      "w": 2.75
+     },
+     {
+      "id": "unknown",
+      "label": "Unknown",
+      "sub": "dependent work stops",
+      "kind": "record",
+      "tone": "amber",
+      "at": [
+       10.45,
+       4.0
+      ],
+      "w": 2.75
+     },
+     {
+      "id": "reconcile",
+      "label": "Reconciler",
+      "sub": "query by key",
+      "kind": "service",
+      "at": [
+       10.45,
+       7.0
+      ],
+      "w": 2.6
+     }
+    ],
+    "edges": [
+     {
+      "from": "proposal",
+      "to": "idem",
+      "label": "begin"
+     },
+     {
+      "from": "idem",
+      "to": "approval",
+      "label": "if required"
+     },
+     {
+      "from": "approval",
+      "to": "precond"
+     },
+     {
+      "from": "precond",
+      "to": "system",
+      "label": "execute once",
+      "route": "straight",
+      "label_t": 0.45
+     },
+     {
+      "from": "system",
+      "to": "verified",
+      "label": "receipt",
+      "route": "straight"
+     },
+     {
+      "from": "system",
+      "to": "unknown",
+      "label": "timeout",
+      "route": "straight",
+      "offset": -40
+     },
+     {
+      "from": "unknown",
+      "to": "system",
+      "label": "blind retry",
+      "style": "prohibited",
+      "route": "straight",
+      "offset": -40
+     },
+     {
+      "from": "unknown",
+      "to": "reconcile"
+     },
+     {
+      "from": "reconcile",
+      "to": "system",
+      "label": "query",
+      "style": "async",
+      "route": "straight",
+      "label_t": 0.55
+     },
+     {
+      "from": "reconcile",
+      "to": "verified",
+      "label": "proven state",
+      "style": "feedback",
+      "from_side": "right",
+      "to_side": "right",
+      "points": [
+       [
+        12.0,
+        7.0
+       ],
+       [
+        12.0,
+        1.5
+       ]
+      ],
+      "label_t": 0.3
+     }
+    ],
+    "components": [
+     {
+      "ref": "idem",
+      "name": "Idempotent intent"
+     },
+     {
+      "ref": "approval",
+      "name": "Proposal-bound approval"
+     },
+     {
+      "ref": "precond",
+      "name": "Expected-version check"
+     },
+     {
+      "ref": "reconcile",
+      "name": "Reconcile the unknown"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 23,
+   "part": "VI",
+   "file": "chapter-23-contain-the-damage-when-a-model-is-manipulated.png",
+   "title": "Contain the Damage When a Model Is Manipulated",
+   "focus": "Assume the model is manipulated; independent limits keep the failure local.",
+   "themes": [
+    "Assume compromise",
+    "Blast-radius limits",
+    "Scoped kill switches"
+   ],
+   "diagram": {
+    "title": "Manipulated reasoning, contained reach",
+    "groups": [
+     {
+      "id": "envelope",
+      "label": "Capability envelope",
+      "box": [
+       0.1,
+       2.75,
+       3.4,
+       5.6
+      ],
+      "style": "zone",
+      "tone": "teal",
+      "label_at": "bottom-left"
+     },
+     {
+      "id": "limits",
+      "label": "Independent limits",
+      "box": [
+       3.85,
+       1.0,
+       8.2,
+       7.85
+      ],
+      "style": "boundary",
+      "tone": "cyan"
+     },
+     {
+      "id": "outside",
+      "label": "Outside model reach",
+      "box": [
+       8.6,
+       1.0,
+       11.95,
+       7.85
+      ],
+      "style": "zone",
+      "tone": "slate",
+      "label_at": "bottom-right"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "model",
+      "label": "Manipulated model",
+      "sub": "may obey injection",
+      "kind": "model",
+      "at": [
+       1.75,
+       4.25
+      ],
+      "w": 2.7
+     },
+     {
+      "id": "data_ctl",
+      "label": "Pre-retrieval authz",
+      "sub": "label, minimize fields",
+      "kind": "control",
+      "at": [
+       6.0,
+       1.95
+      ],
+      "w": 2.8
+     },
+     {
+      "id": "secret_broker",
+      "label": "Secret broker",
+      "sub": "last-hop lease",
+      "kind": "control",
+      "at": [
+       6.0,
+       3.65
+      ],
+      "w": 2.8
+     },
+     {
+      "id": "egress",
+      "label": "Egress proxy",
+      "sub": "default-deny",
+      "kind": "control",
+      "at": [
+       6.0,
+       5.35
+      ],
+      "w": 2.8
+     },
+     {
+      "id": "effect_ctl",
+      "label": "Effect controls",
+      "sub": "approval, receipts",
+      "kind": "control",
+      "at": [
+       6.0,
+       7.05
+      ],
+      "w": 2.8
+     },
+     {
+      "id": "data",
+      "label": "Enterprise data",
+      "kind": "store",
+      "at": [
+       10.4,
+       1.95
+      ],
+      "w": 2.7
+     },
+     {
+      "id": "creds",
+      "label": "Credentials",
+      "sub": "never in prompt or code",
+      "kind": "store",
+      "at": [
+       10.4,
+       3.65
+      ],
+      "w": 2.7
+     },
+     {
+      "id": "hosts",
+      "label": "Network hosts",
+      "kind": "external",
+      "at": [
+       10.4,
+       5.35
+      ],
+      "w": 2.7
+     },
+     {
+      "id": "effects",
+      "label": "External effects",
+      "kind": "effect",
+      "at": [
+       10.4,
+       7.05
+      ],
+      "w": 2.7
+     }
+    ],
+    "edges": [
+     {
+      "from": "model",
+      "to": "data_ctl",
+      "nodots": true,
+      "route": "straight",
+      "to_side": "left"
+     },
+     {
+      "from": "model",
+      "to": "secret_broker",
+      "nodots": true,
+      "route": "straight",
+      "to_side": "left"
+     },
+     {
+      "from": "model",
+      "to": "egress",
+      "nodots": true,
+      "route": "straight",
+      "to_side": "left"
+     },
+     {
+      "from": "model",
+      "to": "effect_ctl",
+      "nodots": true,
+      "route": "straight",
+      "to_side": "left"
+     },
+     {
+      "from": "data_ctl",
+      "to": "data",
+      "label": "authorized fields"
+     },
+     {
+      "from": "secret_broker",
+      "to": "creds",
+      "label": "inject at last hop"
+     },
+     {
+      "from": "egress",
+      "to": "hosts",
+      "label": "one-use grant"
+     },
+     {
+      "from": "effect_ctl",
+      "to": "effects",
+      "label": "verified commit"
+     },
+     {
+      "from": "model",
+      "to": "outside",
+      "label": "no bypass",
+      "style": "prohibited",
+      "from_side": "top",
+      "to_side": "top",
+      "points": [
+       [
+        1.75,
+        0.35
+       ],
+       [
+        10.4,
+        0.35
+       ]
+      ],
+      "label_t": 0.5
+     }
+    ],
+    "components": [
+     {
+      "ref": "data_ctl",
+      "name": "Authorize before retrieval"
+     },
+     {
+      "ref": "secret_broker",
+      "name": "Last-hop credentials"
+     },
+     {
+      "ref": "egress",
+      "name": "Default-deny egress"
+     },
+     {
+      "ref": "effect_ctl",
+      "name": "Effect controls"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 24,
+   "part": "VII",
+   "file": "chapter-24-follow-a-run-from-request-to-verified-outcome.png",
+   "title": "Follow a Run from Request to Verified Outcome",
+   "focus": "Trace the decisions and effects that explain a run, not just latency.",
+   "themes": [
+    "Causal traces",
+    "Decision evidence",
+    "Separate audit"
+   ],
+   "diagram": {
+    "title": "Four questions a trace answers",
+    "groups": [
+     {
+      "id": "diagnostics",
+      "label": "Diagnostics",
+      "box": [
+       0.1,
+       0.0,
+       11.95,
+       5.6
+      ],
+      "style": "zone",
+      "tone": "cyan",
+      "label_at": "bottom-left"
+     },
+     {
+      "id": "protected",
+      "label": "Protected evidence",
+      "box": [
+       3.4,
+       6.05,
+       11.95,
+       7.95
+      ],
+      "style": "boundary",
+      "tone": "indigo",
+      "label_at": "bottom-left"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "slo",
+      "label": "Violated SLO",
+      "sub": "or violated outcome",
+      "kind": "record",
+      "at": [
+       1.6,
+       2.75
+      ],
+      "w": 2.65
+     },
+     {
+      "id": "trace",
+      "label": "Causal run trace",
+      "sub": "stable IDs + span links",
+      "kind": "record",
+      "at": [
+       5.35,
+       2.75
+      ],
+      "w": 2.9
+     },
+     {
+      "id": "run_id",
+      "label": "Run identity",
+      "sub": "which run, release?",
+      "kind": "record",
+      "at": [
+       9.95,
+       0.7
+      ],
+      "w": 3.15
+     },
+     {
+      "id": "decision",
+      "label": "Path decision",
+      "sub": "which policy, branch?",
+      "kind": "control",
+      "at": [
+       9.95,
+       2.05
+      ],
+      "w": 3.15
+     },
+     {
+      "id": "critical",
+      "label": "Critical path",
+      "sub": "queue · retry · dwell",
+      "kind": "service",
+      "at": [
+       9.95,
+       3.4
+      ],
+      "w": 3.15
+     },
+     {
+      "id": "effect",
+      "label": "Effect evidence",
+      "sub": "receipt or Unknown",
+      "kind": "effect",
+      "at": [
+       9.95,
+       4.75
+      ],
+      "w": 3.15
+     },
+     {
+      "id": "vault",
+      "label": "Content vault",
+      "sub": "payloads by hash",
+      "kind": "store",
+      "at": [
+       5.35,
+       7.0
+      ],
+      "w": 2.9
+     },
+     {
+      "id": "audit",
+      "label": "Audit ledger",
+      "sub": "complete, integrity-protected",
+      "kind": "store",
+      "at": [
+       9.95,
+       7.0
+      ],
+      "w": 3.15
+     }
+    ],
+    "edges": [
+     {
+      "from": "slo",
+      "to": "trace",
+      "label": "start here"
+     },
+     {
+      "from": "trace",
+      "to": "run_id",
+      "route": "straight",
+      "nodots": true,
+      "to_side": "left"
+     },
+     {
+      "from": "trace",
+      "to": "decision",
+      "route": "straight",
+      "nodots": true,
+      "to_side": "left"
+     },
+     {
+      "from": "trace",
+      "to": "critical",
+      "route": "straight",
+      "nodots": true,
+      "to_side": "left"
+     },
+     {
+      "from": "trace",
+      "to": "effect",
+      "route": "straight",
+      "nodots": true,
+      "to_side": "left"
+     },
+     {
+      "from": "effect",
+      "to": "audit",
+      "label": "points to"
+     },
+     {
+      "from": "trace",
+      "to": "vault",
+      "label": "hash ref",
+      "style": "async"
+     }
+    ],
+    "components": [
+     {
+      "ref": "run_id",
+      "name": "Run identity"
+     },
+     {
+      "ref": "decision",
+      "name": "Path-changing decision"
+     },
+     {
+      "ref": "critical",
+      "name": "Critical-path time"
+     },
+     {
+      "ref": "effect",
+      "name": "Effect proof"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 25,
+   "part": "VII",
+   "file": "chapter-25-improve-the-system-without-handing-it-control.png",
+   "title": "Improve the System Without Handing It Control",
+   "focus": "Turn production evidence into governed releases, never self-approved change.",
+   "themes": [
+    "Slice-aware evaluation",
+    "Governed improvement",
+    "No self-certification"
+   ],
+   "diagram": {
+    "title": "Automate, govern, prohibit",
+    "groups": [
+     {
+      "id": "auto",
+      "label": "Automate in envelope",
+      "box": [
+       2.95,
+       0.35,
+       8.85,
+       4.6
+      ],
+      "style": "zone",
+      "tone": "cyan",
+      "label_at": "bottom-left"
+     },
+     {
+      "id": "human",
+      "label": "Human governance",
+      "box": [
+       9.15,
+       2.45,
+       11.7,
+       7.85
+      ],
+      "style": "boundary",
+      "tone": "amber",
+      "label_at": "bottom-left"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "evidence",
+      "label": "Production evidence",
+      "sub": "traces · failures",
+      "kind": "record",
+      "at": [
+       1.45,
+       1.35
+      ],
+      "w": 2.65
+     },
+     {
+      "id": "score",
+      "label": "Capture & score",
+      "sub": "approved scorers",
+      "kind": "control",
+      "at": [
+       4.45,
+       1.35
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "draft",
+      "label": "Draft candidate",
+      "sub": "ChangeBundle draft",
+      "kind": "record",
+      "at": [
+       7.4,
+       1.35
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "halt",
+      "label": "Auto-halt",
+      "sub": "tested stop condition",
+      "kind": "control",
+      "at": [
+       4.45,
+       3.45
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "validate",
+      "label": "Validate",
+      "sub": "replay · tests · slices",
+      "kind": "control",
+      "at": [
+       7.4,
+       3.45
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "model",
+      "label": "Agent / model",
+      "sub": "drafts only",
+      "kind": "model",
+      "at": [
+       10.45,
+       1.2
+      ],
+      "w": 2.2
+     },
+     {
+      "id": "approve",
+      "label": "Owner approval",
+      "sub": "risk-tiered",
+      "kind": "human",
+      "at": [
+       10.45,
+       3.45
+      ],
+      "w": 2.2
+     },
+     {
+      "id": "controls",
+      "label": "Controls & audit",
+      "sub": "policy · evaluator · audit",
+      "kind": "store",
+      "at": [
+       10.45,
+       6.6
+      ],
+      "w": 2.2
+     },
+     {
+      "id": "release",
+      "label": "Immutable release",
+      "sub": "canary + rollback",
+      "kind": "record",
+      "at": [
+       6.0,
+       6.4
+      ],
+      "w": 2.65
+     }
+    ],
+    "edges": [
+     {
+      "from": "evidence",
+      "to": "score"
+     },
+     {
+      "from": "score",
+      "to": "draft"
+     },
+     {
+      "from": "draft",
+      "to": "validate"
+     },
+     {
+      "from": "validate",
+      "to": "approve"
+     },
+     {
+      "from": "approve",
+      "to": "release",
+      "label": "deploy",
+      "route": "straight",
+      "label_t": 0.35
+     },
+     {
+      "from": "release",
+      "to": "halt",
+      "label": "breach",
+      "route": "straight"
+     },
+     {
+      "from": "release",
+      "to": "evidence",
+      "label": "monitor, learn",
+      "style": "feedback",
+      "from_side": "left",
+      "to_side": "bottom",
+      "points": [
+       [
+        1.45,
+        6.4
+       ]
+      ],
+      "label_t": 0.3
+     },
+     {
+      "from": "model",
+      "to": "draft",
+      "label": "drafts"
+     },
+     {
+      "from": "model",
+      "to": "release",
+      "label": "self-promote",
+      "style": "prohibited",
+      "from_side": "bottom",
+      "to_side": "right",
+      "from_shift": -167,
+      "points": [
+       [
+        9.5,
+        2.15
+       ],
+       [
+        9.0,
+        2.15
+       ],
+       [
+        9.0,
+        6.4
+       ]
+      ],
+      "label_t": 0.62
+     },
+     {
+      "from": "model",
+      "to": "controls",
+      "label": "rewrite",
+      "style": "prohibited",
+      "from_side": "right",
+      "to_side": "right",
+      "points": [
+       [
+        12.0,
+        1.2
+       ],
+       [
+        12.0,
+        6.6
+       ]
+      ],
+      "label_t": 0.62
+     }
+    ],
+    "components": [
+     {
+      "ref": "score",
+      "name": "Approved automated scoring"
+     },
+     {
+      "ref": "draft",
+      "name": "Drafts, not mutations"
+     },
+     {
+      "ref": "approve",
+      "name": "Human-governed approval"
+     },
+     {
+      "ref": "model",
+      "name": "No self-certification"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 26,
+   "part": "VIII",
+   "file": "chapter-26-make-governance-part-of-how-the-platform-runs.png",
+   "title": "Make Governance Part of How the Platform Runs",
+   "focus": "Make governance a predictable, risk-proportional path with named owners.",
+   "themes": [
+    "Named owners",
+    "Proportional controls",
+    "Expiring exceptions"
+   ],
+   "diagram": {
+    "title": "Route each change by risk",
+    "groups": [
+     {
+      "id": "review",
+      "label": "Proportional review",
+      "box": [
+       5.95,
+       0.35,
+       8.85,
+       7.85
+      ],
+      "style": "band",
+      "tone": "cyan"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "change",
+      "label": "Proposed change",
+      "sub": "use case · tool · release",
+      "kind": "record",
+      "at": [
+       1.45,
+       2.3
+      ],
+      "w": 2.65
+     },
+     {
+      "id": "modelname",
+      "label": "Model name",
+      "sub": "not a risk input",
+      "kind": "external",
+      "at": [
+       1.45,
+       5.8
+      ],
+      "w": 2.65
+     },
+     {
+      "id": "classify",
+      "label": "Risk tier",
+      "sub": "impact · reversibility",
+      "kind": "control",
+      "at": [
+       4.1,
+       4.05
+      ],
+      "w": 2.2
+     },
+     {
+      "id": "t01",
+      "label": "Tier 0–1",
+      "sub": "standard policy · basic eval",
+      "kind": "control",
+      "at": [
+       7.4,
+       1.6
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "t2",
+      "label": "Tier 2",
+      "sub": "domain acceptance",
+      "kind": "control",
+      "at": [
+       7.4,
+       4.05
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "t34",
+      "label": "Tier 3–4",
+      "sub": "exact approval · assurance",
+      "kind": "human",
+      "at": [
+       7.4,
+       6.5
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "evidence",
+      "label": "Pipeline evidence",
+      "sub": "ValidationReport",
+      "kind": "record",
+      "at": [
+       10.45,
+       2.2
+      ],
+      "w": 2.65
+     },
+     {
+      "id": "promote",
+      "label": "Release owner",
+      "sub": "promotion decision",
+      "kind": "human",
+      "at": [
+       10.45,
+       4.55
+      ],
+      "w": 2.65
+     },
+     {
+      "id": "exception",
+      "label": "Expiring exception",
+      "sub": "risk authority · expiry",
+      "kind": "record",
+      "at": [
+       10.45,
+       6.9
+      ],
+      "w": 2.65
+     }
+    ],
+    "edges": [
+     {
+      "from": "change",
+      "to": "classify",
+      "route": "straight"
+     },
+     {
+      "from": "modelname",
+      "to": "classify",
+      "label": "not risk",
+      "style": "prohibited",
+      "route": "straight",
+      "label_t": 0.4
+     },
+     {
+      "from": "classify",
+      "to": "t01",
+      "label": "low",
+      "route": "straight",
+      "label_t": 0.55
+     },
+     {
+      "from": "classify",
+      "to": "t2"
+     },
+     {
+      "from": "classify",
+      "to": "t34",
+      "label": "high",
+      "route": "straight",
+      "label_t": 0.55
+     },
+     {
+      "from": "t01",
+      "to": "evidence",
+      "route": "straight",
+      "nodots": true,
+      "to_side": "left"
+     },
+     {
+      "from": "t2",
+      "to": "evidence",
+      "route": "straight",
+      "nodots": true,
+      "to_side": "left"
+     },
+     {
+      "from": "t34",
+      "to": "evidence",
+      "route": "straight",
+      "nodots": true,
+      "to_side": "left"
+     },
+     {
+      "from": "evidence",
+      "to": "promote"
+     },
+     {
+      "from": "exception",
+      "to": "promote",
+      "label": "scoped gap",
+      "style": "async"
+     }
+    ],
+    "components": [
+     {
+      "ref": "classify",
+      "name": "Risk from consequence"
+     },
+     {
+      "ref": "review",
+      "name": "Proportional review paths"
+     },
+     {
+      "ref": "evidence",
+      "name": "Pipeline-produced evidence"
+     },
+     {
+      "ref": "exception",
+      "name": "Owned, expiring exceptions"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 27,
+   "part": "VIII",
+   "file": "chapter-27-release-new-behavior-without-breaking-work-in-flight.png",
+   "title": "Release New Behavior Without Breaking Work in Flight",
+   "focus": "Release the whole behavior graph and keep every run pinned.",
+   "themes": [
+    "Immutable bundles",
+    "Pinned runs",
+    "Compatible workers"
+   ],
+   "diagram": {
+    "title": "The bundle is the release",
+    "groups": [
+     {
+      "id": "graph",
+      "label": "Behavior graph",
+      "box": [
+       0.1,
+       0.0,
+       3.6,
+       7.95
+      ],
+      "style": "boundary",
+      "tone": "cyan",
+      "label_at": "bottom-left"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "prompts",
+      "label": "Prompts & Skills",
+      "sub": "immutable digest",
+      "kind": "record",
+      "at": [
+       1.85,
+       0.75
+      ],
+      "w": 3.0
+     },
+     {
+      "id": "route",
+      "label": "Model route",
+      "sub": "+ fallbacks",
+      "kind": "model",
+      "at": [
+       1.85,
+       2.2
+      ],
+      "w": 3.0
+     },
+     {
+      "id": "tools",
+      "label": "Tool schemas",
+      "sub": "versioned contract",
+      "kind": "record",
+      "at": [
+       1.85,
+       3.65
+      ],
+      "w": 3.0
+     },
+     {
+      "id": "policy",
+      "label": "Policy bundle",
+      "sub": "signed version",
+      "kind": "control",
+      "at": [
+       1.85,
+       5.1
+      ],
+      "w": 3.0
+     },
+     {
+      "id": "workflow",
+      "label": "Workflow build",
+      "sub": "replay markers",
+      "kind": "record",
+      "at": [
+       1.85,
+       6.55
+      ],
+      "w": 3.0
+     },
+     {
+      "id": "bundle",
+      "label": "Signed bundle",
+      "sub": "ReleaseManifest",
+      "kind": "record",
+      "at": [
+       5.35,
+       3.65
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "latest",
+      "label": "Mutable “latest”",
+      "sub": "never admitted",
+      "kind": "external",
+      "at": [
+       8.45,
+       1.2
+      ],
+      "w": 2.4
+     },
+     {
+      "id": "deny",
+      "label": "Emergency deny",
+      "sub": "outside the bundle",
+      "kind": "control",
+      "at": [
+       11.0,
+       1.2
+      ],
+      "w": 2.2
+     },
+     {
+      "id": "run",
+      "label": "Active run",
+      "sub": "pinned manifest",
+      "kind": "actor",
+      "at": [
+       8.45,
+       3.65
+      ],
+      "w": 2.2
+     },
+     {
+      "id": "worker",
+      "label": "Compatible worker",
+      "sub": "old contract or tested migration",
+      "kind": "service",
+      "at": [
+       8.45,
+       6.3
+      ],
+      "w": 2.75
+     }
+    ],
+    "edges": [
+     {
+      "from": "prompts",
+      "to": "bundle",
+      "nodots": true,
+      "from_side": "right",
+      "to_side": "left",
+      "route": "ortho",
+      "radius": 28
+     },
+     {
+      "from": "route",
+      "to": "bundle",
+      "nodots": true,
+      "from_side": "right",
+      "to_side": "left",
+      "route": "ortho",
+      "radius": 28
+     },
+     {
+      "from": "tools",
+      "to": "bundle",
+      "nodots": true,
+      "from_side": "right",
+      "to_side": "left",
+      "route": "ortho",
+      "radius": 28
+     },
+     {
+      "from": "policy",
+      "to": "bundle",
+      "nodots": true,
+      "from_side": "right",
+      "to_side": "left",
+      "route": "ortho",
+      "radius": 28
+     },
+     {
+      "from": "workflow",
+      "to": "bundle",
+      "nodots": true,
+      "from_side": "right",
+      "to_side": "left",
+      "route": "ortho",
+      "radius": 28
+     },
+     {
+      "from": "bundle",
+      "to": "run",
+      "label": "pinned"
+     },
+     {
+      "from": "run",
+      "to": "worker",
+      "label": "compatible"
+     },
+     {
+      "from": "latest",
+      "to": "run",
+      "label": "never served",
+      "style": "prohibited"
+     },
+     {
+      "from": "deny",
+      "to": "run",
+      "label": "overrides",
+      "route": "straight",
+      "label_t": 0.45
+     }
+    ],
+    "components": [
+     {
+      "ref": "graph",
+      "name": "Whole behavior graph"
+     },
+     {
+      "ref": "bundle",
+      "name": "Signed release bundle"
+     },
+     {
+      "ref": "run",
+      "name": "Run-pinned manifest"
+     },
+     {
+      "ref": "worker",
+      "name": "Compatible workers"
+     }
+    ]
+   }
+  },
+  {
+   "chapter": 28,
+   "part": "VIII",
+   "file": "chapter-28-treat-performance-as-a-business-decision.png",
+   "title": "Treat Performance as a Business Decision",
+   "focus": "Optimize cost and latency per verified success, not token price.",
+   "themes": [
+    "Cost per success",
+    "Fair capacity",
+    "Safe degradation"
+   ],
+   "diagram": {
+    "title": "The trajectory, not the token",
+    "groups": [
+     {
+      "id": "token",
+      "label": "Optimize the token",
+      "box": [
+       0.1,
+       0.35,
+       11.95,
+       3.05
+      ],
+      "style": "band",
+      "tone": "amber"
+     },
+     {
+      "id": "trajectory",
+      "label": "Optimize the trajectory",
+      "box": [
+       0.1,
+       3.6,
+       11.95,
+       7.85
+      ],
+      "style": "band",
+      "tone": "cyan"
+     }
+    ],
+    "nodes": [
+     {
+      "id": "cheap",
+      "label": "Cheaper model call",
+      "sub": "lower token price",
+      "kind": "model",
+      "at": [
+       1.5,
+       1.75
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "turns",
+      "label": "More turns, retries",
+      "sub": "extra retrieval",
+      "kind": "service",
+      "at": [
+       4.5,
+       1.75
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "review",
+      "label": "Human review",
+      "sub": "escalations rise",
+      "kind": "human",
+      "at": [
+       7.5,
+       1.75
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "costly",
+      "label": "Higher cost / success",
+      "sub": "local saving lost",
+      "kind": "record",
+      "tone": "amber",
+      "at": [
+       10.5,
+       1.75
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "deterministic",
+      "label": "Deterministic path",
+      "sub": "remove agency",
+      "kind": "control",
+      "at": [
+       1.5,
+       4.95
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "context",
+      "label": "Selective context",
+      "sub": "dedup · summaries · top-k",
+      "kind": "service",
+      "at": [
+       4.5,
+       4.95
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "route",
+      "label": "Evaluated route",
+      "sub": "escalate on failed validation",
+      "kind": "model",
+      "at": [
+       7.5,
+       4.95
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "verified",
+      "label": "Verified success",
+      "sub": "cost per outcome",
+      "kind": "effect",
+      "at": [
+       10.5,
+       4.95
+      ],
+      "w": 2.45
+     },
+     {
+      "id": "safety",
+      "label": "Safety controls",
+      "sub": "never disabled",
+      "kind": "control",
+      "at": [
+       10.5,
+       7.0
+      ],
+      "w": 2.45
+     }
+    ],
+    "edges": [
+     {
+      "from": "cheap",
+      "to": "turns"
+     },
+     {
+      "from": "turns",
+      "to": "review"
+     },
+     {
+      "from": "review",
+      "to": "costly"
+     },
+     {
+      "from": "deterministic",
+      "to": "context"
+     },
+     {
+      "from": "context",
+      "to": "route"
+     },
+     {
+      "from": "route",
+      "to": "verified"
+     },
+     {
+      "from": "safety",
+      "to": "verified",
+      "label": "constrains"
+     },
+     {
+      "from": "costly",
+      "to": "route",
+      "label": "revert slice",
+      "style": "feedback",
+      "route": "straight",
+      "label_t": 0.5
+     }
+    ],
+    "components": [
+     {
+      "ref": "deterministic",
+      "name": "Remove unnecessary agency"
+     },
+     {
+      "ref": "context",
+      "name": "Reduce context"
+     },
+     {
+      "ref": "route",
+      "name": "Route by evaluation"
+     },
+     {
+      "ref": "verified",
+      "name": "Cost per verified success"
+     }
+    ]
+   }
+  }
+ ]
+}
