@@ -4,22 +4,22 @@
 
 ## Measurements
 
-- **canonical_markdown_sha256:** `6efa7200636f22436afdc91889524152a890bcbde49678166abcbe0cf683f056`
-- **canonical_markdown_bytes:** `708065`
+- **canonical_markdown_sha256:** `a067dd2511609b7400229e2a314ed8be76192347a72bc85aa9ca07dca3c39cfa`
+- **canonical_markdown_bytes:** `721682`
 - **parts:** `8`
 - **chapters:** `28`
 - **appendices:** `12`
-- **code_blocks:** `71`
+- **code_blocks:** `70`
 - **reference_count:** `48`
-- **citation_occurrences:** `109`
+- **citation_occurrences:** `111`
 - **cited_reference_ids:** `48`
 - **diagram_markers:** `45`
 - **registered_diagrams:** `45`
 - **cover_dimensions:** `[2550, 3300]`
-- **docx_sha256:** `48d4ac1cb8e38cd635e4682375c673e696e284867976b06952fa509ef33a3aa0`
-- **docx_bytes:** `43558029`
-- **docx_paragraphs:** `3047`
-- **docx_tables:** `417`
+- **docx_sha256:** `a4834150f6d8aa4ade1e90e4cf72b17004f372733cf9fb288fa012d2502aa29d`
+- **docx_bytes:** `43572045`
+- **docx_paragraphs:** `3142`
+- **docx_tables:** `424`
 - **docx_inline_images:** `74`
 - **docx_chapters:** `28`
 - **docx_appendices:** `12`
