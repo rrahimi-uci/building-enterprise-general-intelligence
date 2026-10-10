@@ -86,6 +86,10 @@ Applied a deep review of the DOCX (front matter, Chapters 1–3) to the canonica
 - Replaced unresolvable legacy source keys with registry IDs (R01, R13).
 - Removed a code-free duplicate section ("One bounded agent step in code") and a leaked authoring note; joined hard-wrapped bullets; consistent US spelling and component names (LLM Gateway, reauthorize).
 
+### Remove the reviews-comments folder
+
+- Removed `reviews-comments/` (an already-applied Chapter 3 review DOCX and its `.gitkeep`) and its `.gitignore` rule. Its entries drop out of `RELEASE-MANIFEST.json` and `CHECKSUMS.sha256` at the next `make package`.
+
 ### Fix three book-wide DOCX/LaTeX rendering defects
 
 - Markdown backslash escapes (`artifact\_id`, `a \< b`) printed literally in
