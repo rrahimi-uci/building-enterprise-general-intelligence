@@ -23,3 +23,15 @@ def test_step_emits_a_retriever_span_and_run_tags():
     assert trace.info.tags["risk_class"] == "R2"
     # The manifest id is recorded; the context body is deliberately not.
     assert "ctx:run-77:1" in str(spans["load_authorized_context"].outputs)
+
+
+def test_pinned_autolog_disables_the_agents_sdk_tracer_by_default():
+    # Chapter 24 states this default; the example opts in explicitly because of it.
+    import inspect
+
+    import mlflow.openai
+
+    default = inspect.signature(mlflow.openai.autolog).parameters[
+        "disable_openai_agent_tracer"
+    ].default
+    assert default is True
