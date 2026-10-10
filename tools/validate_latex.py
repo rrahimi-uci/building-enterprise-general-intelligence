@@ -106,6 +106,7 @@ def main() -> int:
         "narrative_parts": content.count(r"\BookPartPage{") - content.count(r"\BookPartPage{REFERENCE}"),
         "appendix_dividers": content.count(r"\BookPartPage{REFERENCE}"),
         "chapters": content.count(r"\BookChapter{"),
+        "chapter_covers": content.count(r"\BookChapterCover{"),
         "appendices": content.count(r"\BookAppendix{"),
         "diagrams": content.count(r"\BookDiagram{"),
         "code_blocks": content.count(r"\begin{lstlisting}"),
@@ -118,6 +119,7 @@ def main() -> int:
         "narrative_parts": 8,
         "appendix_dividers": 1,
         "chapters": 28,
+        "chapter_covers": 28,
         "appendices": 12,
     }
     for key, value in expected.items():
@@ -237,6 +239,23 @@ def main() -> int:
             minimum = 295 if "cover" in value else 220
             if effective_dpi < minimum:
                 errors.append("Insufficient image resolution: " + value + " at " + format(effective_dpi, ".1f") + " dpi")
+    # Chapter covers: full-bleed Letter pages, so measure against 8.5in like the cover.
+    covers_path = root / "config" / "chapter-covers.json"
+    if covers_path.exists():
+        covers_doc = json.loads(covers_path.read_text(encoding="utf-8"))
+        for entry in covers_doc["chapters"]:
+            value = covers_doc["output_dir"] + "/" + entry["file"]
+            path = root / value
+            if not path.exists():
+                errors.append("Missing chapter cover: " + value)
+                continue
+            if value not in content:
+                errors.append("Chapter cover is registered but never referenced in the TeX: " + value)
+            with Image.open(path) as image:
+                effective_dpi = image.width / 8.5
+                image_quality.append({"file": value, "pixels": [image.width, image.height], "effective_dpi": round(effective_dpi, 1)})
+                if effective_dpi < 295:
+                    errors.append("Insufficient image resolution: " + value + " at " + format(effective_dpi, ".1f") + " dpi")
     measurements["image_quality"] = image_quality
 
     font_files = sorted((root / "latex" / "fonts").glob("*.ttf"))
@@ -330,31 +349,6 @@ def main() -> int:
             errors.append("Insufficient text contrast: " + foreground + "/" + background + " = " + format(ratio, ".2f"))
     measurements["contrast_tests"] = contrast_results
 
-    # Part divider panels: registered, present, checksum-stable, and above the
-    # same effective-resolution bar the diagrams must clear.
-    visuals_path = root / "config" / "part-visuals.json"
-    if visuals_path.exists():
-        visuals_doc = json.loads(visuals_path.read_text(encoding="utf-8"))
-        rendered_width = visuals_doc["rendered_width_inches"]
-        measured = []
-        for visual in visuals_doc["visuals"]:
-            asset = root / visual["file"]
-            if not asset.exists():
-                errors.append("Missing Part " + visual["part"] + " panel: " + visual["file"])
-                continue
-            if visual.get("sha256") and sha256(asset) != visual["sha256"]:
-                errors.append("Part " + visual["part"] + " panel checksum mismatch")
-            with Image.open(asset) as panel:
-                dpi = panel.width / rendered_width
-            measured.append({"part": visual["part"], "effective_dpi": round(dpi, 1)})
-            if dpi < 255:
-                errors.append(
-                    "Part " + visual["part"] + " panel is " + format(dpi, ".0f")
-                    + " dpi at " + str(rendered_width) + "in, below the 255 dpi contract"
-                )
-            if visual["file"] not in content:
-                errors.append("Part " + visual["part"] + " panel is registered but never referenced in the TeX")
-        measurements["part_visuals"] = measured
 
     reference_pdf = root / "latex" / "reference" / "DOCX-layout-reference-v1.0.0.pdf"
     if reference_pdf.exists():

@@ -243,7 +243,9 @@ Together, these principles establish a simple operating contract: agents provide
 
 \mainmatter
 
-\BookPartPage{I}{FOUNDATIONS}{This is the starting point for the whole book. We name the pieces, draw the boundary around the model, and show how a useful prototype becomes a system that can survive retries, waiting, failure, and scrutiny. The later Parts add capabilities to this foundation; they do not replace it.}{assets/parts/part-i.png}
+\BookPartPage{I}{FOUNDATIONS}{This is the starting point for the whole book. We name the pieces, draw the boundary around the model, and show how a useful prototype becomes a system that can survive retries, waiting, failure, and scrutiny. The later Parts add capabilities to this foundation; they do not replace it.}
+
+\BookChapterCover{cover-images/chapter-01-what-turns-an-llm-call-into-a-production-system.png}
 
 \BookChapter{01}{What Turns an LLM Call into a Production System}
 
@@ -842,6 +844,8 @@ What would you require before calling an agent production-ready? & Evaluated out
 With the system boundary established, Chapter 2 converts model intent into typed, validated tool proposals and a deterministic commit path.\par
 
 The mortgage checkpoint ends with a useful but limited summary: the missing income document is visible, while verification, deterministic calculation, and workflow commands are not yet part of the case. Chapter 2 adds those contracts and shows why a well-formed proposal is still not permission to act.\par
+
+\BookChapterCover{cover-images/chapter-02-from-model-output-to-safe-action.png}
 
 \BookChapter{02}{From Model Output to Safe Action}
 
@@ -1496,6 +1500,8 @@ What is the trade-off of a stronger deterministic shell? & More contracts and pl
 With tools bounded, Chapter 3 defines the runtime contract that keeps applications portable across agent frameworks and model providers.\par
 
 For the mortgage case, the remaining bottleneck is the execution seam: the typed shell needs one bounded evidence-review activity, but the framework must not become the owner of the case, policy, approval, or effect records.\par
+
+\BookChapterCover{cover-images/chapter-03-keep-the-agent-framework-in-its-lane.png}
 
 \BookChapter{03}{Keep the Agent Framework in Its Lane}
 
@@ -2155,7 +2161,9 @@ How should SDK upgrades be released? & As behavioral changes: run adapter and sc
 
 The runtime boundary is now explicit: a framework runs one bounded reasoning step, while the platform owns durable truth, authority, effects, and accountability. Chapter 4 places that boundary inside the complete enterprise reference architecture.\par
 
-\BookPartPage{II}{ARCHITECTURE, KNOWLEDGE, AND CONTEXT}{The first Part established that the model is not the system of record. This Part draws the system around it: who owns each fact, where policy is enforced, how knowledge stays current, and how one run receives only the context it is allowed to see. By the end, “the agent knows” has become a set of inspectable contracts rather than a vague claim about a prompt.}{assets/parts/part-ii.png}
+\BookPartPage{II}{ARCHITECTURE, KNOWLEDGE, AND CONTEXT}{The first Part established that the model is not the system of record. This Part draws the system around it: who owns each fact, where policy is enforced, how knowledge stays current, and how one run receives only the context it is allowed to see. By the end, “the agent knows” has become a set of inspectable contracts rather than a vague claim about a prompt.}
+
+\BookChapterCover{cover-images/chapter-04-design-the-architecture-around-the-model.png}
 
 \BookChapter{04}{Design the Architecture Around the Model}
 
@@ -2694,6 +2702,8 @@ How should execution behave during a control-plane outage? & Continue compatible
 \section{Where this leads next}
 
 The reference architecture names a knowledge plane but does not say what fills it; Chapter 5 defines the governed knowledge layer agents retrieve, reason over, are constrained by, and act through.\par
+
+\BookChapterCover{cover-images/chapter-05-give-knowledge-an-owner.png}
 
 \BookChapter{05}{Give Knowledge an Owner}
 
@@ -3387,6 +3397,8 @@ Can you reproduce a decision made six months ago? & Knowledge is versioned and p
 
 The knowledge layer defines what the organization knows and what agents may do with it. Chapter 6 turns to the run itself: how context is assembled, how memory and workflow state differ, and how a single request gets exactly the knowledge it needs and nothing more.\par
 
+\BookChapterCover{cover-images/chapter-06-build-context-without-losing-the-plot.png}
+
 \BookChapter{06}{Build Context Without Losing the Plot}
 
 \begin{bookcallout}[Northstar at this point]
@@ -3916,7 +3928,9 @@ How do you delete a fact from an agentic system? & Tombstone and revoke the sour
 
 Context assembly completes the knowledge Part. Chapter 7 turns from what agents know to how teams build with it, defining the reusable developer platform and SDK.\par
 
-\BookPartPage{III}{THE DEVELOPER PLATFORM}{Good architecture is not enough if every delivery team has to reconstruct it from scratch. This Part turns the reference design into a paved road: reusable contracts, adapters, Skills, domain packs, and a lifecycle that carries them from a developer laptop to production. The platform stays opinionated about safety and evidence while leaving domain teams room to build something useful.}{assets/parts/part-iii.png}
+\BookPartPage{III}{THE DEVELOPER PLATFORM}{Good architecture is not enough if every delivery team has to reconstruct it from scratch. This Part turns the reference design into a paved road: reusable contracts, adapters, Skills, domain packs, and a lifecycle that carries them from a developer laptop to production. The platform stays opinionated about safety and evidence while leaving domain teams room to build something useful.}
+
+\BookChapterCover{cover-images/chapter-07-build-a-paved-road-for-agent-teams.png}
 
 \BookChapter{07}{Build a Paved Road for Agent Teams}
 
@@ -4155,6 +4169,8 @@ When is framework portability proven? & Only when adapter conformance tests pass
 \section{Where this leads next}
 
 The delivery path is established; Chapter 8 packages repeatable behavior as versioned Skills with explicit contracts and lifecycle controls.\par
+
+\BookChapterCover{cover-images/chapter-08-package-capabilities-as-versioned-skills.png}
 
 \BookChapter{08}{Package Capabilities as Versioned Skills}
 
@@ -4443,6 +4459,8 @@ When should behavior remain application-specific? & When it encodes one product 
 
 Individual Skills are governable; Chapter 9 composes them into domain packs without dissolving ownership or compatibility boundaries.\par
 
+\BookChapterCover{cover-images/chapter-09-turn-skills-into-a-coherent-domain-platform.png}
+
 \BookChapter{09}{Turn Skills into a Coherent Domain Platform}
 
 \begin{bookcallout}[Where The Mortgage Case Stands]
@@ -4629,7 +4647,9 @@ What is the main pack anti-pattern? & A monolithic prompt-and-tools bundle with 
 
 The platform and capability model are complete; Chapter 10 begins the pattern sequence with the smallest bounded reasoning loop.\par
 
-\BookPartPage{IV}{PATTERNS THAT WORK—AND THOSE THAT FAIL}{Patterns are shortcuts for thinking, but they are only helpful when their boundaries are visible. This Part starts with the loop shapes teams reach for, then follows routing, planning, reflection, human review, and durable work. It ends with a catalog of patterns and failure shapes so a design review can ask not only “what could work?” but also “how would this fail in production?”}{assets/parts/part-iv.png}
+\BookPartPage{IV}{PATTERNS THAT WORK—AND THOSE THAT FAIL}{Patterns are shortcuts for thinking, but they are only helpful when their boundaries are visible. This Part starts with the loop shapes teams reach for, then follows routing, planning, reflection, human review, and durable work. It ends with a catalog of patterns and failure shapes so a design review can ask not only “what could work?” but also “how would this fail in production?”}
+
+\BookChapterCover{cover-images/chapter-10-use-react-without-creating-a-runaway-loop.png}
 
 \BookChapter{10}{Use ReAct Without Creating a Runaway Loop}
 
@@ -4978,6 +4998,8 @@ When should ReAct not be used? & For a known workflow, a single retrieval, a pro
 \section{Where this leads next}
 
 A bounded reason–act loop handles local uncertainty; Chapter 11 adds routing and handoff when known paths or specialists should own the work.\par
+
+\BookChapterCover{cover-images/chapter-11-route-the-work-without-losing-ownership.png}
 
 \BookChapter{11}{Route the Work Without Losing Ownership}
 
@@ -5345,6 +5367,8 @@ When is a static router better? & When classes are stable, risk is high, complia
 \section{Where this leads next}
 
 Routing selects among known capabilities; Chapter 12 addresses tasks whose decomposition must itself be proposed and validated.\par
+
+\BookChapterCover{cover-images/chapter-12-turn-proposed-plans-into-safe-executable-work.png}
 
 \BookChapter{12}{Turn Proposed Plans into Safe, Executable Work}
 
@@ -5836,6 +5860,8 @@ How do you prevent plausible but endless planning? & External revision, loop, st
 
 Planning creates an executable structure; Chapter 13 adds independent evaluation and bounded revision without self-certification.\par
 
+\BookChapterCover{cover-images/chapter-13-use-critique-to-improve-never-to-self-approve.png}
+
 \BookChapter{13}{Use Critique to Improve—Never to Self-Approve}
 
 \begin{bookcallout}[Where The Mortgage Case Stands]
@@ -6152,6 +6178,8 @@ When should you not add reflection? & When the first result already meets an exe
 \section{Where this leads next}
 
 Automated evaluation can improve candidates; Chapter 14 identifies decisions that require explicit human authority, correction, or recourse.\par
+
+\BookChapterCover{cover-images/chapter-14-put-people-where-their-judgment-matters.png}
 
 \BookChapter{14}{Put People Where Their Judgment Matters}
 
@@ -6711,6 +6739,8 @@ How should approval be bound to an action? & Persist the exact canonical proposa
 
 Human control introduces waits and resumptions; Chapter 15 makes those waits durable and gives long-running work explicit state and recovery.\par
 
+\BookChapterCover{cover-images/chapter-15-keep-long-running-work-alive-through-failure.png}
+
 \BookChapter{15}{Keep Long-Running Work Alive Through Failure}
 
 \begin{bookquote}
@@ -7175,6 +7205,8 @@ How do you deploy new workflow code safely? & Preserve compatible workers, use e
 
 The core patterns are now defined; Chapter 16 compares them by the obligation each protects, the shortcut it replaces, and what it costs.\par
 
+\BookChapterCover{cover-images/chapter-16-choose-patterns-that-fit-real-enterprise-work.png}
+
 \BookChapter{16}{Choose Patterns That Fit Real Enterprise Work}
 
 \section{How to choose a pattern for the problem you actually have}
@@ -7312,6 +7344,8 @@ Every card uses one review sequence so teams can compare alternatives consistent
 \section{Where this leads next}
 
 Pattern selection is easier when failure shapes are visible; Chapter 17 recasts recurring anti-patterns as measurable replacement decisions.\par
+
+\BookChapterCover{cover-images/chapter-17-architecture-patterns-that-fail-in-production.png}
 
 \BookChapter{17}{Architecture Patterns That Fail in Production}
 
@@ -7709,7 +7743,9 @@ The most expensive anti-patterns in this catalog are not the exotic ones. AP-04,
 
 After removing unsafe local architectures, Chapter 18 considers when multiple agents add justified specialization rather than accidental complexity.\par
 
-\BookPartPage{V}{WORKING TOGETHER ACROSS BOUNDARIES}{Once a system has more than one worker—or reaches beyond its own process—the conversation becomes a distributed protocol. This Part makes the ownership, authority, cancellation, and artifact rules explicit for internal specialists and external peers alike. It also keeps a useful distinction in view: a protocol can move a message without granting permission to act.}{assets/parts/part-v.png}
+\BookPartPage{V}{WORKING TOGETHER ACROSS BOUNDARIES}{Once a system has more than one worker—or reaches beyond its own process—the conversation becomes a distributed protocol. This Part makes the ownership, authority, cancellation, and artifact rules explicit for internal specialists and external peers alike. It also keeps a useful distinction in view: a protocol can move a message without granting permission to act.}
+
+\BookChapterCover{cover-images/chapter-18-coordinate-specialists-without-losing-control.png}
 
 \BookChapter{18}{Coordinate Specialists Without Losing Control}
 
@@ -8289,6 +8325,8 @@ What does an A2A or MCP protocol not solve? & Business authorization, peer trust
 
 Multi-agent collaboration inside one platform is only part of the problem; Chapter 19 extends those controls to external tools, agents, and model providers.\par
 
+\BookChapterCover{cover-images/chapter-19-crossing-system-boundaries-mcp-a2a-and-local-control.png}
+
 \BookChapter{19}{Crossing System Boundaries: MCP, A2A, and Local Control}
 
 \begin{bookquote}
@@ -8763,9 +8801,11 @@ How do you version external capabilities? & Pin registry entry, endpoint, protoc
 
 Gateways control protocol and model access, but not the entire attack surface; Chapter 20 introduces defense in depth across all agentic trust boundaries.\par
 
-\BookPartPage{VI}{SECURITY, IDENTITY, AND CONTROL}{This Part asks what happens when the model is wrong, manipulated, or simply given more reach than it needs. It applies defense in depth to content, identity, delegated authority, tools, code, data, memory, remote agents, and the software supply chain. Every control is tied to a boundary, a decision, a signal, and a recovery path so “security” remains an engineering property.}{assets/parts/part-vi.png}
+\BookPartPage{VI}{SECURITY, IDENTITY, AND CONTROL}{This Part asks what happens when the model is wrong, manipulated, or simply given more reach than it needs. It applies defense in depth to content, identity, delegated authority, tools, code, data, memory, remote agents, and the software supply chain. Every control is tied to a boundary, a decision, a signal, and a recovery path so “security” remains an engineering property.}
 
 The order matters. Authentication establishes who is present; authorization decides what that subject and workload may do; guardrails inspect risky input and output; sandboxes limit what code can reach; and the effect ledger records what actually committed. These controls reinforce one another, but none can stand in for the others. The model may propose an action, while deterministic services decide whether the action is eligible, safe to execute, and complete enough to report.\par
+
+\BookChapterCover{cover-images/chapter-20-security-starts-outside-the-prompt.png}
 
 \BookChapter{20}{Security Starts Outside the Prompt}
 
@@ -9179,6 +9219,8 @@ Why does the threat catalog not replace the boundary architecture? & The catalog
 
 The guardrail architecture establishes defense in depth; Chapter 21 makes it enforceable per caller by binding every action to an authenticated identity and a delegated grant.\par
 
+\BookChapterCover{cover-images/chapter-21-carry-identity-narrow-authority.png}
+
 \BookChapter{21}{Carry Identity, Narrow Authority}
 
 \begin{bookquote}
@@ -9580,6 +9622,8 @@ Where must authorization occur in retrieval? & Before content reaches the model,
 \section{Where this leads next}
 
 Identity and delegated authority answer who may ask; Chapter 22 proves whether a specific tool effect may execute, commit, retry, or recover.\par
+
+\BookChapterCover{cover-images/chapter-22-make-external-effects-safe-to-retry.png}
 
 \BookChapter{22}{Make External Effects Safe to Retry}
 
@@ -10199,6 +10243,8 @@ Why are both idempotency and optimistic concurrency needed? & Idempotency preven
 
 Protected effects are governed; Chapter 23 contains the remaining execution, egress, data, privacy, and supply-chain blast radius.\par
 
+\BookChapterCover{cover-images/chapter-23-contain-the-damage-when-a-model-is-manipulated.png}
+
 \BookChapter{23}{Contain the Damage When a Model Is Manipulated}
 
 \begin{bookquote}
@@ -10601,7 +10647,9 @@ What makes a useful kill-switch design? & Narrow scopes, emergency-deny preceden
 
 Security controls now produce events and evidence; Chapter 24 turns those signals into end-to-end traces that operators can reconstruct.\par
 
-\BookPartPage{VII}{EVIDENCE, EVALUATION, AND IMPROVEMENT}{You cannot improve a system you cannot explain, and you cannot call a change an improvement by looking only at its average score. This Part connects causal traces, evaluation, slices, regression cases, and governed learning. The aim is not more telemetry for its own sake; it is evidence that helps a team decide what to fix, what to release, and what to leave alone.}{assets/parts/part-vii.png}
+\BookPartPage{VII}{EVIDENCE, EVALUATION, AND IMPROVEMENT}{You cannot improve a system you cannot explain, and you cannot call a change an improvement by looking only at its average score. This Part connects causal traces, evaluation, slices, regression cases, and governed learning. The aim is not more telemetry for its own sake; it is evidence that helps a team decide what to fix, what to release, and what to leave alone.}
+
+\BookChapterCover{cover-images/chapter-24-follow-a-run-from-request-to-verified-outcome.png}
 
 \BookChapter{24}{Follow a Run from Request to Verified Outcome}
 
@@ -11033,6 +11081,8 @@ Why keep audit separate? & Audit has stronger completeness, integrity, access, a
 \section{Where this leads next}
 
 Tracing explains what happened; Chapter 25 determines whether the trajectory and outcome were acceptable and whether a change is safe to ship.\par
+
+\BookChapterCover{cover-images/chapter-25-improve-the-system-without-handing-it-control.png}
 
 \BookChapter{25}{Improve the System Without Handing It Control}
 
@@ -11530,7 +11580,9 @@ How do you roll back without breaking active runs? & Stop new assignment, restor
 
 The improvement loop proposes and validates change; Chapter 26 assigns decision rights, risk tiers, approvals, exceptions, and accountability.\par
 
-\BookPartPage{VIII}{RUNNING THE SYSTEM IN THE REAL WORLD}{Shipping the first version is the easy milestone. The hard work is operating the system when usage grows, people change roles, vendors drift, and a run is still active during a deployment. This Part connects governance, release and recovery, capacity, reliability, and cost so the platform remains usable after the demo has become a dependency.}{assets/parts/part-viii.png}
+\BookPartPage{VIII}{RUNNING THE SYSTEM IN THE REAL WORLD}{Shipping the first version is the easy milestone. The hard work is operating the system when usage grows, people change roles, vendors drift, and a run is still active during a deployment. This Part connects governance, release and recovery, capacity, reliability, and cost so the platform remains usable after the demo has become a dependency.}
+
+\BookChapterCover{cover-images/chapter-26-make-governance-part-of-how-the-platform-runs.png}
 
 \BookChapter{26}{Make Governance Part of How the Platform Runs}
 
@@ -11718,6 +11770,8 @@ How do you know governance is accelerating delivery? & Time from evidence-comple
 \section{Where this leads next}
 
 Governance defines who may release change; Chapter 27 makes releases immutable, promotable, observable, reversible, and recoverable.\par
+
+\BookChapterCover{cover-images/chapter-27-release-new-behavior-without-breaking-work-in-flight.png}
 
 \BookChapter{27}{Release New Behavior Without Breaking Work in Flight}
 
@@ -12246,6 +12300,8 @@ Describe safe regional failover during an external write. & Stop admission, fenc
 
 The release lifecycle is controlled; Chapter 28 sizes the system and optimizes cost, latency, capacity, and reliability around verified outcomes.\par
 
+\BookChapterCover{cover-images/chapter-28-treat-performance-as-a-business-decision.png}
+
 \BookChapter{28}{Treat Performance as a Business Decision}
 
 \begin{bookquote}
@@ -12679,7 +12735,7 @@ Why can the cheapest model be more expensive? & Lower reliability may cause more
 
 The architecture narrative is complete. The appendices provide decision aids, runbooks, contracts, framework evidence, references, maintenance criteria, and production acceptance checks for implementation and future editions.\par
 
-\BookPartPage{REFERENCE}{APPENDICES: FIELD GUIDE AND REFERENCE}{The appendices are meant to be used at the desk, not admired at the end of the book. They collect decision aids, runbooks, contracts, framework notes, a glossary, the Harborlight implementation guide, and the evidence registry that keeps the main argument honest.}{}
+\BookPartPage{REFERENCE}{APPENDICES: FIELD GUIDE AND REFERENCE}{The appendices are meant to be used at the desk, not admired at the end of the book. They collect decision aids, runbooks, contracts, framework notes, a glossary, the Harborlight implementation guide, and the evidence registry that keeps the main argument honest.}
 
 \clearpage
 

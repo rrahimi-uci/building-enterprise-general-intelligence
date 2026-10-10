@@ -9,7 +9,8 @@ This document is the visual and editorial contract for every representation of t
 | Cover | `[[COVER]]` | full-page image | page 1 | identity, title, author, edition |
 | Title/front matter | H1/H2 as authored | Title, Subtitle, headings | follows cover | scope, audience, reading map, TOC |
 | Part | `# Part <Roman> — <Title>` | Book Part | standalone page | conceptual phase and orientation |
-| Chapter | `# Chapter NN — <Title>` | Heading 1 | new page | primary learning unit |
+| Chapter cover | none (from `config/chapter-covers.json`) | full-page image, no heading | standalone page before each chapter | explains the chapter's central concept at a glance |
+| Chapter | `# Chapter NN — <Title>` | Heading 1 | new page, after its cover | primary learning unit |
 | Appendix | `# Appendix X — <Title>` | Heading 1 | new page | reference/operational material |
 | Section | `##` | Heading 2 | keep with next | major chapter argument |
 | Subsection | `###` | Heading 3 | keep with next | decomposed concept |

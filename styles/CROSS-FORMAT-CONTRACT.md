@@ -20,7 +20,8 @@ When representations disagree, fix the canonical source/configuration and regene
 
 | Concept | Canonical Markdown | DOCX | XeLaTeX | Notion |
 |---|---|---|---|---|
-| Part | H1 `Part …` | standalone Book Part page + 4.8in panel | standalone `BookPartPage` + 4.8in panel | H1 or child page with orientation |
+| Part | H1 `Part …` | standalone Book Part page (text only) | standalone `BookPartPage` (text only) | H1 or child page with orientation |
+| Chapter cover | `config/chapter-covers.json` → `cover-images/chapter-NN-*.png` | standalone full-page image before the chapter H1 | `\BookChapterCover` full-bleed Letter page before `\BookChapter` | image attachment or child-page header |
 | Chapter/appendix | H1 | Heading 1, new page | forced-page chapter/appendix macro | H1/child page, same title/order |
 | Section | H2–H4 | Heading 2–4 | styled section hierarchy | H2–H4 |
 | Paragraph/list | CommonMark/GFM | Normal/List styles | native paragraph/list environments | native paragraph/list blocks |
