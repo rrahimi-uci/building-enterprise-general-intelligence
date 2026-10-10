@@ -8224,9 +8224,12 @@ Security controls now produce events and evidence; Chapter 24 turns those signal
 
 You cannot improve a system you cannot explain, and you cannot call a change an
 improvement by looking only at its average score. This Part connects causal
-traces, evaluation, slices, regression cases, and governed learning. The aim is
-not more telemetry for its own sake; it is evidence that helps a team decide
-what to fix, what to release, and what to leave alone.
+traces, evaluation, slices, regression cases, and governed learning. Earlier
+chapters listed what each pattern must emit and how a run accepts its own
+result; Chapter 24 joins those signals into one causal trace, and Chapter 25
+turns traces into release evidence. The aim is not more telemetry for its own
+sake; it is evidence that helps a team decide what to fix, what to release, and
+what to leave alone.
 
 # 24 — Follow a Run from Request to Verified Outcome
 
@@ -8234,11 +8237,11 @@ what to fix, what to release, and what to leave alone.
 
 |  |
 | --- |
-| **WHERE THE MORTGAGE CASE STANDS** An evidence review completes slowly and expensively. Operators can see a final summary but cannot tell whether the delay came from queues, retrieval, policy, model turns, retries, human dwell, or a slow connector. Harborlight links the entire trajectory. |
+| **WHERE THE MORTGAGE CASE STANDS** An evidence review completes slowly and expensively. Operators can see a final summary but cannot tell whether the delay came from queues, retrieval, policy, model turns, retries, human dwell, or a slow connector. Harborlight's target is one trace that links the entire run. |
 
 |  |
 | --- |
-| **THE DESIGN CHOICE** Adopt OpenTelemetry-compatible causal traces and MLflow 3.15.x for diagnostics; retain complete protected audit evidence separately. |
+| **THE DESIGN CHOICE** Adopt OpenTelemetry-compatible causal traces and MLflow 3.15.2 (pinned) for diagnostics; retain complete protected audit evidence separately. |
 
 ## Why a trace must explain decisions, not just latency
 
@@ -8259,52 +8262,60 @@ complete, integrity-protected records required for protected decisions and
 effects. A trace may point to an audit record, but it should not become the
 only copy of that record.
 
+Appendix A's P-09 and Chapter 17's AP-14 name this object and what its absence
+costs; this book calls it the causal run trace, and Chapter 25 calls the same
+run's ordered decisions its trajectory. Three other records remain
+authoritative: workflow history for execution state (Chapter 15), the effect
+ledger for effect state (Chapter 22), and the audit ledger for proof. The trace
+links to all three and replaces none.
+
 [[DIAGRAM:causal-trace|Figure 24-1 — A causal run trace links asynchronous work while protected decisions and effects enter a separate audit ledger]]
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
-| Trace pipeline; separate audit ledger | sensitive runtime to operations access | trace shard · regional collector | one span/export batch | TraceContext · SpanLink · AuditEvent |
+| Trace pipeline; separate audit ledger | sensitive runtime to operations access | trace shard · regional collector | one span/export batch | W3C trace context · SpanEnvelope · TraceIndex · AuditEvent |
 
 An operator should be able to ask a trace four questions without opening every
-log line: what run was this, which decision changed the path, which activity
-consumed the time or budget, and what evidence proves the final effect? The
-answer comes from stable identifiers and typed links, not from copying every
-prompt and response into a search index.
+log line. Which run was this, and which release handled the request? Which
+decision changed the path: what context the model saw, and which policy
+decision narrowed the eligible actions? Which activity consumed the time or
+budget? Which effect was committed, which receipt proves it, and did the
+business obligation succeed? The answers come from stable identifiers and typed
+links, not from copying every prompt and response into a search index.
+Long-running runs need span links as well as nesting, because queues, retries,
+resumptions, and fan-out do not form one in-process call stack.
 
 ## Follow one decision from request to outcome
 
-A useful trace should let an engineer retell the run without guessing. Which release handled the request? What context did the model see? Which policy decision narrowed the eligible actions? What proposal was made, what effect was committed, and which receipt proves it? Finally, did the business obligation succeed? Latency spans cannot answer those questions unless the trace is joined to durable domain and effect records.
-
-A production trace links admission, workflow tasks, AgentRuntime activities, model calls, retrieval, policy decisions, tool invocations, approvals, effects, waits, remote tasks, operator commands, and terminal acceptance. Long-running runs require stable domain IDs and span links because queues, retries, resumptions, and fan-out do not form one in-process call stack.
-
-Northstar uses OpenTelemetry-compatible context propagation and MLflow 3.15.x tracing. `mlflow.openai.autolog()` can capture OpenAI calls, while explicit spans cover platform-owned boundaries. In the pinned MLflow 3.15.2 profile, Agents SDK tracing is disabled by default; an Agents SDK integration must pass `disable_openai_agent_tracer=False` to register MLflow's Agents SDK trace processor. `RunConfig(trace_include_sensitive_data=False)` remains a separate privacy control. Required attributes include tenant-safe run and task IDs, release versions, workflow build, model route, tool and policy versions, risk class, token and cost usage, effect state, retry owner, artifact references, and stop reason.
-
-### Privacy and reliability
-
-Raw prompts, retrieved documents, credentials, and protected tool payloads do not automatically belong in traces. Record governed artifact references, hashes, classifications, and redaction metadata. Regional collectors buffer, redact, batch, and export. Diagnostic telemetry may be sampled; protected audit events are written separately with completeness and integrity controls plus monitoring.
-
 ### Debugging method
 
-Start with the violated outcome or SLO, identify the critical path, then find the first divergent state transition or decision. Distinguish queue time, execution time, human dwell, retry delay, and reconciliation time. Compare the run manifest and context/evidence versions before comparing final prose.
+1. Start from the violated outcome or SLO, not from the final prose.
+2. Walk the critical path and split elapsed time into queue, execution, human dwell, retry delay, and reconciliation.
+3. Find the first divergent span: input classification, source or freshness, context manifest, prompt, route, model, tool, arguments, policy, approval, effect, or acceptance.
+4. Diff the failing run against the nearest accepted run — run manifest, context and evidence versions, and every pinned version — before comparing final prose.
+5. Change nothing, especially the prompt, until the evidence locates the failing responsibility. A prompt change that hides a policy or contract defect removes the signal without removing the fault.
 
 ### Worked example — diagnosing a slow mortgage-evidence review
 
 Harborlight reports that a mortgage evidence review took twelve minutes. The
 summary looks plausible, so a request log alone would make the incident appear
 closed. The causal trace instead shows a three-minute queue wait, two retrieval
-attempts caused by a stale index, a four-minute human action authorization wait, and a
+attempts caused by a stale index, a four-minute human approval wait, and a
 loan-origination connector timeout whose effect record is **Unknown**. The
 operator now has a safe next step: reconcile the LOS before retrying, then
 decide whether the latency problem belongs to capacity, retrieval freshness,
 human workflow, or effect recovery.
 
-| **Trace segment** | **What the operator learns** | **Action or evidence** |
-| --- | --- | --- |
-| Admission and queue | The run waited before any model work began | Queue age, capacity class, and assignment event |
-| Retrieval | The first context snapshot was stale and a second attempt ran | Index snapshot, ACL-filter count, freshness, query hash |
-| Approval | Human dwell dominated model latency | Proposal hash, approver role, wait and expiry timestamps |
-| Connector | The downstream call timed out after dispatch | Tool span, idempotency key, downstream request ID |
-| Effect ledger | The mortgage document request cannot yet be called successful or declined | LOS receipt or reconciliation case; no blind retry |
+| **Trace segment** | **Time and category** | **What the operator learns** | **Action or evidence** |
+| --- | --- | --- | --- |
+| Admission and queue | 3 min · queue | The run waited before any model work began | Queue age, capacity class, and assignment event |
+| Retrieval | 2 min · retry delay | The first context snapshot was stale and a second attempt ran | Index snapshot, ACL-filter count, freshness, query hash |
+| Approval | 4 min · human dwell | Human dwell dominated model latency | Proposal hash, approver role, wait and expiry timestamps |
+| Connector | 3 min · execution and reconciliation | The downstream call timed out after dispatch | Tool span, idempotency key, downstream request ID |
+| Effect ledger | open · reconciliation | The mortgage document request cannot yet be called successful or declined | LOS receipt or reconciliation case; no blind retry |
+
+The first divergent decision is the stale index snapshot; the Unknown effect is
+the first state that blocks a safe retry.
 
 This example also shows why “trace everything” is not a sufficient design. The
 trace needs the identifiers and state transitions that explain the run, while
@@ -8317,63 +8328,116 @@ with an authorized reference.
 | --- | --- |
 | Problem | Explain and improve a distributed probabilistic trajectory, not merely log the final text. |
 | Why it is difficult | One outcome spans models, prompts, retrievals, tools, policies, queues, agents, humans, and retries; full content may contain secrets or PII; identical inputs may produce different paths. |
-| Design alternatives | Application logs; framework traces; vendor APM; OpenTelemetry; event-sourced audit; black-box outcome evals; trace/trajectory grading; deterministic simulators. |
-| Recommended architecture | Emit one distributed trace per run with spans for every model, retrieval, policy, tool, workflow, handoff, approval, and effect. Separate operational telemetry from immutable audit. Build eval datasets from representative, adversarial, and production-failure cases; score both outcomes and trajectories. |
-| Trade-offs | Rich traces improve diagnosis but increase storage, privacy, and access-control burden. Content capture must be selective, redacted, encrypted, and role restricted. |
-| Failure scenarios | Trace breaks at an A2A boundary; model prompts leak secrets; average success hides long-tail failures; LLM judge rewards style over correctness; replay repeats a live side effect. |
-| Enterprise example | A mortgage platform traces evidence routing, knowledge citations, tool arguments, policy decisions, authorization latency, and LOS effects; a failed document request becomes a regression fixture and sandbox replay. |
+| Design alternatives | Application logs; framework traces; vendor APM; OpenTelemetry; event-sourced audit. |
+| Recommended architecture | Emit one causal trace per run with spans for every call and decision (schema below). Separate operational telemetry from immutable audit. |
+| Trade-offs | Rich traces improve diagnosis but increase storage, privacy, and access-control burden. |
+| Failure scenarios | Trace breaks at an A2A boundary; model prompts leak secrets; replay repeats a live side effect. |
+| Enterprise example | A mortgage platform traces evidence routing, knowledge citations, tool arguments, policy decisions, approval latency, and LOS effects; a failed document request becomes a regression fixture and sandbox replay. |
 
 ### What the trace needs to connect
 
-Adopt OpenTelemetry-compatible context and GenAI semantic conventions, with organization-specific attributes where standards are still evolving. A run is the root span; workflow nodes, model calls, retrievals, policy checks, tool/A2A calls, approvals, checkpoints, and compensation are child spans or linked asynchronous traces.
+Map spans to OpenTelemetry-compatible context and GenAI semantic conventions
+through an internal layer, with organization-specific attributes where the
+standards are still evolving. A run is the root span; every call and decision
+below is a child span or a linked asynchronous trace.
 
 | **Span type** | **Essential attributes** |
 | --- | --- |
-| Run | tenant, subject hash, agent/workflow/version set, purpose, risk, status, budget, correlation ID |
+| Run | tenant, subject hash, agent/workflow/version set, purpose, risk class, status, budget, token and cost totals, stop reason, correlation ID |
 | Model | provider, model route/version, prompt-template hash, context-manifest hash, input/output tokens, latency, cache, finish/error type |
 | Retrieval | source/index snapshot, query hash, ACL-filter count, documents returned, freshness, latency |
-| Policy | policy bundle/version, action/resource hash, decision, obligations, reason code, latency |
-| Tool | tool/version, risk, arguments hash, auth grant ID, idempotency key, retries, effect receipt, latency |
-| Agent task | caller/callee versions, task ID, protocol, ownership transition, budget transfer, terminal status |
+| Decision | kind (route, plan compile/revision, step disposition, acceptance, critique); candidates and eligibility removals; chosen option; validator or compiler reason; scorer/rubric versions for acceptance; plan digest/revision and replan diff; turn index, information gain, remaining budgets, stop reason |
+| Policy | policy bundle/version, decision ID, action/resource hash, decision, obligations, reason code, latency |
+| Tool | tool/version, risk class, arguments hash, grant ID, credential lease ID, idempotency key, retries, effect state (`effect.state`), effect receipt, artifact references, latency |
+| Memory | memory ID/version, operation (read/write/delete), scope/tenant, purpose and policy basis, provenance, TTL |
+| Agent task | caller/callee versions, task ID, protocol, ownership transition, grant lineage, budget transfer, join condition, terminal status |
 | Approval | request hash, policy reason, approver role, wait time, decision, expiry, modification flag |
-| Workflow | node/attempt, queue delay, checkpoint, retry class, signal/event IDs, replay flag |
+| Security control | control (detector, egress, DLP, kill switch), rule/version, taint label of the input, decision, action |
+| Workflow | node/attempt, workflow build, queue delay, checkpoint, timer/wait state, retry class and owner, signal/event IDs and source, cancel and replay flags |
+
+The “What you need to see in production” lists in Chapters 2, 6, 10–15, and 18
+are attributes on these span types; this table is their common schema.
 
 Do not treat hidden chain-of-thought as required observability. Record concise decision summaries, selected alternatives, evidence references, structured plans, policy outputs, and tool trajectories. This is more stable, safer, and more operationally useful.
+
+|  |
+| --- |
+| **OBSERVABILITY TIP**  Trace the decision, not only the call. Latency and token counts tell you a run was slow; they never tell you why it was wrong. Record which context manifest was authorized, which policy applied, and which branch was taken — those attributes are what let a trace answer a question weeks later. |
 
 ### A scorecard operators can actually use
 
 | **Dimension** | **Representative metrics** |
 | --- | --- |
-| Outcome quality | Task success, groundedness, factual precision/recall, business acceptance, human correction rate |
-| Trajectory quality | Correct route/tool/handoff, unnecessary steps, plan churn, evidence coverage, policy adherence |
-| Reliability | Completion rate, retry recovery, duplicate-effect rate, ambiguous-effect rate, stuck-run age, compensation success |
+| Outcome quality | Task success, groundedness, faithfulness / unsupported-claim rate, factual precision/recall, business acceptance, human correction rate |
+| Trajectory quality | Correct route/tool/handoff, tool-selection precision/recall, argument correctness, plan adherence, unnecessary steps, plan churn, evidence coverage, policy adherence |
+| Reliability | Completion rate, retry recovery, retry amplification, duplicate-effect rate, ambiguous-effect rate, stuck-run age, compensation success |
 | Safety/security | Unauthorized-attempt block rate, prompt-injection utility/security scores, DLP events, cross-tenant violations, approval bypasses |
 | Latency | End-to-end p50/p95/p99, time to first useful update, queue delay, model/tool latency, approval wait |
 | Cost | Cost/successful outcome, input/output tokens, tool/API cost, cache hit, wasted retry cost, specialist fan-out cost |
-| Human load | Approval frequency, approval dwell time, escalation rate, override rate, reviewer agreement |
+| Human load | Approval frequency, approval dwell time, escalation rate, override rate, reviewer agreement, reviewer fatigue |
 | Operations | SLO attainment, trace completeness, rollback time, mean time to diagnose/recover, dead-letter backlog |
+
+Chapter 25 explains how the outcome and trajectory rows are scored offline and
+per slice.
 
 ### Trace and replay semantics
 
 * Propagate W3C traceparent/tracestate across HTTP, queues, MCP, and A2A. Use span links when work is triggered asynchronously or crosses an independently rooted remote trace.
-* Record model route/version, prompt/context hashes, tool/agent versions, policy decision IDs, artifact/effect references, retry/cancel/replay flags, cost, and timing.
-* Operational replay reuses recorded activity outputs and cannot create live effects. A fork with changed model/prompt/tool is a new run and explicitly mocks or reauthorizes external access.
-* Deterministic correctness checks outrank model graders. Store grader prompt/model/version, raw score evidence, and inter-rater calibration so a later drift analysis is possible.
+* Workflow replay (Chapter 15) re-executes history using recorded activity results. Diagnostic replay renders a recorded run without calling models or tools. A fork (Chapter 4 § Run API, `:fork`) is a new run from a checkpoint with explicitly changed versions; it mocks external effects or reauthorizes them. None of the three may create a live effect.
+
+## A workable implementation
+
+### Who should own each decision
+
+| **Component** | **Responsibility** |
+| --- | --- |
+| Telemetry Collector | Receive OTLP traces, metrics, and logs; enrich with tenant/run metadata; redact and route |
+| Trace Index | Fast causal lookup by run, task, effect, version, error, tenant, and time |
+| Content Vault | Separately encrypted optional prompt/output/tool payloads referenced by hash |
+| Metrics/SLO Pipeline | Aggregate low-cardinality service, quality, safety, cost, and human-load indicators |
+| Replay/Fork Service | Reconstruct a safe sandbox run from manifest, history, artifacts, and recorded effects |
+| Audit ledger writer | Append-only, integrity-protected, loss-intolerant path for protected decisions and effects; see Chapter 4 § Where each kind of state belongs |
+
+### The contracts between components
+
+| **API** | **Purpose and key semantics** |
+| --- | --- |
+| POST /otlp/v1/traces, /metrics, /logs | Standard OTLP ingestion with workload authentication, tenant binding, size/rate limits, and redaction |
+| GET /v1/runs/{run\_id}/trace | Return role-redacted causal graph, span summaries, links, and authorized content handles |
+
+Forks use Chapter 4's `POST /v1/runs/{id}:fork`: a sandbox run whose external
+effects are mocked or read-only unless separately authorized. The Chapter 14
+operator console reads the trace API; its live run graph is a role-redacted
+view of this trace.
+
+### Records worth preserving
+
+| **Entity** | **Required fields and invariants** |
+| --- | --- |
+| TraceIndex | trace/run IDs, tenant, start/end, root service, manifest/version set, status/risk, error/effect/approval flags, cost/tokens; no sensitive body by default |
+| SpanEnvelope | trace/span/parent or links, kind, service/operation, start/duration, status, normalized attributes/events, content refs, sampling class |
+| ContentBlob | encrypted URI/hash, tenant/key, classification, redaction profile, authorized roles, retention, source span; stored separately |
+| AuditEvent | run/effect/decision ID, actor and subject, policy/approval reference, integrity hash, retention class; never sampled |
+
+### Privacy and reliability
+
+Raw prompts, retrieved documents, credentials, and protected tool payloads do
+not automatically belong in traces. Record governed artifact references,
+hashes, classifications, and redaction metadata; content that must be captured
+is selective, redacted, encrypted, and role restricted in the Content Vault.
+Regional collectors buffer, redact, batch, compress, retry, and spill encrypted
+data, so application latency is decoupled from backend analytics. Diagnostic
+telemetry may be sampled; protected effect and audit events follow a separate
+loss-intolerant path with completeness and integrity controls plus monitoring.
 
 ### What changes as usage grows
 
-* Decouple application latency from backend analytics with regional collectors, bounded queues, batching, compression, retry, and encrypted spill. Protected effect/audit events follow a loss-intolerant path distinct from sampled diagnostics.
 * Partition trace storage by tenant + time; index only operationally useful low-cardinality fields. Put high-cardinality attributes and content in columnar/object storage with controlled query paths.
 * Use tiered sampling: 100% metadata for runs/effects/policy/approvals; 100% detailed traces for failures, security findings, canaries, R3/R4, and operator-selected runs; adaptive/statistical detail for routine success.
 * Move older traces from hot index to compressed object storage, preserving searchable summaries and evidence pointers. Retention differs for telemetry, evaluation fixtures, and legal/audit records.
-* Run evaluations on dedicated queues with tenant/candidate budgets, reproducible seeds, provider-rate awareness, and early stop when statistical or hard safety failure criteria are met.
 * Compute metrics from events/spans through streaming aggregation rather than querying raw traces for dashboards. Control label cardinality; never use user IDs, prompts, or URLs as metric labels.
-* Preserve sampling weights and selection reasons for online estimates. Compare by task/risk/data/source/model slices so improvements in average score cannot hide a critical regression.
-* Monitor the observability system itself: collector drop rate, redaction failure, trace completeness, broken links, ingest lag, hot-store cost, evaluator disagreement, and dataset leakage.
-
-|  |
-| --- |
-| **OBSERVABILITY TIP**  Trace the decision, not only the call. Latency and token counts tell you a run was slow; they never tell you why it was wrong. Record which context manifest was authorized, which policy applied, and which branch was taken — those attributes are what let a trace answer a question weeks later. |
+* Preserve sampling weights and selection reasons for online estimates.
+* Monitor the observability system itself: collector drop rate, redaction failure, trace completeness, broken links, ingest lag, and hot-store cost.
 
 ## What the evidence lets us conclude
 
@@ -8383,12 +8447,10 @@ Do not treat hidden chain-of-thought as required observability. Record concise d
 
 The discussion above draws on R19. Appendix K lists the complete sources and records their authority, version, and scope.
 
-|  |
-| --- |
-| **OBSERVABILITY TIP**  Tag every trace with the identifiers your system of record uses — run, tenant, risk class. A trace that cannot be joined to the business record it affected can time a run but cannot explain its outcome. |
-
 ## A sensible place to start
 
+Start by instrumenting what the platform owns: the first example places manual
+agent and tool spans and records a decision attribute.
 
 🐍 · Manually tracing agent and tool boundaries with MLflow
 
@@ -8418,6 +8480,15 @@ def handle_request(case_id: str) -> str:
 ```
 
 ### MLflow tracing integration
+
+The examples use OpenTelemetry-compatible context propagation and MLflow 3.15.2
+(pinned) tracing. `mlflow.openai.autolog()` captures OpenAI calls, while
+explicit spans cover platform-owned boundaries; the example below records the
+context-manifest ID, not the context body. The pinned 3.15.2 `autolog`
+defaults `disable_openai_agent_tracer` to true, so the examples pass `False` to
+register MLflow's Agents SDK trace processor; the example's test asserts that
+default. `RunConfig(trace_include_sensitive_data=False)` remains a separate
+privacy control.
 
 🐍 · Configuring MLflow tracing around a governed agent step
 
@@ -8464,7 +8535,10 @@ The cumulative mortgage runtime makes the boundary concrete: the OpenAI Agents
 SDK performs one bounded, read-only tool loop; the Tool Gateway owns the
 synthetic projection; MLflow records the causal AgentRunner, agent, and tool
 spans. The scripted model keeps the example offline, so a trace proves the
-integration and redaction mechanics without claiming a live provider call.
+integration and redaction mechanics without claiming a live provider call. The
+queue, policy, approval, and effect spans in the worked example are not here;
+they are platform spans you add with the explicit-span pattern above. That is
+exercise 1.
 
 🐍 · Tracing the mortgage Agents SDK runtime with MLflow
 
@@ -8542,13 +8616,15 @@ def run_mortgage_review() -> dict[str, object]:
 
 ## If this fails in production
 
-1. Start at the SLO violation and walk the critical path span by span.
-2. Correlate queue, workflow, model, retrieval, tool, approval, and effect timing.
-3. Compare diagnostic trace completeness with required audit evidence.
+1. A trace breaks at a queue, resume, or A2A boundary: check traceparent propagation and span links, and fall back to domain-ID joins.
+2. Spans lack release or policy versions: block the release, because runs cannot be compared.
+3. The collector drops data or redaction fails: confirm protected audit events took the loss-intolerant path, quarantine leaked content, and alert on the observability SLOs.
+
+To debug a failed run, use the method in § Debugging method. If telemetry cannot join a run to its release, decisions, and effects, see AP-14 in Chapter 17.
 
 ## What to verify before production
 
-**✓** Run, workflow, agent, model, retrieval, policy, tool, approval, effect, and human spans share stable causal identifiers.
+**✓** Every span type in the schema carries stable causal identifiers.
 
 **✓** Asynchronous relationships use span links and domain IDs.
 
@@ -8560,18 +8636,18 @@ def run_mortgage_review() -> dict[str, object]:
 
 ## Put the idea to work
 
-1. Define the canonical trace attributes for the Harborlight mortgage platform.
+1. Starting from the mortgage Agents SDK example, add the queue, policy, approval, and effect spans the schema requires, so the worked example's five segments appear.
 2. Create a dashboard that separates machine latency from human dwell.
 
 ## Questions to bring to design review
 
 | **Question** | **Strong answer** |
 | --- | --- |
-| What is the root trace for a long-running run? | A durable run trajectory linked across workflow tasks, model calls, tools, messages, approvals, effects, and restarts using stable IDs and span links. |
-| Why is parent-child nesting insufficient? | Asynchronous queues, retries, fan-out, resumed waits, and remote agents create causal relationships that require links and domain identifiers. |
+| What is the root trace for a long-running run? | One causal run trace linked across workflow tasks, model calls, tools, messages, approvals, effects, and restarts using stable IDs and span links, because queues, retries, fan-out, resumed waits, and remote agents are not one call stack. |
 | Which data should not be put blindly into traces? | Secrets, credentials, raw sensitive prompts, retrieved content, tool payloads, and regulated identifiers; record governed references and hashes where possible. |
 | How do traces support debugging? | They expose critical path, state transitions, versions, policy decisions, retries, cost, evidence lineage, and the first divergent step. |
 | Why keep audit separate? | Audit has stronger completeness, integrity, access, and retention obligations than sampled diagnostic telemetry. |
+| Which record do you trust when the trace and the effect ledger disagree? | The effect ledger for effect state and workflow history for execution state; the trace is diagnostic and may be sampled, so a disagreement is an observability defect to fix, not a fact to act on. |
 
 ## Where this leads next
 
@@ -8579,11 +8655,11 @@ Tracing explains what happened; Chapter 25 determines whether the trajectory and
 
 # 25 — Improve the System Without Handing It Control
 
-> **Evidence context:** The evaluation architecture maps to current capabilities documented by MLflow, DeepEval, Ragas, LangSmith, and OpenAI. Tool names and APIs are examples; the durable contract is dataset + release graph + scorer versions + trace/effect evidence. **[R20][R21][R22][R24][R25][R26]**
+> **Evidence context:** The evaluation architecture maps to current capabilities documented by MLflow, DeepEval, Ragas, LangSmith, and OpenAI. Tool names and APIs are examples; the durable contract is dataset + release manifest + scorer versions + trace/effect evidence. **[R20][R21][R22][R24][R25][R26]**
 
 |  |
 | --- |
-| **WHERE THE MORTGAGE CASE STANDS** A prompt change improves average evidence-summary quality but introduces one unauthorized tool trajectory in a low-volume region. Aggregate accuracy hides the regression; slice-aware trajectory evaluation blocks the release. |
+| **WHERE THE MORTGAGE CASE STANDS** A prompt change improves average evidence-summary quality but, in one low-volume region, attempts an LOS lookup outside the case's eligible tool set. Aggregate accuracy hides the regression; slice-aware trajectory evaluation blocks the release. |
 
 |  |
 | --- |
@@ -8595,9 +8671,10 @@ Production evidence is only useful if it can change the system safely. This
 chapter follows a failure from trace to evaluation case to candidate release,
 and keeps outcome quality separate from trajectory safety. The distinction
 matters when an average score improves while a small tenant, language, or tool
-path becomes less safe.
+path becomes less safe. Chapter 24's traces are the starting evidence; a failed
+run such as its unresolved document request becomes a reviewed case here.
 
-## A safe improvement loop starts with evidence
+## A release gate starts with evidence
 
 An evaluation compares a candidate against an explicit contract, a baseline,
 and the slices where failure matters. The candidate is not just a prompt: it is
@@ -8606,31 +8683,35 @@ and runtime configuration that could change the trajectory. A release gate
 combines deterministic checks with calibrated quality evidence, then records a
 decision that another operator can reproduce.
 
-The chapter therefore treats evaluation as the measurement stage of a larger
-learning system. Observe, measure, detect, and diagnose before recommending a
-change; validate and approve it before deployment; then monitor the result and
-curate the evidence into the next regression set. The loop improves the system
-without granting any model authority to rewrite controls or certify itself.
+Chapter 13 evaluated one candidate artifact inside a run to decide whether that
+run's result is accepted. This chapter evaluates a candidate version of the
+system across a dataset to decide whether it may be promoted. The discipline is
+the same — deterministic checks first, calibrated judges only for nuance, no
+self-certification — but the release decision adds immutable datasets,
+baselines, slices, and repeated runs. Evaluation is the Measure and Validate
+stages of the governed learning loop described later in this chapter.
 
 [[DIAGRAM:evaluation-gate|Figure 25-1 — Candidate evaluation combines deterministic checks, calibrated judges, slices, and a risk-tiered release gate]]
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
-| Evaluation Registry and release gate | production evidence to development corpus | dataset version · scorer pool · slice | one case and candidate release | EvalCase · Feedback · ReleaseGateDecision |
+| Evaluation Registry and release gate | production evidence to development corpus | dataset version · scorer pool · slice | one case and candidate release | EvalCase · EvaluationResult · ReleaseGateDecision |
 
 The gate is deliberately not a single score. A candidate can improve a
 language-quality metric while violating an authorization invariant, increasing
 unknown effects, or regressing a small but high-consequence slice. Deterministic
 failure therefore blocks promotion; a model judge can add useful evidence about
-nuanced quality, but it cannot override a protected invariant.
+nuanced quality, but it cannot override a protected invariant. Normalize every
+framework score into a platform-owned EvaluationResult; no framework score is
+release authority. A gate may return waiver-required for residual risk outside
+a protected invariant; the waiver is a Chapter 26 exception — scoped, owned,
+compensated, and expiring — never a way past a deterministic failure.
 
 ## Use evaluation to guide engineering decisions
 
-Evaluation changes engineering decisions only when it is tied to failures the business cares about. An average quality increase can hide a regression on protected, high-risk, or rare cases. That is why the dataset needs immutable cases, explicit slices, and trajectory evidence—not just one score. The release decision should show where the system improved, where uncertainty remains, and which regressions are severe enough to stop promotion.
+A release dataset needs immutable cases, explicit slices, and trajectory evidence—not just one score. The release decision should show where the system improved, where uncertainty remains, and which regressions are severe enough to stop promotion.
 
 An agent evaluation case includes input, initial state, user simulation or messages, expected outcome properties, allowed and forbidden tools, required evidence, maximum budgets, failure injections, and slice tags. The result includes final output, complete trajectory, artifacts, policy decisions, effects, human events, latency, cost, and terminal state.
-
-MLflow 3.15.x supports GenAI evaluation, trace-based scorers, code-based scorers, LLM judges, human feedback, and OpenAI Agents SDK tracing integration. Version 3.15.2 adds immutable evaluation-dataset versions and scorer ensembles. This book pins 3.15.2; newer overall MLflow releases may exist and require separate compatibility validation.
 
 ### Judge the outcome and the path separately
 
@@ -8640,23 +8721,13 @@ evaluation asks how the system got there: did it retrieve only authorized
 context, choose the permitted tool, respect the budget, request approval, and
 leave a verifiable effect? Both are necessary because a lucky final answer can
 hide an unsafe path, while a safe path can still produce an unhelpful result.
+Chapter 24's scorecard lists the outcome and trajectory metrics; here they are
+computed per case, per slice, against a baseline.
 
-Treat each expected property according to how it can be known. Schema validity,
-authorization, approval binding, budget limits, effect state, and required
-evidence should be checked deterministically. Nuanced qualities such as tone,
-clarity, or usefulness may use a calibrated judge alongside human labels and
-confidence information. The evaluator type belongs in the result so later
-readers do not mistake a probabilistic opinion for a proof.
-
-### Evaluation pyramid
-
-* **Contract and unit:** schemas, reducers, compilers, capability subsets, idempotency, deterministic acceptance.
-* **Simulation:** multi-turn users, tool fixtures, clock, failures, approvals, and remote peers.
-* **Trajectory:** correct tools, order, evidence, policy, budgets, handoffs, waits, and effects.
-* **Threat:** prompt injection, exfiltration, confused deputy, cross-tenant, SSRF, malicious artifact, approval tampering.
-* **Reliability:** retries, timeouts, duplicates, out-of-order events, unknown effects, cancellation, replay, regional recovery.
-* **Performance:** queue age, tokens, tool calls, latency, cost per success, concurrency, fairness.
-* **Canary and production:** bounded exposure, online monitors, human feedback, failure mining, rollback.
+Apply Chapter 13's rule for which properties are checked deterministically and
+which may use a calibrated judge; at release level, also record the evaluator
+type and version in every result so a probabilistic opinion is never mistaken
+for a proof.
 
 ### Layer tests from contracts to outcomes
 
@@ -8664,108 +8735,111 @@ readers do not mistake a probabilistic opinion for a proof.
 | --- | --- | --- |
 | Unit | Schemas, plan compiler, policy rules, context filters, budget logic, redaction, idempotency | Deterministic tests and property-based fuzzing |
 | Contract | Tool/MCP/A2A schemas, auth scopes, errors, compatibility, effect receipts | Consumer/provider contract tests against mocks and sandboxes |
-| Component | Agent behavior with controlled models/tools | Seeded scenarios, golden trajectories, metamorphic tests |
+| Component | Agent behavior with controlled models/tools; trajectory constraints (tools, order, evidence, budgets, handoffs) | Seeded scenarios, golden trajectories, metamorphic tests |
 | Workflow | Retries, replay, pause/resume, cancellation, compensation, code-version migration | Fault injection and workflow-engine test harness |
 | Simulation | Multi-turn users, changing data, delayed events, partial failures | Stateful environment and user simulators; many seeds |
-| Security/adversarial | Prompt injection, malicious files/tools/agents, exfiltration, privilege escalation | AgentDojo-style suites, red-team corpora, sandbox escape and DLP tests |
+| Security/adversarial | Prompt injection, malicious files/tools/agents, exfiltration, privilege escalation | Prompt-injection benchmark suites, red-team corpora, sandbox escape and DLP tests |
+| Performance | Queue age, tokens, tool calls, latency, cost per accepted outcome, fairness | Load and soak tests per slice |
 | Regression | Known wins/failures across pinned versions | Offline datasets; outcome + trace graders; statistical confidence |
-| End-to-end | Real identity, source ACLs, queues, approvals, effects, audit | Staging tenant with synthetic data; canary in production |
+| End-to-end | Real identity, source ACLs, queues, approvals, effects, audit | Staging tenant with synthetic data; canary in production with stop conditions |
 | Continuous | Drift, novel failures, cost/latency, policy incidents | Sampled online evals, human review, alerts, incident-to-test loop |
 
-Use deterministic validators as the gold standard where possible. LLM-as-judge is useful for nuanced rubrics but must be calibrated against humans, blinded to candidate identity, tested for variance/bias, and never be the sole gate for safety-critical correctness. Measure repeated-run reliability (pass^k or equivalent), not just best-of-one success.
+Measure repeated-run reliability (pass^k or equivalent), not just best-of-one success.
 
 ### Worked example — average improvement, protected-slice regression
 
 Suppose a Harborlight prompt revision makes routine evidence summaries clearer,
-but one low-volume region now produces an unauthorized LOS lookup in a
-simulated trajectory. The aggregate score is better, yet the candidate is not a
-safe release. Slice-aware evaluation makes the disagreement visible and gives
-the release owner a concrete decision record.
+but in one low-volume region the candidate now attempts an LOS lookup outside
+the case's eligible tool set in a simulated trajectory. The aggregate score is
+better, yet the candidate is not a safe release. Slice-aware evaluation makes
+the disagreement visible and gives the release owner a concrete decision
+record.
 
 | **Evidence** | **Candidate result** | **Release interpretation** |
 | --- | --- | --- |
 | Routine answer quality | Improved against the baseline | Useful quality evidence, not sufficient for promotion |
 | Protected-action trajectory | One forbidden lookup appears | Deterministic safety regression; block the candidate |
 | Region/risk slice | Regression is low volume but high consequence | Volume cannot dilute the risk tier |
-| Diagnosis | New context or routing path selects the LOS tool | Compare trace, policy decision, context manifest, and release graph |
+| Diagnosis | New context or routing path selects the LOS tool | Compare trace, policy decision, context manifest, and release manifest (Chapter 24 § Debugging method) |
 | Next candidate | Narrow retrieval/tool eligibility and add the case to the regression set | Re-run held-out, adversarial, and protected-effect checks |
+
+In production the Tool Gateway would deny the call, but the attempt is still a
+deterministic trajectory failure: the candidate's context or routing now pushes
+the model toward a forbidden action, and shipping it would turn a release
+defect into production denials and incidents that each depend on one control
+holding.
 
 The important habit is to preserve the failing trace as a versioned case after
 privacy and purpose review. Otherwise the next improvement can repeat the same
 failure while the dashboard reports only the improved average.
 
-## A workable implementation
+## Separate runtime adaptation from offline improvement
 
-### Who should own each decision
+Runtime adaptation chooses among options approved before the run started:
+pre-approved routes and fallbacks, additional authorized context or dropping
+optional context, retry within budget, stopping a loop, asking for input,
+escalating, and shedding load. It cannot expand permissions, purpose, data
+access, spend, tools, or model allowlists. Offline improvement creates a new
+immutable release and may change prompts, context/RAG, memory policy, tools,
+skills, model selection, routing, deterministic code, agent topology,
+workflows, and system architecture after evaluation and approval.
 
-| **Component** | **Responsibility** |
-| --- | --- |
-| Telemetry Gateway/Collector | Receive OTLP traces, metrics, and logs; enrich with tenant/run metadata; redact and route |
-| Trace Index | Fast causal lookup by run, task, effect, version, error, tenant, and time |
-| Content Vault | Separately encrypted optional prompt/output/tool payloads referenced by hash |
-| Metrics/SLO Pipeline | Aggregate low-cardinality service, quality, safety, cost, and human-load indicators |
-| Evaluation Registry | Version datasets, cases, rubrics, graders, baselines, and release thresholds |
-| Evaluation Orchestrator | Run candidates across seeds/environments, grade, compare, and produce confidence intervals |
-| Replay/Fork Service | Reconstruct a safe sandbox run from manifest, history, artifacts, and recorded effects |
-| Failure Mining Service | Cluster traces/incidents and propose curated regression cases for human review |
+The test is simple: if a change outlives the run, or widens the envelope, it is
+an offline release. Chapter 13's bounded revision improves an artifact inside
+the run, so it is runtime. A memory write within memory policy is a governed
+runtime data effect (Chapter 6); changing that policy is offline. Chapter 28's
+degraded modes and Chapter 23's kill switches are runtime controls inside a
+pre-approved envelope.
 
-### The contracts between components
+For Harborlight, falling back to the pre-approved secondary model route when
+the primary is rate-limited is runtime adaptation. Making the cheaper route the
+default is an offline release that needs slice evaluation (AP-15). Runtime
+outcomes feed the offline loop as evidence, never as a change.
 
-| **API** | **Purpose and key semantics** |
-| --- | --- |
-| POST /otlp/v1/traces, /metrics, /logs | Standard OTLP ingestion with workload authentication, tenant binding, size/rate limits, and redaction |
-| GET /v1/runs/{run\_id}/trace | Return role-redacted causal graph, span summaries, links, and authorized content handles |
-| POST /v1/eval-datasets | Create immutable/versioned dataset from approved cases and provenance |
-| POST /v1/eval-runs | Evaluate a release candidate against dataset/rubric, seeds, model routes, environment, and budget |
-| GET /v1/eval-runs/{eval\_run\_id}/comparison | Compare candidate/baseline metrics, confidence intervals, slices, regressions, cost, and trace deltas |
-| POST /v1/release-gates:evaluate | Apply risk-tiered thresholds and return pass/fail/waiver-required with evidence |
-| POST /v1/runs/{run\_id}:forkReplay | Create a sandbox fork at checkpoint; external effects are mocked/read-only unless separately authorized |
-| POST /v1/regression-cases:propose | Submit a production failure/cluster for de-identification, labeling, leakage review, and dataset approval |
-
-### Records worth preserving
-
-| **Entity** | **Required fields and invariants** |
-| --- | --- |
-| TraceIndex | trace/run IDs, tenant, start/end, root service, manifest/version set, status/risk, error/effect/approval flags, cost/tokens; no sensitive body by default |
-| SpanEnvelope | trace/span/parent or links, kind, service/operation, start/duration, status, normalized attributes/events, content refs, sampling class |
-| ContentBlob | encrypted URI/hash, tenant/key, classification, redaction profile, authorized roles, retention, source span; stored separately |
-| EvalDatasetVersion | dataset/version/digest, purpose, cases, slices, provenance, license/privacy/leakage review, owner, lifecycle |
-| EvalCase | case ID, input/environment fixtures, expected invariants/artifacts/trajectory constraints, rubric, risk tags, source/provenance |
-| EvalRun | candidate/baseline manifest digests, dataset, seeds, grader versions, environment, status, aggregate resource usage |
-| EvalScore | eval/case/attempt, metric, score, confidence/evidence, deterministic or grader type/version, latency/cost |
-| ReleaseGateDecision | candidate, risk tier, thresholds, slice results, decision, waiver, approvers, evidence refs; immutable |
-| ProductionSample | run/trace, sampling reason/weight, consent/privacy handling, evaluation status, incident/failure cluster |
-
-|  |
-| --- |
-| **BEST PRACTICE**  Grow the evaluation set from production failures, not only from imagined ones. Every incident should end by contributing a reviewed case. A suite assembled up front measures what you expected to be hard; a suite grown from incidents measures what actually is. |
+[[DIAGRAM:runtime-offline|Figure 25-2 — Runtime adaptation and offline improvement boundary]]
 
 ## Close the loop without handing control to the model
 
 Continuous improvement joins production evidence to versioned change and release. It does not let an agent rewrite its prompt, memory policy, permissions, evaluator, or code and then certify itself.
 
-[[DIAGRAM:learning-loop|Figure 25-2 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn]]
+[[DIAGRAM:learning-loop|Figure 25-3 — Observe → Measure → Detect → Diagnose → Recommend → Validate → Approve → Deploy → Monitor → Learn]]
 
 | **Stage** | **Work and durable output** | **Automation boundary** |
 | --- | --- | --- |
-| Observe | Join traces, context, tools/effects, feedback, corrections, incidents, cost, latency, outcome into ObservationRecord | Capture/redact/sample automatically; approve sensitive purpose/access |
+| Observe | Join traces, context, tools/effects, feedback, corrections, incidents, cost, latency, outcome into ProductionSample linked to TraceIndex (Chapter 24), including failed candidates from Chapter 13 | Capture/redact/sample automatically; approve sensitive purpose/access |
 | Measure | Run deterministic invariants and quality, safety, retrieval, tool, trajectory, SLO, economics metrics into EvaluationResult | Approved scorers automate; humans define truth/threshold/calibration |
-| Detect | Rules, anomaly, drift, slice regression, recurring corrections into DetectionEvent | Alert/contain within approved envelope |
-| Diagnose | Compare successful/failed traces, first divergence, structural/semantic clusters into causal hypothesis | Tools rank; accountable owner confirms cause/business meaning |
-| Recommend | Smallest candidate, predicted benefit, risk, affected contracts, rollback into ChangeBundle draft | Generate drafts; never self-approve/mutate production |
+| Detect | Rules, anomaly, drift, slice regression, recurring corrections into an alert or containment action | Alert/contain within approved envelope |
+| Diagnose | Compare successful/failed traces, first divergence, structural/semantic clusters into an owner-confirmed causal hypothesis | Tools rank; accountable owner confirms cause/business meaning |
+| Recommend | Smallest candidate, predicted benefit, risk, affected contracts, rollback into ChangeBundle draft (Chapter 27) | Generate drafts; never self-approve/mutate production |
 | Validate | Replay, simulation, unit/contract/security/privacy/adversarial/load/cost/compatibility tests into ValidationReport | CI automates; owners approve datasets, exceptions, residual risk |
-| Approve | Risk class and domain/security/privacy/operations decision into PromotionDecision | Only pre-approved low-risk change classes auto-approve; never self-authored behavior |
-| Deploy | Immutable build, bindings, shadow/canary, rollback into ReleaseManifest/deployment | Progressive delivery within approved policy |
+| Approve | Use-case tier × change class (Chapter 26) and domain/security/privacy/operations decision into ReleaseGateDecision; PromotionDecision is recorded at promotion (Chapter 27) | Only pre-approved low-risk change classes auto-approve; never self-authored behavior |
+| Deploy | Immutable build, bindings, shadow/canary, rollback into ReleaseManifest (Chapter 27) | Progressive delivery within approved policy |
 | Monitor | Compare canary/production to baseline across quality, safety, reliability, cost, business | Auto-halt/rollback on tested stop condition |
-| Learn | Record causal result, curate regressions, update taxonomy/runbook into LearningRecord | Metadata may automate; data/policy/architecture changes require governance |
+| Learn | Record causal result, curate regressions, update taxonomy/runbook into a reviewed EvalCase proposal and runbook update | Metadata may automate; data/policy/architecture changes require governance |
 
-## Separate runtime adaptation from offline improvement
+Chapter 27 executes the Deploy and Monitor stages as signed promotion through
+shadow and canary.
 
-[[DIAGRAM:runtime-offline|Figure 25-3 — Runtime adaptation and offline improvement boundary]]
+The worked example travels the same loop. Slice evaluation detects the
+forbidden-tool attempt, and comparing traces and context manifests diagnoses
+the new retrieval path. The recommendation narrows retrieval and tool
+eligibility; held-out, adversarial, and protected-effect suites validate it,
+and the domain owner approves. The failing trace becomes a reviewed case.
 
-Runtime adaptation selects only pre-approved routes/fallbacks, reduces optional context, sheds load, stops a loop, asks for input, escalates, or rolls back inside a fixed envelope. It cannot expand permissions, purpose, data access, spend, tools, or model allowlists. Offline improvement creates a new immutable release and may change prompts, context/RAG, memory policy, tools, skills, model selection, routing, deterministic code, agent topology, workflows, and system architecture after evaluation and approval.
+| **What the loop may do** | **Changes** |
+| --- | --- |
+| Automate within the envelope | Capture, approved redaction and scoring, anomaly detection, clustering, draft recommendations, tests, sandbox runs, approved canaries, halt, rollback |
+| Require human governance | Permission, policy, data, memory purpose, protected effects, model allowlist, topology, architecture, evaluator truth, training data, exceptions, wider promotion |
+| Never permitted | Expanding authority, disabling controls, editing audit evidence, changing approval requirements, promoting self-authored behavior |
+
+|  |
+| --- |
+| **BEST PRACTICE**  Grow the evaluation set from production failures, not only from imagined ones. Every incident should end by contributing a reviewed case. A suite assembled up front measures what you expected to be hard; a suite grown from incidents measures what actually is. |
 
 ## Choose the right improvement path
+
+The Diagnose stage selects the row. Change the lowest layer that removes the
+cause, and prefer deterministic code when the decision has become stable.
 
 | **Layer** | **Evidence** | **Candidate** | **Validation / approval** |
 | --- | --- | --- | --- |
@@ -8780,16 +8854,43 @@ Runtime adaptation selects only pre-approved routes/fallbacks, reduces optional 
 | Agent topology | Duplicate work, fan-out/handoff, unclear owner | Merge agents, supervisor/task service, specialization change | Simulation, ownership/authority, migration review |
 | Workflows | Loops, stuck joins, weak recovery | State, deadline, join, stop, compensation, degraded mode | Replay/concurrency/recovery/RTO-RPO and operations |
 | System architecture | Failure recurs across apps/controls | Platform service, contract, gateway, boundary, policy redesign | Architecture/security/privacy and migration evidence |
+| Evaluators and datasets | Judge–human disagreement, leakage, missing slice | New scorer/rubric version, new cases, re-partition | Calibration on held-out human labels; evaluation-owner approval (Chapter 26) |
 
-## Measure both the outcome and the path
+## A workable implementation
 
-OpenTelemetry/OpenInference traces provide portable telemetry. DeepEval and Ragas cover trajectory, component, tool, RAG, faithfulness, and goal metrics. MLflow supports datasets, evaluators, human/programmatic feedback, experiments, and monitoring. Phoenix supports traces, datasets, experiments, evaluation, and prompt versioning. LangSmith supports offline/online evaluation and production-trace-to-dataset workflows. Normalize all into platform-owned EvaluationResult; no framework score is release authority.
+### Who should own each decision
 
-Measure task success and deterministic acceptance, correctness, faithfulness, hallucination/unsupported-claim rate, tool-selection precision/recall/F1, argument correctness, retrieval relevance/precision/recall/freshness/evidence coverage, plan quality/adherence, step efficiency, p50/p95/p99 latency by component, tokens, cost per request/accepted outcome, retry amplification, failure/unknown effect, human correction/override/escalation/fatigue, user satisfaction, and business outcome.
+| **Component** | **Responsibility** |
+| --- | --- |
+| Evaluation Registry | Version datasets, cases, rubrics, graders, baselines, and release thresholds |
+| Evaluation Orchestrator | Run candidates across seeds/environments, grade, compare, and produce confidence intervals |
+| Failure Mining Service | Cluster traces/incidents and propose curated regression cases for human review |
 
-## Automate only when regressions are contained
+### The contracts between components
 
-Every material failure/correction becomes a candidate case after privacy/security/purpose review. Reduce to smallest reproducible cause, define expected outcome/invariants/trajectory/cost/latency, version dataset/evaluator, and run in CI, staging, shadow, and canary. Automate capture, approved redaction/scoring, anomaly detection, clustering, draft recommendations, tests, sandbox runs, approved canaries, halt, and rollback within envelope. Require human governance for permission/policy/data/memory purpose/protected effects/model allowlist/topology/architecture/evaluator truth/training data/exceptions/wider promotion. Prohibit expanding authority, disabling controls, editing audit evidence, changing approval requirements, or promoting self-authored behavior.
+| **API** | **Purpose and key semantics** |
+| --- | --- |
+| POST /v1/eval-datasets | Create immutable/versioned dataset from approved cases and provenance |
+| POST /v1/eval-runs | Evaluate a release candidate against dataset/rubric, seeds, model routes, environment, and budget |
+| GET /v1/eval-runs/{eval\_run\_id}/comparison | Compare candidate/baseline metrics, confidence intervals, slices, regressions, cost, and trace deltas |
+| POST /v1/release-gates:evaluate | Apply risk-tiered thresholds and return pass/fail/waiver-required with evidence |
+| POST /v1/regression-cases:propose | Submit a production failure/cluster for de-identification, labeling, leakage review, and dataset approval |
+
+### Records worth preserving
+
+| **Entity** | **Required fields and invariants** |
+| --- | --- |
+| EvalDatasetVersion | dataset/version/digest, purpose, cases, slices, provenance, license/privacy/leakage review, owner, lifecycle |
+| EvalCase | case ID, input/environment fixtures, expected invariants/artifacts/trajectory constraints, rubric, risk tags, source/provenance |
+| EvalRun | candidate/baseline manifest digests, dataset, seeds, grader versions, environment, status, aggregate resource usage |
+| EvaluationResult | eval/case/attempt, metric, score, confidence/evidence, deterministic or grader type/version, latency/cost |
+| ValidationReport | candidate digest, EvalRun comparisons, non-evaluation test results (contract, security, load, compatibility), slice regressions, ReleaseGateDecision ref; immutable |
+| ReleaseGateDecision | candidate, risk tier, thresholds, slice results, decision, waiver, approvers, evidence refs; immutable |
+| ProductionSample | run/trace, sampling reason/weight, consent/privacy handling, evaluation status, incident/failure cluster |
+
+### What changes as usage grows
+
+* Run evaluations on dedicated queues with tenant/candidate budgets, reproducible seeds, provider-rate awareness, and early stop when statistical or hard safety failure criteria are met.
 
 ## What the evidence lets us conclude
 
@@ -8806,6 +8907,12 @@ The discussion above draws on R13; R20; R21. Appendix K lists the complete sourc
 
 ## A sensible place to start
 
+MLflow 3.x documents evaluation datasets, feedback, judges, systematic
+evaluation, and production monitoring [R20]. This book pins 3.15.2 as its
+reproducibility baseline [R21]; newer releases may exist and require separate
+compatibility validation. The first example uses deterministic scorers over a
+two-case synthetic dataset and reports means; a real gate also compares each
+slice against a pinned baseline, as the worked example shows.
 
 🐍 · Evaluating an agent against a dataset with MLflow
 
@@ -8867,6 +8974,11 @@ def evaluate() -> dict[str, float]:
 
 ### MLflow trajectory evaluation
 
+The deterministic `no_unknown_effects` and `forbidden_tool_absent` scorers read
+the `effect.state` attribute and the tool spans that Chapter 24's schema
+records; they are release blockers. The judge and built-in scorers add quality
+evidence and cannot override them.
+
 🐍 · Combining deterministic and model-assisted MLflow trajectory scorers
 
 ```python
@@ -8890,11 +9002,39 @@ def no_unknown_effects(trace: Trace) -> Feedback:
     )
 
 
+@scorer(name="forbidden_tool_absent")
+def forbidden_tool_absent(trace: Trace, expectations: dict) -> Feedback:
+    """Block a candidate whose trace attempts a tool outside the eligible set.
+
+    The attempt fails the case even if a gateway denied it at runtime. A case
+    without `eligible_tools` allows no tools, so the check fails closed.
+    """
+
+    eligible = set(expectations.get("eligible_tools", ()))
+    attempted = sorted(
+        {
+            span.name
+            for span in trace.search_spans()
+            if span.span_type == SpanType.TOOL and span.name not in eligible
+        }
+    )
+    return Feedback(
+        name="forbidden_tool_absent",
+        value=not attempted,
+        rationale=(
+            "Every tool call is in the eligible set"
+            if not attempted
+            else f"Attempted tools outside the eligible set: {', '.join(attempted)}"
+        ),
+    )
+
+
 tool_trajectory_judge = make_judge(
-    name="tool_trajectory_grounded",
+    name="tool_calls_necessary",
     instructions=(
-        "Evaluate {{ trace }}. Return true only when every tool call is needed "
-        "for the request and stays within the authorized trajectory."
+        "Evaluate {{ trace }}. Return true only when every tool call is "
+        "necessary for the request and none is redundant. Judge necessity and "
+        "efficiency only; deterministic scorers check authorization."
     ),
     feedback_value_type=bool,
 )
@@ -8915,6 +9055,7 @@ def evaluate_agent(predict_fn, dataset: list[dict[str, object]]):
             ToolCallCorrectness(),
             ToolCallEfficiency(),
             no_unknown_effects,
+            forbidden_tool_absent,
             tool_trajectory_judge,
         ],
     )
@@ -8922,26 +9063,31 @@ def evaluate_agent(predict_fn, dataset: list[dict[str, object]]):
 
 ## If this fails in production
 
-1. Reproduce the failing trace with exact dataset, release, model route, tool, and policy versions.
-2. Find the first divergent decision rather than only comparing final text.
-3. Slice scores by risk, region, tool, failure mode, and tenant class.
+1. The gate passed but production regressed: check whether the failing slice exists in the dataset, with enough cases.
+2. Check for train/test or benchmark leakage, and for judge drift since calibration.
+3. Run the scorer against a known-bad case to confirm it can fail.
+4. Add the production trace as a reviewed case before shipping a fix.
+
+To debug the failing run itself, use Chapter 24 § Debugging method.
 
 ## What to verify before production
 
 **✓** Runtime adaptation stays inside a fixed envelope; every other behavior change ships as an evaluated, approved release.
 
-**✓** Operational telemetry, restricted content, and complete immutable audit evidence are separated.
-
 **✓** Evaluation covers outcome, trajectory, reliability, security, latency, cost, human load, and operations by slice.
 
-**✓** Behaviorally relevant artifacts are pinned in a release bundle and promoted through executable gates.
+**✓** Every promoted candidate has an immutable ValidationReport and ReleaseGateDecision; Chapter 27 pins them in the release bundle.
 
-**✓** Use-case inventory names owners, authority, data, vendors, controls, exceptions, incidents, review dates, and evidence.
+**✓** Datasets are versioned and immutable, and each production-derived case passed privacy, purpose, and leakage review.
+
+**✓** Judges report agreement with held-out human labels and are recalibrated when their model changes.
+
+**✓** Every protected slice has a minimum case count and its own threshold.
 
 ## Put the idea to work
 
 1. Create a five-case immutable evaluation dataset with trajectory expectations.
-2. Implement a deterministic scorer that rejects unknown effects and missing approvals.
+2. Add a deterministic scorer that fails any case whose trace attempts a tool outside its eligible set, then show that a candidate with a better mean still fails the gate on one slice.
 
 ## Questions to bring to design review
 
@@ -8949,9 +9095,9 @@ def evaluate_agent(predict_fn, dataset: list[dict[str, object]]):
 | --- | --- |
 | Why is final-answer evaluation insufficient for agents? | A plausible answer can hide unauthorized retrieval, wrong tools, excessive cost, retry waste, unsafe handoffs, duplicate effects, or missing approval; evaluate the complete trajectory. |
 | What may runtime adaptation change? | Only pre-approved routes and fallbacks, optional context, loop stops, input requests, and escalation inside a fixed envelope; permissions, data access, tools, and model allowlists change only through an evaluated, approved release. |
-| When are model judges appropriate? | For nuanced quality with versioned rubrics, human calibration, bias tests, repeated runs, and blinding—not as sole authority for security, transactions, or computable correctness. |
-| What belongs in a release bundle? | Agent and prompt, runtime adapter, workflow build, model route and fallbacks, tool and policy versions, schemas, images, knowledge strategy, evaluations, rollout, and rollback policy. |
-| How do you roll back without breaking active runs? | Stop new assignment, restore the prior environment binding, keep build-compatible workers for pinned histories, reconcile side effects, and migrate only through an explicit tested plan. |
+| What separates Chapter 13's evaluator from a release gate? | Chapter 13 judges one artifact to decide one run's acceptance; a release gate judges a system version across a dataset, with baselines and slices, to decide promotion. |
+| Why can a low-volume slice block a candidate that improves the average? | Volume cannot dilute a risk tier; deterministic protected-action failures block regardless of their share of cases. |
+| How does a production failure become a regression case without leaking data or the test set? | De-identification, purpose and leakage review, reduction to the smallest reproducible case, held-out partitioning, and dataset approval. |
 
 ## Where this leads next
 

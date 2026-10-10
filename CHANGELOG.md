@@ -13,6 +13,16 @@ All notable changes follow semantic versioning and are recorded here.
 - MCP mutations continue to the Tool Gateway; the A2A Gateway is related to Chapter 1's gateway table and to the Task Service; remote states map onto the pinned A2A 1.0.1 task-state names.
 - The artifact-adoption check moves from Chapter 6 into Chapter 19 as the tested `artifact-adoption` example, now with a content-hash check. The uncited MLflow MCP Registry version claim and untested adapter are removed.
 
+### Part VII — evidence, evaluation, and improvement (continuity review, WP-VII)
+
+- Chapter 24 is the home of observability: one decision-centric span schema (decision, memory, and security-control spans; `effect.state` on tool spans), the single metric scorecard, and the telemetry implementation (collector, trace index, content vault, audit ledger writer) moved in from Chapter 25.
+- Chapter 24 states the four authoritative records (trace, workflow history, effect ledger, audit ledger), names the causal run trace and trajectory, separates workflow replay, diagnostic replay, and fork, and absorbs Chapter 7's first-divergence steps into a five-step § Debugging method that the worked example now follows.
+- Chapter 25 is reordered: release gate, test layers, worked example, runtime/offline boundary (now with a test, placements, and a Harborlight example), the learning loop with defined records and an automate/govern/never table, then evaluation-only implementation.
+- Chapter 25 defines EvaluationResult, ValidationReport, and ReleaseGateDecision; one test-layer table replaces the pyramid list; the waiver path and the Chapter 13 versus release-gate distinction are explained.
+- MLflow claims are limited to what R20/R21 support; the Agents SDK tracer default is now a tested statement about the pinned package.
+- The trajectory example adds a deterministic `forbidden_tool_absent` scorer, and its judge no longer assesses authorization.
+- Figures 25-2 and 25-3: runtime lane matches the prose; Approve reads "owner or pre-approved class".
+
 ### Shared contracts and examples (continuity review, Phase 1)
 
 - `AgentDecision.disposition` gains `proposed_action`: `invoke_tool` is a read, and a mutation leaves the loop as a proposal.
