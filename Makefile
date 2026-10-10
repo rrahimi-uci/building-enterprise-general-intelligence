@@ -11,7 +11,7 @@ TEX_ENTRY := latex/Enterprise-General-Intelligence-v2.1.0.tex
 
 PYTHON_EXAMPLES ?= $(if $(wildcard .venv-examples/bin/python),.venv-examples/bin/python,python3)
 
-.PHONY: help setup setup-examples all assemble cover part-visuals chapter-covers diagrams build latex draft pdf references \
+.PHONY: help setup setup-examples all assemble cover chapter-covers diagrams build latex draft pdf references \
         examples examples-run latex-validate validate deterministic qa-pdf latex-pdf \
         package release clean distclean
 
@@ -25,7 +25,6 @@ help:
 	@echo "Generation"
 	@echo "  assemble        source/parts/*.md -> book/manuscript.md + dist/*.md"
 	@echo "  cover           regenerate the cover image"
-	@echo "  part-visuals    crop the Part artwork panels from their sources"
 	@echo "  diagrams        render every diagram from its editable source"
 	@echo "  chapter-covers  render the Letter-size chapter cover visuals"
 	@echo "  build           assemble + cover + DOCX"
@@ -73,11 +72,6 @@ assemble:
 cover:
 	$(PYTHON) tools/generate_cover.py --root "$(ROOT)"
 
-## part-visuals: crop source/part-visuals/*.png into the artwork panels the
-## dividers render. Idempotent; digests are recorded in config/part-visuals.json.
-part-visuals:
-	$(PYTHON) tools/prepare_part_visuals.py --root "$(ROOT)"
-
 ## diagrams: render assets/diagrams/src/*.{gv,mmd} to vector PDF for XeLaTeX and
 ## raster PNG for DOCX. Needs graphviz and, for sequence diagrams, mermaid-cli.
 diagrams:
@@ -88,7 +82,7 @@ diagrams:
 chapter-covers:
 	$(PYTHON) tools/render_chapter_covers.py --root "$(ROOT)"
 
-build: assemble cover part-visuals
+build: assemble cover
 	$(PYTHON) tools/build_book.py --root "$(ROOT)"
 	$(PYTHON) tools/build_book.py --root "$(ROOT)" --template-only
 

@@ -243,7 +243,7 @@ Together, these principles establish a simple operating contract: agents provide
 
 \mainmatter
 
-\BookPartPage{I}{FOUNDATIONS}{This is the starting point for the whole book. We name the pieces, draw the boundary around the model, and show how a useful prototype becomes a system that can survive retries, waiting, failure, and scrutiny. The later Parts add capabilities to this foundation; they do not replace it.}{assets/parts/part-i.png}
+\BookPartPage{I}{FOUNDATIONS}{This is the starting point for the whole book. We name the pieces, draw the boundary around the model, and show how a useful prototype becomes a system that can survive retries, waiting, failure, and scrutiny. The later Parts add capabilities to this foundation; they do not replace it.}
 
 \BookChapterCover{cover-images/chapter-01-what-turns-an-llm-call-into-a-production-system.png}
 
@@ -2161,7 +2161,7 @@ How should SDK upgrades be released? & As behavioral changes: run adapter and sc
 
 The runtime boundary is now explicit: a framework runs one bounded reasoning step, while the platform owns durable truth, authority, effects, and accountability. Chapter 4 places that boundary inside the complete enterprise reference architecture.\par
 
-\BookPartPage{II}{ARCHITECTURE, KNOWLEDGE, AND CONTEXT}{The first Part established that the model is not the system of record. This Part draws the system around it: who owns each fact, where policy is enforced, how knowledge stays current, and how one run receives only the context it is allowed to see. By the end, “the agent knows” has become a set of inspectable contracts rather than a vague claim about a prompt.}{assets/parts/part-ii.png}
+\BookPartPage{II}{ARCHITECTURE, KNOWLEDGE, AND CONTEXT}{The first Part established that the model is not the system of record. This Part draws the system around it: who owns each fact, where policy is enforced, how knowledge stays current, and how one run receives only the context it is allowed to see. By the end, “the agent knows” has become a set of inspectable contracts rather than a vague claim about a prompt.}
 
 \BookChapterCover{cover-images/chapter-04-design-the-architecture-around-the-model.png}
 
@@ -3928,7 +3928,7 @@ How do you delete a fact from an agentic system? & Tombstone and revoke the sour
 
 Context assembly completes the knowledge Part. Chapter 7 turns from what agents know to how teams build with it, defining the reusable developer platform and SDK.\par
 
-\BookPartPage{III}{THE DEVELOPER PLATFORM}{Good architecture is not enough if every delivery team has to reconstruct it from scratch. This Part turns the reference design into a paved road: reusable contracts, adapters, Skills, domain packs, and a lifecycle that carries them from a developer laptop to production. The platform stays opinionated about safety and evidence while leaving domain teams room to build something useful.}{assets/parts/part-iii.png}
+\BookPartPage{III}{THE DEVELOPER PLATFORM}{Good architecture is not enough if every delivery team has to reconstruct it from scratch. This Part turns the reference design into a paved road: reusable contracts, adapters, Skills, domain packs, and a lifecycle that carries them from a developer laptop to production. The platform stays opinionated about safety and evidence while leaving domain teams room to build something useful.}
 
 \BookChapterCover{cover-images/chapter-07-build-a-paved-road-for-agent-teams.png}
 
@@ -4647,7 +4647,7 @@ What is the main pack anti-pattern? & A monolithic prompt-and-tools bundle with 
 
 The platform and capability model are complete; Chapter 10 begins the pattern sequence with the smallest bounded reasoning loop.\par
 
-\BookPartPage{IV}{PATTERNS THAT WORK—AND THOSE THAT FAIL}{Patterns are shortcuts for thinking, but they are only helpful when their boundaries are visible. This Part starts with the loop shapes teams reach for, then follows routing, planning, reflection, human review, and durable work. It ends with a catalog of patterns and failure shapes so a design review can ask not only “what could work?” but also “how would this fail in production?”}{assets/parts/part-iv.png}
+\BookPartPage{IV}{PATTERNS THAT WORK—AND THOSE THAT FAIL}{Patterns are shortcuts for thinking, but they are only helpful when their boundaries are visible. This Part starts with the loop shapes teams reach for, then follows routing, planning, reflection, human review, and durable work. It ends with a catalog of patterns and failure shapes so a design review can ask not only “what could work?” but also “how would this fail in production?”}
 
 \BookChapterCover{cover-images/chapter-10-use-react-without-creating-a-runaway-loop.png}
 
@@ -7743,7 +7743,7 @@ The most expensive anti-patterns in this catalog are not the exotic ones. AP-04,
 
 After removing unsafe local architectures, Chapter 18 considers when multiple agents add justified specialization rather than accidental complexity.\par
 
-\BookPartPage{V}{WORKING TOGETHER ACROSS BOUNDARIES}{Once a system has more than one worker—or reaches beyond its own process—the conversation becomes a distributed protocol. This Part makes the ownership, authority, cancellation, and artifact rules explicit for internal specialists and external peers alike. It also keeps a useful distinction in view: a protocol can move a message without granting permission to act.}{assets/parts/part-v.png}
+\BookPartPage{V}{WORKING TOGETHER ACROSS BOUNDARIES}{Once a system has more than one worker—or reaches beyond its own process—the conversation becomes a distributed protocol. This Part makes the ownership, authority, cancellation, and artifact rules explicit for internal specialists and external peers alike. It also keeps a useful distinction in view: a protocol can move a message without granting permission to act.}
 
 \BookChapterCover{cover-images/chapter-18-coordinate-specialists-without-losing-control.png}
 
@@ -8801,7 +8801,7 @@ How do you version external capabilities? & Pin registry entry, endpoint, protoc
 
 Gateways control protocol and model access, but not the entire attack surface; Chapter 20 introduces defense in depth across all agentic trust boundaries.\par
 
-\BookPartPage{VI}{SECURITY, IDENTITY, AND CONTROL}{This Part asks what happens when the model is wrong, manipulated, or simply given more reach than it needs. It applies defense in depth to content, identity, delegated authority, tools, code, data, memory, remote agents, and the software supply chain. Every control is tied to a boundary, a decision, a signal, and a recovery path so “security” remains an engineering property.}{assets/parts/part-vi.png}
+\BookPartPage{VI}{SECURITY, IDENTITY, AND CONTROL}{This Part asks what happens when the model is wrong, manipulated, or simply given more reach than it needs. It applies defense in depth to content, identity, delegated authority, tools, code, data, memory, remote agents, and the software supply chain. Every control is tied to a boundary, a decision, a signal, and a recovery path so “security” remains an engineering property.}
 
 The order matters. Authentication establishes who is present; authorization decides what that subject and workload may do; guardrails inspect risky input and output; sandboxes limit what code can reach; and the effect ledger records what actually committed. These controls reinforce one another, but none can stand in for the others. The model may propose an action, while deterministic services decide whether the action is eligible, safe to execute, and complete enough to report.\par
 
@@ -10647,7 +10647,7 @@ What makes a useful kill-switch design? & Narrow scopes, emergency-deny preceden
 
 Security controls now produce events and evidence; Chapter 24 turns those signals into end-to-end traces that operators can reconstruct.\par
 
-\BookPartPage{VII}{EVIDENCE, EVALUATION, AND IMPROVEMENT}{You cannot improve a system you cannot explain, and you cannot call a change an improvement by looking only at its average score. This Part connects causal traces, evaluation, slices, regression cases, and governed learning. The aim is not more telemetry for its own sake; it is evidence that helps a team decide what to fix, what to release, and what to leave alone.}{assets/parts/part-vii.png}
+\BookPartPage{VII}{EVIDENCE, EVALUATION, AND IMPROVEMENT}{You cannot improve a system you cannot explain, and you cannot call a change an improvement by looking only at its average score. This Part connects causal traces, evaluation, slices, regression cases, and governed learning. The aim is not more telemetry for its own sake; it is evidence that helps a team decide what to fix, what to release, and what to leave alone.}
 
 \BookChapterCover{cover-images/chapter-24-follow-a-run-from-request-to-verified-outcome.png}
 
@@ -11580,7 +11580,7 @@ How do you roll back without breaking active runs? & Stop new assignment, restor
 
 The improvement loop proposes and validates change; Chapter 26 assigns decision rights, risk tiers, approvals, exceptions, and accountability.\par
 
-\BookPartPage{VIII}{RUNNING THE SYSTEM IN THE REAL WORLD}{Shipping the first version is the easy milestone. The hard work is operating the system when usage grows, people change roles, vendors drift, and a run is still active during a deployment. This Part connects governance, release and recovery, capacity, reliability, and cost so the platform remains usable after the demo has become a dependency.}{assets/parts/part-viii.png}
+\BookPartPage{VIII}{RUNNING THE SYSTEM IN THE REAL WORLD}{Shipping the first version is the easy milestone. The hard work is operating the system when usage grows, people change roles, vendors drift, and a run is still active during a deployment. This Part connects governance, release and recovery, capacity, reliability, and cost so the platform remains usable after the demo has become a dependency.}
 
 \BookChapterCover{cover-images/chapter-26-make-governance-part-of-how-the-platform-runs.png}
 
@@ -12735,7 +12735,7 @@ Why can the cheapest model be more expensive? & Lower reliability may cause more
 
 The architecture narrative is complete. The appendices provide decision aids, runbooks, contracts, framework evidence, references, maintenance criteria, and production acceptance checks for implementation and future editions.\par
 
-\BookPartPage{REFERENCE}{APPENDICES: FIELD GUIDE AND REFERENCE}{The appendices are meant to be used at the desk, not admired at the end of the book. They collect decision aids, runbooks, contracts, framework notes, a glossary, the Harborlight implementation guide, and the evidence registry that keeps the main argument honest.}{}
+\BookPartPage{REFERENCE}{APPENDICES: FIELD GUIDE AND REFERENCE}{The appendices are meant to be used at the desk, not admired at the end of the book. They collect decision aids, runbooks, contracts, framework notes, a glossary, the Harborlight implementation guide, and the evidence registry that keeps the main argument honest.}
 
 \clearpage
 

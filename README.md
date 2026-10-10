@@ -114,12 +114,11 @@ make pdf        # three-pass XeLaTeX -> dist/*-LaTeX.pdf
 │
 ├── source/                       # ← THE ONLY PLACE YOU EDIT PROSE
 │   ├── parts/                    # canonical editable Markdown sources
-│   ├── part-visuals/             # immutable source artwork for Part dividers
+│   ├── part-visuals/             # retained source artwork (no longer embedded in the book)
 │   └── original/                 # immutable v3.0/v3.1 provenance
 ├── config/                       # ← AND THE ONLY PLACE YOU EDIT METADATA
 │   ├── book.json                 # metadata, layout, typography, colors
 │   ├── diagrams.json             # diagram registry
-│   ├── part-visuals.json         # Part divider panel registry
 │   ├── chapter-covers.json       # chapter cover visual specs (one per chapter)
 │   ├── examples.json             # code-example registry
 │   ├── mortgage_stages.json      # C01–C28 checkpoint registry
@@ -129,7 +128,6 @@ make pdf        # three-pass XeLaTeX -> dist/*-LaTeX.pdf
 │   ├── cover/                    # source artwork and generated cover
 │   ├── diagrams/                 # rendered diagrams: PDF for print, PNG for DOCX
 │   │   └── src/                  # ← editable diagram sources (.gv, .mmd)
-│   └── parts/                    # generated Part divider panels
 ├── cover-images/                 # generated Letter-size chapter cover visuals
 │
 ├── book/manuscript.md            # generated canonical assembly; do not hand-edit
@@ -202,7 +200,6 @@ Committed — tracked release evidence, listed in `CHECKSUMS.sha256`:
 - `dist/Enterprise-General-Intelligence-v2.1.0.tex`
 - `latex/content/book-content.tex`
 - `assets/cover/cover-v2.1.0.png`
-- `assets/parts/part-*.png` — Part divider panels, cropped from `source/part-visuals/`
 - `assets/diagrams/*.pdf` and `*.png` — rendered from `assets/diagrams/src/` by `make diagrams`
 - `cover-images/chapter-*.png` — chapter cover visuals, rendered from `config/chapter-covers.json` by `make chapter-covers` and embedded as the page before each chapter in the DOCX and XeLaTeX editions
 - `templates/book-style-template.docx`

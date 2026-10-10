@@ -25,15 +25,6 @@ def chapter_covers(root: Path) -> dict[str, str]:
     return {f"{c['chapter']:02d}": f"{spec['output_dir']}/{c['file']}" for c in spec["chapters"]}
 
 
-def part_visuals(root: Path) -> dict[str, str]:
-    """Part roman numeral -> artwork panel path, for the divider pages."""
-    path = root / "config" / "part-visuals.json"
-    if not path.exists():
-        return {}
-    registry = json.loads(path.read_text(encoding="utf-8"))
-    return {v["part"]: v["file"] for v in registry["visuals"]}
-
-
 def book_release(root: Path) -> str:
     """The single source of the release identifier.
 
@@ -361,7 +352,7 @@ def reference_target(text: str) -> str:
     return (r"\BookReferenceTarget{" + match.group(1) + "}") if match else ""
 
 
-def render_content(blocks: list[tuple], diagram_files: dict[str, str], book_title: str, visuals: dict[str, str] | None = None, covers: dict[str, str] | None = None) -> tuple[str, dict[str, int]]:
+def render_content(blocks: list[tuple], diagram_files: dict[str, str], book_title: str, covers: dict[str, str] | None = None) -> tuple[str, dict[str, int]]:
     output: list[str] = ["% Generated from book/manuscript.md. Do not hand-edit."]
     stats = {"parts": 0, "appendix_dividers": 0, "chapters": 0, "chapter_covers": 0, "appendices": 0, "diagrams": 0, "code_blocks": 0, "tables": 0, "callouts": 0, "citations": 0}
     index = 0
@@ -373,7 +364,6 @@ def render_content(blocks: list[tuple], diagram_files: dict[str, str], book_titl
         while index < len(blocks) and blocks[index][0] == "paragraph" and skipped < 3:
             index += 1
             skipped += 1
-    visuals = visuals or {}
     covers = covers or {}
     output.extend([r"\frontmatter", r"\tableofcontents", r"\clearpage"])
     first_part = True
@@ -404,10 +394,9 @@ def render_content(blocks: list[tuple], diagram_files: dict[str, str], book_titl
                 stats["appendix_dividers"] += 1
             else:
                 stats["parts"] += 1
-            visual = visuals.get(block[1], "")
             output.append(
                 r"\BookPartPage{" + escape_plain(block[1]) + "}{" + inline(block[2])
-                + "}{" + inline(block[3]) + "}{" + visual + "}"
+                + "}{" + inline(block[3]) + "}"
             )
         elif kind == "heading":
             level, text = block[1], block[2]
@@ -554,7 +543,7 @@ def main() -> int:
         diagram_files[item["id"]] = vector.as_posix() if (root / vector).exists() else item["file"]
     blocks = list(parse_markdown(markdown))
     book_cfg = json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]
-    content, stats = render_content(blocks, diagram_files, book_cfg["title"], part_visuals(root), chapter_covers(root))
+    content, stats = render_content(blocks, diagram_files, book_cfg["title"], chapter_covers(root))
 
     latex_dir = root / "latex"
     content_dir = latex_dir / "content"

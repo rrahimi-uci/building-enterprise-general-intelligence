@@ -4,8 +4,8 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "37b9dbbd1abd8d0c66eb6f20e61eaedbc253e951f556a8d7a523b8458b5cdd2a",
-    "content_tex_sha256": "a574c29c37c4a0b3a2f6e22438c0a33c8acee07e3f03912b20bbbb08e9911ecb",
-    "style_sha256": "dea427368ae863a2b2890c9402c87e2e804942b4d4c81f27a5a19bf7e32330c1",
+    "content_tex_sha256": "f4f9aaac8901240c0e7d85ddaecfd4729790f68ae6be1be2b9259f9dccb536de",
+    "style_sha256": "54d4efe867d3a09edd804f8fac1b0dea9d1bece35b9d106aed7c9492c9597314",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
@@ -740,40 +740,6 @@
         "foreground": "BookInk",
         "background": "BookPaleCyan",
         "ratio": 14.05
-      }
-    ],
-    "part_visuals": [
-      {
-        "part": "I",
-        "effective_dpi": 257.5
-      },
-      {
-        "part": "II",
-        "effective_dpi": 257.5
-      },
-      {
-        "part": "III",
-        "effective_dpi": 257.5
-      },
-      {
-        "part": "IV",
-        "effective_dpi": 257.5
-      },
-      {
-        "part": "V",
-        "effective_dpi": 257.5
-      },
-      {
-        "part": "VI",
-        "effective_dpi": 257.5
-      },
-      {
-        "part": "VII",
-        "effective_dpi": 257.5
-      },
-      {
-        "part": "VIII",
-        "effective_dpi": 257.5
       }
     ],
     "cross_format_reference_pdf_pages": 213,
