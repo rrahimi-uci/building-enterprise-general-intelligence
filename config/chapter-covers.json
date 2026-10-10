@@ -46,7 +46,7 @@
    "themes": [
     "Bounded reasoning",
     "Ownership boundaries",
-    "Governed execution"
+    "Control points"
    ],
    "diagram": {
     "title": "The boundary around the model",
@@ -315,7 +315,7 @@
      },
      {
       "id": "intent",
-      "label": "ToolIntent",
+      "label": "proposed_action",
       "sub": "typed proposal",
       "kind": "record",
       "at": [

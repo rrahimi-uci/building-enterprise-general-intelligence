@@ -4,6 +4,15 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Front matter and Part I (continuity review, WP-FM and WP-I)
+
+- Front matter: reader paths now include their prerequisites; "How the book is organized" matches Figure 0-1, whose labels are now the exact Part titles; the engineering contract is condensed and points to Chapter 2's principles; maintainer content and the supplier-onboarding promise are gone; the Closing Perspective is listed.
+- Chapter 1 opens with the demo, states the thesis once, explains the state-owner table that later chapters reuse, shows checkpoint C01, maps the three per-step questions and the ten problems to the chapters that answer them, and fixes vocabulary pointers. "Agent Gateway" becomes the A2A Gateway (Figure 1-4); Figure 1-3 shows Channels as Parts II and IV.
+- Chapter 1's prototype and level sketches are now a tested example (`prototype-levels`), whose test reproduces the Wednesday duplicate write.
+- Chapter 2 names the six gates as the deterministic shell, gives each gate an owner, places human approval inside Authorize, defines acceptance criteria and the acceptance engine, and uses `proposed_action` and the second pay statement in its proposal.
+- Chapter 3 is about a quarter shorter: previews of approval, handoff, guardrails, retries, and the write path collapse into one section that points to the owning chapters; AgentRuntime is defined before the checkpoint; the step status enum and the step-to-gate bridge are stated; the restart and replaceability tests are paired; `contracts#step` moves here from Chapter 1.
+- Northstar and the supplier-onboarding thread are retired from Part I; approval terminology follows Chapter 14.
+
 ### Part VII — evidence, evaluation, and improvement (continuity review, WP-VII)
 
 - Chapter 24 is the home of observability: one decision-centric span schema (decision, memory, and security-control spans; `effect.state` on tool spans), the single metric scorecard, and the telemetry implementation (collector, trace index, content vault, audit ledger writer) moved in from Chapter 25.
