@@ -1,6 +1,6 @@
 {
-  "examples": 35,
-  "cited": 35,
+  "examples": 36,
+  "cited": 36,
   "uncited": [],
   "rendered_lines": {
     "contracts": 108,
@@ -50,6 +50,7 @@
     "examples/tests/test_approval_verification.py",
     "examples/tests/test_bounded_react_loop.py",
     "examples/tests/test_capability_catalog.py",
+    "examples/tests/test_capability_levels.py",
     "examples/tests/test_contracts.py",
     "examples/tests/test_durable_state.py",
     "examples/tests/test_effect_idempotency.py",
