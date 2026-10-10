@@ -8,36 +8,36 @@ digraph book_map {
   edge [style=invis]
 
   p1 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#0D6E69" BGCOLOR="#E7F5F3">
-     <TR><TD WIDTH="80" BGCOLOR="#0D6E69" ALIGN="CENTER"><FONT COLOR="white"><B>I</B></FONT></TD>
-         <TD WIDTH="150" ALIGN="LEFT"><B>Foundations</B></TD>
-         <TD WIDTH="195" ALIGN="LEFT"><FONT POINT-SIZE="11" COLOR="#4A6078">bounded reasoning, typed tools, runtime</FONT></TD></TR></TABLE>>]
+     <TR><TD WIDTH="56" BGCOLOR="#0D6E69" ALIGN="CENTER"><FONT COLOR="white"><B>I</B></FONT></TD>
+         <TD WIDTH="255" ALIGN="LEFT"><B>Foundations</B></TD>
+         <TD WIDTH="215" ALIGN="LEFT"><FONT POINT-SIZE="11" COLOR="#4A6078">bounded reasoning, typed tools, runtime</FONT></TD></TR></TABLE>>]
   p2 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#0B6076" BGCOLOR="#E6F5F9">
-     <TR><TD WIDTH="80" BGCOLOR="#0B6076" ALIGN="CENTER"><FONT COLOR="white"><B>II</B></FONT></TD>
-         <TD WIDTH="150" ALIGN="LEFT"><B>Architecture and knowledge</B></TD>
-         <TD WIDTH="195" ALIGN="LEFT"><FONT POINT-SIZE="11" COLOR="#4A6078">planes, contracts, governed knowledge</FONT></TD></TR></TABLE>>]
+     <TR><TD WIDTH="56" BGCOLOR="#0B6076" ALIGN="CENTER"><FONT COLOR="white"><B>II</B></FONT></TD>
+         <TD WIDTH="255" ALIGN="LEFT"><B>Architecture, Knowledge, and Context</B></TD>
+         <TD WIDTH="215" ALIGN="LEFT"><FONT POINT-SIZE="11" COLOR="#4A6078">planes, contracts, governed knowledge</FONT></TD></TR></TABLE>>]
   p3 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#1450A3" BGCOLOR="#EAF3FB">
-     <TR><TD WIDTH="80" BGCOLOR="#1450A3" ALIGN="CENTER"><FONT COLOR="white"><B>III</B></FONT></TD>
-         <TD WIDTH="150" ALIGN="LEFT"><B>Developer platform</B></TD>
-         <TD WIDTH="195" ALIGN="LEFT"><FONT POINT-SIZE="11" COLOR="#4A6078">SDK, Skills, delivery lifecycle</FONT></TD></TR></TABLE>>]
+     <TR><TD WIDTH="56" BGCOLOR="#1450A3" ALIGN="CENTER"><FONT COLOR="white"><B>III</B></FONT></TD>
+         <TD WIDTH="255" ALIGN="LEFT"><B>The Developer Platform</B></TD>
+         <TD WIDTH="215" ALIGN="LEFT"><FONT POINT-SIZE="11" COLOR="#4A6078">SDK, Skills, delivery lifecycle</FONT></TD></TR></TABLE>>]
   p4 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#1450A3" BGCOLOR="#EDF3FC">
-     <TR><TD WIDTH="80" BGCOLOR="#1450A3" ALIGN="CENTER"><FONT COLOR="white"><B>IV</B></FONT></TD>
-         <TD WIDTH="150" ALIGN="LEFT"><B>Patterns and anti-patterns</B></TD>
-         <TD WIDTH="195" ALIGN="LEFT"><FONT POINT-SIZE="11" COLOR="#4A6078">what to build, and what to stop building</FONT></TD></TR></TABLE>>]
+     <TR><TD WIDTH="56" BGCOLOR="#1450A3" ALIGN="CENTER"><FONT COLOR="white"><B>IV</B></FONT></TD>
+         <TD WIDTH="255" ALIGN="LEFT"><B>Patterns That Work—and Those That Fail</B></TD>
+         <TD WIDTH="215" ALIGN="LEFT"><FONT POINT-SIZE="11" COLOR="#4A6078">what to build, and what to stop building</FONT></TD></TR></TABLE>>]
   p5 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#6A2E6E" BGCOLOR="#F7ECF8">
-     <TR><TD WIDTH="80" BGCOLOR="#6A2E6E" ALIGN="CENTER"><FONT COLOR="white"><B>V</B></FONT></TD>
-         <TD WIDTH="150" ALIGN="LEFT"><B>Multi-agent and integration</B></TD>
-         <TD WIDTH="195" ALIGN="LEFT"><FONT POINT-SIZE="11" COLOR="#4A6078">collaboration, MCP, A2A, model control</FONT></TD></TR></TABLE>>]
+     <TR><TD WIDTH="56" BGCOLOR="#6A2E6E" ALIGN="CENTER"><FONT COLOR="white"><B>V</B></FONT></TD>
+         <TD WIDTH="255" ALIGN="LEFT"><B>Working Together Across Boundaries</B></TD>
+         <TD WIDTH="215" ALIGN="LEFT"><FONT POINT-SIZE="11" COLOR="#4A6078">specialists, MCP, A2A</FONT></TD></TR></TABLE>>]
   p6 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#A62C2C" BGCOLOR="#FCECEC">
-     <TR><TD WIDTH="80" BGCOLOR="#A62C2C" ALIGN="CENTER"><FONT COLOR="white"><B>VI</B></FONT></TD>
-         <TD WIDTH="150" ALIGN="LEFT"><B>Security and guardrails</B></TD>
-         <TD WIDTH="195" ALIGN="LEFT"><FONT POINT-SIZE="11" COLOR="#4A6078">identity, tools, effects, containment</FONT></TD></TR></TABLE>>]
+     <TR><TD WIDTH="56" BGCOLOR="#A62C2C" ALIGN="CENTER"><FONT COLOR="white"><B>VI</B></FONT></TD>
+         <TD WIDTH="255" ALIGN="LEFT"><B>Security, Identity, and Control</B></TD>
+         <TD WIDTH="215" ALIGN="LEFT"><FONT POINT-SIZE="11" COLOR="#4A6078">identity, tools, effects, containment</FONT></TD></TR></TABLE>>]
   p7 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#8A5600" BGCOLOR="#FFF4DF">
-     <TR><TD WIDTH="80" BGCOLOR="#8A5600" ALIGN="CENTER"><FONT COLOR="white"><B>VII</B></FONT></TD>
-         <TD WIDTH="150" ALIGN="LEFT"><B>Observability and evaluation</B></TD>
-         <TD WIDTH="195" ALIGN="LEFT"><FONT POINT-SIZE="11" COLOR="#4A6078">traces, evidence, continuous learning</FONT></TD></TR></TABLE>>]
+     <TR><TD WIDTH="56" BGCOLOR="#8A5600" ALIGN="CENTER"><FONT COLOR="white"><B>VII</B></FONT></TD>
+         <TD WIDTH="255" ALIGN="LEFT"><B>Evidence, Evaluation, and Improvement</B></TD>
+         <TD WIDTH="215" ALIGN="LEFT"><FONT POINT-SIZE="11" COLOR="#4A6078">traces, evidence, continuous learning</FONT></TD></TR></TABLE>>]
   p8 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#4A6078" BGCOLOR="#EEF4FA">
-     <TR><TD WIDTH="80" BGCOLOR="#4A6078" ALIGN="CENTER"><FONT COLOR="white"><B>VIII</B></FONT></TD>
-         <TD WIDTH="150" ALIGN="LEFT"><B>Governance and operations</B></TD>
-         <TD WIDTH="195" ALIGN="LEFT"><FONT POINT-SIZE="11" COLOR="#4A6078">accountability, release, cost, reliability</FONT></TD></TR></TABLE>>]
+     <TR><TD WIDTH="56" BGCOLOR="#4A6078" ALIGN="CENTER"><FONT COLOR="white"><B>VIII</B></FONT></TD>
+         <TD WIDTH="255" ALIGN="LEFT"><B>Running the System in the Real World</B></TD>
+         <TD WIDTH="215" ALIGN="LEFT"><FONT POINT-SIZE="11" COLOR="#4A6078">accountability, release, cost, reliability</FONT></TD></TR></TABLE>>]
   p1 -> p2 -> p3 -> p4 -> p5 -> p6 -> p7 -> p8
 }

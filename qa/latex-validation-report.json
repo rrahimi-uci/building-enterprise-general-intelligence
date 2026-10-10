@@ -4,7 +4,7 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7",
-    "content_tex_sha256": "06f42ff1c0ccf562e3d93be9be391d6ac0c490ecbbe7b1f4dbfa7b5dad6e5af9",
+    "content_tex_sha256": "2a869e1a22c6e873e117e45b7ddc219e3cbbfb956480e661759cb699d71c4295",
     "style_sha256": "7a1273ba38763881c8ed2ede7ad741ea49ca031d7bb5f8fc354e413a88d840c8",
     "narrative_parts": 8,
     "appendix_dividers": 1,
@@ -12,15 +12,15 @@
     "chapter_covers": 28,
     "appendices": 12,
     "diagrams": 45,
-    "code_blocks": 70,
-    "longtables": 142,
-    "compact_tables": 105,
-    "callout_tables": 95,
+    "code_blocks": 71,
+    "longtables": 143,
+    "compact_tables": 103,
+    "callout_tables": 91,
     "citation_occurrences": 109,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 342,
-    "markdown_code_blocks": 70,
+    "markdown_tables": 337,
+    "markdown_code_blocks": 71,
     "image_quality": [
       {
         "file": "assets/cover/cover-v1.0.0.png",
@@ -33,10 +33,10 @@
       {
         "file": "assets/diagrams/book-map.png",
         "pixels": [
-          2266,
-          1855
+          2505,
+          1818
         ],
-        "effective_dpi": 321.0
+        "effective_dpi": 354.8
       },
       {
         "file": "assets/diagrams/mortgage-case-lifecycle.png",
@@ -65,10 +65,10 @@
       {
         "file": "assets/diagrams/gateway-roles.png",
         "pixels": [
-          5278,
-          1173
+          4578,
+          1428
         ],
-        "effective_dpi": 747.6
+        "effective_dpi": 648.4
       },
       {
         "file": "assets/diagrams/deterministic-shell.png",

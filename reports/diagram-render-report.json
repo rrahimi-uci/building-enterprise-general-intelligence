@@ -50,12 +50,12 @@
       "id": "book-map",
       "source": "book-map.gv",
       "pixels": [
-        2266,
-        1855
+        2505,
+        1818
       ],
-      "effective_dpi": 331,
+      "effective_dpi": 366,
       "vector": true,
-      "sha256": "f9134866904054ee4ed21d163aed27e6f06ac112c16e7bab23fee61c53aef1c2"
+      "sha256": "6f4351eb5ac059425c0e8c7e9c9815dcf747014d87fe8978f176686c1e1796da"
     },
     {
       "id": "capability-ladder",
@@ -160,12 +160,12 @@
       "id": "gateway-roles",
       "source": "gateway-roles.gv",
       "pixels": [
-        5278,
-        1173
+        4578,
+        1428
       ],
-      "effective_dpi": 771,
+      "effective_dpi": 668,
       "vector": true,
-      "sha256": "822fdc303fba2e1a744514730c107916e9779b86a0c23b0861e251f0f16e8265"
+      "sha256": "c4171d7e82e160267fc2123fc50b05d3adbe489d40dda9a26307ee727da4adfb"
     },
     {
       "id": "governance-model",
@@ -484,7 +484,7 @@
       ],
       "effective_dpi": 554,
       "vector": true,
-      "sha256": "8ff18685606b98a1f3e4e559c527ec2376a98e42c921ed5a5f4bfd178919293c"
+      "sha256": "c799b2abf25dd9371c324b2b7f91184ea89ea2403257f8cae071bdc27cbbe7e4"
     },
     {
       "id": "test-pyramid",
