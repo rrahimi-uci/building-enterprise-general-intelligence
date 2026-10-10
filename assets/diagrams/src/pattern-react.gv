@@ -1,7 +1,8 @@
 // Figure 10-1 — Bounded ReAct. The loop is inside; the limits are outside.
 // Message: reason-act-observe cycles, but the controller that owns budgets,
 // no-progress detection and termination is not in the loop. A mutation never
-// executes inside it -- it leaves as a proposal.
+// executes inside it -- it leaves as a proposal. Stopping is the controller's
+// decision; whether an answer is accepted is the acceptance engine's.
 digraph pattern_react {
   rankdir = TB
   graph [ranksep=0.34, nodesep=0.26]
@@ -21,6 +22,6 @@ digraph pattern_react {
   obs -> rea [label=" next need", fontsize=9, fontcolor="#4A6078"]
   ctl -> rea [color="#1450A3", style=dashed, arrowsize=0.55, label=" admits each turn",
               fontsize=9, fontcolor="#1450A3"]
-  obs -> acc [color="#8A5600", label=" stop?", fontsize=9, fontcolor="#8A5600"]
+  obs -> acc [color="#8A5600", label=" accept?", fontsize=9, fontcolor="#8A5600"]
   rea -> pro [color="#6A2E6E", style=dashed, label=" mutation", fontsize=9, fontcolor="#6A2E6E"]
 }

@@ -6,15 +6,15 @@
       "file": "assets/diagrams/anti-ambient-authority.png",
       "source": "assets/diagrams/src/anti-ambient-authority.gv",
       "vector": "assets/diagrams/anti-ambient-authority.pdf",
-      "description": "AP-03 ambient authority versus a narrowed capability lease",
-      "sha256": "4edf74b9fc8d685d13d3d4e07ccd17e965dd4e2f0f157a84155f2e9091f73262"
+      "description": "AP-03 ambient authority versus a narrowed capability envelope and a short-lived credential lease",
+      "sha256": "82ed3fa644591b113971f24c9f383d7e9d2fbef60b98fcbc3c75f5695cc533ea"
     },
     {
       "id": "anti-approval-binding",
       "file": "assets/diagrams/anti-approval-binding.png",
       "source": "assets/diagrams/src/anti-approval-binding.gv",
       "vector": "assets/diagrams/anti-approval-binding.pdf",
-      "description": "AP-06 Boolean consent versus proposal-bound human action authorization",
+      "description": "AP-06 Boolean consent versus proposal-bound, expiring approval",
       "sha256": "b651f803f7c4f0a86aabdf1a628c6ad916ad3ef0522242e3e1288223df8cf6dd"
     },
     {
@@ -145,8 +145,9 @@
     {
       "id": "pattern-decision-tree",
       "file": "assets/diagrams/pattern-decision-tree.png",
-      "sha256": "602b3dcef2c3298f48c91073a8c9125fc217a380e7da9c444a50b028079b27b5",
+      "sha256": "05f976967bf14a61ca3f603675909106cfc5651a2cfb373aad99fba30495fc88",
       "source": "assets/diagrams/src/pattern-decision-tree.gv",
+      "description": "Pattern selection: questions that choose the shape of the work, then checks that add durable execution, evaluator-optimizer, or approval and intervention, each leaf labelled with its chapter",
       "vector": "assets/diagrams/pattern-decision-tree.pdf"
     },
     {
@@ -162,8 +163,8 @@
       "file": "assets/diagrams/pattern-hitl.png",
       "source": "assets/diagrams/src/pattern-hitl.gv",
       "vector": "assets/diagrams/pattern-hitl.pdf",
-      "description": "The two human controls: proposal-bound approval versus operational intervention",
-      "sha256": "f757ce7ef70d0a8680b34391726f0f274ea9c1a0db9063d2e55a4c684545c3de"
+      "description": "Proposal-bound approval versus intervention raised by the run or taken by an operator on a run in flight",
+      "sha256": "a0fa5848a80112466e673dd6b2c62ec549634f69fa81ad01435ecdff9e10bb33"
     },
     {
       "id": "pattern-planning",
@@ -179,23 +180,23 @@
       "source": "assets/diagrams/src/pattern-react.gv",
       "vector": "assets/diagrams/pattern-react.pdf",
       "description": "Bounded ReAct: the reason-act-observe loop with the controller and limits outside it",
-      "sha256": "eb6e2c982093a01d2c71fca8ea3af8af234f25a41d68111b7418c04412571702"
+      "sha256": "1342c365b65b915b19203f0854b6f2b864f6faa30209b9d969f9c20ded30ddc4"
     },
     {
       "id": "pattern-reflection",
       "file": "assets/diagrams/pattern-reflection.png",
       "source": "assets/diagrams/src/pattern-reflection.gv",
       "vector": "assets/diagrams/pattern-reflection.pdf",
-      "description": "Reflection: a bounded produce-evaluate-revise loop whose verdict cannot self-promote",
-      "sha256": "2226864094dce7c11a766879028b9b0243afd6f1ee7c2982de77862645be2a56"
+      "description": "Reflection: a bounded loop runs executable checks before an advisory judge; acceptance is decided outside it",
+      "sha256": "9fbec2c722322b571a9f99dda87e9bb8c298fd553f5f6c21d4f977097e79424f"
     },
     {
       "id": "pattern-routing",
       "file": "assets/diagrams/pattern-routing.png",
       "source": "assets/diagrams/src/pattern-routing.gv",
       "vector": "assets/diagrams/pattern-routing.pdf",
-      "description": "Routing: classification selects a specialist; policy decides whether it is permitted",
-      "sha256": "ed6c696fecc9216bced059a168a7737d62d7ac41799fbd15b5433812f6ece4d3"
+      "description": "Routing: a deterministic eligible set comes first, classification selects a specialist, and exact authorization decides whether it may act",
+      "sha256": "27e8ba9404005895e3f1b1acf2a009ad40d6511e9c046884c2fed6b37780e0ba"
     },
     {
       "id": "policy-to-guardrail",

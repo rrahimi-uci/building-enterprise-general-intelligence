@@ -4,7 +4,7 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7",
-    "content_tex_sha256": "a4c233e3382c52caafcd5028fd4d61e16953240bc47a6d664b263b8afeb93edd",
+    "content_tex_sha256": "7359ca94e8cc1435700071476b54b0bac95fbd48293f9d81ab09b36ea1c918f2",
     "style_sha256": "7a1273ba38763881c8ed2ede7ad741ea49ca031d7bb5f8fc354e413a88d840c8",
     "narrative_parts": 8,
     "appendix_dividers": 1,
@@ -12,15 +12,15 @@
     "chapter_covers": 28,
     "appendices": 12,
     "diagrams": 43,
-    "code_blocks": 69,
-    "longtables": 145,
+    "code_blocks": 68,
+    "longtables": 148,
     "compact_tables": 109,
-    "callout_tables": 96,
-    "citation_occurrences": 111,
+    "callout_tables": 79,
+    "citation_occurrences": 113,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 350,
-    "markdown_code_blocks": 69,
+    "markdown_tables": 336,
+    "markdown_code_blocks": 68,
     "image_quality": [
       {
         "file": "assets/cover/cover-v1.0.0.png",
@@ -170,7 +170,7 @@
         "file": "assets/diagrams/pattern-routing.png",
         "pixels": [
           2293,
-          1434
+          1833
         ],
         "effective_dpi": 324.8
       },
@@ -185,10 +185,10 @@
       {
         "file": "assets/diagrams/pattern-reflection.png",
         "pixels": [
-          2282,
-          1226
+          2283,
+          1522
         ],
-        "effective_dpi": 323.2
+        "effective_dpi": 323.4
       },
       {
         "file": "assets/diagrams/pattern-hitl.png",
@@ -209,10 +209,10 @@
       {
         "file": "assets/diagrams/pattern-decision-tree.png",
         "pixels": [
-          2366,
-          1946
+          2321,
+          4264
         ],
-        "effective_dpi": 335.1
+        "effective_dpi": 328.8
       },
       {
         "file": "assets/diagrams/anti-before-after.png",
@@ -225,10 +225,10 @@
       {
         "file": "assets/diagrams/anti-ambient-authority.png",
         "pixels": [
-          2364,
-          1876
+          2330,
+          1685
         ],
-        "effective_dpi": 334.8
+        "effective_dpi": 330.0
       },
       {
         "file": "assets/diagrams/anti-retry-storm.png",
