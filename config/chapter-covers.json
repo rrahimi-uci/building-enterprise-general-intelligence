@@ -46,7 +46,7 @@
    "themes": [
     "Bounded reasoning",
     "Ownership boundaries",
-    "Governed execution"
+    "Control points"
    ],
    "diagram": {
     "title": "The boundary around the model",
@@ -315,7 +315,7 @@
      },
      {
       "id": "intent",
-      "label": "ToolIntent",
+      "label": "proposed_action",
       "sub": "typed proposal",
       "kind": "record",
       "at": [
@@ -770,7 +770,7 @@
      },
      {
       "id": "run",
-      "label": "Durable Run Service",
+      "label": "Run Service",
       "sub": "owns workflow",
       "kind": "service",
       "at": [
@@ -800,7 +800,7 @@
      },
      {
       "id": "effects",
-      "label": "Tool/effect service",
+      "label": "Effect Service",
       "sub": "receipt proves effect",
       "kind": "effect",
       "at": [
@@ -810,7 +810,7 @@
      },
      {
       "id": "human",
-      "label": "Human authorization",
+      "label": "Approval Service",
       "sub": "exact, expiring decision",
       "kind": "human",
       "at": [
@@ -949,7 +949,7 @@
    "themes": [
     "Knowledge as artifacts",
     "Provenance and scope",
-    "Rules as guardrails"
+    "Rules as enforced constraints"
    ],
    "diagram": {
     "title": "From context to constraint",
@@ -1050,7 +1050,7 @@
      },
      {
       "id": "guard",
-      "label": "Guardrail",
+      "label": "Enforced rule",
       "sub": "at effect boundary",
       "kind": "control",
       "at": [
@@ -1138,7 +1138,7 @@
      },
      {
       "ref": "guard",
-      "name": "Effect-boundary guardrail"
+      "name": "Effect-boundary rule check"
      },
      {
       "ref": "outcome",
@@ -1155,7 +1155,7 @@
    "focus": "Assemble each prompt as a disposable, authorized projection of distinct stores.",
    "themes": [
     "Authorized projection",
-    "State taxonomy",
+    "Five context sources",
     "Governed memory"
    ],
    "diagram": {
@@ -1234,7 +1234,7 @@
      },
      {
       "id": "assembler",
-      "label": "Context Assembler",
+      "label": "Context Service",
       "sub": "authorize, then fetch",
       "kind": "control",
       "at": [
@@ -4575,7 +4575,7 @@
    "title": "Carry Identity, Narrow Authority",
    "focus": "Carry subject and actor; grant the intersection, never the union.",
    "themes": [
-    "Dual principal",
+    "Subject and actor",
     "Monotonic narrowing",
     "Last-hop credentials"
    ],
@@ -4584,7 +4584,7 @@
     "groups": [
      {
       "id": "identities",
-      "label": "Three identities",
+      "label": "Subject, actor, purpose",
       "box": [
        0.1,
        0.35,
@@ -4759,7 +4759,7 @@
     "components": [
      {
       "ref": "identities",
-      "name": "Three identities"
+      "name": "Subject, actor, purpose"
      },
      {
       "ref": "pdp",
@@ -5008,7 +5008,7 @@
    "title": "Contain the Damage When a Model Is Manipulated",
    "focus": "Assume the model is manipulated; independent limits keep the failure local.",
    "themes": [
-    "Assume compromise",
+    "Assume manipulation",
     "Blast-radius limits",
     "Scoped kill switches"
    ],

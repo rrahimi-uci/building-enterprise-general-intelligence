@@ -35,7 +35,7 @@
     {
       "id": "book-map",
       "file": "assets/diagrams/book-map.png",
-      "sha256": "f9134866904054ee4ed21d163aed27e6f06ac112c16e7bab23fee61c53aef1c2",
+      "sha256": "6f4351eb5ac059425c0e8c7e9c9815dcf747014d87fe8978f176686c1e1796da",
       "source": "assets/diagrams/src/book-map.gv",
       "vector": "assets/diagrams/book-map.pdf"
     },
@@ -94,18 +94,11 @@
       "vector": "assets/diagrams/dx-golden-path.pdf"
     },
     {
-      "id": "gateway-position",
-      "file": "assets/diagrams/gateway-position.png",
-      "sha256": "9abc8f1a3c4a1c4c8f2d16ef95a01150ef73e65b2a30579155fbe3a78b75ade3",
-      "source": "assets/diagrams/src/gateway-position.gv",
-      "vector": "assets/diagrams/gateway-position.pdf"
-    },
-    {
       "id": "gateway-roles",
       "file": "assets/diagrams/gateway-roles.png",
       "source": "assets/diagrams/src/gateway-roles.gv",
       "vector": "assets/diagrams/gateway-roles.pdf",
-      "sha256": "822fdc303fba2e1a744514730c107916e9779b86a0c23b0861e251f0f16e8265"
+      "sha256": "c4171d7e82e160267fc2123fc50b05d3adbe489d40dda9a26307ee727da4adfb"
     },
     {
       "id": "governance-model",
@@ -117,7 +110,7 @@
     {
       "id": "guardrail-sequence",
       "file": "assets/diagrams/guardrail-sequence.png",
-      "sha256": "f5e08560369cbd8b629423e7b1e7b67a10bb6c89b5e35d9a3be86092fe874bff",
+      "sha256": "19213cd981b5270f406bf88d72f4ac3a0dda5c054f8639ce85037a5d18a13c85",
       "source": "assets/diagrams/src/guardrail-sequence.mmd",
       "vector": "assets/diagrams/guardrail-sequence.pdf"
     },
@@ -201,7 +194,7 @@
     {
       "id": "policy-to-guardrail",
       "file": "assets/diagrams/policy-to-guardrail.png",
-      "sha256": "5d1cb1313d1705c377a62c1243880f2a5d49a839820edc8a9faebeef2cb17a97",
+      "sha256": "8ad5b9c498355dbe4478a06e38f1f584775f978706286dd479a37205a7a44eb2",
       "source": "assets/diagrams/src/policy-to-guardrail.gv",
       "vector": "assets/diagrams/policy-to-guardrail.pdf"
     },
@@ -215,14 +208,14 @@
     {
       "id": "reference-architecture",
       "file": "assets/diagrams/reference-architecture.png",
-      "sha256": "57ce2db42d428b7acb30753e01af7ac53458738ffbed88b1e307516da1810ab1",
+      "sha256": "95df05d1ce386fe3a7358366341274e307d10056d3af66529f7f5573bb558f94",
       "source": "assets/diagrams/src/reference-architecture.gv",
       "vector": "assets/diagrams/reference-architecture.pdf"
     },
     {
       "id": "request-sequence",
       "file": "assets/diagrams/request-sequence.png",
-      "sha256": "9a3b07d4bf51c402d678f77c2eef298fc1d3f72ae26069a61adde8ea0e7f38f5",
+      "sha256": "9e8f2e8e8247be23bba33ce664f15a84a13e932ca5a80ba3b51858f584c3c03c",
       "source": "assets/diagrams/src/request-sequence.mmd",
       "vector": "assets/diagrams/request-sequence.pdf"
     },
@@ -275,7 +268,7 @@
     {
       "id": "security-depth",
       "file": "assets/diagrams/security-depth.png",
-      "sha256": "82e0ca96cd7be9e0bdbce41573d63ef8c67c8f7a130ecef61f21f489f3650da3",
+      "sha256": "f3fda106a8fd925e9fb86eec486ac75d980c465b24034285dd3cfc27524492fb",
       "source": "assets/diagrams/src/security-depth.gv",
       "vector": "assets/diagrams/security-depth.pdf"
     },
@@ -293,7 +286,7 @@
       "source": "assets/diagrams/src/effect-lifecycle.gv",
       "vector": "assets/diagrams/effect-lifecycle.pdf",
       "description": "Protected effect lifecycle with approval, idempotency, unknown outcomes, reconciliation, and compensation",
-      "sha256": "68eea51546aeabbcd2bfabfc064bec9153f7205cd86245d9e99f9962f5cdbb39"
+      "sha256": "fcd56b704b586f8bb2b8855c293b857914920a4f76e4bd6923e968d3efd72a8a"
     },
     {
       "id": "sandbox-egress",
@@ -317,14 +310,14 @@
       "source": "assets/diagrams/src/supervisor-worker.gv",
       "vector": "assets/diagrams/supervisor-worker.pdf",
       "description": "Supervisor/worker with narrowed child grants, an explicit fan-in contract, and durable cancellation",
-      "sha256": "c4009fa0a6d7ecdd907b1e096d4cb6d7421c66a02e6349d85744e59d2aee578b"
+      "sha256": "c0f2d101eb6e854fc45f81ec193ab8286313c9d05c582d1407c7ed95f6b06292"
     },
     {
       "id": "system-overview",
       "file": "assets/diagrams/system-overview.png",
       "source": "assets/diagrams/src/system-overview.gv",
       "vector": "assets/diagrams/system-overview.pdf",
-      "sha256": "8ff18685606b98a1f3e4e559c527ec2376a98e42c921ed5a5f4bfd178919293c"
+      "sha256": "c799b2abf25dd9371c324b2b7f91184ea89ea2403257f8cae071bdc27cbbe7e4"
     }
   ],
   "note": "Diagrams are generated from the editable sources in assets/diagrams/src/ by tools/render_diagrams.py. Each source renders to a vector PDF, which XeLaTeX embeds, and a raster PNG for the DOCX edition. Never hand-edit a render."

@@ -6,7 +6,7 @@ import pytest
 
 from examples.knowledge.policy_to_rule import Predicate, Rule, SourceRef
 from examples.knowledge.rule_as_guardrail import (
-    Guardrail, PolicyViolation, UnknownUnderPolicy, guarded_dispatch,
+    EnforcedRule, PolicyViolation, UnknownUnderPolicy, guarded_dispatch,
 )
 
 RULE = Rule(
@@ -17,7 +17,7 @@ RULE = Rule(
     effective_from="2026-01-01",
     source=SourceRef("mortgage_underwriting_policy", "sec_4_2", 0, 100, "a" * 64),
 )
-GUARDS = [Guardrail(RULE)]
+GUARDS = [EnforcedRule(RULE)]
 
 
 def submit_for_underwriting():
@@ -60,7 +60,7 @@ def test_a_missing_fact_refuses_rather_than_permitting():
                          jurisdiction="US", on_date="2026-06-01")
 
 
-def test_the_effect_never_runs_when_a_guardrail_refuses():
+def test_the_effect_never_runs_when_a_rule_refuses():
     ran = []
     facts = {"requested_ltv": Decimal("0.85"), "underwriter_approved": False}
     with pytest.raises(PolicyViolation):

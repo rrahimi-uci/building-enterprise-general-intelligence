@@ -4,6 +4,33 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Part V (Chapters 18–19, continuity review)
+
+- Chapter 18 defines the task lifecycle and owns the one TaskEnvelope: its eight field groups move in from Chapter 19, and the code becomes the tested `contracts#task` region (idempotent creation, depth and budget withdrawal, envelope-subset hook).
+- Handoff follows Chapter 11: `:handoff` proposes a pending OwnershipTransfer that only `:accept` commits. Plan revision belongs to Chapter 12 (`plans:revise` removed).
+- The duplicate capability-envelope proof leaves Chapter 18 (Chapter 21 owns it); the two pattern cards merge into "Supervisor/Worker at a glance"; Figure 18-1 uses the mortgage specialists.
+- Chapter 19 becomes the federated delta: the LLM Gateway material leaves (enforcement to Chapter 4, routing and metrics to Chapter 28), Figure 19-1 and `gateway-position` are retired, and A2ATaskEnvelope is deleted.
+- MCP mutations continue to the Tool Gateway; the A2A Gateway is related to Chapter 1's gateway table and to the Task Service; remote states map onto the pinned A2A 1.0.1 task-state names.
+- The artifact-adoption check moves from Chapter 6 into Chapter 19 as the tested `artifact-adoption` example, now with a content-hash check. The uncited MLflow MCP Registry version claim and untested adapter are removed.
+
+### Part II (Chapters 4–6) continuity pass
+
+- Chapter 4 is now the book's map: it opens on the mortgage case and the Chapter 3 seam, uses the seven plane names in the tables and in Figure 4-1, maps Figure 1-3's bands onto them, renames layers so none is called "plane", and indexes every authoritative record to its owning plane and defining chapter.
+- Chapter 4 receives the LLM Gateway contract from Chapter 19, explains the global control tier and regional execution cells in one section, annotates the end-to-end flow by owning plane (Figure 4-2 now assembles context before the step and shows the optional approval hop), and owns one base Run API table (`/audit` removed).
+- The RunManifest gains prose and moves, with the artifact reference and the single CloudEvent shape, into the new `contracts#platform` example; the inline JSON and Python listings are gone and the effect receipt no longer contradicts Chapter 22.
+- Chapter 5 uses "enforced rule" rather than "guardrail" (text, Figure 5-2, and the example class), adds the owner **Approve** step, moves the Knowledge Hub after provenance with a mode mapping and its two callers, and receives index freshness from Chapter 6.
+- Chapter 6 has one ten-stage pipeline, five context sources, one segment `kind` enum mapped to trust tiers, memory in one section, and one ContextManifest schema in the new `context-manifest` example; the artifact-adoption listing leaves for Chapter 19.
+- Approval terminology, Harborlight case boxes (Northstar removed), "Strong answer" and ✓ template forms, and Chapter 17 anti-pattern pointers are applied across Part II; the Chapter 4–6 covers follow the renamed components.
+
+### Front matter and Part I (continuity review, WP-FM and WP-I)
+
+- Front matter: reader paths now include their prerequisites; "How the book is organized" matches Figure 0-1, whose labels are now the exact Part titles; the engineering contract is condensed and points to Chapter 2's principles; maintainer content and the supplier-onboarding promise are gone; the Closing Perspective is listed.
+- Chapter 1 opens with the demo, states the thesis once, explains the state-owner table that later chapters reuse, shows checkpoint C01, maps the three per-step questions and the ten problems to the chapters that answer them, and fixes vocabulary pointers. "Agent Gateway" becomes the A2A Gateway (Figure 1-4); Figure 1-3 shows Channels as Parts II and IV.
+- Chapter 1's prototype and level sketches are now a tested example (`prototype-levels`), whose test reproduces the Wednesday duplicate write.
+- Chapter 2 names the six gates as the deterministic shell, gives each gate an owner, places human approval inside Authorize, defines acceptance criteria and the acceptance engine, and uses `proposed_action` and the second pay statement in its proposal.
+- Chapter 3 is about a quarter shorter: previews of approval, handoff, guardrails, retries, and the write path collapse into one section that points to the owning chapters; AgentRuntime is defined before the checkpoint; the step status enum and the step-to-gate bridge are stated; the restart and replaceability tests are paired; `contracts#step` moves here from Chapter 1.
+- Northstar and the supplier-onboarding thread are retired from Part I; approval terminology follows Chapter 14.
+
 ### Part VII — evidence, evaluation, and improvement (continuity review, WP-VII)
 
 - Chapter 24 is the home of observability: one decision-centric span schema (decision, memory, and security-control spans; `effect.state` on tool spans), the single metric scorecard, and the telemetry implementation (collector, trace index, content vault, audit ledger writer) moved in from Chapter 25.
@@ -47,6 +74,15 @@ All notable changes follow semantic versioning and are recorded here.
 - Inline Python in Chapters 27 and 28 is replaced by tested examples: `release-compatibility` (typed `WorkerProfile`), `release-attestation` (binds verified identities to the artifact), and `admission-permit` (grant, defer, or reject).
 - Northstar boxes become mortgage-case boxes; numeric "guardrails" become "starting limits"; Figures 26-1, 27-1, and 28-1 and the Chapter 26 cover are corrected.
 - The Closing Perspective now follows Chapter 28, replays Chapter 1's Monday–Friday failures against the controls that contain them, and states that only checkpoints C01–C03 are implemented.
+
+### Part VI — Security, Identity, and Control (continuity review, WP-VI)
+
+- The Part VI orientation states the "assume manipulation" premise once and maps Chapters 20–23, replacing a control order the chapters contradicted.
+- Chapter 20 keeps "guardrail" in its detector sense only, has one nine-layer model (Figure 20-1 redrawn to match), and gives every threat card a first deterministic refusal layer. Figure 20-3 now shows the detector feeding the policy engine. It gains opening boxes and an incident section cited to NIST SP 800-61 [R42].
+- Chapter 21 is reordered: subject, actor, and purpose; then the decision; then how authority travels, with capability envelope (scope) and credential lease (proof) defined. The subset proof is the new `capability-envelope` example.
+- Chapter 22 is one argument with one implementation block. It defines Unknown canonically, relates risk classes to use-case tiers, and drops the inline ledger in favor of the `effect-idempotency` example. Figure 22-1 reserves the effect before approval.
+- Chapter 23 continues the Chapter 20 example rather than retelling it. It drops its duplicate layer list, threat table, and credentials API, and adds kill-switch and data-lineage/privacy sections. Its code is now the `egress-url` and `kill-switch` examples, without the unrelated RTO/RPO class. The governance record moves to Chapter 26.
+- Approval terminology replaces "human action authorization" throughout the Part. Chapter 21 and 23 cover labels follow the revised text.
 
 ### Part III — developer platform (continuity review, WP-III)
 

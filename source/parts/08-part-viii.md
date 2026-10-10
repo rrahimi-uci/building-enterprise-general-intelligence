@@ -557,7 +557,7 @@ The numbers above are illustrative planning inputs, not universal limits. Their 
 
 Model routing happens at the LLM Gateway (Chapter 4), and model choice is a governance decision before it is an economic one. Filter by tenant, purpose, data class, residency, risk, required capabilities, context length, tool/JSON behavior, and approved version. Only then optimize expected accepted-outcome quality under latency and cost budgets. Health and quota further constrain selection. Fallbacks obey the same invariants; “any available model” is not a safe fallback. Figure 28-2 shows the decision tree.
 
-<!-- FIG-19-2-MOVES-HERE -->
+[[DIAGRAM:model-routing|Figure 28-2 — Policy-first model-routing decision tree]]
 
 Record each routing decision: candidate routes, exclusions and reasons, selected provider/model/version/region, policy digest, budgets, fallback chain, and experiment cohort.
 
