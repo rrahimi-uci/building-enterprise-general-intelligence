@@ -220,10 +220,10 @@
     },
     {
       "id": "skills-registry",
-      "book_chapters": [8],
+      "book_chapters": [8, 9],
       "path": "examples/platform/skills_registry.py",
       "language": "python",
-      "title": "Resolving a skill version under policy and SemVer precedence",
+      "title": "A Skill registry: policy-bound resolution and pinned Skill Packs",
       "verify": "test",
       "tests": [
         "examples/tests/test_skills_registry.py"
@@ -232,7 +232,8 @@
         "pydantic==2.13.5"
       ],
       "regions": {
-        "resolution": "Eligibility and resolution, without the SemVer parser."
+        "resolution": "Eligibility and resolution, without the SemVer parser.",
+        "packs": "Skill Pack manifest, registration, activation, and replay-only resolution."
       }
     },
     {
@@ -287,6 +288,22 @@
       "regions": {
         "core": "The logic the chapter teaches, without the supporting models."
       }
+    },
+    {
+      "id": "adapter-conformance",
+      "book_chapters": [7],
+      "path": "examples/runtime/adapter_conformance.py",
+      "language": "python",
+      "title": "An adapter conformance suite that reports every gap",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_adapter_conformance.py"
+      ],
+      "libraries": [
+        "openai==3.13.0",
+        "openai-agents==0.22.2",
+        "pydantic==2.13.5"
+      ]
     },
     {
       "id": "durable-state",

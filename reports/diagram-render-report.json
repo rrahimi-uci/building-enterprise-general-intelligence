@@ -1,6 +1,6 @@
 {
-  "diagrams": 44,
-  "with_vector": 44,
+  "diagrams": 43,
+  "with_vector": 43,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -113,37 +113,37 @@
       "sha256": "fa414e7cc7da8b066e4d54e773d3516d5c893d7c7c92359c074976184836cb50"
     },
     {
-      "id": "developer-lifecycle",
-      "source": "developer-lifecycle.gv",
-      "pixels": [
-        2279,
-        2183
-      ],
-      "effective_dpi": 333,
-      "vector": true,
-      "sha256": "54dfe08451ffa40cb3dfbb39f2554d7f317c4b7f1688813192d23b5241f4c7b2"
-    },
-    {
       "id": "developer-platform",
       "source": "developer-platform.gv",
       "pixels": [
-        2271,
-        1471
+        2262,
+        1469
       ],
-      "effective_dpi": 332,
+      "effective_dpi": 330,
       "vector": true,
-      "sha256": "52e83d88265e751d3aa34690786de86bf17851ac00dbdf0c956f3e6a9ed0cf3f"
+      "sha256": "0f5c50101d3b8bee87d6c58d25a0327f49b8eaaae122a3d74c0e17842045f8d0"
     },
     {
       "id": "dx-golden-path",
       "source": "dx-golden-path.gv",
       "pixels": [
-        2270,
-        1982
+        2292,
+        1196
       ],
-      "effective_dpi": 331,
+      "effective_dpi": 335,
       "vector": true,
-      "sha256": "604e272b394b0341cddb37cb170b3c493aee757e2dfdfc38fbfa486c33aa77a0"
+      "sha256": "48e287314084041ba128fc6a8a8cf02652a7ef819d36acc8ae7c38ed98ce29dd"
+    },
+    {
+      "id": "gateway-position",
+      "source": "gateway-position.gv",
+      "pixels": [
+        2389,
+        2164
+      ],
+      "effective_dpi": 349,
+      "vector": true,
+      "sha256": "9abc8f1a3c4a1c4c8f2d16ef95a01150ef73e65b2a30579155fbe3a78b75ade3"
     },
     {
       "id": "gateway-roles",
@@ -303,12 +303,12 @@
       "id": "portability",
       "source": "portability.gv",
       "pixels": [
-        2271,
-        999
+        2265,
+        964
       ],
-      "effective_dpi": 332,
+      "effective_dpi": 331,
       "vector": true,
-      "sha256": "a99b915091e238d4e4ee7512ea57f8db4a0b907d0ffd047bc28e640d44c67502"
+      "sha256": "aada39c261eb9342fd986adee2556454c4680b0f3d7e397802a9a0c6a950a170"
     },
     {
       "id": "reference-architecture",
@@ -451,7 +451,7 @@
       ],
       "effective_dpi": 385,
       "vector": true,
-      "sha256": "16c322bf4ffe57747dcfbc62303f647bc9c9a21fb9fdc3418d858f99084d8f57"
+      "sha256": "b8802f4053d496afacdb1e51c0a63aa8430f2154ab715cf6d613ec8eca1a7d2a"
     },
     {
       "id": "supervisor-worker",
@@ -462,7 +462,7 @@
       ],
       "effective_dpi": 471,
       "vector": true,
-      "sha256": "c0f2d101eb6e854fc45f81ec193ab8286313c9d05c582d1407c7ed95f6b06292"
+      "sha256": "c4009fa0a6d7ecdd907b1e096d4cb6d7421c66a02e6349d85744e59d2aee578b"
     },
     {
       "id": "system-overview",
@@ -474,17 +474,6 @@
       "effective_dpi": 554,
       "vector": true,
       "sha256": "8ff18685606b98a1f3e4e559c527ec2376a98e42c921ed5a5f4bfd178919293c"
-    },
-    {
-      "id": "test-pyramid",
-      "source": "test-pyramid.gv",
-      "pixels": [
-        2269,
-        1020
-      ],
-      "effective_dpi": 331,
-      "vector": true,
-      "sha256": "e176177bb73ca1e5c3ef2744da7ce558894f1c530fd122b016e95bb4542f48dc"
     }
   ],
   "errors": [],

@@ -4034,7 +4034,7 @@ How do you delete a fact from an agentic system? & Tombstone and revoke the sour
 
 Context assembly completes the knowledge Part. Chapter 7 turns from what agents know to how teams build with it, defining the reusable developer platform and SDK.\par
 
-\BookPartPage{III}{THE DEVELOPER PLATFORM}{Good architecture is not enough if every delivery team has to reconstruct it from scratch. This Part turns the reference design into a paved road: reusable contracts, adapters, Skills, domain packs, and a lifecycle that carries them from a developer laptop to production. The platform stays opinionated about safety and evidence while leaving domain teams room to build something useful.}
+\BookPartPage{III}{THE DEVELOPER PLATFORM}{Parts I and II defined the contracts; this Part decides who builds them once. Chapter 7 describes the paved road (platform-owned contracts, adapters, services, and a golden path) and doubles as a map: most of its services are developed in Parts IV–VIII. Chapters 8 and 9 define what teams reuse on that road: the versioned Skill and the Skill Pack. Three owners share it: the platform team, domain-capability owners, and application teams.}
 
 \BookChapterCover{cover-images/chapter-07-build-a-paved-road-for-agent-teams.png}
 
@@ -4046,13 +4046,19 @@ Context assembly completes the knowledge Part. Chapter 7 turns from what agents 
 
 \end{bookquote}
 
+\begin{bookcallout}[Where The Mortgage Case Stands]
+A second Harborlight team begins an agent for the compliance review and starts copying the mortgage team's SDK wrapper.
+\end{bookcallout}
+
+\begin{bookcallout}[The Design Choice]
+Give teams platform-owned contracts, conformance-tested adapters, and a golden path that emits evidence at every stage; leave domain behavior, topology, and acceptance to the team.
+\end{bookcallout}
+
 \section{Why teams should not each rebuild the safety layer}
 
-Without a platform, every team rebuilds the same dangerous plumbing and every fix arrives at a different speed. This chapter describes a paved road made of contracts, adapters, and delivery practices. The goal is not to force every application into one monolith; it is to make the safe path easier to reuse than the clever shortcut.\par
-
-\section{When the need becomes obvious}
-
 The need for a paved road becomes obvious after the second or third team ships. One team retries inside its SDK wrapper, another records only transcripts, and a third gives tools a broad service credential. Each local choice looks reasonable, but the organization now has three incompatible meanings of failure, audit, and authorization. A platform earns its place by making those cross-cutting decisions once and leaving product teams free to build differentiated domain behavior.\par
+
+The goal is not to force every application into one monolith; it is to make the safe path easier to reuse than the clever shortcut.\par
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -4060,92 +4066,66 @@ The need for a paved road becomes obvious after the second or third team ships. 
 \begin{tabular}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{State owner} & \color{white}\bfseries \textbf{Trust boundary} & \color{white}\bfseries \textbf{Scale unit} & \color{white}\bfseries \textbf{Failure containment} & \color{white}\bfseries \textbf{Core contracts} \\
-Platform services own contracts and evidence; applications own domain behavior & application code to platform-owned control planes & template · adapter · release artifact & one application release & AgentSpec · RunContext · ToolManifest · ReleaseManifest \\
+Platform services own contracts and evidence; applications and domain-capability owners own domain behavior & application code to platform-owned services & template · adapter · release artifact & one application release & AgentSpec · AgentStepRequest/Result · ToolManifest · ReleaseManifest \\
 \end{tabular}
 \BookTableEnd
 
 \section{What teams should be able to rely on}
 
-The developer platform is a reusable paved road that lets teams build differentiated agents without repeatedly rebuilding identity, policy, tool safety, tracing, evaluation, durable execution, and delivery infrastructure. Applications use platform-owned contracts and replaceable adapters.\par
+The developer platform lets teams build differentiated agents without repeatedly rebuilding identity, policy, tool safety, tracing, evaluation, durable execution, and delivery infrastructure. Applications use platform-owned contracts and replaceable adapters. Most of these services are developed later in the book; the last column says where.\par
 
 \BookDiagram{assets/diagrams/developer-platform.pdf}{Figure 7-1 — Agentic developer platform and SDK capability stack}{developer-platform}
 
 \needspace{5\baselineskip}
 \BookTableStart
-\small
-\begin{longtable}{@{}Y{0.3133\linewidth}Y{0.3133\linewidth}Y{0.3133\linewidth}@{}}
+\fontsize{7.2}{9}\selectfont
+\begin{longtable}{@{}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}Y{0.2350\linewidth}@{}}
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Capability} & \color{white}\bfseries \textbf{Reusable platform responsibility} & \color{white}\bfseries \textbf{Application-specific responsibility} \\
+\color{white}\bfseries \textbf{Capability} & \color{white}\bfseries \textbf{Reusable platform responsibility} & \color{white}\bfseries \textbf{Application-specific responsibility} & \color{white}\bfseries \textbf{Taught in} \\
 \endfirsthead
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Capability} & \color{white}\bfseries \textbf{Reusable platform responsibility} & \color{white}\bfseries \textbf{Application-specific responsibility} \\
+\color{white}\bfseries \textbf{Capability} & \color{white}\bfseries \textbf{Reusable platform responsibility} & \color{white}\bfseries \textbf{Application-specific responsibility} & \color{white}\bfseries \textbf{Taught in} \\
 \endhead
-Agent Runtime & Run context, budgets, typed outputs, interruption, cancellation, adapter & Domain instructions, acceptance, specialist roles \\
+Agent Runtime & Step contract, budgets, typed outputs, interruption, cancellation, adapter & Domain instructions, acceptance, specialist roles & Ch 3 \\
 \rowcolor{BookLight}
-Workflow/Orchestration & Durable state, timers, retries, joins, compensation, replay & Domain process graph and deadlines \\
-Tool SDK & Schema, identity context, idempotency, effect protocol, mocks, telemetry & Domain operation and compensation semantics \\
+Workflow and durable execution & Durable state, timers, joins, checkpoints, leases, deduplication, retries, replay, recovery, reconciliation & Domain process graph, deadlines, state machine, and compensation choices & Ch 15 \\
+Tool SDK & Schema, identity context, idempotency, effect protocol, mocks, telemetry & Domain operation and compensation semantics & Ch 2 (introduction), Ch 22 (contract) \\
 \rowcolor{BookLight}
-MCP Integration & Server registry, trust, gateway, discovery cache, compatibility tests & Approved servers/tools and domain interpretation \\
-Agent-to-Agent Communication & Task/artifact envelopes, delegation, identity, deadline, cancellation & Collaboration topology and child acceptance \\
+MCP Integration & Server registry, trust, gateway, discovery cache, compatibility tests & Approved servers/tools and domain interpretation & Ch 19 \\
+Agent-to-Agent Communication & Task/artifact envelopes, delegation, identity, deadline, cancellation & Collaboration topology and child acceptance & Ch 18–19 \\
 \rowcolor{BookLight}
-Context/RAG & Connectors, ACL filtering, snapshot/provenance, ranking hooks, budgets & Sources, retrieval policy, evidence requirements \\
-Memory & Eligibility, scope, TTL, provenance, correction/deletion, encryption & Purpose, schema, confidence, business ownership \\
+Context/RAG & Connectors, ACL filtering, snapshot/provenance, ranking hooks, budgets & Sources, retrieval policy, evidence requirements & Ch 5–6 \\
+Memory & Eligibility, scope, TTL, provenance, correction/deletion, encryption & Purpose, schema, confidence, business ownership & Ch 6 \\
 \rowcolor{BookLight}
-Skills & Manifest, versioning, dependencies, signing, registry, tests & Capability logic, knowledge, examples, acceptance suite \\
-Identity \& Permissions & Subject/workload identity, policy, short-lived credentials & Declared permissions and resource scopes \\
+Skills & Manifest, versioning, dependencies, signing, registry, tests & Domain-capability owner: capability logic, knowledge, examples, acceptance suite & Ch 8–9 \\
+Identity \& Permissions & Subject/workload identity, action policy, short-lived credentials & Declared permissions and resource scopes & Ch 21 \\
 \rowcolor{BookLight}
-Guardrails & Injection, input/output safety, DLP, action policy & Domain risk rules, safe responses, escalation \\
-LLM Gateway & Provider adapters, routing, budgets, filtering, cache, fallback, telemetry & Quality/cost/latency policy and needed capabilities \\
+Guardrails & Injection and content detectors, input/output safety, DLP & Domain risk rules, safe responses, escalation & Ch 20 \\
+LLM Gateway & Provider adapters, routing, budgets, filtering, cache, fallback, telemetry & Quality/cost/latency policy and needed capabilities & Ch 4 (contract), Ch 28 (routing and cost) \\
 \rowcolor{BookLight}
-Evaluation & Dataset/evaluator registry, experiments, regression gates & Domain truth, rubrics, thresholds, reviewers \\
-Observability/Tracing & Unified run graph, schemas, sampling, redaction, correlation & Domain events and outcome linkage \\
+Evaluation & Dataset/evaluator registry, experiments, regression gates & Domain truth, rubrics, thresholds, reviewers & Ch 25 \\
+Observability/Tracing & Unified run graph, schemas, sampling, redaction, correlation & Domain events and outcome linkage & Ch 24 \\
 \rowcolor{BookLight}
-Durable Execution & Checkpoints, leases, deduplication, recovery, reconciliation & Domain state machine and compensation choices \\
-Human-in-the-Loop & Proposal, preview, grants, queues, SLAs, recourse & Reviewer policy, domain evidence, decision rights \\
-\rowcolor{BookLight}
-Deployment \& Versioning & Packaging, manifests, environments, gates, canary, rollback & Application release and risk sign-off \\
+Human-in-the-Loop & Proposal, preview, grants, queues, SLAs, recourse & Reviewer policy, domain evidence, decision rights & Ch 14 \\
+Deployment \& Versioning & Packaging, manifests, environments, gates, canary, rollback & Application release and risk sign-off & Ch 27 \\
 \end{longtable}
 \BookTableEnd
+
+Two kinds of team sit on the application side. Application teams own an agent: its AgentSpec, topology, and acceptance. Domain-capability owners own the Skills and Skill Packs that several applications reuse (Chapters 8–9). Chapter 4 § The decisions that shape the system already federates both to accountable owners.\par
+
+The Tool SDK is the authoring side of the Tool Gateway. A developer writes a typed operation; the SDK emits the ToolManifest (Chapter 22 § What a ToolManifest must declare) that the gateway enforces on every call (Chapter 2).\par
 
 \section{Keep contracts stable while frameworks change}
 
 \BookDiagram{assets/diagrams/portability.pdf}{Figure 7-2 — Platform contracts with replaceable framework and provider adapters}{portability}
 
-Use AgentSpec, RunContext, TaskEnvelope, ToolManifest/ToolCall, ContextManifest, MemoryRecord, EvaluationResult, and ReleaseManifest as stable contracts. Compile them into framework/provider adapters. Standardized contracts, MCP, APIs, events, agent-to-agent protocols, gateways, and shared platform services provide interoperability without leaking vendor-native message objects into applications. Compatibility suites verify cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.\par
-
-\section{How a capability moves from idea to production}
-
-\BookDiagram{assets/diagrams/developer-lifecycle.pdf}{Figure 7-3 — Local-to-production agent lifecycle}{developer-lifecycle}
-
-Create from an approved template; attach tools, Skills, context, and memory; configure model policy, permissions, budgets, and review; test deterministic logic, contracts, simulations, adversarial cases, and failures; evaluate quality, safety, latency, and cost; package immutable artifacts with locks, SBOM, signature, provenance, and ReleaseManifest; promote through policy gates; observe correlated production traces; improve through controlled ChangeBundles.\par
-
-\section{SDK example}
-
-\BookSnake · illustrative pseudocode\par
-
-\needspace{130.4pt}
-\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
-agent = platform.agent(
-    spec="mortgage_evidence_review@0.1.0",
-    model_policy="quality-balanced@7",
-    permissions=["mortgage:case:read", "mortgage:evidence_request"],
-    budgets={"tokens": 18_000, "usd": 0.45, "deadline_s": 90},
-)
-agent.attach_skill("mortgage-evidence-review@0.1.0")
-agent.attach_tool(read_mortgage_case, risk="regulated", effect="evidence.read")
-agent.use_context(source="mortgage-underwriting-policy", snapshot="approved-2026.09")
-agent.use_memory(policy="case-evidence-preferences@1")
-report = platform.test(agent).simulate("mortgage-evidence-regression")
-platform.release(agent, require=["quality", "security", "cost", "rollback"])
-\end{lstlisting}
-
-This is deliberately platform pseudocode, not a claim that the OpenAI Agents SDK exposes \lstinline[style=bookinline]!platform.agent!, \lstinline[style=bookinline]!attach_skill!, or \lstinline[style=bookinline]!platform.release! with these method names. The repository's checked implementation uses a provider-neutral \lstinline[style=bookinline]!AgentRuntime! and translates its request into the pinned Agents SDK at the adapter boundary. The fluent API is convenience. The compiled contracts, policy decisions, tool/effect evidence, traces, and release manifest are the stable interface.\par
+Chapter 3 put the framework behind \lstinline[style=bookinline]!AgentRuntime.execute(AgentStepRequest) → AgentStepResult!; the platform's job is to own that seam for every team. The stable contracts are AgentSpec (Chapter 4), AgentStepRequest/AgentStepResult (Chapter 3), ToolManifest (Chapter 22), ContextManifest and MemoryRecord (Chapter 6), TaskEnvelope (Chapter 18), EvaluationResult (Chapter 25), and ReleaseManifest (Chapter 27). Compatibility suites verify cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.\par
 
 \section{Make the safe path the easy path}
 
 Developer experience should compress setup and diagnosis time while making authority, versions, risk, evidence, and cost visible. A convenient SDK that hides those concerns transfers complexity to production incidents.\par
 
-\BookDiagram{assets/diagrams/dx-golden-path.pdf}{Figure 7-4 — Developer golden path from scaffold to operated release}{dx-golden-path}
+\BookDiagram{assets/diagrams/dx-golden-path.pdf}{Figure 7-3 — Developer golden path from scaffold to operated release}{dx-golden-path}
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -4157,7 +4137,7 @@ Developer experience should compress setup and diagnosis time while making autho
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Stage} & \color{white}\bfseries \textbf{Developer action} & \color{white}\bfseries \textbf{Platform assistance} & \color{white}\bfseries \textbf{Evidence} \\
 \endhead
-Scaffold & Select template and risk tier & AgentSpec, ownership, tests, eval, deployment skeleton & Purpose, owner, acceptance, data/effect class \\
+Scaffold & Select template and use-case tier (Chapter 26) & AgentSpec, ownership, tests, eval, deployment skeleton & Purpose, owner, acceptance, data/effect class \\
 \rowcolor{BookLight}
 Develop & Add instructions, tools, Skills, context, workflow & Local runtime, mocks, seeded simulation, hot reload & Unit/contract tests and permissions \\
 Debug & Inspect and compare run graphs & Trace viewer, state/time travel, prompt/context diff, replay & Reproducible failure and first divergence \\
@@ -4165,36 +4145,24 @@ Debug & Inspect and compare run graphs & Trace viewer, state/time travel, prompt
 Evaluate & Run golden, adversarial, failure, load suites & Dataset/evaluator registry and slice reports & Thresholds, reviewers, baseline, uncertainty \\
 Package & Build immutable bundle & Lock, SBOM, signing, provenance, compatibility & ReleaseManifest and rollback target \\
 \rowcolor{BookLight}
-Promote & Bind environment and canary & Policy gate, approval, progressive delivery & ValidationReport and risk approval \\
+Promote & Bind environment and canary & Policy gate, approval, progressive delivery & ValidationReport and ReleaseGateDecision (Chapter 25); risk approval (promotion detail: Chapter 27) \\
 Operate & Observe SLO, quality, safety, cost & Alerts, runbooks, reconciliation, incident tools & On-call and operational ownership \\
 \rowcolor{BookLight}
-Improve & Build ChangeBundle from evidence & Trace mining, dataset curation, experiment workflow & Causal hypothesis, tests, approval, learning record \\
+Improve & Build ChangeBundle from evidence & Trace mining, dataset curation, experiment workflow & Causal hypothesis, tests, approval, reviewed regression case (learning loop: Chapter 25) \\
 \end{longtable}
 \BookTableEnd
 
+A paved road has costs. Its abstractions lag new framework features, and the platform team can become a queue. Allow negotiated extensions behind the same contracts (P-12, Appendix A), and route any deviation through a scoped, expiring exception (Chapter 26 § Make review predictable and proportional) rather than an unrecorded bypass.\par
+
+\section{What the road looks like to a developer}
+
+A developer meets the road as a few declarations. The mortgage team's agent declares its AgentSpec \lstinline[style=bookinline]!mortgage-evidence-agent@0.1.0!; a Skill requirement \lstinline[style=bookinline]!mortgage.evidence.read@^0.1!, which is a compatible range rather than a digest (Chapter 8 pins the digest per run); the tool \lstinline[style=bookinline]!mortgage.case.read@1! at effect risk class R1 (Chapter 22); the knowledge snapshot \lstinline[style=bookinline]!mortgage-policy@approved-2026.09!; budgets; and the permissions it needs. Those permissions are a ceiling, intersected with the caller's grants at run time (Chapter 21); declaring them grants nothing. The platform compiles these declarations to the Chapter 3 contracts, and those contracts, not the SDK's method names, are the stable interface.\par
+
+The command line walks the golden path, from \lstinline[style=bookinline]!agentctl init mortgage-evidence-agent! through \lstinline[style=bookinline]!agentctl promote --from staging --to production --canary 5%! to \lstinline[style=bookinline]!agentctl rollback mortgage-evidence-agent@0.1.0 --to 0.0.9!. Build one immutable artifact, pin everything listed in Chapter 27 § Versioned objects, and bind endpoints, identities, secrets, sources, quotas, regions, and review queues only at deployment.\par
+
 \section{Test the contracts before you test the model}
 
-\BookDiagram{assets/diagrams/test-pyramid.pdf}{Figure 7-5 — Testing and simulation pyramid}{test-pyramid}
-
-Deterministic units verify schemas, policy helpers, acceptance, routes, reducers, calculations, and state transitions. Contract tests verify identity, idempotency, timeout/unknown-effect semantics, protocol capability, errors, and telemetry. Component evaluations measure retrieval, tools, arguments, structured output, safety, and memory. Trajectory simulation tests planning, handoffs, loops, deadlines, cancellation, duplicates, dependency degradation, and human delay. End-to-end staging uses exact model, identity, gateway, data, and integration versions. Canary and shadow evaluation use explicit stop and rollback conditions.\par
-
-\section{CLI and delivery workflow}
-
-BASH · illustrative command sequence\par
-
-\needspace{93.6pt}
-\begin{lstlisting}[style=bookcode,title={BASH},language=bookbash]
-agentctl init mortgage-evidence-review --template regulated-workflow --risk high
-agentctl dev --scenario missing-income-evidence --trace
-agentctl test --unit --contracts --failure-injection
-agentctl eval --dataset mortgage-evidence-regression@1 --compare production
-agentctl package --lock --sbom --sign
-agentctl promote --from staging --to production --canary 5%
-agentctl traces diff run:failed run:accepted
-agentctl rollback mortgage-evidence-review@0.1.0 --to 0.0.9
-\end{lstlisting}
-
-Use one immutable artifact across environments; bind endpoints, identities, secrets, sources, quotas, regions, and review queues at deployment. Pin SDKs, adapters, model aliases, tool schemas, Skills, MCP servers, policy bundles, evaluators, and knowledge snapshots. A model/provider swap is a behavior change—not harmless configuration.\par
+Most defects are cheaper to catch without a model. The platform makes those tests cheap to write by supplying the harnesses: tool mocks, seeded simulation, a controllable clock, fault injection, and recorded-trace replay. The full set of evaluation levels, and which gate each feeds, is defined in Chapter 25 § Layer tests from contracts to outcomes.\par
 
 \section{What the evidence lets us conclude}
 
@@ -4214,17 +4182,91 @@ Framework portability & Public agent SDKs differ in cancellation, streaming, too
 
 The discussion above draws on R29; R31; R32. Appendix K lists the complete sources and records their authority, version, and scope.\par
 
+\section{A sensible place to start}
+
+The suite below makes that evidence row executable. It drives any adapter with scripted test models and checks four promises of the Chapter 3 seam: a typed disposition, reported usage, cancellation that reaches the model call, and SDK errors mapped to the platform's result shape. A failed check is reported as a named gap to publish as a known limitation of that adapter.\par
+
+\BookSnake · An adapter conformance suite that reports every gap\par
+
+\needspace{608.8pt}
+\begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
+@dataclass(frozen=True)
+class CheckResult:
+    name: str
+    passed: bool
+    detail: str
+
+
+@dataclass(frozen=True)
+class ConformanceReport:
+    results: tuple[CheckResult, ...]
+
+    @property
+    def gaps(self) -> tuple[str, ...]:
+        """Failed checks: publish each as a known limitation of this adapter."""
+        return tuple(r.name for r in self.results if not r.passed)
+
+
+VALID_OUTPUT = json.dumps(
+    {"status": "completed", "summary": "Evidence reviewed.", "evidence_artifact_ids": []}
+)
+
+
+async def check_typed_disposition(execute: Adapter, request, context) -> CheckResult:
+    result = await execute(request, context, model=ScriptedModel([Say(VALID_OUTPUT)]))
+    status = result.get("status")
+    return CheckResult("typed_disposition", status in PLATFORM_STATUSES,
+                       f"status={status!r}")
+
+
+async def check_usage_reported(execute: Adapter, request, context) -> CheckResult:
+    result = await execute(request, context, model=ScriptedModel([Say(VALID_OUTPUT)]))
+    return CheckResult("usage_reported", bool(result.get("usage")),
+                       "usage present" if result.get("usage") else "no usage field")
+
+
+async def check_cancellation(execute: Adapter, request, context,
+                             timeout_s: float = 2.0) -> CheckResult:
+    model = BlockingModel()
+    task = asyncio.create_task(execute(request, context, model=model))
+    await asyncio.wait_for(model.started.wait(), timeout_s)
+    task.cancel()
+    try:
+        result = await asyncio.wait_for(task, timeout_s)
+    except asyncio.CancelledError:
+        return CheckResult("cancellation_propagates", model.cancelled,
+                           "cancelled through to the model call")
+    return CheckResult("cancellation_propagates", False,
+                       f"swallowed cancellation and returned {result.get('status')!r}")
+
+
+async def check_error_mapping(execute: Adapter, request, context) -> CheckResult:
+    try:
+        result = await execute(request, context, model=ScriptedModel([Say("not json")]))
+    except AgentsException as error:
+        return CheckResult("sdk_errors_mapped", False,
+                           f"leaked SDK exception {type(error).__name__}")
+    mapped = result.get("status") == "failed" and bool(result.get("error_code"))
+    return CheckResult("sdk_errors_mapped", mapped, f"status={result.get('status')!r}")
+
+
+async def run_conformance(execute: Adapter, request, context) -> ConformanceReport:
+    checks = (check_typed_disposition, check_usage_reported,
+              check_cancellation, check_error_mapping)
+    return ConformanceReport(tuple([await c(execute, request, context) for c in checks]))
+\end{lstlisting}
+
 \section{If this fails in production}
 
 \begin{enumerate}
 
-\item Start from the accepted business outcome and walk backward through the causal run graph.
+\item Check that the run's RunManifest references a ReleaseManifest whose every pin resolves. A run without one bypassed the road.
 
-\item Find the first divergent span: input classification, source or freshness, prompt, route, model, tool, arguments, policy, effect, approval, or acceptance.
+\item Compare the artifact digest across environments. A difference means the one-artifact rule broke at build or binding.
 
-\item Diff the failing run against the nearest accepted run — prompt, context manifest, and every pinned version — before changing anything.
+\item Run the adapter conformance suite against the deployed adapter version. A gap such as dropped cancellation is a platform defect, not an application defect.
 
-\item Do not edit the prompt until the evidence locates the failing responsibility. A prompt change that hides a policy or contract defect removes the signal without removing the fault.
+\item For behavior inside a run, follow Chapter 24 § Debugging method. Do not edit the prompt until the evidence locates the failing responsibility.
 
 \end{enumerate}
 
@@ -4232,7 +4274,7 @@ The discussion above draws on R29; R31; R32. Appendix K lists the complete sourc
 
 \textbf{\ensuremath{\checkmark}} One immutable artifact crosses every environment; endpoints, identities, secrets, sources, quotas, regions, and review queues bind at deployment.\par
 
-\textbf{\ensuremath{\checkmark}} SDKs, adapters, model aliases, tool schemas, Skills, MCP servers, policy bundles, evaluators, and knowledge snapshots are pinned in the release manifest.\par
+\textbf{\ensuremath{\checkmark}} SDKs, adapters, model aliases, tool schemas, Skills, MCP servers, policy bundles, evaluators, and knowledge snapshots are pinned in the ReleaseManifest.\par
 
 \textbf{\ensuremath{\checkmark}} A model or provider swap ships as a behavior change with evaluation, canary, and rollback — never as configuration.\par
 
@@ -4244,9 +4286,9 @@ The discussion above draws on R29; R31; R32. Appendix K lists the complete sourc
 
 \begin{enumerate}
 
-\item Take one existing agent and list which of the sixteen platform capabilities it reimplements locally. Estimate the cost of replacing each with the platform service.
+\item Take one existing agent and list which of the fifteen platform capabilities it reimplements locally. Estimate the cost of replacing each with the platform service.
 
-\item Write an adapter conformance test that fails when a framework silently drops cancellation mid-run.
+\item Add a streaming check to the conformance suite, run it against a second framework's adapter, and record each gap as a known limitation.
 
 \end{enumerate}
 
@@ -4262,10 +4304,10 @@ The discussion above draws on R29; R31; R32. Appendix K lists the complete sourc
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Question} & \color{white}\bfseries \textbf{Strong answer} \\
 \endhead
-Why should platform contracts, not framework objects, be the stable interface? & Vendor message objects change between releases and differ in semantics. Contracts such as AgentSpec, ToolManifest, and ReleaseManifest keep applications, evidence, and audits stable while adapters absorb the change. \\
+Who owns a Skill: the platform, the domain, or the application? & The platform owns the registry, manifest schema, signing, and resolution; the domain-capability owner owns content, evaluation suite, and support window; the application declares requirements and acceptance. \\
 \rowcolor{BookLight}
 What makes a paved road adopted rather than mandated? & It removes work the team would otherwise do — identity, policy, tracing, durable execution, release — while leaving domain behavior, topology, and acceptance to the team. A road that constrains domain decisions gets bypassed. \\
-Why is a model or provider swap not configuration? & Behavior, cost, latency, and failure modes all change without application code changing, so it requires the same evaluation, canary, and rollback evidence as a code release. \\
+How do you detect a team bypassing the paved road? & Runs without a ReleaseManifest, tools unknown to the gateway registry, SDK calls outside AgentRuntime in dependency scans, and traces without platform correlation. \\
 \rowcolor{BookLight}
 What does the golden path make visible that a convenient SDK hides? & Authority, versions, risk, evidence, and cost. An SDK that hides them does not remove the complexity; it relocates it to production incidents. \\
 When is framework portability proven? & Only when adapter conformance tests pass across cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior. Parity is never inferred from documentation. \\
@@ -4274,14 +4316,14 @@ When is framework portability proven? & Only when adapter conformance tests pass
 
 \section{Where this leads next}
 
-The delivery path is established; Chapter 8 packages repeatable behavior as versioned Skills with explicit contracts and lifecycle controls.\par
+The paved road standardizes how an agent is built, tested, and released. It does not yet say how reusable behavior travels between agents without copy-and-paste; Chapter 8 packages it as versioned Skills with explicit contracts and lifecycle controls.\par
 
 \BookChapterCover{cover-images/chapter-08-package-capabilities-as-versioned-skills.png}
 
 \BookChapter{08}{Package Capabilities as Versioned Skills}
 
-\begin{bookcallout}[Northstar at this point]
-Teams begin copying prompts and tool wrappers between agents. Results diverge, fixes do not propagate, and no owner can prove which behavior reached production. Northstar introduces a Skill as the unit of reusable capability.
+\begin{bookcallout}[Where The Mortgage Case Stands]
+Teams begin copying prompts and tool wrappers between agents. Results diverge, fixes do not propagate, and no owner can prove which behavior reached production. Harborlight introduces a Skill as the unit of reusable capability.
 \end{bookcallout}
 
 \begin{bookcallout}[The Design Choice]
@@ -4290,11 +4332,9 @@ Make the Skill manifest the versioned capability contract and resolve exact rele
 
 \section{Why a prompt is not a reusable capability}
 
-Prompts and tool wrappers become hard to govern as soon as several teams copy them. A Skill gives a meaningful capability an owner, an interface, a release, and evidence that it was tested. This chapter explains what belongs in that package and when versioning the whole capability is more useful than versioning an instruction string by itself.\par
+Prompts and tool wrappers become hard to govern as soon as several teams copy them. A Skill gives a meaningful capability an owner, an interface, a release, and evidence that it was tested. This chapter explains what belongs in that package and when versioning the whole capability is more useful than versioning an instruction string by itself. A small prompt edit can alter tool selection, data exposure, or output shape even though no application code changed.\par
 
-\section{What belongs inside a Skill}
-
-A Skill is useful when it can be reviewed, tested, versioned, and retired as a coherent capability. The prompt is only one part. The package also needs to say what inputs it accepts, what evidence it may read, which tools it can propose, what outputs it guarantees, how risk is classified, and how operators will know it is healthy. A small prompt edit can alter tool selection, data exposure, or output shape even though no application code changed.\par
+Skills separate reuse from copy-and-paste. An application requests a capability such as \lstinline[style=bookinline]!mortgage.evidence.read!; it does not embed a specific prompt and connector.\par
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -4308,7 +4348,7 @@ Skill Registry and resolver & semantic discovery to policy-bound resolution & Sk
 
 \section{The Skill manifest}
 
-A Skill is the smallest independently owned and versioned package that lets an agent perform a meaningful capability. Its manifest names interface schemas, instructions, eligible tools, knowledge sources, optional workflow template, policy constraints, side-effect class, observability fields, evaluation suite, owner, lifecycle, and immutable digest.\par
+A Skill is the smallest independently owned and versioned package that lets an agent perform a meaningful capability. Its manifest names interface schemas, instructions, eligible tools, knowledge sources, optional workflow template, policy constraints, risk ceiling, observability fields, evaluation suite, owner, and immutable digest.\par
 
 That list is abstract until you see one. A manifest is a declaration, not code:\par
 
@@ -4320,7 +4360,6 @@ skill: mortgage.evidence.read
 version: 0.1.0
 digest: sha256:9f3c...            # immutable; the version alias may move, this cannot
 owner: mortgage-platform-team
-side_effect_class: read_only      # governs which policy gates apply at resolution
 
 interface:
   input:  MortgageEvidenceRequest@1
@@ -4334,17 +4373,43 @@ requires:
 policy:
   data_classes: [mortgage_financial]
   regions:      [us]             # resolution fails outside these, it does not warn
-  min_risk_tier: 1
+  # highest effect risk class (R0–R4, Chapter 22) this Skill is certified for;
+  # resolution refuses any requirement above it
+  risk_ceiling: R1
 
 evaluation:
   suite: mortgage-evidence-regression@1
   gates: {accuracy: 0.94, cross_tenant_leak: 0}
-lifecycle: active
 \end{lstlisting}
 
-Three things in that file are doing more work than they appear to. The \lstinline[style=bookinline]!digest! is what a run actually pins, so an alias moving under you cannot change behavior mid-flight. The \lstinline[style=bookinline]!requires! block is exhaustive — a Skill that reaches for a tool not listed there fails, which is what makes the manifest a contract rather than documentation. And \lstinline[style=bookinline]!evaluation.gates! means promotion is decided by evidence, not by a reviewer's judgment on the day.\par
+Three things in that file are doing more work than they appear to. The \lstinline[style=bookinline]!digest! is what a run actually pins, so an alias moving under you cannot change behavior mid-flight. The \lstinline[style=bookinline]!requires! block is exhaustive: a tool not listed there is outside the step's eligible set, so the Tool Gateway refuses the call, which is what makes the manifest a contract rather than documentation. And \lstinline[style=bookinline]!evaluation.gates! means promotion is decided by evidence, not by a reviewer's judgment on the day.\par
 
-Skills separate reuse from copy-and-paste. An application requests a capability such as \lstinline[style=bookinline]!mortgage.evidence.read!; it does not embed a specific prompt and connector.\par
+Lifecycle is not in the manifest. The manifest is immutable and digested, so its state lives in the registry's release record (SkillRelease), which changes as evidence arrives.\par
+
+Every change, even one instruction sentence, produces a new digest and must re-pass certification. The version number communicates interface compatibility only: MAJOR for a breaking input or output schema change, a widened \lstinline[style=bookinline]!requires! set, or a raised risk ceiling, each of which makes consumers re-run their policy review; MINOR for compatible additions; PATCH for instruction or example changes that keep the interface. Behavioral compatibility is never inferred from the number; the evaluation gates establish it and the release records it.\par
+
+\subsection{Skill, tool, agent, pack — which is which}
+
+\needspace{5\baselineskip}
+\BookTableStart
+\fontsize{7.2}{9}\selectfont
+\begin{longtable}{@{}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}Y{0.1880\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Unit} & \color{white}\bfseries \textbf{What it is} & \color{white}\bfseries \textbf{Contract} & \color{white}\bfseries \textbf{Owner} & \color{white}\bfseries \textbf{Enforced by} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Unit} & \color{white}\bfseries \textbf{What it is} & \color{white}\bfseries \textbf{Contract} & \color{white}\bfseries \textbf{Owner} & \color{white}\bfseries \textbf{Enforced by} \\
+\endhead
+Tool & One typed operation with effect semantics & ToolManifest (Chapter 22) & Tool owner & Tool Gateway on every call (Chapters 2, 22) \\
+\rowcolor{BookLight}
+Skill & Instructions, interface, eligible tools, knowledge, policy, and evaluation for one reusable capability, executed inside an agent step & SkillManifest & Domain-capability owner & Resolver (this chapter), then Tool Gateway \\
+Agent & A configured worker that runs bounded steps and requires Skills & AgentSpec, executed as AgentStepRequest (Chapter 3) & Application team & AgentRuntime \\
+\rowcolor{BookLight}
+Skill Pack & Compatible, co-released Skills plus shared policy and evaluations & SkillPackManifest (Chapter 9) & Pack owner & Registry and release (Chapter 27) \\
+\end{longtable}
+\BookTableEnd
+
+One deterministic operation with an effect is a tool; model judgment over several tools or sources, reused across agents, is a Skill; anything that owns a run, its acceptance, and its topology is an agent. Chapter 5's capability catalog is the discovery view across the tool and Skill registries; the registries stay separate because their contracts and enforcement points differ.\par
 
 \subsection{Discovery is not permission}
 
@@ -4352,7 +4417,7 @@ This is the distinction the chapter turns on: conflating discovery with resoluti
 
 \BookDiagram{assets/diagrams/skill-resolution.pdf}{Figure 8-1 — Discovery proposes candidates; resolution pins exactly one version, or fails}{skill-resolution}
 
-\textbf{Discovery} is semantic and permissive. It searches a catalog for Skills that might satisfy a stated need, and it may legitimately return several. It answers \emph{what exists}.\par
+\textbf{Discovery} is semantic and broad. It searches a catalog for Skills that might satisfy a stated need, and it may legitimately return several. It answers \emph{what exists}. Its candidates are input to resolution, not a menu for the model. When a model must choose among Skills, it sees only a shortlist that resolution has already made eligible (Chapter 5 § Capability and API catalog; AP-12 in Chapter 17).\par
 
 \textbf{Resolution} is deterministic and restrictive. Given one requirement and the run's envelope, it filters by tenant, purpose, subject and actor grants, data class, region, risk, compatibility, release stage, health, and cost — then pins exactly one version by digest. It answers \emph{what this run may use, right now}.\par
 
@@ -4367,16 +4432,43 @@ Input & A capability need in natural terms & A requirement plus the run envelope
 Method & Semantic search over the catalog & Deterministic policy evaluation \\
 Output & Zero or more candidates & Exactly one pinned digest, or a failure \\
 \rowcolor{BookLight}
-May a model influence it? & Yes — it can describe the need & \textbf{No} \\
+May a model influence it? & Yes — it can describe the need. It never sees unfiltered candidates. & \textbf{No} \\
 Failure mode & Returns nothing useful & Fails closed, with the rule that refused \\
 \end{tabular}
 \BookTableEnd
 
 The asymmetry matters. Discovery may be fuzzy because nothing it returns is yet permitted. Resolution may not, because its output is what will actually run. A system that lets a model pick from discovery results has skipped the gate and is back to ungoverned capability with a registry in front of it.\par
 
+The pinned release is compiled into the step. Its instructions enter the ContextManifest at trust tier 2 (Chapter 6 § The trust hierarchy of instructions); its \lstinline[style=bookinline]!requires.tools! becomes the step's eligible tool versions and its \lstinline[style=bookinline]!runtime! block the step's bounds in the AgentStepRequest (Chapter 3 § The request is bounded before the model sees it); its digest is recorded in the RunManifest (Chapter 4 § RunManifest).\par
+
+Resolution decides which Skill may run. It authorizes none of the calls that Skill proposes: each still passes the six gates at the Tool Gateway (Chapter 2) against the subject, purpose, and exact resource (Chapter 22). Because Skill instructions direct behavior, Skill content is executable supply chain, which is why Chapter 9 signs and attests packs.\par
+
+A Skill is bound four times, and each binding fixes something different:\par
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{When a Skill is bound} & \color{white}\bfseries \textbf{What is fixed} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{When a Skill is bound} & \color{white}\bfseries \textbf{What is fixed} \\
+\endhead
+Build (Chapter 7) & A requirement: capability plus compatible version range, not a digest \\
+\rowcolor{BookLight}
+Release (Chapters 9, 27) & The exact Skill and pack versions eligible for this release \\
+Plan compile (Chapter 12) & Each plan node's requirement, bound to one release from that set \\
+\rowcolor{BookLight}
+Run (this chapter) & Resolution against the run envelope pins one digest, recorded in the RunManifest and never re-resolved for the life of the run \\
+\end{longtable}
+\BookTableEnd
+
+Each later binding may only narrow the earlier one.\par
+
 \subsection{Skill lifecycle}
 
-Draft → Certified → Staged → Active → Deprecated → Revoked is evidence-driven. Each transition requires an artifact rather than an approval conversation.\par
+Draft → Certified → Staged → Active → Deprecated → Revoked is evidence-driven. Each transition requires an artifact rather than an approval conversation. When a Skill serves a use case at tier T3 or T4 (Chapter 26 § Match the control to the risk), the required artifact includes a recorded risk approval.\par
 
 \needspace{5\baselineskip}
 \BookTableStart
@@ -4389,32 +4481,32 @@ Draft → Certified → Staged → Active → Deprecated → Revoked is evidence
 \textbf{Certified} & Evidence exists; not yet deployed & A staging release decision \\
 \textbf{Staged} & Running in staging, shadow, or a limited canary & Canary evidence within gates \\
 \rowcolor{BookLight}
-\textbf{Active} & Resolvable by production runs & — \\
-\textbf{Deprecated} & Still resolvable for runs already using it & The compatibility window expiring \\
+\textbf{Active} & Resolvable by production runs & A successor release, or an owner decision to retire \\
+\textbf{Deprecated} & Not resolvable for new runs; runs that pinned it keep executing that digest & The compatibility window expiring \\
 \rowcolor{BookLight}
-\textbf{Revoked} & Not resolvable by anything new & — \\
+\textbf{Revoked} & Not resolvable; in-flight runs pinned to it pause or migrate by risk class & — \\
 \end{tabular}
 \BookTableEnd
 
-Certification includes contract, unit, simulation, trajectory, threat, failure-injection, load, and operator-readiness checks. Deprecation retains a compatibility window for active runs — a long-running mortgage evidence review started three weeks ago must finish on the version it pinned. Revocation removes the Skill from all resolution and may trigger workflow pause or migration by risk class. It normally follows the compatibility window; revoking earlier is the one transition that can affect a run already in flight, which is why it is reserved for a defect serious enough to justify that.\par
+Certification includes contract, unit, simulation, trajectory, threat, failure-injection, load, and operator-readiness checks (levels defined in Chapter 25 § Layer tests from contracts to outcomes). Deprecation retains a compatibility window for active runs — a long-running mortgage evidence review started three weeks ago must finish on the version it pinned. Revocation removes the Skill from all resolution and may trigger workflow pause or migration by risk class. It normally follows the compatibility window; revoking earlier is the one transition that can affect a run already in flight, which is why it is reserved for a defect serious enough to justify that. Revocation is the Skill-scoped case of Chapter 23 § Stop new risky work without abandoning effects; the rule that rollback changes only new work is Chapter 27 § Roll back assignment, not history.\par
 
 \subsection{Skill contract surface}
 
 \begin{itemize}
 
-\item describe(requirement) -> candidates
+\item \lstinline[style=bookinline]!describe(requirement) -> candidates!
 
-\item resolve(requirement, run\_envelope) -> SkillRelease
+\item \lstinline[style=bookinline]!resolve(requirement, run_envelope) -> SkillRelease!
 
-\item invoke(step\_request) -> AgentStepResult
+\item \lstinline[style=bookinline]!bind(release, step_request) -> AgentStepRequest!. Skills are not called directly; the bound request is executed by AgentRuntime (Chapter 3).
 
-\item evaluate(release, dataset\_version) -> EvaluationReport
+\item \lstinline[style=bookinline]!evaluate(release, dataset_version) -> EvaluationResult! (Chapter 25)
 
-\item promote(release, stage, evidence) -> ReleaseDecision
+\item \lstinline[style=bookinline]!promote(release, stage, evidence) -> PromotionDecision! (Chapter 27), where the evidence includes Chapter 25's ReleaseGateDecision
 
 \end{itemize}
 
-The registry scales as a read-heavy control-plane service with immutable manifests, version indexes, cached eligibility metadata, and regional last-known-good replicas. Runtime execution remains in regional cells.\par
+The registry scales as a read-heavy service in the global control tier with immutable manifests, version indexes, cached eligibility metadata, and regional last-known-good replicas. Runtime execution remains in regional execution cells.\par
 
 \section{What the evidence lets us conclude}
 
@@ -4436,18 +4528,17 @@ The discussion above draws on R05; R07. Appendix K lists the complete sources an
 
 \section{A sensible place to start}
 
-\subsection{Skill manifest and resolver}
+The resolver filters by capability, purpose, region, risk ceiling, and data class, then picks the highest eligible SemVer. Production resolution also takes the run envelope (subject and actor grants, tenant), evaluation, health, cost, and rollout policy, which the example omits. Lifecycle state sits in the registry's release record, so promotion never moves a digest.\par
 
-\BookSnake · Resolving a skill version under policy and SemVer precedence\par
+\BookSnake · A Skill registry: policy-bound resolution and pinned Skill Packs\par
 
+\needspace{332.8pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class SkillRegistry:
     def __init__(self) -> None:
         self._skills: dict[str, SkillManifest] = {}
-        self._packs: dict[str, SkillPackManifest] = {}
         # Release records: lifecycle state per version, outside the digest.
         self._skill_state: dict[str, LifecycleState] = {}
-        self._pack_state: dict[str, LifecycleState] = {}
 
     def register_skill(self, skill: SkillManifest) -> str:
         key = f"{skill.skill_id}@{skill.version}"
@@ -4461,27 +4552,6 @@ class SkillRegistry:
         if key not in self._skills:
             raise LookupError(f"unknown skill: {key}")
         self._skill_state[key] = state
-
-    def register_pack(self, pack: SkillPackManifest) -> str:
-        key = f"{pack.pack_id}@{pack.version}"
-        if key in self._packs:
-            raise ValueError(f"skill pack already exists: {key}")
-        missing = set(pack.skill_versions) - self._skills.keys()
-        if missing:
-            raise ValueError(f"pack references unknown skills: {sorted(missing)}")
-        self._packs[key] = pack
-        self._pack_state[key] = "draft"
-        return key
-
-    def set_pack_state(self, key: str, state: LifecycleState) -> None:
-        if key not in self._packs:
-            raise LookupError(f"unknown skill pack: {key}")
-        if state == "active" and any(
-            self._skill_state[skill_key] != "active"
-            for skill_key in self._packs[key].skill_versions
-        ):
-            raise ValueError("active pack must reference only active skills")
-        self._pack_state[key] = state
 
     def resolve(self, requirement: SkillRequirement) -> SkillManifest:
         candidates = [
@@ -4498,34 +4568,13 @@ class SkillRegistry:
             raise LookupError("no eligible skill")
         # Production resolution also uses evaluation, health, cost, and rollout policy.
         return max(candidates, key=lambda skill: _semver_key(skill.version))
-
-    def resolve_pack(
-        self, pack_key: str, *, allow_deprecated_for_replay: bool = False
-    ) -> tuple[SkillManifest, ...]:
-        try:
-            pack = self._packs[pack_key]
-        except KeyError as error:
-            raise LookupError("unknown skill pack") from error
-        permitted_pack_states = {"active"}
-        permitted_skill_states = {"active"}
-        if allow_deprecated_for_replay:
-            permitted_pack_states.add("deprecated")
-            permitted_skill_states.add("deprecated")
-        if self._pack_state[pack_key] not in permitted_pack_states:
-            raise LookupError("skill pack is not available for this resolution mode")
-        if any(
-            self._skill_state[key] not in permitted_skill_states
-            for key in pack.skill_versions
-        ):
-            raise LookupError("skill pack contains unavailable skill")
-        return tuple(self._skills[key] for key in pack.skill_versions)
 \end{lstlisting}
 
 \section{If this fails in production}
 
 \begin{enumerate}
 
-\item Resolve a Skill version from the recorded requirement and compare registry evidence.
+\item Read the pinned digest and the recorded requirement and envelope from the RunManifest. Re-run resolution as of the run's start and compare: a different answer means the registry changed underneath; the same answer locates the defect in that Skill version.
 
 \item Diff Skill manifests across a regression.
 
@@ -4535,9 +4584,9 @@ class SkillRegistry:
 
 \section{What to verify before production}
 
-\textbf{\ensuremath{\checkmark}} Every Skill has an owner, immutable version, digest, lifecycle, and support window.\par
+\textbf{\ensuremath{\checkmark}} Every Skill has an owner, immutable version, digest, lifecycle state, and compatibility window.\par
 
-\textbf{\ensuremath{\checkmark}} Inputs, outputs, side effects, risk, data, region, and observability are explicit.\par
+\textbf{\ensuremath{\checkmark}} Inputs, outputs, risk ceiling, data, region, and observability are explicit.\par
 
 \textbf{\ensuremath{\checkmark}} Discovery is semantic; resolution is deterministic and policy-bound.\par
 
@@ -4570,9 +4619,9 @@ class SkillRegistry:
 What is a Skill? & A versioned capability package combining contract, instructions, tools, knowledge, policy, workflow, tests, release evidence, and ownership. \\
 \rowcolor{BookLight}
 How is Skill discovery different from resolution? & Discovery finds semantic candidates; resolution applies deterministic eligibility, compatibility, health, policy, and release rules to pin one version. \\
-What makes a Skill portable? & Provider-neutral typed interfaces and artifact references, with SDK-specific adapters kept behind the runtime boundary. \\
+Does resolving a Skill authorize its tool calls? & No. Resolution selects which Skill version may run; every tool call it proposes still passes the Tool Gateway's validation, authorization, and effect controls. \\
 \rowcolor{BookLight}
-How should a Skill be tested? & Contract, deterministic unit, simulation, trajectory, threat, data-boundary, failure-injection, regression, load, and canary tests. \\
+How should a Skill be tested? & Contract, unit, simulation, trajectory, threat, failure-injection, load, and operator-readiness checks (levels in Chapter 25). \\
 When should behavior remain application-specific? & When it encodes one product transaction, unstable workflow, private data boundary, or ownership model that should not be generalized. \\
 \end{longtable}
 \BookTableEnd
@@ -4586,7 +4635,7 @@ Individual Skills are governable; Chapter 9 composes them into domain packs with
 \BookChapter{09}{Turn Skills into a Coherent Domain Platform}
 
 \begin{bookcallout}[Where The Mortgage Case Stands]
-Harborlight needs a complete domain experience, not isolated Skills. Evidence retrieval, document validation, income and property checks, policy explanation, and underwriter-package preparation must ship as a compatible, evaluated pack.
+Harborlight needs a complete domain experience, not isolated Skills. Evidence retrieval, document validation, income and property checks, policy explanation, underwriter-package preparation, and document requests must ship as a compatible, evaluated pack.
 \end{bookcallout}
 
 \begin{bookcallout}[The Design Choice]
@@ -4595,9 +4644,7 @@ Ship domain behavior as immutable Skill Packs with compatibility, policy, evalua
 
 \section{Why domain capabilities need to ship together}
 
-One Skill can be useful; a domain workflow needs several Skills to agree about schemas, policy, terminology, evaluation, and operations. This chapter shows how to compose those pieces into a Skill Pack that can be promoted as one release. The payoff is visible during change: a mortgage team can roll out a compatible capability bundle instead of discovering incompatibilities in production one agent at a time.\par
-
-\section{Compatibility, not convenience}
+One Skill can be useful; a domain workflow needs several Skills to agree about schemas, policy, terminology, evaluation, and operations. This chapter shows how to compose those pieces into a Skill Pack that can be promoted as one release.\par
 
 Shipping related Skills together is less about convenience than compatibility. Suppose document validation begins returning a new evidence schema while income verification still expects the old one. Independent releases can leave a run in the gap between them. A pack pins versions known to work together, tests shared workflow and policy as one behavior, and gives operators one unit to promote or roll back.\par
 
@@ -4611,11 +4658,36 @@ Skill Pack Registry and release pipeline & pack authoring to tenant/runtime use 
 \end{tabular}
 \BookTableEnd
 
+\section{What compatibility means}
+
+A pack build produces a CompatibilityReport; any failed check blocks the pack from certification.\par
+
+\needspace{5\baselineskip}
+\BookTableStart
+\small
+\begin{tabular}{@{}Y{0.4700\linewidth}Y{0.4700\linewidth}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Check} & \color{white}\bfseries \textbf{Fails when} \\
+Skill-to-Skill schemas & A producer's output schema does not satisfy the consumer's input schema, as in the evidence-schema gap above \\
+\rowcolor{BookLight}
+Tool schemas & Two Skills require incompatible versions of one tool \\
+Policy obligations & Skills declare conflicting data-class or region constraints \\
+\rowcolor{BookLight}
+Workflow contracts & A workflow template expects a Skill output the pack does not provide \\
+Knowledge versions & Skills pin different snapshots of the same source \\
+\rowcolor{BookLight}
+Runtime and model requirements & Skills need different adapter or model capabilities \\
+Deprecation windows & A pinned Skill's compatibility window ends before the pack's support window \\
+\end{tabular}
+\BookTableEnd
+
+This is Skill-to-Skill compatibility inside a release. Chapter 27's release compatibility check is a different test, between a run's pinned release and the workers that may execute it.\par
+
 \section{From one capability to a coherent domain experience}
 
-A Skill Pack composes a coherent domain experience. Harborlight’s mortgage-evidence pack pins evidence retrieval, document validation, income and property checks, policy explanation, underwriter-package preparation, and document-request Skills. It also pins shared policy, taxonomy, knowledge strategy, workflow templates, evaluation datasets, dashboards, and runbooks.\par
+A Skill Pack composes a coherent domain experience. Harborlight’s mortgage-evidence pack pins the Skills named above, together with shared policy, taxonomy, knowledge strategy, workflow templates, evaluation datasets, dashboards, and runbooks.\par
 
-A pack is not a directory of prompts. The pack manifest declares dependency constraints, schema compatibility, required runtime capabilities, data and region policy, risk ceiling, evaluation gates, release aliases, owner, and support window. A pack can expose a smaller capability surface to each agent even though the complete domain distribution contains more Skills.\par
+A pack is not a directory of prompts. The pack manifest declares dependency constraints, schema compatibility, required runtime capabilities, data and region policy, risk ceiling, evaluation gates, release aliases, owner, and support window. A pack can expose a smaller capability surface to each agent even though the complete domain distribution contains more Skills: each AgentSpec names the pack Skills it requires, and resolution refuses any other Skill for that agent's steps, so least agency (Chapter 2, principle 2) holds inside a pack. The same structure fits any domain where several Skills must agree on schemas and policy.\par
 
 \subsection{Installing a pack grants nothing}
 
@@ -4640,23 +4712,19 @@ Declare its dependency and risk ceiling & Change the installing tenant's grants 
 
 A business unit that installs the mortgage-evidence pack and has no entitlement to the income-verification source gets a pack whose income-verification Skill will not resolve for its runs. That is the correct outcome, and it is why sharing a pack across business units is a policy and data-boundary review rather than a package install.\par
 
-\subsection{Pack governance and sharing}
+The refusal should surface before work starts, at plan compilation (Chapter 12 § Compile-time checks) or admission, naming the rule that denied it, never mid-run. The installing tenant's grants are combined by intersection with the subject's and actor's (Chapter 21).\par
 
-Packs move through signed releases and aliases such as development, staging, and production. Tenant rollout policy can pin a version or cohort.\par
+\subsection{Pack lifecycle, ownership, and release}
 
-\subsection{Domain pack examples}
+A lifecycle state (Chapter 8) is a version's trust status; an alias is a pointer that says which pack version an environment or tenant cohort resolves. Moving an alias is a promotion and needs the same evidence, through Chapter 27's stages: shadow, canary, tenant cohort, and production. Rollback moves the alias back.\par
 
-\begin{itemize}
+An active pack may reference only active Skills, which the example enforces. To deprecate one Skill, release a new pack version that drops or replaces it; runs pinned to the old pack finish on it (Chapter 27 § Roll back assignment, not history).\par
 
-\item \textbf{Mortgage evidence review:} evidence retrieval, document validation, income and property checks, policy explanation, underwriter-package preparation, document request.
+Each Skill keeps its owner. The pack owner owns the CompatibilityReport, shared policy, pack-level evaluation, and the support window.\par
 
-\item \textbf{Customer support:} account read, entitlement, troubleshooting, refund proposal, escalation.
+The ReleaseManifest pins pack versions (Chapter 27). Each run resolves Skills only from the pinned pack and records the pack version and Skill digests in its RunManifest.\par
 
-\item \textbf{Software delivery:} repository context, test planning, code change, review, deployment evidence.
-
-\item \textbf{Financial close:} reconciliation, variance explanation, exception routing, controlled posting.
-
-\end{itemize}
+A pack is executable supply chain because Skill instructions direct behavior (trust tier 2, Chapter 6): sign it, attach SBOM and provenance, and verify them at promotion (Chapter 27 § Release attestation verification).\par
 
 \section{What the evidence lets us conclude}
 
@@ -4678,20 +4746,12 @@ The discussion above draws on R16; R17. Appendix K lists the complete sources an
 
 \section{A sensible place to start}
 
-\subsection{Skill Pack contract}
+\lstinline[style=bookinline]!register_pack! refuses unknown Skills, and \lstinline[style=bookinline]!set_pack_state! refuses to activate a pack that references any non-active Skill. \lstinline[style=bookinline]!resolve_pack! returns deprecated content only in explicit replay mode, which is Chapter 8's compatibility window in code.\par
 
-\BookSnake · implementation excerpt\par
+\BookSnake · A Skill registry: policy-bound resolution and pinned Skill Packs\par
 
-\needspace{231.6pt}
+\needspace{581.2pt}
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
-from __future__ import annotations
-import hashlib
-import json
-import re
-from typing import Literal
-from pydantic import BaseModel, Field, field_validator, model_validator
-from .contracts import SkillRequirement
-
 class SkillPackManifest(BaseModel):
     pack_id: str
     version: str
@@ -4700,13 +4760,59 @@ class SkillPackManifest(BaseModel):
     skill_versions: tuple[str, ...]
     policy_bundle_ref: str
     evaluation_suite_ref: str
-    status: Literal["draft", "active", "deprecated", "revoked"] = "draft"
 
     @field_validator("version")
     @classmethod
     def version_is_semver(cls, value: str) -> str:
         _semver_key(value)
         return value
+
+
+class SkillPackRegistry(SkillRegistry):
+    """A pack is a release unit: it pins Skill versions and grants nothing."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._packs: dict[str, SkillPackManifest] = {}
+        self._pack_state: dict[str, LifecycleState] = {}
+
+    def register_pack(self, pack: SkillPackManifest) -> str:
+        key = f"{pack.pack_id}@{pack.version}"
+        if key in self._packs:
+            raise ValueError(f"skill pack already exists: {key}")
+        missing = set(pack.skill_versions) - self._skills.keys()
+        if missing:
+            raise ValueError(f"pack references unknown skills: {sorted(missing)}")
+        self._packs[key] = pack
+        self._pack_state[key] = "draft"
+        return key
+
+    def set_pack_state(self, key: str, state: LifecycleState) -> None:
+        if key not in self._packs:
+            raise LookupError(f"unknown skill pack: {key}")
+        if state == "active" and any(
+            self._skill_state[skill_key] != "active"
+            for skill_key in self._packs[key].skill_versions
+        ):
+            raise ValueError("active pack must reference only active skills")
+        self._pack_state[key] = state
+
+    def resolve_pack(
+        self, pack_key: str, *, allow_deprecated_for_replay: bool = False
+    ) -> tuple[SkillManifest, ...]:
+        try:
+            pack = self._packs[pack_key]
+        except KeyError as error:
+            raise LookupError("unknown skill pack") from error
+        permitted = {"active"}
+        if allow_deprecated_for_replay:
+            # Chapter 8's compatibility window: pinned runs may replay deprecated content.
+            permitted.add("deprecated")
+        if self._pack_state[pack_key] not in permitted:
+            raise LookupError("skill pack is not available for this resolution mode")
+        if any(self._skill_state[key] not in permitted for key in pack.skill_versions):
+            raise LookupError("skill pack contains unavailable skill")
+        return tuple(self._skills[key] for key in pack.skill_versions)
 \end{lstlisting}
 
 \section{If this fails in production}
@@ -4715,7 +4821,7 @@ class SkillPackManifest(BaseModel):
 
 \item Expand the pack dependency graph and locate the incompatible version.
 
-\item Compare pack alias history with active run manifests.
+\item Compare pack alias history with the pack version and Skill digests recorded in each affected run's RunManifest.
 
 \item Run the pack-level evaluation suite on the failing tenant slice.
 
@@ -4760,14 +4866,14 @@ Why create a Skill Pack? & To distribute a compatible domain capability set with
 What must pack compatibility cover? & Skill and tool schemas, policy obligations, workflow contracts, knowledge versions, runtime and model requirements, and deprecation windows. \\
 Can installing a pack grant authority? & No. Installation exposes definitions; tenant policy and each run envelope still determine eligibility and exact authorization. \\
 \rowcolor{BookLight}
-How should packs be promoted? & As signed immutable releases through dev, staging, shadow, canary, production, and rollback aliases backed by evaluation evidence. \\
+How should packs be promoted? & As signed immutable releases promoted through shadow, canary, tenant-cohort, and production aliases backed by evaluation evidence; rollback reassigns the alias to the prior version. \\
 What is the main pack anti-pattern? & A monolithic prompt-and-tools bundle with hidden dependencies, no owner, no tests, and no independent versioning. \\
 \end{longtable}
 \BookTableEnd
 
 \section{Where this leads next}
 
-The platform and capability model are complete; Chapter 10 begins the pattern sequence with the smallest bounded reasoning loop.\par
+The platform now supplies the units every later pattern binds to: an agent runs one bounded step through AgentRuntime, with Skills resolved from a pinned pack and tools called through the Tool Gateway. Part IV asks what shape the reasoning inside that step, and the workflow around it, should take, starting with the smallest bounded loop in Chapter 10.\par
 
 \BookPartPage{IV}{PATTERNS THAT WORK—AND THOSE THAT FAIL}{Patterns are shortcuts for thinking, but they are only helpful when their boundaries are visible. This Part starts with the loop shapes teams reach for, then follows routing, planning, reflection, human review, and durable work. It ends with a catalog of patterns and failure shapes so a design review can ask not only “what could work?” but also “how would this fail in production?”}
 
