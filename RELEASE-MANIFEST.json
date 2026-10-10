@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 429,
+  "file_count": 458,
   "files": [
     {
       "path": ".gitattributes",
@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 1778,
-      "sha256": "5f521c5d074368d055394279d6068882ab64390de93032a6286573ea786847a8"
+      "bytes": 2370,
+      "sha256": "2601615efc401895d69d80e689788226c4838e8bce103a49f1d0e53971a06c7e"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -76,8 +76,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 15038,
-      "sha256": "da2d944d886d31b12f6877eecab5935a41222400dac3b43e0f4356fcd225c550"
+      "bytes": 14939,
+      "sha256": "49e6cab88c46f80c7b4749d2f3fdf11c9cab5723535d97581e6139415739ace7"
     },
     {
       "path": "RELEASE-CHECKLIST.md",
@@ -91,8 +91,8 @@
     },
     {
       "path": "assets/cover/cover-v1.0.0.png",
-      "bytes": 5124409,
-      "sha256": "9f1cd2dce229591d05d39bb610ab0cfd2cae4a2e80c10b727cf5b868b9a03af7"
+      "bytes": 5136147,
+      "sha256": "28ad3c99a9acc73e777f9ab184406604913abd290d11c1fb2a4e187a8eaf53d4"
     },
     {
       "path": "assets/diagrams/anti-ambient-authority.pdf",
@@ -831,153 +831,153 @@
     },
     {
       "path": "cover-images/00-overview-all-chapters.png",
-      "bytes": 4519491,
-      "sha256": "bbcf45969124f765386d0da9afa947c235f8c8c141207caa67db0bef115c7840"
+      "bytes": 4514600,
+      "sha256": "dfa15d583e26201a7cb64abab04ccaf73ff47c84003c23803a60888f74b8d0d2"
     },
     {
       "path": "cover-images/chapter-01-what-turns-an-llm-call-into-a-production-system.png",
-      "bytes": 1076725,
-      "sha256": "8e40590c3e173650a73eba6e5a531283c824762db8ed49656e4b23e60c1936c0"
+      "bytes": 1072519,
+      "sha256": "114098e5580b83b5e5aa8d4d52344efdbb3d4cd52b76515ba4a1c80f63c7be3d"
     },
     {
       "path": "cover-images/chapter-02-from-model-output-to-safe-action.png",
-      "bytes": 1074386,
-      "sha256": "d3a4015a5c1d04ba634acbc6cfb16ea9dc5ca58a0070f279ba4a3bc79bc423f1"
+      "bytes": 1070223,
+      "sha256": "ec1563449a4d8a2e1aa24b0b6ff3358c364a6705bba1708e3f1b04d074afc489"
     },
     {
       "path": "cover-images/chapter-03-keep-the-agent-framework-in-its-lane.png",
-      "bytes": 891311,
-      "sha256": "bec341d94b1c80d0c6273121adbf2a48146daad972679f2e168c32d15bee2b4a"
+      "bytes": 887375,
+      "sha256": "ca37c5b4be878bfc6429659ad3eb1116d4674faddd3451d92b1404da82b55e53"
     },
     {
       "path": "cover-images/chapter-04-design-the-architecture-around-the-model.png",
-      "bytes": 1134365,
-      "sha256": "b7f146e849d65f18f1f12b98c94714efa16bfcd63b38dc417613cc0934d62dbb"
+      "bytes": 1130116,
+      "sha256": "c6e5bbd3ac0a0d8749c06fdf88dc5c8141139d2684619415ed05eb502c96433d"
     },
     {
       "path": "cover-images/chapter-05-give-knowledge-an-owner.png",
-      "bytes": 837957,
-      "sha256": "ff9c012dbf37d58c3cd541a0f91b94d321166f741ba4db67b5c63a5c807441cd"
+      "bytes": 833817,
+      "sha256": "f4254e0a544a6531310e34a992c786ec866183134bb9dff29518fe1187fa2593"
     },
     {
       "path": "cover-images/chapter-06-build-context-without-losing-the-plot.png",
-      "bytes": 1136042,
-      "sha256": "f22160b0bd04f2dd1e7e74862738932ab0e62e5c14bc3c16f90a7190b46d94f7"
+      "bytes": 1132033,
+      "sha256": "49d200a0e7e20b35a864d0258b453bb0158b6ac40cfc258b7d42535e364593cb"
     },
     {
       "path": "cover-images/chapter-07-build-a-paved-road-for-agent-teams.png",
-      "bytes": 1020802,
-      "sha256": "08eae5e1cd10e5bae05359144fe74a0ad84c0acd63f3dbf79ac9c02df757e8d7"
+      "bytes": 1016685,
+      "sha256": "d863225a4924a3281399e20496c20c2172d552325aed5d4465d60216a0c42f3d"
     },
     {
       "path": "cover-images/chapter-08-package-capabilities-as-versioned-skills.png",
-      "bytes": 792962,
-      "sha256": "39f1cc6ca4a8fddaf14c27a2f742cf3d3ce9a9566eab9c8dbf026b7d87814895"
+      "bytes": 788846,
+      "sha256": "0ed9a81c4373dad37b58216c02674506db4e8e5d5eda3d8638a9b3a711e05b28"
     },
     {
       "path": "cover-images/chapter-09-turn-skills-into-a-coherent-domain-platform.png",
-      "bytes": 1114122,
-      "sha256": "6b2bc59d1f009082de0b615aa6bf4d967b504626ee0f74a0f85debec8a7eb667"
+      "bytes": 1110455,
+      "sha256": "e44717e4330134316c2e8f06dc066303a988c4d7225c4eb6aac2f790c2b061e9"
     },
     {
       "path": "cover-images/chapter-10-use-react-without-creating-a-runaway-loop.png",
-      "bytes": 1166971,
-      "sha256": "07458edd065ccb605d0fff4b5e55ca3e69afd16122a681e043fdc6f3e91e8978"
+      "bytes": 1162706,
+      "sha256": "1c0b4b49528fdd8483aee3085fc4734c4e6a3843bf880fc56b0c3ac5e17ced39"
     },
     {
       "path": "cover-images/chapter-11-route-the-work-without-losing-ownership.png",
-      "bytes": 803242,
-      "sha256": "18014d40e0f8715105d977bcf1183e7d47fa5598eb98f17ce3a1d0a12da97fef"
+      "bytes": 799050,
+      "sha256": "73bad0a9c92e998f265b43535d2985804bf424a42c9797b4a185664a59304959"
     },
     {
       "path": "cover-images/chapter-12-turn-proposed-plans-into-safe-executable-work.png",
-      "bytes": 1166762,
-      "sha256": "ad013e598ed4ef38c574950fbd6e2c83f49d7d248ba3d5fed2be4655ab33ad52"
+      "bytes": 1162635,
+      "sha256": "943ee9685d6defed95a8a1a2570679bb6db2a85b42e435d1b6586f22182d5dee"
     },
     {
       "path": "cover-images/chapter-13-use-critique-to-improve-never-to-self-approve.png",
-      "bytes": 1133548,
-      "sha256": "36234ee456481ce55444fd11c747581742a020dce0192519967359b2797fc2c8"
+      "bytes": 1129482,
+      "sha256": "c8cb626fa349c64368fd1a81213b9bf9f366e4fe06b9c6db2b69c01d2932ccda"
     },
     {
       "path": "cover-images/chapter-14-put-people-where-their-judgment-matters.png",
-      "bytes": 1087472,
-      "sha256": "0834f29f4fdb39b6e95f88cad55c3429bc20700d830d5b640376e3cae9bfa6cb"
+      "bytes": 1083291,
+      "sha256": "d9771cf1f11ba1ac66a4ed082e952e0ef20460fbee024482c9875cba91b9da4c"
     },
     {
       "path": "cover-images/chapter-15-keep-long-running-work-alive-through-failure.png",
-      "bytes": 1130113,
-      "sha256": "0cea2a57f1f56d0651b1ce4232d11dc53b5239516aae8871677e6299f35ace97"
+      "bytes": 1125946,
+      "sha256": "ca93238a92209db6b2e11d800613ac7dba4f842cdde2da3cf3288a346bdcb028"
     },
     {
       "path": "cover-images/chapter-16-choose-patterns-that-fit-real-enterprise-work.png",
-      "bytes": 757305,
-      "sha256": "dd52965bd97393573625bc5d089f03c72a92e5aa338ac8c53c781524d83c92c0"
+      "bytes": 753196,
+      "sha256": "e58e1dd59290e0bb11c69546c7cc9a22c0032be437b96a62959e40a92eec43fa"
     },
     {
       "path": "cover-images/chapter-17-architecture-patterns-that-fail-in-production.png",
-      "bytes": 740248,
-      "sha256": "864dd442fc4d917c9f8488c23f13fba03d0f7518acf28ac68dfede1e0d2edd41"
+      "bytes": 736181,
+      "sha256": "f7a842033eb76e4712993470dbf160a54bf2652b11fcb225a890040e20cf4b09"
     },
     {
       "path": "cover-images/chapter-18-coordinate-specialists-without-losing-control.png",
-      "bytes": 1182907,
-      "sha256": "53473caa479ae7ee8b15998da4ca8ca0412ca18deac3668555432aa0d27cd976"
+      "bytes": 1178844,
+      "sha256": "a90c9e261e04fc819213483aec279d95fb109f4129aa59766b0b73bb7bea232f"
     },
     {
       "path": "cover-images/chapter-19-crossing-system-boundaries-mcp-a2a-and-local-control.png",
-      "bytes": 1140268,
-      "sha256": "3fb25c3e5600a04e605b0855c448fca936a95ea2727d7ae0581a36f6bbe08745"
+      "bytes": 1136011,
+      "sha256": "fe9099e87e021117f42ce08ba430bda19606ef19950dbdc96d44fba66de42b82"
     },
     {
       "path": "cover-images/chapter-20-security-starts-outside-the-prompt.png",
-      "bytes": 954807,
-      "sha256": "ab68924a2b7f803bb3c79412099d90c8b898e63b2f5ea8a226473f76cc595f12"
+      "bytes": 950518,
+      "sha256": "c400145c2a162d9a32922892f47320b386484918a3410082ab2b60490b275cdf"
     },
     {
       "path": "cover-images/chapter-21-carry-identity-narrow-authority.png",
-      "bytes": 1033750,
-      "sha256": "d84ee4539d7b3bb5e6313b27e787c226968950ce223cd35dbc6f7c345b5a7148"
+      "bytes": 1029580,
+      "sha256": "fb7eeeb3262a3a87dc87350457f5043aaac0a3c812412fa462ad7c0abc57c4bd"
     },
     {
       "path": "cover-images/chapter-22-make-external-effects-safe-to-retry.png",
-      "bytes": 868891,
-      "sha256": "b64f7ca1d72dafdb17915292738b1281abcf9f5faea4429acf3bc026ea845437"
+      "bytes": 864904,
+      "sha256": "fd8bd95ce80f91a810f5ff532f9008306d8d270844c89d3be93ae78c832ba26d"
     },
     {
       "path": "cover-images/chapter-23-contain-the-damage-when-a-model-is-manipulated.png",
-      "bytes": 1116188,
-      "sha256": "561fe1f45018625da23d07aa461edb7d9713f2f292426076d07cb5e1afc375a6"
+      "bytes": 1111963,
+      "sha256": "d523d5ed4e10c23d73c1ed2dab23330d4b24ab8ec156a154967dfb913921892e"
     },
     {
       "path": "cover-images/chapter-24-follow-a-run-from-request-to-verified-outcome.png",
-      "bytes": 1050047,
-      "sha256": "b06ecab58622b879a11f7ffb95e130e4bfedbeb2da39ef5a9920eb18cc5dc132"
+      "bytes": 1045980,
+      "sha256": "308ef2c27724d4700e86ef4974d182d022de087664b09b3be5e3bfbd251911c5"
     },
     {
       "path": "cover-images/chapter-25-improve-the-system-without-handing-it-control.png",
-      "bytes": 1081892,
-      "sha256": "92a80d132790aa70b5d655833f75b00605b7e491e66e460455420af2aa969fd1"
+      "bytes": 1077628,
+      "sha256": "03d476c19209da66c5cdc03691292e42a683131cb7bd9bcc36284382baf8e41d"
     },
     {
       "path": "cover-images/chapter-26-make-governance-part-of-how-the-platform-runs.png",
-      "bytes": 998220,
-      "sha256": "29ff391d37c82d1bc738b4c3dd91693c9acfb69e0618cd95f3595beed3b10f36"
+      "bytes": 994269,
+      "sha256": "f32ec38205cbc5516304dd12dca48051ef97582272b812222a0c611c5750ff2f"
     },
     {
       "path": "cover-images/chapter-27-release-new-behavior-without-breaking-work-in-flight.png",
-      "bytes": 1020283,
-      "sha256": "6d0f30ad0db911473ac569e4c75bf21681a1df38cae2e3e1404a3bad62fd2009"
+      "bytes": 1016229,
+      "sha256": "7932de75a5576d390fa88cfe3141985e350b0746e9ffcca804fdc131b59329af"
     },
     {
       "path": "cover-images/chapter-28-treat-performance-as-a-business-decision.png",
-      "bytes": 751879,
-      "sha256": "de741d0e17e62d424567ff15e49e8a0bbe9e9a82bf9e346ff3996a89ffc0945f"
+      "bytes": 747816,
+      "sha256": "4a49e4d56d36326ef4b6661f3a70be1faedf9d9a23e510af92d7159cb0c5ab09"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.docx",
-      "bytes": 43609202,
-      "sha256": "b37b4327f6e25c3403681d77f8f3a92340b5cceb66c95fc6456d398f436f9250"
+      "bytes": 43512148,
+      "sha256": "08cc2fe7b123f8bf18a45100b2f749dfbf4f4fe5bfdce19e0c82fb23331f2a3b"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.md",
@@ -1303,11 +1303,6 @@
       "path": "examples/tests/test_step_execution.py",
       "bytes": 1365,
       "sha256": "3f6249a868479592e725530a98e41c2583fdd47921d5c6c88654b45787058904"
-    },
-    {
-      "path": "full-book-review-plan.md",
-      "bytes": 37836,
-      "sha256": "38f04d7842023522613ebe9144c673a29dbcffcd0b88742350738c36e763d40e"
     },
     {
       "path": "latex/Enterprise-General-Intelligence-v1.0.0.tex",
@@ -1677,22 +1672,22 @@
     {
       "path": "qa/build-report.json",
       "bytes": 309,
-      "sha256": "dab2ef9d85efbc9de98765fb464632ca4d6cbfcca7337fe23e9ddf94f044b7db"
+      "sha256": "f694c8a7012b9bd575a6c146ad63b4d6455bf3935f30ca7b8bd777d408ad7864"
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 43609202,
-      "sha256": "b37b4327f6e25c3403681d77f8f3a92340b5cceb66c95fc6456d398f436f9250"
+      "bytes": 43512148,
+      "sha256": "08cc2fe7b123f8bf18a45100b2f749dfbf4f4fe5bfdce19e0c82fb23331f2a3b"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 43609202,
-      "sha256": "b37b4327f6e25c3403681d77f8f3a92340b5cceb66c95fc6456d398f436f9250"
+      "bytes": 43512148,
+      "sha256": "08cc2fe7b123f8bf18a45100b2f749dfbf4f4fe5bfdce19e0c82fb23331f2a3b"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "dbddf4fac14e73060c8f5178b6509bc3fa0c74574d4a3be1325372f3bf0d32db"
+      "sha256": "8067877e253c7e28972d4375deeec26974bfd4985278d90ff9c7fcbc1bed027b"
     },
     {
       "path": "qa/latex-validation-report.json",
@@ -1702,7 +1697,7 @@
     {
       "path": "qa/validation-report.json",
       "bytes": 875,
-      "sha256": "0c7db832ba1480e443db4372bb99942c365d9a11ab22ba36f8514fdfa390eef1"
+      "sha256": "bfc04709d15d28880586c43d3aa597abed7010f13eb4db0661f4a61956cc3308"
     },
     {
       "path": "reports/assembly-report.json",
@@ -1712,7 +1707,7 @@
     {
       "path": "reports/chapter-cover-report.json",
       "bytes": 6750,
-      "sha256": "28f0bb5b1d1eb9d7e123d20b3932c317a9a6ed55cbc0a85c70480f4d3b3206fd"
+      "sha256": "9b86b65a4cf635715b4b2f462f567bfca3e0f9ef0ed7e54dc0be2fc92fd57bf3"
     },
     {
       "path": "reports/chapter-insert-map.json",
@@ -1736,8 +1731,8 @@
     },
     {
       "path": "reports/editorial-audit.md",
-      "bytes": 18902,
-      "sha256": "882b7f8fe8d2827218a61961939feca3140ebefa63cee4482da33e56eb4d155c"
+      "bytes": 18980,
+      "sha256": "86a9fb5f0f48a58f2303c33f0a54e7903159e10a3eb13e47c384ded90dcacd11"
     },
     {
       "path": "reports/editorial-transformation.json",
@@ -1766,8 +1761,8 @@
     },
     {
       "path": "reports/release-notes.md",
-      "bytes": 6557,
-      "sha256": "a6a65759632b989c02ac9530666c66ed1716b49b5a2618a5969b7c160ad09e67"
+      "bytes": 7129,
+      "sha256": "a9832e1bc207434d61c43d6fdcece2fd9b7397fad82af0e16832c6acb863b9dd"
     },
     {
       "path": "reports/restructure-map.json",
@@ -1776,18 +1771,168 @@
     },
     {
       "path": "reports/technical-validation.md",
-      "bytes": 4100,
-      "sha256": "db5ee24f874b981981265dbac10dc3ccff58af08467fe39b8129bad69f7c22a8"
+      "bytes": 4178,
+      "sha256": "154f07a0d669e363e89c0d277d163b4b4ff5c8a9938f42b570ebebc5612bb5c9"
     },
     {
       "path": "reports/validation-summary.md",
       "bytes": 864,
-      "sha256": "9565470e8380b07d6315f8a50506f534007197b7cff6e219b7501ce67ab0b9bc"
+      "sha256": "49b1610b4521580b23d87488d691884004e1f399f780e9517cd8fc9c42717cc5"
     },
     {
       "path": "requirements.txt",
       "bytes": 105,
       "sha256": "49c4ffba917032e2de9d2bb8b5c2178a1109fad0e4e7e1aecaea2445b0f1b6a5"
+    },
+    {
+      "path": "reviews/continuity-and-flow/book-concept-map.md",
+      "bytes": 121501,
+      "sha256": "12172a7f105a208d03f4ce992b437b25538cf0c8d9156d1bcd30a5d729f484f1"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-01.md",
+      "bytes": 46795,
+      "sha256": "5b495847180195d920ca6ee67b6fae1ae42e1211cd7fe1108c642aa7f2688a66"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-02.md",
+      "bytes": 34212,
+      "sha256": "181497861c1bd8e04834d0d5466340157b3d69c8085c69ed4114a1da604989fc"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-03.md",
+      "bytes": 49267,
+      "sha256": "f828888b7a75c5b889f9c7275640d4e8664cc37f9854b189500588962eca5a4d"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-04.md",
+      "bytes": 46905,
+      "sha256": "3eb2e172683241879df0875993ea9b330933186cf54ab25231470f286f31ee03"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-05.md",
+      "bytes": 25271,
+      "sha256": "adeaf78666b2a2ee04ca8eaa5d57dc6c0f405f6bf10bc648582f323f154bf4e8"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-06.md",
+      "bytes": 32498,
+      "sha256": "cea4ac01a8b68155dbf5467a26e5025293ec89aa689c2ad8ac6daa825f027411"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-07.md",
+      "bytes": 39629,
+      "sha256": "f9a6347f3cedb1a09f8f4fdbf26326732ab7b09edfebef8c18c17f781bfb1186"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-08.md",
+      "bytes": 37647,
+      "sha256": "32f58e656572c753c1e58ac0d65d9f108738f71ca086b221de917ea5817b66c2"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-09.md",
+      "bytes": 26809,
+      "sha256": "dc8e279ba548afd9e90bf96cf407aef36aa03d72df5e482e63cbfb0703efb24d"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-10.md",
+      "bytes": 27536,
+      "sha256": "15496cb5ed8ba39614d88e9b3d4180493e5bb3c818c05eeb7f05c9bc5069029f"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-11.md",
+      "bytes": 29092,
+      "sha256": "2424d84a6463fa4a84ffcac5dc61d18b605e7ef2fda2d86fe975f0208fd5d28a"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-12.md",
+      "bytes": 32115,
+      "sha256": "4eb9e374dd2995fd5bfb0203903d96fc049db97fdf447fab854365d36b44b1aa"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-13.md",
+      "bytes": 28989,
+      "sha256": "869ba60ac9f2bbbdf8c776ba2b632b83e4112d611a1e6eb113f0e5e47ec7946d"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-14.md",
+      "bytes": 33891,
+      "sha256": "a8d1ea2ca80619d8b2239bc82a7ca88898024433d2f17eee24cf7174bfdc624b"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-15.md",
+      "bytes": 33921,
+      "sha256": "e58dc6c7766f08086688c8191fdab0b4051fc5c26df5beb5d28e5234b62cf804"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-16.md",
+      "bytes": 26711,
+      "sha256": "81fb281d48cd7510db3c3575515fd857d88d536d280627154486362e496ae427"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-17.md",
+      "bytes": 31838,
+      "sha256": "ea3cd1435e463a700f4988b817d5666cfb791cf5e321fbf9732adedc86bc8674"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-18.md",
+      "bytes": 38412,
+      "sha256": "0fa28b6a73c0a8737fdf71617f0708b46ea5e082589a520dda8dae9bb12a6f27"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-19.md",
+      "bytes": 39772,
+      "sha256": "b92929c2ca9dd7f8158e6c43cec38fd8197bc0c489782b13d86593885c84c69b"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-20.md",
+      "bytes": 33435,
+      "sha256": "ec8ae42bbae01a274a61e11b54a361e00d4a1b3eb818158a1cd263b04a1a486a"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-21.md",
+      "bytes": 29412,
+      "sha256": "a3baa43dd1d35f7075fbccc079b2549e0512d903343c2e08a6b6d01325160b21"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-22.md",
+      "bytes": 42243,
+      "sha256": "b3b5f962a290ecbee27c2c19c46f8baa407b57f239849aecf785f6a3b9604efb"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-23.md",
+      "bytes": 31435,
+      "sha256": "aaf7eb74ecf1bb75ef62b2c97a7440f979ef6a9a359d18c7d2fe7af523a7c081"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-24.md",
+      "bytes": 43499,
+      "sha256": "9f2786dba85985768a87e1afc741d32c525e789df2e28b3e416f238297b963b3"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-25.md",
+      "bytes": 45738,
+      "sha256": "508c5edaedc644f89da575ee02214f054a3486a19d523c625281a153038c15ec"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-26.md",
+      "bytes": 33024,
+      "sha256": "b9266a81930274f545e26e945441a36b868498549a8c270907e81d6de33fe657"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-27.md",
+      "bytes": 39454,
+      "sha256": "1deac2be3e680010a335ed6e9233c460729056116d3e4314dfed6da89df2e803"
+    },
+    {
+      "path": "reviews/continuity-and-flow/chapter-28.md",
+      "bytes": 39023,
+      "sha256": "5be9ff7318dfa316ca6f58dc3d1b1c2eedbbe4352f04450a917fb4834a5afde5"
+    },
+    {
+      "path": "reviews/continuity-and-flow/overall-book-review.md",
+      "bytes": 86799,
+      "sha256": "f432da828f698fc901ceeeb995ef5896bbe7169a5a84f6a7728493cce8ffebca"
     },
     {
       "path": "skills/book-maintainer/SKILL.md",
@@ -1971,8 +2116,8 @@
     },
     {
       "path": "styles/DESIGN-SYSTEM.md",
-      "bytes": 13429,
-      "sha256": "163577372f672d4cecf78f4a4ded1181833c5d158e7fcb544702f541dc827e26"
+      "bytes": 13589,
+      "sha256": "efcd45781841a7ceb26865debb69c57ee17b74549b1d9417cd911a2879b5b34f"
     },
     {
       "path": "styles/DOCX-STYLES.md",
@@ -2116,8 +2261,8 @@
     },
     {
       "path": "tools/generate_cover.py",
-      "bytes": 4716,
-      "sha256": "df4f79e2c1703a3e3fc22d6885f6877de6e842379e91aa084fe606be32e9841b"
+      "bytes": 4530,
+      "sha256": "15a4ffeb08cba53d7cbf725964a1766eb7279c512abace03557438ba1ae41e49"
     },
     {
       "path": "tools/package_release.py",
@@ -2131,8 +2276,8 @@
     },
     {
       "path": "tools/render_chapter_covers.py",
-      "bytes": 38797,
-      "sha256": "ffce18360f69daf0249e7a38c68040fed0719da4e939eda4d395afd6da9d6a5f"
+      "bytes": 38762,
+      "sha256": "585f859a63bff4c8b60e97d7f347b344235ea166628448c200029209fc9d0dd2"
     },
     {
       "path": "tools/render_diagrams.py",

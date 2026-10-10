@@ -17,7 +17,7 @@ One canonical source in `source/parts/*.md` produces three synchronized represen
 5. **Render:** `tools/build_book.py` generates DOCX from the assembled manuscript and configuration.
 6. **Validate before release:** never hand-edit generated DOCX or distributable Markdown.
 
-`source/original/` is immutable provenance. `tools/prepare_manuscript.py` is the frozen one-time v3.1-to-**v1.0.0** migration/bootstrap tool. It still emits the v1.0.0 topology and metadata and has deliberately not been updated for v1.0.0; never run it during ordinary editing, because it would regenerate `source/parts` from the legacy source and undo the v1.0.0 restructure.
+`source/original/` is immutable provenance. `tools/prepare_manuscript.py` is the frozen one-time migration/bootstrap tool from the v3.1 draft. Never run it during ordinary editing: it would regenerate `source/parts` from the legacy source and undo the current v1.0.0 structure.
 
 ## Quick start
 

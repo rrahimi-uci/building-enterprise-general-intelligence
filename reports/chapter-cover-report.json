@@ -9,7 +9,7 @@
         2550,
         3300
       ],
-      "sha256": "8e40590c3e173650a73eba6e5a531283c824762db8ed49656e4b23e60c1936c0"
+      "sha256": "114098e5580b83b5e5aa8d4d52344efdbb3d4cd52b76515ba4a1c80f63c7be3d"
     },
     {
       "file": "cover-images/chapter-02-from-model-output-to-safe-action.png",
@@ -17,7 +17,7 @@
         2550,
         3300
       ],
-      "sha256": "d3a4015a5c1d04ba634acbc6cfb16ea9dc5ca58a0070f279ba4a3bc79bc423f1"
+      "sha256": "ec1563449a4d8a2e1aa24b0b6ff3358c364a6705bba1708e3f1b04d074afc489"
     },
     {
       "file": "cover-images/chapter-03-keep-the-agent-framework-in-its-lane.png",
@@ -25,7 +25,7 @@
         2550,
         3300
       ],
-      "sha256": "bec341d94b1c80d0c6273121adbf2a48146daad972679f2e168c32d15bee2b4a"
+      "sha256": "ca37c5b4be878bfc6429659ad3eb1116d4674faddd3451d92b1404da82b55e53"
     },
     {
       "file": "cover-images/chapter-04-design-the-architecture-around-the-model.png",
@@ -33,7 +33,7 @@
         2550,
         3300
       ],
-      "sha256": "b7f146e849d65f18f1f12b98c94714efa16bfcd63b38dc417613cc0934d62dbb"
+      "sha256": "c6e5bbd3ac0a0d8749c06fdf88dc5c8141139d2684619415ed05eb502c96433d"
     },
     {
       "file": "cover-images/chapter-05-give-knowledge-an-owner.png",
@@ -41,7 +41,7 @@
         2550,
         3300
       ],
-      "sha256": "ff9c012dbf37d58c3cd541a0f91b94d321166f741ba4db67b5c63a5c807441cd"
+      "sha256": "f4254e0a544a6531310e34a992c786ec866183134bb9dff29518fe1187fa2593"
     },
     {
       "file": "cover-images/chapter-06-build-context-without-losing-the-plot.png",
@@ -49,7 +49,7 @@
         2550,
         3300
       ],
-      "sha256": "f22160b0bd04f2dd1e7e74862738932ab0e62e5c14bc3c16f90a7190b46d94f7"
+      "sha256": "49d200a0e7e20b35a864d0258b453bb0158b6ac40cfc258b7d42535e364593cb"
     },
     {
       "file": "cover-images/chapter-07-build-a-paved-road-for-agent-teams.png",
@@ -57,7 +57,7 @@
         2550,
         3300
       ],
-      "sha256": "08eae5e1cd10e5bae05359144fe74a0ad84c0acd63f3dbf79ac9c02df757e8d7"
+      "sha256": "d863225a4924a3281399e20496c20c2172d552325aed5d4465d60216a0c42f3d"
     },
     {
       "file": "cover-images/chapter-08-package-capabilities-as-versioned-skills.png",
@@ -65,7 +65,7 @@
         2550,
         3300
       ],
-      "sha256": "39f1cc6ca4a8fddaf14c27a2f742cf3d3ce9a9566eab9c8dbf026b7d87814895"
+      "sha256": "0ed9a81c4373dad37b58216c02674506db4e8e5d5eda3d8638a9b3a711e05b28"
     },
     {
       "file": "cover-images/chapter-09-turn-skills-into-a-coherent-domain-platform.png",
@@ -73,7 +73,7 @@
         2550,
         3300
       ],
-      "sha256": "6b2bc59d1f009082de0b615aa6bf4d967b504626ee0f74a0f85debec8a7eb667"
+      "sha256": "e44717e4330134316c2e8f06dc066303a988c4d7225c4eb6aac2f790c2b061e9"
     },
     {
       "file": "cover-images/chapter-10-use-react-without-creating-a-runaway-loop.png",
@@ -81,7 +81,7 @@
         2550,
         3300
       ],
-      "sha256": "07458edd065ccb605d0fff4b5e55ca3e69afd16122a681e043fdc6f3e91e8978"
+      "sha256": "1c0b4b49528fdd8483aee3085fc4734c4e6a3843bf880fc56b0c3ac5e17ced39"
     },
     {
       "file": "cover-images/chapter-11-route-the-work-without-losing-ownership.png",
@@ -89,7 +89,7 @@
         2550,
         3300
       ],
-      "sha256": "18014d40e0f8715105d977bcf1183e7d47fa5598eb98f17ce3a1d0a12da97fef"
+      "sha256": "73bad0a9c92e998f265b43535d2985804bf424a42c9797b4a185664a59304959"
     },
     {
       "file": "cover-images/chapter-12-turn-proposed-plans-into-safe-executable-work.png",
@@ -97,7 +97,7 @@
         2550,
         3300
       ],
-      "sha256": "ad013e598ed4ef38c574950fbd6e2c83f49d7d248ba3d5fed2be4655ab33ad52"
+      "sha256": "943ee9685d6defed95a8a1a2570679bb6db2a85b42e435d1b6586f22182d5dee"
     },
     {
       "file": "cover-images/chapter-13-use-critique-to-improve-never-to-self-approve.png",
@@ -105,7 +105,7 @@
         2550,
         3300
       ],
-      "sha256": "36234ee456481ce55444fd11c747581742a020dce0192519967359b2797fc2c8"
+      "sha256": "c8cb626fa349c64368fd1a81213b9bf9f366e4fe06b9c6db2b69c01d2932ccda"
     },
     {
       "file": "cover-images/chapter-14-put-people-where-their-judgment-matters.png",
@@ -113,7 +113,7 @@
         2550,
         3300
       ],
-      "sha256": "0834f29f4fdb39b6e95f88cad55c3429bc20700d830d5b640376e3cae9bfa6cb"
+      "sha256": "d9771cf1f11ba1ac66a4ed082e952e0ef20460fbee024482c9875cba91b9da4c"
     },
     {
       "file": "cover-images/chapter-15-keep-long-running-work-alive-through-failure.png",
@@ -121,7 +121,7 @@
         2550,
         3300
       ],
-      "sha256": "0cea2a57f1f56d0651b1ce4232d11dc53b5239516aae8871677e6299f35ace97"
+      "sha256": "ca93238a92209db6b2e11d800613ac7dba4f842cdde2da3cf3288a346bdcb028"
     },
     {
       "file": "cover-images/chapter-16-choose-patterns-that-fit-real-enterprise-work.png",
@@ -129,7 +129,7 @@
         2550,
         3300
       ],
-      "sha256": "dd52965bd97393573625bc5d089f03c72a92e5aa338ac8c53c781524d83c92c0"
+      "sha256": "e58e1dd59290e0bb11c69546c7cc9a22c0032be437b96a62959e40a92eec43fa"
     },
     {
       "file": "cover-images/chapter-17-architecture-patterns-that-fail-in-production.png",
@@ -137,7 +137,7 @@
         2550,
         3300
       ],
-      "sha256": "864dd442fc4d917c9f8488c23f13fba03d0f7518acf28ac68dfede1e0d2edd41"
+      "sha256": "f7a842033eb76e4712993470dbf160a54bf2652b11fcb225a890040e20cf4b09"
     },
     {
       "file": "cover-images/chapter-18-coordinate-specialists-without-losing-control.png",
@@ -145,7 +145,7 @@
         2550,
         3300
       ],
-      "sha256": "53473caa479ae7ee8b15998da4ca8ca0412ca18deac3668555432aa0d27cd976"
+      "sha256": "a90c9e261e04fc819213483aec279d95fb109f4129aa59766b0b73bb7bea232f"
     },
     {
       "file": "cover-images/chapter-19-crossing-system-boundaries-mcp-a2a-and-local-control.png",
@@ -153,7 +153,7 @@
         2550,
         3300
       ],
-      "sha256": "3fb25c3e5600a04e605b0855c448fca936a95ea2727d7ae0581a36f6bbe08745"
+      "sha256": "fe9099e87e021117f42ce08ba430bda19606ef19950dbdc96d44fba66de42b82"
     },
     {
       "file": "cover-images/chapter-20-security-starts-outside-the-prompt.png",
@@ -161,7 +161,7 @@
         2550,
         3300
       ],
-      "sha256": "ab68924a2b7f803bb3c79412099d90c8b898e63b2f5ea8a226473f76cc595f12"
+      "sha256": "c400145c2a162d9a32922892f47320b386484918a3410082ab2b60490b275cdf"
     },
     {
       "file": "cover-images/chapter-21-carry-identity-narrow-authority.png",
@@ -169,7 +169,7 @@
         2550,
         3300
       ],
-      "sha256": "d84ee4539d7b3bb5e6313b27e787c226968950ce223cd35dbc6f7c345b5a7148"
+      "sha256": "fb7eeeb3262a3a87dc87350457f5043aaac0a3c812412fa462ad7c0abc57c4bd"
     },
     {
       "file": "cover-images/chapter-22-make-external-effects-safe-to-retry.png",
@@ -177,7 +177,7 @@
         2550,
         3300
       ],
-      "sha256": "b64f7ca1d72dafdb17915292738b1281abcf9f5faea4429acf3bc026ea845437"
+      "sha256": "fd8bd95ce80f91a810f5ff532f9008306d8d270844c89d3be93ae78c832ba26d"
     },
     {
       "file": "cover-images/chapter-23-contain-the-damage-when-a-model-is-manipulated.png",
@@ -185,7 +185,7 @@
         2550,
         3300
       ],
-      "sha256": "561fe1f45018625da23d07aa461edb7d9713f2f292426076d07cb5e1afc375a6"
+      "sha256": "d523d5ed4e10c23d73c1ed2dab23330d4b24ab8ec156a154967dfb913921892e"
     },
     {
       "file": "cover-images/chapter-24-follow-a-run-from-request-to-verified-outcome.png",
@@ -193,7 +193,7 @@
         2550,
         3300
       ],
-      "sha256": "b06ecab58622b879a11f7ffb95e130e4bfedbeb2da39ef5a9920eb18cc5dc132"
+      "sha256": "308ef2c27724d4700e86ef4974d182d022de087664b09b3be5e3bfbd251911c5"
     },
     {
       "file": "cover-images/chapter-25-improve-the-system-without-handing-it-control.png",
@@ -201,7 +201,7 @@
         2550,
         3300
       ],
-      "sha256": "92a80d132790aa70b5d655833f75b00605b7e491e66e460455420af2aa969fd1"
+      "sha256": "03d476c19209da66c5cdc03691292e42a683131cb7bd9bcc36284382baf8e41d"
     },
     {
       "file": "cover-images/chapter-26-make-governance-part-of-how-the-platform-runs.png",
@@ -209,7 +209,7 @@
         2550,
         3300
       ],
-      "sha256": "29ff391d37c82d1bc738b4c3dd91693c9acfb69e0618cd95f3595beed3b10f36"
+      "sha256": "f32ec38205cbc5516304dd12dca48051ef97582272b812222a0c611c5750ff2f"
     },
     {
       "file": "cover-images/chapter-27-release-new-behavior-without-breaking-work-in-flight.png",
@@ -217,7 +217,7 @@
         2550,
         3300
       ],
-      "sha256": "6d0f30ad0db911473ac569e4c75bf21681a1df38cae2e3e1404a3bad62fd2009"
+      "sha256": "7932de75a5576d390fa88cfe3141985e350b0746e9ffcca804fdc131b59329af"
     },
     {
       "file": "cover-images/chapter-28-treat-performance-as-a-business-decision.png",
@@ -225,7 +225,7 @@
         2550,
         3300
       ],
-      "sha256": "de741d0e17e62d424567ff15e49e8a0bbe9e9a82bf9e346ff3996a89ffc0945f"
+      "sha256": "4a49e4d56d36326ef4b6661f3a70be1faedf9d9a23e510af92d7159cb0c5ab09"
     }
   ],
   "errors": [],

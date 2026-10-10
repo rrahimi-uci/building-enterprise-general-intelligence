@@ -2,6 +2,10 @@
 
 Book v1.0.0 is the canonical foundation for *Building an Enterprise General Intelligence Platform* by Reza Rahimi, PhD.
 
+## Cover artwork and version alignment — 2026-10-10
+
+The book cover and all 28 chapter cover images no longer print a release number. Their editable generators retain the title, author, chapter identity, and diagrams; the v1.0.0 release identifier remains in the book metadata, title page, running footer, and artifact filenames. The chapter contact sheet, DOCX, XeLaTeX source, checksum registry, and package were regenerated from the updated artwork. The changelog now presents one v1.0.0 release record, and the continuity review map names the current book version.
+
 ## Chapter 1 review-comment reconciliation — 2026-09-18
 
 Sixteen reviewer comments left on the distributed v1.0.0 DOCX were reconciled

@@ -18,6 +18,8 @@ This document is the visual and editorial contract for every representation of t
 
 Do not skip heading levels. Do not start body content with a duplicate H1 title. Every Part page states what the reader will decide or build and how the Part connects to the previous and next layers.
 
+The book and chapter cover artwork carries no printed release version. Version metadata remains in the title page, running footer, and release artifact names.
+
 ## 2. Narrative component model
 
 A chapter should normally contain:
