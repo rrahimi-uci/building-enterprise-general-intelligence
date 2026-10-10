@@ -4,6 +4,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Remove the reviews-comments folder
+
+- Removed `reviews-comments/` (an already-applied Chapter 3 review DOCX and its `.gitkeep`) and its `.gitignore` rule. Its entries drop out of `RELEASE-MANIFEST.json` and `CHECKSUMS.sha256` at the next `make package`.
+
 ### Fix three book-wide DOCX/LaTeX rendering defects
 
 - Markdown backslash escapes (`artifact\_id`, `a \< b`) printed literally in
