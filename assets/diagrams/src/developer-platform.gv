@@ -1,6 +1,8 @@
 // Figure 7-1 — Agentic developer platform and SDK capability stack.
 // Message: teams build differentiated agents on shared, versioned capabilities
-// they do not have to re-implement or re-secure.
+// they do not have to re-implement or re-secure. Skills and Skill Packs are
+// domain-owned and reused across agents; the registry that resolves them is
+// platform-owned.
 digraph developer_platform {
   rankdir = TB
   graph [ranksep=0.16]
@@ -11,13 +13,13 @@ digraph developer_platform {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#6A2E6E" BGCOLOR="#F7ECF8">
       <TR><TD COLSPAN="4" BGCOLOR="#6A2E6E" ALIGN="LEFT"><FONT COLOR="white"><B>  Team-owned · differentiated</B></FONT></TD></TR>
       <TR><TD WIDTH="118" ALIGN="CENTER">Domain agents</TD><TD WIDTH="118" ALIGN="CENTER">Domain tools</TD>
-          <TD WIDTH="118" ALIGN="CENTER">Prompts</TD><TD WIDTH="118" ALIGN="CENTER">Eval datasets</TD></TR>
+          <TD WIDTH="118" ALIGN="CENTER">Skills · Skill Packs<BR/><FONT POINT-SIZE="10">domain-owned</FONT></TD><TD WIDTH="118" ALIGN="CENTER">Eval datasets</TD></TR>
     </TABLE>>]
   sdk [label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#0D6E69" BGCOLOR="#E7F5F3">
       <TR><TD COLSPAN="4" BGCOLOR="#0D6E69" ALIGN="LEFT"><FONT COLOR="white"><B>  SDK · portable contracts</B></FONT></TD></TR>
-      <TR><TD WIDTH="118" ALIGN="CENTER">AgentSpec</TD><TD WIDTH="118" ALIGN="CENTER">ToolSpec</TD>
-          <TD WIDTH="118" ALIGN="CENTER">RunContext</TD><TD WIDTH="118" ALIGN="CENTER">ContextManifest</TD></TR>
+      <TR><TD WIDTH="118" ALIGN="CENTER">AgentSpec</TD><TD WIDTH="118" ALIGN="CENTER">ToolManifest</TD>
+          <TD WIDTH="118" ALIGN="CENTER">AgentStepRequest</TD><TD WIDTH="118" ALIGN="CENTER">ContextManifest</TD></TR>
     </TABLE>>]
   platform [label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#1450A3" BGCOLOR="#EAF3FB">

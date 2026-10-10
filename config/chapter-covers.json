@@ -1492,7 +1492,7 @@
      {
       "id": "contracts",
       "label": "Platform contracts",
-      "sub": "AgentSpec · ToolSpec",
+      "sub": "AgentSpec · ToolManifest",
       "kind": "control",
       "at": [
        9.1,

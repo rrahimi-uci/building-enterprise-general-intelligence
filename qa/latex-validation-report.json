@@ -4,23 +4,23 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7",
-    "content_tex_sha256": "4b443a4c59bd2df61807e823770443006abc6523d7c68c9f1309f11a6d210d83",
+    "content_tex_sha256": "a4c233e3382c52caafcd5028fd4d61e16953240bc47a6d664b263b8afeb93edd",
     "style_sha256": "7a1273ba38763881c8ed2ede7ad741ea49ca031d7bb5f8fc354e413a88d840c8",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "chapter_covers": 28,
     "appendices": 12,
-    "diagrams": 45,
-    "code_blocks": 70,
-    "longtables": 143,
-    "compact_tables": 108,
-    "callout_tables": 94,
+    "diagrams": 43,
+    "code_blocks": 69,
+    "longtables": 145,
+    "compact_tables": 109,
+    "callout_tables": 96,
     "citation_occurrences": 111,
     "reference_targets": 48,
     "unique_citation_ids": 48,
-    "markdown_tables": 345,
-    "markdown_code_blocks": 70,
+    "markdown_tables": 350,
+    "markdown_code_blocks": 69,
     "image_quality": [
       {
         "file": "assets/cover/cover-v1.0.0.png",
@@ -129,42 +129,26 @@
       {
         "file": "assets/diagrams/developer-platform.png",
         "pixels": [
-          2271,
-          1471
+          2262,
+          1469
         ],
-        "effective_dpi": 321.7
+        "effective_dpi": 320.4
       },
       {
         "file": "assets/diagrams/portability.png",
         "pixels": [
-          2271,
-          999
+          2265,
+          964
         ],
-        "effective_dpi": 321.7
-      },
-      {
-        "file": "assets/diagrams/developer-lifecycle.png",
-        "pixels": [
-          2279,
-          2183
-        ],
-        "effective_dpi": 322.8
+        "effective_dpi": 320.8
       },
       {
         "file": "assets/diagrams/dx-golden-path.png",
         "pixels": [
-          2270,
-          1982
+          2292,
+          1196
         ],
-        "effective_dpi": 321.5
-      },
-      {
-        "file": "assets/diagrams/test-pyramid.png",
-        "pixels": [
-          2269,
-          1020
-        ],
-        "effective_dpi": 321.4
+        "effective_dpi": 324.6
       },
       {
         "file": "assets/diagrams/skill-resolution.png",
