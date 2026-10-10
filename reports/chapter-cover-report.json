@@ -81,7 +81,7 @@
         2550,
         3300
       ],
-      "sha256": "1c0b4b49528fdd8483aee3085fc4734c4e6a3843bf880fc56b0c3ac5e17ced39"
+      "sha256": "d2cf3321cd095b7537094eca01eebd79e3e95d940bc3b4220f31fe745fe1bc25"
     },
     {
       "file": "cover-images/chapter-11-route-the-work-without-losing-ownership.png",
@@ -97,7 +97,7 @@
         2550,
         3300
       ],
-      "sha256": "943ee9685d6defed95a8a1a2570679bb6db2a85b42e435d1b6586f22182d5dee"
+      "sha256": "1de044423d6753ce911420e549e7cb89574ad521465c975b9766dd7ce5925d03"
     },
     {
       "file": "cover-images/chapter-13-use-critique-to-improve-never-to-self-approve.png",
@@ -113,7 +113,7 @@
         2550,
         3300
       ],
-      "sha256": "d9771cf1f11ba1ac66a4ed082e952e0ef20460fbee024482c9875cba91b9da4c"
+      "sha256": "6a3126fad1682d5ebb2682fda4835097796069660474e58184e26a4cb3ccd86a"
     },
     {
       "file": "cover-images/chapter-15-keep-long-running-work-alive-through-failure.png",
@@ -129,7 +129,7 @@
         2550,
         3300
       ],
-      "sha256": "e58e1dd59290e0bb11c69546c7cc9a22c0032be437b96a62959e40a92eec43fa"
+      "sha256": "02b5cbc41101527a21cf6f9561749f1ddc8ed22f86ad5d3f5543cd9bb88d1492"
     },
     {
       "file": "cover-images/chapter-17-architecture-patterns-that-fail-in-production.png",
