@@ -7,7 +7,7 @@ digraph portability {
   node [width=1.45, fontsize=11.5]
 
   app [label="Application code", fillcolor="#F7ECF8", color="#6A2E6E", width=2.4]
-  contracts [label="Platform contracts\nAgentSpec · ToolSpec · RunContext",
+  contracts [label="Platform contracts\nAgentSpec · AgentStepRequest · ToolManifest",
              fillcolor="#EAF3FB", color="#1450A3", style=filled, width=3.2]
 
   subgraph cluster_frameworks {

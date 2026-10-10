@@ -1,6 +1,6 @@
 {
-  "examples": 26,
-  "cited": 26,
+  "examples": 27,
+  "cited": 27,
   "uncited": [],
   "rendered_lines": {
     "contracts": 108,
@@ -16,10 +16,11 @@
     "mlflow-evaluation": 53,
     "mortgage-agents-mlflow": 69,
     "mlflow-trajectory-evaluation": 48,
-    "skills-registry": 188,
+    "skills-registry": 199,
     "plan-compilation": 114,
     "approval-verification": 98,
     "step-execution": 98,
+    "adapter-conformance": 64,
     "durable-state": 91,
     "react-engine": 120,
     "policy-to-rule": 51,
@@ -33,6 +34,7 @@
   "tests_executed": true,
   "tests_passed": true,
   "test_files": [
+    "examples/tests/test_adapter_conformance.py",
     "examples/tests/test_agent_tool_loop.py",
     "examples/tests/test_approval_gate.py",
     "examples/tests/test_approval_verification.py",

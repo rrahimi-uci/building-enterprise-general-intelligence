@@ -16,7 +16,7 @@ digraph skill_resolution {
   edge [arrowsize=0.65, penwidth=1.5, color="#1450A3"]
 
   need [label="Capability need\n\"read mortgage evidence\"", fillcolor="#E7F5F3", color="#0D6E69"]
-  cat  [label="Catalog search\nsemantic, permissive", fillcolor="#E6F5F9", color="#0B6076"]
+  cat  [label="Catalog search\nsemantic, broad", fillcolor="#E6F5F9", color="#0B6076"]
   cand [label="Candidates\nmortgage.evidence.read @ 0.1.0, 0.1.1", shape=note,
         style=filled, fillcolor="#E6F5F9", color="#0B6076"]
 
