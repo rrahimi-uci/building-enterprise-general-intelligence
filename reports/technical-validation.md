@@ -61,7 +61,7 @@ validation, LaTeX validation, and deterministic-build checks.
 
 ## Full-book review evidence
 
-- Review contract and chapter-by-chapter matrix: `full-book-review-plan.md`.
+- Review contract and chapter-by-chapter matrix: `full-book-review-plan.md` (removed from the tree after the review closed; recoverable from git history).
 - The running example is consistently Harborlight Mortgage; broader supplier, support, and procurement material is retained only as explicitly labeled comparative architecture evidence.
 - The primary mortgage contract vocabulary uses `HumanActionAuthorizationRequest` and `HumanActionAuthorizationDecision` consistently across source, examples, diagrams, and generated artifacts.
 - Example execution: 26 examples and 123 tests passed with no warnings.

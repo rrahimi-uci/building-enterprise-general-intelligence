@@ -310,7 +310,7 @@ open for the author’s review.
 ## Addendum — Full-book end-to-end review
 
 **Reviewed:** 2026-09-16
-**Review plan:** `full-book-review-plan.md`
+**Review plan:** `full-book-review-plan.md` (removed from the tree after the review closed; recoverable from git history)
 
 This pass executed the review plan across the complete canonical source and its
 publication pipeline. The mortgage case is now the primary narrative from the
