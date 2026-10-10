@@ -1,29 +1,55 @@
 // Figure 16-1 — Pattern selection decision tree.
 // Message: choose by hidden obligation, uncertainty and risk, not by fashionable
-// terminology. Each leaf names the pattern and the condition that reached it.
+// terminology. The first questions pick the shape of the work; every shape then
+// takes the three checks below it, adding one Part IV pattern for each yes.
+// Each leaf names the pattern and the chapter that teaches it.
 digraph pattern_decision_tree {
   rankdir = TB
-  graph [ranksep=0.32, nodesep=0.14]
+  compound = true
+  graph [ranksep=0.30, nodesep=0.16]
   node [width=1.35, fontsize=10.5]
   edge [fontsize=9.5]
 
-  q1 [label="Path known\nin advance?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.5, height=0.85]
-  q2 [label="Next step depends\non observation?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.8, height=0.85]
-  q3 [label="Long-running?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.5, height=0.85]
-  q4 [label="Effect needs\nhuman authority?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.7, height=0.85]
+  subgraph cluster_shape {
+    label="  1 · Choose the shape of the work  "; labeljust="l"; fontsize=11; fontcolor="#4A6078"
+    color="#4A6078"; style="rounded"; margin=10
 
-  p1 [label="Deterministic\nworkflow", fillcolor="#E7F5F3", color="#0D6E69"]
-  p2 [label="Bounded\nReAct", fillcolor="#E7F5F3", color="#0D6E69"]
-  p3 [label="Plan–Execute", fillcolor="#E7F5F3", color="#0D6E69"]
-  p4 [label="Durable\nagent", fillcolor="#E7F5F3", color="#0D6E69"]
-  p5 [label="Human-in-\nthe-loop", fillcolor="#E7F5F3", color="#0D6E69"]
+    q1 [label="Path known\nin advance?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.5, height=0.85]
+    q2 [label="Several known\nspecialists or paths?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.9, height=0.85]
+    q3 [label="Next step depends\non observation?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.8, height=0.85]
 
-  q1 -> p1 [label=" yes ", color="#0D6E69", fontcolor="#0D6E69"]
-  q1 -> q2 [label=" no "]
-  q2 -> p2 [label=" yes ", color="#0D6E69", fontcolor="#0D6E69"]
-  q2 -> p3 [label=" no "]
-  q2 -> q3 [style=dashed, color="#4A6078", label=" then "]
-  q3 -> p4 [label=" yes ", color="#0D6E69", fontcolor="#0D6E69"]
-  q3 -> q4 [label=" no "]
-  q4 -> p5 [label=" yes ", color="#0D6E69", fontcolor="#0D6E69"]
+    p1 [label="Deterministic\nworkflow (Ch 12/15)", fillcolor="#E7F5F3", color="#0D6E69"]
+    p2 [label="Routing /\nhandoff (Ch 11)", fillcolor="#E7F5F3", color="#0D6E69"]
+    p3 [label="Bounded\nReAct (Ch 10)", fillcolor="#E7F5F3", color="#0D6E69"]
+    p4 [label="Plan\ncompilation (Ch 12)", fillcolor="#E7F5F3", color="#0D6E69"]
+
+    q1 -> p1 [label=" yes ", color="#0D6E69", fontcolor="#0D6E69"]
+    q1 -> q2 [label=" no "]
+    q2 -> p2 [label=" yes ", color="#0D6E69", fontcolor="#0D6E69"]
+    q2 -> q3 [label=" no "]
+    q3 -> p3 [label=" yes ", color="#0D6E69", fontcolor="#0D6E69"]
+    q3 -> p4 [label=" no "]
+  }
+
+  subgraph cluster_checks {
+    label="  2 · Then add what the obligation needs  "; labeljust="l"; fontsize=11; fontcolor="#4A6078"
+    color="#4A6078"; style="rounded"; margin=10
+
+    c1 [label="Outlives one\nrequest?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.6, height=0.85]
+    c2 [label="Draft quality\nneeds revision?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.7, height=0.85]
+    c3 [label="Effect needs\nhuman authority?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond, style=filled, width=1.7, height=0.85]
+
+    a1 [label="Durable\nexecution (Ch 15)", fillcolor="#E7F5F3", color="#0D6E69"]
+    a2 [label="Evaluator–\noptimizer (Ch 13)", fillcolor="#E7F5F3", color="#0D6E69"]
+    a3 [label="Approval /\nintervention (Ch 14)", fillcolor="#E7F5F3", color="#0D6E69"]
+
+    c1 -> a1 [label=" yes ", color="#0D6E69", fontcolor="#0D6E69"]
+    c1 -> c2 [label=" then "]
+    c2 -> a2 [label=" yes ", color="#0D6E69", fontcolor="#0D6E69"]
+    c2 -> c3 [label=" then "]
+    c3 -> a3 [label=" yes ", color="#0D6E69", fontcolor="#0D6E69"]
+  }
+
+  p4 -> c1 [style=dashed, color="#4A6078", fontcolor="#4A6078", label=" every shape, then ",
+            ltail=cluster_shape, lhead=cluster_checks]
 }

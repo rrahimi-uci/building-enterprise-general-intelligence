@@ -37,22 +37,166 @@ keeps the main argument honest.
 6. Side effect: proposal/authorize/commit, idempotency, reconciliation, acceptance.
 7. Post-deployment improvement: governed learning; never self-certification.
 
+Figure 16-1 and Chapter 16 cover the Part IV subset of these choices.
+
+## Pattern cards
+
+Each card names the obligation it protects, the shortcut that fails, the better design, and the chapter that builds it. Where the pattern already has a card in its chapter, the entry stays short and points there.
+
+### P-01 — Bounded ReAct
+
+**Use when.** The next step depends on an observation, and adaptive evidence gathering is needed.
+
+**Shortcut that fails.** An unbounded think–act loop, in which the model owns stopping, budget, and success.
+
+**Better design.** A controller bounds steps, time, tokens, tools, and evidence, and deterministic acceptance decides when the work is done.
+
+**Built in.** Chapter 10; card: § ReAct at a glance.
+
+### P-02 — Deterministic spine with semantic nodes
+
+**Use when.** Known obligations include a few judgment points.
+
+**Shortcut that fails.** A conversational agent owns the process, so retries, waits, joins, approval, and compensation become ambiguous.
+
+**Better design.** A durable workflow with bounded semantic nodes: workflow state → semantic task → typed result → deterministic transition. The Harborlight evidence review always loads the case, checks the policy snapshot, requests missing documents through the six gates, and runs acceptance; only the evidence assessment between those steps is semantic.
+
+**Watch and cost.** Track transcript-only state, orphan tasks, duplicate effects, and recovery time. Workflow modeling adds upfront cost.
+
+**Built in.** Chapters 12 and 15.
+
+### P-03 — Typed ContextManifest
+
+**Use when.** The model needs authorized, fresh evidence within a token budget.
+
+**Shortcut that fails.** Top-k hits and chat history are dumped into the prompt, so selection, access control, freshness, poisoning, and truncation cannot be reproduced.
+
+**Better design.** Authorization precedes retrieval, and a manifest records each segment's source, snapshot, provenance, rank, freshness, and token allocation: planner → authorization → retrieval → ranking/dedup → manifest → model.
+
+**Built in.** Chapter 6; see § How context is assembled.
+
+### P-04 — Provenance-bound memory
+
+**Use when.** Useful facts must persist beyond one run.
+
+**Shortcut that fails.** Every interaction is written to one vector store, so errors, secrets, stale facts, and injected instructions persist.
+
+**Better design.** Working memory stays run-scoped; long-term memory is written only through a gate that requires purpose, scope, TTL, provenance, verification, and a deletion path.
+
+**Built in.** Chapter 6; see § Memory is not a bag of embeddings.
+
+### P-05 — Tool façade behind the six gates
+
+**Use when.** An agent must cause a business effect.
+
+**Shortcut that fails.** A broad CRUD call with ambient credentials, so language becomes authorization and retries duplicate work.
+
+**Better design.** A typed, least-privilege tool whose effects pass the six gates: propose → validate → authorize → commit → verify → accept.
+
+**Built in.** Chapters 2 and 22; card: Chapter 2 § Tool Use at a glance.
+
+### P-06 — Typed task ownership and join
+
+**Use when.** Specialists collaborate on one outcome.
+
+**Shortcut that fails.** Free-form agent chat owns the work, producing duplicate owners, cycles, lost artifacts, and premature completion.
+
+**Better design.** A TaskEnvelope gives each task one owner, narrowed authority, a deadline, artifacts by reference, cancellation, and a deterministic join.
+
+**Built in.** Chapters 11 and 18; card: Chapter 18 § Supervisor/Worker at a glance.
+
+### P-07 — Least-privilege capability envelope
+
+**Use when.** Agents need sensitive access.
+
+**Shortcut that fails.** One reusable token follows the chain, so injection or compromise gains broad authority.
+
+**Better design.** Subject and workload identity yield a capability envelope (scope) by intersection, and a short-lived credential lease (proof) is minted at the moment of use: identity → policy → capability envelope → credential lease → gateway and tool enforcement. A loan officer may read an authorized mortgage case and propose a document request, but cannot approve the operation or make the lending decision.
+
+**Watch and cost.** Track scope and age, expansion attempts, cross-tenant attempts, and denials. Fine-grained policy needs templates and simulation.
+
+**Built in.** Chapter 21.
+
+### P-08 — Effect ledger and reconciliation
+
+**Use when.** A timeout may follow a committed external effect.
+
+**Shortcut that fails.** Timeout means failure and retry, so the same logical effect executes twice.
+
+**Better design.** An EffectRecord reserved before dispatch, a stable logical effect key, an Unknown state that blocks retry, and reconciliation against the authoritative system: reserve → dispatch → receipt or Unknown → reconcile → accept. A timed-out mortgage document request is looked up by its idempotency key before anything retries it.
+
+**Watch and cost.** Track Unknown rate and age, duplicate effects, and reconciliation latency. It requires downstream receipts or a query interface.
+
+**Built in.** Chapter 22.
+
+### P-09 — Causal run trace
+
+**Use when.** Diagnosis spans model, context, policy, tools, humans, and effects.
+
+**Shortcut that fails.** Independent logs and transcripts, so the first divergence and the attribution of outcome and cost are lost.
+
+**Better design.** One trace links request, release, context, decisions, effects, acceptance, and outcome through trace IDs and domain IDs. The trace reveals stale retrieval before a correct but misinformed tool call.
+
+**Watch and cost.** Track unlinked spans, missing versions, outcome joins, and diagnosis time. Capture is costly and sensitive; sample and reference payloads.
+
+**Built in.** Chapter 24.
+
+### P-10 — Evidence gates scaled to the change
+
+**Use when.** Behavior changes often but review capacity is finite.
+
+**Shortcut that fails.** Manually review everything, or auto-deploy from one score; fatigue or self-certification hides risk.
+
+**Better design.** Review depth follows change class × use-case tier (Chapter 26), with proportional tests, reviewers, canary, and rollback: ChangeBundle → change class and tier → validation → approval → staged release. A typo fix in a low-tier assistant auto-promotes; a model change for the mortgage evidence agent requires domain, privacy, and risk approval.
+
+**Watch and cost.** Track bypasses, reviewer fatigue, exception age, and regression escapes. Classification needs calibration.
+
+**Built in.** Chapters 25–27.
+
+### P-11 — Durable runtime with backpressure
+
+**Use when.** Runs face bursts, waits, humans, and unreliable dependencies.
+
+**Shortcut that fails.** Synchronous workers retry locally, so state is lost and outages amplify queues and retries.
+
+**Better design.** Durable state, timers, and bounded retries (Chapter 15), plus admission permits, quotas, circuit breakers, and degraded mode (Chapter 28).
+
+**Built in.** Chapters 15 and 28; card: Chapter 15 § Durable execution at a glance.
+
+### P-12 — Portable contracts and adapters
+
+**Use when.** Several frameworks or providers must coexist.
+
+**Shortcut that fails.** Application code depends on provider-native objects, so migration rewrites applications and controls diverge.
+
+**Better design.** Platform-owned contracts and normalized events with conformance-tested adapters: application contracts → adapters → shared services → providers and protocols. A framework migration keeps tools, policy, traces, evaluation, and release intact.
+
+**Watch and cost.** Track native-object leakage, conformance failures, and migration effort. The abstraction may lag new features; allow negotiated extensions.
+
+**Built in.** Chapters 3 and 7.
+
 ## Match the obligation to a pattern
 
-| **Category** | **Recommended pattern** | **Anti-pattern** | **Primary chapters** |
+The chapters column lists where each pattern is built, plus Chapter 17 for its anti-patterns. The last four rows are Part IV patterns without a P-card; their cards are in Chapters 11–14.
+
+| **Category** | **Recommended pattern** | **Anti-pattern** | **Chapters** |
 | --- | --- | --- | --- |
-| Reasoning | P-01 Bounded ReAct | AP-01 monolith; AP-11 unbounded loops | 10, 16–17 |
-| Orchestration | P-02 deterministic spine | AP-08 chat as workflow | 11–15, 17–18 |
-| Context | P-03 ContextManifest | AP-02 prompt database; AP-09 vector truth | 5–6, 17 |
-| Memory | P-04 tiered memory | AP-13 memory write by default | 6, 17 |
-| Tools | P-05 proposal–authorize–commit façade | AP-12 ungated discovery | 2–3, 17, 19, 22 |
-| Multi-agent | P-06 typed tasks/join | AP-08 chat as workflow | 17–19 |
-| Security | P-07 capability envelope | AP-03 ambient authority; AP-10 judge gate | 17, 20–23 |
-| Reliability | P-08 effect reconciliation | AP-04 retry everywhere; AP-05 timeout=failure | 15, 17, 22, 27–28 |
-| Observability | P-09 causal run graph | AP-07 model says done; AP-14 unlinked telemetry | 17, 24–25, 27–28 |
-| Governance | P-10 risk-tiered gates | AP-06 Boolean approval | 14, 17, 26 |
-| Operations | P-11 durable runtime/backpressure | AP-16 in-place change | 15, 17, 27–28 |
-| Architecture | P-12 portable contracts/adapters | AP-15 provider swap as config | 3–4, 7, 17, 27 |
+| Reasoning | P-01 Bounded ReAct | AP-11 unbounded loops | 10, 17 |
+| Orchestration | P-02 deterministic spine | AP-01 monolith; AP-07 model says done | 12, 15, 17 |
+| Context | P-03 ContextManifest | AP-02 prompt database; AP-09 vector truth | 6, 17 |
+| Memory | P-04 provenance-bound memory | AP-13 memory write by default | 6, 17 |
+| Tools | P-05 tool façade behind the six gates | AP-06 Boolean approval; AP-12 ungated discovery | 2, 17, 21, 22 |
+| Multi-agent | P-06 typed tasks/join | AP-08 chat as workflow | 11, 17, 18 |
+| Security | P-07 capability envelope | AP-03 ambient authority; AP-10 judge gate | 17, 21 |
+| Reliability | P-08 effect reconciliation | AP-04 retry everywhere; AP-05 timeout=failure | 17, 22 |
+| Observability | P-09 causal run trace | AP-14 unlinked telemetry | 17, 24 |
+| Governance | P-10 evidence gates scaled to the change | AP-15 provider swap as config; AP-16 in-place change | 17, 25–27 |
+| Operations | P-11 durable runtime/backpressure | AP-04 retry amplification under load | 15, 17, 28 |
+| Architecture | P-12 portable contracts/adapters | — | 3, 7, 17 |
+| Routing and handoff | Chapter 11 routing and handoff | AP-08 chat as workflow; AP-12 ungated discovery | 11, 17 |
+| Planning | Chapter 12 plan compilation | AP-11 unbounded loops | 12, 17 |
+| Quality | Chapter 13 reflection, evaluator–optimizer, and acceptance | AP-07 model says done; AP-10 judge gate | 13, 17 |
+| Human authority | Chapter 14 approval and intervention | AP-06 Boolean approval | 14, 17 |
 
 # Appendix B — When Things Go Wrong: Triage and Runbooks
 

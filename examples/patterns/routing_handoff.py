@@ -1,8 +1,10 @@
-"""Routing by handoff: a triage agent that transfers ownership, not just context.
+"""Framework handoff: a triage agent passes control to a specialist within one run.
 
-A handoff is an authority transfer. The receiving agent runs with its own
-instructions, its own tools, and -- in a real deployment -- its own grant. That
-is what makes routing an architecture decision rather than a prompt trick.
+This is the SDK's handoff primitive. It moves control, not accountability: the
+specialist answers inside the same run, budget, and cancellation boundary. An
+accountable handoff -- a recorded, acknowledged ownership transfer -- is a
+platform record the workflow keeps around this call (Chapter 11), and exact
+authorization still happens when a specialist acts.
 """
 from __future__ import annotations
 

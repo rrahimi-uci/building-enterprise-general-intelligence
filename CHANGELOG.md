@@ -14,6 +14,21 @@ All notable changes follow semantic versioning and are recorded here.
 - The trajectory example adds a deterministic `forbidden_tool_absent` scorer, and its judge no longer assesses authorization.
 - Figures 25-2 and 25-3: runtime lane matches the prose; Approve reads "owner or pre-approved class".
 
+### Part IV — patterns that work and those that fail (continuity review)
+
+- The Part IV orientation now links the patterns to the Part III platform and states the three questions every pattern chapter answers.
+- Chapter 10 separates stopping (controller) from acceptance (acceptance engine), aligns its typed decisions with the shared contracts, and defines observations and information gain.
+- Chapter 11 is now the home of handoff: framework handoff versus accountable handoff, the ownership table, and the acknowledgment protocol. Figure 11-1 shows eligibility before classification, and a new tested `route-validation` example replaces the inline router.
+- Chapter 12 is reordered around the Plan IR: a risk-class gloss, a node-kind map to Part IV, compile-time checks next to the IR, and one revision section.
+- Chapter 13 defines the acceptance engine and `AcceptanceDecision`. A tested `evaluator-optimizer` example replaces the inline listing that let the evaluator approve its own work, and Figure 13-1 runs executable checks before an advisory judge.
+- Chapters 10–13 use "<Pattern> at a glance" cards, claim rows instead of generic evidence boxes, and drop R13/R07 citations that supported no claim.
+- Chapter 14 names three human controls (approval, intervention, operator control) and adds an intervention contract. Every Part IV escalation now lands as a typed InterventionTask. The approval field list appears once, uses the `ApprovalRequest` / `ApprovalDecision` names, and the divergent inline code is gone.
+- Chapter 15 is reordered so the lifecycle comes before its terminal states. It adds the book's run-state table, fills the empty event-driven resume section, links each lifecycle step to its Part IV pattern, and points to Chapters 4, 22, and 27 instead of repeating them. The recovery-objective claim, which exceeded its sources, is replaced.
+- Chapter 16 is now a slim Part IV synthesis: a revised decision tree (Figure 16-1) with chapter-labelled leaves, a comparison table of the Chapter 10–15 patterns, and one Harborlight run that composes them. The twelve platform pattern cards move to Appendix A.
+- Appendix A holds the twelve P-cards, each tagged with the chapter that builds it, with corrected pairings and rows for the Part IV patterns. P-09 is now "Causal run trace", and P-03 and P-04 follow Chapter 6's authorization order and memory taxonomy.
+- Chapter 17 tags each card "Prevented in / Built in" (seven prevented, seven previewed, two built later), moves the prioritization into "How to read a card", and moves its six anti-pattern/correction listings into tested examples (`examples/antipatterns/`). The AP-05 correction no longer retries after a null lookup, and the AP-06 correction keys the commit by the logical effect.
+- Terminology across Chapters 14–17: approval rather than "human action authorization", the second pay statement as the missing document, capability envelope plus credential lease (Figure 17-2), and no Northstar or supplier-onboarding examples.
+
 ### Shared contracts and examples (continuity review, Phase 1)
 
 - `AgentDecision.disposition` gains `proposed_action`: `invoke_tool` is a read, and a mutation leaves the loop as a proposal.
