@@ -4,6 +4,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Remove the reviews-comments folder
+
+- Removed `reviews-comments/` (an already-applied Chapter 3 review DOCX and its `.gitkeep`) and its `.gitignore` rule. Its entries drop out of `RELEASE-MANIFEST.json` and `CHECKSUMS.sha256` at the next `make package`.
+
 ### Connect Chapter 2's opening callouts into one narrative
 
 - Added a framing paragraph before Chapter 2's four opening callout boxes
