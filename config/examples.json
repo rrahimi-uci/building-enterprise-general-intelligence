@@ -116,7 +116,7 @@
       "book_chapters": [11],
       "path": "examples/patterns/routing_handoff.py",
       "language": "python",
-      "title": "Routing by handoff: transferring ownership, not context",
+      "title": "Framework handoff: passing control to a specialist within one run",
       "verify": "test",
       "tests": [
         "examples/tests/test_routing_handoff.py"
@@ -125,6 +125,38 @@
         "openai==3.13.0",
         "openai-agents==0.22.2"
       ]
+    },
+    {
+      "id": "route-validation",
+      "book_chapters": [11],
+      "path": "examples/patterns/route_validation.py",
+      "language": "python",
+      "title": "Eligibility-first routing with validation and fallback",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_route_validation.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ],
+      "regions": {
+        "router": "Eligibility, model proposal, validation, and fallback."
+      }
+    },
+    {
+      "id": "evaluator-optimizer",
+      "book_chapters": [13],
+      "path": "examples/patterns/evaluator_optimizer.py",
+      "language": "python",
+      "title": "A bounded evaluator-optimizer whose judge cannot accept",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_evaluator_optimizer.py"
+      ],
+      "libraries": [],
+      "regions": {
+        "core": "Checks first, judge as evidence, acceptance engine decides, escalation on stop."
+      }
     },
     {
       "id": "approval-gate",
@@ -293,6 +325,80 @@
       "regions": {
         "core": "The logic the chapter teaches, without the supporting models."
       }
+    },
+    {
+      "id": "ap-delegation-budget",
+      "book_chapters": [17],
+      "path": "examples/antipatterns/delegation_budget.py",
+      "language": "python",
+      "title": "AP-11 and its correction: delegation draws on one budget",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_antipatterns.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "ap-state-projection",
+      "book_chapters": [17],
+      "path": "examples/antipatterns/state_projection.py",
+      "language": "python",
+      "title": "AP-02 and its correction: typed state projected into context",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_antipatterns.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "ap-memory-gate",
+      "book_chapters": [17],
+      "path": "examples/antipatterns/memory_gate.py",
+      "language": "python",
+      "title": "AP-13 and its correction: a memory write passes a gate",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_antipatterns.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "ap-retry-owner",
+      "book_chapters": [17],
+      "path": "examples/antipatterns/retry_owner.py",
+      "language": "python",
+      "title": "AP-04 and its correction: one retry owner, one shared budget",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_antipatterns.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "ap-unknown-effect",
+      "book_chapters": [17],
+      "path": "examples/antipatterns/unknown_effect.py",
+      "language": "python",
+      "title": "AP-05 and its correction: a timeout leaves the effect Unknown",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_antipatterns.py"
+      ],
+      "libraries": []
+    },
+    {
+      "id": "ap-bound-approval",
+      "book_chapters": [17],
+      "path": "examples/antipatterns/bound_approval.py",
+      "language": "python",
+      "title": "AP-06 and its correction: the approval covers this exact proposal",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_antipatterns.py"
+      ],
+      "libraries": [
+        "pydantic==2.13.5"
+      ]
     },
     {
       "id": "step-execution",

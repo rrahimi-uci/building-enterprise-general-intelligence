@@ -1,6 +1,7 @@
 // Figure 11-1 — Routing. Selection is not authority.
-// Message: the router decides WHO should handle the work. It never decides
-// whether the work is permitted -- that is a separate policy decision, and a
+// Message: the eligible set is computed before the classifier sees anything.
+// The router decides WHO should handle the work. It never decides whether the
+// work is permitted -- that is a separate authorization decision, and a
 // low-confidence route falls back rather than guessing.
 digraph pattern_routing {
   rankdir = TB
@@ -10,15 +11,18 @@ digraph pattern_routing {
   edge [arrowsize=0.65, penwidth=1.5, color="#1450A3"]
 
   req [label="Request", fillcolor="#EEF4FA", color="#4A6078"]
-  cls [label="Classify\nintent · risk · confidence", shape=diamond, style=filled,
+  eli [label="Eligible set\npurpose · authority · region\nhealth · release", fillcolor="#EAF3FB",
+       color="#1450A3", width=2.4]
+  cls [label="Classify\nintent · confidence", shape=diamond, style=filled,
        fillcolor="#FFF4DF", color="#8A5600", height=0.75, width=2.3]
   s1  [label="Specialist A", fillcolor="#E7F5F3", color="#0D6E69"]
   s2  [label="Specialist B", fillcolor="#E7F5F3", color="#0D6E69"]
   fb  [label="Fallback\nhuman or safe default", fillcolor="#EEF4FA", color="#4A6078", width=2.0]
-  pol [label="Policy decision\nmay this subject use it?", fillcolor="#FCECEC",
+  pol [label="Exact authorization\nmay this subject invoke it?", fillcolor="#FCECEC",
        color="#A62C2C", width=2.4]
 
-  req -> cls
+  req -> eli
+  eli -> cls [label=" eligible only", fontsize=9, fontcolor="#4A6078"]
   cls -> s1 [label=" high", fontsize=9, fontcolor="#4A6078"]
   cls -> s2 [label=" high", fontsize=9, fontcolor="#4A6078"]
   cls -> fb [label=" low confidence", fontsize=9, fontcolor="#4A6078", color="#4A6078"]
