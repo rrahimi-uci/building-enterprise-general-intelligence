@@ -4,6 +4,15 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Apply DOCX review to Part VI
+
+Applied a deep review of the DOCX (Chapters 20–23) to the canonical source:
+
+- Fixed the Ch22 failure timeline, which said "ERP" in a scenario about the LOS, and expanded LOS on first use.
+- Ch22 no longer says to authorize "never against the agent's own identity", which contradicted Ch21's subject-and-actor model.
+- Removed overstated security guarantees: containment claims replace "remains safe", "remains valid", and "passes every input guard"; approval is bound when required rather than for every protected effect.
+- Replaced unresolvable legacy source keys with registry IDs; effect-state names and the intent hash are used consistently.
+
 ### Apply DOCX review to Part V
 
 Applied a deep review of the DOCX (Chapters 18–19) to the canonical source:
