@@ -400,6 +400,36 @@
       "checkpoint": "C01-C03",
       "book_chapters": [1, 2, 3],
       "offline": true
+    },
+    {
+      "id": "release-compatibility",
+      "book_chapters": [27],
+      "path": "examples/platform/release_compatibility.py",
+      "language": "python",
+      "title": "Release compatibility check against a worker profile",
+      "verify": "test",
+      "tests": ["examples/tests/test_release_compatibility.py"],
+      "libraries": ["pydantic==2.13.5"]
+    },
+    {
+      "id": "release-attestation",
+      "book_chapters": [27],
+      "path": "examples/platform/release_attestation.py",
+      "language": "python",
+      "title": "Release attestation bound to verified identities",
+      "verify": "test",
+      "tests": ["examples/tests/test_release_attestation.py"],
+      "libraries": ["pydantic==2.13.5"]
+    },
+    {
+      "id": "admission-permit",
+      "book_chapters": [28],
+      "path": "examples/platform/admission_permit.py",
+      "language": "python",
+      "title": "Capacity admission that grants, defers, or rejects",
+      "verify": "test",
+      "tests": ["examples/tests/test_admission_permit.py"],
+      "libraries": []
     }
   ]
 }

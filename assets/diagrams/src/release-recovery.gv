@@ -26,5 +26,5 @@ digraph release_recovery {
   canary -> rollback [label="  SLO/eval breach  ", color="#A62C2C", fontcolor="#A62C2C", style=dashed]
   active -> reconcile [label="  timeout or failover  ", color="#8A5600", fontcolor="#8A5600", style=dashed]
   reconcile -> recovery
-  recovery -> worker [label="  resume by risk tier  ", color="#6A2E6E", fontcolor="#6A2E6E"]
+  recovery -> worker [label="  resume by effect risk class  ", color="#6A2E6E", fontcolor="#6A2E6E"]
 }

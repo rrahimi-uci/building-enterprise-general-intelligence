@@ -14,6 +14,15 @@ All notable changes follow semantic versioning and are recorded here.
 - Approval records are `ApprovalRequest` / `ApprovalDecision`, issued by `ApprovalService`, in the examples and `mortgage_case/`.
 - Examples and tests use the second pay statement (`pay_statement`) as the missing document.
 
+### Part VIII and the Closing Perspective (continuity review, WP-VIII)
+
+- Chapter 26 now holds governance's own mechanism: use-case tiers T0–T4 related to effect risk classes R0–R4 and change classes, a release review-depth rule, control-hierarchy and cadence tables, an expiring-exception lifecycle, and the governance inventory, exception API, GovernanceRecord, and ExceptionWaiver moved from Chapters 23 and 27.
+- Chapter 27 defines one release chain (ChangeBundle → ReleaseManifest → EnvironmentBinding → RunManifest), teaches release contents once, adds a seven-step regional recovery sequence, uses "global control tier" and "regional execution cell", and moves the baseline technology stack to Appendix D.
+- Chapter 28 is reordered to measure → optimize → admit → degrade, separates permit-holding work from waiting runs in its Little's Law example, receives Chapter 19's policy-first model routing, and merges its duplicated concurrency lists.
+- Inline Python in Chapters 27 and 28 is replaced by tested examples: `release-compatibility` (typed `WorkerProfile`), `release-attestation` (binds verified identities to the artifact), and `admission-permit` (grant, defer, or reject).
+- Northstar boxes become mortgage-case boxes; numeric "guardrails" become "starting limits"; Figures 26-1, 27-1, and 28-1 and the Chapter 26 cover are corrected.
+- The Closing Perspective now follows Chapter 28, replays Chapter 1's Monday–Friday failures against the controls that contain them, and states that only checkpoints C01–C03 are implemented.
+
 ### Cover artwork and version labels
 
 - Removed printed release numbers from the book cover and all 28 chapter covers; regenerated the cover artwork and synchronized publication artifacts. The release identifier remains `v1.0.0` in metadata, filenames, title page, and running footers.

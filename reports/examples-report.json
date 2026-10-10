@@ -1,6 +1,6 @@
 {
-  "examples": 26,
-  "cited": 26,
+  "examples": 29,
+  "cited": 29,
   "uncited": [],
   "rendered_lines": {
     "contracts": 108,
@@ -28,11 +28,15 @@
     "rule-as-guardrail": 58,
     "set-operations": 81,
     "capability-catalog": 55,
-    "mortgage-cumulative-case": 23
+    "mortgage-cumulative-case": 23,
+    "release-compatibility": 47,
+    "release-attestation": 41,
+    "admission-permit": 38
   },
   "tests_executed": true,
   "tests_passed": true,
   "test_files": [
+    "examples/tests/test_admission_permit.py",
     "examples/tests/test_agent_tool_loop.py",
     "examples/tests/test_approval_gate.py",
     "examples/tests/test_approval_verification.py",
@@ -53,6 +57,8 @@
     "examples/tests/test_plan_compilation.py",
     "examples/tests/test_policy_to_rule.py",
     "examples/tests/test_react_engine.py",
+    "examples/tests/test_release_attestation.py",
+    "examples/tests/test_release_compatibility.py",
     "examples/tests/test_routing_handoff.py",
     "examples/tests/test_rule_as_guardrail.py",
     "examples/tests/test_set_operations.py",

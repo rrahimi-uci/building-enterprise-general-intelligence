@@ -117,7 +117,7 @@
     {
       "id": "governance-model",
       "file": "assets/diagrams/governance-model.png",
-      "sha256": "f6610ba8bda791e0c2c520c507af352a9d4c850f6e471e510da57847dc4cee51",
+      "sha256": "f7770bb832a0847b46f9be3caf5b998cb0dc5d69dc176bc8e3e3e99a6486488f",
       "source": "assets/diagrams/src/governance-model.gv",
       "vector": "assets/diagrams/governance-model.pdf"
     },
@@ -238,7 +238,7 @@
       "source": "assets/diagrams/src/release-recovery.gv",
       "vector": "assets/diagrams/release-recovery.pdf",
       "description": "Immutable release promotion and regional recovery without rewriting active run history",
-      "sha256": "2821187cb8b0efb8af797ab239cd4effaff5907c3b07ae4bf09ab2a582f1b63e"
+      "sha256": "a63f80fa6f6ba3e673ee4caa1fe791b715d137a1e4ca4e07980e7883a5f30745"
     },
     {
       "id": "reliability-economics",
@@ -246,7 +246,7 @@
       "source": "assets/diagrams/src/reliability-economics.gv",
       "vector": "assets/diagrams/reliability-economics.pdf",
       "description": "Admission, bounded execution, and outcome-based operating feedback",
-      "sha256": "741f097070c5b94bde04fbc1db7f091b5112a563c33f0a5059e1f232e51c6645"
+      "sha256": "6f615778d5c8dbf95decf7adb569845831c9ed3f421064a14b070a16ff8742fe"
     },
     {
       "id": "runtime-offline",
