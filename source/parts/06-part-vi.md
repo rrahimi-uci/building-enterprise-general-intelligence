@@ -1020,7 +1020,7 @@ review dates is Chapter 26's.
 
 ## The containment path
 
-[[DIAGRAM:sandbox-egress|Figure 23-1 — Containing manipulated content at capability, sandbox, egress, credential, and effect boundaries]]
+[[DIAGRAM:sandbox-egress|Figure 23-1 — Containing manipulated content at capability, sandbox, egress, credential, DLP, and effect boundaries]]
 
 Read this figure as a containment argument. The input may be malicious and the
 model may select the wrong operation, but the request still has to pass an

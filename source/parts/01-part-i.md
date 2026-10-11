@@ -575,7 +575,9 @@ JSON · what the model actually emits
 ```
 
 A `proposed_action` is a request; nothing runs until the shell commits it. The
-registered `AgentDecision` contract (Chapter 3) defines the dispositions.
+registered `AgentDecision` contract (Chapter 3) defines the dispositions; the
+JSON above flattens its fields for reading (the contract nests the call in
+`tool_call` and lists uncertainties and evidence references as structured items).
 
 | Gate | Owner | Question it asks | What it rejects here |
 | --- | --- | --- | --- |
