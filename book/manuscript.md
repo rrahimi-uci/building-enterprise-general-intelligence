@@ -625,7 +625,7 @@ which is why the figure draws it as a spine beside the stack rather than a layer
 within it, and why it gets a Part of its own. The platform that builds,
 releases and runs the system is drawn the same way and for the same reason.
 
-Figure 4-1 in Chapter 4 opens these bands into planes and components; Chapter 4
+Chapter 4 opens these bands into planes and components in Figure 4-1 and
 maps its names to these. The notation carries over — solid is the request,
 dashed is control, dotted is evidence.
 
@@ -1545,6 +1545,7 @@ Mortgage business state for `MORT-2026-000184` is different:
 | Workflow stage | `EVIDENCE_REVIEW` |
 | Evidence status | Application, first pay statement, and purchase agreement available; second pay statement missing |
 | Policy | `policy://mortgage@2026.09` |
+| Knowledge | Release `mortgage-policy@2026.09`, pinned at admission (Chapter 5) |
 | Approval | Pending for the exact evidence-request proposal |
 | Committed effects | `MORTGAGE-DOC-REQ-000184` recorded, if approved and committed |
 | Resource version | Mortgage case version 1 |
@@ -1573,6 +1574,7 @@ The release path is adapter contract tests, recorded-trace replay, tool-schema t
 | `sdk` | `openai-agents@0.22.2` |
 | `model_route` | `reasoning-standard@4` |
 | `policy` | `policy://mortgage@2026.09` |
+| `knowledge_snapshots` | `mortgage-policy@2026.09` |
 
 Each step's `ContextManifest` is recorded with its `AgentStepRequest`, not in the run manifest. Together they make a production result reconstructable and explainable even after the framework, model, prompt, or adapter has changed. Chapter 27 covers deployment and recovery gates; Chapter 24 covers the trace evidence used in comparison.
 
@@ -1746,7 +1748,7 @@ The planes and layers are two views of the same system. Planes tell you who owns
 
 Read the figure downward: each band is one ownership plane and lists its main components, and the solid path traces one request from intent to committed effect, narrowing in authority at every step. *Security and governance* and *Evaluation and operations* are drawn as vertical spines rather than bands because neither sits between two planes — the policy decision point is consulted at admission, at run control, and again at the gateways, and the collector gathers from every plane. Dashed edges are control, dotted edges are evidence, and the bottom band sits outside the trust boundary: nothing there is assumed, and everything returned from it is revalidated.
 
-Figure 1-3 drew the same system as orientation bands. Figure 4-1 refines them into ownership planes:
+Chapter 1's Figure 1-3 drew the same system as orientation bands; Figure 4-1 refines them into ownership planes:
 
 | Figure 1-3 band | Chapter 4 plane |
 | --- | --- |
@@ -1765,7 +1767,7 @@ Figure 1-3 drew the same system as orientation bands. Figure 4-1 refines them in
 | Experience and channels | Intent, interaction, review, accessibility, recourse | Request and interaction record | UI state is not approval or workflow truth |
 | Agent applications | Domain instructions, topology, response assembly | AgentSpec, Skill manifest, application release | Cannot mint authority or directly commit protected effects |
 | Runtime and workflow | Run graph, deadlines, budgets, retries, cancellation, checkpoints, joins | RunManifest, run state, TaskEnvelope | Transcript is evidence, not execution state |
-| Knowledge, context, and memory | Governed knowledge, authorized evidence, provenance, snapshots, governed persistence | ContextManifest, MemoryRecord | Retrieved text remains untrusted data |
+| Knowledge, context, and memory | Governed knowledge, authorized evidence, provenance, snapshots, governed persistence | KnowledgeRelease, ContextManifest, MemoryRecord | Retrieved text remains untrusted data |
 | Gateways and integration | LLM routing, tool façades, effects, MCP/A2A, APIs, events | RoutingDecision, ToolManifest, EffectRecord, protocol envelope | Revalidate identity, policy, schema, and tenancy |
 | Security and governance | Identity, least privilege, RBAC/ABAC, guardrails, approval, DLP, audit | PolicyDecision, CapabilityEnvelope, ApprovalRequest/Decision | Protected actions fail closed; ambiguous effects become unknown |
 | Evaluation and operations | Tracing, evaluation, SLOs, incidents, release, capacity, learning | Trace graph, EvaluationResult, ChangeBundle, ReleaseManifest | Monitoring cannot self-promote behavior change |
@@ -1785,7 +1787,7 @@ The Runtime and workflow plane builds the AgentStepRequest; the Agent applicatio
 | Business truth | Domain system | Read an authorized projection | Replace truth with a summary |
 | Effects | Effect Service (Chapter 22) and downstream receipt | Propose arguments | Assert a mutation completed |
 | Approval | Approval Service (Chapter 14) | Generate rationale and preview | Reuse Boolean or stale conversational consent |
-| Knowledge | Governed source/snapshot catalog | Synthesize evidence | Treat similarity as truth or freshness |
+| Knowledge | Knowledge registry and Hub (Chapter 5) | Synthesize evidence | Treat similarity as truth or freshness, or resolve against an unreleased version |
 | Learning | Evaluation, dataset, release services | Recommend a candidate | Self-certify or self-deploy |
 
 ## The decisions that shape the system
@@ -1832,7 +1834,7 @@ to serve it.
 | Durable execution | Workflow engine, timers, signal handlers, checkpoint/event store | Crash recovery, pause/resume, retries, compensation, replay |
 | Model access | LLM Gateway, router, prompt assembler, structured-output validator | Provider abstraction, routing, caching, quotas, redaction |
 | Tool and protocol access | Tool Gateway, Effect Service, MCP Gateway, A2A Gateway, connectors | Discovery, authorization, invocation, effects, isolation, versioning |
-| Knowledge and context services | Context Service, Enterprise Knowledge Hub (Chapter 5), search/vector index, catalog/lineage, memory service | Authorized retrieval, provenance, ACLs, governed memory; shared stores: see § Where each kind of state belongs |
+| Knowledge and context services | Context Service, Enterprise Knowledge Hub and knowledge registry (Chapter 5), search/vector index, catalog/lineage, memory service | Authorized retrieval, provenance, ACLs, governed memory; shared stores: see § Where each kind of state belongs |
 | Sandboxed execution | Sandboxed workers, code/browser runners, egress proxy | Resource isolation and constrained side effects |
 | Trust and governance | IdP, STS, workload identity, PDP/PEP, Approval Service, secrets, audit/WORM | Least privilege, tenant isolation, policy, approval, evidence and retention |
 | Operations and improvement | OTel collector, trace store, metrics, eval service, incident tooling | Debug, replay, evaluate, optimize, alert, and promote |
@@ -1872,7 +1874,7 @@ It applies deterministic eligibility before any optimization; Chapter 28 treats 
 
 ## Global control and regional cells
 
-The platform separates a global control tier from regional execution cells. The global tier publishes signed, immutable definitions—AgentSpecs, policy bundles, ReleaseManifests—and holds no run state. Each run has a home cell holding its run control, durable workflow, bounded agent workers (AgentRuntime and its adapters, Chapter 3), LLM Gateway, Tool Gateway, context services, effect ledger, artifact store, and regional telemetry and audit pipelines. Cells bound residency and blast radius: definitions fan out, while active tenant runs stay regional. A cell that cannot reach the global tier continues pinned in-flight work but fails closed on high-risk admission when it cannot verify freshness; Chapter 27 covers the operations.
+The platform separates a global control tier from regional execution cells. The global tier publishes signed, immutable definitions—AgentSpecs, policy bundles, ReleaseManifests, knowledge releases—and holds no run state. Each run has a home cell holding its run control, durable workflow, bounded agent workers (AgentRuntime and its adapters, Chapter 3), LLM Gateway, Tool Gateway, context services, effect ledger, artifact store, and regional telemetry and audit pipelines. Cells bound residency and blast radius: definitions fan out, while active tenant runs stay regional. A cell that cannot reach the global tier continues pinned in-flight work but fails closed on high-risk admission when it cannot verify freshness; Chapter 27 covers the operations.
 
 Scale stateless APIs horizontally, partition state by tenant and run, shard workflow history and trace indexes, and isolate workload classes through queues and concurrency pools.
 
@@ -1904,6 +1906,7 @@ A reference architecture becomes implementable when every arrow has an API or ev
 | TaskEnvelope | Runtime and workflow | Chapter 18 |
 | AgentStepRequest/AgentStepResult | Runtime and workflow → Agent applications | Chapter 3 |
 | ContextManifest, MemoryRecord | Knowledge, context, and memory | Chapter 6 |
+| KnowledgeRelease | Knowledge, context, and memory | Chapter 5 |
 | Skill manifest | Agent applications | Chapter 8 |
 | CapabilityEnvelope, CredentialLease | Security and governance | Chapter 21 |
 | PolicyDecision | Security and governance | Chapter 21 |
@@ -1931,7 +1934,7 @@ Chapter 15 adds the durable-execution operations (events:ingest, :pause, :resume
 
 ### RunManifest
 
-The RunManifest is written once, at admission (step 2). It references the promoted ReleaseManifest it was resolved from (Chapter 27), which already pins the agent build, prompt bundle, policy bundle, and tool contracts, and records only what is resolved for this run: the Skill and pack digests, the knowledge snapshots, the model route chosen within the release's eligible set, the runtime adapter, the capability envelope, the budget, and the use-case tier (Chapter 26). Every AgentStepRequest (Chapter 3) and every ContextManifest (Chapter 6) references it. It never changes; a run that needs different versions is a new run or an explicit migration (Chapter 15). Its model is in § A sensible place to start.
+The RunManifest is written once, at admission (step 2). It references the promoted ReleaseManifest it was resolved from (Chapter 27), which already pins the agent build, prompt bundle, policy bundle, and tool contracts, and records only what is resolved for this run: the Skill and pack digests, the knowledge snapshots (the release digests resolved from the knowledge streams the ReleaseManifest declares, Chapter 5), the model route chosen within the release's eligible set, the runtime adapter, the capability envelope, the budget, and the use-case tier (Chapter 26). Every AgentStepRequest (Chapter 3) and every ContextManifest (Chapter 6) references it. It never changes; a run that needs different versions is a new run or an explicit migration (Chapter 15). Its model is in § A sensible place to start.
 
 ### Artifact contract
 
@@ -1955,6 +1958,7 @@ Events record facts that already happened (`run.status.changed`); commands go th
 | Relational operational DB | Run projections, manifests, budgets, ownership, approvals, effect ledger, dedup keys | Strong transactions, optimistic versions, row-level security |
 | Object store | Prompts by digest, large tool outputs, artifacts, evidence bundles, replay fixtures | Immutable/versioned objects, hashes, retention lock, tenant keys |
 | Search/vector index | ACL-aware chunks and embeddings derived from source systems | Source revision/provenance, pre-retrieval authorization, rebuild/delete pipeline |
+| Knowledge registry | Ontology versions, knowledge objects, release manifests, live pointers per environment | Immutable releases by digest; audited pointer moves; retained while any RunManifest references them |
 | Conversation and memory stores | Conversation turns (append-only); approved cross-run MemoryRecords | Tenant+subject partitioning, write policy, TTL, deletion tombstones (Chapter 6) |
 | Event log/broker | CloudEvents, status changes, business triggers | At-least-once, partitions, schema registry, outbox/inbox, DLQ/quarantine |
 | Trace/metric store | OTel spans, metrics, logs with content references | Tiered retention, sampling, redaction, restricted content access |
@@ -2131,17 +2135,16 @@ The reference architecture names a knowledge, context, and memory plane but not 
 
 |  |
 | --- |
-| **THE DESIGN CHOICE** Treat institutional knowledge as governed artifacts with owners, versions, scope, and provenance — not as a corpus. Retrieval becomes one consumer of those artifacts rather than the knowledge itself. |
+| **THE DESIGN CHOICE** Treat institutional knowledge as governed artifacts with owners, scope, and provenance, released like software and pinned per run — not as a corpus. Retrieval, traversal, and enforcement consume a release, never "current". |
 
 ## Why retrieval alone is not a knowledge strategy
 
 Chapter 4 gave knowledge, context, and memory one plane; this chapter fills its
 knowledge half. Teams often say “put the knowledge in a vector store” when they
-really mean four different jobs: supply context, support reasoning, enforce
-constraints, and enable action. Those jobs have different owners and different
-failure modes. This chapter separates them and uses the Harborlight case to
-show why a single semantic index cannot be the evidence source, the inference
-model, the policy engine, and the tool catalog at once.
+mean four jobs: supply context, support reasoning, enforce constraints, and
+enable action. Those jobs have different owners and failure modes, and the
+Harborlight case shows why one semantic index cannot be the evidence source,
+the inference model, the policy engine, and the tool catalog at once.
 
 ## Why similarity cannot tell you what to trust
 
@@ -2149,28 +2152,44 @@ model, the policy engine, and the tool catalog at once.
 
 | State owner | Trust boundary | Scale unit | Failure containment | Core contracts |
 | --- | --- | --- | --- | --- |
-| Knowledge Hub and its registries | authored source to governed artifact | artifact · domain · tenant | one artifact version | KnowledgeArtifact · Rule · Capability · ResolutionQuery |
+| Knowledge registry and Hub | authored source to released knowledge | artifact · domain · tenant | one release | KnowledgeArtifact · KnowledgeRelease · Rule · ResolutionQuery |
 
 Retrieval-augmented generation answers one question well: *what text is relevant to this?* Enterprises then ask it three questions it was never designed for; Figure 5-1 shows all four behind one governed resolution surface.
 
 | Mode | The question | Representation | How it fails when wrong |
 | --- | --- | --- | --- |
 | Context | What is the situation? | Documents, embeddings, semantic search | Plausible grounding that is stale, superseded, or outside the reader's authority |
-| Reasoning | What should happen? | Ontology, knowledge graph, decision models | Correct facts, invalid inference |
+| Reasoning | What should happen? | Ontology, knowledge graph (traversal), decision models (evaluation) | Correct facts, invalid inference |
 | Constraints | What may I do? | Policies and permissions as enforceable rules | The agent explains the rule, then violates it |
 | Action | How do I do it? | Capability and API contracts | Right decision, wrong or unauthorized effect |
 
-The fourth column is the argument. Each mode fails differently, so each needs different evidence and different tests. A system that cannot say which mode failed cannot be debugged, and a similarity score is not evidence of authority, currency, or permission.
+The fourth column is the argument: each mode fails differently and needs its own evidence and tests, and a similarity score is not evidence of authority, currency, or permission.
 
-The clearest case is the one Harborlight hit. An underwriting policy excludes a property or income condition. Retrieval returns the policy, the model quotes it, and the agent proceeds anyway, because nothing in the pipeline was responsible for *enforcing* the exclusion. The document was context. Nobody made it a constraint.
+Harborlight hit the clearest case. Retrieval returns the policy that excludes a property or income condition, the model quotes it, and the agent proceeds anyway, because nothing was responsible for *enforcing* the exclusion. The document was context. Nobody made it a constraint.
+
+## Compliance knowledge is made of layers, and the layers are different kinds of thing
+
+Harborlight must enforce **compliance knowledge**, taken from regulations, standards, contracts, and internal policies. A **requirement** is a statement in an authoritative source that the organization must satisfy; an **obligation** is the duty derived from it, with subject, scope, modality, and effective period; a **control** discharges it (an enforced rule, check, approval, or review); a **constraint** is a control's true, false, or unknown reading at a control point; a **definition** is a term the others depend on. Chapters 13 and 21 bind obligations to one run or action.
+
+Each layer derives from the one above and is a different kind of thing:
+
+| Layer | Kind and identity | Checked by |
+| --- | --- | --- |
+| Authoritative sources | Artifact: bytes, by digest | Digest match |
+| Extracted requirements and definitions | Artifact: candidate claims with span and verdict | `grounding` |
+| Ontology | Model: kinds, relationships, properties, vocabulary; MAJOR.MINOR.PATCH | `knowledge-schema` |
+| Obligations, controls, definitions | Artifact: graph and rules in a release, by digest | Every gate and an approval |
+| Approval and activation | Decisions, bound to a candidate digest | `independent-approval`, `release-integrity` |
+
+The KnowledgeArtifact is the control-plane record; Chapter 6's KnowledgeObject is the Semantic view's projection of one inside a release. The reference implementation this chapter follows, the author's Policy Logic Forge repository [R48], carries a source reference and evidence span on each rule field.
 
 ## How enterprise knowledge becomes usable
 
-Each representation in the knowledge fabric is derived from—and traceable back to—the source above it. That lineage lets an engineer explain why a rule exists, detect when the source changed, and rebuild every derived artifact. A constraint that cannot point to the sentence or decision behind it is not an enforceable policy; it is an opinion encoded in software.
+Each representation below keeps its lineage to the layer above. A constraint that cannot point to the sentence or decision behind it is not an enforceable policy; it is an opinion encoded in software.
 
 ### Semantic knowledge
 
-Documents, policies, procedures, standards, and prior decisions, reached through embeddings and hybrid search. Chapter 6 owns how retrieved evidence enters a model call—authorization order, ranking, token allocation, and the ContextManifest. What belongs here is what makes retrieval *governed*: source authority, effective dates, jurisdiction, supersession, and the difference between text that appears in a document and text that is authoritative.
+Documents, policies, procedures, standards, and prior decisions, reached through embeddings and hybrid search. Chapter 6 owns how retrieved evidence enters a model call. What belongs here is what makes retrieval *governed*: source authority, effective dates, jurisdiction, supersession, and the difference between text that appears in a document and text that is authoritative.
 
 A retrieved passage should never reach a model without the metadata that decides whether it still applies.
 
@@ -2227,7 +2246,68 @@ class KnowledgeGraph:
 
 Traversal must be bounded. An unbounded walk over an enterprise graph is a denial of service against your own agent, and a cycle makes it non-terminating.
 
-The honest caveat: ontologies are where enterprise knowledge programs go to die. The useful heuristic is to model only what an agent must traverse to make a decision it cannot make otherwise, and to let a modeling exercise justify itself one query at a time.
+The **ontology** is the schema the graph conforms to: entity kinds, allowed relationships, required properties with types and units, and the SBVR vocabulary naming them. A statement is a typed node or edge, a typed rule, or a decision-table row; the graph format is the platform's choice. Conformance checks report every violation and repair none; a conforming graph freezes into an instance identified by its content digest.
+
+🐍 · Traversal answering a question similarity cannot
+
+```python
+@dataclass(frozen=True)
+class GraphSchema:
+    """The ontology: which kinds exist, how they may relate, what each must carry."""
+
+    version: str                                  # MAJOR.MINOR.PATCH
+    node_kinds: frozenset[str]
+    edge_kinds: frozenset[tuple[str, str, str]]   # (source kind, relation, target kind)
+    required: dict[str, tuple[str, ...]]          # kind -> properties it must carry
+
+
+@dataclass(frozen=True)
+class Violation:
+    subject: str
+    reason: str
+
+
+def validate(graph: KnowledgeGraph, schema: GraphSchema) -> list[Violation]:
+    """Report every violation and repair nothing: a checker that fixes what it
+    finds can no longer say how good the graph was."""
+    found = []
+    for node, props in sorted(graph.nodes.items()):
+        kind = props.get("kind")
+        if kind not in schema.node_kinds:
+            found.append(Violation(node, f"kind {kind!r} is not in ontology {schema.version}"))
+            continue
+        found += [Violation(node, f"{kind} must carry {name}")
+                  for name in schema.required.get(kind, ()) if name not in props]
+    for source, relation, target in graph.edges:
+        edge_kind = (graph.nodes[source].get("kind"), relation, graph.nodes[target].get("kind"))
+        if edge_kind not in schema.edge_kinds:
+            found.append(Violation(f"{source} {relation} {target}",
+                                   f"ontology {schema.version} does not allow {edge_kind}"))
+    return found
+
+
+@dataclass(frozen=True)
+class GraphRelease:
+    """A conforming graph frozen for release: identity is the digest of its content."""
+
+    ontology_version: str
+    nodes: tuple
+    edges: tuple
+    digest: str
+
+    @classmethod
+    def freeze(cls, graph: KnowledgeGraph, schema: GraphSchema) -> "GraphRelease":
+        if violations := validate(graph, schema):
+            raise ValueError(f"{len(violations)} violations; a non-conforming graph is not released")
+        nodes = tuple(sorted((n, tuple(sorted(p.items()))) for n, p in graph.nodes.items()))
+        edges = tuple(sorted(graph.edges))
+        content = repr((schema.version, nodes, edges)).encode("utf-8")
+        return cls(schema.version, nodes, edges, hashlib.sha256(content).hexdigest())
+```
+
+Types come from declarations, never from names alone, as in the reference implementation [R48]. Reasoning means bounded traversal and deterministic evaluation, never open-ended inference, so a decision stays reproducible.
+
+The honest caveat: ontologies are where enterprise knowledge programs go to die. Model only what an agent must traverse to decide, and let modeling justify itself one query at a time.
 
 ### Business rules as enforceable constraints
 
@@ -2289,7 +2369,7 @@ class Rule:
         return hashlib.sha256(payload.encode()).hexdigest()[:16]
 ```
 
-Scope is required, not optional. A rule whose applicability is implicit will be applied where it does not belong, which is the most common way a correctly extracted rule still produces a wrong decision. Identity by content rather than by assigned identifier is what lets two independent extractions of one sentence recognize each other later.
+Scope is required: a rule whose applicability is implicit will be applied where it does not belong. Identity by content lets two independent extractions of one sentence recognize each other.
 
 Enforcement then happens where intent becomes action:
 
@@ -2356,81 +2436,15 @@ def guarded_dispatch(effect, facts: dict, rules, *, jurisdiction: str, on_date: 
     return effect()
 ```
 
-Note the refusal on missing input. A rule check that reads *unknown* as *permitted* is not a control. Three-valued evaluation — true, false, unknown — is what stops an absent field from silently authorizing an effect.
+Note the refusal on missing input. A rule check that reads *unknown* as *permitted* is not a control; three-valued evaluation stops an absent field from silently authorizing an effect.
 
 ### Business data catalog
 
-Entities, fields, definitions, ownership, lineage, sensitivity, and access constraints, described so an agent can discover and query data safely. A column name is not a definition, and a schema without a sensitivity class cannot tell an agent which fields it must not put in a prompt—the class Chapter 6's context pipeline uses to redact before a prompt is built.
-
-### Capability and API catalog
-
-What the agent may do, with the consequences attached. A tool list says what exists; a capability catalog says whether an action mutates, what must be true first, who may invoke it, and whether a retry is safe.
-
-🐍 · Discovering a capability with its effects and prerequisites
-
-```python
-Effect = Literal["read", "write", "irreversible"]
-
-
-@dataclass(frozen=True)
-class Capability:
-    capability_id: str
-    version: str
-    description: str
-    effect: Effect
-    required_action: str
-    prerequisites: tuple[str, ...] = field(default_factory=tuple)
-    idempotent: bool = False
-    data_classes: frozenset[str] = frozenset()
-
-
-class CapabilityUnavailable(Exception):
-    """No capability satisfies the request under the caller's grant."""
-
-
-@dataclass
-class CapabilityCatalog:
-    capabilities: dict[str, Capability] = field(default_factory=dict)
-
-    def register(self, capability: Capability) -> None:
-        self.capabilities[capability.capability_id] = capability
-
-    def discover(self, *, intent_effect: Effect, granted_actions: frozenset[str],
-                 satisfied: frozenset[str], permitted_data: frozenset[str]) -> list[Capability]:
-        """Everything the caller may actually invoke right now.
-
-        Four filters, and the order matters: an agent should never see a
-        capability it cannot use, because a listed-but-forbidden tool is an
-        invitation to try.
-        """
-        eligible = []
-        for capability in self.capabilities.values():
-            if capability.effect != intent_effect:
-                continue
-            if capability.required_action not in granted_actions:
-                continue
-            if not set(capability.prerequisites) <= satisfied:
-                continue
-            if not capability.data_classes <= permitted_data:
-                continue
-            eligible.append(capability)
-        # Reversible first: when two capabilities both satisfy the intent, the
-        # one that can be undone is the safer default.
-        order = {"read": 0, "write": 1, "irreversible": 2}
-        return sorted(eligible, key=lambda c: (order[c.effect], not c.idempotent, c.capability_id))
-
-    def select(self, **kwargs) -> Capability:
-        found = self.discover(**kwargs)
-        if not found:
-            raise CapabilityUnavailable("no capability satisfies this request under the caller's grant")
-        return found[0]
-```
-
-A capability the caller may not invoke should never appear (Chapter 8 § Discovery is not permission; AP-12), because a listed-but-forbidden tool is an invitation to try. The catalog does not own these entries; it indexes the Skill manifests of Chapter 8 and the ToolManifests of Chapter 22 for discovery, and every invocation still resolves against those registries.
+Entities, fields, definitions, ownership, lineage, sensitivity, and access constraints, described so an agent can discover and query data safely. A column name is not a definition, and a schema without a sensitivity class cannot tell an agent which fields it must not put in a prompt.
 
 ### Process and decision models
 
-Four OMG standards already describe what most enterprises are otherwise inventing badly. The question to ask of each is not whether it is rigorous but what an agent can do with it that it could not do with prose.
+Four OMG standards already describe what most enterprises otherwise invent badly. Ask of each what an agent can do with it that it could not do with prose.
 
 | Standard | Represents | What an agent does with it |
 | --- | --- | --- |
@@ -2439,13 +2453,13 @@ Four OMG standards already describe what most enterprises are otherwise inventin
 | CMMN [R46] | Case management, unordered work | Handles work with no fixed sequence without inventing one |
 | SBVR [R47] | Business vocabulary and rules | Resolves what a term means in this domain before acting on it |
 
-DMN earns its place fastest. A decision table with a declared hit policy is the one artifact that turns a class of judgment calls into a lookup, and a lookup can be tested. BPMN pays off where the sequence is genuinely fixed and the cost of skipping a step is high. CMMN and SBVR are narrower; adopt them when case work or vocabulary ambiguity is the actual problem, not because the set is incomplete without them.
+DMN earns its place fastest: a table whose hit policy is proved over finite inputs turns judgment calls into a testable lookup. BPMN pays off where a sequence is genuinely fixed; CMMN and SBVR where case work or vocabulary ambiguity is the problem. The reference implementation [R48] emits these models as fail-closed projections, BPMN only where the source states an order.
 
 ## Turn policy prose into logic the system can enforce
 
 Extraction is probabilistic. Verification must not be. The pipeline that works separates the two and refuses to let the first vouch for itself.
 
-Consider a policy sentence that says a pay statement is acceptable only within a particular age window. The source document is authoritative, but the runtime cannot safely enforce prose. The platform extracts a candidate rule with its exact source span, proves that the span says what the rule says, has an eligible owner approve the interpretation, compiles the approved rule, and records the version used for each case. Skip a link in that chain and the system may enforce a rule nobody can explain or prove is current.
+Consider a policy sentence that accepts a pay statement only within an age window. The runtime cannot safely enforce prose. The platform extracts a candidate rule with its exact source span, proves that the span says what the rule says, has an eligible owner approve the interpretation, compiles it, and records the version used for each case. Skip a link and the system may enforce a rule nobody can explain or prove is current.
 
 [[DIAGRAM:policy-to-guardrail|Figure 5-2 — Extract, prove, approve, and project: from policy text to an enforced constraint]]
 
@@ -2511,13 +2525,13 @@ def verify(quote: str, source_ref, corpus: dict[str, str]) -> Verdict:
     return Verdict("supported", "quoted text found in the cited span", evidence)
 ```
 
-The listing adapts the verifier of the reference implementation this chapter follows, the author's Policy Logic Forge repository [R48], whose grounding stage admits a verdict only when it names evidence resolved as literal text of the corpus. A model that invents a rule will invent a plausible citation for it, so checking that a citation is well-formed proves nothing. Checking that the cited passage *says what the rule says* is a different operation, and it is the one that matters. In one run of the author's own compliance extraction pipeline built on this design, independent verification rejected 44% of the model-proposed dependency and conflict claims that a single structural screen had already accepted [R48]. That figure is author-reported: one measurement of one pipeline on one corpus, not a general rate. It is, however, the empirical case for making verification independent of extraction.
+The listing adapts the reference implementation's verifier [R48], which admits a verdict only when it names evidence resolved as literal corpus text. A model that invents a rule will invent a plausible citation, so a well-formed citation proves nothing; what matters is whether the cited passage *says what the rule says*. In one run of the author's own compliance extraction pipeline built on this design, independent verification rejected 44% of the model-proposed dependency and conflict claims that a single structural screen had already accepted [R48]. That figure is author-reported, one measurement of one pipeline on one corpus, not a general rate; it is still the empirical case for independent verification.
 
-**Approve.** An eligible owner accepts the interpretation; the approval, the source digest, and the rule version are recorded together. Verification shows the rule matches the text; approval makes it the organization's rule.
+**Approve.** An eligible owner accepts the interpretation; the approval, the source digest, and the rule version are recorded together. Verification shows the rule matches the text; approval makes it the organization's rule, bound to the candidate digest of the whole change (§ Change compliance knowledge the way you change software).
 
 **Project** turns what survived into the standards-compliant models above, and into the constraints the runtime enforces at the effect boundary.
 
-The age-window rule now needs a fact: how old is the statement? That fact comes from a document too, and the next section puts it through the same discipline.
+The age-window rule now needs a fact, the statement's age, and that fact comes from a document too.
 
 |  |
 | --- |
@@ -2527,9 +2541,9 @@ The age-window rule now needs a fact: how old is the statement? That fact comes 
 
 An applicant's pay statement arrives through a channel the platform does not trust. Until it is verified it is not evidence; it is bytes.
 
-**Intake.** Intake computes the digest, inspects the content, classifies the kind with a confidence, records origin, tenant, case, ACL pointer, and retention class, and labels the artifact as data before any model sees it (Chapter 20's ingest row). Text and structure are derived from the bytes, with OCR only where a page has no text layer. The digest is authoritative; the text, like every index entry, is a projection carrying its source revision, ACL pointer, ingestion time, and deletion state. The extract, classify, ACL, chunk, embed, and index stages keep independent cursors, so a failed embedding never blocks an ACL deletion. A statement resubmitted under a new name has the first one's digest: it is the first statement again, not a second.
+**Intake.** Intake computes the digest, inspects the content, classifies the kind, records origin, tenant, case, ACL pointer, and retention class, and labels the artifact as data before any model sees it (Chapter 20's ingest row). The digest is authoritative; the text, like every index entry, is a projection carrying its source revision, ACL pointer, and deletion state. A statement resubmitted under a new name has the first one's digest, so it is not a second statement.
 
-**Extract and normalize.** A model proposes typed fields (employer, pay date, gross, deductions, net, year-to-date gross), each with its region, a confidence, and the extractor version: model route and prompt digest. Normalization puts the unit on the field, parses dates and money, and marks each value *extracted* (the document states it) or *derived* (the platform computed it, such as the statement's age in days). The document kind's schema, not the model, declares which fields are decision-material, and a field the schema does not declare is held, never guessed into place.
+**Extract and normalize.** A model proposes typed fields, each with its region, a confidence, and the extractor version: model route and prompt digest. Normalization puts the unit on the field, parses dates and money, and marks each value *extracted* (the document states it) or *derived* (the platform computed it, such as the statement's age in days). The document kind's schema, not the model, declares which fields are decision-material, and a field the schema does not declare is held, never guessed into place.
 
 🐍 · A document's fields verified against its bytes before they become facts
 
@@ -2585,7 +2599,7 @@ The gate in Figure 5-3 is Figure 5-2's: verification reads the bytes, not the ex
 
 [[DIAGRAM:document-ingestion|Figure 5-3 — Document ingestion: intake, extract, verify against the bytes, route, record, serve]]
 
-**Verify.** Verification re-opens the pinned bytes and checks, in order: the digest still matches; each extracted field's quoted text is literally present in its region, through the rule lane's verifier; the value parsed from those bytes, not from the model's quote, equals the record's; the record is internally consistent (net equals gross minus deductions, year-to-date is not below the period); and it agrees with the case, such as the employer on the application. Derived fields are checked against their verified inputs, never against text; no statement prints its own age. Each field receives exactly one verdict (supported, contradicted, or insufficient evidence); a verifier that skips a field leaves the run incomplete, and it fails closed. A document whose decision-material fields are not all supported yields no facts; a presentation field, such as an address, cannot block. Confidence plays no part: a confident value its region contradicts is contradicted, and an unsure one the bytes support is supported.
+**Verify.** Verification re-opens the pinned bytes and checks, in order: the digest matches; each extracted field's quoted text is literally in its region, through the rule lane's verifier; the value parsed from those bytes equals the record's; the record is internally consistent (net equals gross minus deductions); and it agrees with the case, such as the employer on the application. Derived fields are checked against their verified inputs, never against text; no statement prints its own age. Each field receives exactly one verdict (supported, contradicted, or insufficient evidence); a verifier that skips one fails closed. Admission then follows the grounding gate (§ Change compliance knowledge the way you change software): no facts until every decision-material field is supported. Confidence plays no part.
 
 🐍 · A document's fields verified against its bytes before they become facts
 
@@ -2647,17 +2661,106 @@ def facts_for_rules(cert: Certification) -> dict[str, object]:
 
 |  |
 | --- |
-| **SECURITY AND GOVERNANCE**  Verification proves the document says it, not that it is true. An internally consistent forgery passes this gate; only an independent source, such as the payroll provider of Chapter 17 or a human reviewer, catches it. Record corroboration separately from verification, and never let a decision that needs the truth rest on verification alone. |
+| **SECURITY AND GOVERNANCE**  Verification proves the document says it, not that it is true. An internally consistent forgery passes this gate; only an independent source, such as the payroll provider of Chapter 17 or a human reviewer, catches it. Record corroboration separately, and never let a decision that needs the truth rest on verification alone. |
 
-**Route and record.** Findings route by kind. A contradiction goes to human review (an InterventionTask, Chapter 14). A field that could not be located goes to targeted repair, which re-extracts only that field and sends it back through the same gate. A missing input, or a kind the pipeline does not handle, goes to case management. A reviewer's correction is a new version with the reviewer's identity, and the model's value stays in history; a job that extracted nothing reports a finding, never success. Everything lands in one record, the **KnowledgeArtifact** named in the chapter's first table: kind (document, chunk, field, rule), source digest and region, extractor and verifier versions, per-field verdicts, corroboration, status and route, owner, version and supersedes, effective range, scope, ACL, and data class. A document record inherits the owner of its source system; the case owns its use. Status follows the knowledge lifecycle defined below, Draft through Revoked; *retired* is not a status but the retention event that follows deprecation or revocation. Deleting the source deletes the record, its history, and its derived facts through the lineage events Chapter 6 lists.
+**Route and record.** Findings route by kind: a contradiction to human review (an InterventionTask, Chapter 14), an unlocated field to targeted repair of that field alone through the same gate, a missing input or unhandled kind to case management. A reviewer's correction is a new version, and the model's value stays in history; a job that extracted nothing reports a finding, never success. Everything lands in one record, the **KnowledgeArtifact** named in the chapter's first table: kind (document, chunk, field, rule), source digest and region, extractor and verifier versions, per-field verdicts, corroboration, status and route, owner, version and supersedes, effective range, scope, ACL, and data class. Status follows the knowledge lifecycle defined below, Draft through Revoked; *retired* is not a status but the retention event that follows deprecation or revocation. Deleting the source deletes the record, its history, and its derived facts through the lineage events Chapter 6 lists.
 
-**Version and re-process.** Three things change under a record: the bytes, whose digest mismatch invalidates every field; the extractor, as on Chapter 1's Friday; and the policy that consumes the fact. Re-processing is a diff, not an overwrite. Every field resolves to exactly one of changed, unchanged, review-held, or refused; nothing is dropped; only changed facts trigger re-evaluation; and a field under human review never resolves itself. A run pins the knowledge release it read, and the release lists the digest of every record in it, so a six-month-old decision can be reproduced with its evidence.
+**Version and re-process.** When the bytes, the extractor (Chapter 1's Friday), or the consuming policy changes, re-processing is a diff, not an overwrite: every field is changed, unchanged, review-held, or refused, nothing is dropped, only changed facts trigger re-evaluation, and a field under review never resolves itself. A run pins the knowledge release it read, and the release lists the digest of every record in it, so a six-month-old decision can be reproduced with its evidence.
 
-At the effect boundary the enforced age-window rule reads `pay_statement_age_days` only from a servable record; until one exists, its missing-input refusal fires. A forged net goes to review, so the rule still sees *unknown*; altered bytes fail the digest check. The Tuesday instruction hidden in an upload is labelled text, not a declared field, so it reaches neither the rule nor the model as direction.
+At the effect boundary the age-window rule reads `pay_statement_age_days` only from a servable record; otherwise its missing-input refusal fires. A forged net goes to review, so the rule still sees *unknown*; altered bytes fail the digest check; and the Tuesday instruction in an upload is labelled text, not a declared field, so it directs neither rule nor model.
 
-## Combine knowledge without flattening its differences
+## Why provenance determines what you can trust
 
-An enterprise never has one knowledge base. It has a regulator's and its own, last quarter's and this quarter's, one business unit's and another's. Agents must operate across them, and that requires defined operations rather than a merge.
+Every representation above is only as good as the metadata that says whether to believe it.
+
+| Field | Why an agent needs it |
+| --- | --- |
+| Owner | Who answers when the artifact is wrong |
+| Version and supersedes | Which of two conflicting statements is current |
+| Effective from / until | Whether it applied on the date in question |
+| Jurisdiction and scope | Whether it applies to this subject at all |
+| Provenance | The passage, offsets, and document digest it derives from: content provenance, distinct from the build provenance of released artifacts in Chapter 27 |
+| Confidence | Authoritative or inferred |
+| Verification and corroboration | Whether the source says it, and whether an independent source agrees |
+| Permissions and data class | Who may see it, and whether it may enter a prompt |
+| Release and status | Which release carries this version, in which lifecycle state: what a run pins |
+| Lifecycle | Review cadence and expiry |
+
+Without the document digest, a rule extracted from last year's policy still verifies against this year's text, and nothing notices that the ground moved. The source revision is authoritative; every index entry is a disposable projection of it (§ Ingest documents the way you extract rules).
+
+|  |
+| --- |
+| **SECURITY AND GOVERNANCE**  Permissions belong to the knowledge artifact, enforced at the resolution boundary. Filtering retrieved passages after the model has seen them is not access control; it is redaction after disclosure. |
+
+## Two planes: develop compliance knowledge, consume releases
+
+Compliance knowledge is developed in one plane and used in another (Figure 5-4). The **control plane**, in Chapter 4's global control tier, extracts, validates, versions, approves, publishes, and deprecates; owners and SMEs write to it, an assistant only proposes, and one service identity, the **registry publisher**, releases and activates. The reference implementation [R48] is a control plane with no runtime consumer.
+
+What the platform adds beyond it starts at the interface. The **knowledge registry** holds ontology versions, objects, release manifests, and a live pointer per stream, tenant, environment, and region. A **knowledge release** is the immutable, content-addressed set of objects, ontology version, and source revisions the publisher activated. At admission each stream the ReleaseManifest declares resolves to a release digest in the RunManifest's `knowledge_snapshots` (Chapter 4). The **runtime plane** then reads only that pin, through the Hub's resolve (admission only), search, bounded query, and three-valued evaluate operations, none of which accepts "current".
+
+[[DIAGRAM:knowledge-lifecycle|Figure 5-4 — Compliance knowledge has two planes: the control plane develops and releases it, the runtime plane enforces one pinned release per run, and only evidence crosses back up]]
+
+Releases cross down; evidence crosses up as decision records, refusals, contradictions, SME corrections, and Chapter 25's ChangeBundle drafts, never as a write. No control point re-resolves a stream mid-run; stale knowledge needs a new run or a migration (Chapter 15).
+
+## Change compliance knowledge the way you change software
+
+A **knowledge change** is the reviewable unit. It names its objects by stable id, its rationale and source digests, and its version bump, and resolves into one candidate whose **candidate digest** covers the content, the pinned upstream base, the live release it replaces, and the resolver version. A change deprecates, never deletes; removing or renaming an ontology kind is a MAJOR version with a migration. Chapter 27 § Knowledge releases covers the CI/CD stages, tenant extensions, promotion, and rollback.
+
+Gates run on the resolved candidate, not the textual diff. A model may locate evidence or propose a merge, a verdict, or a change; only a deterministic check turns it into a gate result. The reference implementation [R48] runs structural invariants, then targeted repair of only the failed fields, then independent grounding rebuilt from the corpus. The gates keep that order and add what a release needs that a build does not.
+
+| Gate | Checks | Fails closed on |
+| --- | --- | --- |
+| `knowledge-schema` | Kinds, relationships, properties, units; the rule contract | A blocking violation |
+| `change-contract` | Touched equals declared; rationale, sources, version | A mismatch |
+| `duplicate-overlap` | Identical objects merge, keeping all provenance | Lost provenance |
+| `grounding` | A literal span in the pinned bytes; one verdict per claim | An unsupported decision-material claim; incomplete output |
+| `consistency` | Same subject and scope, incompatible outcomes; finite domains enumerated; undefined terms held | An unresolved candidate; an unproved table |
+| `regression` | Golden and boundary cases; every object changed, unchanged, review-held, or refused | A regressed case; an object without status |
+| `staleness` | Revisions, base, digests, and input fingerprints still match | Any mismatch: Stale |
+| `independent-approval` | An eligible SME, not the author, approved this digest | Self-approval; another digest |
+| `release-integrity` | Bundle verified; version once; pointer compare-and-swap; every object accounted for | Any failure: the old release stays live |
+
+Gates prove form, provenance, and bounded properties; consistency is a filter for the SME, not a proof, and only the approver judges meaning. A finding holds an object as `review-held`, excluded from evaluation but visible in the release, and routes it by kind: a contradiction or judgment call to human review, a structure defect to targeted repair that re-enters the gate, an evidence gap to case management, as for documents. Every gate reports objects examined over objects in the release; an empty suite reports zero, not a pass.
+
+🐍 · Gate findings routed by kind, and a quality budget that cannot pass by rounding
+
+```python
+Route = Literal["human_review", "targeted_repair", "case_management"]
+
+REPAIRABLE = {"contract", "structure", "naming", "test_case"}   # deterministic defects
+EVIDENCE_GAPS = {"evidence_gap", "unhandled_kind"}
+
+
+@dataclass(frozen=True)
+class Finding:
+    """A gate's finding holds an object; it never removes it."""
+
+    object_id: str
+    kind: str
+    reason: str
+    human_required: bool = False   # an explicit judgment finding
+
+
+def route(findings: Iterable[Finding]) -> Route | None:
+    """Only a contradiction or an explicit judgment call needs a person's time.
+
+    A structure defect is repaired narrowly and re-enters the same gate; a gap in
+    the evidence is worked as a case; a kind nobody planned for fails closed.
+    """
+    found = list(findings)
+    if not found:
+        return None
+    if any(f.kind == "contradiction" or f.human_required for f in found):
+        return "human_review"
+    kinds = {f.kind for f in found}
+    if kinds <= REPAIRABLE:
+        return "targeted_repair"
+    if kinds <= REPAIRABLE | EVIDENCE_GAPS:
+        return "case_management"
+    return "human_review"
+```
+
+Consistency rests on operations over typed rule sets. A union keeps each rule's sources and identifiers; a contradiction is surfaced with its evidence and never settled by picking a winner; model-judged equivalence never overrides an alignment by identifier or citation. The reference implementation [R48] adds finite-domain proofs this listing omits.
 
 🐍 · Union, intersection, difference and contradiction over rule sets
 
@@ -2745,46 +2848,85 @@ def contradictions(left: dict[str, object], right: dict[str, object]) -> list[Co
     return found
 ```
 
-| Operation | Meaning | What an agent may do with the result |
-| --- | --- | --- |
-| Intersection | Asserted by both sources | Corroborated, not verified; the scope, freshness, and permission checks below still apply before action |
-| Difference | Asserted by one source only | Scope-dependent; requires a jurisdiction check first |
-| Union | Every distinct rule, with per-source attribution | Complete coverage; conflicts still possible |
-| Contradiction | Rules that cannot both be satisfied | Stop, escalate, and never resolve automatically |
+### What the platform adds beyond the reference implementation
 
-Three properties are worth stating as rules of the architecture.
+The reference implementation stops at a certified build. Release states reuse Chapter 8's names, add Approved because meaning has no automated oracle, and drop Staged because a release is Active per environment:
 
-**Union is not merge.** Combining two knowledge bases must preserve which source asserted each rule and what its original identifier was. A union that flattens attribution destroys the only information that can later resolve a conflict.
-
-**A contradiction is a result, not an error.** Two authoritative sources that disagree is a finding about the organization, frequently a valuable one. The platform's job is to surface it with structured evidence — the shared subject, each side's requirement, and why they cannot both hold — not to pick a winner quietly.
-
-**Semantic equivalence never overrides deterministic alignment.** Where rules align by identifier or citation, that alignment stands. Model-judged equivalence is advisory, marked for review, and never allowed to change a deterministic match.
-
-|  |
-| --- |
-| **ARCHITECTURE GUIDANCE**  Define these operations over typed rules with declared scope, not over documents. Two documents cannot be intersected; two rule sets can. If your knowledge base cannot support the algebra, it is a corpus with a search box. |
-
-## Why provenance determines what you can trust
-
-Every representation above is only as good as the metadata that says whether to believe it.
-
-| Field | Why an agent needs it |
+| State | Means |
 | --- | --- |
-| Owner | Who answers when the artifact is wrong |
-| Version and supersedes | Which of two conflicting statements is current |
-| Effective from / until | Whether it applied on the date in question |
-| Jurisdiction and scope | Whether it applies to this subject at all |
-| Provenance | The passage, offsets, and document digest it derives from: content provenance, distinct from the build provenance of released artifacts in Chapter 27 |
-| Confidence and status | Authoritative, inferred, or draft |
-| Verification and corroboration | Whether the source says it, and whether an independent source agrees |
-| Permissions and data class | Who may see it, and whether it may enter a prompt |
-| Lifecycle | Review cadence and expiry |
+| Draft | Not resolvable; flagged Stale if its target moved |
+| Certified | Complete gate record; held objects excluded from evaluation |
+| Approved | Independently approved on this digest; any edit returns it to Draft |
+| Active | Named by a live pointer; new runs resolve it |
+| Deprecated | Kept for runs that pinned it, through the compatibility window |
+| Revoked | Not resolvable; in-flight runs pause or migrate by risk class |
 
-The document digest deserves emphasis. Without it, a rule extracted from last year's policy still verifies against this year's text, and nothing in the system notices that the ground moved. Freshness follows from the same rule: the source revision is authoritative, and every index entry is a disposable projection of it (§ Ingest documents the way you extract rules).
+Retirement follows as a retention event; a release is kept while any retained RunManifest references it. **Activation is the publication boundary**: the publisher rechecks, stores and verifies the bundle, then moves the pointer. Until then the runtime cannot see the candidate, and a failed publish leaves the old release live. Activation changes behavior without an agent release, so it is a Chapter 26 change class with independent approval as the floor.
 
-|  |
-| --- |
-| **SECURITY AND GOVERNANCE**  Permissions belong to the knowledge artifact, enforced at the resolution boundary. Filtering retrieved passages after the model has seen them is not access control; it is redaction after disclosure. |
+The analogy breaks where meaning matters: a clean merge is not valid knowledge, sources change upstream on their own schedule, and two jurisdictions may legitimately disagree.
+
+## Obligations enforced at every control point
+
+Chapter 1's control points, the plan compiler, and the acceptance engine read the same pinned release; the latter two remain lifecycle controls, not control points. Knowledge is **approved** for a run when the publisher activated it after a complete gate record and an independent approval, the RunManifest pinned it, and it is not Revoked. Every decision records the release digest.
+
+| Consumer | Reads | Missing, ambiguous, or revoked | Contradicted |
+| --- | --- | --- | --- |
+| Context Service (Chapter 6) | Semantic view | Omit; held text is never a fact | Serve both, attributed |
+| Plan compiler (Chapter 12) | Bound rules and tables | Refuse the node | Refuse and escalate |
+| Policy decision point (Chapter 21) | Catalog definitions | Deny protected actions | Deny |
+| Tool Gateway (Chapter 22) | Enforced rules, verified facts | `UnknownUnderPolicy` | Refuse |
+| Acceptance engine (Chapter 13) | Domain rules, criteria | Reject: evidence missing | Escalate |
+
+Three consultation rules come straight from the reference evaluator [R48]: only a completely lowered rule is evaluable, and an unproved table is refused before evaluation; unknown refuses, never defaults; incompatible assignments to one subject are refused, never adjudicated. The fourth is the platform's: that evaluator returns unknown for any rule scoped by jurisdiction or date, having no runtime context, and the control point supplies it.
+
+🐍 · A policy rule enforced at the effect boundary
+
+```python
+ReleaseStatus = Literal["draft", "certified", "approved", "active", "deprecated", "revoked"]
+
+
+class ReleaseNotEvaluable(Exception):
+    """The run's pin names a release no control point may evaluate."""
+
+
+@dataclass(frozen=True)
+class PinnedRelease:
+    """One knowledge release as a run pinned it at admission (RunManifest)."""
+
+    stream: str
+    digest: str
+    status: ReleaseStatus
+    rules: tuple[EnforcedRule, ...]
+
+
+def rules_for(pins: dict[str, PinnedRelease], stream: str) -> tuple[EnforcedRule, ...]:
+    """The rules this run may evaluate: from its own pin, never from 'current'.
+
+    Only an activated release is evaluable. Deprecated still serves the run that
+    pinned it; revoked serves nobody; anything not yet active was never released.
+    """
+    pin = pins.get(stream)
+    if pin is None:
+        raise UnknownUnderPolicy(f"the run pinned no release of {stream}")
+    if pin.status not in ("active", "deprecated"):
+        raise ReleaseNotEvaluable(f"{stream}@{pin.digest[:12]} is {pin.status}")
+    return pin.rules
+
+
+def pinned_dispatch(effect, facts: dict, pins: dict[str, PinnedRelease], stream: str,
+                    *, jurisdiction: str, on_date: str):
+    """Enforce the pinned release; every outcome cites the digest it was decided on."""
+    rules = rules_for(pins, stream)
+    try:
+        result = guarded_dispatch(effect, facts, rules,
+                                  jurisdiction=jurisdiction, on_date=on_date)
+    except PolicyViolation as refusal:
+        refusal.release = pins[stream].digest
+        raise
+    return result, pins[stream].digest
+```
+
+When Harborlight's upstream requirement on current income evidence shortens the age window, consistency reads the two thresholds as declared supersession, and an income rule whose term "qualifying income" is undefined is held. The rest is the platform's: the underwriting policy owner, not the author, approves; `mortgage-policy@2026.10` activates in staging and is promoted by digest; `RUN-98217` keeps `2026.09`; a plan node needing the held rule is refused at compile time. When a wrong value is found, production rolls back by pointer and runs on `2026.10` are listed for re-evaluation.
 
 ## Reference architecture: the Enterprise Knowledge Hub
 
@@ -2792,20 +2934,14 @@ Agents must not hold connection strings to six stores. They ask one service, whi
 
 | Hub view | Holds | Answers | Serves mode / built from |
 | --- | --- | --- | --- |
-| Governance | Ownership, versions, effective dates, permissions, lifecycle | May this agent see this, and is it current? | All modes / § Why provenance determines what you can trust |
+| Governance (registry) | Ownership, versions, releases, effective dates, permissions | May this run see this, and which release is it in? | All modes / § Two planes: develop compliance knowledge, consume releases |
 | Semantic | Documents and embeddings | What text is relevant? | Context / § Semantic knowledge |
 | Structural | Ontology, graph, data catalog | What is related to what, and what does this field mean? | Reasoning / § Ontology and knowledge graph, § Business data catalog |
 | Normative | Rules, decision tables, vocabulary | What is required, permitted, or forbidden? | Constraints / § Business rules as enforceable constraints, DMN, SBVR |
 | Procedural | Process and case models | In what order, and what may not be skipped? | Reasoning / BPMN, CMMN |
-| Capability | Tools, APIs, effects, prerequisites | What can be done, and at what cost? | Action / § Capability and API catalog |
+| Capability | Tools, APIs, effects, prerequisites | What can be done, and at what cost? | Action / the capability catalog, Chapter 8 |
 
-One query surface sits above all six. Permissions are enforced there, attribution is attached there, and an agent that asks for knowledge it may not have receives a refusal rather than a filtered answer.
-
-Document ingestion fills the Semantic view with labelled text and supplies the facts the Normative view's rules evaluate; the enforced rule receives only supported facts. The Hub is the knowledge half of the knowledge, context, and memory plane (Chapter 4). It has two kinds of caller: the Context Service, which resolves pre-step context (Chapter 6), and read-only tools invoked through the Tool Gateway during a step (Chapter 3). Both reach the same permissions and attribution; neither holds store connections.
-
-|  |
-| --- |
-| **PRODUCTION CONSIDERATION**  Version the knowledge layer alongside the agent. An agent release pinned to a policy version (the RunManifest's `knowledge_snapshots`, Chapter 4) is reproducible; one that resolves against "current" changes behavior when a document changes, with no deployment and no trace. |
+Ingestion fills the Semantic view with labelled text and the Normative view's rules with supported facts. The Hub is the knowledge half of Chapter 4's knowledge, context, and memory plane, with two callers: the Context Service before a step (Chapter 6) and read-only tools through the Tool Gateway during one (Chapter 3). Both resolve against the run's pinned release with the same permissions and attribution; neither holds store connections.
 
 ## What the evidence lets us conclude
 
@@ -2813,12 +2949,14 @@ Document ingestion fills the Semantic view with labelled text and supplies the f
 | --- | --- | --- |
 | Standards scope | BPMN, DMN, CMMN, and SBVR are OMG specifications; each citation supports the existence and semantics of its own standard and nothing about its suitability for agentic systems. That assessment is book-authored. | R44; R45; R46; R47 |
 | Verification measurement | On one documented run of the author's own pipeline, independent re-verification against the corpus rejected 44% of model-proposed dependency and conflict claims that a single structural screen had accepted. Evidence that structure checks are not grounding; not an error rate for extraction, rules, or documents. | R48 |
+| Reference implementation | At the pinned commit the author's repository has the build-time mechanisms this chapter points at; it has no release, approval, pointer, or runtime, and shows nothing about other systems. | R48 |
+| Knowledge lifecycle (book-authored recommendation) | The object model, graph presentation, planes, gates, states, and everything from approval onward are the book's own. | — |
 
 The discussion above draws on R44; R45; R46; R47; R48. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
-The examples above are the reference implementation, and each is executed in continuous integration. Composed, they show the shape of the Hub: a rule extracted with provenance, verified against its corpus, placed in a graph, reconciled against a second source, and finally enforced at the effect boundary over facts a document yielded only after verification.
+The examples above are the reference implementation, and each is executed in continuous integration. Composed, they show the Hub's shape: a rule extracted with provenance, verified, placed in a conforming graph, reconciled against a second source, released through gates and an independent approval, and enforced from a run's pin over verified document facts.
 
 ## If this fails in production
 
@@ -2826,9 +2964,8 @@ The examples above are the reference implementation, and each is executed in con
 | --- | --- | --- |
 | Agent quotes the right policy and violates it | The rule is context, never a constraint | Is any rule evaluated at the effect boundary? |
 | Correct answer in staging, wrong in production | Scope or effective date not enforced | Does the rule declare jurisdiction and effective_from, and are they checked? |
-| Two runs disagree on identical input | Resolution against "current" rather than a pinned version | Is the knowledge version recorded in the RunManifest (Chapter 4)? |
-| A conflict surfaces only after an incident | Contradictions resolved silently at merge | Does the union preserve per-source attribution? |
-| An agent selects a mutating tool for a read | Capability discovery filters on names, not effects | Does the catalog carry each capability's effect semantics and risk class (Chapter 22), and is discovery filtered on them? |
+| Two runs disagree on identical input | Resolution against "current" rather than a pinned release | Does each RunManifest name a release digest, and did the two runs pin different releases? |
+| A rule changed in production and nobody can say who approved it | A change merged without a candidate digest and an independent approval | Does the release manifest record the author and a different approving human? |
 | Provenance points at text that does not support the rule | Citation trusted rather than verified | Is verification rebuilding evidence from the corpus? |
 | A model's reading of a pay statement reaches a rule as a fact | Extraction served without verification | Does the effect boundary receive only supported fields? |
 | Extraction quality drops after a model change, unnoticed | Extractor version not recorded; no re-processing diff | Does each record carry its extractor version, and does a change produce a diff? |
@@ -2849,9 +2986,9 @@ If the vector index is being treated as the source of truth, the repair is struc
 
 **✓** Union preserves per-source attribution; contradictions are escalated, never auto-resolved.
 
-**✓** Capability discovery filters on granted actions, prerequisites, and data class before returning results.
+**✓** Every RunManifest names the knowledge release digests it resolved; no control point reads "current".
 
-**✓** The knowledge version used by a run is recorded in its RunManifest (Chapter 4).
+**✓** No knowledge change reaches a live pointer without a complete gate record and an independent approval of its candidate digest; rollback rewrites nothing.
 
 **✓** Permissions are enforced at the resolution boundary, not after the model has seen the passage.
 
@@ -2873,7 +3010,7 @@ If the vector index is being treated as the source of truth, the repair is struc
 | Where is a policy enforced, as opposed to described? | Constraints exist outside the prompt |
 | What does the system do when a required input is missing? | Unknown is not silently treated as permitted |
 | How does a value from a document become a fact a rule may evaluate? | Through a verifier that re-opens the bytes, and a record that says so |
-| Can you reproduce a decision made six months ago? | Knowledge is versioned and pinned per run |
+| Can you reproduce a decision made six months ago? | The RunManifest names a release digest that still resolves, and its manifest names the approver |
 
 ## Where this leads next
 
@@ -2913,7 +3050,7 @@ These sources often appear together in a prompt, which makes it tempting to stor
 | --- | --- | --- | --- |
 | Workflow state | Current node, variables, child tasks, budgets, approvals | Durable run history (Chapter 15); context reads the RunStateProjection | Strong transition rules; versioned; queryable; replay-safe |
 | Conversation | Recent messages, channel state, current clarification | Conversation service / document DB | Append-only turns; compact with source links; not authoritative business state |
-| Enterprise knowledge | Policies, contracts, code, tickets, records, catalogs | Source systems + governed search/vector/graph indexes, through the Hub (Chapter 5) | Source remains authoritative; ACL filter before retrieval; freshness and lineage |
+| Enterprise knowledge | Policies, contracts, code, tickets, records, catalogs | Source systems + governed search/vector/graph indexes, through the Hub (Chapter 5) | Source remains authoritative; resolved against the release the run pinned; ACL filter before retrieval; freshness and lineage |
 | Working memory | Scratch notes, candidate plan, intermediate hypotheses | Run-scoped state or object artifacts | TTL; no automatic cross-run reuse; label confidence and provenance |
 | Long-term memory | Approved preferences, reusable facts, learned procedures | Governed memory service / relational + search index | Explicit write policy, consent, provenance, TTL, ACL, correction/deletion |
 
@@ -3036,7 +3173,7 @@ The Conversation Service owns turns; the Workflow Projection Service owns canoni
 | POST /v1/context:assemble | Build a token-bounded context from pinned instructions, run state, conversation, knowledge, and memory under a policy and data budget |
 | GET /v1/runs/{run\_id} (Chapters 4 and 15) | The canonical state projection and state\_version that context reads; never the transcript |
 | POST /v1/conversations/{id}/turns | Append an immutable user/agent/tool turn with provenance, classification, and client idempotency key |
-| POST /v1/knowledge:search | The Hub's query surface (Chapter 5): hybrid search with subject+actor context, source allowlist, freshness, filters, top-k, and required citations |
+| POST /v1/knowledge:search | The Hub's query surface (Chapter 5): hybrid search within the run's pinned release, with subject+actor context, source allowlist, freshness, filters, top-k, and required citations; resolve, query, and evaluate are in Chapter 5 |
 | POST /v1/memories | Propose/write a governed memory with scope, provenance, confidence, consent, TTL, and deduplication key; policy may require review |
 | GET /v1/memories:search | Search only memories visible to the subject/purpose/run; returns confidence and source lineage |
 | PATCH /v1/memories/{memory\_id} | Correct via optimistic version; preserves previous version and reason |
@@ -3052,7 +3189,7 @@ The Conversation Service owns turns; the Workflow Projection Service owns canoni
 | ContextManifest | context ID, run ID, RunManifest digest, node ID, step request ID, revision, policy version, per-section caps and allocation, ordered segments, omitted candidate IDs, redactions, manifest hash, created time |
 | ContextSegment | segment ID, kind and trust tier, source URI/revision, content hash, authorization decision ID, freshness, token count |
 | MemoryRecord | memory ID, tenant, subject/team scope, type, canonical value, provenance, confidence, consent, purpose allowlist, TTL, status, supersedes |
-| KnowledgeObject | source URI/revision, object/chunk IDs, text/blob reference, embedding version, metadata, ACL pointer, ingestion cursor, verification status, deletion state |
+| KnowledgeObject | source URI/revision, object/chunk IDs, text/blob reference, embedding version, metadata, ACL pointer, ingestion cursor, verification status, release digest, deletion state |
 | SummarySnapshot | input segment hashes, summary hash/reference, model/prompt version, coverage map, unresolved facts, expiry; immutable |
 
 There is one RunManifest per run and one ContextManifest per AgentStepRequest; the ContextManifest references the RunManifest digest. Tool results observed inside the step's loop are appended as tier-four segments in a new manifest revision recorded on each model span.
@@ -3420,7 +3557,7 @@ async def run_conformance(execute: Adapter, request, context) -> ConformanceRepo
 
 **✓** One immutable artifact crosses every environment; endpoints, identities, secrets, sources, quotas, regions, and review queues bind at deployment.
 
-**✓** SDKs, adapters, model aliases, tool schemas, Skills, MCP servers, policy bundles, evaluators, and knowledge snapshots are pinned in the ReleaseManifest.
+**✓** SDKs, adapters, model aliases, tool schemas, Skills, MCP servers, policy bundles, and evaluators are pinned in the ReleaseManifest, which also declares the knowledge streams and ontology major versions it accepts; release digests are resolved per run (Chapter 5).
 
 **✓** A model or provider swap ships as a behavior change with evaluation, canary, and rollback — never as configuration.
 
@@ -3492,7 +3629,7 @@ interface:
 
 requires:
   tools:     [mortgage.case.read@1, mortgage.document.read@1]
-  knowledge: [mortgage-policy@approved-2026.09]
+  knowledge: [mortgage-policy@2026.09]
   runtime:   {max_turns: 6, deadline_s: 45}
 
 policy:
@@ -3528,7 +3665,7 @@ Every change, even one instruction sentence, produces a new digest and must re-p
 | Agent | A configured worker that runs bounded steps and requires Skills | AgentSpec, executed as AgentStepRequest (Chapter 3) | Application team | AgentRuntime |
 | Skill Pack | Compatible, co-released Skills plus shared policy and evaluations | SkillPackManifest (Chapter 9) | Pack owner | Registry and release (Chapter 27) |
 
-One deterministic operation with an effect is a tool; model judgment over several tools or sources, reused across agents, is a Skill; anything that owns a run, its acceptance, and its topology is an agent. Chapter 5's capability catalog is the discovery view across the tool and Skill registries; the registries stay separate because their contracts and enforcement points differ.
+One deterministic operation with an effect is a tool; model judgment over several tools or sources, reused across agents, is a Skill; anything that owns a run, its acceptance, and its topology is an agent. The capability catalog below is the discovery view across the tool and Skill registries; the registries stay separate because their contracts and enforcement points differ.
 
 ### Discovery is not permission
 
@@ -3541,8 +3678,7 @@ governed capability quietly becomes ungoverned.
 might satisfy a stated need, and it may legitimately return several. It answers
 *what exists*. Its candidates are input to resolution, not a menu for the
 model. When a model must choose among Skills, it sees only a shortlist that
-resolution has already made eligible (Chapter 5 § Capability and API catalog;
-AP-12 in Chapter 17).
+resolution has already made eligible (AP-12 in Chapter 17).
 
 **Resolution** is deterministic and restrictive. Given one requirement and the
 run's envelope, it filters by tenant, purpose, subject and actor grants, data
@@ -3561,6 +3697,70 @@ The asymmetry matters. Discovery may be fuzzy because nothing it returns is yet
 permitted. Resolution may not, because its output is what will actually run.
 A system that lets a model pick from discovery results has skipped the gate and
 is back to ungoverned capability with a registry in front of it.
+
+The catalog discovery searches says what the agent may do, with the consequences attached. A tool list says what exists; a capability catalog says whether an action mutates, what must be true first, who may invoke it, and whether a retry is safe.
+
+🐍 · Discovering a capability with its effects and prerequisites
+
+```python
+Effect = Literal["read", "write", "irreversible"]
+
+
+@dataclass(frozen=True)
+class Capability:
+    capability_id: str
+    version: str
+    description: str
+    effect: Effect
+    required_action: str
+    prerequisites: tuple[str, ...] = field(default_factory=tuple)
+    idempotent: bool = False
+    data_classes: frozenset[str] = frozenset()
+
+
+class CapabilityUnavailable(Exception):
+    """No capability satisfies the request under the caller's grant."""
+
+
+@dataclass
+class CapabilityCatalog:
+    capabilities: dict[str, Capability] = field(default_factory=dict)
+
+    def register(self, capability: Capability) -> None:
+        self.capabilities[capability.capability_id] = capability
+
+    def discover(self, *, intent_effect: Effect, granted_actions: frozenset[str],
+                 satisfied: frozenset[str], permitted_data: frozenset[str]) -> list[Capability]:
+        """Everything the caller may actually invoke right now.
+
+        Four filters, and the order matters: an agent should never see a
+        capability it cannot use, because a listed-but-forbidden tool is an
+        invitation to try.
+        """
+        eligible = []
+        for capability in self.capabilities.values():
+            if capability.effect != intent_effect:
+                continue
+            if capability.required_action not in granted_actions:
+                continue
+            if not set(capability.prerequisites) <= satisfied:
+                continue
+            if not capability.data_classes <= permitted_data:
+                continue
+            eligible.append(capability)
+        # Reversible first: when two capabilities both satisfy the intent, the
+        # one that can be undone is the safer default.
+        order = {"read": 0, "write": 1, "irreversible": 2}
+        return sorted(eligible, key=lambda c: (order[c.effect], not c.idempotent, c.capability_id))
+
+    def select(self, **kwargs) -> Capability:
+        found = self.discover(**kwargs)
+        if not found:
+            raise CapabilityUnavailable("no capability satisfies this request under the caller's grant")
+        return found[0]
+```
+
+A capability the caller may not invoke should never appear, because a listed-but-forbidden tool is an invitation to try. The catalog does not own these entries; it indexes the Skill manifests of this chapter and the ToolManifests of Chapter 22 for discovery, and every invocation still resolves against those registries.
 
 The pinned release is compiled into the step. Its instructions enter the ContextManifest at trust tier 2 (Chapter 6 § The trust hierarchy of instructions); its `requires.tools` becomes the step's eligible tool versions and its `runtime` block the step's bounds in the AgentStepRequest (Chapter 3 § The request is bounded before the model sees it); its digest is recorded in the RunManifest (Chapter 4 § RunManifest).
 
@@ -3723,7 +3923,7 @@ A pack build produces a CompatibilityReport; any failed check blocks the pack fr
 | Tool schemas | Two Skills require incompatible versions of one tool |
 | Policy obligations | Skills declare conflicting data-class or region constraints |
 | Workflow contracts | A workflow template expects a Skill output the pack does not provide |
-| Knowledge versions | Skills pin different snapshots of the same source |
+| Knowledge versions | Skills require different releases of one knowledge stream, or ontology major versions that cannot coexist |
 | Runtime and model requirements | Skills need different adapter or model capabilities |
 | Deprecation windows | A pinned Skill's compatibility window ends before the pack's support window |
 
@@ -4527,6 +4727,7 @@ Each node kind is executed by a mechanism defined elsewhere: `llm_activity` is a
 * Data-flow classification can stay equal or become more restrictive. A node cannot send restricted data to a capability whose manifest/region/purpose is incompatible.
 * Mutating nodes require idempotency/effect semantics (Chapter 22) and any policy-required preview, approval (Chapter 14), or compensation. An R4 (irreversible or privileged) commit remains a deterministic domain operation.
 * Loops require a deterministic guard plus maximum iterations, wall time, cost, and a no-progress detector using the no-progress signatures of Chapter 10; unbounded loops and unhandled terminal paths are rejected. Delegation depth and parallel fan-out are statically bounded; see AP-11 for why per-child limits do not compose.
+* A node that evaluates a rule or decision table binds to the run's pinned knowledge release; a node that needs an object the release does not hold as evaluable (absent, review-held, or Revoked) is refused here, naming the object (Chapter 5).
 * The compiler estimates critical path, maximum fan-out, worst-case calls/cost, and required quota. Admission (Chapter 28) may reject, defer, or require approval before commit.
 
 ## Revise without rewriting history
@@ -4761,7 +4962,7 @@ Independent evaluation does not mean asking the same model to reread its answer 
 
 [[DIAGRAM:pattern-reflection|Figure 13-1 — A bounded revise loop whose verdict is advisory; acceptance happens outside it]]
 
-Reflection asks, “What is missing or inconsistent?” Evaluation asks, “Does this candidate meet an acceptance rubric?” In the mortgage case, the contradictory address is caught by an executable check against the application projection; whether the recommendation overstates confidence is the kind of qualitative criterion a calibrated judge may assess. Combining reflection and evaluation can improve complex artifacts, but only if the roles are explicit and bounded. The platform runs executable checks before any model judge: schema, evidence presence, policy, effect state, resource version, arithmetic, and deterministic domain rules.
+Reflection asks, “What is missing or inconsistent?” Evaluation asks, “Does this candidate meet an acceptance rubric?” In the mortgage case, the contradictory address is caught by an executable check against the application projection; whether the recommendation overstates confidence is the kind of qualitative criterion a calibrated judge may assess. Combining reflection and evaluation can improve complex artifacts, but only if the roles are explicit and bounded. The platform runs executable checks before any model judge: schema, evidence presence, policy, effect state, resource version, arithmetic, and deterministic domain rules from the run's pinned knowledge release (Chapter 5).
 
 Qualitative criteria—clarity, completeness, grounded synthesis, or policy-explanation quality—may use calibrated judges. Judge prompt, model route, examples, sampling parameters, and rubric are versioned. A judge used at runtime must already be calibrated: Chapter 25 § Layer tests from contracts to outcomes defines how judges are measured against human labels and gated for release. Inside a run, a judge score is one input to the acceptance decision; it is never permission to access data or commit a transaction (see AP-10).
 
@@ -5807,7 +6008,7 @@ def project_context(snapshot: tuple[DecisionRecord, ...]) -> list[str]:
 
 **What it looks like in practice.** An obsolete policy chunk applies a superseded spending limit, and the answer cites the document by name, which is what makes the reviewer believe it.
 
-**How to replace it.** Governed sources and snapshots hold authority; the index is a derived locator whose hits are verified for ACL, freshness, and supersession before the content reaches the model. Migrate in steps: Vector hit → action becomes source + ACL + snapshot → evidence → decision.
+**How to replace it.** Governed sources and snapshots hold authority, and the snapshot is a pinned knowledge release (Chapter 5); the index is a derived locator whose hits are verified for ACL, freshness, and supersession before the content reaches the model. Migrate in steps: Vector hit → action becomes source + ACL + snapshot → evidence → decision.
 
 **How to know the repair worked.** Track evidence age at decision time, source disagreement rate, ACL mismatches at retrieval, and citations pointing at superseded revisions. The cost: authoritative lookup adds latency to every retrieval. Apply it in proportion to what the answer will be used for; drafting assistance and payment authorization do not need the same guarantee.
 
@@ -6824,7 +7025,7 @@ refuses it first, and how to recover.
 
 **Signals.** Ingestion anomalies, rank manipulation, source drift, failures that cluster on a new source.
 
-**Prevent.** Signed and approved ingestion with provenance (Chapter 5 § Ingest documents the way you extract rules), source/index separation, ACLs, poisoning tests.
+**Prevent.** Signed and approved ingestion with provenance (Chapter 5 § Ingest documents the way you extract rules) and signed knowledge releases with independent approval (Chapter 5 § Change compliance knowledge the way you change software), source/index separation, ACLs, poisoning tests.
 
 **First deterministic refusal.** Context/memory: source, snapshot, and ACL filters admit only approved sources into the knowledge snapshot a run may read. They cannot see poison that arrived through an approved source; that residual risk falls to Chapter 5's independent verification and to the Recover step.
 
@@ -7164,7 +7365,7 @@ Every retrieval, delegation, tool call, memory write, and publication evaluates 
 
 allow(subject, actor, action, resource, tenant, purpose, data\_class, environment, risk, run\_id, time, device/session assurance, requested\_scope)
 
-The effective permission is the intersection—not the union—of all applicable grants. Explicit deny wins.
+The effective permission is the intersection—not the union—of all applicable grants. Explicit deny wins. The data classes, purposes, and resource definitions the tuple names come from the run's pinned knowledge release (Chapter 5); business rules are evaluated at the effect boundary and in the domain rules engine, not here, and the policy bundle remains authorization policy-as-code.
 
 RBAC is useful for stable coarse roles such as “mortgage evidence reader.” ABAC adds
 the facts that change per request, such as a particular account, data class,
@@ -7523,8 +7724,8 @@ discovery returns only what the run may use.
 
 Resolve the manifest at dispatch, not at import; a risk class that lives only in
 a reviewer's memory cannot be enforced. The enforced rules the gateway evaluates
-before dispatch (Chapter 5) read verified facts from KnowledgeArtifacts, never
-model output; the precondition/version field remains the resource-version check.
+before dispatch (Chapter 5) read verified facts from KnowledgeArtifacts in the
+run's pinned knowledge release, never model output; the precondition/version field remains the resource-version check.
 
 ### Risk classes
 
@@ -8176,7 +8377,7 @@ human workflow, or effect recovery.
 | **Trace segment** | **Time and category** | **What the operator learns** | **Action or evidence** |
 | --- | --- | --- | --- |
 | Admission and queue | 3 min · queue | The run waited before any model work began | Queue age, capacity class, and assignment event |
-| Retrieval | 2 min · retry delay | The first context snapshot was stale and a second attempt ran | Index snapshot, extraction record versions, ACL-filter count, freshness, query hash |
+| Retrieval | 2 min · retry delay | The first context snapshot was stale and a second attempt ran | Knowledge release digest and index build, extraction record versions, ACL-filter count, freshness, query hash |
 | Approval | 4 min · human dwell | Human dwell dominated model latency | Proposal hash, approver role, wait and expiry timestamps |
 | Connector | 3 min · execution | The downstream call timed out after dispatch | Tool span, idempotency key, downstream request ID |
 | Effect ledger | open · reconciliation | The mortgage document request cannot yet be called successful or declined | LOS receipt or reconciliation case; no blind retry |
@@ -8212,9 +8413,9 @@ below is a child span or a linked asynchronous trace.
 | --- | --- |
 | Run | tenant, subject hash, agent/workflow/version set, purpose, risk class, status, budget, token and cost totals, stop reason, correlation ID |
 | Model | provider, model route/version, prompt-template hash, context-manifest hash, input/output tokens, latency, cache, finish/error type |
-| Retrieval | source/index snapshot, extraction record versions, query hash, ACL-filter count, documents returned, freshness, latency |
+| Retrieval | knowledge release digest and index build, extraction record versions, query hash, ACL-filter count, documents returned, freshness, latency |
 | Decision | kind (route, plan compile/revision, step disposition, acceptance, critique); candidates and eligibility removals; chosen option; validator or compiler reason; scorer/rubric versions for acceptance; plan digest/revision and replan diff; turn index, information gain, remaining budgets, stop reason |
-| Policy | policy bundle/version, decision ID, action/resource hash, decision, obligations, reason code, latency |
+| Policy | policy bundle/version, decision ID, action/resource hash, decision, obligations, rule ids, reason code, latency |
 | Tool | tool/version, risk class, arguments hash, grant ID, credential lease ID, idempotency key, retries, effect state (`effect.state`), effect receipt, artifact references, latency |
 | Memory | memory ID/version, operation (read/write/delete), scope/tenant, purpose and policy basis, provenance, TTL |
 | Agent task | caller/callee versions, task ID, protocol, ownership transition, grant lineage, budget transfer, join condition, terminal status |
@@ -8720,6 +8921,7 @@ cause, and prefer deterministic code when the decision has become stable.
 | Prompts | Omissions, conflicts, unsupported claims | Clarify responsibility, examples, evidence, stop rules | Golden/adversarial replay; behavior/policy review |
 | Context/RAG | Recall/precision, stale/poisoned source, injection correlation | ACL/freshness/ranking/dedup/token/source changes | Retrieval/faithfulness/security tests; data-owner approval |
 | Document extraction | Field accuracy on a labelled document set; review-route rate and verification rejections over a fixed denominator | Extractor or prompt version, consistency checks, verification thresholds | Re-extraction replay on golden documents; data-owner approval |
+| Knowledge | Unknown-under-policy refusals per rule, runtime contradictions, citations of superseded releases, SME corrections, held and refused objects per release against a fixed integer budget | A new knowledge release: rule, vocabulary, ontology, or tenant extension | Knowledge test-suite replay, grounding, consistency, and independent SME approval (Chapter 5) |
 | Memory | Correction, leakage, stale/poisoned retrieval | Eligibility, purpose, scope, TTL, verification, deletion | Privacy/security/longitudinal replay; memory-purpose approval |
 | Tools | Wrong choice/args, timeout/retry/unknown effect | Narrow schema/catalog, preconditions, idempotency/reconcile | Contract/failure/load/security; effect/permission approval |
 | Skills | Version-specific or inconsistent behavior | New immutable Skill/dependencies/examples/acceptance | Skill certification and domain owner |
@@ -9029,7 +9231,7 @@ This framing also explains why a central board alone scales poorly. A board can 
 
 ## Share responsibility without losing accountability
 
-Figure 26-1 shows the split. Central services provide identity and policy, evidence and audit, and risk tiers and exceptions once; domain teams decide in context; and the review board engages in proportion to risk tier, not to team.
+The split is shown in Figure 26-1. Central services provide identity and policy, evidence and audit, and risk tiers and exceptions once; domain teams decide in context; and the review board engages in proportion to risk tier, not to team.
 
 [[DIAGRAM:governance-model|Figure 26-1 — Federated governance with centralized control services]]
 
@@ -9039,6 +9241,7 @@ Figure 26-1 shows the split. Central services provide identity and policy, evide
 | Risk tier/autonomy | Risk owner | Threat/data/effect assessment and controls |
 | Platform contracts | Platform product owner | RFC, compatibility/migration, SLO |
 | Data/context/memory purpose | Data owner | Source, ACL, purpose, retention, deletion, quality |
+| Knowledge release | Knowledge owner: domain owner for rules and vocabulary, data owner for sources | Gate record, independent approval, release manifest (Chapter 5) |
 | Tool/effect authorization | Resource owner | Tool contract, permission, idempotency/reconciliation, approval policy |
 | Model/provider/route | Model governance owner | Capability, evaluation, data terms, region, cost, resilience |
 | Evaluator/dataset truth | Domain evaluation owner | Lineage, rubric, calibration, uncertainty |
@@ -9075,7 +9278,7 @@ The tier sets the minimum controls. Review stays predictable when every rule has
 
 Principles and standards are argued; policy-as-code and configuration are executed.
 
-The release gate (Chapter 25's ReleaseGateDecision) takes two inputs: the use case's tier and the change class. In T0–T2 use cases, pre-approved low-risk change classes (metadata, documentation, evaluated prompt wording) may promote automatically on passing gates. A change in the "Require human governance" row of Chapter 25 § Close the loop without handing control to the model always requires a named approver, whatever the tier. In T3–T4 use cases every behavior change needs the release owner's recorded approval and a canary; T4 adds independent assurance.
+The release gate (Chapter 25's ReleaseGateDecision) takes two inputs: the use case's tier and the change class. In T0–T2 use cases, pre-approved low-risk change classes (metadata, documentation, evaluated prompt wording) may promote automatically on passing gates. A change in the "Require human governance" row of Chapter 25 § Close the loop without handing control to the model always requires a named approver, whatever the tier. In T3–T4 use cases every behavior change needs the release owner's recorded approval and a canary; T4 adds independent assurance. A knowledge activation (Chapter 5) changes behavior without an agent release, so it is a change class under the same rule, with independent SME approval as its floor.
 
 A design review covers each area below; the chapter in parentheses holds its controls: outcome and acceptance (Chapters 2 and 13), deterministic boundary (2), state and effect ownership (15, 22), identity and delegation (21), context and memory (6), tool, MCP, and A2A trust (19), threats (20), evaluation truth (25), observability and privacy (24), recovery and release (27), capacity and cost (28), human oversight (14), and portability (3).
 
@@ -9210,7 +9413,7 @@ For an agentic system, behavior is spread across more than application code. A m
 
 A production release pins every object in the table below, plus dashboards, runbooks, rollout, and rollback plans. The platform records these in an immutable ReleaseManifest; each run's RunManifest references it.
 
-Four records keep this precise. A ChangeBundle is a proposed change (Chapter 25's Recommend stage); it becomes a ReleaseManifest only when promoted. A ReleaseManifest—the "release bundle" in this chapter's prose—is the immutable, signed graph listed in § Versioned objects. An EnvironmentBinding says which ReleaseManifest new starts receive for a tenant, use case, environment, and region. A RunManifest (Chapter 4) is resolved once at admission: it records the ReleaseManifest digest plus the run's subject, purpose, budget, risk tier, and knowledge-snapshot choice. The ReleaseManifest fixes the eligible Skill and pack versions; each RunManifest records the digests resolved from that set (Chapter 8). Rollback changes an EnvironmentBinding; it never edits a ReleaseManifest or a RunManifest.
+Four records keep this precise. A ChangeBundle is a proposed change (Chapter 25's Recommend stage); it becomes a ReleaseManifest only when promoted. A ReleaseManifest—the "release bundle" in this chapter's prose—is the immutable, signed graph listed in § Versioned objects. An EnvironmentBinding says which ReleaseManifest new starts receive for a tenant, use case, environment, and region. A RunManifest (Chapter 4) is resolved once at admission: it records the ReleaseManifest digest plus the run's subject, purpose, budget, risk tier, and the knowledge release digests it resolved (Chapter 5). The ReleaseManifest fixes the eligible Skill and pack versions; each RunManifest records the digests resolved from that set (Chapter 8). Rollback changes an EnvironmentBinding; it never edits a ReleaseManifest or a RunManifest.
 
 ### Versioned objects
 
@@ -9225,7 +9428,7 @@ Four records keep this precise. A ChangeBundle is a proposed change (Chapter 25'
 | Model route | Provider model ID/version + decoding/config + fallback chain | Quality, safety, latency, cost, regional/compliance evals |
 | Policy bundle | Signed version + effective period | Policy tests, separation of duties, emergency rollback |
 | Data/schema | Versioned contract and migration | Backward/forward compatibility and lineage checks |
-| Knowledge snapshot | Source revision/index build ID + ACL snapshot strategy | Freshness, ACL correctness, deletion propagation |
+| Knowledge release | Registry release digest: ontology version, object digests, source revisions, approvals | Chapter 5 gates and independent SME approval; the Semantic index also: freshness, ACL correctness, deletion propagation |
 | Eval dataset/rubric | Immutable examples, provenance, reviewer/version | Coverage, leakage review, judge calibration |
 | Runtime image | Signed digest + SBOM/provenance | Vulnerability, sandbox, supply-chain checks |
 | Artifact | Content hash + schema + creator run/version | Classification, destination policy, retention |
@@ -9244,7 +9447,7 @@ Chapter 15 keeps compatible workers and explicit migrations for in-flight histor
 
 * Tool/model fallback is itself a versioned route with eval evidence. “Same family” or “newer model” is not proof of compatibility.
 * Policies can impose emergency deny outside the pinned bundle; the run records both the original policy and the current higher-precedence denial.
-* Knowledge snapshots may be “as-of,” “current under freshness policy,” or a recorded set of source revisions. The manifest states which reproducibility level applies.
+* Knowledge snapshots may be “as-of,” “current under freshness policy,” or a recorded set of source revisions, and the manifest states which applies. “Current under freshness policy” is permitted only for the Semantic view's retrieval index; rules, vocabulary, and the ontology are always a recorded knowledge release.
 
 ### A release walkthrough
 
@@ -9259,6 +9462,146 @@ The distinction between a release and a deployment becomes concrete during a too
 | Region fails during a write | Fence the old writer, restore, reconcile, then advance placement (§ Regional recovery) | No effect is assumed absent merely because the request timed out |
 
 This is why “roll back the model” is usually incomplete. If the prompt, tool schema, policy, workflow build, or retrieved knowledge strategy also changed, restoring one model identifier does not restore the behavior. The smallest safe rollback unit is the release bundle, while emergency deny and credential revocation remain separate controls that can take effect immediately and be recorded alongside the pinned release.
+
+### Knowledge releases
+
+Compliance knowledge (Chapter 5) has its own release stream, and activating a release changes behavior without an agent release. The software stages map onto it:
+
+| **Software stage** | **Knowledge equivalent** | **Record** |
+| --- | --- | --- |
+| Source code | Requirements, obligations, controls as typed rules, vocabulary, ontology, graph data, tenant extensions | KnowledgeArtifact; ontology version |
+| Lockfile | The pinned upstream base release | Pinned base of the stream |
+| Pull request | One knowledge change, frozen as a candidate digest | Change record |
+| Build | Base, tenant extension, and ontology resolved into one content-addressed candidate | Release digest |
+| Lint and tests | Chapter 5's gates: golden decision and refusal cases, impact diff | Gate record |
+| Code review | Independent SME approval of the whole candidate | Approval in the release manifest |
+| Deploy | The registry publisher moves the live pointer | KnowledgeBinding |
+| Promotion and rollback | The identical digest moves forward; the pointer moves back | Activation record |
+| Monitoring | Refusals, unknown verdicts, contradictions, superseded citations | Chapter 25 evidence; ChangeBundle draft |
+
+One change is one branch. A long-lived knowledge branch goes stale: by the time it merges, the base and the live release have moved, and semantic conflicts hide in a clean textual merge. A tenant's deviation is a **tenant extension** over a pinned shared base, never a fork. For rules, stricter than the base is flagged and allowed, and looser than a base floor blocks. For the ontology, an extension may add kinds, relationships, properties, and terms but never remove, rename, or redefine a base element; that needs a new major stream. Every scope dimension an extension uses is declared in the ontology, never hard-coded in an evaluator. Extensions are tenant-private, and an upstream base bump re-checks each one against the new floor. A hotfix takes the same path with priority review; break-glass is an ExceptionWaiver (Chapter 26), never a bypass.
+
+Publication follows Chapter 5's boundary: one approval lets the registry publisher recheck, store and verify the bundle, allocate the version once per attempt, and move the pointer.
+
+🐍 · A knowledge change published only after gates, an independent approval, and a verified bundle
+
+```python
+@dataclass(frozen=True)
+class Candidate:
+    """One change, frozen at submission. Its digest is what the approver approves."""
+
+    change_id: str
+    author: str
+    objects: tuple             # Requirement, Obligation, Control records
+    pinned_base: str           # the upstream base release it was resolved against
+    target_live: str | None    # the live release it expects to replace
+    resolver_version: str
+
+    def digest(self) -> str:
+        return hashlib.sha256(repr(self).encode("utf-8")).hexdigest()
+
+
+GATES = ("knowledge-schema", "change-contract", "duplicate-overlap", "grounding",
+         "consistency", "regression", "staleness")
+
+
+@dataclass
+class Registry:
+    releases: dict[str, Release] = field(default_factory=dict)
+    pointers: dict[tuple[str, str], str] = field(default_factory=dict)  # (stream, env)
+
+
+def publish(registry: Registry, stream: str, env: str, candidate: Candidate,
+            gates: list[Gate], approval: Approval) -> Release:
+    digest = candidate.digest()
+    if digest in registry.releases:            # a retry: no second version
+        return registry.releases[digest]
+    if {g.name for g in gates if g.passed} != set(GATES):
+        raise PublishRefused("gate record incomplete or failed")
+    if approval.approver == candidate.author:
+        raise PublishRefused("an author cannot approve their own change")
+    if approval.candidate_digest != digest:
+        raise PublishRefused("the approval names a different candidate")
+    if registry.pointers.get((stream, env)) != candidate.target_live:
+        raise PublishRefused("stale: the live release moved after submission")
+    version = 1 + sum(r.stream == stream for r in registry.releases.values())
+    registry.releases[digest] = Release(stream, version, digest, candidate, approval)
+    if registry.releases[digest].candidate.digest() != digest:   # verify before activating
+        raise PublishRefused("stored bundle does not match its digest")
+    registry.pointers[(stream, env)] = digest  # activation: the publication boundary
+    return registry.releases[digest]
+```
+
+Promotion carries the identical digest, and a target whose pointer diverged blocks until reconciled. Rollback moves the pointer back, mints no version, rewrites nothing, and marks open changes Stale; in-flight runs keep their pin unless the release is revoked. A repository revert alone is not a rollback, because the pointer is runtime truth.
+
+🐍 · A knowledge change published only after gates, an independent approval, and a verified bundle
+
+```python
+def promote(registry: Registry, stream: str, source_env: str, target_env: str,
+            *, expected: str | None) -> str:
+    """Move the identical digest forward; never rebuild for the next environment."""
+    digest = registry.pointers[(stream, source_env)]
+    if registry.pointers.get((stream, target_env)) != expected:
+        raise PublishRefused(f"{target_env} diverged; reconcile before promoting")
+    registry.pointers[(stream, target_env)] = digest
+    return digest
+
+
+def rollback(registry: Registry, stream: str, env: str, to_digest: str) -> None:
+    """Reassign the pointer to an earlier release. Nothing is rewritten or deleted."""
+    prior = registry.releases.get(to_digest)
+    if prior is None or prior.stream != stream:
+        raise PublishRefused("rollback target is not a release of this stream")
+    registry.pointers[(stream, env)] = to_digest
+
+
+def resolve(registry: Registry, stream: str, env: str) -> str:
+    """Admission's one question: which release does a new run pin? Only an active one."""
+    if (stream, env) not in registry.pointers:
+        raise LookupError(f"no active release of {stream} in {env}")
+    return registry.pointers[(stream, env)]
+```
+
+Each gate record reports its denominator and holds objects against an integer budget, so rounding, dropped held objects, or a changed cohort cannot make a release pass. The listing adapts the quality budget of Policy Logic Forge [R48], the reference implementation Chapter 5 follows.
+
+🐍 · Gate findings routed by kind, and a quality budget that cannot pass by rounding
+
+```python
+class BudgetError(ValueError):
+    """The record's own counts disagree, so no verdict can be read from it."""
+
+
+@dataclass(frozen=True)
+class GateRecord:
+    gate: str
+    in_release: int    # every object in the effective release: the denominator
+    examined: int
+    evaluable: int
+    held: int          # review-held: still in the release, not evaluable
+    refused: int       # refused with a typed reason: still counted
+
+
+@dataclass(frozen=True)
+class Budget:
+    denominator: int
+    held: int
+    maximum_held: int
+    passes: bool
+
+
+def budget(record: GateRecord, rate_percent: int) -> Budget:
+    """Held objects against an integer ceiling: floor, never a rounded percentage."""
+    counts = (record.in_release, record.examined, record.evaluable, record.held, record.refused)
+    if any(c < 0 for c in counts):
+        raise BudgetError("counts are non-negative")
+    if record.evaluable + record.held + record.refused != record.in_release:
+        raise BudgetError("evaluable + held + refused must equal the objects in the release")
+    if record.examined != record.in_release:
+        raise BudgetError(f"{record.gate} examined {record.examined} of {record.in_release}")
+    maximum = record.in_release * rate_percent // 100
+    passes = record.examined > 0 and record.held <= maximum   # examined nothing: not a pass
+    return Budget(record.in_release, record.held, maximum, passes)
+```
 
 ## Promotion as a chain of evidence
 
@@ -9369,7 +9712,7 @@ The ordering in step 7 is this book's recommendation. Recovery is rehearsed with
 | --- | --- | --- |
 | Supply chain | An SBOM describes components; SLSA provenance describes where and how an artifact was built and by which builder. Using both, verifying signatures and builder identity before promotion, and pinning model, prompt, Skill, policy, and evaluation digests in the release manifest are this book's recommendations. | R17; R18 |
 
-The discussion above draws on R17; R18. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R17; R18; R48. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -9848,7 +10191,7 @@ keeps the main argument honest.
 6. Side effect: the six gates (Chapter 2), idempotency, and reconciliation.
 7. Post-deployment improvement: governed learning; never self-certification.
 
-Figure 16-1 and Chapter 16 cover the Part IV subset of these choices.
+Chapter 16 and its Figure 16-1 cover the Part IV subset of these choices.
 
 ## Pattern cards
 
@@ -9986,6 +10329,18 @@ Each card names the obligation it protects, the shortcut that fails, the better 
 
 **Built in.** Chapters 3 and 7.
 
+### P-13 — Pinned knowledge release
+
+**Use when.** Agents reason over, or are bound by, institutional knowledge such as policies, obligations, and controls.
+
+**Shortcut that fails.** "Current" documents are indexed and similarity decides, so a rule changes under a run with no deployment, no approval, and no trace.
+
+**Better design.** Knowledge is developed in a control plane and consumed as a release: change → gates → independent approval → release → live pointer → one pin per run → control points consult the pin.
+
+**Watch and cost.** Track held objects per release, unknown-under-policy refusals, and citations of superseded releases. Gates prove structure, not meaning, so SME review time is the real cost.
+
+**Built in.** Chapter 5 § Change compliance knowledge the way you change software.
+
 ## Match the obligation to a pattern
 
 The chapters column lists where each pattern is built, plus Chapter 17 for its anti-patterns. The last four rows are Part IV patterns without a P-card; their cards are in Chapters 11–14.
@@ -9994,7 +10349,8 @@ The chapters column lists where each pattern is built, plus Chapter 17 for its a
 | --- | --- | --- | --- |
 | Reasoning | P-01 Bounded ReAct | AP-11 unbounded loops | 10, 17 |
 | Orchestration | P-02 deterministic spine | AP-01 monolith; AP-07 model says done | 12, 15, 17 |
-| Context | P-03 ContextManifest | AP-02 prompt database; AP-09 vector truth | 6, 17 |
+| Context | P-03 ContextManifest | AP-02 prompt database | 6, 17 |
+| Knowledge | P-13 pinned knowledge release | AP-09 vector truth | 5, 17 |
 | Memory | P-04 provenance-bound memory | AP-13 memory write by default | 6, 17 |
 | Tools | P-05 tool façade behind the six gates | AP-06 Boolean approval; AP-12 ungated discovery | 2, 17, 21, 22 |
 | Multi-agent | P-06 typed tasks/join | AP-08 chat as workflow | 11, 17, 18 |
@@ -10016,6 +10372,7 @@ Each row names the Chapter 17 card that describes the failure's usual cause.
 | **Symptom** | **Inspect first** | **Safe response** | **Anti-pattern** |
 | --- | --- | --- | --- |
 | Plausible answer, wrong evidence | ContextManifest, revisions, authorization, trust labels | Rebuild context; reject unsupported claims; add regression case | AP-02, AP-09 |
+| Two runs decide differently on identical input | RunManifest knowledge snapshots and the release manifests they name | Compare the releases; never re-resolve against "current" | AP-09 |
 | Repeated tool loop | Action-observation signatures and information gain | Stop on no-progress; reduce tools; route or escalate | AP-11 |
 | Duplicate business write | Effect key, intent hash, idempotency, receipt | Freeze dependents; reconcile; repair retry ownership | AP-04 |
 | Write timed out | Effect state and downstream request ID | Mark Unknown; never blind-retry; reconcile | AP-05 |
@@ -10042,11 +10399,13 @@ Each contract has one owner and one defining chapter, as indexed in Chapter 4 §
 
 | **Contract** | **Owner** | **Key fields** | **Defined in** |
 | --- | --- | --- | --- |
-| RunManifest | Run Service | ReleaseManifest digest; resolved Skill and pack digests, knowledge snapshots, model route, runtime adapter, capability envelope, budget, use-case tier; written once at admission | Chapter 4 |
+| RunManifest | Run Service | ReleaseManifest digest; resolved Skill and pack digests, knowledge snapshots (release digests per stream), model route, runtime adapter, capability envelope, budget, use-case tier; written once at admission | Chapter 4 |
 | Artifact | Producing run (bytes in the artifact store) | artifact ID, immutable version, schema, content hash, creator run/node/agent, source refs, classification, residency, retention | Chapter 4 |
 | Event (CloudEvent envelope) | Producing service, through its outbox | standard attributes plus tenant, correlation, and causation extensions (wire names `tenantid`, `correlationid`, `causationid`; CloudEvents allows only lowercase letters and digits) and `traceparent`; payload by `dataref` and `datahash` | Chapter 4 |
 | AgentStepRequest / AgentStepResult | Run Service builds the request; AgentRuntime returns the result | request: identity, behavior pins, ContextManifest, capabilities, bounds, output schema, trace; result: status (`completed`, `needs_input`, `proposed_action`, `failed`), payload, artifact refs, proposed action, usage, error | Chapter 3 |
 | KnowledgeArtifact | Knowledge Hub | kind, source digest and region, extractor and verifier versions, per-field verdicts, corroboration, status and review route, owner, version/supersedes, effective range, scope, ACL and data class | Chapter 5 |
+| KnowledgeRelease | Knowledge registry; the registry publisher writes | stream, version, digest, ontology version, object digests, source revisions, pinned base and tenant-extension revision, gate records, author, approving human, candidate digest, previous release, effective period, activation record | Chapter 5 |
+| KnowledgeBinding | Knowledge registry; moved only by the registry publisher | stream, tenant, environment, region → active release digest; previous digest; compare-and-swap on move; activation record | Chapters 5 and 27 |
 | ContextManifest | Context Service | RunManifest digest, node, step request ID, revision, policy version, section caps and allocation, ordered segments (kind, trust tier, source revision, hash, authorization decision), omitted candidates, redactions, manifest hash | Chapter 6 |
 | MemoryRecord | Memory Service | tenant, subject/team scope, type, value, provenance, confidence, consent, purpose allowlist, TTL, status, supersedes | Chapter 6 |
 | Skill manifest | Skill owner; Skill Registry | interface schemas, instructions, required tools and knowledge, data-class and region policy, `risk_ceiling`, evaluation suite and gates, owner, digest; lifecycle lives in SkillRelease | Chapter 8 |
@@ -10224,20 +10583,24 @@ Chapter 1 § The vocabulary this book assumes introduces the core terms; this gl
 | Audience binding | Restricting a credential to one intended recipient so it cannot be replayed against another service | 21 |
 | Authorization | The policy decision over subject, actor, purpose, resource, and action; distinct from a human approval | 21 |
 | Canary | Exposing a change to a bounded cohort of real traffic with explicit stop conditions before full release | 27 |
+| Candidate digest | The hash over a proposed knowledge release's content, its pinned base, the live release it expects to replace, and the resolver version; an approval binds to it as an ApprovalDecision binds to a proposal hash (14), and any edit invalidates it | 5 |
 | Capability envelope | The platform-computed maximum scope a run or child task may use (actions, resources, purpose, data, region, risk, time, spend, delegation), identified by its `grant_id`; a child's envelope is a provable subset of its parent's | 21 |
 | Causal run trace | One run's linked spans across workflow, model, tools, approvals, and effects; links to the authoritative records and replaces none | 24 |
 | Change class | The classification of a proposed change; with the use-case tier it sets review depth | 25 |
 | ChangeBundle | A proposed change to versioned objects; it becomes a ReleaseManifest only when promoted | 27 |
 | Child task | Durable delegated work with one owner, carried by a TaskEnvelope and executed as a child workflow | 18 |
 | Compensation | A new, authorized business action that reverses a committed effect; it never erases the original receipt | 22 |
+| Compliance knowledge | The requirements an organization takes from regulations, standards, contracts, and internal policies, the obligations and controls derived from them, the constraints the runtime enforces, and the definitions they depend on, each with provenance to its authoritative source; managed as a versioned, released asset | 5 |
 | ContextManifest | Record of exactly what one agent step's context contained and why: ordered segments with source, trust tier, authorization decision, and token allocation | 6 |
+| Control | The mechanism by which an obligation is discharged or its breach prevented: an enforced rule, a check, an approval, or a review. Controls execute at control points (1); a guardrail is a detector, not a control | 5 |
 | Credential lease | A short-lived, audience-bound credential minted after authorization for one downstream call; the proof that accompanies a capability envelope's scope | 21 |
 | Deterministic shell | The six gates around a model proposal: propose, validate, authorize (including any human approval), commit, verify, accept | 2 |
 | Downscoping | Deriving a narrower credential from a broader one so delegated work never exceeds its delegator's authority | 21 |
 | Effect | An externally observable mutation with durable intent, state, receipt, and reconciliation | 22 |
 | Effect ledger | The Effect Service's durable record of every external change attempted, its idempotency key, and its confirmed outcome | 22 |
 | Effect risk class (R0–R4) | Classification of one tool effect, from R0 pure transform to R4 irreversible, privileged, or financial action that an agent may only propose | 22 |
-| EnvironmentBinding | Says which ReleaseManifest new runs receive for a tenant, use case, environment, and region; rollback changes it | 27 |
+| Enforced rule | A typed rule from a pinned knowledge release that a control point evaluates before an effect, with true, false, or unknown results; unknown refuses. Distinct from a guardrail, which only detects | 5 |
+| EnvironmentBinding | Says which ReleaseManifest new runs receive for a tenant, use case, environment, and region; rollback changes it. A knowledge stream's pointer is a KnowledgeBinding | 27 |
 | EvaluationResult | One evaluator's score for one case and attempt, with evaluator type and version | 25 |
 | EvidenceRef | Source revision or artifact reference with hash, provenance, and authorization lineage | 6 |
 | Federated task | A child task that crosses a trust boundary to an external agent through the A2A Gateway | 19 |
@@ -10247,23 +10610,31 @@ Chapter 1 § The vocabulary this book assumes introduces the core terms; this gl
 | Idempotency key | A stable identifier the platform derives from tenant, run, and logical effect and binds to an intent hash; passed to a downstream system that supports one so it recognizes a repeated request as the same request. The model never chooses it | 22 |
 | InterventionRequired | Run, task, or effect state used when correctness cannot be established automatically; it opens an intervention task | 15, 22 |
 | Intervention task | A typed request for human help with an uncertain run; its response is an input to the run and never approves an effect | 14 |
+| Knowledge graph | The governed, versioned instance of an ontology: typed nodes and edges with provenance, scope, and permissions, frozen into a release and traversed within bounds | 5 |
+| Knowledge registry | Control-plane store of ontology versions, knowledge objects, release manifests, and the live pointer (KnowledgeBinding) per stream and environment; the Knowledge Hub is its read-only runtime surface | 5 |
+| Knowledge release | The immutable, content-addressed set of knowledge objects, ontology version, and source revisions that the registry publisher activated after a complete gate record and an independent approval; what a run pins | 5 |
 | KnowledgeArtifact | The Knowledge Hub's record of a governed artifact (document, chunk, extracted field, or rule) with its source digest and region, versions, verdicts, owner, and scope | 5 |
 | Layer | A deployable unit of the architecture (for example, Model access or Durable execution); layers serve the planes | 4 |
 | LLM Gateway | Control point that decides which model may answer under which data policy, and enforces model routing, privacy, budgets, and evidence | 4 |
 | MCP Gateway | Control point that terminates MCP and decides whether an external server and tool are trusted and eligible | 19 |
+| Obligation | A duty derived from a requirement, with a subject, a scope, a modality, and an effective period. A PolicyDecision's obligations (21) and a run's obligations (13) are obligations bound to one action or one run | 5 |
+| Ontology | The schema of a knowledge graph: the entity kinds, relationships, properties, constraints, and vocabulary its objects must conform to; versioned separately from the instances it governs | 5 |
 | Plan IR | Typed representation of proposed work that is compiled and checked before any node is scheduled | 12 |
 | Plane | An ownership domain; the seven planes give every authoritative record one owner | 4 |
 | Provenance | Where content came from, under what authority it was retrieved, and how far it may be trusted | 5, 6 |
 | Purpose | Why an action is requested; carried with subject and actor so a valid identity cannot be reused for an unrelated operation | 21 |
 | Regional execution cell | The regional unit that holds a run's control, workflow, workers, gateways, context, and effect ledger | 4 |
+| Registry publisher | The knowledge registry's single service identity that merges approved content, stores and verifies a release, and moves the live pointer; no human or assistant holds it | 5 |
 | Release gate | The decision whether a candidate may be promoted, recorded as a ReleaseGateDecision | 25 |
 | ReleaseManifest | The immutable, signed graph of every behavior-relevant version in a release; fixes the eligible Skill and pack set | 27 |
+| Requirement | A statement in an authoritative source that the organization must satisfy; the source, span, and digest are its provenance | 5 |
 | Run | One admitted unit of work with a RunManifest; it contains a workflow execution whose nodes run activities, agent steps, or child tasks | 4, 15 |
 | RunManifest | Per-run record written once at admission: the ReleaseManifest digest plus what was resolved for this run | 4 |
 | Skill | Versioned capability package: interface, instructions, eligible tools, knowledge, policy, risk ceiling, evaluation, owner, digest | 8 |
 | Skill Pack | Certified, co-released set of compatible Skills with shared policy and evaluations; installing one grants nothing | 9 |
 | Subject | The principal whose delegated authority initiates a protected action | 21 |
 | TaskEnvelope | The contract every child task carries, in eight field groups | 18 |
+| Tenant extension | A tenant's additions to a shared base knowledge release (stricter rules, extra kinds, relationships, or terms), versioned and resolved against a pinned base; never a fork, and never a removal or redefinition of a base element | 5 |
 | Tool Gateway | Control point that decides whether an effect may happen for this subject and dispatches it as one logical effect under the effect ledger, so a retry cannot repeat it; it does not promise cross-system exactly-once delivery; protocol-agnostic | 2, 22 |
 | Trajectory | A run's ordered decisions viewed for evaluation | 25 |
 | Trust tier | The rank of a context segment's origin, from tier 1 system instructions to tier 4 retrieved data that can never direct behavior | 6 |

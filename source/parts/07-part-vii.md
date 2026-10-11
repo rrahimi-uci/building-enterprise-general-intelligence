@@ -88,7 +88,7 @@ human workflow, or effect recovery.
 | **Trace segment** | **Time and category** | **What the operator learns** | **Action or evidence** |
 | --- | --- | --- | --- |
 | Admission and queue | 3 min · queue | The run waited before any model work began | Queue age, capacity class, and assignment event |
-| Retrieval | 2 min · retry delay | The first context snapshot was stale and a second attempt ran | Index snapshot, extraction record versions, ACL-filter count, freshness, query hash |
+| Retrieval | 2 min · retry delay | The first context snapshot was stale and a second attempt ran | Knowledge release digest and index build, extraction record versions, ACL-filter count, freshness, query hash |
 | Approval | 4 min · human dwell | Human dwell dominated model latency | Proposal hash, approver role, wait and expiry timestamps |
 | Connector | 3 min · execution | The downstream call timed out after dispatch | Tool span, idempotency key, downstream request ID |
 | Effect ledger | open · reconciliation | The mortgage document request cannot yet be called successful or declined | LOS receipt or reconciliation case; no blind retry |
@@ -124,9 +124,9 @@ below is a child span or a linked asynchronous trace.
 | --- | --- |
 | Run | tenant, subject hash, agent/workflow/version set, purpose, risk class, status, budget, token and cost totals, stop reason, correlation ID |
 | Model | provider, model route/version, prompt-template hash, context-manifest hash, input/output tokens, latency, cache, finish/error type |
-| Retrieval | source/index snapshot, extraction record versions, query hash, ACL-filter count, documents returned, freshness, latency |
+| Retrieval | knowledge release digest and index build, extraction record versions, query hash, ACL-filter count, documents returned, freshness, latency |
 | Decision | kind (route, plan compile/revision, step disposition, acceptance, critique); candidates and eligibility removals; chosen option; validator or compiler reason; scorer/rubric versions for acceptance; plan digest/revision and replan diff; turn index, information gain, remaining budgets, stop reason |
-| Policy | policy bundle/version, decision ID, action/resource hash, decision, obligations, reason code, latency |
+| Policy | policy bundle/version, decision ID, action/resource hash, decision, obligations, rule ids, reason code, latency |
 | Tool | tool/version, risk class, arguments hash, grant ID, credential lease ID, idempotency key, retries, effect state (`effect.state`), effect receipt, artifact references, latency |
 | Memory | memory ID/version, operation (read/write/delete), scope/tenant, purpose and policy basis, provenance, TTL |
 | Agent task | caller/callee versions, task ID, protocol, ownership transition, grant lineage, budget transfer, join condition, terminal status |
@@ -495,6 +495,7 @@ cause, and prefer deterministic code when the decision has become stable.
 | Prompts | Omissions, conflicts, unsupported claims | Clarify responsibility, examples, evidence, stop rules | Golden/adversarial replay; behavior/policy review |
 | Context/RAG | Recall/precision, stale/poisoned source, injection correlation | ACL/freshness/ranking/dedup/token/source changes | Retrieval/faithfulness/security tests; data-owner approval |
 | Document extraction | Field accuracy on a labelled document set; review-route rate and verification rejections over a fixed denominator | Extractor or prompt version, consistency checks, verification thresholds | Re-extraction replay on golden documents; data-owner approval |
+| Knowledge | Unknown-under-policy refusals per rule, runtime contradictions, citations of superseded releases, SME corrections, held and refused objects per release against a fixed integer budget | A new knowledge release: rule, vocabulary, ontology, or tenant extension | Knowledge test-suite replay, grounding, consistency, and independent SME approval (Chapter 5) |
 | Memory | Correction, leakage, stale/poisoned retrieval | Eligibility, purpose, scope, TTL, verification, deletion | Privacy/security/longitudinal replay; memory-purpose approval |
 | Tools | Wrong choice/args, timeout/retry/unknown effect | Narrow schema/catalog, preconditions, idempotency/reconcile | Contract/failure/load/security; effect/permission approval |
 | Skills | Version-specific or inconsistent behavior | New immutable Skill/dependencies/examples/acceptance | Skill certification and domain owner |

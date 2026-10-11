@@ -4,23 +4,23 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7",
-    "content_tex_sha256": "efa0ba2a9a4e21021579c21887867ccffff6b80e8ba8630c52885c0eb84b1242",
+    "content_tex_sha256": "6650143398b23af54377f7348a9ee9635ed6dd02c734ce46173d3db5cef45dd3",
     "style_sha256": "40c967d11d614bbcc15b62d973047318754a6a3d554a0ed639320e64ff1f3ff8",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "chapter_covers": 28,
     "appendices": 12,
-    "diagrams": 43,
-    "code_blocks": 59,
-    "longtables": 155,
-    "compact_tables": 98,
-    "callout_tables": 72,
-    "citation_occurrences": 148,
+    "diagrams": 44,
+    "code_blocks": 65,
+    "longtables": 158,
+    "compact_tables": 99,
+    "callout_tables": 70,
+    "citation_occurrences": 156,
     "reference_targets": 58,
     "unique_citation_ids": 58,
-    "markdown_tables": 325,
-    "markdown_code_blocks": 59,
+    "markdown_tables": 327,
+    "markdown_code_blocks": 65,
     "image_quality": [
       {
         "file": "assets/cover/cover-v1.0.0.png",
@@ -105,10 +105,10 @@
       {
         "file": "assets/diagrams/knowledge-fabric.png",
         "pixels": [
-          2271,
-          1524
+          2458,
+          1461
         ],
-        "effective_dpi": 321.7
+        "effective_dpi": 348.2
       },
       {
         "file": "assets/diagrams/policy-to-guardrail.png",
@@ -121,10 +121,18 @@
       {
         "file": "assets/diagrams/document-ingestion.png",
         "pixels": [
-          2493,
+          2319,
           2324
         ],
-        "effective_dpi": 353.1
+        "effective_dpi": 328.5
+      },
+      {
+        "file": "assets/diagrams/knowledge-lifecycle.png",
+        "pixels": [
+          2727,
+          3272
+        ],
+        "effective_dpi": 386.3
       },
       {
         "file": "assets/diagrams/context-pipeline.png",

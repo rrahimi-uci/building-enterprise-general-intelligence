@@ -6,8 +6,9 @@ from decimal import Decimal
 import pytest
 
 from examples.knowledge.policy_to_rule import Predicate, Rule, SourceRef
-from examples.knowledge.rule_as_guardrail import (
-    EnforcedRule, PolicyViolation, UnknownUnderPolicy, guarded_dispatch,
+from examples.knowledge.enforced_rule import (
+    EnforcedRule, PinnedRelease, PolicyViolation, ReleaseNotEvaluable,
+    UnknownUnderPolicy, guarded_dispatch, pinned_dispatch, rules_for,
 )
 
 RULE = Rule(
@@ -111,3 +112,76 @@ def test_the_age_window_reads_only_verified_document_facts():
     assert guarded_dispatch(lambda: "accepted", facts_for_rules(_certified_statement(15)) | accept,
                             [EnforcedRule(AGE_WINDOW)], jurisdiction="US",
                             on_date="2026-09-20") == "accepted"
+
+
+# Adapted from the reference evaluator's tests in Policy Logic Forge [R48]
+# (tests/test_feel.py, commit c22dc450, MIT): unknown is not false, and two
+# rules that disagree are refused, never adjudicated.
+def test_a_missing_fact_is_unknown_never_false():
+    rule = EnforcedRule(AGE_WINDOW)
+    with pytest.raises(UnknownUnderPolicy):
+        rule.enforce({"income_evidence_acceptable": True}, jurisdiction="US", on_date="2026-09-20")
+    # A false condition is a different answer: the rule does not fire.
+    rule.enforce({"pay_statement_age_days": 15, "income_evidence_acceptable": True},
+                 jurisdiction="US", on_date="2026-09-20")
+
+
+def test_two_rules_that_assign_one_subject_incompatible_values_are_refused_not_adjudicated():
+    accept = Rule(
+        rule_id="r_recent_statement_ok", modality="permission",
+        conditions=(Predicate("pay_statement_age_days", ">", 30),),
+        outcome=Predicate("income_evidence_acceptable", "=", True),
+        jurisdiction="US", responsible_party="evidence_review", effective_from="2026-01-01",
+        source=SourceRef("tenant_extension", "sec_1", 0, 40, "b" * 64),
+    )
+    both = [EnforcedRule(AGE_WINDOW), EnforcedRule(accept)]
+    facts = {"pay_statement_age_days": 75}
+    for proposed in (True, False):
+        with pytest.raises(PolicyViolation):
+            guarded_dispatch(lambda: "accepted", facts | {"income_evidence_acceptable": proposed},
+                             both, jurisdiction="US", on_date="2026-11-19")
+
+
+def _pins(status, digest="d" * 64, window=AGE_WINDOW):
+    return {"mortgage-policy": PinnedRelease("mortgage-policy", digest, status,
+                                             (EnforcedRule(window),))}
+
+
+def test_a_draft_release_is_never_evaluable():
+    for status in ("draft", "certified", "approved"):
+        with pytest.raises(ReleaseNotEvaluable):
+            rules_for(_pins(status), "mortgage-policy")
+
+
+def test_a_deprecated_release_still_serves_the_run_that_pinned_it():
+    assert rules_for(_pins("deprecated"), "mortgage-policy")
+
+
+def test_a_revoked_release_refuses_even_a_pinned_run():
+    with pytest.raises(ReleaseNotEvaluable):
+        rules_for(_pins("revoked"), "mortgage-policy")
+
+
+def test_a_run_with_no_pin_for_the_stream_refuses():
+    with pytest.raises(UnknownUnderPolicy):
+        rules_for({}, "mortgage-policy")
+
+
+def test_two_runs_pinned_to_different_releases_decide_differently_and_both_cite_their_digest():
+    shorter = Rule(
+        rule_id="r_pay_statement_age", modality="prohibition",
+        conditions=(Predicate("pay_statement_age_days", ">", 30),),
+        outcome=Predicate("income_evidence_acceptable", "=", False),
+        jurisdiction="US", responsible_party="evidence_review", effective_from="2026-10-01",
+        source=SourceRef("mortgage_underwriting_policy", "sec_3_1", 0, 80, "c" * 64),
+    )
+    run_old = _pins("active", "1" * 64)               # pinned mortgage-policy@2026.09
+    run_new = _pins("active", "2" * 64, shorter)      # pinned mortgage-policy@2026.10
+    facts = {"pay_statement_age_days": 45, "income_evidence_acceptable": True}
+    result, cited = pinned_dispatch(lambda: "accepted", facts, run_old, "mortgage-policy",
+                                    jurisdiction="US", on_date="2026-10-20")
+    assert (result, cited) == ("accepted", "1" * 64)
+    with pytest.raises(PolicyViolation) as refused:
+        pinned_dispatch(lambda: "accepted", facts, run_new, "mortgage-policy",
+                        jurisdiction="US", on_date="2026-10-20")
+    assert refused.value.release == "2" * 64

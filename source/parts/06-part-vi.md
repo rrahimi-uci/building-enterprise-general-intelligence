@@ -167,7 +167,7 @@ refuses it first, and how to recover.
 
 **Signals.** Ingestion anomalies, rank manipulation, source drift, failures that cluster on a new source.
 
-**Prevent.** Signed and approved ingestion with provenance (Chapter 5 § Ingest documents the way you extract rules), source/index separation, ACLs, poisoning tests.
+**Prevent.** Signed and approved ingestion with provenance (Chapter 5 § Ingest documents the way you extract rules) and signed knowledge releases with independent approval (Chapter 5 § Change compliance knowledge the way you change software), source/index separation, ACLs, poisoning tests.
 
 **First deterministic refusal.** Context/memory: source, snapshot, and ACL filters admit only approved sources into the knowledge snapshot a run may read. They cannot see poison that arrived through an approved source; that residual risk falls to Chapter 5's independent verification and to the Recover step.
 
@@ -458,7 +458,7 @@ Every retrieval, delegation, tool call, memory write, and publication evaluates 
 
 allow(subject, actor, action, resource, tenant, purpose, data\_class, environment, risk, run\_id, time, device/session assurance, requested\_scope)
 
-The effective permission is the intersection—not the union—of all applicable grants. Explicit deny wins.
+The effective permission is the intersection—not the union—of all applicable grants. Explicit deny wins. The data classes, purposes, and resource definitions the tuple names come from the run's pinned knowledge release (Chapter 5); business rules are evaluated at the effect boundary and in the domain rules engine, not here, and the policy bundle remains authorization policy-as-code.
 
 RBAC is useful for stable coarse roles such as “mortgage evidence reader.” ABAC adds
 the facts that change per request, such as a particular account, data class,
@@ -755,8 +755,8 @@ discovery returns only what the run may use.
 
 Resolve the manifest at dispatch, not at import; a risk class that lives only in
 a reviewer's memory cannot be enforced. The enforced rules the gateway evaluates
-before dispatch (Chapter 5) read verified facts from KnowledgeArtifacts, never
-model output; the precondition/version field remains the resource-version check.
+before dispatch (Chapter 5) read verified facts from KnowledgeArtifacts in the
+run's pinned knowledge release, never model output; the precondition/version field remains the resource-version check.
 
 ### Risk classes
 

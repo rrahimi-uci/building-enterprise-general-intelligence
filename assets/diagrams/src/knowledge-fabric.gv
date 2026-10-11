@@ -9,7 +9,7 @@ digraph knowledge_fabric {
 
   gov [label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#8A5600" BGCOLOR="#FFF4DF">
-      <TR><TD ALIGN="CENTER" WIDTH="470"><B>Governance</B>  ·  owner · version · effective dates · provenance · permissions</TD></TR>
+      <TR><TD ALIGN="CENTER" WIDTH="470"><B>Governance</B>  ·  owner · version · release · effective dates · provenance · permissions</TD></TR>
     </TABLE>>]
 
   reps [label=<
@@ -24,7 +24,7 @@ digraph knowledge_fabric {
 
   api [label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#1450A3" BGCOLOR="#EAF3FB">
-      <TR><TD ALIGN="CENTER" WIDTH="470"><B>Knowledge resolution API</B>  ·  one surface, permissions enforced here</TD></TR>
+      <TR><TD ALIGN="CENTER" WIDTH="470"><B>Knowledge resolution API</B>  ·  one surface · pinned release · permissions enforced here</TD></TR>
     </TABLE>>]
 
   modes [label=<

@@ -18,7 +18,7 @@ digraph document_ingestion {
   verify [label="Literal span\nin the bytes?\nConsistent?",
           shape=diamond, style=filled, fillcolor="#FFF4DF", color="#8A5600",
           height=1.35, width=2.3, margin="0.02,0.02"]
-  record [label="KnowledgeArtifact\ndigest · regions · verdicts\nversions: diff, not overwrite",
+  record [label="KnowledgeArtifact\ndigest · regions · verdicts · release\nversions: diff, not overwrite",
           shape=cylinder, style=filled, fillcolor="#EDF3FC", color="#1450A3"]
   route [label="Route by\nfinding kind",
          shape=diamond, style=filled, fillcolor="#FFF4DF", color="#8A5600",

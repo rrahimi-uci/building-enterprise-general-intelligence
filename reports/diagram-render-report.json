@@ -1,6 +1,6 @@
 {
-  "diagrams": 43,
-  "with_vector": 43,
+  "diagrams": 44,
+  "with_vector": 44,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -171,12 +171,12 @@
       "id": "knowledge-fabric",
       "source": "knowledge-fabric.gv",
       "pixels": [
-        2271,
-        1524
+        2458,
+        1461
       ],
-      "effective_dpi": 332,
+      "effective_dpi": 359,
       "vector": true,
-      "sha256": "e3594f380182974c59c2a947190a04cebe564d8fe244d6aa839d2b073818b976"
+      "sha256": "0440b63202672ff4059cfbca783f1f13022ef5122f69fe39077a727b566025df"
     },
     {
       "id": "learning-loop",
@@ -292,12 +292,23 @@
       "id": "document-ingestion",
       "source": "document-ingestion.gv",
       "pixels": [
-        2493,
+        2319,
         2324
       ],
-      "effective_dpi": 364,
+      "effective_dpi": 339,
       "vector": true,
-      "sha256": "d57684b97ed7874335c38561cff24f81032a4567e9568d9f3a3c31a9b1183502"
+      "sha256": "29f04fbe08ebafe6cccd549ea3efcd1a9297cfd610db6e1e400c7b69fdcb32b7"
+    },
+    {
+      "id": "knowledge-lifecycle",
+      "source": "knowledge-lifecycle.gv",
+      "pixels": [
+        2727,
+        3272
+      ],
+      "effective_dpi": 398,
+      "vector": true,
+      "sha256": "e221a117356844769995db211d9df44931e563e764e5c59af4ddb7236e59a0d4"
     },
     {
       "id": "portability",
