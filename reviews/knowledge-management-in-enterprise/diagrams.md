@@ -8,7 +8,7 @@ Figure numbering after both plans: 5-1 fabric (changed label), 5-2 policy-to-gua
 
 **Caption.** "Figure 5-4 — Compliance knowledge has two planes: the control plane develops and releases it, the runtime plane enforces one pinned release per run, and only evidence crosses back up" [reframed: caption; node labels below carry the same vocabulary — `sources` "Authoritative sources · regulations · standards · contracts · internal policies", `graph` "Versioned compliance knowledge graph · requirements · obligations · controls · conforms to the ontology · content digest" (absorbing `semantic` per the correction under Print QA), `production` "Production compliance knowledge · one pinned release per run (RunManifest)", `effect` "Governed action · or refusal (obligation unmet or unknown = refuse)". Every label is a kind of source or object, never a named law or regulator.]
 
-**What it teaches.** (1) Knowledge is produced through gates and a human approval before it exists for the runtime at all; (2) the registry and its live pointer are the only interface between the planes; (3) agents and control points consume a pinned release, never a draft or "current"; (4) production observations and SME feedback return as proposed changes, not as writes.
+**What it teaches.** (1) Knowledge is produced through gates and a human approval before it exists for the runtime at all; (2) the registry and its live pointer are the only interface between the planes; (3) agents and control points consume a pinned release, never a draft or "current"; (4) production observations and SME feedback return as proposed changes, not as writes. [grounded: review G-46a — `sources`, `extract`, `graph` and `gates` have direct or adapted counterparts in the reference pipeline (source bytes with digests → model extraction with exact spans → a content-hashed typed graph → deterministic invariants, independent grounding, and compile/proof reports); `approve`, `registry`, `production`, `controls`, `agent`, `effect`, `observe` and the boundary band are book-authored, since the reference is a build-time pipeline with no approval, release, pointer, runtime consumer, or feedback path. The `gates` label keeps five names for space; the chapter's gate table carries all nine.]
 
 **Source.** `assets/diagrams/src/knowledge-lifecycle.gv`, `rankdir=TB`, two clusters, one explicit boundary, target 6.8 in × 8.2 in.
 
@@ -40,7 +40,7 @@ Figure numbering after both plans: 5-1 fabric (changed label), 5-2 policy-to-gua
 | `extract → semantic` | solid | typed claims with provenance |
 | `semantic → graph` | solid | conforming objects |
 | `graph → gates` | solid | candidate release |
-| `gates → reject` | solid, red | fail |
+| `gates → reject` | solid, red | blocking finding · returned to Draft [grounded: contradicts-fixed — review G-46b; a plain "fail" drew every finding as a rejection, but a non-blocking finding holds the object (flagged `review-held`, excluded from the evaluable set) and the candidate continues to approval; only a blocking finding or an incomplete gate record takes this edge] |
 | `gates → approve` | solid, teal | pass · gate record |
 | `approve → reject` | solid, red | request changes |
 | `approve → registry` | solid, teal | approved identity → publish |
