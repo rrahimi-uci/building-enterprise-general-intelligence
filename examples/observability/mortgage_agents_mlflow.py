@@ -41,8 +41,9 @@ def configure_observability(experiment: str = "book-mortgage-agents") -> None:
 
     mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db"))
     mlflow.set_experiment(experiment)
-    # MLflow 3.15 disables its Agents SDK trace processor by default. Explicitly
-    # enabling it is what makes AgentRunner, agent, and tool spans appear here.
+    # MLflow 3.15.2 registers its Agents SDK trace processor whatever the flag,
+    # so AgentRunner, agent, and tool spans appear either way. False also keeps
+    # the SDK's own exporter, which sends nothing without an API key.
     mlflow.openai.autolog(
         log_traces=True,
         disable_openai_agent_tracer=False,

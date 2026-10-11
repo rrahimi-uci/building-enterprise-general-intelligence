@@ -365,7 +365,7 @@ def summarize(client: OpenAI, evidence_metadata: str) -> str:
 
 **What it does well:** Read, summarize, classify, draft, translate, extract.
 
-**Where it stops:** Find out anything it was not told. A model asked "is this application's income evidence sufficient?" will produce a confident answer drawn from training data that may be two years stale, because producing an answer is the only thing it does. It has no reliable way of knowing what it does *not* know.
+**Where it stops:** Find out anything it was not told. A model asked "is this application's income evidence sufficient?" will produce a confident answer drawn from training data frozen at a past cutoff, because producing an answer is the only thing it does. It has no reliable way of knowing what it does *not* know.
 
 ### Level two — a model with tools
 
@@ -672,7 +672,8 @@ effect ledger.
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Grounding boundary | Separate model capability from system correctness. A benchmark or demo does not establish authorization, durability, privacy, or business acceptance. Every material output should carry evidence references and uncertainty. | R01; R13 |
+| Reported capability and risk | ReAct reports benchmark results for interleaved reasoning and action; NIST's generative-AI profile lists confabulation, confidently stated false content, among generative-AI risks. | R01; R13 |
+| Grounding boundary (book-authored recommendation) | Separate model capability from system correctness. A benchmark or demo does not establish authorization, durability, privacy, or business acceptance, so every material output should carry evidence references and uncertainty. | — |
 
 The discussion above draws on R01; R13. Appendix K lists the complete sources and records their authority, version, and scope.
 
@@ -1796,8 +1797,8 @@ contradiction. They are not: they answer different questions.
 
 The **plane** table is the conceptual model. It answers *who owns which
 decision*, and it is what you reason with when deciding where a responsibility
-belongs. Seven planes is the smallest set that keeps every authoritative record
-in exactly one place.
+belongs. Seven planes are enough to keep every authoritative record in exactly
+one place.
 
 The **layer** table below is the deployable decomposition. It answers *what you
 build, run, and page someone about*. Planes split into layers wherever two parts
@@ -1942,7 +1943,7 @@ A mutating tool returns a receipt from the system of record (proof of what happe
 
 > **Evidence context:** CloudEvents defines the portable event envelope used here, while the transactional-outbox source supports atomic state/event publication and warns that consumers still require duplicate handling. **[R03][R04]**
 
-Events record facts that already happened (`run.status.changed`); commands go through the Run API and carry an expected state version. Every event uses one CloudEvents 1.0 envelope with `tenant_id`, `correlation_id`, `causation_id`, and `traceparent` alongside the standard attributes. Large or sensitive payloads travel by `dataref` and `datahash`, never embedded. Producers publish through a transactional outbox and consumers deduplicate on (source, id); Chapter 22 defines both records.
+Events record facts that already happened (`run.status.changed`); commands go through the Run API and carry an expected state version. Every event uses one CloudEvents 1.0 envelope carrying tenant, correlation, causation, and `traceparent` extension attributes alongside the standard ones. The specification restricts attribute names to lowercase letters and digits, so a Python field such as `tenant_id` in the companion model must serialize as `tenantid` on the wire. Large or sensitive payloads travel by `dataref` and `datahash`, never embedded. Producers publish through a transactional outbox and consumers deduplicate on (source, id); Chapter 22 defines both records.
 
 ## Where each kind of state belongs
 
@@ -2053,13 +2054,18 @@ class CloudEvent(BaseModel):
     subject: str | None = None
     time: datetime
     dataschema: str | None = None
-    tenant_id: str
-    correlation_id: str
-    causation_id: str | None = None
+    # Extension attribute names must be lowercase letters and digits on the wire.
+    tenant_id: str = Field(serialization_alias="tenantid")
+    correlation_id: str = Field(serialization_alias="correlationid")
+    causation_id: str | None = Field(default=None, serialization_alias="causationid")
     traceparent: str | None = None
     dataref: str | None = None
     datahash: Digest | None = None
     data: dict[str, Any] | None = None
+
+    def to_wire(self) -> dict[str, Any]:
+        """The structured-mode JSON a producer publishes; absent attributes are omitted."""
+        return self.model_dump(mode="json", by_alias=True, exclude_none=True)
 
     @field_validator("source")
     @classmethod
@@ -2920,7 +2926,8 @@ There is one RunManifest per run and one ContextManifest per AgentStepRequest; t
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Privacy lifecycle | Context and memory need purpose limitation, consent or other legal basis where applicable, data-subject request handling, deletion propagation, legal-hold precedence, residency, provider retention controls, and proof that derived summaries/indexes were handled too. | R13; R39 |
+| Privacy obligations | The GDPR sets purpose limitation, a lawful basis such as consent, and data-subject rights including erasure; NIST's generative-AI profile names leakage of personal data and risks to consent and purpose specification among generative-AI privacy risks. | R13; R39 |
+| Privacy lifecycle (book-authored recommendation) | Apply those obligations to context and memory: handle data-subject requests, propagate deletion to derived summaries and indexes with proof, let legal holds take precedence, and enforce residency and provider retention controls. | — |
 
 The discussion above draws on R13; R39. Appendix K lists the complete sources and records their authority, version, and scope.
 
@@ -3172,13 +3179,14 @@ Most defects are cheaper to catch without a model. The platform makes those test
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Framework portability | Public agent SDKs differ in cancellation, streaming, tool, approval, and error semantics. A shared contract does not make them interchangeable; only adapter conformance tests demonstrate parity, and any gap must be recorded as a known limitation rather than assumed away. | R29; R31; R32 |
+| Framework abstractions | OpenAI, Microsoft, and Google each document their own agent abstractions; the Microsoft and Google frameworks also document workflow or multi-agent structures. | R29; R31; R32 |
+| Framework portability (book-authored recommendation) | Do not assume these SDKs share cancellation, streaming, tool, approval, or error semantics. A shared contract does not make them interchangeable; only adapter conformance tests demonstrate parity, and any gap is recorded as a known limitation rather than assumed away. | — |
 
 The discussion above draws on R29; R31; R32. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
-The suite below makes that evidence row executable. It drives any adapter with scripted test models and checks four promises of the Chapter 3 seam: a typed disposition, reported usage, cancellation that reaches the model call, and SDK errors mapped to the platform's result shape. A failed check is reported as a named gap to publish as a known limitation of that adapter.
+The suite below makes the portability row executable. It drives any adapter with scripted test models and checks four promises of the Chapter 3 seam: a typed disposition, reported usage, cancellation that reaches the model call, and SDK errors mapped to the platform's result shape. A failed check is reported as a named gap to publish as a known limitation of that adapter.
 
 🐍 · An adapter conformance suite that reports every gap
 
@@ -3446,9 +3454,9 @@ The registry scales as a read-heavy service in the global control tier with immu
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Terminology | Skill is a platform-owned package in this book. It is not an OpenAI Agents SDK primitive and is not identical to A2A AgentSkill metadata or Skills over MCP. Interchange requires an explicit adapter and loss analysis. | R05; R07 |
+| Terminology | Skill is a platform-owned package in this book. It is not identical to A2A AgentSkill metadata, to Skills served over MCP, or to the skills the OpenAI Agents SDK can attach to its shell tool. Interchange requires an explicit adapter and loss analysis. | R05; R07; R29 |
 
-The discussion above draws on R05; R07. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R05; R07; R29. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -3618,7 +3626,8 @@ A pack is executable supply chain because Skill instructions direct behavior (tr
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Distribution security | A Skill Pack is executable supply chain: pin dependencies and tool schemas, produce SBOM and signed provenance, scan transitive content and binaries, enforce publisher trust, and support revocation without rewriting historical runs. | R16; R17 |
+| Supply-chain risk | OWASP's agent-security guidance lists compromise of third-party tools, APIs, and data sources as a key agent risk; SLSA defines build-provenance requirements and levels. | R16; R17 |
+| Distribution security (book-authored recommendation) | Treat a Skill Pack as executable supply chain: pin dependencies and tool schemas, produce an SBOM and signed provenance, scan transitive content and binaries, enforce publisher trust, and support revocation without rewriting historical runs. | — |
 
 The discussion above draws on R16; R17. Appendix K lists the complete sources and records their authority, version, and scope.
 
@@ -4460,7 +4469,7 @@ New evidence can invalidate future work. Replanning starts from an explicit set 
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Durable scheduling | Durable-execution systems preserve workflow progress, timers, and replay across failures, which is why compiled plans are scheduled through a workflow rather than an in-process loop. | R02 |
+| Durable scheduling | Durable execution resumes work in a new process after a failure and supports reliable long waits; scheduling compiled plans through a workflow rather than an in-process loop is this book's recommendation. | R02 |
 
 The discussion above draws on R27; R02. Appendix K lists the complete sources and records their authority, version, and scope.
 
@@ -4659,7 +4668,7 @@ The loop stops on pass, maximum revisions, maximum spend, deadline, or no-progre
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Evaluation tooling | Current evaluation platforms support datasets, code-based and LLM judges, and human feedback; using judges only as evidence for an independent acceptance decision is this book's recommendation. | R20 |
+| Evaluation tooling | MLflow's evaluation documentation covers evaluation datasets, custom code-based scorers, LLM judges, and human feedback attached to traces; using judges only as evidence for an independent acceptance decision is this book's recommendation. | R20 |
 
 The discussion above draws on R20. Appendix K lists the complete sources and records their authority, version, and scope.
 
@@ -5143,7 +5152,7 @@ Human control introduces waits and resumptions; Chapter 15 makes those waits dur
 
 # 15 — Keep Long-Running Work Alive Through Failure
 
-> **Evidence context:** Durable-execution systems preserve workflow progress across failures and long waits; concrete integrations and replay semantics vary by backend. **[R02][R36][R38]**
+> **Evidence context:** Durable-execution systems let work resume after failures and long waits, and agent frameworks integrate with several such backends; that replay semantics differ by backend, and must be checked for each one, is this book's caution. **[R02][R36][R38]**
 
 |  |
 | --- |
@@ -5218,7 +5227,7 @@ Every pattern in Chapters 10–14 runs inside this lifecycle.
 
 ### Terminal correctness
 
-A run reaches Succeeded only through executable acceptance. A canceled run with a possibly committed write does not simply disappear; it moves through reconciliation and possibly compensation. If correctness cannot be established automatically, InterventionRequired is a valid terminal operational state.
+A run reaches Succeeded only through executable acceptance. A canceled run with a possibly committed write does not simply disappear; it moves through reconciliation and possibly compensation. If correctness cannot be established automatically, the run moves to InterventionRequired: automated work stops, an intervention task opens, and the run closes only through that task's response.
 
 | **Run state** | **Reached when** | **Never reached by** |
 | --- | --- | --- |
@@ -5228,7 +5237,7 @@ A run reaches Succeeded only through executable acceptance. A canceled run with 
 | Failed | A permanent failure occurs and no effect is Unknown | A timed-out mutation, which is Unknown |
 | Canceled | Cancellation intent is recorded and every effect is committed, compensated, or declined | Leaving an effect Unknown |
 | Expired | A deadline or wait expires under an explicit disposition | Implicit approval or silent abandonment |
-| InterventionRequired | Correctness cannot be established automatically; an intervention task opens (Chapter 14) | Retrying until something works |
+| InterventionRequired | Correctness cannot be established automatically; an intervention task opens (Chapter 14); non-terminal until its response resolves the run | Retrying until something works |
 
 Step dispositions (Chapter 10) feed the workflow, acceptance decides (Chapters 2 and 13), and no run may close while an effect is Unknown; Chapter 22 owns effect states and compensation.
 
@@ -5337,7 +5346,7 @@ The base Run API is in Chapter 4. Durable execution adds these operations and tw
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Durable progress | Durable execution preserves workflow progress across crashes and long waits through replay and durable timers. | R02 |
+| Durable progress | Durable execution is crash-proof execution: work resumes in a new process after a failure and can wait reliably for long periods. Rebuilding state by replaying recorded history, as this chapter's reducer does, is one engine design, not something the source specifies. | R02 |
 
 The discussion above draws on R02; R04. Appendix K lists the complete sources and records their authority, version, and scope.
 
@@ -5717,7 +5726,7 @@ The three cards here are the difference between *can* and *may*. An agent that c
 
 ### AP-12 — Ungated tool discovery and catalog dumping
 
-**How this failure starts.** A mature platform has many tools, and the agent cannot use what it cannot see. The tempting shortcut is “Every discovered tool and its full schema is placed into the prompt, often straight from an MCP server's advertised catalog.” It breaks down because discovery is being used as authorization. Selection accuracy falls as the catalog grows, because the model is choosing among near-neighbours it has no basis to distinguish. Schemas consume context that evidence should occupy. Worse, tool descriptions are untrusted text from a third party, so a malicious server can write a description engineered to attract calls — the agent is reading attacker-controlled instructions and treating them as a menu.
+**How this failure starts.** A mature platform has many tools, and the agent cannot use what it cannot see. The tempting shortcut is “Every discovered tool and its full schema is placed into the prompt, often straight from an MCP server's advertised catalog.” It breaks down because discovery is being used as authorization. Selection gets harder as the catalog grows, because the model is choosing among near-neighbours it has no basis to distinguish. Schemas consume context that evidence should occupy. Worse, tool descriptions are untrusted text from a third party, so a malicious server can write a description engineered to attract calls — the agent is reading attacker-controlled instructions and treating them as a menu.
 
 **What it looks like in practice.** A reporting agent discovers an administrative delete tool, because the catalog was filtered by connectivity rather than by the caller's authority.
 
@@ -6022,7 +6031,8 @@ Central coordination is easier to govern but can bottleneck; decentralized colla
 | CompletedPendingValidation | The owner submits artifacts through `:complete`; they stay quarantined | The Task Service, after schema, provenance, and acceptance checks |
 | Succeeded | Validation passes and the parent's join adopts the artifacts (Chapter 15 § Terminal correctness) | No one; terminal |
 | CancelRequested → Canceled | The parent persists cancellation intent; Canceled only after any executing mutation reconciles | The Task Service, once children acknowledge and effects settle |
-| Failed / Expired / InterventionRequired | A typed failure (including the receiver's rejection), a passed deadline, or an outcome no rule can settle | No one; the parent applies its join policy, and InterventionRequired opens an intervention task (Chapter 14) |
+| Failed / Expired | A typed failure (including the receiver's rejection) or a passed deadline | No one; terminal, and the parent applies its join policy |
+| InterventionRequired | An outcome no rule can settle; an intervention task opens (Chapter 14) | The intervention task's response; non-terminal until it resolves the task (Chapter 15 § Terminal correctness) |
 
 The receiver may reject, accept, request input, produce partial artifacts, complete, fail, or acknowledge cancellation. Terminal states reuse Chapter 15's run terminal names, and a terminal task accepts no new work; follow-up is a new task. Cancellation propagates downward by default; compensation does not propagate automatically and follows domain policy (Chapter 22).
 
@@ -6376,7 +6386,8 @@ Local states are the task lifecycle of Chapter 18; the gateway maps each remote 
 | CancelRequested | CancelTask sent; no terminal state yet | Stop issuing new authority; continue monitoring possible effects |
 | Canceled | TASK\_STATE\_CANCELED | Close only after any possible effect reconciles |
 | Failed | TASK\_STATE\_FAILED or TASK\_STATE\_REJECTED | Apply parent join policy |
-| Expired/InterventionRequired | Deadline passed or remote outcome ambiguous | Apply parent join/reconciliation policy; never resubmit automatically |
+| Expired | Deadline passed | Apply parent join policy; never resubmit automatically |
+| InterventionRequired | Remote outcome ambiguous | Open an intervention task and hold dependent work until its response; never resubmit automatically |
 
 ### Scalability, federation, and failure isolation
 
@@ -7146,10 +7157,10 @@ JSON · implementation excerpt
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Non-human identity | Workload identity proves the actor; delegation proves whose authority and purpose it uses. Rotate and revoke both credentials and capability grants. A valid service identity is not sufficient authorization. | R06; R08 |
+| Non-human identity | Token exchange distinguishes the subject on whose behalf a token acts from the actor that holds it. The book's recommendation, not a sourced finding, is that workload identity proves the actor, delegation proves whose authority and purpose it uses, both credentials and capability grants rotate and revoke, and a valid service identity is not sufficient authorization. | R08 |
 | Audience-bound last-hop credentials | Resource indicators constrain token audience; protected-resource metadata lets a client discover which authorization server protects a resource; neither defines enterprise policy. | R09; R10 |
 
-The discussion above draws on R06; R08; R09; R10. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R08; R09; R10. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -7313,7 +7324,7 @@ A protected mutation moves through Reserved → Executing → Committed, with br
 
 [[DIAGRAM:effect-lifecycle|Figure 22-1 — Protected effect lifecycle: reservation, approval, unknown outcomes, and reconciliation]]
 
-The terminal states are deliberately more expressive than success and failure.
+The outcome states are deliberately more expressive than success and failure.
 **Declined** means the effect was proven not to happen; **Unknown** means the
 system lacks proof and must stop dependent work; **Partial** means some business
 components changed; and **InterventionRequired** means automation cannot safely
@@ -7816,9 +7827,9 @@ than abandoned. Its release-side counterpart is Chapter 27's Emergency Control.
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Supply-chain admission | SBOM inventory and SLSA build provenance answer different questions; runtime admission should verify both for pinned artifacts. | R17; R18 |
+| Supply-chain admission | SBOM inventory and SLSA build provenance answer different questions. Verifying both for pinned artifacts at runtime admission is this book's recommendation. | R17; R18 |
 | Data minimization and deletion (EU context only) | GDPR principles inform minimization and erasure obligations for EU personal data; jurisdiction-specific analysis is still required. | R39 |
-| Incident control | Pre-wire kill switches by tenant, agent release, tool, connector, model route, and data source. A kill switch must stop new risky work while preserving evidence and effect reconciliation. | R15 |
+| Incident control | R15 recommends kill switches that can disable specific tools, prompts, or agent connections, and credential revocation to contain rogue agents. Extending the scopes to tenant, agent release, connector, model route, and data source, and requiring a kill switch to preserve evidence and effect reconciliation, are this book's recommendations. | R15 |
 
 The discussion above draws on R15; R17; R18; R39. Appendix K lists the complete sources and records their authority, version, and scope.
 
@@ -8187,9 +8198,12 @@ def handle_request(case_id: str) -> str:
 The examples use OpenTelemetry-compatible context propagation and MLflow 3.15.2
 (pinned) tracing. `mlflow.openai.autolog()` captures OpenAI calls, while
 explicit spans cover platform-owned boundaries; the example below records the
-context-manifest ID, not the context body. The pinned 3.15.2 `autolog`
-defaults `disable_openai_agent_tracer` to true, so the examples pass `False` to
-register MLflow's Agents SDK trace processor; the example's test asserts that
+context-manifest ID, not the context body. In the pinned 3.15.2, `autolog`
+registers MLflow's Agents SDK trace processor whatever the setting;
+`disable_openai_agent_tracer`, true by default, decides whether it first
+removes the SDK's own exporter to OpenAI's tracing backend. The examples pass
+`False`, which keeps that exporter beside MLflow's; it sends nothing without an
+API key, but a deployment that must keep traces in-house should leave the
 default. `RunConfig(trace_include_sensitive_data=False)` remains a separate
 privacy control.
 
@@ -8205,7 +8219,9 @@ def configure_observability(experiment: str = "book-mortgage-evidence-review") -
     """
     mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db"))
     mlflow.set_experiment(experiment)
-    # Captures OpenAI calls and enables MLflow's Agents SDK trace processor. The
+    # Captures OpenAI calls; MLflow registers its Agents SDK trace processor
+    # whatever the flag. False also keeps the SDK's own exporter (it sends
+    # nothing without an API key); in-house deployments keep the default. The
     # explicit spans below cover the platform-owned workflow, policy, approval,
     # and effect boundaries that provider autologging cannot see.
     mlflow.openai.autolog(
@@ -8265,8 +8281,9 @@ def configure_observability(experiment: str = "book-mortgage-agents") -> None:
 
     mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db"))
     mlflow.set_experiment(experiment)
-    # MLflow 3.15 disables its Agents SDK trace processor by default. Explicitly
-    # enabling it is what makes AgentRunner, agent, and tool spans appear here.
+    # MLflow 3.15.2 registers its Agents SDK trace processor whatever the flag,
+    # so AgentRunner, agent, and tool spans appear either way. False also keeps
+    # the SDK's own exporter, which sends nothing without an API key.
     mlflow.openai.autolog(
         log_traces=True,
         disable_openai_agent_tracer=False,
@@ -8600,7 +8617,7 @@ cause, and prefer deterministic code when the decision has become stable.
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | MLflow baseline | This book pins MLflow 3.15.2 as a reproducibility baseline for its examples. It is not labeled latest; feature availability, experimental status, and compatibility must be re-verified against release notes and current documentation before implementation. | R21 |
-| Evaluation limit | A passing model judge is probabilistic evidence, not proof. Security, authorization, schema, budget, effect, and acceptance invariants remain deterministic release blockers. Protect against benchmark leakage and tune judges with human feedback. | R20; R13 |
+| Evaluation limit | R20 documents model judges alongside human feedback attached to traces; R13 asks evaluators to document possible train/test contamination of benchmarks. The book's recommendation, not a sourced finding, is that a passing judge is probabilistic evidence, not proof, and that security, authorization, schema, budget, effect, and acceptance invariants remain deterministic release blockers. | R20; R13 |
 
 The discussion above draws on R13; R20; R21. Appendix K lists the complete sources and records their authority, version, and scope.
 
@@ -8907,7 +8924,7 @@ The release gate (Chapter 25's ReleaseGateDecision) takes two inputs: the use ca
 
 A design review covers each area below; the chapter in parentheses holds its controls: outcome and acceptance (Chapters 2 and 13), deterministic boundary (2), state and effect ownership (15, 22), identity and delegation (21), context and memory (6), tool, MCP, and A2A trust (19), threats (20), evaluation truth (25), observability and privacy (24), recovery and release (27), capacity and cost (28), human oversight (14), and portability (3).
 
-Reviews also run on a fixed cadence. Incidents enter the daily review because incident response belongs inside organizational risk management [R42].
+Reviews also run on a fixed cadence. Incidents enter the daily or weekly review because incident response belongs inside organizational risk management [R42].
 
 | **Cadence** | **Input** | **Owner** | **Output** |
 | --- | --- | --- | --- |
@@ -9195,7 +9212,7 @@ The ordering in step 7 is this book's recommendation. Recovery is rehearsed with
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Supply chain | An SBOM describes components; SLSA provenance describes where and how an artifact was built. Use both, verify signatures and builder identity before promotion, and include model/prompt/Skill/policy/evaluation digests in the release manifest. | R17; R18 |
+| Supply chain | An SBOM describes components; SLSA provenance describes where and how an artifact was built and by which builder. Using both, verifying signatures and builder identity before promotion, and pinning model, prompt, Skill, policy, and evaluation digests in the release manifest are this book's recommendations. | R17; R18 |
 
 The discussion above draws on R17; R18. Appendix K lists the complete sources and records their authority, version, and scope.
 
@@ -9872,7 +9889,7 @@ Each contract has one owner and one defining chapter, as indexed in Chapter 4 §
 | --- | --- | --- | --- |
 | RunManifest | Run Service | ReleaseManifest digest; resolved Skill and pack digests, knowledge snapshots, model route, runtime adapter, capability envelope, budget, use-case tier; written once at admission | Chapter 4 |
 | Artifact | Producing run (bytes in the artifact store) | artifact ID, immutable version, schema, content hash, creator run/node/agent, source refs, classification, residency, retention | Chapter 4 |
-| Event (CloudEvent envelope) | Producing service, through its outbox | standard attributes plus `tenant_id`, `correlation_id`, `causation_id`, `traceparent`; payload by `dataref` and `datahash` | Chapter 4 |
+| Event (CloudEvent envelope) | Producing service, through its outbox | standard attributes plus tenant, correlation, and causation extensions (wire names `tenantid`, `correlationid`, `causationid`; CloudEvents allows only lowercase letters and digits) and `traceparent`; payload by `dataref` and `datahash` | Chapter 4 |
 | AgentStepRequest / AgentStepResult | Run Service builds the request; AgentRuntime returns the result | request: identity, behavior pins, ContextManifest, capabilities, bounds, output schema, trace; result: status (`completed`, `needs_input`, `proposed_action`, `failed`), payload, artifact refs, proposed action, usage, error | Chapter 3 |
 | ContextManifest | Context Service | RunManifest digest, node, step request ID, revision, policy version, section caps and allocation, ordered segments (kind, trust tier, source revision, hash, authorization decision), omitted candidates, redactions, manifest hash | Chapter 6 |
 | MemoryRecord | Memory Service | tenant, subject/team scope, type, value, provenance, confidence, consent, purpose allowlist, TTL, status, supersedes | Chapter 6 |
@@ -9901,7 +9918,7 @@ Each contract has one owner and one defining chapter, as indexed in Chapter 4 §
 
 # Appendix D — Choosing an Agent Framework
 
-> **Evidence context:** The comparison draws on current documentation for the OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Amazon Bedrock multi-agent collaboration, LangGraph and LangSmith, LlamaIndex Workflows, PydanticAI durable execution, Dapr Agents, Temporal, DBOS, Restate, MCP, A2A, OpenTelemetry GenAI conventions, MLflow, the Claude Agent SDK, Claude Managed Agents, and CrewAI. It records declared capabilities, not a comparative production certification; all of these are living documents, so verify current maturity before relying on any row. **[R02][R05][R06][R07][R19][R20][R21][R25][R29][R31][R32][R33][R34][R35][R36][R37][R38][R55][R56][R57][R58]**
+> **Evidence context:** The comparison draws on current documentation for the OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Amazon Bedrock multi-agent collaboration, LangGraph and LangSmith, LlamaIndex Workflows, Pydantic AI durable execution, Dapr Agents, Temporal, DBOS, Restate, MCP, A2A, OpenTelemetry GenAI conventions, MLflow, the Claude Agent SDK, Claude Managed Agents, and CrewAI. It records declared capabilities, not a comparative production certification; all of these are living documents, so verify current maturity before relying on any row. **[R02][R05][R06][R07][R19][R20][R21][R25][R29][R31][R32][R33][R34][R35][R36][R37][R38][R55][R56][R57][R58]**
 
 |  |
 | --- |
@@ -9912,14 +9929,14 @@ Each contract has one owner and one defining chapter, as indexed in Chapter 4 §
 | **Framework or standard** | **Strength** | **Enterprise caution** | **Recommended placement** |
 | --- | --- | --- | --- |
 | OpenAI Agents SDK | Compact Python runtime for agents, tools, handoffs, guardrails, structured outputs, sessions, tracing, MCP, HITL, RunState, and sandbox surfaces; a useful manager-versus-handoff distinction | SDK state is not workflow truth; provider gravity; the application still owns credentials, authorization, effects, durability, and long waits | Bounded AgentRuntime adapter (Chapter 3); an SDK handoff moves control inside one step, never accountability (Chapter 11). Book baseline: `openai-agents==0.22.2` with `openai==3.13.0` in the offline profile |
-| Claude Agent SDK and Managed Agents | The Agent SDK exposes Claude Code's agent loop, built-in tools, hooks, permissions, subagents, MCP, and sessions as a library; Managed Agents hosts that harness for long-running work with persisted sessions, a server-sent event stream, and managed or self-hosted sandboxes | Managed Agents is documented as beta; verify feature maturity and cost before adoption; enterprise effects and cross-vendor state stay externally governed | Research and coding workloads behind the same AgentRuntime boundary; keep run, effect, and audit state portable |
-| Google ADK and A2A | Composable agents and tools with Google Cloud integration; A2A 1.0 defines agent cards, tasks, messages, artifacts, bindings, and lifecycle operations | Cloud convenience and protocol interoperability do not supply capability trust, authorization equivalence, transaction semantics, or quality | ADK as one harness option behind the platform boundary; the A2A Gateway at cross-team and vendor boundaries (Chapter 19) |
+| Claude Agent SDK and Managed Agents | The Agent SDK exposes Claude Code's agent loop, built-in tools, hooks, permissions, subagents, MCP, and sessions as a library; Managed Agents is a hosted agent harness, documented as beta, for long-running work with persisted sessions, a server-sent event stream, and Anthropic-managed or self-hosted sandboxes | Verify Managed Agents feature maturity and cost before adoption; enterprise effects and cross-vendor state stay externally governed | Research and coding workloads behind the same AgentRuntime boundary; keep run, effect, and audit state portable |
+| Google ADK and A2A | Composable model-driven agents, tools, and multi-agent workflows; A2A 1.0.1 defines agent cards, tasks, messages, artifacts, bindings, and lifecycle operations | Cloud convenience and protocol interoperability do not supply capability trust, authorization equivalence, transaction semantics, or quality | ADK as one harness option behind the platform boundary; the A2A Gateway at cross-team and vendor boundaries (Chapter 19) |
 | Microsoft Agent Framework | Agent and workflow abstractions that converge AutoGen and Semantic Kernel concepts: typed sessions and middleware, graph workflows, telemetry, broad provider integrations | Some languages and features remain preview; Azure-centric managed integrations increase coupling; do not bind public contracts to framework messages or state | Behind adapters where the Microsoft ecosystem and typed middleware matter; pair with the durable and effect architecture |
 | LangGraph and LangSmith | Explicit graph state, checkpointers, interrupts, stores, time travel, human-in-the-loop, and trace/evaluation workflow | Graph checkpoints are not complete enterprise durability; identity, effects, policy, release, and audit still need integration; memory semantics remain application-defined | Application-level graph orchestration, optionally inside a separate durable workflow; keep external writes governed |
-| PydanticAI | Typed outputs and dependencies, validation, model-provider abstraction, OpenTelemetry orientation, and durable-execution integrations | Typed outputs improve validation but prove neither authorization, truth, nor effect completion; durability depends on the chosen backend and activity boundaries | Strongly typed application adapters and testable agent code |
+| Pydantic AI | Typed agents with durable-execution integrations, including Temporal, DBOS, Prefect, and Restate | Typed outputs improve validation but prove neither authorization, truth, nor effect completion; durability depends on the chosen backend and activity boundaries | Strongly typed application adapters and testable agent code |
 | LlamaIndex Workflows | Lightweight event-driven, asynchronous workflows integrated with retrieval and data pipelines | Assess operational durability, multi-service transactions, identity, and governance for the target deployment | Retrieval-heavy flows and controlled event-driven pipelines behind platform gateways |
-| CrewAI | Accessible crew and flow model, role specialization, event-driven flows, rapid prototyping | Role-play can encourage complexity; verify durability, permission, trace, and effect semantics rather than relying on the abstraction | Prototyping and bounded automations whose flow layer passes platform controls |
-| Dapr Agents | Connects agents to Dapr actors, workflows, state, messaging, resiliency, secrets, and OpenTelemetry | Adds a sidecar and actor operational model; semantics depend on Dapr components and deployment maturity | Teams already standardized on Dapr that want durable, stateful, event-driven agents |
+| CrewAI | Crews of role-playing agents with specific goals and tools, and event-driven Flows that manage state and control execution | Role-play can encourage complexity; verify durability, permission, trace, and effect semantics rather than relying on the abstraction | Prototyping and bounded automations whose flow layer passes platform controls |
+| Dapr Agents | Connects agents to Dapr workflows, actors, state, pub/sub messaging, resiliency policies, and distributed tracing | Adds a sidecar and actor operational model; semantics depend on Dapr components and deployment maturity | Teams already standardized on Dapr that want durable, stateful, event-driven agents |
 | Amazon Bedrock Agents Classic / AgentCore | Bedrock Agents Classic documents a supervisor/collaborator model; its documentation states that the service is in maintenance mode and closed to new customers, with AgentCore identified for similar capabilities | AWS lock-in, lifecycle status, and supervisor-centric topology; inspect portability, observability, migration, and service-specific limits | Existing Classic estates or AWS-native evaluations that account for maintenance status; wrap source-system authorization and evidence externally |
 | Temporal | Mature durable execution, timers, signals, retries, and workflow history | Requires deterministic workflow discipline, a compatibility strategy, and separate domain effect semantics | Strong default for long-running workflows and recoverable coordination (Chapter 15) |
 | DBOS, Restate, and cloud durable runtimes | Crash-resilient workflows, timers, retries, signals, and long waits; DBOS integrates database-backed execution with Python | Supply no agent reasoning, knowledge governance, tool semantics, or business authorization; evaluate scale envelope, maturity, and regional recovery | Execution substrate beneath the agent harness when a code-centric, simpler operational footprint fits |
@@ -9934,7 +9951,7 @@ Each contract has one owner and one defining chapter, as indexed in Chapter 4 §
 3. **From bespoke plugins to protocols:** MCP standardizes tools and resources; A2A standardizes remote-agent interaction.
 4. **From logs to trajectories:** framework traces and OpenTelemetry conventions increasingly capture handoffs, tools, tokens, and evaluation signals.
 5. **From single-vendor demos to gateways:** enterprises need model, tool, policy, identity, and telemetry gateways to retain control across frameworks.
-6. **From prompt safeguards to capability security:** OWASP’s agentic list centers on privileged action under manipulated context [R15].
+6. **From prompt safeguards to capability security:** OWASP’s agentic list ranks agent goal hijack, tool misuse, and identity and privilege abuse as its top three risks [R15].
 7. **From “autonomy” to bounded agency:** public guidance recommends simple composable patterns and earning orchestration complexity only where measurable value justifies it [R27].
 
 ## A practical way to choose
@@ -9948,7 +9965,7 @@ Each row names typical choices for one concern and the criteria that should deci
 | **Concern** | **Typical choices** | **Selection criteria** |
 | --- | --- | --- |
 | Durable workflow | Temporal, DBOS, Restate, cloud durable functions/state machines | Replay/versioning, signals/timers, child workflows, visibility, language/runtime fit, operations |
-| Agent graph/harness | LangGraph, OpenAI Agents SDK, Claude Agent SDK/Managed Agents, Microsoft Agent Framework, Google ADK, PydanticAI, LlamaIndex | Typed state, interrupts, tool ergonomics, model portability, trace quality, escape hatches |
+| Agent graph/harness | LangGraph, OpenAI Agents SDK, Claude Agent SDK/Managed Agents, Microsoft Agent Framework, Google ADK, Pydantic AI, LlamaIndex | Typed state, interrupts, tool ergonomics, model portability, trace quality, escape hatches |
 | Events/queues | Kafka/Pulsar, cloud pub-sub/queues, NATS | Ordering, retention, throughput, replay, tenancy, ecosystem, residency |
 | Policy | OPA/Rego, Cedar/Verified Permissions, cloud IAM plus domain service | RBAC/ABAC expressiveness, decision logs, latency, analysis/testing, tenant model |
 | Workload identity | SPIFFE/SPIRE, cloud workload federation, service mesh identity | Short-lived credentials, federation, attestation, sender/audience binding |
@@ -9967,7 +9984,7 @@ Each row names typical choices for one concern and the criteria that should deci
 | ReAct [R01] | Interleaving reasoning and environment actions improves many interactive tasks compared with reasoning or acting alone | Agent loops need real tool feedback and explicit stop limits; reasoning text does not supply transaction safety |
 | AutoGen [R49] | Multi-agent conversation is a flexible composition mechanism for tools, models, and humans | Conversation is useful as an application abstraction, but enterprise ownership and durable task semantics must be added |
 | AgentBench [R50] | Across eight interactive environments, agent performance differs widely between models; weak long-term reasoning, decision-making, and instruction following are the main failure causes | Evaluate in environment-specific tasks with real tool and state constraints |
-| GAIA [R51] | Questions that are simple for humans but require browsing, files, multimodality, and tools expose a large gap between humans and tool-equipped models | “Easy for a human” is not an adequate release assumption; test cross-capability, long-tail tasks |
+| GAIA [R51] | Questions that are simple for humans but require reasoning, multimodality, web browsing, and tool use expose a large gap between humans and tool-equipped models | “Easy for a human” is not an adequate release assumption; test cross-capability, long-tail tasks |
 | SWE-bench [R52] | Real repository issues with executable tests give grounded evaluation for coding agents | Prefer domains with objective environmental feedback; still require human review for broader requirements and security |
 | τ-bench [R53] | Tool agents must interact with users while following domain rules, and they behave inconsistently across repeated trials | Test multi-turn policy compliance and repeated-run consistency, not only final-answer quality |
 | AgentDojo [R54] | Tool-integrated agents can be evaluated jointly for task utility and prompt-injection security | Security evaluations must measure both attack resistance and retained task utility |
@@ -10201,7 +10218,7 @@ For each major problem use this exact structure:
 9. **Deployment and scale design** — regional topology, queues, worker pools, quotas, fair scheduling, autoscaling/backpressure, isolation, HA/DR, and cost controls.
 10. **Observability and operator design** — OTel trace graph, metrics/SLOs, redaction, replay/fork, approval console, incident actions, and audit separation.
 11. **Testing and evaluation strategy** — unit, contract, workflow fault, simulation, adversarial, regression, staging E2E, canary, online evaluation, and statistical release criteria.
-12. **Framework decision matrix** — critically compare OpenAI, Anthropic, Google ADK/A2A, Microsoft Agent Framework, LangGraph/LangSmith, PydanticAI, LlamaIndex, CrewAI, Dapr Agents, Bedrock/AgentCore, durable runtimes, MCP, and OpenTelemetry.
+12. **Framework decision matrix** — critically compare OpenAI, Anthropic, Google ADK/A2A, Microsoft Agent Framework, LangGraph/LangSmith, Pydantic AI, LlamaIndex, CrewAI, Dapr Agents, Bedrock/AgentCore, durable runtimes, MCP, and OpenTelemetry.
 13. **Prototype package** — minimal end-to-end reference implementation proving one read-only flow and one approved side-effect flow.
 14. **Architecture decision records** — at minimum: single vs multi-agent; harness vs durable engine; MCP/A2A boundaries; identity delegation; memory stores; effect semantics; observability; and deployment isolation.
 15. **Risk register and roadmap** — unresolved industry problems, mitigations, residual risk owners, phased adoption, and exit criteria.
@@ -10325,73 +10342,73 @@ References are numbered by stable registry identifier. Each citation supports on
 
 ## Research foundations
 
-* **[R01]** Yao et al. (2023). *ReAct: Synergizing Reasoning and Acting in Language Models*. ICLR 2023 / arXiv:2210.03629. [Primary or authoritative source](https://arxiv.org/abs/2210.03629). Accessed 13 September 2026. **Supports:** Defines ReAct and reports benchmark results for interleaved reasoning and action.
-* **[R43]** Little, John D. C. (1961). *A Proof for the Queuing Formula: L = λW*. Operations Research 9(3). [Primary or authoritative source](https://doi.org/10.1287/opre.9.3.383). Accessed 13 September 2026. **Supports:** Primary source for Little’s Law; book sizing equations remain workload-specific approximations.
-* **[R49]** Wu et al. (2023). *AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation*. arXiv:2308.08155. [Primary or authoritative source](https://arxiv.org/abs/2308.08155). Accessed 10 October 2026. **Supports:** Presents AutoGen, a framework in which multiple agents converse using LLMs, human input, and tools. Supports only the description of multi-agent conversation as a composition mechanism.
-* **[R50]** Liu et al. (2023). *AgentBench: Evaluating LLMs as Agents*. ICLR 2024 / arXiv:2308.03688. [Primary or authoritative source](https://arxiv.org/abs/2308.03688). Accessed 10 October 2026. **Supports:** Introduces an eight-environment agent benchmark and reports wide performance differences between models, attributed mainly to weak long-term reasoning, decision-making, and instruction following.
-* **[R51]** Mialon et al. (2023). *GAIA: a benchmark for General AI Assistants*. arXiv:2311.12983. [Primary or authoritative source](https://arxiv.org/abs/2311.12983). Accessed 10 October 2026. **Supports:** Introduces 466 real-world questions that are simple for humans but require tools, browsing, and multimodality, and reports a large human-versus-model gap.
-* **[R52]** Jimenez et al. (2023). *SWE-bench: Can Language Models Resolve Real-World GitHub Issues?*. ICLR 2024 / arXiv:2310.06770. [Primary or authoritative source](https://arxiv.org/abs/2310.06770). Accessed 10 October 2026. **Supports:** Introduces a benchmark of real GitHub issues evaluated with executable tests.
-* **[R53]** Yao et al. (2024). *τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains*. arXiv:2406.12045. [Primary or authoritative source](https://arxiv.org/abs/2406.12045). Accessed 10 October 2026. **Supports:** Introduces a benchmark of tool agents interacting with users under domain rules and reports inconsistent behavior across repeated trials.
-* **[R54]** Debenedetti et al. (2024). *AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents*. arXiv:2406.13352. [Primary or authoritative source](https://arxiv.org/abs/2406.13352). Accessed 10 October 2026. **Supports:** Introduces an environment for evaluating tool-using agents' task utility and prompt-injection security together.
+* **[R01]** Yao et al. (2023). *ReAct: Synergizing Reasoning and Acting in Language Models*. ICLR 2023 / arXiv:2210.03629. [Primary or authoritative source](https://arxiv.org/abs/2210.03629). Accessed 11 October 2026. **Supports:** Defines ReAct and reports benchmark results for interleaved reasoning and action.
+* **[R43]** Little, John D. C. (1961). *A Proof for the Queuing Formula: L = λW*. Operations Research 9(3). [Primary or authoritative source](https://doi.org/10.1287/opre.9.3.383). Accessed 11 October 2026. **Supports:** Primary source for Little’s Law; book sizing equations remain workload-specific approximations.
+* **[R49]** Wu et al. (2023). *AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation*. arXiv:2308.08155. [Primary or authoritative source](https://arxiv.org/abs/2308.08155). Accessed 11 October 2026. **Supports:** Presents AutoGen, a framework in which multiple agents converse using LLMs, human input, and tools. Supports only the description of multi-agent conversation as a composition mechanism.
+* **[R50]** Liu et al. (2024). *AgentBench: Evaluating LLMs as Agents*. ICLR 2024 / arXiv:2308.03688. [Primary or authoritative source](https://arxiv.org/abs/2308.03688). Accessed 11 October 2026. **Supports:** Introduces an eight-environment agent benchmark and reports wide performance differences between models, attributed mainly to weak long-term reasoning, decision-making, and instruction following.
+* **[R51]** Mialon et al. (2023). *GAIA: a benchmark for General AI Assistants*. arXiv:2311.12983. [Primary or authoritative source](https://arxiv.org/abs/2311.12983). Accessed 11 October 2026. **Supports:** Introduces 466 real-world questions that are simple for humans but require tools, browsing, and multimodality, and reports a large human-versus-model gap.
+* **[R52]** Jimenez et al. (2024). *SWE-bench: Can Language Models Resolve Real-World GitHub Issues?*. ICLR 2024 / arXiv:2310.06770. [Primary or authoritative source](https://arxiv.org/abs/2310.06770). Accessed 11 October 2026. **Supports:** Introduces a benchmark of real GitHub issues evaluated with executable tests.
+* **[R53]** Yao et al. (2024). *τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains*. arXiv:2406.12045. [Primary or authoritative source](https://arxiv.org/abs/2406.12045). Accessed 11 October 2026. **Supports:** Introduces a benchmark of tool agents interacting with users under domain rules and reports inconsistent behavior across repeated trials.
+* **[R54]** Debenedetti et al. (2024). *AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents*. arXiv:2406.13352. [Primary or authoritative source](https://arxiv.org/abs/2406.13352). Accessed 11 October 2026. **Supports:** Introduces an environment for evaluating tool-using agents' task utility and prompt-injection security together.
 
-## Protocols, identity, and event standards
+## Protocols and technical standards
 
-* **[R04]** Cloud Native Computing Foundation (2024). *CloudEvents Specification*. CloudEvents 1.0.x. [Primary or authoritative source](https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md). Accessed 13 September 2026. **Supports:** Defines a portable event envelope and event identity semantics.
-* **[R05]** Model Context Protocol Project (2026). *Model Context Protocol Specification*. 2026-07-28. [Primary or authoritative source](https://modelcontextprotocol.io/specification/2026-07-28). Accessed 13 September 2026. **Supports:** Defines the stateless MCP core, resources, prompts, tools, and extensions.
-* **[R06]** Model Context Protocol Project (2026). *MCP Authorization*. 2026-07-28. [Primary or authoritative source](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization). Accessed 13 September 2026. **Supports:** Defines MCP HTTP authorization and audience/resource protections.
-* **[R07]** A2A Project (2026). *Agent2Agent Protocol Specification*. v1.0.1. [Primary or authoritative source](https://a2a-protocol.org/v1.0.1/specification). Accessed 13 September 2026. **Supports:** Defines agent cards, tasks, messages, artifacts, bindings, authorization surfaces, and lifecycle operations.
-* **[R08]** IETF (2020). *OAuth 2.0 Token Exchange*. RFC 8693. [Primary or authoritative source](https://datatracker.ietf.org/doc/html/rfc8693). Accessed 13 September 2026. **Supports:** Defines subject/actor semantics for token exchange, delegation, and impersonation.
-* **[R09]** IETF (2020). *Resource Indicators for OAuth 2.0*. RFC 8707. [Primary or authoritative source](https://datatracker.ietf.org/doc/html/rfc8707). Accessed 13 September 2026. **Supports:** Defines resource indicators used to constrain token audience.
-* **[R10]** IETF (2025). *OAuth 2.0 Protected Resource Metadata*. RFC 9728. [Primary or authoritative source](https://datatracker.ietf.org/doc/html/rfc9728). Accessed 13 September 2026. **Supports:** Defines protected-resource metadata used in authorization discovery.
-* **[R19]** OpenTelemetry (2026). *Generative AI Semantic Conventions*. Development status. [Primary or authoritative source](https://github.com/open-telemetry/semantic-conventions-genai). Accessed 13 September 2026. **Supports:** Defines emerging GenAI spans, events, metrics, agent, provider, and MCP mappings.
-* **[R41]** W3C (2023). *Web Content Accessibility Guidelines (WCAG) 2.2*. W3C Recommendation. [Primary or authoritative source](https://www.w3.org/TR/WCAG22/). Accessed 13 September 2026. **Supports:** Defines accessibility success criteria relevant to human-review interfaces.
-* **[R44]** Object Management Group (2014). *Business Process Model and Notation (BPMN)*. Version 2.0.2, formal, January 2014. [Primary or authoritative source](https://www.omg.org/spec/BPMN/2.0.2). Accessed 14 September 2026. **Supports:** Defines BPMN process modelling notation and its execution semantics. Supports the existence and semantics of the standard only, not any claim about its suitability for agentic planning.
-* **[R45]** Object Management Group (2024). *Decision Model and Notation (DMN)*. Version 1.5, formal, August 2024. [Primary or authoritative source](https://www.omg.org/spec/DMN/1.5). Accessed 14 September 2026. **Supports:** Defines DMN decision tables, hit policies, and FEEL. Supports the existence and semantics of the standard only, not any claim about agent decision quality.
-* **[R46]** Object Management Group (2016). *Case Management Model and Notation (CMMN)*. Version 1.1, formal, December 2016. [Primary or authoritative source](https://www.omg.org/spec/CMMN/1.1). Accessed 14 September 2026. **Supports:** Defines CMMN case modelling for unordered, event-driven work. Supports the existence and semantics of the standard only.
-* **[R47]** Object Management Group (2019). *Semantics of Business Vocabulary and Business Rules (SBVR)*. Version 1.5, formal, December 2019. [Primary or authoritative source](https://www.omg.org/spec/SBVR/1.5). Accessed 14 September 2026. **Supports:** Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only.
+* **[R04]** Cloud Native Computing Foundation (2022). *CloudEvents Specification*. CloudEvents 1.0.2. [Primary or authoritative source](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md). Accessed 11 October 2026. **Supports:** Defines a portable event envelope and event identity semantics.
+* **[R05]** Model Context Protocol Project (2026). *Model Context Protocol Specification*. 2026-07-28. [Primary or authoritative source](https://modelcontextprotocol.io/specification/2026-07-28). Accessed 11 October 2026. **Supports:** Defines the stateless MCP core, resources, prompts, tools, and extensions.
+* **[R06]** Model Context Protocol Project (2026). *MCP Authorization*. 2026-07-28. [Primary or authoritative source](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization). Accessed 11 October 2026. **Supports:** Defines MCP HTTP authorization and audience/resource protections.
+* **[R07]** A2A Project (2026). *Agent2Agent Protocol Specification*. v1.0.1. [Primary or authoritative source](https://a2a-protocol.org/v1.0.1/specification). Accessed 11 October 2026. **Supports:** Defines agent cards, tasks, messages, artifacts, bindings, authorization surfaces, and lifecycle operations.
+* **[R08]** IETF (2020). *OAuth 2.0 Token Exchange*. RFC 8693. [Primary or authoritative source](https://datatracker.ietf.org/doc/html/rfc8693). Accessed 11 October 2026. **Supports:** Defines subject/actor semantics for token exchange, delegation, and impersonation.
+* **[R09]** IETF (2020). *Resource Indicators for OAuth 2.0*. RFC 8707. [Primary or authoritative source](https://datatracker.ietf.org/doc/html/rfc8707). Accessed 11 October 2026. **Supports:** Defines resource indicators used to constrain token audience.
+* **[R10]** IETF (2025). *OAuth 2.0 Protected Resource Metadata*. RFC 9728. [Primary or authoritative source](https://datatracker.ietf.org/doc/html/rfc9728). Accessed 11 October 2026. **Supports:** Defines protected-resource metadata used in authorization discovery.
+* **[R19]** OpenTelemetry (n.d.). *Generative AI Semantic Conventions*. Development status. [Primary or authoritative source](https://github.com/open-telemetry/semantic-conventions-genai). Accessed 11 October 2026. **Supports:** Defines emerging GenAI spans, events, metrics, agent, provider, and MCP mappings.
+* **[R41]** W3C (2024). *Web Content Accessibility Guidelines (WCAG) 2.2*. W3C Recommendation, 12 December 2024. [Primary or authoritative source](https://www.w3.org/TR/2024/REC-WCAG22-20241212/). Accessed 11 October 2026. **Supports:** Defines accessibility success criteria relevant to human-review interfaces.
+* **[R44]** Object Management Group (2014). *Business Process Model and Notation (BPMN)*. Version 2.0.2, formal, January 2014. [Primary or authoritative source](https://www.omg.org/spec/BPMN/2.0.2). Accessed 11 October 2026. **Supports:** Defines BPMN process modelling notation and its execution semantics. Supports the existence and semantics of the standard only, not any claim about its suitability for agentic planning.
+* **[R45]** Object Management Group (2024). *Decision Model and Notation (DMN)*. Version 1.5, formal, August 2024. [Primary or authoritative source](https://www.omg.org/spec/DMN/1.5). Accessed 11 October 2026. **Supports:** Defines DMN decision tables, hit policies, and FEEL. Supports the existence and semantics of the standard only, not any claim about agent decision quality.
+* **[R46]** Object Management Group (2016). *Case Management Model and Notation (CMMN)*. Version 1.1, formal, December 2016. [Primary or authoritative source](https://www.omg.org/spec/CMMN/1.1). Accessed 11 October 2026. **Supports:** Defines CMMN case modelling for unordered, event-driven work. Supports the existence and semantics of the standard only.
+* **[R47]** Object Management Group (2019). *Semantics of Business Vocabulary and Business Rules (SBVR)*. Version 1.5, formal, December 2019. [Primary or authoritative source](https://www.omg.org/spec/SBVR/1.5). Accessed 11 October 2026. **Supports:** Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only.
 
 ## Security, governance, law, and assurance
 
-* **[R11]** NIST (2020). *Zero Trust Architecture*. NIST SP 800-207. [Primary or authoritative source](https://csrc.nist.gov/pubs/sp/800/207/final). Accessed 13 September 2026. **Supports:** Supports resource-centric, continuously evaluated trust and explicit policy enforcement.
-* **[R12]** NIST (2023). *Artificial Intelligence Risk Management Framework (AI RMF 1.0)*. NIST AI 100-1. [Primary or authoritative source](https://www.nist.gov/itl/ai-risk-management-framework). Accessed 13 September 2026. **Supports:** Defines voluntary Govern, Map, Measure, and Manage risk-management functions.
-* **[R13]** NIST (2024). *Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile*. NIST AI 600-1. [Primary or authoritative source](https://doi.org/10.6028/NIST.AI.600-1). Accessed 13 September 2026. **Supports:** Provides cross-sector generative-AI risk considerations across the AI lifecycle.
-* **[R14]** ISO/IEC (2023). *Information technology — Artificial intelligence — Management system*. ISO/IEC 42001:2023. [Primary or authoritative source](https://www.iso.org/standard/42001). Accessed 13 September 2026. **Supports:** Defines requirements for an AI management system and continual improvement.
-* **[R15]** OWASP GenAI Security Project (2026). *OWASP Top 10 for Agentic Applications*. 2026 edition. [Primary or authoritative source](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/). Accessed 13 September 2026. **Supports:** Prioritizes major agentic-application security risks and mitigations.
-* **[R16]** OWASP Cheat Sheet Series (2026). *AI Agent Security Cheat Sheet*. Living guidance. [Primary or authoritative source](https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html). Accessed 13 September 2026. **Supports:** Provides practical controls for identity, tools, memory, output, and monitoring.
-* **[R17]** SLSA Project (2026). *SLSA Specification*. v1.2. [Primary or authoritative source](https://slsa.dev/spec/v1.2). Accessed 13 September 2026. **Supports:** Defines supply-chain security tracks, levels, and provenance requirements.
-* **[R18]** CISA (2026). *Software Bill of Materials Resources*. Living guidance. [Primary or authoritative source](https://www.cisa.gov/sbom). Accessed 13 September 2026. **Supports:** Supports SBOM practices; distinct from build provenance.
-* **[R39]** European Union (2016). *General Data Protection Regulation*. Regulation (EU) 2016/679. [Primary or authoritative source](https://eur-lex.europa.eu/eli/reg/2016/679/oj). Accessed 13 September 2026. **Supports:** Primary legal text for EU data-protection principles and rights.
-* **[R40]** European Commission (2026). *European AI Act: Regulatory Framework*. Implementation overview. [Primary or authoritative source](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai). Accessed 13 September 2026. **Supports:** Official implementation overview; legal advice must use the binding text and applicable jurisdiction.
-* **[R42]** NIST (2025). *Incident Response Recommendations and Considerations for Cybersecurity Risk Management*. NIST SP 800-61 Rev. 3. [Primary or authoritative source](https://csrc.nist.gov/pubs/sp/800/61/r3/final). Accessed 13 September 2026. **Supports:** Supports incident-response integration with organizational risk management.
+* **[R11]** NIST (2020). *Zero Trust Architecture*. NIST SP 800-207. [Primary or authoritative source](https://csrc.nist.gov/pubs/sp/800/207/final). Accessed 11 October 2026. **Supports:** Supports resource-centric, continuously evaluated trust and explicit policy enforcement.
+* **[R12]** NIST (2023). *Artificial Intelligence Risk Management Framework (AI RMF 1.0)*. NIST AI 100-1. [Primary or authoritative source](https://doi.org/10.6028/NIST.AI.100-1). Accessed 11 October 2026. **Supports:** Defines voluntary Govern, Map, Measure, and Manage risk-management functions.
+* **[R13]** NIST (2024). *Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile*. NIST AI 600-1. [Primary or authoritative source](https://doi.org/10.6028/NIST.AI.600-1). Accessed 11 October 2026. **Supports:** Provides cross-sector generative-AI risk considerations across the AI lifecycle.
+* **[R14]** ISO/IEC (2023). *Information technology — Artificial intelligence — Management system*. ISO/IEC 42001:2023. [Primary or authoritative source](https://www.iso.org/standard/42001). Accessed 11 October 2026. **Supports:** Defines requirements for an AI management system and continual improvement.
+* **[R15]** OWASP GenAI Security Project (2025). *OWASP Top 10 for Agentic Applications for 2026*. 2026 edition. [Primary or authoritative source](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/). Accessed 11 October 2026. **Supports:** Prioritizes major agentic-application security risks and mitigations.
+* **[R16]** OWASP Cheat Sheet Series (n.d.). *AI Agent Security Cheat Sheet*. Living guidance. [Primary or authoritative source](https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html). Accessed 11 October 2026. **Supports:** Provides practical controls for identity, tools, memory, output, and monitoring.
+* **[R17]** SLSA Project (2025). *SLSA Specification*. v1.2. [Primary or authoritative source](https://slsa.dev/spec/v1.2). Accessed 11 October 2026. **Supports:** Defines supply-chain security tracks, levels, and provenance requirements.
+* **[R18]** CISA (n.d.). *Software Bill of Materials (SBOM)*. Living guidance. [Primary or authoritative source](https://www.cisa.gov/topics/information-communications-technology-supply-chain-security/sbom). Accessed 11 October 2026. **Supports:** Supports SBOM practices; distinct from build provenance.
+* **[R39]** European Union (2016). *General Data Protection Regulation*. Regulation (EU) 2016/679. [Primary or authoritative source](https://eur-lex.europa.eu/eli/reg/2016/679/oj). Accessed 11 October 2026. **Supports:** Primary legal text for EU data-protection principles and rights.
+* **[R40]** European Commission (2026). *AI Act*. Implementation overview. [Primary or authoritative source](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai). Accessed 11 October 2026. **Supports:** Official implementation overview; legal advice must use the binding text and applicable jurisdiction.
+* **[R42]** NIST (2025). *Incident Response Recommendations and Considerations for Cybersecurity Risk Management*. NIST SP 800-61 Rev. 3. [Primary or authoritative source](https://csrc.nist.gov/pubs/sp/800/61/r3/final). Accessed 11 October 2026. **Supports:** Supports incident-response integration with organizational risk management.
 
 ## Frameworks, evaluation, and industry implementation guidance
 
-* **[R02]** Temporal Technologies (2024). *The Definitive Guide to Durable Execution*. Temporal documentation. [Primary or authoritative source](https://temporal.io/blog/what-is-durable-execution). Accessed 13 September 2026. **Supports:** Explains crash-resilient workflow execution, replay, durable timers, and long-running processes.
-* **[R03]** AWS Prescriptive Guidance (2024). *Transactional Outbox Pattern*. AWS Prescriptive Guidance. [Primary or authoritative source](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html). Accessed 13 September 2026. **Supports:** Supports atomic state/event publication and duplicate-consumer considerations.
-* **[R20]** MLflow (2026). *LLM and Agent Evaluation*. MLflow 3.x. [Primary or authoritative source](https://mlflow.org/docs/latest/genai/eval-monitor/). Accessed 13 September 2026. **Supports:** Documents evaluation datasets, feedback, judges, systematic evaluation, and production monitoring.
-* **[R21]** MLflow (2026). *MLflow 3.15.2 Release*. 3.15.2. [Primary or authoritative source](https://mlflow.org/releases/3.15.2). Accessed 13 September 2026. **Supports:** Pins the reproducibility baseline used for book examples.
-* **[R22]** Confident AI (2026). *DeepEval Metrics Introduction*. Current documentation. [Primary or authoritative source](https://deepeval.com/docs/metrics-introduction). Accessed 13 September 2026. **Supports:** Documents component, RAG, tool, task, and agent-oriented evaluation metrics.
-* **[R23]** Arize AI (2026). *Phoenix Documentation*. Current documentation. [Primary or authoritative source](https://arize.com/docs/phoenix). Accessed 13 September 2026. **Supports:** Documents OpenInference/OTel tracing, datasets, experiments, evaluation, and prompt/version workflows.
-* **[R24]** Ragas (2026). *Agent Evaluation Metrics*. Current documentation. [Primary or authoritative source](https://docs.ragas.io/en/latest/concepts/metrics/available_metrics/agents). Accessed 13 September 2026. **Supports:** Documents tool-call and agent-goal evaluation metrics.
-* **[R25]** LangChain (2026). *LangSmith Evaluation*. Current documentation. [Primary or authoritative source](https://docs.langchain.com/langsmith/evaluation). Accessed 13 September 2026. **Supports:** Documents offline and online evaluation, datasets, experiments, and production-trace workflows.
-* **[R26]** OpenAI (2026). *Evaluate Agent Workflows*. Current documentation. [Primary or authoritative source](https://developers.openai.com/api/docs/guides/agent-evals). Accessed 13 September 2026. **Supports:** Documents datasets, graders, trace grading, and regression evaluation.
-* **[R27]** Anthropic (2024). *Building Effective Agents*. Engineering article. [Primary or authoritative source](https://www.anthropic.com/engineering/building-effective-agents). Accessed 13 September 2026. **Supports:** Distinguishes workflows from agents and recommends earning orchestration complexity.
-* **[R28]** Anthropic (2025). *How We Built Our Multi-Agent Research System*. Engineering article. [Primary or authoritative source](https://www.anthropic.com/engineering/multi-agent-research-system). Accessed 13 September 2026. **Supports:** Reports multi-agent research architecture and token/context trade-offs.
-* **[R29]** OpenAI (2026). *OpenAI Agents SDK for Python*. Current documentation. [Primary or authoritative source](https://openai.github.io/openai-agents-python). Accessed 13 September 2026. **Supports:** Documents agents, tools, guardrails, handoffs, sessions, results, and tracing.
-* **[R30]** OpenAI (2026). *OpenAI Agents SDK Python v0.22.2*. Release v0.22.2. [Primary or authoritative source](https://github.com/openai/openai-agents-python/releases/tag/v0.22.2). Accessed 13 September 2026. **Supports:** Pins the SDK baseline used for concrete adapter examples.
-* **[R31]** Microsoft (2026). *Microsoft Agent Framework Overview*. Current documentation. [Primary or authoritative source](https://learn.microsoft.com/en-us/agent-framework/overview). Accessed 13 September 2026. **Supports:** Documents Microsoft agent and workflow abstractions.
-* **[R32]** Google (2026). *Agent Development Kit: Agents*. Current documentation. [Primary or authoritative source](https://adk.dev/agents). Accessed 13 September 2026. **Supports:** Documents Google ADK agent and multi-agent abstractions.
-* **[R33]** Amazon Web Services (2026). *Multi-Agent Collaboration for Amazon Bedrock Agents*. Current documentation. [Primary or authoritative source](https://docs.aws.amazon.com/bedrock/latest/userguide/agents-multi-agent-collaboration.html). Accessed 13 September 2026. **Supports:** Documents the managed supervisor/collaborator pattern.
-* **[R34]** LangChain (2026). *LangGraph Persistence*. Current documentation. [Primary or authoritative source](https://docs.langchain.com/oss/python/langgraph/persistence). Accessed 13 September 2026. **Supports:** Documents checkpointers, thread state, stores, and persistence.
-* **[R35]** LlamaIndex (2026). *LlamaIndex Workflows*. Current documentation. [Primary or authoritative source](https://docs.llamaindex.ai/en/stable/module_guides/workflow/). Accessed 13 September 2026. **Supports:** Documents event-driven asynchronous workflow abstractions.
-* **[R36]** Pydantic (2026). *PydanticAI Durable Execution*. Current documentation. [Primary or authoritative source](https://pydantic.dev/docs/ai/capabilities/durable_execution/overview). Accessed 13 September 2026. **Supports:** Documents typed agent integration with durable-execution backends.
-* **[R37]** Dapr (2026). *Dapr Agents*. Current documentation. [Primary or authoritative source](https://docs.dapr.io/developing-ai/dapr-agents). Accessed 13 September 2026. **Supports:** Documents Dapr agent integration with workflows, actors, state, messaging, resiliency, and telemetry.
-* **[R38]** DBOS (2026). *DBOS AI Quickstart*. Current documentation. [Primary or authoritative source](https://docs.dbos.dev/ai/ai-quickstart). Accessed 13 September 2026. **Supports:** Documents durable long-running agent workflows, queues, waits, and framework integrations.
-* **[R48]** Rahimi, R. (2026). *Policy Logic Forge: compiling compliance policy text into typed, source-grounded executable decision logic*. Repository documentation, ARCHITECTURE.md §1.1. [Primary or authoritative source](https://github.com/rrahimi-uci/policy-logic-forge). Accessed 14 September 2026. **Supports:** Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction.
-* **[R55]** Anthropic (n.d.). *Agent SDK overview*. Current documentation. [Primary or authoritative source](https://code.claude.com/docs/en/agent-sdk/overview). Accessed 10 October 2026. **Supports:** Documents the Claude Agent SDK as Claude Code's agent loop packaged as a Python and TypeScript library with built-in tools, hooks, subagents, MCP, permissions, and sessions. Does not support maturity, cost, or enterprise-governance claims.
-* **[R56]** Anthropic (n.d.). *Claude Managed Agents overview*. Current documentation (beta). [Primary or authoritative source](https://platform.claude.com/docs/en/managed-agents/overview). Accessed 10 October 2026. **Supports:** Documents Managed Agents as a hosted agent harness in beta: agents, environments (Anthropic-managed or self-hosted sandboxes), sessions, and server-sent events with persisted history, intended for long-running work. Does not support production-readiness or cost claims.
-* **[R57]** CrewAI (n.d.). *CrewAI documentation: Introduction*. Current documentation. [Primary or authoritative source](https://docs.crewai.com/en/introduction). Accessed 10 October 2026. **Supports:** Documents Crews of role-playing agents and event-driven Flows. Does not support durability, permission, trace, or effect-semantics claims.
-* **[R58]** Restate (n.d.). *Restate documentation*. Current documentation. [Primary or authoritative source](https://docs.restate.dev/). Accessed 10 October 2026. **Supports:** Documents durable execution that resumes from completed steps after failure, durable timers, automatic retries, waiting for external events, and long-running processes. Does not support scale, maturity, or regional-recovery claims.
+* **[R02]** Temporal Technologies (2025). *The Definitive Guide to Durable Execution*. Temporal blog. [Primary or authoritative source](https://temporal.io/blog/what-is-durable-execution). Accessed 11 October 2026. **Supports:** Defines durable execution as crash-proof execution that resumes in a new process after failure, with reliable long waits and long-running processes. Does not describe a specific replay or event-history mechanism.
+* **[R03]** Amazon Web Services (n.d.). *Transactional Outbox Pattern*. AWS Prescriptive Guidance: Cloud design patterns, architectures, and implementations. [Primary or authoritative source](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html). Accessed 11 October 2026. **Supports:** Supports atomic state/event publication and duplicate-consumer considerations.
+* **[R20]** MLflow (2026). *LLM and Agent Evaluation*. MLflow 3.15.2 documentation. [Primary or authoritative source](https://mlflow.org/docs/3.15.2/genai/eval-monitor/). Accessed 11 October 2026. **Supports:** Documents evaluation datasets, feedback, judges, systematic evaluation, and production monitoring.
+* **[R21]** MLflow (2026). *MLflow 3.15.2 Release*. 3.15.2. [Primary or authoritative source](https://mlflow.org/releases/3.15.2). Accessed 11 October 2026. **Supports:** Pins the reproducibility baseline used for book examples.
+* **[R22]** Confident AI (n.d.). *DeepEval Metrics Introduction*. Current documentation (v4.2.8 at access). [Primary or authoritative source](https://deepeval.com/docs/metrics-introduction). Accessed 11 October 2026. **Supports:** Documents component, RAG, tool, task, and agent-oriented evaluation metrics.
+* **[R23]** Arize AI (n.d.). *Phoenix Documentation*. Current documentation. [Primary or authoritative source](https://arize.com/docs/phoenix). Accessed 11 October 2026. **Supports:** Documents OpenInference/OTel tracing, datasets, experiments, evaluation, and prompt/version workflows.
+* **[R24]** Ragas (2025). *Agent Evaluation Metrics*. Current documentation. [Primary or authoritative source](https://docs.ragas.io/en/latest/concepts/metrics/available_metrics/agents). Accessed 11 October 2026. **Supports:** Documents tool-call and agent-goal evaluation metrics.
+* **[R25]** LangChain (n.d.). *LangSmith Evaluation*. Current documentation. [Primary or authoritative source](https://docs.langchain.com/langsmith/evaluation). Accessed 11 October 2026. **Supports:** Documents offline and online evaluation, datasets, experiments, and production-trace workflows.
+* **[R26]** OpenAI (n.d.). *Evaluate Agent Workflows*. Current documentation. [Primary or authoritative source](https://developers.openai.com/api/docs/guides/agent-evals). Accessed 11 October 2026. **Supports:** Documents datasets, graders, trace grading, and regression evaluation.
+* **[R27]** Anthropic (2024). *Building Effective Agents*. Engineering article. [Primary or authoritative source](https://www.anthropic.com/engineering/building-effective-agents). Accessed 11 October 2026. **Supports:** Distinguishes workflows from agents and recommends earning orchestration complexity.
+* **[R28]** Anthropic (2025). *How We Built Our Multi-Agent Research System*. Engineering article. [Primary or authoritative source](https://www.anthropic.com/engineering/multi-agent-research-system). Accessed 11 October 2026. **Supports:** Reports multi-agent research architecture and token/context trade-offs.
+* **[R29]** OpenAI (n.d.). *OpenAI Agents SDK for Python*. Current documentation. [Primary or authoritative source](https://openai.github.io/openai-agents-python). Accessed 11 October 2026. **Supports:** Documents agents, the runner, function tools, structured output types, input/output/tool guardrails, handoffs, sessions, MCP integration, results with interruptions and resumable RunState for human-in-the-loop approval, local and hosted shell-tool skills, sandbox agents, and tracing with configurable sensitive-data capture.
+* **[R30]** OpenAI (2026). *OpenAI Agents SDK Python v0.22.2*. Release v0.22.2. [Primary or authoritative source](https://github.com/openai/openai-agents-python/releases/tag/v0.22.2). Accessed 11 October 2026. **Supports:** Pins the SDK baseline used for concrete adapter examples.
+* **[R31]** Microsoft (2026). *Microsoft Agent Framework Overview*. Current documentation. [Primary or authoritative source](https://learn.microsoft.com/en-us/agent-framework/overview). Accessed 11 October 2026. **Supports:** Documents Microsoft Agent Framework agents, graph-based workflows, sessions, middleware, telemetry, and model-provider integrations; states that it succeeds and combines AutoGen and Semantic Kernel and that its Go SDK is in public preview.
+* **[R32]** Google (n.d.). *Agent Development Kit: Agents*. Current documentation. [Primary or authoritative source](https://adk.dev/agents). Accessed 11 October 2026. **Supports:** Documents Google ADK agent and multi-agent abstractions.
+* **[R33]** Amazon Web Services (n.d.). *Use Multi-Agent Collaboration with Amazon Bedrock Agents*. Current documentation. [Primary or authoritative source](https://docs.aws.amazon.com/bedrock/latest/userguide/agents-multi-agent-collaboration.html). Accessed 11 October 2026. **Supports:** Documents the managed supervisor/collaborator pattern of Amazon Bedrock Agents, now Bedrock Agents Classic, and states that the service is no longer open to new customers, pointing to Amazon Bedrock AgentCore for similar capabilities.
+* **[R34]** LangChain (n.d.). *LangGraph Persistence*. Current documentation. [Primary or authoritative source](https://docs.langchain.com/oss/python/langgraph/persistence). Accessed 11 October 2026. **Supports:** Documents checkpointers, thread state, stores, and persistence.
+* **[R35]** LlamaIndex (n.d.). *LlamaIndex Workflows*. Current documentation. [Primary or authoritative source](https://developers.llamaindex.ai/python/llamaagents/workflows/). Accessed 11 October 2026. **Supports:** Documents event-driven asynchronous workflow abstractions.
+* **[R36]** Pydantic (n.d.). *Pydantic AI: Durable Execution*. Current documentation. [Primary or authoritative source](https://pydantic.dev/docs/ai/capabilities/durable_execution/overview). Accessed 11 October 2026. **Supports:** Documents typed agent integration with durable-execution backends.
+* **[R37]** Dapr (2026). *Dapr Agents*. Current documentation. [Primary or authoritative source](https://docs.dapr.io/developing-ai/dapr-agents). Accessed 11 October 2026. **Supports:** Documents Dapr agent integration with workflows, actors, state, messaging, resiliency, and telemetry.
+* **[R38]** DBOS (n.d.). *DBOS AI Quickstart*. Current documentation. [Primary or authoritative source](https://docs.dbos.dev/ai/ai-quickstart). Accessed 11 October 2026. **Supports:** Documents durable long-running agent workflows, queues, waits, and framework integrations.
+* **[R48]** Rahimi, R. (2026). *Policy Logic Forge: compiling compliance policy text into typed, source-grounded executable decision logic*. ARCHITECTURE.md §1.1 at commit 393364f. [Primary or authoritative source](https://github.com/rrahimi-uci/policy-logic-forge/blob/393364fae6700c10f4f6f7f024e67a63631a2f9a/ARCHITECTURE.md#11-the-evidence-spine). Accessed 11 October 2026. **Supports:** Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction.
+* **[R55]** Anthropic (n.d.). *Agent SDK overview*. Current documentation. [Primary or authoritative source](https://code.claude.com/docs/en/agent-sdk/overview). Accessed 11 October 2026. **Supports:** Documents the Claude Agent SDK as Claude Code's agent loop packaged as a Python and TypeScript library with built-in tools, hooks, subagents, MCP, permissions, and sessions. Does not support maturity, cost, or enterprise-governance claims.
+* **[R56]** Anthropic (n.d.). *Claude Managed Agents overview*. Current documentation (beta). [Primary or authoritative source](https://platform.claude.com/docs/en/managed-agents/overview). Accessed 11 October 2026. **Supports:** Documents Managed Agents as a hosted agent harness in beta: agents, environments (Anthropic-managed or self-hosted sandboxes), sessions, and server-sent events with persisted history, intended for long-running work. Does not support production-readiness or cost claims.
+* **[R57]** CrewAI (n.d.). *CrewAI documentation: Introduction*. Current documentation (v1.15.27 at access). [Primary or authoritative source](https://docs.crewai.com/en/introduction). Accessed 11 October 2026. **Supports:** Documents Crews of role-playing agents and event-driven Flows. Does not support durability, permission, trace, or effect-semantics claims.
+* **[R58]** Restate (n.d.). *Restate documentation*. Current documentation. [Primary or authoritative source](https://docs.restate.dev/). Accessed 11 October 2026. **Supports:** Documents durable execution that resumes from completed steps after failure, durable timers, automatic retries, waiting for external events, and long-running processes. Does not support scale, maturity, or regional-recovery claims.
 
 ## Where each claim is supported
 
@@ -10399,64 +10416,64 @@ This matrix defines exactly what each citation is permitted to support. It preve
 
 | ID | Source class | Permitted claim scope | Verification note |
 |---|---|---|---|
-| R01 | research | Defines ReAct and reports benchmark results for interleaved reasoning and action. | Verified 2026-09-13; re-check living sources before use. |
-| R02 | industry guidance | Explains crash-resilient workflow execution, replay, durable timers, and long-running processes. | Verified 2026-09-13; re-check living sources before use. |
-| R03 | architecture pattern | Supports atomic state/event publication and duplicate-consumer considerations. | Verified 2026-09-13; re-check living sources before use. |
-| R04 | standard | Defines a portable event envelope and event identity semantics. | Verified 2026-09-13; re-check living sources before use. |
-| R05 | protocol specification | Defines the stateless MCP core, resources, prompts, tools, and extensions. | Verified 2026-09-13; re-check living sources before use. |
-| R06 | protocol specification | Defines MCP HTTP authorization and audience/resource protections. | Verified 2026-09-13; re-check living sources before use. |
-| R07 | protocol specification | Defines agent cards, tasks, messages, artifacts, bindings, authorization surfaces, and lifecycle operations. | Verified 2026-09-13; re-check living sources before use. |
-| R08 | internet standard | Defines subject/actor semantics for token exchange, delegation, and impersonation. | Verified 2026-09-13; re-check living sources before use. |
-| R09 | internet standard | Defines resource indicators used to constrain token audience. | Verified 2026-09-13; re-check living sources before use. |
-| R10 | internet standard | Defines protected-resource metadata used in authorization discovery. | Verified 2026-09-13; re-check living sources before use. |
-| R11 | official guidance | Supports resource-centric, continuously evaluated trust and explicit policy enforcement. | Verified 2026-09-13; re-check living sources before use. |
-| R12 | official guidance | Defines voluntary Govern, Map, Measure, and Manage risk-management functions. | Verified 2026-09-13; re-check living sources before use. |
-| R13 | official guidance | Provides cross-sector generative-AI risk considerations across the AI lifecycle. | Verified 2026-09-13; re-check living sources before use. |
-| R14 | management system standard | Defines requirements for an AI management system and continual improvement. | Verified 2026-09-13; re-check living sources before use. |
-| R15 | community guidance | Prioritizes major agentic-application security risks and mitigations. | Verified 2026-09-13; re-check living sources before use. |
-| R16 | community guidance | Provides practical controls for identity, tools, memory, output, and monitoring. | Verified 2026-09-13; re-check living sources before use. |
-| R17 | community standard | Defines supply-chain security tracks, levels, and provenance requirements. | Verified 2026-09-13; re-check living sources before use. |
-| R18 | official guidance | Supports SBOM practices; distinct from build provenance. | Verified 2026-09-13; re-check living sources before use. |
-| R19 | observability standard | Defines emerging GenAI spans, events, metrics, agent, provider, and MCP mappings. | Verified 2026-09-13; re-check living sources before use. |
-| R20 | framework documentation | Documents evaluation datasets, feedback, judges, systematic evaluation, and production monitoring. | Verified 2026-09-13; re-check living sources before use. |
-| R21 | framework release | Pins the reproducibility baseline used for book examples. | Verified 2026-09-13; re-check living sources before use. |
-| R22 | framework documentation | Documents component, RAG, tool, task, and agent-oriented evaluation metrics. | Verified 2026-09-13; re-check living sources before use. |
-| R23 | framework documentation | Documents OpenInference/OTel tracing, datasets, experiments, evaluation, and prompt/version workflows. | Verified 2026-09-13; re-check living sources before use. |
-| R24 | framework documentation | Documents tool-call and agent-goal evaluation metrics. | Verified 2026-09-13; re-check living sources before use. |
-| R25 | framework documentation | Documents offline and online evaluation, datasets, experiments, and production-trace workflows. | Verified 2026-09-13; re-check living sources before use. |
-| R26 | vendor documentation | Documents datasets, graders, trace grading, and regression evaluation. | Verified 2026-09-13; re-check living sources before use. |
-| R27 | industry guidance | Distinguishes workflows from agents and recommends earning orchestration complexity. | Verified 2026-09-13; re-check living sources before use. |
-| R28 | industry report | Reports multi-agent research architecture and token/context trade-offs. | Verified 2026-09-13; re-check living sources before use. |
-| R29 | framework documentation | Documents agents, tools, guardrails, handoffs, sessions, results, and tracing. | Verified 2026-09-13; re-check living sources before use. |
-| R30 | framework release | Pins the SDK baseline used for concrete adapter examples. | Verified 2026-09-13; re-check living sources before use. |
-| R31 | framework documentation | Documents Microsoft agent and workflow abstractions. | Verified 2026-09-13; re-check living sources before use. |
-| R32 | framework documentation | Documents Google ADK agent and multi-agent abstractions. | Verified 2026-09-13; re-check living sources before use. |
-| R33 | framework documentation | Documents the managed supervisor/collaborator pattern. | Verified 2026-09-13; re-check living sources before use. |
-| R34 | framework documentation | Documents checkpointers, thread state, stores, and persistence. | Verified 2026-09-13; re-check living sources before use. |
-| R35 | framework documentation | Documents event-driven asynchronous workflow abstractions. | Verified 2026-09-13; re-check living sources before use. |
-| R36 | framework documentation | Documents typed agent integration with durable-execution backends. | Verified 2026-09-13; re-check living sources before use. |
-| R37 | framework documentation | Documents Dapr agent integration with workflows, actors, state, messaging, resiliency, and telemetry. | Verified 2026-09-13; re-check living sources before use. |
-| R38 | framework documentation | Documents durable long-running agent workflows, queues, waits, and framework integrations. | Verified 2026-09-13; re-check living sources before use. |
-| R39 | law | Primary legal text for EU data-protection principles and rights. | Verified 2026-09-13; re-check living sources before use. |
-| R40 | official legal guidance | Official implementation overview; legal advice must use the binding text and applicable jurisdiction. | Verified 2026-09-13; re-check living sources before use. |
-| R41 | standard | Defines accessibility success criteria relevant to human-review interfaces. | Verified 2026-09-13; re-check living sources before use. |
-| R42 | official guidance | Supports incident-response integration with organizational risk management. | Verified 2026-09-13; re-check living sources before use. |
-| R43 | research | Primary source for Little’s Law; book sizing equations remain workload-specific approximations. | Verified 2026-09-13; re-check living sources before use. |
-| R44 | standard | Defines BPMN process modelling notation and its execution semantics. Supports the existence and semantics of the standard only, not any claim about its suitability for agentic planning. | Verified 2026-09-14; re-check living sources before use. |
-| R45 | standard | Defines DMN decision tables, hit policies, and FEEL. Supports the existence and semantics of the standard only, not any claim about agent decision quality. | Verified 2026-09-14; re-check living sources before use. |
-| R46 | standard | Defines CMMN case modelling for unordered, event-driven work. Supports the existence and semantics of the standard only. | Verified 2026-09-14; re-check living sources before use. |
-| R47 | standard | Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only. | Verified 2026-09-14; re-check living sources before use. |
-| R48 | framework documentation | Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction. | Verified 2026-09-14; re-check living sources before use. |
-| R49 | research | Presents AutoGen, a framework in which multiple agents converse using LLMs, human input, and tools. Supports only the description of multi-agent conversation as a composition mechanism. | Verified 2026-10-10; re-check living sources before use. |
-| R50 | research | Introduces an eight-environment agent benchmark and reports wide performance differences between models, attributed mainly to weak long-term reasoning, decision-making, and instruction following. | Verified 2026-10-10; re-check living sources before use. |
-| R51 | research | Introduces 466 real-world questions that are simple for humans but require tools, browsing, and multimodality, and reports a large human-versus-model gap. | Verified 2026-10-10; re-check living sources before use. |
-| R52 | research | Introduces a benchmark of real GitHub issues evaluated with executable tests. | Verified 2026-10-10; re-check living sources before use. |
-| R53 | research | Introduces a benchmark of tool agents interacting with users under domain rules and reports inconsistent behavior across repeated trials. | Verified 2026-10-10; re-check living sources before use. |
-| R54 | research | Introduces an environment for evaluating tool-using agents' task utility and prompt-injection security together. | Verified 2026-10-10; re-check living sources before use. |
-| R55 | framework documentation | Documents the Claude Agent SDK as Claude Code's agent loop packaged as a Python and TypeScript library with built-in tools, hooks, subagents, MCP, permissions, and sessions. Does not support maturity, cost, or enterprise-governance claims. | Verified 2026-10-10; re-check living sources before use. |
-| R56 | framework documentation | Documents Managed Agents as a hosted agent harness in beta: agents, environments (Anthropic-managed or self-hosted sandboxes), sessions, and server-sent events with persisted history, intended for long-running work. Does not support production-readiness or cost claims. | Verified 2026-10-10; re-check living sources before use. |
-| R57 | framework documentation | Documents Crews of role-playing agents and event-driven Flows. Does not support durability, permission, trace, or effect-semantics claims. | Verified 2026-10-10; re-check living sources before use. |
-| R58 | framework documentation | Documents durable execution that resumes from completed steps after failure, durable timers, automatic retries, waiting for external events, and long-running processes. Does not support scale, maturity, or regional-recovery claims. | Verified 2026-10-10; re-check living sources before use. |
+| R01 | research | Defines ReAct and reports benchmark results for interleaved reasoning and action. | Verified 2026-10-11; re-check living sources before use. |
+| R02 | industry guidance | Defines durable execution as crash-proof execution that resumes in a new process after failure, with reliable long waits and long-running processes. Does not describe a specific replay or event-history mechanism. | Verified 2026-10-11; re-check living sources before use. |
+| R03 | architecture pattern | Supports atomic state/event publication and duplicate-consumer considerations. | Verified 2026-10-11; re-check living sources before use. |
+| R04 | standard | Defines a portable event envelope and event identity semantics. | Verified 2026-10-11; re-check living sources before use. |
+| R05 | protocol specification | Defines the stateless MCP core, resources, prompts, tools, and extensions. | Verified 2026-10-11; re-check living sources before use. |
+| R06 | protocol specification | Defines MCP HTTP authorization and audience/resource protections. | Verified 2026-10-11; re-check living sources before use. |
+| R07 | protocol specification | Defines agent cards, tasks, messages, artifacts, bindings, authorization surfaces, and lifecycle operations. | Verified 2026-10-11; re-check living sources before use. |
+| R08 | internet standard | Defines subject/actor semantics for token exchange, delegation, and impersonation. | Verified 2026-10-11; re-check living sources before use. |
+| R09 | internet standard | Defines resource indicators used to constrain token audience. | Verified 2026-10-11; re-check living sources before use. |
+| R10 | internet standard | Defines protected-resource metadata used in authorization discovery. | Verified 2026-10-11; re-check living sources before use. |
+| R11 | official guidance | Supports resource-centric, continuously evaluated trust and explicit policy enforcement. | Verified 2026-10-11; re-check living sources before use. |
+| R12 | official guidance | Defines voluntary Govern, Map, Measure, and Manage risk-management functions. | Verified 2026-10-11; re-check living sources before use. |
+| R13 | official guidance | Provides cross-sector generative-AI risk considerations across the AI lifecycle. | Verified 2026-10-11; re-check living sources before use. |
+| R14 | management system standard | Defines requirements for an AI management system and continual improvement. | Verified 2026-10-11; re-check living sources before use. |
+| R15 | community guidance | Prioritizes major agentic-application security risks and mitigations. | Verified 2026-10-11; re-check living sources before use. |
+| R16 | community guidance | Provides practical controls for identity, tools, memory, output, and monitoring. | Verified 2026-10-11; re-check living sources before use. |
+| R17 | community standard | Defines supply-chain security tracks, levels, and provenance requirements. | Verified 2026-10-11; re-check living sources before use. |
+| R18 | official guidance | Supports SBOM practices; distinct from build provenance. | Verified 2026-10-11; re-check living sources before use. |
+| R19 | observability standard | Defines emerging GenAI spans, events, metrics, agent, provider, and MCP mappings. | Verified 2026-10-11; re-check living sources before use. |
+| R20 | framework documentation | Documents evaluation datasets, feedback, judges, systematic evaluation, and production monitoring. | Verified 2026-10-11; re-check living sources before use. |
+| R21 | framework release | Pins the reproducibility baseline used for book examples. | Verified 2026-10-11; re-check living sources before use. |
+| R22 | framework documentation | Documents component, RAG, tool, task, and agent-oriented evaluation metrics. | Verified 2026-10-11; re-check living sources before use. |
+| R23 | framework documentation | Documents OpenInference/OTel tracing, datasets, experiments, evaluation, and prompt/version workflows. | Verified 2026-10-11; re-check living sources before use. |
+| R24 | framework documentation | Documents tool-call and agent-goal evaluation metrics. | Verified 2026-10-11; re-check living sources before use. |
+| R25 | framework documentation | Documents offline and online evaluation, datasets, experiments, and production-trace workflows. | Verified 2026-10-11; re-check living sources before use. |
+| R26 | vendor documentation | Documents datasets, graders, trace grading, and regression evaluation. | Verified 2026-10-11; re-check living sources before use. |
+| R27 | industry guidance | Distinguishes workflows from agents and recommends earning orchestration complexity. | Verified 2026-10-11; re-check living sources before use. |
+| R28 | industry report | Reports multi-agent research architecture and token/context trade-offs. | Verified 2026-10-11; re-check living sources before use. |
+| R29 | framework documentation | Documents agents, the runner, function tools, structured output types, input/output/tool guardrails, handoffs, sessions, MCP integration, results with interruptions and resumable RunState for human-in-the-loop approval, local and hosted shell-tool skills, sandbox agents, and tracing with configurable sensitive-data capture. | Verified 2026-10-11; re-check living sources before use. |
+| R30 | framework release | Pins the SDK baseline used for concrete adapter examples. | Verified 2026-10-11; re-check living sources before use. |
+| R31 | framework documentation | Documents Microsoft Agent Framework agents, graph-based workflows, sessions, middleware, telemetry, and model-provider integrations; states that it succeeds and combines AutoGen and Semantic Kernel and that its Go SDK is in public preview. | Verified 2026-10-11; re-check living sources before use. |
+| R32 | framework documentation | Documents Google ADK agent and multi-agent abstractions. | Verified 2026-10-11; re-check living sources before use. |
+| R33 | framework documentation | Documents the managed supervisor/collaborator pattern of Amazon Bedrock Agents, now Bedrock Agents Classic, and states that the service is no longer open to new customers, pointing to Amazon Bedrock AgentCore for similar capabilities. | Verified 2026-10-11; re-check living sources before use. |
+| R34 | framework documentation | Documents checkpointers, thread state, stores, and persistence. | Verified 2026-10-11; re-check living sources before use. |
+| R35 | framework documentation | Documents event-driven asynchronous workflow abstractions. | Verified 2026-10-11; re-check living sources before use. |
+| R36 | framework documentation | Documents typed agent integration with durable-execution backends. | Verified 2026-10-11; re-check living sources before use. |
+| R37 | framework documentation | Documents Dapr agent integration with workflows, actors, state, messaging, resiliency, and telemetry. | Verified 2026-10-11; re-check living sources before use. |
+| R38 | framework documentation | Documents durable long-running agent workflows, queues, waits, and framework integrations. | Verified 2026-10-11; re-check living sources before use. |
+| R39 | law | Primary legal text for EU data-protection principles and rights. | Verified 2026-10-11; re-check living sources before use. |
+| R40 | official legal guidance | Official implementation overview; legal advice must use the binding text and applicable jurisdiction. | Verified 2026-10-11; re-check living sources before use. |
+| R41 | standard | Defines accessibility success criteria relevant to human-review interfaces. | Verified 2026-10-11; re-check living sources before use. |
+| R42 | official guidance | Supports incident-response integration with organizational risk management. | Verified 2026-10-11; re-check living sources before use. |
+| R43 | research | Primary source for Little’s Law; book sizing equations remain workload-specific approximations. | Verified 2026-10-11; re-check living sources before use. |
+| R44 | standard | Defines BPMN process modelling notation and its execution semantics. Supports the existence and semantics of the standard only, not any claim about its suitability for agentic planning. | Verified 2026-10-11; re-check living sources before use. |
+| R45 | standard | Defines DMN decision tables, hit policies, and FEEL. Supports the existence and semantics of the standard only, not any claim about agent decision quality. | Verified 2026-10-11; re-check living sources before use. |
+| R46 | standard | Defines CMMN case modelling for unordered, event-driven work. Supports the existence and semantics of the standard only. | Verified 2026-10-11; re-check living sources before use. |
+| R47 | standard | Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only. | Verified 2026-10-11; re-check living sources before use. |
+| R48 | framework documentation | Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction. | Verified 2026-10-11; re-check living sources before use. |
+| R49 | research | Presents AutoGen, a framework in which multiple agents converse using LLMs, human input, and tools. Supports only the description of multi-agent conversation as a composition mechanism. | Verified 2026-10-11; re-check living sources before use. |
+| R50 | research | Introduces an eight-environment agent benchmark and reports wide performance differences between models, attributed mainly to weak long-term reasoning, decision-making, and instruction following. | Verified 2026-10-11; re-check living sources before use. |
+| R51 | research | Introduces 466 real-world questions that are simple for humans but require tools, browsing, and multimodality, and reports a large human-versus-model gap. | Verified 2026-10-11; re-check living sources before use. |
+| R52 | research | Introduces a benchmark of real GitHub issues evaluated with executable tests. | Verified 2026-10-11; re-check living sources before use. |
+| R53 | research | Introduces a benchmark of tool agents interacting with users under domain rules and reports inconsistent behavior across repeated trials. | Verified 2026-10-11; re-check living sources before use. |
+| R54 | research | Introduces an environment for evaluating tool-using agents' task utility and prompt-injection security together. | Verified 2026-10-11; re-check living sources before use. |
+| R55 | framework documentation | Documents the Claude Agent SDK as Claude Code's agent loop packaged as a Python and TypeScript library with built-in tools, hooks, subagents, MCP, permissions, and sessions. Does not support maturity, cost, or enterprise-governance claims. | Verified 2026-10-11; re-check living sources before use. |
+| R56 | framework documentation | Documents Managed Agents as a hosted agent harness in beta: agents, environments (Anthropic-managed or self-hosted sandboxes), sessions, and server-sent events with persisted history, intended for long-running work. Does not support production-readiness or cost claims. | Verified 2026-10-11; re-check living sources before use. |
+| R57 | framework documentation | Documents Crews of role-playing agents and event-driven Flows. Does not support durability, permission, trace, or effect-semantics claims. | Verified 2026-10-11; re-check living sources before use. |
+| R58 | framework documentation | Documents durable execution that resumes from completed steps after failure, durable timers, automatic retries, waiting for external events, and long-running processes. Does not support scale, maturity, or regional-recovery claims. | Verified 2026-10-11; re-check living sources before use. |
 
 # Appendix L — Capacity, Resilience, and Release Acceptance
 

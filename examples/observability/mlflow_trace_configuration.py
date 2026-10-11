@@ -26,7 +26,9 @@ def configure_observability(experiment: str = "book-mortgage-evidence-review") -
     """
     mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db"))
     mlflow.set_experiment(experiment)
-    # Captures OpenAI calls and enables MLflow's Agents SDK trace processor. The
+    # Captures OpenAI calls; MLflow registers its Agents SDK trace processor
+    # whatever the flag. False also keeps the SDK's own exporter (it sends
+    # nothing without an API key); in-house deployments keep the default. The
     # explicit spans below cover the platform-owned workflow, policy, approval,
     # and effect boundaries that provider autologging cannot see.
     mlflow.openai.autolog(

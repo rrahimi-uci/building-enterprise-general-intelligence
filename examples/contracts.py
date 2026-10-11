@@ -262,13 +262,18 @@ class CloudEvent(BaseModel):
     subject: str | None = None
     time: datetime
     dataschema: str | None = None
-    tenant_id: str
-    correlation_id: str
-    causation_id: str | None = None
+    # Extension attribute names must be lowercase letters and digits on the wire.
+    tenant_id: str = Field(serialization_alias="tenantid")
+    correlation_id: str = Field(serialization_alias="correlationid")
+    causation_id: str | None = Field(default=None, serialization_alias="causationid")
     traceparent: str | None = None
     dataref: str | None = None
     datahash: Digest | None = None
     data: dict[str, Any] | None = None
+
+    def to_wire(self) -> dict[str, Any]:
+        """The structured-mode JSON a producer publishes; absent attributes are omitted."""
+        return self.model_dump(mode="json", by_alias=True, exclude_none=True)
 
     @field_validator("source")
     @classmethod

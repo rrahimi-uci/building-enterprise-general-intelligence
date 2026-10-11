@@ -36,7 +36,7 @@ def accessed(r: dict) -> str:
 def render_reference_sections(text: str, references: list[dict]) -> str:
     category_order = [
         ("Research foundations", {"research"}),
-        ("Protocols, identity, and event standards", {"protocol specification", "internet standard", "standard", "observability standard"}),
+        ("Protocols and technical standards", {"protocol specification", "internet standard", "standard", "observability standard"}),
         ("Security, governance, law, and assurance", {"official guidance", "community guidance", "community standard", "management system standard", "law", "official legal guidance"}),
         ("Frameworks, evaluation, and industry implementation guidance", {"framework documentation", "framework release", "vendor documentation", "industry guidance", "industry report", "architecture pattern"}),
     ]

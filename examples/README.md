@@ -72,8 +72,9 @@ falls through to the real OpenAI provider.
 
 The Chapter 24 mortgage integration also uses the real Agents SDK runner, but
 keeps the model scripted. It calls
-`mlflow.openai.autolog(disable_openai_agent_tracer=False)` explicitly: MLflow
-3.15.2 otherwise disables its Agents SDK trace processor by default. The run
+`mlflow.openai.autolog(disable_openai_agent_tracer=False)`. In MLflow 3.15.2
+autolog registers its Agents SDK trace processor either way; `False` also keeps
+the SDK's own exporter, which sends nothing without an API key. The run
 uses a SQLite tracking URI, records only safe synthetic metadata, and never
 requires an API key.
 
