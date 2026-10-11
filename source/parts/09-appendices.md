@@ -235,6 +235,7 @@ Each contract has one owner and one defining chapter, as indexed in Chapter 4 §
 | Artifact | Producing run (bytes in the artifact store) | artifact ID, immutable version, schema, content hash, creator run/node/agent, source refs, classification, residency, retention | Chapter 4 |
 | Event (CloudEvent envelope) | Producing service, through its outbox | standard attributes plus tenant, correlation, and causation extensions (wire names `tenantid`, `correlationid`, `causationid`; CloudEvents allows only lowercase letters and digits) and `traceparent`; payload by `dataref` and `datahash` | Chapter 4 |
 | AgentStepRequest / AgentStepResult | Run Service builds the request; AgentRuntime returns the result | request: identity, behavior pins, ContextManifest, capabilities, bounds, output schema, trace; result: status (`completed`, `needs_input`, `proposed_action`, `failed`), payload, artifact refs, proposed action, usage, error | Chapter 3 |
+| KnowledgeArtifact | Knowledge Hub | kind, source digest and region, extractor and verifier versions, per-field verdicts, corroboration, status and review route, owner, version/supersedes, effective range, scope, ACL and data class | Chapter 5 |
 | ContextManifest | Context Service | RunManifest digest, node, step request ID, revision, policy version, section caps and allocation, ordered segments (kind, trust tier, source revision, hash, authorization decision), omitted candidates, redactions, manifest hash | Chapter 6 |
 | MemoryRecord | Memory Service | tenant, subject/team scope, type, value, provenance, confidence, consent, purpose allowlist, TTL, status, supersedes | Chapter 6 |
 | Skill manifest | Skill owner; Skill Registry | interface schemas, instructions, required tools and knowledge, data-class and region policy, `risk_ceiling`, evaluation suite and gates, owner, digest; lifecycle lives in SkillRelease | Chapter 8 |
@@ -435,6 +436,7 @@ Chapter 1 § The vocabulary this book assumes introduces the core terms; this gl
 | Idempotency key | A stable identifier the platform derives from tenant, run, and logical effect and binds to an intent hash; passed to a downstream system that supports one so it recognizes a repeated request as the same request. The model never chooses it | 22 |
 | InterventionRequired | Run, task, or effect state used when correctness cannot be established automatically; it opens an intervention task | 15, 22 |
 | Intervention task | A typed request for human help with an uncertain run; its response is an input to the run and never approves an effect | 14 |
+| KnowledgeArtifact | The Knowledge Hub's record of a governed artifact (document, chunk, extracted field, or rule) with its source digest and region, versions, verdicts, owner, and scope | 5 |
 | Layer | A deployable unit of the architecture (for example, Model access or Durable execution); layers serve the planes | 4 |
 | LLM Gateway | Control point that decides which model may answer under which data policy, and enforces model routing, privacy, budgets, and evidence | 4 |
 | MCP Gateway | Control point that terminates MCP and decides whether an external server and tool are trusted and eligible | 19 |
@@ -457,6 +459,7 @@ Chapter 1 § The vocabulary this book assumes introduces the core terms; this gl
 | Unknown | Effect state when a mutation may have reached the downstream system and the platform holds neither a receipt nor proof of absence; it blocks retry and dependent work | 22 |
 | Use-case tier (T0–T4) | Classification of a whole use case that sets governance and release depth; never lower than its most dangerous eligible effect requires | 26 |
 | ValidationReport | The release evidence for one candidate: evaluation comparisons, other test results, and slice regressions | 25 |
+| Verification status | A claim's or field's verdict against its pinned source: supported, contradicted, or insufficient evidence. It shows the source says it, not that it is true; corroboration by an independent source is recorded separately | 5 |
 | Workflow execution | The durable, replayable history that owns a run's state; one active execution per run generation | 15 |
 
 # Appendix I — Companion Implementation Guide: Harborlight Mortgage

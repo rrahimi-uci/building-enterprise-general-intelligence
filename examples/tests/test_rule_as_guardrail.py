@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import date
 from decimal import Decimal
 
 import pytest
@@ -67,3 +68,46 @@ def test_the_effect_never_runs_when_a_rule_refuses():
         guarded_dispatch(lambda: ran.append(1), facts, GUARDS,
                          jurisdiction="US", on_date="2026-06-01")
     assert ran == [], "enforcement must precede the effect, not report on it"
+
+
+# Where the two lanes meet: a rule extracted from policy prose, evaluated over a
+# fact extracted from a document. The 60-day window is illustrative only.
+AGE_WINDOW = Rule(
+    rule_id="r_pay_statement_age", modality="prohibition",
+    conditions=(Predicate("pay_statement_age_days", ">", 60),),
+    outcome=Predicate("income_evidence_acceptable", "=", False),
+    jurisdiction="US", responsible_party="evidence_review",
+    effective_from="2026-01-01",
+    source=SourceRef("mortgage_underwriting_policy", "sec_3_1", 0, 80, "a" * 64),
+)
+
+
+def _certified_statement(age_days: int, *, tampered: bool = False):
+    from datetime import timedelta
+
+    from examples.knowledge.document_ingestion import ExtractedField, verify_document
+    from examples.tests.test_document_ingestion import CASE, TEXT, fields, record
+
+    as_of = date(2026, 9, 5) + timedelta(days=age_days)
+    age = ExtractedField("pay_statement_age_days", age_days, "days", "derived",
+                         inputs=("pay_date",))
+    derive = {"pay_statement_age_days": lambda v: (as_of - date.fromisoformat(v["pay_date"])).days}
+    text = TEXT.replace("4,250.00", "5,250.00") if tampered else TEXT
+    return verify_document(record(), fields(pay_statement_age_days=age), text,
+                           case=CASE, derive=derive)
+
+
+def test_the_age_window_reads_only_verified_document_facts():
+    from examples.knowledge.document_ingestion import facts_for_rules
+
+    accept = {"income_evidence_acceptable": True}  # what the agent proposes to record
+    unverified = _certified_statement(15, tampered=True)  # never verified
+    with pytest.raises(UnknownUnderPolicy):
+        guarded_dispatch(lambda: "accepted", facts_for_rules(unverified) | accept,
+                         [EnforcedRule(AGE_WINDOW)], jurisdiction="US", on_date="2026-09-20")
+    with pytest.raises(PolicyViolation):
+        guarded_dispatch(lambda: "accepted", facts_for_rules(_certified_statement(75)) | accept,
+                         [EnforcedRule(AGE_WINDOW)], jurisdiction="US", on_date="2026-11-19")
+    assert guarded_dispatch(lambda: "accepted", facts_for_rules(_certified_statement(15)) | accept,
+                            [EnforcedRule(AGE_WINDOW)], jurisdiction="US",
+                            on_date="2026-09-20") == "accepted"

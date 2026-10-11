@@ -539,12 +539,29 @@
       "book_chapters": [5],
       "path": "examples/knowledge/grounding_verifier.py",
       "language": "python",
-      "title": "Rebuilding a claim's evidence instead of trusting its citation",
+      "title": "Admitting a claim only on a literal span of the bytes it cites",
       "verify": "test",
       "tests": [
         "examples/tests/test_grounding_verifier.py"
       ],
-      "libraries": []
+      "libraries": [],
+      "adapted_from": "Policy Logic Forge [R48], commit c22dc450: agents/agent_09_grounding_verifier.py and utils/citations.py (MIT)"
+    },
+    {
+      "id": "document-ingestion",
+      "book_chapters": [5],
+      "path": "examples/knowledge/document_ingestion.py",
+      "language": "python",
+      "title": "A document's fields verified against its bytes before they become facts",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_document_ingestion.py"
+      ],
+      "libraries": [],
+      "regions": {
+        "record": "Intake record, typed fields with unit and origin, and duplicate detection.",
+        "verify": "Independent verification, consistency, routes, and fail-closed facts."
+      }
     },
     {
       "id": "knowledge-graph",

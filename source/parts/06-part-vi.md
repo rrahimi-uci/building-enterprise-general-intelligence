@@ -167,7 +167,7 @@ refuses it first, and how to recover.
 
 **Signals.** Ingestion anomalies, rank manipulation, source drift, failures that cluster on a new source.
 
-**Prevent.** Signed and approved ingestion with provenance (Chapter 5), source/index separation, ACLs, poisoning tests.
+**Prevent.** Signed and approved ingestion with provenance (Chapter 5 § Ingest documents the way you extract rules), source/index separation, ACLs, poisoning tests.
 
 **First deterministic refusal.** Context/memory: source, snapshot, and ACL filters admit only approved sources into the knowledge snapshot a run may read. They cannot see poison that arrived through an approved source; that residual risk falls to Chapter 5's independent verification and to the Recover step.
 
@@ -316,7 +316,7 @@ credential, or authorize a publication.
 
 | **Step** | **What the attacker tries** | **Control that must hold** | **Evidence to retain** |
 | --- | --- | --- | --- |
-| Ingest | Hide an instruction in a trusted-looking PDF | Malware/content inspection and provenance label mark the artifact as data | Source digest, detector version, classification |
+| Ingest | Hide an instruction in a trusted-looking PDF | Malware/content inspection and provenance label mark the artifact as data; the extraction record keeps the text as data, never a field (Chapter 5) | Source digest, detector version, classification |
 | Retrieve | Make the instruction rank beside relevant policy | ACL and task-scoped retrieval return only authorized fields and references | ContextManifest, source revision, ACL decision |
 | Reason | Convince the model that upload is part of verification | Typed output permits a proposal, not an arbitrary destination or capability | Model route, proposal hash, selected tool |
 | Dispatch | Turn the proposal into an external request | Policy re-checks subject, purpose, destination, data class, and risk | PolicyDecision, EgressGrant (Chapter 23) or denial |
@@ -754,7 +754,9 @@ discovery returns only what the run may use.
 | Operations | SLO, health endpoint, trace semantics, cost unit, deprecation date, support contact |
 
 Resolve the manifest at dispatch, not at import; a risk class that lives only in
-a reviewer's memory cannot be enforced.
+a reviewer's memory cannot be enforced. The enforced rules the gateway evaluates
+before dispatch (Chapter 5) read verified facts from KnowledgeArtifacts, never
+model output; the precondition/version field remains the resource-version check.
 
 ### Risk classes
 

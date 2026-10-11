@@ -4,6 +4,12 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Chapter 5: document ingestion (step 1 of the compliance-knowledge update)
+
+- New § Ingest documents the way you extract rules: the second pay statement goes through intake, extraction, verification against its pinned bytes, routing, and one KnowledgeArtifact record, so the age-window rule reads only supported facts. Forged, tampered, resubmitted, and instruction-carrying statements are refused. Figure 5-3 (`document-ingestion`) added.
+- New `document-ingestion` example (regions `record`, `verify`) with ten behavioural tests. `grounding-verifier`, adapted from Policy Logic Forge [R48] with credit, now admits a claim only on a literal span and records the evidence sliced from the bytes; two tests added. The guardrail and policy-to-rule tests gain the pay-statement age window.
+- R48 widened to the pinned commit c22dc450 and the elements the book points at; the 44% sentence and evidence row say "model-proposed" claims and "a single structural screen". One-line pointers added in Chapters 4, 6, 18, 20, 22, 24, 25 and Appendices C (KnowledgeArtifact) and H (KnowledgeArtifact, Verification status).
+
 ### Correctness validation, pass 2
 
 - Citations: evidence rows that cited a source beyond its scope are split into the sourced fact and a labelled book recommendation (Chapters 1, 6, 7, 9, 12, 13, 15, 21, 23, 25, 27); Chapter 21 no longer cites R06 for workload identity.

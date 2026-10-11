@@ -331,9 +331,9 @@
   {
     "id": "R48",
     "status": "verified_with_caveat",
-    "method": "direct inspection of ARCHITECTURE.md \u00a71.1 at the pinned commit",
+    "method": "direct inspection of a read-only clone at commit c22dc450 (2026-09-11): ARCHITECTURE.md, docs/, and the modules and tests named in the registry scope; nothing executed",
     "verified": "2026-10-11",
-    "caveat": "Book-authored project. The link is pinned to commit 393364f (4 September 2026), the latest change to ARCHITECTURE.md; \u00a71.1 states that one real run rejected 44% of dependency and conflict claims. The figure is self-reported and was not independently reproduced."
+    "caveat": "Book-authored project. Scope widened to the elements the book points at (registry supports text). The URL stays pinned to commit 393364f (4 September 2026), the latest change to ARCHITECTURE.md, whose content is identical at c22dc450; \u00a7\u00a71.1 and 2.3 state that one historical run rejected 44% of model-proposed dependency and conflict claims a single structural screen had accepted. The figure is self-reported and was not independently reproduced. The quality budget and decision-material claim classification are defined and tested but not wired into the pipeline stages."
   },
   {
     "id": "R49",

@@ -1862,7 +1862,7 @@ It applies deterministic eligibility before any optimization; Chapter 28 treats 
 | **Boundary** | **Treat as untrusted** | **Mandatory controls** | **Developed in** |
 | --- | --- | --- | --- |
 | User/tenant → platform | Prompts, attachments, callback URLs | AuthN, tenant binding, malware/content scan, request schema, quotas | Chapter 21 |
-| Knowledge → model | Documents, email, web text, OCR, metadata | Provenance, ACL filters before retrieval, instruction/data labeling, DLP | Chapter 6 |
+| Knowledge → model | Documents, email, web text, OCR, metadata | Provenance, ACL filters before retrieval, instruction/data labeling, DLP | Chapters 5–6 |
 | Model → orchestrator | Plans, arguments, classifications, generated code | Strict schema, allowlists, invariant checks, confidence/risk routing | Chapter 2 |
 | Orchestrator → tool | Requested action and delegated context | PDP decision, downscoped token, idempotency, dry-run/approval, audit | Chapters 21–22 |
 | Agent → agent | Claims, artifacts, status, requested authority | Authenticated channel, signed task envelope, scope intersection, limits | Chapters 18–19 |
@@ -2127,7 +2127,7 @@ The reference architecture names a knowledge, context, and memory plane but not 
 
 |  |
 | --- |
-| **WHERE THE MORTGAGE CASE STANDS** Harborlight's evidence agent can retrieve the underwriting policy and quote it accurately. It still recommends proceeding with an application whose property or income profile the policy excludes, because retrieving a sentence is not the same as being bound by it. The platform team stops adding documents to the index and starts treating policy as governed knowledge. |
+| **WHERE THE MORTGAGE CASE STANDS** Harborlight's evidence agent can retrieve the underwriting policy and quote it accurately. It still recommends proceeding with an application whose property or income profile the policy excludes, because retrieving a sentence is not the same as being bound by it. The platform team stops adding documents to the index and starts treating policy as governed knowledge. The second pay statement has arrived, and nothing yet tells a verified field from a model's reading of a PDF. |
 
 |  |
 | --- |
@@ -2426,7 +2426,7 @@ class CapabilityCatalog:
         return found[0]
 ```
 
-Filtering during discovery matters more than it looks. A capability the caller may not invoke should never appear (Chapter 8 § Discovery is not permission; AP-12), because a listed-but-forbidden tool is an invitation to try. The catalog does not own these entries; it indexes the Skill manifests of Chapter 8 and the ToolManifests of Chapter 22 for discovery, and every invocation still resolves against those registries.
+A capability the caller may not invoke should never appear (Chapter 8 § Discovery is not permission; AP-12), because a listed-but-forbidden tool is an invitation to try. The catalog does not own these entries; it indexes the Skill manifests of Chapter 8 and the ToolManifests of Chapter 22 for discovery, and every invocation still resolves against those registries.
 
 ### Process and decision models
 
@@ -2451,64 +2451,209 @@ Consider a policy sentence that says a pay statement is acceptable only within a
 
 **Extract** is the part a language model does well: find the rules, type their conditions and outcomes, record where each came from.
 
-**Prove** is the part that decides whether to believe it. The critical move is that verification does not trust the citation a rule carries; it rebuilds the evidence from the raw corpus and compares.
+**Prove** is the part that decides whether to believe it. The critical move is that verification does not trust the citation a rule carries; it re-opens the pinned source, admits the claim only if its quoted text is literally present in the cited span, and records the evidence sliced from those bytes.
 
-🐍 · Rebuilding a claim's evidence instead of trusting its citation
+🐍 · Admitting a claim only on a literal span of the bytes it cites
 
 ```python
+Status = Literal["supported", "contradicted", "insufficient_evidence"]
+HELD: Status = "insufficient_evidence"
+
+
 @dataclass(frozen=True)
 class Verdict:
-    grounded: bool
+    status: Status
     reason: str
+    evidence: str | None = None  # sliced from the pinned bytes, never from the claim
+
+    @property
+    def grounded(self) -> bool:
+        return self.status == "supported"
 
 
-def normalize(text: str) -> str:
-    return re.sub(r"\s+", " ", text).strip().lower()
+def _folded(text: str) -> tuple[str, list[int]]:
+    """Case- and whitespace-folded text, with each character's source offset."""
+    chars: list[str] = []
+    offsets: list[int] = []
+    for i, ch in enumerate(text):
+        if ch.isspace() and (not chars or chars[-1] == " "):
+            continue
+        chars.append(" " if ch.isspace() else ch.lower())
+        offsets.append(i)
+    return "".join(chars).rstrip(), offsets
 
 
-def verify(claim: str, source_ref, corpus: dict[str, str], *, min_overlap: float = 0.6) -> Verdict:
-    """Certify a claim against the corpus the citation points at.
+def verify(quote: str, source_ref, corpus: dict[str, str]) -> Verdict:
+    """Admit a claim only on a literal span of the bytes it cites.
 
-    Three ways to fail, checked in order, because a later check cannot be
-    trusted once an earlier one has failed.
+    Checked in order, because a later check cannot be trusted once an earlier
+    one has failed.
     """
     document = corpus.get(source_ref.document_id)
     if document is None:
-        return Verdict(False, f"cited document does not exist: {source_ref.document_id}")
-
+        return Verdict(HELD, "cited document does not exist")
     # The digest pins the document *version*. Without it, a rule extracted from
     # last year's policy still 'verifies' against this year's text.
     actual = hashlib.sha256(document.encode()).hexdigest()
-    if source_ref.source_sha256 not in {actual, "a" * 64}:  # test fixtures use a sentinel
-        return Verdict(False, "cited document has changed since extraction")
-
-    if source_ref.end_offset > len(document):
-        return Verdict(False, "cited span falls outside the document")
-
-    passage = normalize(document[source_ref.start_offset:source_ref.end_offset])
-    if not passage:
-        return Verdict(False, "cited span is empty")
-
-    # Content overlap, not string equality: extraction legitimately rewords.
-    claim_terms = set(normalize(claim).split())
-    passage_terms = set(passage.split())
-    if not claim_terms:
-        return Verdict(False, "claim is empty")
-    overlap = len(claim_terms & passage_terms) / len(claim_terms)
-    if overlap < min_overlap:
-        return Verdict(False, f"claim is not supported by the cited passage ({overlap:.0%} overlap)")
-    return Verdict(True, f"grounded at {overlap:.0%} overlap")
+    if source_ref.source_sha256 not in {actual, TEST_SENTINEL}:
+        return Verdict(HELD, "cited document has changed since extraction")
+    if not 0 <= source_ref.start_offset < source_ref.end_offset <= len(document):
+        return Verdict(HELD, "cited span falls outside the document")
+    span = document[source_ref.start_offset:source_ref.end_offset]
+    span_folded, offsets = _folded(span)
+    quote_folded, _ = _folded(quote.strip())
+    # Literal presence, not term overlap: a paraphrase that shares nine words in
+    # ten is still the model's sentence, not the source's.
+    at = span_folded.find(quote_folded) if quote_folded else -1
+    if at < 0:
+        return Verdict(HELD, "claim is not supported by the cited passage")
+    evidence = span[offsets[at]:offsets[at + len(quote_folded) - 1] + 1]
+    return Verdict("supported", "quoted text found in the cited span", evidence)
 ```
 
-A model that invents a rule will invent a plausible citation for it, so checking that a citation is well-formed proves nothing. Checking that the cited passage *says what the rule says* is a different operation, and it is the one that matters. In one run of the author's own compliance extraction pipeline built on this design, independent verification rejected 44% of the dependency and conflict claims that the pipeline's own deterministic guard had already accepted [R48]. That figure is author-reported: one measurement of one pipeline on one corpus, not a general rate. It is, however, the empirical case for making verification independent of extraction.
+The listing adapts the verifier of the reference implementation this chapter follows, the author's Policy Logic Forge repository [R48], whose grounding stage admits a verdict only when it names evidence resolved as literal text of the corpus. A model that invents a rule will invent a plausible citation for it, so checking that a citation is well-formed proves nothing. Checking that the cited passage *says what the rule says* is a different operation, and it is the one that matters. In one run of the author's own compliance extraction pipeline built on this design, independent verification rejected 44% of the model-proposed dependency and conflict claims that a single structural screen had already accepted [R48]. That figure is author-reported: one measurement of one pipeline on one corpus, not a general rate. It is, however, the empirical case for making verification independent of extraction.
 
 **Approve.** An eligible owner accepts the interpretation; the approval, the source digest, and the rule version are recorded together. Verification shows the rule matches the text; approval makes it the organization's rule.
 
 **Project** turns what survived into the standards-compliant models above, and into the constraints the runtime enforces at the effect boundary.
 
+The age-window rule now needs a fact: how old is the statement? That fact comes from a document too, and the next section puts it through the same discipline.
+
 |  |
 | --- |
 | **COMMON PITFALL**  Treating extraction confidence as grounding. A high-confidence rule with a fabricated citation is more dangerous than a low-confidence one, because it will pass review. Verify against the corpus, not against the model's own certainty. |
+
+## Ingest documents the way you extract rules
+
+An applicant's pay statement arrives through a channel the platform does not trust. Until it is verified it is not evidence; it is bytes.
+
+**Intake.** Intake computes the digest, inspects the content, classifies the kind with a confidence, records origin, tenant, case, ACL pointer, and retention class, and labels the artifact as data before any model sees it (Chapter 20's ingest row). Text and structure are derived from the bytes, with OCR only where a page has no text layer. The digest is authoritative; the text, like every index entry, is a projection carrying its source revision, ACL pointer, ingestion time, and deletion state. The extract, classify, ACL, chunk, embed, and index stages keep independent cursors, so a failed embedding never blocks an ACL deletion. A statement resubmitted under a new name has the first one's digest: it is the first statement again, not a second.
+
+**Extract and normalize.** A model proposes typed fields (employer, pay date, gross, deductions, net, year-to-date gross), each with its region, a confidence, and the extractor version: model route and prompt digest. Normalization puts the unit on the field, parses dates and money, and marks each value *extracted* (the document states it) or *derived* (the platform computed it, such as the statement's age in days). The document kind's schema, not the model, declares which fields are decision-material, and a field the schema does not declare is held, never guessed into place.
+
+🐍 · A document's fields verified against its bytes before they become facts
+
+```python
+Route = Literal["human_review", "targeted_repair", "case_management"]
+
+# Which fields can block is the platform's declaration, never the extractor's.
+PAY_STATEMENT = {"employer": True, "pay_date": True, "gross_pay": True,
+                 "deductions": True, "net_pay": True, "ytd_gross": True,
+                 "pay_statement_age_days": True, "employer_address": False}
+
+
+@dataclass(frozen=True)
+class DocumentRecord:
+    """Intake's record of the bytes: the digest is authoritative, text a projection."""
+
+    document_id: str
+    kind: str
+    sha256: str
+    source_revision: str
+    case_id: str
+    acl_ref: str
+    extractor_version: str  # model route and prompt digest
+    label: str = "data"     # the text is data, never instruction
+
+
+@dataclass(frozen=True)
+class ExtractedField:
+    name: str
+    value: Decimal | str | int
+    unit: str | None              # the unit lives on the field: "USD", "days"
+    origin: Literal["extracted", "derived"]
+    region: SourceRef | None = None   # extracted: where the document states it
+    quote: str = ""                   # extracted: the text the model says it read
+    inputs: tuple[str, ...] = ()      # derived: the fields it is computed from
+    confidence: float = 0.0           # recorded for evaluation, never used to decide
+
+
+@dataclass(frozen=True)
+class FieldVerdict:
+    name: str
+    status: Status
+    reason: str
+    route: Route | None = None
+
+
+def duplicate_of(record: DocumentRecord, seen: dict[str, str]) -> str | None:
+    """Same bytes under a new name are the earlier document, not a second one."""
+    return seen.get(record.sha256)
+```
+
+The gate in Figure 5-3 is Figure 5-2's: verification reads the bytes, not the extraction.
+
+[[DIAGRAM:document-ingestion|Figure 5-3 — Document ingestion: intake, extract, verify against the bytes, route, record, serve]]
+
+**Verify.** Verification re-opens the pinned bytes and checks, in order: the digest still matches; each extracted field's quoted text is literally present in its region, through the rule lane's verifier; the value parsed from those bytes, not from the model's quote, equals the record's; the record is internally consistent (net equals gross minus deductions, year-to-date is not below the period); and it agrees with the case, such as the employer on the application. Derived fields are checked against their verified inputs, never against text; no statement prints its own age. Each field receives exactly one verdict (supported, contradicted, or insufficient evidence); a verifier that skips a field leaves the run incomplete, and it fails closed. A document whose decision-material fields are not all supported yields no facts; a presentation field, such as an address, cannot block. Confidence plays no part: a confident value its region contradicts is contradicted, and an unsure one the bytes support is supported.
+
+🐍 · A document's fields verified against its bytes before they become facts
+
+```python
+def verify_document(record, fields, text, *, case, derive, verifier=ground):
+    if hashlib.sha256(text.encode()).hexdigest() != record.sha256:
+        held = {f.name: FieldVerdict(f.name, HELD, "bytes changed since extraction",
+                                     "case_management") for f in fields}
+        return Certification(record, held, complete=True, route="case_management")
+    out: dict[str, FieldVerdict] = {}
+    values: dict[str, object] = {}
+
+    def fail(names, status, why, route):
+        for n in names:
+            out[n] = FieldVerdict(n, status, why, route)
+
+    for f in (f for f in fields if f.origin == "extracted"):
+        v = verifier(f.quote, f.region, {record.document_id: text})
+        if v is None:
+            continue  # no verdict for this field: the run is incomplete
+        if not v.grounded:
+            fail([f.name], v.status, v.reason, "targeted_repair")
+        elif _parse(v.evidence, f.value) != f.value:  # the bytes decide, not the quote
+            fail([f.name], "contradicted", f"bytes say {v.evidence!r}", "human_review")
+        else:
+            values[f.name] = f.value
+    agree = [((k,), lambda g, k=k, e=e: g[k] == e, f"{k} disagrees with the case")
+             for k, e in case.items()]
+    for names, holds, why in (*CONSISTENCY, *agree):
+        if all(n in values for n in names) and not holds(values):
+            fail(names, "contradicted", why, "human_review")  # cannot tell which lies
+    for f in (f for f in fields if f.origin == "derived"):
+        if not all(n in values and n not in out for n in f.inputs):
+            fail([f.name], HELD, "an input is not supported", "case_management")
+        elif derive[f.name](values) != f.value:  # checked structurally, never as text
+            fail([f.name], "contradicted", "derivation disagrees", "human_review")
+        else:
+            values[f.name] = f.value
+    for f in fields:
+        if f.name not in PAY_STATEMENT:
+            fail([f.name], HELD, "not a declared field of this kind", None)
+        elif f.name in values and f.name not in out:
+            out[f.name] = FieldVerdict(f.name, "supported", "verified against bytes")
+    named = {f.name for f in fields}
+    fail([n for n, m in PAY_STATEMENT.items() if m and n not in named],
+         HELD, "nothing extracted", "targeted_repair")
+    complete = all(f.name in out for f in fields)  # one verdict per field
+    blocking = [v for v in out.values()
+                if PAY_STATEMENT.get(v.name) and v.status != "supported"]
+    route = next((r for r in PRIORITY if any(v.route == r for v in blocking)), None)
+    facts = {n: values[n] for n in values if out[n].status == "supported"}
+    return Certification(record, out, facts, complete, complete and not blocking, route)
+
+
+def facts_for_rules(cert: Certification) -> dict[str, object]:
+    """Only a servable document yields facts; anything else leaves the rule unknown."""
+    return dict(cert.values) if cert.servable else {}
+```
+
+|  |
+| --- |
+| **SECURITY AND GOVERNANCE**  Verification proves the document says it, not that it is true. An internally consistent forgery passes this gate; only an independent source, such as the payroll provider of Chapter 17 or a human reviewer, catches it. Record corroboration separately from verification, and never let a decision that needs the truth rest on verification alone. |
+
+**Route and record.** Findings route by kind. A contradiction goes to human review (an InterventionTask, Chapter 14). A field that could not be located goes to targeted repair, which re-extracts only that field and sends it back through the same gate. A missing input, or a kind the pipeline does not handle, goes to case management. A reviewer's correction is a new version with the reviewer's identity, and the model's value stays in history; a job that extracted nothing reports a finding, never success. Everything lands in one record, the **KnowledgeArtifact** named in the chapter's first table: kind (document, chunk, field, rule), source digest and region, extractor and verifier versions, per-field verdicts, corroboration, status and route, owner, version and supersedes, effective range, scope, ACL, and data class. A document record inherits the owner of its source system; the case owns its use. Status follows the knowledge lifecycle defined below, Draft through Revoked; *retired* is not a status but the retention event that follows deprecation or revocation. Deleting the source deletes the record, its history, and its derived facts through the lineage events Chapter 6 lists.
+
+**Version and re-process.** Three things change under a record: the bytes, whose digest mismatch invalidates every field; the extractor, as on Chapter 1's Friday; and the policy that consumes the fact. Re-processing is a diff, not an overwrite. Every field resolves to exactly one of changed, unchanged, review-held, or refused; nothing is dropped; only changed facts trigger re-evaluation; and a field under human review never resolves itself. A run pins the knowledge release it read, and the release lists the digest of every record in it, so a six-month-old decision can be reproduced with its evidence.
+
+At the effect boundary the enforced age-window rule reads `pay_statement_age_days` only from a servable record; until one exists, its missing-input refusal fires. A forged net goes to review, so the rule still sees *unknown*; altered bytes fail the digest check. The Tuesday instruction hidden in an upload is labelled text, not a declared field, so it reaches neither the rule nor the model as direction.
 
 ## Combine knowledge without flattening its differences
 
@@ -2631,12 +2776,11 @@ Every representation above is only as good as the metadata that says whether to 
 | Jurisdiction and scope | Whether it applies to this subject at all |
 | Provenance | The passage, offsets, and document digest it derives from: content provenance, distinct from the build provenance of released artifacts in Chapter 27 |
 | Confidence and status | Authoritative, inferred, or draft |
+| Verification and corroboration | Whether the source says it, and whether an independent source agrees |
 | Permissions and data class | Who may see it, and whether it may enter a prompt |
 | Lifecycle | Review cadence and expiry |
 
-The document digest deserves emphasis. Without it, a rule extracted from last year's policy still verifies against this year's text, and nothing in the system notices that the ground moved.
-
-Freshness follows from the same rule: the source revision is authoritative, and every index entry is a disposable projection that carries its source revision, ACL pointer, ingestion time, and deletion state. Ingestion runs as separate extract, classify, ACL, chunk, embed, and index stages with independent cursors, so a failed embedding never blocks an ACL deletion.
+The document digest deserves emphasis. Without it, a rule extracted from last year's policy still verifies against this year's text, and nothing in the system notices that the ground moved. Freshness follows from the same rule: the source revision is authoritative, and every index entry is a disposable projection of it (§ Ingest documents the way you extract rules).
 
 |  |
 | --- |
@@ -2657,7 +2801,7 @@ Agents must not hold connection strings to six stores. They ask one service, whi
 
 One query surface sits above all six. Permissions are enforced there, attribution is attached there, and an agent that asks for knowledge it may not have receives a refusal rather than a filtered answer.
 
-The Hub is the knowledge half of the knowledge, context, and memory plane (Chapter 4). It has two kinds of caller: the Context Service, which resolves pre-step context (Chapter 6), and read-only tools invoked through the Tool Gateway during a step (Chapter 3). Both reach the same permissions and attribution; neither holds store connections.
+Document ingestion fills the Semantic view with labelled text and supplies the facts the Normative view's rules evaluate; the enforced rule receives only supported facts. The Hub is the knowledge half of the knowledge, context, and memory plane (Chapter 4). It has two kinds of caller: the Context Service, which resolves pre-step context (Chapter 6), and read-only tools invoked through the Tool Gateway during a step (Chapter 3). Both reach the same permissions and attribution; neither holds store connections.
 
 |  |
 | --- |
@@ -2668,13 +2812,13 @@ The Hub is the knowledge half of the knowledge, context, and memory plane (Chapt
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | Standards scope | BPMN, DMN, CMMN, and SBVR are OMG specifications; each citation supports the existence and semantics of its own standard and nothing about its suitability for agentic systems. That assessment is book-authored. | R44; R45; R46; R47 |
-| Verification measurement | The 44% rejection figure is one run of one compliance pipeline on one corpus, reported in the book author's own implementation repository. It is evidence that independent verification finds real errors, not a general error rate for extraction. | R48 |
+| Verification measurement | On one documented run of the author's own pipeline, independent re-verification against the corpus rejected 44% of model-proposed dependency and conflict claims that a single structural screen had accepted. Evidence that structure checks are not grounding; not an error rate for extraction, rules, or documents. | R48 |
 
 The discussion above draws on R44; R45; R46; R47; R48. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
-The examples above are the reference implementation, and each is executed in continuous integration. Composed, they show the shape of the Hub: a rule extracted with provenance, verified against its corpus, placed in a graph, reconciled against a second source, and finally enforced at the effect boundary.
+The examples above are the reference implementation, and each is executed in continuous integration. Composed, they show the shape of the Hub: a rule extracted with provenance, verified against its corpus, placed in a graph, reconciled against a second source, and finally enforced at the effect boundary over facts a document yielded only after verification.
 
 ## If this fails in production
 
@@ -2686,6 +2830,8 @@ The examples above are the reference implementation, and each is executed in con
 | A conflict surfaces only after an incident | Contradictions resolved silently at merge | Does the union preserve per-source attribution? |
 | An agent selects a mutating tool for a read | Capability discovery filters on names, not effects | Does the catalog carry each capability's effect semantics and risk class (Chapter 22), and is discovery filtered on them? |
 | Provenance points at text that does not support the rule | Citation trusted rather than verified | Is verification rebuilding evidence from the corpus? |
+| A model's reading of a pay statement reaches a rule as a fact | Extraction served without verification | Does the effect boundary receive only supported fields? |
+| Extraction quality drops after a model change, unnoticed | Extractor version not recorded; no re-processing diff | Does each record carry its extractor version, and does a change produce a diff? |
 
 If the vector index is being treated as the source of truth, the repair is structural; see AP-09 in Chapter 17.
 
@@ -2698,6 +2844,8 @@ If the vector index is being treated as the source of truth, the repair is struc
 **✓** At least one rule is enforced at the effect boundary, with a test proving the effect does not run when it refuses.
 
 **✓** Missing inputs refuse rather than default to permitted.
+
+**✓** Every extracted field resolves to a region in a digest-pinned document and carries a verdict; every check has a consumer that can refuse.
 
 **✓** Union preserves per-source attribution; contradictions are escalated, never auto-resolved.
 
@@ -2713,6 +2861,7 @@ If the vector index is being treated as the source of truth, the repair is struc
 2. Find a question your retrieval system answers plausibly and wrongly. Identify which of the four consumption modes it actually needed.
 3. Compute the intersection of two overlapping policy sets in your domain. Inspect the differences before the union.
 4. Take a rule your agents are expected to follow and make it refuse an effect in a test.
+5. List the decision-material fields of one document your agents read, and write the consistency checks that would catch a forged one.
 
 ## Questions to bring to design review
 
@@ -2723,6 +2872,7 @@ If the vector index is being treated as the source of truth, the repair is struc
 | What happens when two authoritative sources disagree? | Contradiction is a first-class result |
 | Where is a policy enforced, as opposed to described? | Constraints exist outside the prompt |
 | What does the system do when a required input is missing? | Unknown is not silently treated as permitted |
+| How does a value from a document become a fact a rule may evaluate? | Through a verifier that re-opens the bytes, and a record that says so |
 | Can you reproduce a decision made six months ago? | Knowledge is versioned and pinned per run |
 
 ## Where this leads next
@@ -2785,7 +2935,7 @@ enterprise knowledge, and memory—and each passes every stage.
 | 2 · Candidate sources | Choose candidate sources, including memory, which passes its own policy gate | Searching corpora the purpose does not justify |
 | 3 · Authorize | Filter by tenant, subject, and resource ACL | The classic RAG leak: retrieving what the caller may not read |
 | 4 · Fetch pinned versions | Read immutable snapshots named in the RunManifest (Chapter 4) | A run that cannot be replayed because sources moved |
-| 5 · Classify and sanitize | Label each segment's kind and trust tier (see the hierarchy below), strip active content | Instructions embedded in retrieved documents |
+| 5 · Classify and sanitize | Label each segment's kind and trust tier (see the hierarchy below), re-check the data label assigned at ingestion (Chapter 5), strip active content | Instructions embedded in retrieved documents |
 | 6 · Deduplicate | Collapse near-identical chunks | One loud document crowding out the rest of the evidence |
 | 7 · Rank | Order by relevance, freshness, source authority and effective dates (Chapter 5) | Similarity alone deciding what the model believes |
 | 8 · Allocate tokens | Allocate tokens within per-section caps fixed before retrieval | Silent truncation dropping the constraint that mattered |
@@ -2877,7 +3027,7 @@ Working memory is run-scoped; long-term memory carries the obligations above.
 
 ### Who should own each decision
 
-The Conversation Service owns turns; the Workflow Projection Service owns canonical run state; the Context Service's assembler creates an ephemeral model-input projection; its Retrieval Broker, the client of the Chapter 5 Hub, queries governed knowledge; the Memory Service owns approved cross-run memory; the Provenance Service tracks lineage; and the Compaction Service produces source-linked summaries. No component can silently promote a conversation statement into workflow truth or long-term memory.
+The Conversation Service owns turns; the Workflow Projection Service owns canonical run state; the Context Service's assembler creates an ephemeral model-input projection; its Retrieval Broker, the client of the Chapter 5 Hub, queries governed knowledge, including the records Chapter 5's document ingestion produces; the Memory Service owns approved cross-run memory; the Provenance Service tracks lineage; and the Compaction Service produces source-linked summaries. No component can silently promote a conversation statement into workflow truth or long-term memory.
 
 ### The contracts between components
 
@@ -2902,7 +3052,7 @@ The Conversation Service owns turns; the Workflow Projection Service owns canoni
 | ContextManifest | context ID, run ID, RunManifest digest, node ID, step request ID, revision, policy version, per-section caps and allocation, ordered segments, omitted candidate IDs, redactions, manifest hash, created time |
 | ContextSegment | segment ID, kind and trust tier, source URI/revision, content hash, authorization decision ID, freshness, token count |
 | MemoryRecord | memory ID, tenant, subject/team scope, type, canonical value, provenance, confidence, consent, purpose allowlist, TTL, status, supersedes |
-| KnowledgeObject | source URI/revision, object/chunk IDs, text/blob reference, embedding version, metadata, ACL pointer, ingestion cursor, deletion state |
+| KnowledgeObject | source URI/revision, object/chunk IDs, text/blob reference, embedding version, metadata, ACL pointer, ingestion cursor, verification status, deletion state |
 | SummarySnapshot | input segment hashes, summary hash/reference, model/prompt version, coverage map, unresolved facts, expiry; immutable |
 
 There is one RunManifest per run and one ContextManifest per AgentStepRequest; the ContextManifest references the RunManifest digest. Tool results observed inside the step's loop are appended as tier-four segments in a new manifest revision recorded on each model span.
@@ -5988,11 +6138,11 @@ Every additional agent introduces another scheduler, context boundary, identity,
 
 [[DIAGRAM:supervisor-worker|Figure 18-1 — Supervisor/worker: narrowed child grants, an explicit fan-in contract, and durable cancellation]]
 
-Harborlight’s supervisor owns the evidence-package outcome and creates durable child tasks for document extraction, income verification, property review, and policy explanation. Each child receives only the capability, evidence, budget, deadline, and cancellation scope it needs.
+Harborlight’s supervisor owns the evidence-package outcome and creates durable child tasks for document extraction, income verification, property review, and policy explanation. The extraction child runs Chapter 5's document ingestion as a capability and returns a KnowledgeArtifact, not free text. Each child receives only the capability, evidence, budget, deadline, and cancellation scope it needs.
 
 Each child's authority is a *capability envelope*: the maximum actions, resources, purposes, data classes, regions, risk, cost, delegation depth, and lifetime it may use. The Task Service derives it from the parent's envelope by intersection and refuses any child envelope that is not a provable subset. Chapter 21 defines the envelope and gives the subset proof.
 
-Fan-in is explicit: wait for all, quorum, first valid, or fallback. Artifact conflicts use deterministic precedence, source freshness, confidence thresholds, or human resolution. Free-form conversation may help agents explain results, but it cannot replace task status, ownership, artifact, or effect records.
+Fan-in is explicit: wait for all, quorum, first valid, or fallback. Artifact conflicts use deterministic precedence, source freshness, verification status (Chapter 5), confidence thresholds, or human resolution. Free-form conversation may help agents explain results, but it cannot replace task status, ownership, artifact, or effect records.
 
 Nested delegation multiplies cost and risk. The Task Service caps depth, children, concurrency, total turns, total tokens, external calls, and wall-clock time across the entire task tree (the AP-11 correction). Parent cancellation propagates as durable intent; a child with an executing mutation must reconcile before acknowledging final cancellation (Chapter 22 § A reliable protocol for changing the outside world).
 
@@ -6674,7 +6824,7 @@ refuses it first, and how to recover.
 
 **Signals.** Ingestion anomalies, rank manipulation, source drift, failures that cluster on a new source.
 
-**Prevent.** Signed and approved ingestion with provenance (Chapter 5), source/index separation, ACLs, poisoning tests.
+**Prevent.** Signed and approved ingestion with provenance (Chapter 5 § Ingest documents the way you extract rules), source/index separation, ACLs, poisoning tests.
 
 **First deterministic refusal.** Context/memory: source, snapshot, and ACL filters admit only approved sources into the knowledge snapshot a run may read. They cannot see poison that arrived through an approved source; that residual risk falls to Chapter 5's independent verification and to the Recover step.
 
@@ -6823,7 +6973,7 @@ credential, or authorize a publication.
 
 | **Step** | **What the attacker tries** | **Control that must hold** | **Evidence to retain** |
 | --- | --- | --- | --- |
-| Ingest | Hide an instruction in a trusted-looking PDF | Malware/content inspection and provenance label mark the artifact as data | Source digest, detector version, classification |
+| Ingest | Hide an instruction in a trusted-looking PDF | Malware/content inspection and provenance label mark the artifact as data; the extraction record keeps the text as data, never a field (Chapter 5) | Source digest, detector version, classification |
 | Retrieve | Make the instruction rank beside relevant policy | ACL and task-scoped retrieval return only authorized fields and references | ContextManifest, source revision, ACL decision |
 | Reason | Convince the model that upload is part of verification | Typed output permits a proposal, not an arbitrary destination or capability | Model route, proposal hash, selected tool |
 | Dispatch | Turn the proposal into an external request | Policy re-checks subject, purpose, destination, data class, and risk | PolicyDecision, EgressGrant (Chapter 23) or denial |
@@ -7372,7 +7522,9 @@ discovery returns only what the run may use.
 | Operations | SLO, health endpoint, trace semantics, cost unit, deprecation date, support contact |
 
 Resolve the manifest at dispatch, not at import; a risk class that lives only in
-a reviewer's memory cannot be enforced.
+a reviewer's memory cannot be enforced. The enforced rules the gateway evaluates
+before dispatch (Chapter 5) read verified facts from KnowledgeArtifacts, never
+model output; the precondition/version field remains the resource-version check.
 
 ### Risk classes
 
@@ -8024,7 +8176,7 @@ human workflow, or effect recovery.
 | **Trace segment** | **Time and category** | **What the operator learns** | **Action or evidence** |
 | --- | --- | --- | --- |
 | Admission and queue | 3 min · queue | The run waited before any model work began | Queue age, capacity class, and assignment event |
-| Retrieval | 2 min · retry delay | The first context snapshot was stale and a second attempt ran | Index snapshot, ACL-filter count, freshness, query hash |
+| Retrieval | 2 min · retry delay | The first context snapshot was stale and a second attempt ran | Index snapshot, extraction record versions, ACL-filter count, freshness, query hash |
 | Approval | 4 min · human dwell | Human dwell dominated model latency | Proposal hash, approver role, wait and expiry timestamps |
 | Connector | 3 min · execution | The downstream call timed out after dispatch | Tool span, idempotency key, downstream request ID |
 | Effect ledger | open · reconciliation | The mortgage document request cannot yet be called successful or declined | LOS receipt or reconciliation case; no blind retry |
@@ -8060,7 +8212,7 @@ below is a child span or a linked asynchronous trace.
 | --- | --- |
 | Run | tenant, subject hash, agent/workflow/version set, purpose, risk class, status, budget, token and cost totals, stop reason, correlation ID |
 | Model | provider, model route/version, prompt-template hash, context-manifest hash, input/output tokens, latency, cache, finish/error type |
-| Retrieval | source/index snapshot, query hash, ACL-filter count, documents returned, freshness, latency |
+| Retrieval | source/index snapshot, extraction record versions, query hash, ACL-filter count, documents returned, freshness, latency |
 | Decision | kind (route, plan compile/revision, step disposition, acceptance, critique); candidates and eligibility removals; chosen option; validator or compiler reason; scorer/rubric versions for acceptance; plan digest/revision and replan diff; turn index, information gain, remaining budgets, stop reason |
 | Policy | policy bundle/version, decision ID, action/resource hash, decision, obligations, reason code, latency |
 | Tool | tool/version, risk class, arguments hash, grant ID, credential lease ID, idempotency key, retries, effect state (`effect.state`), effect receipt, artifact references, latency |
@@ -8567,6 +8719,7 @@ cause, and prefer deterministic code when the decision has become stable.
 | --- | --- | --- | --- |
 | Prompts | Omissions, conflicts, unsupported claims | Clarify responsibility, examples, evidence, stop rules | Golden/adversarial replay; behavior/policy review |
 | Context/RAG | Recall/precision, stale/poisoned source, injection correlation | ACL/freshness/ranking/dedup/token/source changes | Retrieval/faithfulness/security tests; data-owner approval |
+| Document extraction | Field accuracy on a labelled document set; review-route rate and verification rejections over a fixed denominator | Extractor or prompt version, consistency checks, verification thresholds | Re-extraction replay on golden documents; data-owner approval |
 | Memory | Correction, leakage, stale/poisoned retrieval | Eligibility, purpose, scope, TTL, verification, deletion | Privacy/security/longitudinal replay; memory-purpose approval |
 | Tools | Wrong choice/args, timeout/retry/unknown effect | Narrow schema/catalog, preconditions, idempotency/reconcile | Contract/failure/load/security; effect/permission approval |
 | Skills | Version-specific or inconsistent behavior | New immutable Skill/dependencies/examples/acceptance | Skill certification and domain owner |
@@ -9893,6 +10046,7 @@ Each contract has one owner and one defining chapter, as indexed in Chapter 4 §
 | Artifact | Producing run (bytes in the artifact store) | artifact ID, immutable version, schema, content hash, creator run/node/agent, source refs, classification, residency, retention | Chapter 4 |
 | Event (CloudEvent envelope) | Producing service, through its outbox | standard attributes plus tenant, correlation, and causation extensions (wire names `tenantid`, `correlationid`, `causationid`; CloudEvents allows only lowercase letters and digits) and `traceparent`; payload by `dataref` and `datahash` | Chapter 4 |
 | AgentStepRequest / AgentStepResult | Run Service builds the request; AgentRuntime returns the result | request: identity, behavior pins, ContextManifest, capabilities, bounds, output schema, trace; result: status (`completed`, `needs_input`, `proposed_action`, `failed`), payload, artifact refs, proposed action, usage, error | Chapter 3 |
+| KnowledgeArtifact | Knowledge Hub | kind, source digest and region, extractor and verifier versions, per-field verdicts, corroboration, status and review route, owner, version/supersedes, effective range, scope, ACL and data class | Chapter 5 |
 | ContextManifest | Context Service | RunManifest digest, node, step request ID, revision, policy version, section caps and allocation, ordered segments (kind, trust tier, source revision, hash, authorization decision), omitted candidates, redactions, manifest hash | Chapter 6 |
 | MemoryRecord | Memory Service | tenant, subject/team scope, type, value, provenance, confidence, consent, purpose allowlist, TTL, status, supersedes | Chapter 6 |
 | Skill manifest | Skill owner; Skill Registry | interface schemas, instructions, required tools and knowledge, data-class and region policy, `risk_ceiling`, evaluation suite and gates, owner, digest; lifecycle lives in SkillRelease | Chapter 8 |
@@ -10093,6 +10247,7 @@ Chapter 1 § The vocabulary this book assumes introduces the core terms; this gl
 | Idempotency key | A stable identifier the platform derives from tenant, run, and logical effect and binds to an intent hash; passed to a downstream system that supports one so it recognizes a repeated request as the same request. The model never chooses it | 22 |
 | InterventionRequired | Run, task, or effect state used when correctness cannot be established automatically; it opens an intervention task | 15, 22 |
 | Intervention task | A typed request for human help with an uncertain run; its response is an input to the run and never approves an effect | 14 |
+| KnowledgeArtifact | The Knowledge Hub's record of a governed artifact (document, chunk, extracted field, or rule) with its source digest and region, versions, verdicts, owner, and scope | 5 |
 | Layer | A deployable unit of the architecture (for example, Model access or Durable execution); layers serve the planes | 4 |
 | LLM Gateway | Control point that decides which model may answer under which data policy, and enforces model routing, privacy, budgets, and evidence | 4 |
 | MCP Gateway | Control point that terminates MCP and decides whether an external server and tool are trusted and eligible | 19 |
@@ -10115,6 +10270,7 @@ Chapter 1 § The vocabulary this book assumes introduces the core terms; this gl
 | Unknown | Effect state when a mutation may have reached the downstream system and the platform holds neither a receipt nor proof of absence; it blocks retry and dependent work | 22 |
 | Use-case tier (T0–T4) | Classification of a whole use case that sets governance and release depth; never lower than its most dangerous eligible effect requires | 26 |
 | ValidationReport | The release evidence for one candidate: evaluation comparisons, other test results, and slice regressions | 25 |
+| Verification status | A claim's or field's verdict against its pinned source: supported, contradicted, or insufficient evidence. It shows the source says it, not that it is true; corroboration by an independent source is recorded separately | 5 |
 | Workflow execution | The durable, replayable history that owns a run's state; one active execution per run generation | 15 |
 
 # Appendix I — Companion Implementation Guide: Harborlight Mortgage
@@ -10406,7 +10562,7 @@ References are numbered by stable registry identifier. Each citation supports on
 * **[R36]** Pydantic (n.d.). *Pydantic AI: Durable Execution*. Current documentation. [Primary or authoritative source](https://pydantic.dev/docs/ai/capabilities/durable_execution/overview). Accessed 11 October 2026. **Supports:** Documents typed agent integration with durable-execution backends.
 * **[R37]** Dapr (2026). *Dapr Agents*. Current documentation. [Primary or authoritative source](https://docs.dapr.io/developing-ai/dapr-agents). Accessed 11 October 2026. **Supports:** Documents Dapr agent integration with workflows, actors, state, messaging, resiliency, and telemetry.
 * **[R38]** DBOS (n.d.). *DBOS AI Quickstart*. Current documentation. [Primary or authoritative source](https://docs.dbos.dev/ai/ai-quickstart). Accessed 11 October 2026. **Supports:** Documents durable long-running agent workflows, queues, waits, and framework integrations.
-* **[R48]** Rahimi, R. (2026). *Policy Logic Forge: compiling compliance policy text into typed, source-grounded executable decision logic*. ARCHITECTURE.md §1.1 at commit 393364f. [Primary or authoritative source](https://github.com/rrahimi-uci/policy-logic-forge/blob/393364fae6700c10f4f6f7f024e67a63631a2f9a/ARCHITECTURE.md#11-the-evidence-spine). Accessed 11 October 2026. **Supports:** Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction.
+* **[R48]** Rahimi, R. (2026). *Policy Logic Forge: compiling compliance policy text into typed, source-grounded executable decision logic*. Repository at commit c22dc450 (2026-09-11): ARCHITECTURE.md §§ 1.1, 2.1, 2.3, 2.4, 2.5, 5, 5.1, 6, 6.4; docs/ir-semantics-v1.md; docs/executable-models.md; docs/smt-query-protocol.md; technical-report/report.tex § Scope and limitations; and the modules and tests named in the supports text. [Primary or authoritative source](https://github.com/rrahimi-uci/policy-logic-forge/blob/393364fae6700c10f4f6f7f024e67a63631a2f9a/ARCHITECTURE.md#11-the-evidence-spine). Accessed 11 October 2026. **Supports:** Book-authored implementation. Supports (1) the reported measurement that, on one documented historical run, independent grounding verification rejected 44% of model-proposed dependency and conflict claims that a single structural screen had already accepted (ARCHITECTURE.md §§ 1.1, 2.3) — a measurement of relationship claims on one run, not an error rate for rules, fields, extraction, or any other system; and (2) the existence in the repository at the pinned commit of the following architectural elements, each attributable only as what the named component does: a build-time, thirteen-stage, checkpointed extraction pipeline with no runtime consumer, whose exit-code contract distinguishes data-quality review from failure and in which a stage may never exit 0 for work it did not do (§§ 2.1, 2.4; cli/extract.py; tests/test_pipeline_end_to_end.py); per-chunk and per-corpus content digests and per-field source references with evidence spans whose offsets are excerpt-local (utils/kg_readiness.py; utils/rule_contract.py; docs/ir-semantics-v1.md); four deterministic readiness invariants gated on blocking defects alone, with evidence gaps held rather than failed (§ 2.3 agent_07; utils/kg_readiness.py); targeted remediation of only the failed fields (§ 2.3 agent_08); review routing in which only a positive contradiction or an explicit judgment finding enters the human queue, contract defects go to machine repair and evidence gaps to case management (utils/semantic_routing.py; docs/executable-models.md); independent claim-level grounding that rebuilds evidence from the corpus, admits a supported or contradicted verdict only when it names an evidence record resolved as literal corpus text, records the quote from that record, verifies derived values structurally, and treats verifier completeness as a fail-closed check distinct from verdict counts (§ 2.3 agent_09; agents/agent_09_grounding_verifier.py; utils/citations.py); a grounding certificate bound to the corpus and graph hashes, and intermediate results keyed by a content fingerprint and rejected when it changes (§ 2.5; agent_09 certification_issues); exact-duplicate merge with evidence union (§ 2.3 agent_06); typing from declared units and value sets with refinement reported separately from contradiction, model validation that reports and never repairs, and a fail-closed unresolved concept kind in an SBVR-aligned vocabulary profile that is explicitly not full interchange (§ 2.3 agent_12; § 6.4; utils/information_model.py); fail-closed lowering in which a rule is emitted completely or refused with a typed reason, Kleene three-valued evaluation in which a missing input is unknown and unknown at a table boundary means refuse, a conflict between rules refused rather than adjudicated, decision-table hit-policy obligations proved by bounded enumeration on finite domains with unknown and timeout never a pass, and refusal of any rule whose scope needs jurisdiction, party or date context the evaluator does not have (docs/ir-semantics-v1.md; docs/smt-query-protocol.md; utils/feel.py; tests/test_feel.py; tests/test_hit_policy_proofs.py); fail-closed DMN and BPMN projections in which BPMN is emitted only for source-explicit ordered process semantics (§ 6; utils/executable_models.py; utils/semantic_routing.py); version-to-version change detection that aligns rules by exact id then by unique source citation, classifies change ignoring provenance, propagates impact over the dependency graph, resolves every rule to exactly one of changed, unchanged, unresolved-review or refused with held rules never auto-resolved and kept in every denominator, and states full replay as the oracle (§ 5; utils/regdelta_engine.py; utils/rule_alignment.py; utils/semantic_diff.py; utils/impact_propagation.py); a fixed-denominator quality budget with an integer floor and reconciled cohorts, and a decision-material claim classification, both defined and tested but not wired into the stages (utils/quality_budget.py; utils/claim_admission.py); the documented limit that scope dimensions outside a hard-coded allowlist are refused (§ 5.1); and the repository's own stated limits (technical-report/report.tex § Scope and limitations). Does not support: any general error rate for language-model extraction; any claim about document or OCR extraction accuracy; any claim about runtime enforcement, releases, approval, activation, promotion, rollback, per-run pinning or a knowledge registry (the repository has none); the counts in quality-baselines/, the refinement counts, compile rates or research results unless this entry is widened to name them; or any claim about systems other than the documented runs.
 * **[R55]** Anthropic (n.d.). *Agent SDK overview*. Current documentation. [Primary or authoritative source](https://code.claude.com/docs/en/agent-sdk/overview). Accessed 11 October 2026. **Supports:** Documents the Claude Agent SDK as Claude Code's agent loop packaged as a Python and TypeScript library with built-in tools, hooks, subagents, MCP, permissions, and sessions. Does not support maturity, cost, or enterprise-governance claims.
 * **[R56]** Anthropic (n.d.). *Claude Managed Agents overview*. Current documentation (beta). [Primary or authoritative source](https://platform.claude.com/docs/en/managed-agents/overview). Accessed 11 October 2026. **Supports:** Documents Managed Agents as a hosted agent harness in beta: agents, environments (Anthropic-managed or self-hosted sandboxes), sessions, and server-sent events with persisted history, intended for long-running work. Does not support production-readiness or cost claims.
 * **[R57]** CrewAI (n.d.). *CrewAI documentation: Introduction*. Current documentation (v1.15.27 at access). [Primary or authoritative source](https://docs.crewai.com/en/introduction). Accessed 11 October 2026. **Supports:** Documents Crews of role-playing agents and event-driven Flows. Does not support durability, permission, trace, or effect-semantics claims.
@@ -10465,7 +10621,7 @@ This matrix defines exactly what each citation is permitted to support. It preve
 | R45 | standard | Defines DMN decision tables, hit policies, and FEEL. Supports the existence and semantics of the standard only, not any claim about agent decision quality. | Verified 2026-10-11; re-check living sources before use. |
 | R46 | standard | Defines CMMN case modelling for unordered, event-driven work. Supports the existence and semantics of the standard only. | Verified 2026-10-11; re-check living sources before use. |
 | R47 | standard | Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only. | Verified 2026-10-11; re-check living sources before use. |
-| R48 | framework documentation | Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction. | Verified 2026-10-11; re-check living sources before use. |
+| R48 | framework documentation | Book-authored implementation. Supports (1) the reported measurement that, on one documented historical run, independent grounding verification rejected 44% of model-proposed dependency and conflict claims that a single structural screen had already accepted (ARCHITECTURE.md §§ 1.1, 2.3) — a measurement of relationship claims on one run, not an error rate for rules, fields, extraction, or any other system; and (2) the existence in the repository at the pinned commit of the following architectural elements, each attributable only as what the named component does: a build-time, thirteen-stage, checkpointed extraction pipeline with no runtime consumer, whose exit-code contract distinguishes data-quality review from failure and in which a stage may never exit 0 for work it did not do (§§ 2.1, 2.4; cli/extract.py; tests/test_pipeline_end_to_end.py); per-chunk and per-corpus content digests and per-field source references with evidence spans whose offsets are excerpt-local (utils/kg_readiness.py; utils/rule_contract.py; docs/ir-semantics-v1.md); four deterministic readiness invariants gated on blocking defects alone, with evidence gaps held rather than failed (§ 2.3 agent_07; utils/kg_readiness.py); targeted remediation of only the failed fields (§ 2.3 agent_08); review routing in which only a positive contradiction or an explicit judgment finding enters the human queue, contract defects go to machine repair and evidence gaps to case management (utils/semantic_routing.py; docs/executable-models.md); independent claim-level grounding that rebuilds evidence from the corpus, admits a supported or contradicted verdict only when it names an evidence record resolved as literal corpus text, records the quote from that record, verifies derived values structurally, and treats verifier completeness as a fail-closed check distinct from verdict counts (§ 2.3 agent_09; agents/agent_09_grounding_verifier.py; utils/citations.py); a grounding certificate bound to the corpus and graph hashes, and intermediate results keyed by a content fingerprint and rejected when it changes (§ 2.5; agent_09 certification_issues); exact-duplicate merge with evidence union (§ 2.3 agent_06); typing from declared units and value sets with refinement reported separately from contradiction, model validation that reports and never repairs, and a fail-closed unresolved concept kind in an SBVR-aligned vocabulary profile that is explicitly not full interchange (§ 2.3 agent_12; § 6.4; utils/information_model.py); fail-closed lowering in which a rule is emitted completely or refused with a typed reason, Kleene three-valued evaluation in which a missing input is unknown and unknown at a table boundary means refuse, a conflict between rules refused rather than adjudicated, decision-table hit-policy obligations proved by bounded enumeration on finite domains with unknown and timeout never a pass, and refusal of any rule whose scope needs jurisdiction, party or date context the evaluator does not have (docs/ir-semantics-v1.md; docs/smt-query-protocol.md; utils/feel.py; tests/test_feel.py; tests/test_hit_policy_proofs.py); fail-closed DMN and BPMN projections in which BPMN is emitted only for source-explicit ordered process semantics (§ 6; utils/executable_models.py; utils/semantic_routing.py); version-to-version change detection that aligns rules by exact id then by unique source citation, classifies change ignoring provenance, propagates impact over the dependency graph, resolves every rule to exactly one of changed, unchanged, unresolved-review or refused with held rules never auto-resolved and kept in every denominator, and states full replay as the oracle (§ 5; utils/regdelta_engine.py; utils/rule_alignment.py; utils/semantic_diff.py; utils/impact_propagation.py); a fixed-denominator quality budget with an integer floor and reconciled cohorts, and a decision-material claim classification, both defined and tested but not wired into the stages (utils/quality_budget.py; utils/claim_admission.py); the documented limit that scope dimensions outside a hard-coded allowlist are refused (§ 5.1); and the repository's own stated limits (technical-report/report.tex § Scope and limitations). Does not support: any general error rate for language-model extraction; any claim about document or OCR extraction accuracy; any claim about runtime enforcement, releases, approval, activation, promotion, rollback, per-run pinning or a knowledge registry (the repository has none); the counts in quality-baselines/, the refinement counts, compile rates or research results unless this entry is widened to name them; or any claim about systems other than the documented runs. | Verified 2026-10-11; re-check living sources before use. |
 | R49 | research | Presents AutoGen, a framework in which multiple agents converse using LLMs, human input, and tools. Supports only the description of multi-agent conversation as a composition mechanism. | Verified 2026-10-11; re-check living sources before use. |
 | R50 | research | Introduces an eight-environment agent benchmark and reports wide performance differences between models, attributed mainly to weak long-term reasoning, decision-making, and instruction following. | Verified 2026-10-11; re-check living sources before use. |
 | R51 | research | Introduces 466 real-world questions that are simple for humans but require tools, browsing, and multimodality, and reports a large human-versus-model gap. | Verified 2026-10-11; re-check living sources before use. |

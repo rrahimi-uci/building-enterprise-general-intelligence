@@ -43,3 +43,27 @@ def test_identity_is_by_content_so_two_extractions_agree():
 def test_a_different_threshold_is_a_different_rule():
     changed = rule(conditions=(Predicate("requested_ltv", ">", Decimal("0.90")),))
     assert changed.digest() != rule().digest()
+
+
+# The chapter's worked sentence. The 60-day window is illustrative only.
+AGE_SENTENCE = ("A pay statement older than 60 days at review is not acceptable "
+                "as income evidence.")
+AGE_CORPUS = {"mortgage_underwriting_policy": f"3.1 Income evidence. {AGE_SENTENCE}"}
+
+
+def test_the_pay_statement_sentence_becomes_a_scoped_rule_that_cites_itself():
+    from examples.knowledge.grounding_verifier import verify
+
+    text = AGE_CORPUS["mortgage_underwriting_policy"]
+    start = text.index("A pay")
+    age_rule = rule(
+        rule_id="r_pay_statement_age", modality="prohibition",
+        conditions=(Predicate("pay_statement_age_days", ">", 60),),
+        outcome=Predicate("income_evidence_acceptable", "=", False),
+        responsible_party="evidence_review",
+        source=SourceRef("mortgage_underwriting_policy", "sec_3_1", start,
+                         start + len(AGE_SENTENCE), "a" * 64),
+    )
+    assert age_rule.source.excerpt(AGE_CORPUS) == AGE_SENTENCE
+    assert verify(AGE_SENTENCE, age_rule.source, AGE_CORPUS).grounded
+    assert age_rule.digest() != rule().digest()

@@ -210,6 +210,14 @@
       "sha256": "ac91b545ca98a1d14b783ed670bc0b2055edc81a30aeadd3c5f28339e0354ca8"
     },
     {
+      "id": "document-ingestion",
+      "file": "assets/diagrams/document-ingestion.png",
+      "source": "assets/diagrams/src/document-ingestion.gv",
+      "vector": "assets/diagrams/document-ingestion.pdf",
+      "description": "A pay statement's bytes and digest pass intake (scan, classify, ACL, label as data), then a language model proposes typed fields with regions, units, confidence, and extractor version; independent verification re-opens the pinned bytes and checks literal spans, internal consistency, and agreement with the case; supported records become a KnowledgeArtifact that feeds the Semantic view as labelled data and the enforced rule as facts, while contradicted or unverifiable fields are routed to human review, targeted repair of one field, or case management and are not served; an extractor or policy change produces a diff rather than an overwrite",
+      "sha256": "d57684b97ed7874335c38561cff24f81032a4567e9568d9f3a3c31a9b1183502"
+    },
+    {
       "id": "portability",
       "file": "assets/diagrams/portability.png",
       "source": "assets/diagrams/src/portability.gv",
