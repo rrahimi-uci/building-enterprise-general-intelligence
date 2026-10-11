@@ -2,7 +2,7 @@
 
 Baseline `6ebbc8b`; checked 2026-10-10. Every registered URL received an HTTP HEAD request following redirects (`curl -L -I`, 12-second timeout). These are access results from this client, **not content-support verification**. Non-200 responses may be anti-bot, subscription or HEAD-specific behavior; do not call them broken without a GET/official-source check.
 
-Result: 54/54 attempted; HEAD statuses 200: 49, 202: 1, 403: 3, 404: 1.
+Result: 54/54 attempted; HEAD statuses 200: 49, 202: 1, 403: 3, 404: 1. [Post-sweep note, 2026-10-11: the registry now holds 58 references. R55–R58 (Claude Agent SDK overview, Claude Managed Agents overview, CrewAI introduction, Restate documentation) were registered by the corrective PR after this sweep and are not in the table below; their 2026-10-10 verification records are in `config/reference-verification.json`. R39 returned 200 on a 2026-10-10 re-check (see below).]
 
 | ID | HEAD | Registry URL |
 | --- | ---: | --- |
@@ -66,7 +66,7 @@ Result: 54/54 attempted; HEAD statuses 200: 49, 202: 1, 403: 3, 404: 1.
 - **R13:** HEAD returned 404 at the DOI resolver, but a redirected GET returned 200 at the [official NIST PDF](https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf); [NIST's publication page](https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence) confirms the DOI. Not a broken reference.
 - **R14:** ISO returned 403 to this automated client. Access was not proven broken or claim support proven; a human browser/authorized standards access is needed.
 - **R21:** MLflow returned 403 to this automated client; the [official MLflow 3.15.2 release page](https://mlflow.org/releases/3.15.2/) was independently discoverable via web indexing, and the pinned package installed and tests ran. Access restriction is not proof of a bad URL.
-- **R39:** EUR-Lex returned 202 to HEAD, which is an accepted response rather than a loaded document. Verify the legal text in a browser before legal reliance.
+- **R39:** EUR-Lex returned 202 to HEAD, which is an accepted response rather than a loaded document. Verify the legal text in a browser before legal reliance. [Re-checked 2026-10-10 during the corrective PR's spot-check: HEAD now returns 200. The 202 was transient server behaviour, not a URL problem.]
 - **R43:** DOI resolved to the publisher but returned 403 to this client. The [DOI record](https://doi.org/10.1287/opre.9.3.383) and paper title were checked separately; full text may require access.
 
 No HEAD result certifies the reference's author, year, version, or support for every book claim. The substantive scope findings are in [evidence-ledger.md](evidence-ledger.md).

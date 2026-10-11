@@ -38,3 +38,5 @@
 **Recommended correction:** In a subsequent manuscript/metadata PR, synchronize `config/book.json` to canonical H1 titles and add a validator that asserts title equality across manuscript, book metadata and cover spec. Do not alter titles in this review-only PR.
 
 **Second-pass critique:** Do not claim a DOCX/LaTeX heading defect from this mismatch alone; current renderer code reads headings from assembled Markdown. The risk is stale metadata and future integrations, not proven current page text.
+
+**Disposition (2026-10-11):** confirmed — the 22 `config/book.json` titles listed above are synchronized with the manuscript H1s, and `tools/validate_book.py` now asserts title equality across the manuscript, `config/book.json` and `config/chapter-covers.json` for all 28 chapters, reporting `checks.chapter_title_mismatches` (0 on this branch) and failing `make validate` on any drift; a negative test with an induced mismatch confirmed the failure path (this corrective PR). No renderer reads `structure.chapters[*].title`, so no rendered page changed.

@@ -45,6 +45,8 @@ Any displayed arithmetic/formulas were checked against their stated assumptions 
   **Evidence:** Probability of k successes is `P(A1∩…∩Ak)`, equal to `p^k` only under the stated assumptions.
   **Recommended correction:** Measure empirical all-k pass on paired repeated trajectories; allow `p^k` only as an explicitly labeled IID approximation.
 
+  **Disposition (2026-10-11):** confirmed-adjusted — :391 now defines repeated-run reliability "as the share of tasks that pass on all k repeated trials (pass^k)", computed "from the trials themselves rather than raising a single-run pass rate to the k, which assumes independent trials". No citation was added: R53's registered scope does not cover the metric's definition (this corrective PR).
+
 ## Terminology and Consistency Issues
 
 Compared key terms with adjacent chapters and Appendix H; no separate terminology issue confirmed unless recorded below.
@@ -65,4 +67,4 @@ No separate confirmed finding in this category during this pass; absence of a fi
 
 ## Recommended Corrections
 
-1. Measure empirical all-k pass on paired repeated trajectories; allow `p^k` only as an explicitly labeled IID approximation.
+1. Measure empirical all-k pass on paired repeated trajectories; allow `p^k` only as an explicitly labeled IID approximation. (applied: empirical definition adopted; the p^k shortcut is named with its independence assumption rather than offered as an approximation)

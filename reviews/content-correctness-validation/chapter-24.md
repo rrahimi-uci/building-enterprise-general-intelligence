@@ -61,6 +61,8 @@ No high-confidence typo requiring a prose edit was confirmed in this chapter. Th
   **Evidence:** Worked table explicitly says the effect ledger is open; source/parts/04-part-iv.md:1002 says a run reaches Succeeded only through executable acceptance.
   **Recommended correction:** Call it time to intervention/unresolved effect, or add subsequent reconciliation and its elapsed time before saying completed.
 
+  **Disposition (2026-10-11):** confirmed-adjusted — wording fix: the review "took twelve minutes to return its summary"; the connector timeout leaves the "effect record **Unknown**, so the run cannot close (Chapter 15 § Terminal correctness)"; and the Connector row's category is narrowed to "execution" so reconciliation time is not counted twice. The arithmetic was correct, so "Confirmed Error" overstated the defect: it was an inconsistency between "completed" and an open effect ledger, not a wrong number (this corrective PR).
+
 - **Location:** Trace and replay semantics, source/parts/07-part-vii.md:164
   **Status:** Potential Issue; **Category:** Internal consistency; **Severity:** Medium; **Confidence:** High.
   **Current content:** A fork may reauthorize external effects, followed by 'None of the three may create a live effect.'
@@ -68,7 +70,9 @@ No high-confidence typo requiring a prose edit was confirmed in this chapter. Th
   **Evidence:** Chapter 4's `:fork` is a new run; Chapter 22 requires new authorization and effect identity for live mutations.
   **Recommended correction:** Say replay/diagnostic replay never create live effects; a fork can do so only as a separately authorized new run under Chapter 22.
 
+  **Disposition (2026-10-11):** confirmed — a fork is now "a sandbox run from a checkpoint with explicitly changed versions; its external effects are mocked or read-only"; work that must change the outside world again "is a new, separately authorized run under Chapter 22, not a replay", started through `POST /v1/runs`. Both the semantics bullet (:164) and the trace-API paragraph were aligned, so the blanket "none of the three may create a live effect" no longer conflicts with reauthorization (this corrective PR).
+
 ## Recommended Corrections
 
-1. Call it time to intervention/unresolved effect, or add subsequent reconciliation and its elapsed time before saying completed.
-2. Say replay/diagnostic replay never create live effects; a fork can do so only as a separately authorized new run under Chapter 22.
+1. Call it time to intervention/unresolved effect, or add subsequent reconciliation and its elapsed time before saying completed. (applied: first alternative; the twelve minutes are now time to the returned summary with the run explicitly unable to close)
+2. Say replay/diagnostic replay never create live effects; a fork can do so only as a separately authorized new run under Chapter 22. (applied)

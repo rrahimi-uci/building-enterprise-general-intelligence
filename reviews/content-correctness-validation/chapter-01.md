@@ -19,6 +19,8 @@ No separate confirmed finding in this category during this pass; absence of a fi
   **Evidence:** Technical distinction: an LLM can emit an abstention token or response while still lacking an independent correctness guarantee.
   **Recommended correction:** Qualify as no reliable built-in ground-truth check; distinguish abstention behavior from epistemic certainty.
 
+  **Disposition (2026-10-11):** confirmed-adjusted — Chapter 1 § Level one (`source/parts/01-part-i.md:169`) now reads "It has no reliable way of knowing what it does *not* know" (this corrective PR); the overbroad "no mechanism for *not knowing*" is withdrawn, and the finding's Low severity stands. Two Chapter 1 rows the review did not flag were also corrected alongside A-H1 and A-H2: the Tool Gateway control-point row (:431) no longer says "exactly once", and the vocabulary row (:346) defines the idempotency key as platform-derived.
+
 ## Missing or Weak References
 
 Citation presence was checked, but not every cited page was independently re-read against every attached clause. Any unsupported broad claim identified is listed under Claims Requiring Validation.
@@ -61,4 +63,4 @@ No separate confirmed finding in this category during this pass; absence of a fi
 
 ## Recommended Corrections
 
-1. Qualify as no reliable built-in ground-truth check; distinguish abstention behavior from epistemic certainty.
+1. Qualify as no reliable built-in ground-truth check; distinguish abstention behavior from epistemic certainty. (applied)
