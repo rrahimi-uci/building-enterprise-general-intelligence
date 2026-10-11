@@ -437,7 +437,7 @@ An enterprise never has one knowledge base. It has a regulator's and its own, la
 
 | Operation | Meaning | What an agent may do with the result |
 | --- | --- | --- |
-| Intersection | Asserted by both sources | Highest-confidence knowledge; safe to act on |
+| Intersection | Asserted by both sources | Corroborated, not verified; the scope, freshness, and permission checks below still apply before action |
 | Difference | Asserted by one source only | Scope-dependent; requires a jurisdiction check first |
 | Union | Every distinct rule, with per-source attribution | Complete coverage; conflicts still possible |
 | Contradiction | Rules that cannot both be satisfied | Stop, escalate, and never resolve automatically |
@@ -757,7 +757,7 @@ There is one RunManifest per run and one ContextManifest per AgentStepRequest; t
 
 |  |
 | --- |
-| **PERFORMANCE AND COST**  Measure answer quality against context size — most systems are past the point where more retrieval helps. |
+| **PERFORMANCE AND COST**  Measure answer quality against context size on your own workload. Past some point more retrieval adds tokens and distractors without adding accuracy; only measurement shows where that point is. |
 
 ## What the evidence lets us conclude
 

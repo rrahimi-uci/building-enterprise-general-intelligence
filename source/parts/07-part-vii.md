@@ -75,11 +75,12 @@ resumptions, and fan-out do not form one in-process call stack.
 
 ### Worked example — diagnosing a slow mortgage-evidence review
 
-Harborlight reports that a mortgage evidence review took twelve minutes. The
-summary looks plausible, so a request log alone would make the incident appear
-closed. The causal trace instead shows a three-minute queue wait, two retrieval
-attempts caused by a stale index, a four-minute human approval wait, and a
-loan-origination connector timeout whose effect record is **Unknown**. The
+Harborlight reports that a mortgage evidence review took twelve minutes to
+return its summary. The summary looks plausible, so a request log alone would
+make the incident appear closed. The causal trace instead shows a three-minute
+queue wait, two retrieval attempts caused by a stale index, a four-minute human
+approval wait, and a loan-origination connector timeout whose effect record is
+**Unknown**, so the run cannot close (Chapter 15 § Terminal correctness). The
 operator now has a safe next step: reconcile the LOS before retrying, then
 decide whether the latency problem belongs to capacity, retrieval freshness,
 human workflow, or effect recovery.
@@ -89,7 +90,7 @@ human workflow, or effect recovery.
 | Admission and queue | 3 min · queue | The run waited before any model work began | Queue age, capacity class, and assignment event |
 | Retrieval | 2 min · retry delay | The first context snapshot was stale and a second attempt ran | Index snapshot, ACL-filter count, freshness, query hash |
 | Approval | 4 min · human dwell | Human dwell dominated model latency | Proposal hash, approver role, wait and expiry timestamps |
-| Connector | 3 min · execution and reconciliation | The downstream call timed out after dispatch | Tool span, idempotency key, downstream request ID |
+| Connector | 3 min · execution | The downstream call timed out after dispatch | Tool span, idempotency key, downstream request ID |
 | Effect ledger | open · reconciliation | The mortgage document request cannot yet be called successful or declined | LOS receipt or reconciliation case; no blind retry |
 
 The first divergent decision is the stale index snapshot; the Unknown effect is
@@ -161,7 +162,7 @@ per slice.
 ### Trace and replay semantics
 
 * Propagate W3C traceparent/tracestate across HTTP, queues, MCP, and A2A. Use span links when work is triggered asynchronously or crosses an independently rooted remote trace.
-* Workflow replay (Chapter 15) re-executes history using recorded activity results. Diagnostic replay renders a recorded run without calling models or tools. A fork (Chapter 4 § Run API, `:fork`) is a new run from a checkpoint with explicitly changed versions; it mocks external effects or reauthorizes them. None of the three may create a live effect.
+* Workflow replay (Chapter 15) re-executes history using recorded activity results. Diagnostic replay renders a recorded run without calling models or tools. A fork (Chapter 4 § Run API, `:fork`) is a sandbox run from a checkpoint with explicitly changed versions; its external effects are mocked or read-only. None of the three may create a live effect; work that must change the outside world again is a new, separately authorized run under Chapter 22, not a replay.
 
 ## A workable implementation
 
@@ -184,7 +185,8 @@ per slice.
 | GET /v1/runs/{run\_id}/trace | Return role-redacted causal graph, span summaries, links, and authorized content handles |
 
 Forks use Chapter 4's `POST /v1/runs/{id}:fork`: a sandbox run whose external
-effects are mocked or read-only unless separately authorized. The Chapter 14
+effects are mocked or read-only; a run that must act again starts through
+`POST /v1/runs` with its own authorization. The Chapter 14
 operator console reads the trace API; its live run graph is a role-redacted
 view of this trace.
 
@@ -388,7 +390,7 @@ for a proof.
 | End-to-end | Real identity, source ACLs, queues, approvals, effects, audit | Staging tenant with synthetic data; canary in production with stop conditions |
 | Continuous | Drift, novel failures, cost/latency, policy incidents | Sampled online evals, human review, alerts, incident-to-test loop |
 
-Measure repeated-run reliability (pass^k or equivalent), not just best-of-one success.
+Measure repeated-run reliability as the share of tasks that pass on all k repeated trials (pass^k), not just best-of-one success; compute it from the trials themselves rather than raising a single-run pass rate to the k, which assumes independent trials.
 
 ### Worked example — average improvement, protected-slice regression
 

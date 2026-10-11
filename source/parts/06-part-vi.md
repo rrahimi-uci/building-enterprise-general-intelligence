@@ -157,7 +157,7 @@ refuses it first, and how to recover.
 
 **Prevent.** ContextManifest, trust tiers, corroboration, signatures, freshness (Chapter 6 § The trust hierarchy of instructions).
 
-**First deterministic refusal.** Model/output: the claim-evidence verifier rejects claims without authorized evidence, and the run abstains or escalates on conflict.
+**First deterministic refusal.** Model/output: the claim-evidence verifier rejects claims without authorized evidence, and the run abstains or escalates on conflict. It proves provenance, not truth: a false claim inside an authorized source passes it, so a high-impact claim also needs the corroboration above or a human reviewer, and Chapter 23 bounds what a wrong decision can reach.
 
 **Recover.** Quarantine the artifact, invalidate the snapshot and caches, correct downstream decisions.
 
@@ -169,7 +169,7 @@ refuses it first, and how to recover.
 
 **Prevent.** Signed and approved ingestion with provenance (Chapter 5), source/index separation, ACLs, poisoning tests.
 
-**First deterministic refusal.** Context/memory: source, snapshot, and ACL filters admit only approved sources into the knowledge snapshot a run may read.
+**First deterministic refusal.** Context/memory: source, snapshot, and ACL filters admit only approved sources into the knowledge snapshot a run may read. They cannot see poison that arrived through an approved source; that residual risk falls to Chapter 5's independent verification and to the Recover step.
 
 **Recover.** Remove the data, rebuild a trusted index, invalidate caches, replay affected runs.
 
