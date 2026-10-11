@@ -52,6 +52,10 @@
 | P2-B-19 | R35 and R18 URLs | Potential Issue | R35 redirects to `https://developers.llamaindex.ai/python/llamaagents/workflows/`. R18 redirects to `https://www.cisa.gov/topics/information-communications-technology-supply-chain-security/sbom`. Both resolve (200). | **Owner: registry metadata.** Update both URLs to the redirect targets after confirming the scopes still hold. |
 | P2-B-20 | R21 (MLflow 3.15.2 release page) | Needs Verification | The page returns 403 to automated clients, so its content could not be read. The pin itself is verified: `mlflow-3.15.2.dist-info` is installed, the PyPI upload is dated 2026-08-26, and `examples/requirements.txt` matches. | No change. Re-read the page in a browser before release. |
 
+| P2-B-21 | Ch 18 task lifecycle (`05-part-v.md` l. 88) and Ch 19 state mapping (l. 371) | **Confirmed Error** (inconsistency; raised by the Parts I–IV agent and verified here) | Both tables grouped InterventionRequired with the terminal states Failed and Expired. In `wt-pass2-a` (commit `b86d236`), Ch 15 § Terminal correctness now makes InterventionRequired non-terminal until an intervention response resolves the run, matching "no run may close while an effect is Unknown" and Ch 14. | Gave InterventionRequired its own row in both tables: non-terminal, resolved through the intervention task. Failed and Expired stay terminal. This depends on the Part IV change in branch `pass2/a`. |
+| P2-B-22 | Ch 22 § A reliable protocol (`06-part-vi.md` l. 711) | **Confirmed Error** (inconsistency) | The sentence "The terminal states are deliberately more expressive…" named Unknown and InterventionRequired, yet reconciliation moves Unknown on (`:reconcile`), so Unknown is not terminal. | Now reads "The outcome states…". |
+| P2-B-23 | App C, Event row (`09-appendices.md` l. 236) | **Confirmed Error** (raised by the Parts I–IV agent and verified here) | The CloudEvents spec, fetched 2026-10-11, says attribute names "MUST consist of lower-case letters [a-z] or digits [0-9]", so `tenant_id`, `correlation_id` and `causation_id` are invalid extension names. Ch 4 in `pass2/a` now says underscore fields serialize as `tenantid` and so on. | The row now gives the wire names `tenantid`, `correlationid`, `causationid` and states the naming rule. |
+
 ### Checked with no issue (summary)
 
 - **MCP 2026-07-28 (R05, R06; Ch 19 and App D).** All checked claims match the spec:
@@ -95,7 +99,7 @@
 
 | Checked | Confirmed | Potential | Needs verification | No issue |
 | ---: | ---: | ---: | ---: | ---: |
-| ≈218 | 6 | 13 | 1 | ≈198 |
+| ≈221 | 9 | 13 | 1 | ≈198 |
 
 The ≈218 checked items are:
 
@@ -104,15 +108,17 @@ The ≈218 checked items are:
 - 18 registry scopes checked against primary sources
 - about 30 number and table items
 - 20 freshness sources
+- 3 consistency items raised by the Parts I–IV agent and verified here
 
 Counts are findings, not sentences. "No issue" means checked and not contradicted, not certified.
 
 ## Changes made (canonical files only)
 
-- `source/parts/06-part-vi.md`: P2-B-11, P2-B-12, P2-B-13 (Ch 23).
+- `source/parts/06-part-vi.md`: P2-B-11, P2-B-12, P2-B-13 (Ch 23), P2-B-22.
 - `source/parts/07-part-vii.md`: P2-B-01, P2-B-14.
 - `source/parts/08-part-viii.md`: P2-B-13 (Ch 27), P2-B-16.
-- `source/parts/09-appendices.md`: P2-B-02 to P2-B-06, P2-B-10, P2-B-15.
+- `source/parts/09-appendices.md`: P2-B-02 to P2-B-06, P2-B-10, P2-B-15, P2-B-23.
+- `source/parts/05-part-v.md`: P2-B-21.
 - `config/references.json` (`supports` text only): R29, R31, R33.
 
 Every reference is still cited: validator reports 58 references, 58 cited, 147 bracketed occurrences.

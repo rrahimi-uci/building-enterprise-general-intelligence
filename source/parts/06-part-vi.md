@@ -708,7 +708,7 @@ A protected mutation moves through Reserved → Executing → Committed, with br
 
 [[DIAGRAM:effect-lifecycle|Figure 22-1 — Protected effect lifecycle: reservation, approval, unknown outcomes, and reconciliation]]
 
-The terminal states are deliberately more expressive than success and failure.
+The outcome states are deliberately more expressive than success and failure.
 **Declined** means the effect was proven not to happen; **Unknown** means the
 system lacks proof and must stop dependent work; **Partial** means some business
 components changed; and **InterventionRequired** means automation cannot safely
