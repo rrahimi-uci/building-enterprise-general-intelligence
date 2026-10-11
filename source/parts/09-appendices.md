@@ -262,7 +262,7 @@ Each contract has one owner and one defining chapter, as indexed in Chapter 4 §
 
 # Appendix D — Choosing an Agent Framework
 
-> **Evidence context:** The comparison draws on current documentation for the OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Amazon Bedrock multi-agent collaboration, LangGraph and LangSmith, LlamaIndex Workflows, PydanticAI durable execution, Dapr Agents, Temporal, DBOS, MCP, A2A, OpenTelemetry GenAI conventions, and MLflow. It records declared capabilities, not a comparative production certification. The Claude Agent SDK, CrewAI, and Restate entries have no registered source in this edition; verify their current documentation and maturity before relying on them. **[R02][R05][R06][R07][R19][R20][R21][R25][R29][R31][R32][R33][R34][R35][R36][R37][R38]**
+> **Evidence context:** The comparison draws on current documentation for the OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Amazon Bedrock multi-agent collaboration, LangGraph and LangSmith, LlamaIndex Workflows, PydanticAI durable execution, Dapr Agents, Temporal, DBOS, Restate, MCP, A2A, OpenTelemetry GenAI conventions, MLflow, the Claude Agent SDK, Claude Managed Agents, and CrewAI. It records declared capabilities, not a comparative production certification; all of these are living documents, so verify current maturity before relying on any row. **[R02][R05][R06][R07][R19][R20][R21][R25][R29][R31][R32][R33][R34][R35][R36][R37][R38][R55][R56][R57][R58]**
 
 |  |
 | --- |
@@ -273,7 +273,7 @@ Each contract has one owner and one defining chapter, as indexed in Chapter 4 §
 | **Framework or standard** | **Strength** | **Enterprise caution** | **Recommended placement** |
 | --- | --- | --- | --- |
 | OpenAI Agents SDK | Compact Python runtime for agents, tools, handoffs, guardrails, structured outputs, sessions, tracing, MCP, HITL, RunState, and sandbox surfaces; a useful manager-versus-handoff distinction | SDK state is not workflow truth; provider gravity; the application still owns credentials, authorization, effects, durability, and long waits | Bounded AgentRuntime adapter (Chapter 3); an SDK handoff moves control inside one step, never accountability (Chapter 11). Book baseline: `openai-agents==0.22.2` with `openai==3.13.0` in the offline profile |
-| Claude Agent SDK and Managed Agents | Long-horizon harness design, hosted session and event model, sandbox/worker separation, guidance to start simple | Verify feature maturity and cost before adoption; enterprise effects and cross-vendor state stay externally governed | Research and coding workloads behind the same AgentRuntime boundary; keep run, effect, and audit state portable |
+| Claude Agent SDK and Managed Agents | The Agent SDK exposes Claude Code's agent loop, built-in tools, hooks, permissions, subagents, MCP, and sessions as a library; Managed Agents hosts that harness for long-running work with persisted sessions, a server-sent event stream, and managed or self-hosted sandboxes | Managed Agents is documented as beta; verify feature maturity and cost before adoption; enterprise effects and cross-vendor state stay externally governed | Research and coding workloads behind the same AgentRuntime boundary; keep run, effect, and audit state portable |
 | Google ADK and A2A | Composable agents and tools with Google Cloud integration; A2A 1.0 defines agent cards, tasks, messages, artifacts, bindings, and lifecycle operations | Cloud convenience and protocol interoperability do not supply capability trust, authorization equivalence, transaction semantics, or quality | ADK as one harness option behind the platform boundary; the A2A Gateway at cross-team and vendor boundaries (Chapter 19) |
 | Microsoft Agent Framework | Agent and workflow abstractions that converge AutoGen and Semantic Kernel concepts: typed sessions and middleware, graph workflows, telemetry, broad provider integrations | Some languages and features remain preview; Azure-centric managed integrations increase coupling; do not bind public contracts to framework messages or state | Behind adapters where the Microsoft ecosystem and typed middleware matter; pair with the durable and effect architecture |
 | LangGraph and LangSmith | Explicit graph state, checkpointers, interrupts, stores, time travel, human-in-the-loop, and trace/evaluation workflow | Graph checkpoints are not complete enterprise durability; identity, effects, policy, release, and audit still need integration; memory semantics remain application-defined | Application-level graph orchestration, optionally inside a separate durable workflow; keep external writes governed |
@@ -817,10 +817,10 @@ This matrix defines exactly what each citation is permitted to support. It preve
 
 | **Quantity** | **Approximation** | **Caution** |
 | --- | --- | --- |
-| Effective work rate | lambda\_eff = lambda\_external × E[nodes] × E[fan-out] × retry\_multiplier | Estimate separately by tenant/risk/route. |
+| Effective work rate | lambda\_eff = lambda\_external × E[attempted activities per external run] | Measure attempted activities per run from traces for each resource class; the count already includes fan-out and retries, so do not multiply by them again. Estimate separately by tenant/risk/route. |
 | Offered concurrency | L = lambda\_eff × E[service time] | Little’s Law gives mean in-flight work under stable conditions [R43]. |
 | Permit pool | permits >= ceil(L / target\_utilization) | Use lower utilization for high-variance or rate-limited dependencies. |
-| Retry multiplier | 1 + p\_retry + p\_retry² + … up to the attempt cap | Correlated outages violate independence; simulate them. |
+| Retry multiplier | 1 + p\_retry + p\_retry² + … up to the attempt cap | Projects attempts from first-attempt counts only when traces are unavailable. Correlated outages violate independence; simulate them. |
 | Token demand | requests × (uncached input + cached input + output tokens) | Count tool schemas as input; track by model route and ContextManifest policy. |
 | Verified-success cost | (model + tool + compute + human-review cost) / accepted outcomes | Include failed, abandoned, and reconciled runs. |
 
