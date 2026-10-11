@@ -221,7 +221,7 @@ Each row names the Chapter 17 card that describes the failure's usual cause.
 1. Stop dependent work and preserve cancellation intent.
 2. Load EffectRecord, intent hash, expected version, downstream request ID, and trace.
 3. Query the authoritative downstream system by idempotency key, resource ID, or business predicate.
-4. Classify the result in Chapter 22's effect states: Committed; Declined (proven absent); Partial; still Executing (check again within the provider's visibility window); or InterventionRequired (unprovable).
+4. Classify the result in Chapter 22's effect states: Committed; Declined (proven absent: no match after the visibility window the tool manifest declares); Partial; still Executing (check again within that window); or InterventionRequired (unprovable, including a provider that declares no window).
 5. Record evidence; then accept a Committed receipt, retry a Declined effect under the same logical key, compensate a Partial one, or open an intervention task (Chapter 14).
 6. Add the failure to simulation and release regression tests.
 
@@ -432,7 +432,7 @@ Chapter 1 § The vocabulary this book assumes introduces the core terms; this gl
 | Global control tier | The deployment tier that publishes signed, immutable definitions and holds no run state | 4 |
 | Guardrail | A probabilistic detector, such as an input or output check; its finding feeds a policy point and never decides authorization | 20 |
 | Handoff | An accountable transfer of task or interaction ownership that takes effect only when the recipient acknowledges; a framework handoff moves control, not accountability | 11 |
-| Idempotency key | A caller-supplied identifier that lets a downstream system recognize a repeated request as the same request | 22 |
+| Idempotency key | A stable identifier the platform derives from tenant, run, and logical effect and binds to an intent hash; passed to a downstream system that supports one so it recognizes a repeated request as the same request. The model never chooses it | 22 |
 | InterventionRequired | Run, task, or effect state used when correctness cannot be established automatically; it opens an intervention task | 15, 22 |
 | Intervention task | A typed request for human help with an uncertain run; its response is an input to the run and never approves an effect | 14 |
 | Layer | A deployable unit of the architecture (for example, Model access or Durable execution); layers serve the planes | 4 |
@@ -451,7 +451,7 @@ Chapter 1 § The vocabulary this book assumes introduces the core terms; this gl
 | Skill Pack | Certified, co-released set of compatible Skills with shared policy and evaluations; installing one grants nothing | 9 |
 | Subject | The principal whose delegated authority initiates a protected action | 21 |
 | TaskEnvelope | The contract every child task carries, in eight field groups | 18 |
-| Tool Gateway | Control point that decides whether an effect may happen, for this subject, exactly once; protocol-agnostic | 2, 22 |
+| Tool Gateway | Control point that decides whether an effect may happen for this subject and dispatches it as one logical effect under the effect ledger, so a retry cannot repeat it; it does not promise cross-system exactly-once delivery; protocol-agnostic | 2, 22 |
 | Trajectory | A run's ordered decisions viewed for evaluation | 25 |
 | Trust tier | The rank of a context segment's origin, from tier 1 system instructions to tier 4 retrieved data that can never direct behavior | 6 |
 | Unknown | Effect state when a mutation may have reached the downstream system and the platform holds neither a receipt nor proof of absence; it blocks retry and dependent work | 22 |
