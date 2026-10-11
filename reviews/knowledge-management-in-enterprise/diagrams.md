@@ -6,7 +6,7 @@ Figure numbering after both plans: 5-1 fabric (changed label), 5-2 policy-to-gua
 
 ## 1. New — `knowledge-lifecycle` — Figure 5-4
 
-**Caption.** "Figure 5-4 — Knowledge has two planes: the control plane develops and releases it, the runtime plane consumes one pinned release per run, and only evidence crosses back up"
+**Caption.** "Figure 5-4 — Compliance knowledge has two planes: the control plane develops and releases it, the runtime plane enforces one pinned release per run, and only evidence crosses back up" [reframed: caption; node labels below carry the same vocabulary — `sources` "Authoritative sources · regulations · standards · contracts · internal policies", `graph` "Versioned compliance knowledge graph · requirements · obligations · controls · conforms to the ontology · content digest" (absorbing `semantic` per the correction under Print QA), `production` "Production compliance knowledge · one pinned release per run (RunManifest)", `effect` "Governed action · or refusal (obligation unmet or unknown = refuse)". Every label is a kind of source or object, never a named law or regulator.]
 
 **What it teaches.** (1) Knowledge is produced through gates and a human approval before it exists for the runtime at all; (2) the registry and its live pointer are the only interface between the planes; (3) agents and control points consume a pinned release, never a draft or "current"; (4) production observations and SME feedback return as proposed changes, not as writes.
 
@@ -22,7 +22,7 @@ Figure numbering after both plans: 5-1 fabric (changed label), 5-2 policy-to-gua
 | `graph` | N_data (cylinder, indigo) | Versioned knowledge graph · candidate release · content digest |
 | `gates` | N_gate (diamond, amber) | Quality gates · schema · grounding · consistency · staleness · regression |
 | `reject` | N_bad (rounded, red) | Returned to Draft · findings recorded |
-| `approve` | N_gate (diamond, amber) | Independent SME approval · exact candidate identity |
+| `approve` | N_gate (diamond, amber) | Independent SME approval · exact candidate digest |
 | `registry` | N_service (box, blue) | Knowledge registry · release manifest · live pointer per environment |
 | `production` | N_knowledge (note, cyan) | Production knowledge · one pinned release per run (RunManifest) |
 | `controls` | N_service (box, blue) | Control points · Context Service · plan compiler · policy engine · Tool Gateway · acceptance engine |
@@ -59,6 +59,8 @@ Figure numbering after both plans: 5-1 fabric (changed label), 5-2 policy-to-gua
 
 **Print QA.** Thirteen nodes in two clusters at 13 pt node font: expect ≈ 6.8 in × 8.0 in at 100 %. If taller than 8.5 in, move `observe` to the right of `effect` with `rank=same` and shorten the control-point label to "Control points · Ch 6 · 12 · 21 · 22 · 13".
 
+[reviewed: corrected — the ≈ 8.0 in estimate is not credible: the node table above is a single chain of 11 ranks (`sources` → `extract` → `semantic` → `graph` → `gates` → `approve` → `registry` → `boundary` → `production` → `controls` → `agent`/`effect` → `observe`), each with a two- or three-line label at 13 pt plus two cluster titles and the boundary band; at Graphviz's default `ranksep` that is well over 8.5 in, and DESIGN-SYSTEM.md § 10a says a taller figure "will not share a page with its caption" and scaling pushes labels under the 9 pt floor. The conditional fallback is therefore **required**, not optional, and goes further: (1) fold `semantic` into `graph` — label "Versioned knowledge graph · conforms to the ontology · shapes checked · content digest" — because the figure teaches the lifecycle, and the layer model's table already carries the representation layer; (2) `reject` on `rank=same` with `gates`; (3) `observe` on `rank=same` with `effect`; (4) `controls` label shortened to "Control points · Context Service · plan compiler · policy decision point · Tool Gateway · acceptance engine" on two lines, and the chapter's prose, not the figure, explains that the compiler and acceptance engine are lifecycle controls. Result: 12 nodes, 9 ranks, boundary band preserved, feedback loop (`effect` ⇢ `observe` ⇢ `extract`) preserved. The implementer still measures the rendered PDF; if it is still over 8.5 in, switch `cluster_runtime` to a left-to-right sub-layout (`controls` → `agent` → `effect` on one rank) before touching any label size.]
+
 ## 2. Changed — `knowledge-fabric` — Figure 5-1
 
 Two label edits in `assets/diagrams/src/knowledge-fabric.gv`:
@@ -70,7 +72,7 @@ No topology change. Re-render, replace sha256 in `config/diagrams.json`. Caption
 
 ## 3. Retained — `policy-to-guardrail` — Figure 5-2
 
-Unchanged content; the ingestion plan also retains it. Optional (author decision D2): rename the source and id to `policy-to-enforced-rule` for consistency with the example rename. Cost: rename `.gv`, PNG, PDF; update id, file, vector, source, sha256 in `config/diagrams.json`; update the one marker in Chapter 5. Ids are not reader-visible, so this is cosmetic; the plan does not require it.
+Unchanged content; the ingestion plan also retains it. Optional (author decision D2): rename the source and id to `policy-to-enforced-rule` for consistency with the example rename. Cost: rename `.gv`, PNG, PDF; update id, file, vector, source, sha256 in `config/diagrams.json`; update the one marker in Chapter 5. Ids are not reader-visible, so this is cosmetic; the plan does not require it. [reviewed: corrected — the footprint also includes `RELEASE-MANIFEST.json` and the generated `reports/diagram-render-report.json` and `qa/latex-validation-report.json`, all regenerated by `make deterministic` / `make latex-validate`, never hand-edited; the historical `reviews/continuity-and-flow/*` and `reviews/content-correctness-validation/*` files mention the old id and are left as they are. The same list applies to D1's example rename: `config/examples.json`, the two source files, `RELEASE-MANIFEST.json`, and the generated `reports/examples-report.json`.]
 
 ## 4. Retained — `document-ingestion` — Figure 5-3 (ingestion plan)
 
