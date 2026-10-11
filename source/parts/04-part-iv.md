@@ -517,7 +517,7 @@ New evidence can invalidate future work. Replanning starts from an explicit set 
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Durable scheduling | Durable-execution systems preserve workflow progress, timers, and replay across failures, which is why compiled plans are scheduled through a workflow rather than an in-process loop. | R02 |
+| Durable scheduling | Durable execution resumes work in a new process after a failure and supports reliable long waits; scheduling compiled plans through a workflow rather than an in-process loop is this book's recommendation. | R02 |
 
 The discussion above draws on R27; R02. Appendix K lists the complete sources and records their authority, version, and scope.
 
@@ -650,7 +650,7 @@ The loop stops on pass, maximum revisions, maximum spend, deadline, or no-progre
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Evaluation tooling | Current evaluation platforms support datasets, code-based and LLM judges, and human feedback; using judges only as evidence for an independent acceptance decision is this book's recommendation. | R20 |
+| Evaluation tooling | MLflow's evaluation documentation covers evaluation datasets, custom code-based scorers, LLM judges, and human feedback attached to traces; using judges only as evidence for an independent acceptance decision is this book's recommendation. | R20 |
 
 The discussion above draws on R20. Appendix K lists the complete sources and records their authority, version, and scope.
 
@@ -924,7 +924,7 @@ Human control introduces waits and resumptions; Chapter 15 makes those waits dur
 
 # 15 — Keep Long-Running Work Alive Through Failure
 
-> **Evidence context:** Durable-execution systems preserve workflow progress across failures and long waits; concrete integrations and replay semantics vary by backend. **[R02][R36][R38]**
+> **Evidence context:** Durable-execution systems let work resume after failures and long waits, and agent frameworks integrate with several such backends; that replay semantics differ by backend, and must be checked for each one, is this book's caution. **[R02][R36][R38]**
 
 |  |
 | --- |
@@ -999,7 +999,7 @@ Every pattern in Chapters 10–14 runs inside this lifecycle.
 
 ### Terminal correctness
 
-A run reaches Succeeded only through executable acceptance. A canceled run with a possibly committed write does not simply disappear; it moves through reconciliation and possibly compensation. If correctness cannot be established automatically, InterventionRequired is a valid terminal operational state.
+A run reaches Succeeded only through executable acceptance. A canceled run with a possibly committed write does not simply disappear; it moves through reconciliation and possibly compensation. If correctness cannot be established automatically, the run moves to InterventionRequired: automated work stops, an intervention task opens, and the run closes only through that task's response.
 
 | **Run state** | **Reached when** | **Never reached by** |
 | --- | --- | --- |
@@ -1009,7 +1009,7 @@ A run reaches Succeeded only through executable acceptance. A canceled run with 
 | Failed | A permanent failure occurs and no effect is Unknown | A timed-out mutation, which is Unknown |
 | Canceled | Cancellation intent is recorded and every effect is committed, compensated, or declined | Leaving an effect Unknown |
 | Expired | A deadline or wait expires under an explicit disposition | Implicit approval or silent abandonment |
-| InterventionRequired | Correctness cannot be established automatically; an intervention task opens (Chapter 14) | Retrying until something works |
+| InterventionRequired | Correctness cannot be established automatically; an intervention task opens (Chapter 14); non-terminal until its response resolves the run | Retrying until something works |
 
 Step dispositions (Chapter 10) feed the workflow, acceptance decides (Chapters 2 and 13), and no run may close while an effect is Unknown; Chapter 22 owns effect states and compensation.
 
@@ -1118,7 +1118,7 @@ The base Run API is in Chapter 4. Durable execution adds these operations and tw
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Durable progress | Durable execution preserves workflow progress across crashes and long waits through replay and durable timers. | R02 |
+| Durable progress | Durable execution is crash-proof execution: work resumes in a new process after a failure and can wait reliably for long periods. Rebuilding state by replaying recorded history, as this chapter's reducer does, is one engine design, not something the source specifies. | R02 |
 
 The discussion above draws on R02; R04. Appendix K lists the complete sources and records their authority, version, and scope.
 
@@ -1358,7 +1358,7 @@ The three cards here are the difference between *can* and *may*. An agent that c
 
 ### AP-12 — Ungated tool discovery and catalog dumping
 
-**How this failure starts.** A mature platform has many tools, and the agent cannot use what it cannot see. The tempting shortcut is “Every discovered tool and its full schema is placed into the prompt, often straight from an MCP server's advertised catalog.” It breaks down because discovery is being used as authorization. Selection accuracy falls as the catalog grows, because the model is choosing among near-neighbours it has no basis to distinguish. Schemas consume context that evidence should occupy. Worse, tool descriptions are untrusted text from a third party, so a malicious server can write a description engineered to attract calls — the agent is reading attacker-controlled instructions and treating them as a menu.
+**How this failure starts.** A mature platform has many tools, and the agent cannot use what it cannot see. The tempting shortcut is “Every discovered tool and its full schema is placed into the prompt, often straight from an MCP server's advertised catalog.” It breaks down because discovery is being used as authorization. Selection gets harder as the catalog grows, because the model is choosing among near-neighbours it has no basis to distinguish. Schemas consume context that evidence should occupy. Worse, tool descriptions are untrusted text from a third party, so a malicious server can write a description engineered to attract calls — the agent is reading attacker-controlled instructions and treating them as a menu.
 
 **What it looks like in practice.** A reporting agent discovers an administrative delete tool, because the catalog was filtered by connectivity rather than by the caller's authority.
 

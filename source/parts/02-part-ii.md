@@ -89,8 +89,8 @@ contradiction. They are not: they answer different questions.
 
 The **plane** table is the conceptual model. It answers *who owns which
 decision*, and it is what you reason with when deciding where a responsibility
-belongs. Seven planes is the smallest set that keeps every authoritative record
-in exactly one place.
+belongs. Seven planes are enough to keep every authoritative record in exactly
+one place.
 
 The **layer** table below is the deployable decomposition. It answers *what you
 build, run, and page someone about*. Planes split into layers wherever two parts
@@ -235,7 +235,7 @@ A mutating tool returns a receipt from the system of record (proof of what happe
 
 > **Evidence context:** CloudEvents defines the portable event envelope used here, while the transactional-outbox source supports atomic state/event publication and warns that consumers still require duplicate handling. **[R03][R04]**
 
-Events record facts that already happened (`run.status.changed`); commands go through the Run API and carry an expected state version. Every event uses one CloudEvents 1.0 envelope with `tenant_id`, `correlation_id`, `causation_id`, and `traceparent` alongside the standard attributes. Large or sensitive payloads travel by `dataref` and `datahash`, never embedded. Producers publish through a transactional outbox and consumers deduplicate on (source, id); Chapter 22 defines both records.
+Events record facts that already happened (`run.status.changed`); commands go through the Run API and carry an expected state version. Every event uses one CloudEvents 1.0 envelope carrying tenant, correlation, causation, and `traceparent` extension attributes alongside the standard ones. The specification restricts attribute names to lowercase letters and digits, so a Python field such as `tenant_id` in the companion model must serialize as `tenantid` on the wire. Large or sensitive payloads travel by `dataref` and `datahash`, never embedded. Producers publish through a transactional outbox and consumers deduplicate on (source, id); Chapter 22 defines both records.
 
 ## Where each kind of state belongs
 
@@ -763,7 +763,8 @@ There is one RunManifest per run and one ContextManifest per AgentStepRequest; t
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Privacy lifecycle | Context and memory need purpose limitation, consent or other legal basis where applicable, data-subject request handling, deletion propagation, legal-hold precedence, residency, provider retention controls, and proof that derived summaries/indexes were handled too. | R13; R39 |
+| Privacy obligations | The GDPR sets purpose limitation, a lawful basis such as consent, and data-subject rights including erasure; NIST's generative-AI profile names leakage of personal data and risks to consent and purpose specification among generative-AI privacy risks. | R13; R39 |
+| Privacy lifecycle (book-authored recommendation) | Apply those obligations to context and memory: handle data-subject requests, propagate deletion to derived summaries and indexes with proof, let legal holds take precedence, and enforce residency and provider retention controls. | — |
 
 The discussion above draws on R13; R39. Appendix K lists the complete sources and records their authority, version, and scope.
 

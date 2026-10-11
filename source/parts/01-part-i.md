@@ -166,7 +166,7 @@ have not placed in the prompt.
 
 **What it does well:** Read, summarize, classify, draft, translate, extract.
 
-**Where it stops:** Find out anything it was not told. A model asked "is this application's income evidence sufficient?" will produce a confident answer drawn from training data that may be two years stale, because producing an answer is the only thing it does. It has no reliable way of knowing what it does *not* know.
+**Where it stops:** Find out anything it was not told. A model asked "is this application's income evidence sufficient?" will produce a confident answer drawn from training data frozen at a past cutoff, because producing an answer is the only thing it does. It has no reliable way of knowing what it does *not* know.
 
 ### Level two — a model with tools
 
@@ -459,7 +459,8 @@ effect ledger.
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Grounding boundary | Separate model capability from system correctness. A benchmark or demo does not establish authorization, durability, privacy, or business acceptance. Every material output should carry evidence references and uncertainty. | R01; R13 |
+| Reported capability and risk | ReAct reports benchmark results for interleaved reasoning and action; NIST's generative-AI profile lists confabulation, confidently stated false content, among generative-AI risks. | R01; R13 |
+| Grounding boundary (book-authored recommendation) | Separate model capability from system correctness. A benchmark or demo does not establish authorization, durability, privacy, or business acceptance, so every material output should carry evidence references and uncertainty. | — |
 
 The discussion above draws on R01; R13. Appendix K lists the complete sources and records their authority, version, and scope.
 
