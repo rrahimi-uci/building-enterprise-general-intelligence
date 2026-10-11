@@ -166,7 +166,7 @@ have not placed in the prompt.
 
 **What it does well:** Read, summarize, classify, draft, translate, extract.
 
-**Where it stops:** Find out anything it was not told. A model asked "is this application's income evidence sufficient?" will produce a confident answer drawn from training data that may be two years stale, because producing an answer is the only thing it does. It has no mechanism for *not knowing*.
+**Where it stops:** Find out anything it was not told. A model asked "is this application's income evidence sufficient?" will produce a confident answer drawn from training data that may be two years stale, because producing an answer is the only thing it does. It has no reliable way of knowing what it does *not* know.
 
 ### Level two — a model with tools
 

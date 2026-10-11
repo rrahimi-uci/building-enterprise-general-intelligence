@@ -87,7 +87,7 @@ A paved road has costs. Its abstractions lag new framework features, and the pla
 
 A developer meets the road as a few declarations. The mortgage team's agent declares its AgentSpec `mortgage-evidence-agent@0.1.0`; a Skill requirement `mortgage.evidence.read@^0.1`, which is a compatible range rather than a digest (Chapter 8 pins the digest per run); the tool `mortgage.case.read@1` at effect risk class R1 (Chapter 22); the knowledge snapshot `mortgage-policy@approved-2026.09`; budgets; and the permissions it needs. Those permissions are a ceiling, intersected with the caller's grants at run time (Chapter 21); declaring them grants nothing. The platform compiles these declarations to the Chapter 3 contracts, and those contracts, not the SDK's method names, are the stable interface.
 
-The command line walks the golden path, from `agentctl init mortgage-evidence-agent` through `agentctl promote --from staging --to production --canary 5%` to `agentctl rollback mortgage-evidence-agent@0.1.0 --to 0.0.9`. Build one immutable artifact, pin everything listed in Chapter 27 § Versioned objects, and bind endpoints, identities, secrets, sources, quotas, regions, and review queues only at deployment.
+The command line walks the golden path; `agentctl` is an illustrative command surface, not a tool this book ships: from `agentctl init mortgage-evidence-agent` through `agentctl promote --from staging --to production --canary 5%` to `agentctl rollback mortgage-evidence-agent@0.1.0 --to 0.0.9`. Build one immutable artifact, pin everything listed in Chapter 27 § Versioned objects, and bind endpoints, identities, secrets, sources, quotas, regions, and review queues only at deployment.
 
 ## Test the contracts before you test the model
 
