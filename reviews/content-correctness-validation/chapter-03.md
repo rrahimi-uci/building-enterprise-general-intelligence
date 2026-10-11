@@ -32,7 +32,7 @@ Tables were read for categorical consistency, units and stated assumptions; no n
 
 ## Code Example Validation
 
-Registered example(s): contracts step; step-execution; mortgage-cumulative-case C03. The pinned example/mortgage tests passed as a suite (264 passed); this does not establish semantic completeness. No chapter-specific code defect was confirmed in this pass.
+Registered example(s): contracts (region `step`); step-execution (region `core`); mortgage-cumulative-case (region `c03`) [audited: corrected — registry ids and marker regions as used in the chapter]. The pinned example/mortgage tests passed as a suite (264 passed); this does not establish semantic completeness. No chapter-specific code defect was confirmed in this pass.
 
 ## Equations and Quantitative Validation
 

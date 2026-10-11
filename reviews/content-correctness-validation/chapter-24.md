@@ -32,7 +32,7 @@ Tables were read for categorical consistency, units and stated assumptions; no n
 
 ## Code Example Validation
 
-Registered example(s): MLflow tracing/configuration/integration. The pinned example/mortgage tests passed as a suite (264 passed); this does not establish semantic completeness. No chapter-specific code defect was confirmed in this pass.
+Registered example(s): mlflow-tracing; mlflow-trace-configuration; mortgage-agents-mlflow [audited: corrected — the original text named no ids; these are the three registry entries and markers for Chapter 24]. The pinned example/mortgage tests passed as a suite (264 passed); this does not establish semantic completeness. No chapter-specific code defect was confirmed in this pass.
 
 ## Equations and Quantitative Validation
 

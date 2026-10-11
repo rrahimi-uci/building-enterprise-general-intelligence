@@ -32,7 +32,7 @@ Tables were read for categorical consistency, units and stated assumptions; no n
 
 ## Code Example Validation
 
-Registered example(s): mortgage-cumulative-case C02; agent-tool-loop; governed-tool-gateway. The pinned example/mortgage tests passed as a suite (264 passed); this does not establish semantic completeness. No chapter-specific code defect was confirmed in this pass.
+Registered example(s): mortgage-cumulative-case (region `c02`); agent-tool-loop; governed-tool-gateway [audited: corrected — registry ids and marker regions as used in the chapter]. The pinned example/mortgage tests passed as a suite (264 passed); this does not establish semantic completeness. No chapter-specific code defect was confirmed in this pass.
 
 ## Equations and Quantitative Validation
 

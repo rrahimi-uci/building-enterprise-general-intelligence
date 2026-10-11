@@ -32,7 +32,7 @@ Tables were read for categorical consistency, units and stated assumptions; no n
 
 ## Code Example Validation
 
-Registered example(s): anti-pattern corrective examples. The pinned example/mortgage tests passed as a suite (264 passed); this does not establish semantic completeness. No chapter-specific code defect was confirmed in this pass.
+Registered example(s): ap-delegation-budget; ap-state-projection; ap-memory-gate; ap-retry-owner; ap-unknown-effect; ap-bound-approval [audited: corrected — the original text named no ids; these six are the `book_chapters: [17]` entries in `config/examples.json` and the six `[[EXAMPLE:…]]` markers in the chapter]. The pinned example/mortgage tests passed as a suite (264 passed); this does not establish semantic completeness. No chapter-specific code defect was confirmed in this pass.
 
 ## Equations and Quantitative Validation
 
