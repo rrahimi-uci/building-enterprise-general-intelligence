@@ -3,7 +3,6 @@
 %% the Tool Gateway enforces before anything commits, whether or not the
 %% detector noticed the attack.
 sequenceDiagram
-    autonumber
     participant Agent as Agent Runtime
     participant Det as Content detector
     participant Pol as Policy Engine
@@ -20,7 +19,7 @@ sequenceDiagram
     else permitted
         alt requires human approval
             Pol->>App: request approval
-            App-->>Pol: signed approval, bound to this proposal
+            App-->>Pol: signed approval,<br/>bound to<br/>this proposal
         end
         Pol-->>Tool: authorized invocation
         Tool->>Tool: enforce exact resource, check idempotency ledger

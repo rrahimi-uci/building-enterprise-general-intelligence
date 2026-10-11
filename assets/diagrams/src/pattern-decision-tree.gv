@@ -7,8 +7,8 @@ digraph pattern_decision_tree {
   rankdir = TB
   compound = true
   graph [ranksep=0.30, nodesep=0.16]
-  node [width=1.35, fontsize=10.5]
-  edge [fontsize=9.5]
+  node [width=1.35, fontsize=11.5]
+  edge [fontsize=11]
 
   subgraph cluster_shape {
     label="  1 · Choose the shape of the work  "; labeljust="l"; fontsize=11; fontcolor="#4A6078"

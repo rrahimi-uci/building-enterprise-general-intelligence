@@ -191,8 +191,35 @@ def markdown_unescape(text: str) -> str:
     return re.sub(r"\\([\\`*_{}\[\]()#+.!|<>\-])", r"\1", text)
 
 
-def escape_plain(text: str) -> str:
+QUOTE_OPENERS = set(" \t\n([{—–/“‘")
+
+
+def smart_double_quotes(text: str) -> str:
+    """Turn straight double quotes into typographic ones.
+
+    With TeX ligatures on, XeLaTeX prints every straight `"` as a closing
+    quote, so an opening quote came out backwards. A quote opens when it
+    follows a space, a bracket or a dash (or starts the segment) and is
+    followed by a non-space; otherwise it closes.
+    """
+    out = []
+    for i, ch in enumerate(text):
+        if ch != '"':
+            out.append(ch)
+            continue
+        before = text[i - 1] if i else None
+        after = text[i + 1] if i + 1 < len(text) else ""
+        opens = (before is None or before in QUOTE_OPENERS) and after.strip() != ""
+        if before is None and after and after in ".,;:!?)]}":
+            opens = False
+        out.append("“" if opens else "”")
+    return "".join(out)
+
+
+def escape_plain(text: str, cell: bool = False, quotes: bool = True) -> str:
     text = markdown_unescape(text)
+    if quotes:
+        text = smart_double_quotes(text)
     mapping = {
         "\\": r"\textbackslash{}",
         "&": r"\&",
@@ -207,6 +234,11 @@ def escape_plain(text: str) -> str:
         "✓": r"\ensuremath{\checkmark}",
         "🐍": r"\BookSnake",
     }
+    if cell:
+        # A narrow table column cannot absorb a long slash-joined token such
+        # as "unit/contract/security/...". \slash lets the line break after
+        # the slash at the same penalty as after an explicit hyphen.
+        mapping["/"] = r"\slash{}"
     segments = re.split(r"<br\s*/?>", text, flags=re.I)
     escaped = []
     for segment in segments:
@@ -214,37 +246,40 @@ def escape_plain(text: str) -> str:
     return r"\newline{}".join(escaped)
 
 
-def inline_code(value: str) -> str:
+def inline_code(value: str, cell: bool = False) -> str:
     value = markdown_unescape(value)
+    # In a table the code takes the cell's own size; the 8.6pt body-text style
+    # set identifiers visibly larger than the 7.2pt text around them.
+    style = "style=bookinline,basicstyle=\\ttfamily\\color{BookNavyTwo}" if cell else "style=bookinline"
     for delimiter in "!|+/;:@?":
         if delimiter not in value:
-            return r"\lstinline[style=bookinline]" + delimiter + value + delimiter
-    return r"\texttt{" + escape_plain(value) + "}"
+            return r"\lstinline[" + style + "]" + delimiter + value + delimiter
+    return r"\texttt{" + escape_plain(value, quotes=False) + "}"
 
 
-def inline(text: str) -> str:
+def inline(text: str, cell: bool = False) -> str:
     token = re.compile(r"(\*\*.+?\*\*|`[^`]+`|\[[^\]]+\]\(https?://[^)]+\)|\[R\d{2}\]|(?<!\*)\*[^*\n]+\*)")
     output: list[str] = []
     position = 0
     for match in token.finditer(text):
         if match.start() > position:
-            output.append(escape_plain(text[position:match.start()]))
+            output.append(escape_plain(text[position:match.start()], cell))
         value = match.group(0)
         if value.startswith("**"):
-            output.append(r"\textbf{" + inline(value[2:-2]) + "}")
+            output.append(r"\textbf{" + inline(value[2:-2], cell) + "}")
         elif value.startswith("`"):
-            output.append(inline_code(value[1:-1]))
+            output.append(inline_code(value[1:-1], cell))
         elif re.match(r"^\[[^\]]+\]\(https?://", value):
             link = re.match(r"^\[([^\]]+)\]\((https?://[^)]+)\)$", value)
             if link:
-                output.append(r"\href{\detokenize{" + link.group(2) + "}}{" + inline(link.group(1)) + "}")
+                output.append(r"\href{\detokenize{" + link.group(2) + "}}{" + inline(link.group(1), cell) + "}")
         elif re.fullmatch(r"\[R\d{2}\]", value):
             output.append(r"\BookCitation{" + value[1:-1] + "}")
         elif value.startswith("*"):
-            output.append(r"\emph{" + inline(value[1:-1]) + "}")
+            output.append(r"\emph{" + inline(value[1:-1], cell) + "}")
         position = match.end()
     if position < len(text):
-        output.append(escape_plain(text[position:]))
+        output.append(escape_plain(text[position:], cell))
     return "".join(output)
 
 
@@ -261,56 +296,166 @@ def render_callout(rows: list[list[str]]) -> str:
 
 def table_header(row: list[str], columns: int) -> str:
     padded = row + [""] * (columns - len(row))
-    return " & ".join(r"\color{white}\bfseries " + inline(cell) for cell in padded) + r" \\"
+    return " & ".join(r"\color{white}\bfseries " + inline(cell, cell=True) for cell in padded) + r" \\"
+
+
+# Table geometry, mirrored from bookstyle.sty so the builder can estimate how
+# tall a table's opening rows will set. \linewidth is 7.06in; \tabcolsep 4pt.
+LINEWIDTH_PT = 508.0
+TABCOLSEP_PT = 4.0
+TABLE_TEXTHEIGHT_PT = 698.85
+# (average glyph advance, baselineskip) for the two table sizes: \small and
+# 7.2/9pt, each under the 0.95 \setstretch. The advance is a conservative
+# average for Liberation Sans running text.
+TABLE_FONTS = {"small": (4.6, 10.45), "compact": (3.7, 8.55)}
+
+
+def cell_lines(text: str, width_pt: float, advance_pt: float) -> int:
+    plain = re.sub(r"[*`]|\[R\d{2}\]", "", markdown_unescape(text))
+    chars_per_line = max(8, int(width_pt / advance_pt))
+    lines, current = 1, 0
+    for word in plain.split():
+        if current and current + 1 + len(word) > chars_per_line:
+            lines += 1
+            current = len(word)
+        else:
+            current += (1 if current else 0) + len(word)
+    return lines
+
+
+def table_height(rows: list[list[str]], columns: int, body_rows: int | None = None) -> float:
+    """Estimated set height of the header plus the first `body_rows` rows."""
+    advance, baseline = TABLE_FONTS["small" if columns <= 3 else "compact"]
+    width = (LINEWIDTH_PT - (2 * columns - 2) * TABCOLSEP_PT) / columns
+    chosen = rows if body_rows is None else rows[: body_rows + 1]
+    return sum(max(cell_lines(c, width, advance) for c in row) * baseline + 1.0 for row in chosen)
+
+
+# The opening block a longtable keeps together: the head plus up to three body
+# rows, joined by \\* so the page cannot break between them. Tall rows are
+# kept only while the block stays short, so a table of long cells does not
+# leave most of a page empty in front of it.
+LONGTABLE_KEEP_PT = 150.0
+
+
+def longtable_kept(rows: list[list[str]], columns: int) -> int:
+    """How many leading body rows end in \\* (no page break after them)."""
+    kept = 0
+    for count in (1, 2):
+        if len(rows) - 1 <= count:
+            break
+        if table_height(rows, columns, count + 1) > LONGTABLE_KEEP_PT:
+            break
+        kept = count
+    return kept
+
+
+def table_reservation(rows: list[list[str]], columns: int, compact: bool) -> float:
+    """Room to reserve so a table never opens with a stranded header.
+
+    A tabular cannot break, so reserve all of it. A longtable needs its header
+    and the first rows on the opening page: when they do not fit, longtable
+    breaks before its first row and carries the first head over, which prints
+    the header twice on the next page.
+    """
+    # 1.2: the character-count model underestimates wrapped cells, and a
+    # reservation that is slightly too large only moves a table a page early.
+    opening = None if compact else longtable_kept(rows, columns) + 1
+    height = 1.2 * table_height(rows, columns, opening) + 8.0
+    return min(height, 0.45 * TABLE_TEXTHEIGHT_PT if not compact else 0.9 * TABLE_TEXTHEIGHT_PT)
+
+
+def is_callout(rows: list[list[str]]) -> bool:
+    return max(len(row) for row in rows) == 1 and bool(rows) and not rows[0][0].strip() and len(rows) >= 2
+
+
+def compact_table(rows: list[list[str]]) -> bool:
+    return len(rows) <= 8 and max(len(cell) for row in rows for cell in row) <= 110
+
+
+def block_reservation(block: tuple, after: tuple | None = None) -> float:
+    """Height a heading must keep with it when this block follows directly.
+
+    A heading followed by another heading (H2 then H3) keeps both headings and
+    whatever the second one opens with, so neither is left at a page foot.
+    """
+    if block[0] == "paragraph" and after is not None and after[0] == "code" and LISTING_LABEL.match(block[1]):
+        return listing_keep(after[2]) + LISTING_LABEL_PT
+    if block[0] == "heading" and block[1] >= 2 and after is not None:
+        inner = block_reservation(after)
+        return inner + HEADING_HEIGHT_PT[min(block[1], 4)] if inner else 0.0
+    if block[0] == "table" and not is_callout(block[1]):
+        rows = block[1]
+        return table_reservation(rows, max(len(r) for r in rows), compact_table(rows))
+    if block[0] == "code":
+        return min(len(block[2].splitlines()), 6) * CODE_BASELINE_PT + CODE_FRAME_PT
+    return 0.0
+
+
+# Height each heading level takes from the page, including the space above
+# and below it and the parskip around it. Generous on purpose: when an H2 is
+# immediately followed by an H3, the H2's reservation must exceed the H3's by
+# at least the H2's real height, or the H3's own reservation strands the H2.
+HEADING_HEIGHT_PT = {2: 52.0, 3: 38.0, 4: 28.0}
 
 
 def render_table(rows: list[list[str]]) -> str:
     columns = max(len(row) for row in rows)
-    if columns == 1 and rows and not rows[0][0].strip() and len(rows) >= 2:
+    if is_callout(rows):
         return render_callout(rows)
-    width = 0.94 / columns
-    specification = "@{}" + "".join("Y{" + format(width, ".4f") + r"\linewidth}" for _ in range(columns)) + "@{}"
+    # Columns fill the measure exactly: c widths plus the 2c-2 inner
+    # separations equal \linewidth. A fixed 0.94 share left five-column tables
+    # 1.4pt wider than the text block.
+    width = r"\dimexpr(\linewidth-" + str(2 * columns - 2) + r"\tabcolsep)/" + str(columns) + r"\relax"
+    specification = "@{}" + "".join("Y{" + width + "}" for _ in range(columns)) + "@{}"
     font_command = r"\small" if columns <= 3 else r"\fontsize{7.2}{9}\selectfont"
 
     # Short operational summaries should remain intact. A compact tabular is
     # also preferable here because a longtable at a forced page boundary can
     # print both its first-page and continuation header before the first row.
-    compact = len(rows) <= 8 and max(len(cell) for row in rows for cell in row) <= 110
+    compact = compact_table(rows)
     if compact:
-        output = [r"\needspace{5\baselineskip}", r"\BookTableStart", font_command,
+        reserve = r"\BookNeedspace{" + format(table_reservation(rows, columns, True), ".1f") + "pt}"
+        output = [reserve, r"\BookTableStart", font_command,
                   r"\begin{tabular}{" + specification + "}",
                   r"\rowcolor{BookNavy}", table_header(rows[0], columns)]
         for index, row in enumerate(rows[1:], 1):
             padded = row + [""] * (columns - len(row))
             if index % 2 == 0:
                 output.append(r"\rowcolor{BookLight}")
-            output.append(" & ".join(inline(cell) for cell in padded) + r" \\")
+            output.append(" & ".join(inline(cell, cell=True) for cell in padded) + r" \\")
         output.extend([r"\end{tabular}", r"\BookTableEnd"])
         return "\n".join(output)
 
-    # A longtable header alone at the foot of a page reads as a defect. Reserve
-    # the header plus a few body rows so the table starts where it can breathe;
-    # anything longer still breaks naturally, with the header repeated.
-    output = [r"\needspace{5\baselineskip}", r"\BookTableStart", font_command,
+    # A longtable header alone at the foot of a page reads as a defect. The old
+    # guard, needspace's \needspace, only plants a cheap breakpoint that TeX
+    # takes later, once the page overfills -- by then inside the longtable, whose
+    # output routine prints its head on top of the next page as well. That gave
+    # doubled heads, and heads stranded above unrelated listings. So a longtable
+    # gets no reservation at all (see \BookNeedspace). It already moves itself to the next
+    # page when its head and first row do not fit, and up to two more body rows
+    # are tied to it with \\* (see longtable_kept), so the head opens with rows
+    # beneath it. Anything longer breaks with the head repeated.
+    output = [r"\BookTableStart", font_command,
               r"\begin{longtable}{" + specification + "}"]
     # Define the first-page header separately from the continuation header.
-    # Without an explicit first head, longtable can emit its continuation head
-    # in addition to the rows that precede \endhead at a page boundary.
     output.extend([
         r"\rowcolor{BookNavy}", table_header(rows[0], columns), r"\endfirsthead",
         r"\rowcolor{BookNavy}", table_header(rows[0], columns), r"\endhead",
     ])
+    kept = longtable_kept(rows, columns)
     for index, row in enumerate(rows[1:], 1):
         padded = row + [""] * (columns - len(row))
         if index % 2 == 0:
             output.append(r"\rowcolor{BookLight}")
-        output.append(" & ".join(inline(cell) for cell in padded) + r" \\")
+        end = r" \\*" if index <= kept else r" \\"
+        output.append(" & ".join(inline(cell, cell=True) for cell in padded) + end)
     output.extend([r"\end{longtable}", r"\BookTableEnd"])
     return "\n".join(output)
 
 
 # Code is set at 7.4/9.2pt (see bookcode in bookstyle.sty). A listing that fits
-# on one page should never be split, so reserve its height up front: needspace
+# on one page should never be split, so reserve its height up front: the guard
 # ejects the page when too little room is left, moving the whole listing over.
 CODE_BASELINE_PT = 9.2
 CODE_FRAME_PT = 20.0
@@ -322,15 +467,27 @@ CODE_FRAME_PT = 20.0
 CODE_MAX_RESERVE_PT = 643.0
 
 
+LISTING_LABEL = re.compile(r"^(🐍|[A-Z]{2,5}) · ")
+LISTING_LABEL_PT = 16.0
+
+
+def listing_keep(code: str) -> float:
+    """Height a listing must keep with its label: all of it when it fits on a
+    page, otherwise its first eight lines."""
+    lines = len(code.splitlines())
+    height = lines * CODE_BASELINE_PT + CODE_FRAME_PT
+    return height if height <= CODE_MAX_RESERVE_PT else 8 * CODE_BASELINE_PT + CODE_FRAME_PT
+
+
 def code_reservation(code: str) -> str:
-    """The \needspace guard that keeps a page-sized listing intact."""
+    r"""The \BookNeedspace guard that keeps a page-sized listing intact."""
     height = len(code.splitlines()) * CODE_BASELINE_PT + CODE_FRAME_PT
     if height > CODE_MAX_RESERVE_PT:
         return ""
-    return r"\needspace{" + format(height, ".1f") + "pt}"
+    return r"\BookNeedspace{" + format(height, ".1f") + "pt}"
 
 
-def render_code(language: str, code: str) -> str:
+def render_code(language: str, code: str, labelled: bool = False) -> str:
     if "\\end{lstlisting}" in code:
         raise ValueError("Code block contains a reserved lstlisting terminator")
     language_map = {"python": "Python", "json": "bookjson", "bash": "bookbash", "yaml": "bookyaml", "text": ""}
@@ -340,7 +497,9 @@ def render_code(language: str, code: str) -> str:
     if mapped:
         options.append("language=" + mapped)
     lines = []
-    reservation = code_reservation(code)
+    # A labelled listing was reserved before its label; a second guard here
+    # would add a breakpoint between the label and the code.
+    reservation = "" if labelled else code_reservation(code)
     if reservation:
         lines.append(reservation)
     lines += [r"\begin{lstlisting}[" + ",".join(options) + "]", code, r"\end{lstlisting}"]
@@ -416,12 +575,17 @@ def render_content(blocks: list[tuple], diagram_files: dict[str, str], book_titl
                 output.append(r"\BookAppendix{" + appendix.group(1) + "}{" + inline(appendix.group(2)) + "}")
             elif level == 1:
                 output.append(r"\BookFrontChapter{" + inline(text) + "}")
-            elif level == 2:
-                output.append(r"\section{" + inline(text) + "}")
-            elif level == 3:
-                output.append(r"\subsection{" + inline(text) + "}")
             else:
-                output.append(r"\subsubsection{" + inline(text) + "}")
+                # A heading whose next block is a table or listing must not be
+                # left alone at the foot of a page: reserve the heading and the
+                # block's opening together, before the heading is set.
+                following = blocks[index + 1] if index + 1 < len(blocks) else None
+                after = blocks[index + 2] if index + 2 < len(blocks) else None
+                keep = block_reservation(following, after) if following else 0.0
+                if keep:
+                    output.append(r"\BookNeedspace{" + format(keep + HEADING_HEIGHT_PT[min(level, 4)], ".1f") + "pt}")
+                command = {2: "section", 3: "subsection"}.get(level, "subsubsection")
+                output.append("\\" + command + "{" + inline(text) + "}")
         elif kind == "diagram":
             identifier, caption = block[1], block[2]
             if identifier not in diagram_files:
@@ -430,7 +594,9 @@ def render_content(blocks: list[tuple], diagram_files: dict[str, str], book_titl
             output.append(r"\BookDiagram{" + diagram_files[identifier] + "}{" + inline(caption) + "}{" + escape_plain(identifier) + "}")
         elif kind == "code":
             stats["code_blocks"] += 1
-            output.append(render_code(block[1], block[2]))
+            previous = blocks[index - 1] if index else None
+            labelled = bool(previous and previous[0] == "paragraph" and LISTING_LABEL.match(previous[1]))
+            output.append(render_code(block[1], block[2], labelled))
         elif kind == "table":
             stats["tables"] += 1
             if max(len(row) for row in block[1]) == 1 and block[1] and not block[1][0][0].strip():
@@ -440,8 +606,15 @@ def render_content(blocks: list[tuple], diagram_files: dict[str, str], book_titl
             output.extend([r"\begin{bookquote}", inline(block[1]), r"\end{bookquote}"])
         elif kind == "paragraph":
             text = block[1]
+            following = blocks[index + 1] if index + 1 < len(blocks) else None
             if re.match(r"^Figure\s+\d", text):
                 output.append(r"\BookFigureCaption{" + inline(text) + "}")
+            elif following and following[0] == "code" and LISTING_LABEL.match(text):
+                # A listing's label ("🐍 · …", "JSON · …") belongs to the listing:
+                # reserve the label and the listing's opening together, so the
+                # label never ends a page while its code starts on the next.
+                output.append(r"\BookNeedspace{" + format(listing_keep(following[2]) + LISTING_LABEL_PT, ".1f") + "pt}")
+                output.append(inline(text) + r"\par\nopagebreak")
             else:
                 output.append(inline(text) + r"\par")
         index += 1
