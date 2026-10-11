@@ -15,7 +15,7 @@
 // tears a gap through the middle of the stack.
 digraph system_overview {
   rankdir = TB
-  graph [ranksep=0.24, nodesep=0.34]
+  graph [ranksep=0.24, nodesep=0.12, pad=0.1]
   node [shape=plaintext, style="", margin=0]
 
   subgraph cluster_sec {
@@ -24,7 +24,7 @@ digraph system_overview {
     style = filled; fillcolor = "#FBEFEF"; color = "#A62C2C"; penwidth = 1.5
     margin = 8
     node [shape=box, style="filled,rounded", penwidth=1.2, fontsize=10,
-          fillcolor="#FCECEC", color="#A62C2C", width=1.25, height=0.32,
+          fillcolor="#FCECEC", color="#A62C2C", width=1.2, height=0.32, fontsize=11.5,
           margin="0.10,0.06"]
     c0 [label="Identity"]
     cx [label="Least privilege"]
@@ -39,39 +39,39 @@ digraph system_overview {
   // ------------------------------------------------------------- the bands --
   // badge (Part) | name | what it owns
   ch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#4A6078" BGCOLOR="#EEF4FA">
-    <TR><TD WIDTH="56" BGCOLOR="#4A6078" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>II · IV</B></FONT></TD>
-        <TD WIDTH="150" ALIGN="LEFT"><B>Channels</B></TD>
-        <TD WIDTH="268" ALIGN="LEFT"><FONT POINT-SIZE="11">who asks for work, and who sees the result</FONT></TD></TR></TABLE>>]
+    <TR><TD WIDTH="46" BGCOLOR="#4A6078" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>II · IV</B></FONT></TD>
+        <TD WIDTH="132" ALIGN="LEFT"><B>Channels</B></TD>
+        <TD WIDTH="206" ALIGN="LEFT"><FONT POINT-SIZE="11">who asks for work,<BR ALIGN="LEFT"/>and who sees the result<BR ALIGN="LEFT"/></FONT></TD></TR></TABLE>>]
 
   rt [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#0D6E69" BGCOLOR="#E7F5F3">
-    <TR><TD WIDTH="56" BGCOLOR="#0D6E69" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>I · IV</B></FONT></TD>
-        <TD WIDTH="150" ALIGN="LEFT"><B>Agent runtime</B></TD>
-        <TD WIDTH="268" ALIGN="LEFT"><FONT POINT-SIZE="11">bounded reasoning, patterns, durable run state</FONT></TD></TR></TABLE>>]
+    <TR><TD WIDTH="46" BGCOLOR="#0D6E69" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>I · IV</B></FONT></TD>
+        <TD WIDTH="132" ALIGN="LEFT"><B>Agent runtime</B></TD>
+        <TD WIDTH="206" ALIGN="LEFT"><FONT POINT-SIZE="11">bounded reasoning, patterns,<BR ALIGN="LEFT"/>durable run state<BR ALIGN="LEFT"/></FONT></TD></TR></TABLE>>]
 
   ma [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#6A2E6E" BGCOLOR="#F7ECF8">
-    <TR><TD WIDTH="56" BGCOLOR="#6A2E6E" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>V</B></FONT></TD>
-        <TD WIDTH="150" ALIGN="LEFT"><B>Collaboration</B></TD>
-        <TD WIDTH="268" ALIGN="LEFT"><FONT POINT-SIZE="11">specialists, peer agents, external protocols</FONT></TD></TR></TABLE>>]
+    <TR><TD WIDTH="46" BGCOLOR="#6A2E6E" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>V</B></FONT></TD>
+        <TD WIDTH="132" ALIGN="LEFT"><B>Collaboration</B></TD>
+        <TD WIDTH="206" ALIGN="LEFT"><FONT POINT-SIZE="11">specialists, peer agents,<BR ALIGN="LEFT"/>external protocols<BR ALIGN="LEFT"/></FONT></TD></TR></TABLE>>]
 
   kn [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#0B6076" BGCOLOR="#E6F5F9">
-    <TR><TD WIDTH="56" BGCOLOR="#0B6076" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>II</B></FONT></TD>
-        <TD WIDTH="150" ALIGN="LEFT"><B>Knowledge</B></TD>
-        <TD WIDTH="268" ALIGN="LEFT"><FONT POINT-SIZE="11">governed knowledge, rules, catalogs, per-run context</FONT></TD></TR></TABLE>>]
+    <TR><TD WIDTH="46" BGCOLOR="#0B6076" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>II</B></FONT></TD>
+        <TD WIDTH="132" ALIGN="LEFT"><B>Knowledge</B></TD>
+        <TD WIDTH="206" ALIGN="LEFT"><FONT POINT-SIZE="11">governed knowledge, rules,<BR ALIGN="LEFT"/>catalogs, per-run context<BR ALIGN="LEFT"/></FONT></TD></TR></TABLE>>]
 
   gw [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#1450A3" BGCOLOR="#EAF3FB">
-    <TR><TD WIDTH="56" BGCOLOR="#1450A3" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>IV&#8211;VII</B></FONT></TD>
-        <TD WIDTH="150" ALIGN="LEFT"><B>Control points</B></TD>
-        <TD WIDTH="268" ALIGN="LEFT"><FONT POINT-SIZE="11">admission, inference, effects, and approval</FONT></TD></TR></TABLE>>]
+    <TR><TD WIDTH="46" BGCOLOR="#1450A3" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>IV&#8211;VII</B></FONT></TD>
+        <TD WIDTH="132" ALIGN="LEFT"><B>Control points</B></TD>
+        <TD WIDTH="206" ALIGN="LEFT"><FONT POINT-SIZE="11">admission, inference,<BR ALIGN="LEFT"/>effects, and approval<BR ALIGN="LEFT"/></FONT></TD></TR></TABLE>>]
 
   sor [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#6A2E6E" BGCOLOR="#F1E3F3">
-    <TR><TD WIDTH="56" BGCOLOR="#6A2E6E" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>—</B></FONT></TD>
-        <TD WIDTH="150" ALIGN="LEFT"><B>Systems of record</B></TD>
-        <TD WIDTH="268" ALIGN="LEFT"><FONT POINT-SIZE="11">where effects commit and stay authoritative</FONT></TD></TR></TABLE>>]
+    <TR><TD WIDTH="46" BGCOLOR="#6A2E6E" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>—</B></FONT></TD>
+        <TD WIDTH="132" ALIGN="LEFT"><B>Systems of record</B></TD>
+        <TD WIDTH="206" ALIGN="LEFT"><FONT POINT-SIZE="11">where effects commit<BR ALIGN="LEFT"/>and stay authoritative<BR ALIGN="LEFT"/></FONT></TD></TR></TABLE>>]
 
   obs [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#8A5600" BGCOLOR="#FFF4DF">
-    <TR><TD WIDTH="56" BGCOLOR="#8A5600" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>VII</B></FONT></TD>
-        <TD WIDTH="150" ALIGN="LEFT"><B>Evidence</B></TD>
-        <TD WIDTH="268" ALIGN="LEFT"><FONT POINT-SIZE="11">traces, evaluation, the loop into the next release</FONT></TD></TR></TABLE>>]
+    <TR><TD WIDTH="46" BGCOLOR="#8A5600" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="11"><B>VII</B></FONT></TD>
+        <TD WIDTH="132" ALIGN="LEFT"><B>Evidence</B></TD>
+        <TD WIDTH="206" ALIGN="LEFT"><FONT POINT-SIZE="11">traces, evaluation, the loop<BR ALIGN="LEFT"/>into the next release<BR ALIGN="LEFT"/></FONT></TD></TR></TABLE>>]
 
   // ----------------------------------------------------------- the spines --
   // Tall, because the prose says security spans every band. Drawing it as a
@@ -83,7 +83,7 @@ digraph system_overview {
     style = filled; fillcolor = "#F2F6FA"; color = "#4A6078"; penwidth = 1.5
     margin = 8
     node [shape=box, style="filled,rounded", penwidth=1.2, fontsize=10,
-          fillcolor="#EEF4FA", color="#4A6078", width=1.25, height=0.32,
+          fillcolor="#EEF4FA", color="#4A6078", width=1.2, height=0.32, fontsize=11.5,
           margin="0.10,0.06"]
     p0 [label="Golden paths"]
     p1 [label="SDK"]
@@ -99,11 +99,13 @@ digraph system_overview {
   // The descent is the argument: the agent proposes at the top, the platform
   // authorizes in the middle, and only the bottom bands commit.
   edge [color="#1450A3", penwidth=1.7, arrowsize=0.8]
-  ch -> rt [xlabel=" proposes  "]
+  // Labels, not xlabels: an xlabel is placed after layout and landed on the
+  // arrow ("com|mits"); a label reserves its own room beside the edge.
+  ch -> rt [label=" proposes", fontcolor="#1450A3"]
   rt -> ma
   ma -> kn
-  kn -> gw [xlabel=" authorizes  "]
-  gw -> sor [xlabel=" commits  "]
+  kn -> gw [label=" authorizes", fontcolor="#1450A3"]
+  gw -> sor [label=" commits", fontcolor="#1450A3"]
   sor -> obs
 
   // Evidence closes the loop back to the runtime, which is why it is a band and

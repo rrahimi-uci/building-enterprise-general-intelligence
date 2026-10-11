@@ -1,6 +1,7 @@
 // Figure 20-2 — Agentic security trust boundaries.
 // Message: trust is not inherited through the chain. Each crossing re-checks,
 // because authenticating the user does not authorize the agent.
+// Cluster labels sit clear of the edges that enter each boundary.
 digraph security_boundaries {
   rankdir = TB
   graph [ranksep=0.30, nodesep=0.26]
@@ -8,14 +9,14 @@ digraph security_boundaries {
 
   user [label="User\nauthenticated", fillcolor="#EEF4FA", color="#4A6078"]
   subgraph cluster_trusted {
-    label="  Platform trust boundary  "; labeljust="l"; fontsize=12; fontcolor="#1450A3"
-    color="#1450A3"; style="rounded,dashed"; margin=14; bgcolor="#F6FAFE"
+    label="Platform trust\nboundary"; labeljust="l"; labelloc="b"; fontsize=12; fontcolor="#1450A3"
+    color="#1450A3"; style="rounded,dashed"; margin=24; bgcolor="#F6FAFE"
     run [label="Run service", fillcolor="#EAF3FB", color="#1450A3", style=filled]
     agent [label="Agent runtime\nuntrusted output", fillcolor="#FFF4DF", color="#8A5600", style=filled]
     tool [label="Tool Gateway", fillcolor="#EAF3FB", color="#1450A3", style=filled]
   }
   subgraph cluster_external {
-    label="  Outside the boundary  "; labeljust="l"; fontsize=12; fontcolor="#A62C2C"
+    label="Outside the boundary"; labeljust="l"; labelloc="b"; fontsize=12; fontcolor="#A62C2C"
     color="#A62C2C"; style="rounded,dashed"; margin=14; bgcolor="#FDF5F5"
     model [label="Model provider", fillcolor="#FCECEC", color="#A62C2C"]
     docs [label="Retrieved content\nuntrusted input", fillcolor="#FCECEC", color="#A62C2C"]
@@ -26,6 +27,6 @@ digraph security_boundaries {
   run -> agent [label="  bounded step  "]
   agent -> model [label="  prompt  ", style=dashed]
   docs -> agent [label="  never trusted  ", color="#A62C2C", fontcolor="#A62C2C", style=dashed]
-  agent -> tool [label="  proposal, re-authorized  ", color="#8A5600", fontcolor="#8A5600"]
+  agent -> tool [label=" proposal,\n re-authorized", color="#8A5600", fontcolor="#8A5600"]
   tool -> sys [label="  committed effect  "]
 }

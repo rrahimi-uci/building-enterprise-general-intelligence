@@ -71,9 +71,11 @@ Every semantic color is paired with a text label, heading, border, or structure.
 - Headers repeat across page breaks.
 - Header row uses white bold text on Book Navy.
 - Body uses Book Ink on white/Book Light; color does not encode meaning.
-- Width is allocated across the available line width. Up to five source columns are supported.
-- Dense four/five-column tables use 7.2 pt type. If a future table requires smaller text, split, rotate, or redesign it rather than silently shrinking.
-- URLs and inline code are wrap-safe; cells use ragged-right alignment to avoid rivers and overfull justification.
+- Columns share the line width exactly: `c` equal columns plus their `2c-2` inner separations equal `\linewidth`. Up to five source columns are supported.
+- Dense four/five-column tables use 7.2 pt type, and inline code in a cell takes the cell's size. If a future table requires smaller text, split, rotate, or redesign it rather than silently shrinking.
+- URLs and inline code are wrap-safe; a slash in cell text is a line-break opportunity (`\slash`), so slash-joined lists cannot overrun a column; cells use ragged-right alignment to avoid rivers and overfull justification.
+- Short tables (up to eight rows, no cell over 110 characters) are a single `tabular` kept whole. Longer tables are a `longtable` with no reservation in front of it; its first body rows end in `\\*`, so the head never opens a page alone.
+- Keep-together guards use `\BookNeedspace` (`\Needspace`), never `\needspace`: the latter plants a deferred breakpoint that a later `longtable` can capture, printing a stray or doubled head. A heading keeps the opening of the table, listing, or sub-heading that follows it; a listing label (`🐍 · …`, `JSON · …`) keeps its listing.
 
 ## 7. Code
 
@@ -87,7 +89,7 @@ Every semantic color is paired with a text label, heading, border, or structure.
 
 - Cover: 300 effective dpi at Letter size.
 - Technical diagrams: 255 effective dpi at the 7.06-inch LaTeX line width; no recompression occurs in the source project.
-- Images use width and height limits with `keepaspectratio`; they cannot be stretched.
+- Images use width and height limits with `keepaspectratio`; they cannot be stretched. The height cap is `0.86\textheight`, which still leaves room for a two-line caption; a tall portrait diagram is height-limited, so the cap sets its printed label size.
 - Captions are semantic, centered, dark slate, and represented in surrounding prose.
 - Decorative imagery is restricted to the cover.
 

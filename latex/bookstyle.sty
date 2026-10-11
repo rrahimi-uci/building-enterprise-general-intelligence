@@ -231,9 +231,12 @@
 % ("Figure 4-1 — ..."), which the prose cross-references. LaTeX's automatic
 % "Figure N:" label would print a second, different number in front of it, so
 % the label is suppressed and the book's numbering stands alone.
+% Tall portrait diagrams are height-limited, so the cap sets their label size:
+% at 0.76\textheight a 12in-tall flow printed its labels near 6pt. 0.86 still
+% leaves room for a two-line caption on a float page.
 \newcommand{\BookDiagram}[3]{%
   \begin{figure}[htbp]\centering
-  \includegraphics[width=\linewidth,height=0.76\textheight,keepaspectratio]{#1}%
+  \includegraphics[width=\linewidth,height=0.86\textheight,keepaspectratio]{#1}%
   \captionsetup{labelformat=empty}\caption{#2}\label{fig:#3}
   \end{figure}}
 \newcommand{\BookFigureCaption}[1]{\begin{center}\color{BookSlate}\fontsize{8.5}{10.5}\selectfont\itshape #1\end{center}}
@@ -243,6 +246,12 @@
 \setlength{\tabcolsep}{4pt}
 \setlength{\arrayrulewidth}{0.35pt}
 \arrayrulecolor{BookRule}
+% Keep-together guard for headings, listings and short tables. \needspace (v1.3)
+% only plants a cheap breakpoint that TeX takes later, when the page overfills;
+% if a longtable has started by then, its output routine handles that break and
+% prints a stray table head on the next page. \Needspace measures the page now
+% and breaks now, so the decision cannot leak into a later table.
+\newcommand{\BookNeedspace}[1]{\Needspace{#1}}
 \newcommand{\BookTableStart}{\par\vspace{4pt}\begingroup\small\setlength{\LTpre}{2pt}\setlength{\LTpost}{5pt}}
 \newcommand{\BookTableEnd}{\endgroup\par\vspace{2pt}}
 
@@ -294,6 +303,9 @@
 % Native table of contents.
 \renewcommand{\contentsname}{Contents}
 \makeatletter
+% Room for a three-digit page number; at the 1.55em default every TOC entry
+% from page 100 on was about 1pt overfull.
+\renewcommand*\@pnumwidth{1.9em}
 \renewcommand*\l@part[2]{\addpenalty{-\@highpenalty}\vskip 0.8em plus 1pt\setlength\@tempdima{2.2em}\begingroup\parindent\z@\rightskip\@pnumwidth\parfillskip-\@pnumwidth{\leavevmode\color{BookNavy}\large\bfseries #1\hfil\hb@xt@\@pnumwidth{\hss #2}}\par\endgroup}
 \makeatother
 

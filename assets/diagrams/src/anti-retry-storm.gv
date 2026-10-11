@@ -11,7 +11,7 @@
 // That is deliberate; do not spend time trying to move it.
 digraph anti_retry_storm {
   rankdir = LR
-  graph [ranksep=0.30, nodesep=0.18]
+  graph [ranksep=0.30, nodesep=0.34]
   node [shape=box, style="filled,rounded", penwidth=1.4, fontsize=11,
         margin="0.13,0.08", height=0.40]
   edge [arrowsize=0.7, penwidth=1.6]
@@ -36,9 +36,9 @@ digraph anti_retry_storm {
   b2 -> b3 [color="#A62C2C", constraint=false]
   b3 -> b4 [color="#A62C2C", constraint=false]
   b4 -> b5 [color="#A62C2C", constraint=false]
-  g1 -> g2 [color="#0D6E69", constraint=false, xlabel=" transient"]
+  g1 -> g2 [color="#0D6E69", constraint=false, xlabel="  transient  "]
   g2 -> g3 [color="#0D6E69", constraint=false]
-  g3 -> g4 [color="#0D6E69", constraint=false, xlabel=" unknown"]
+  g3 -> g4 [color="#0D6E69", constraint=false, xlabel="  unknown  "]
   g4 -> g5 [color="#0D6E69", constraint=false]
 
   { rank=same; b1; b2; b3; b4; b5; bad }

@@ -11,7 +11,7 @@
 // That is deliberate; do not spend time trying to move it.
 digraph anti_approval_binding {
   rankdir = LR
-  graph [ranksep=0.30, nodesep=0.18]
+  graph [ranksep=0.30, nodesep=0.34]
   node [shape=box, style="filled,rounded", penwidth=1.4, fontsize=11,
         margin="0.13,0.08", height=0.40]
   edge [arrowsize=0.7, penwidth=1.6]
@@ -35,7 +35,7 @@ digraph anti_approval_binding {
   b3 -> b4 [color="#A62C2C", constraint=false]
   g1 -> g2 [color="#0D6E69", constraint=false]
   g2 -> g3 [color="#0D6E69", constraint=false]
-  g3 -> g4 [color="#0D6E69", constraint=false, xlabel=" yes"]
+  g3 -> g4 [color="#0D6E69", constraint=false, xlabel="  yes  "]
 
   { rank=same; b1; b2; b3; b4; bad }
   { rank=same; g1; g2; g3; g4; good }

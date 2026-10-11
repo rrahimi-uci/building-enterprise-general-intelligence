@@ -22,12 +22,12 @@ digraph pattern_reflection {
   hum [label="Human intervention\nboth versions attached", fillcolor="#FCECEC", color="#A62C2C", width=2.0]
 
   pro -> chk -> ev
-  chk -> gate [label=" fails · judge skipped", fontsize=9, fontcolor="#4A6078", style=dashed]
-  ev -> gate [color="#A62C2C", label=" score + rationale · never self-accepts", fontsize=9, fontcolor="#A62C2C"]
-  gate -> out [color="#8A5600", label=" accepted", fontsize=9, fontcolor="#8A5600"]
-  gate -> rev [label=" rejected", fontsize=9, fontcolor="#4A6078"]
-  gate -> hum [color="#A62C2C", label=" escalated\n cap · no progress", fontsize=9, fontcolor="#A62C2C"]
-  rev -> pro [label=" while under cap", fontsize=9, fontcolor="#4A6078"]
+  chk -> gate [label=" fails · judge skipped", fontsize=10.5, fontcolor="#4A6078", style=dashed]
+  ev -> gate [color="#A62C2C", label=" score + rationale · never self-accepts", fontsize=10.5, fontcolor="#A62C2C"]
+  gate -> out [color="#8A5600", label=" accepted", fontsize=10.5, fontcolor="#8A5600"]
+  gate -> rev [label=" rejected", fontsize=10.5, fontcolor="#4A6078"]
+  gate -> hum [color="#A62C2C", label=" escalated\n cap · no progress", fontsize=10.5, fontcolor="#A62C2C"]
+  rev -> pro [label=" while under cap", fontsize=10.5, fontcolor="#4A6078"]
   cap -> rev [color="#1450A3", style=dashed, arrowsize=0.55]
 
   { rank = same; out; rev; hum }

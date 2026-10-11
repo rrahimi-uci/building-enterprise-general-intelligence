@@ -7,9 +7,9 @@
 // may acknowledge.
 digraph supervisor_worker {
   rankdir = TB
-  graph [ranksep=0.32, nodesep=0.26]
-  node [shape=box, style="filled,rounded", penwidth=1.4, fontsize=10.5,
-        margin="0.12,0.07", height=0.42, width=1.65]
+  graph [ranksep=0.32, nodesep=0.20, pad=0.1]
+  node [shape=box, style="filled,rounded", penwidth=1.4, fontsize=11.5,
+        margin="0.10,0.07", height=0.42, width=1.5]
   edge [arrowsize=0.65, penwidth=1.5, color="#1450A3"]
 
   sup [label="Supervisor\nowns the outcome, always", fillcolor="#E7F5F3",
@@ -28,20 +28,20 @@ digraph supervisor_worker {
 
   join [label="Fan-in contract\nall · quorum · first valid · fallback",
         shape=diamond, style=filled, fillcolor="#FFF4DF", color="#8A5600",
-        height=0.85, width=3.4]
+        height=0.85, width=3.2]
   out  [label="Accepted outcome", fillcolor="#F7ECF8", color="#6A2E6E", width=2.0]
 
-  grant [label="each child grant is an\nintersection, never a copy",
-         shape=plaintext, style="", fontsize=9.5, fontcolor="#A62C2C"]
-  canc  [label="cancellation is durable intent —\na running mutation reconciles first",
-         shape=plaintext, style="", fontsize=9.5, fontcolor="#A62C2C"]
+  grant [label="each child grant\nis an intersection,\nnever a copy",
+         shape=plaintext, style="", fontsize=10.5, fontcolor="#A62C2C"]
+  canc  [label="cancellation is\ndurable intent — a\nrunning mutation\nreconciles first",
+         shape=plaintext, style="", fontsize=10.5, fontcolor="#A62C2C"]
 
   sup -> t1; sup -> t2; sup -> t3
   t1 -> w1; t2 -> w2; t3 -> w3
   w1 -> join; w2 -> join; w3 -> join
   join -> out [color="#8A5600"]
   sup -> join [color="#6A2E6E", style=dashed, arrowsize=0.5,
-               label="  owns completion", fontsize=9, fontcolor="#6A2E6E",
+               label=" owns\n completion", fontsize=10.5, fontcolor="#6A2E6E",
                constraint=false]
 
   { rank=same; t1 -> t2 -> t3 -> grant [style=invis] }

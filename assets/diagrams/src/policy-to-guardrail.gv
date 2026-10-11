@@ -2,11 +2,13 @@
 // Message: extraction is probabilistic and verification is not, so the gate in
 // the middle is the load-bearing part. Ungrounded claims leave the pipeline, and
 // an accountable owner approves the interpretation before it is enforced.
+// The policy sentence is the chapter's own example (a pay-statement age window),
+// not an unrelated payments rule.
 digraph policy_to_guardrail {
   rankdir = TB
   graph [ranksep=0.30, nodesep=0.35]
 
-  policy [label="Policy text\n\n\"Transactions over $10,000\nrequire compliance approval\"",
+  policy [label="Policy text\n\n\"A pay statement is acceptable\nonly within the age window\"",
           fillcolor="#EEF4FA", color="#4A6078", shape=note, style=filled]
   extract [label="Extract\ntyped rule, scope, citation", fillcolor="#E7F5F3", color="#0D6E69"]
   prove [label="Grounded in\nthe corpus?", fillcolor="#FFF4DF", color="#8A5600", shape=diamond,

@@ -24,6 +24,7 @@
     "activationBorderColor": "#0D6E69",
     "sequenceNumberColor": "#FFFFFF"
   },
-  "sequence": { "showSequenceNumbers": true, "actorMargin": 46, "width": 156,
-                "boxMargin": 10, "messageFontSize": 14, "noteFontSize": 13 }
+  "sequence": { "showSequenceNumbers": false, "actorMargin": 24, "width": 112,
+                "boxMargin": 8, "messageMargin": 30, "wrap": true, "mirrorActors": false,
+                "messageFontSize": 15, "noteFontSize": 14, "actorFontSize": 15 }
 }

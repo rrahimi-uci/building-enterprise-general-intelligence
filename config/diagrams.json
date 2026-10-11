@@ -15,14 +15,15 @@
       "source": "assets/diagrams/src/anti-approval-binding.gv",
       "vector": "assets/diagrams/anti-approval-binding.pdf",
       "description": "AP-06 Boolean consent versus proposal-bound, expiring approval",
-      "sha256": "e1c5b392d5d685077e6aba313e3d8875a518d3c8fd9c62b32f4b2be9c15df9bf"
+      "sha256": "c2a4f4889cd85f7feba4b7cd6f22cec922e3a5d8a03ffcac55a7b4ebf35d7d94"
     },
     {
       "id": "anti-before-after",
       "file": "assets/diagrams/anti-before-after.png",
-      "sha256": "2a2d53351d1ed6a067d53086380c5543b98c24a08d51bfbbc6343edaba559a3f",
       "source": "assets/diagrams/src/anti-before-after.gv",
-      "vector": "assets/diagrams/anti-before-after.pdf"
+      "vector": "assets/diagrams/anti-before-after.pdf",
+      "description": "AP-01 side by side: an autonomous monolith that decides, authorizes, and acts, keeps state in the conversation, and leaves effects without receipts, against a governed design where the agent proposes, the platform authorizes, and the gateway commits once with a receipt",
+      "sha256": "360fe352da7c84d9404c67dec0d62c3636e5e7bd621e9ab7821ed1a414ab37dd"
     },
     {
       "id": "anti-retry-storm",
@@ -30,14 +31,15 @@
       "source": "assets/diagrams/src/anti-retry-storm.gv",
       "vector": "assets/diagrams/anti-retry-storm.pdf",
       "description": "AP-04/AP-05 layered retries and timeout-as-failure versus one retry owner",
-      "sha256": "fddd9b20d9c24cfc25d823e08c1405ab694b738287654441cb6e2e794a2a4740"
+      "sha256": "73eab0866632462f9312c4a6bfd1ca021b1d6a73758779b10178740dd92f138a"
     },
     {
       "id": "book-map",
       "file": "assets/diagrams/book-map.png",
-      "sha256": "6f4351eb5ac059425c0e8c7e9c9815dcf747014d87fe8978f176686c1e1796da",
       "source": "assets/diagrams/src/book-map.gv",
-      "vector": "assets/diagrams/book-map.pdf"
+      "vector": "assets/diagrams/book-map.pdf",
+      "description": "The eight Parts in reading order, each with its title and the topics it develops, from foundations to running the system in the real world",
+      "sha256": "6f4351eb5ac059425c0e8c7e9c9815dcf747014d87fe8978f176686c1e1796da"
     },
     {
       "id": "capability-ladder",
@@ -53,7 +55,7 @@
       "source": "assets/diagrams/src/causal-trace.gv",
       "vector": "assets/diagrams/causal-trace.pdf",
       "description": "A causal run trace links asynchronous work while protected decisions and effects enter a separate audit ledger",
-      "sha256": "0b19c15851a2e8fe51c79413a5cd7fdbf0485937b4a230659b2c4f10ca49b76c"
+      "sha256": "65641d273c506c5bce28154a48ba46d6c8496c8be354cac080ee34dd60eda52a"
     },
     {
       "id": "context-pipeline",
@@ -77,68 +79,76 @@
       "source": "assets/diagrams/src/evaluation-gate.gv",
       "vector": "assets/diagrams/evaluation-gate.pdf",
       "description": "Candidate evaluation combines deterministic checks, calibrated judges, slices, and a risk-tiered release gate",
-      "sha256": "fa414e7cc7da8b066e4d54e773d3516d5c893d7c7c92359c074976184836cb50"
+      "sha256": "00f01d625c3abda6b501960f35de5395ba3f6cc9cbf89de9c5217b03b6402e1e"
     },
     {
       "id": "developer-platform",
       "file": "assets/diagrams/developer-platform.png",
-      "sha256": "0f5c50101d3b8bee87d6c58d25a0327f49b8eaaae122a3d74c0e17842045f8d0",
       "source": "assets/diagrams/src/developer-platform.gv",
-      "vector": "assets/diagrams/developer-platform.pdf"
+      "vector": "assets/diagrams/developer-platform.pdf",
+      "description": "Four stacked layers: team-owned agents, tools, Skills and evaluation datasets; the SDK's portable contracts; shared platform services; and identity, policy, evidence, and tracing that no team re-implements",
+      "sha256": "0f5c50101d3b8bee87d6c58d25a0327f49b8eaaae122a3d74c0e17842045f8d0"
     },
     {
       "id": "dx-golden-path",
       "file": "assets/diagrams/dx-golden-path.png",
-      "sha256": "48e287314084041ba128fc6a8a8cf02652a7ef819d36acc8ae7c38ed98ce29dd",
       "source": "assets/diagrams/src/dx-golden-path.gv",
-      "vector": "assets/diagrams/dx-golden-path.pdf"
+      "vector": "assets/diagrams/dx-golden-path.pdf",
+      "description": "The golden path from scaffold through develop, debug, evaluate, package, promote, and operate to improve, with identity, tool manifests, pinned versions, traces, and evidence supplied by the platform",
+      "sha256": "48e287314084041ba128fc6a8a8cf02652a7ef819d36acc8ae7c38ed98ce29dd"
     },
     {
       "id": "gateway-roles",
       "file": "assets/diagrams/gateway-roles.png",
       "source": "assets/diagrams/src/gateway-roles.gv",
       "vector": "assets/diagrams/gateway-roles.pdf",
-      "sha256": "c4171d7e82e160267fc2123fc50b05d3adbe489d40dda9a26307ee727da4adfb"
+      "description": "Each control point and the question it answers: the API Gateway admits the caller, the LLM Gateway chooses the model under policy, the Tool Gateway decides whether an effect may happen once, the MCP and A2A Gateways vet external servers and agents, and human approval binds to one exact proposal before a protected effect reaches a system of record",
+      "sha256": "7bb92651598b0bee720d97edd152f644257a4ad346a0ccb4aeb9b876abbf9f6d"
     },
     {
       "id": "governance-model",
       "file": "assets/diagrams/governance-model.png",
-      "sha256": "f7770bb832a0847b46f9be3caf5b998cb0dc5d69dc176bc8e3e3e99a6486488f",
       "source": "assets/diagrams/src/governance-model.gv",
-      "vector": "assets/diagrams/governance-model.pdf"
+      "vector": "assets/diagrams/governance-model.pdf",
+      "description": "Central control services for identity and policy, evidence and audit, and risk tiers and exceptions supply grants, evidence, and thresholds to domain agent teams that decide in context; only high-risk work goes to a review board scaled to risk tier",
+      "sha256": "a04f069bff5fffe8a7e1fbdebce4ed97431e6d022dfdbbdc97d8461d9b55d345"
     },
     {
       "id": "guardrail-sequence",
       "file": "assets/diagrams/guardrail-sequence.png",
-      "sha256": "19213cd981b5270f406bf88d72f4ac3a0dda5c054f8639ce85037a5d18a13c85",
       "source": "assets/diagrams/src/guardrail-sequence.mmd",
-      "vector": "assets/diagrams/guardrail-sequence.pdf"
+      "vector": "assets/diagrams/guardrail-sequence.pdf",
+      "description": "Sequence for one protected effect: a content detector inspects untrusted content and passes a finding to the policy engine, which refuses or, after any required human approval, authorizes the Tool Gateway to enforce the exact resource, check the idempotency ledger, commit once, and return a receipt",
+      "sha256": "29cffc8c28f909d92d09f6ea26303a95c86d39314b9d91edbff2edd6be56c87a"
     },
     {
       "id": "knowledge-fabric",
       "file": "assets/diagrams/knowledge-fabric.png",
-      "sha256": "e3594f380182974c59c2a947190a04cebe564d8fe244d6aa839d2b073818b976",
       "source": "assets/diagrams/src/knowledge-fabric.gv",
-      "vector": "assets/diagrams/knowledge-fabric.pdf"
+      "vector": "assets/diagrams/knowledge-fabric.pdf",
+      "description": "Governance metadata over four knowledge representations (semantic index, ontology and graph, rules, catalogs), served through one knowledge resolution API that enforces permissions and feeds context, reasoning, constraints, and action to the agent runtime",
+      "sha256": "e3594f380182974c59c2a947190a04cebe564d8fe244d6aa839d2b073818b976"
     },
     {
       "id": "learning-loop",
       "file": "assets/diagrams/learning-loop.png",
-      "sha256": "bd2da5d776297413d934d4e9e8130ce4ff60b61ef5ec7d60dacbff6a9c68453b",
       "source": "assets/diagrams/src/learning-loop.gv",
-      "vector": "assets/diagrams/learning-loop.pdf"
+      "vector": "assets/diagrams/learning-loop.pdf",
+      "description": "The continuous-improvement cycle: observe, measure, detect, diagnose, recommend, validate, approve (by an owner or a pre-approved change class), deploy, monitor, and learn",
+      "sha256": "bd2da5d776297413d934d4e9e8130ce4ff60b61ef5ec7d60dacbff6a9c68453b"
     },
     {
       "id": "model-routing",
       "file": "assets/diagrams/model-routing.png",
-      "sha256": "e03260926709c1a7ca9d6e71a3f86c5195e5ad512893a6e7de4b819bcc289cf9",
       "source": "assets/diagrams/src/model-routing.gv",
-      "vector": "assets/diagrams/model-routing.pdf"
+      "vector": "assets/diagrams/model-routing.pdf",
+      "description": "Policy-first model routing: residency and retention, then model approval for the purpose, must pass before capability decides between the cheapest approved model that meets the bar and a higher-capability approved model; a failed policy check refuses or escalates",
+      "sha256": "e03260926709c1a7ca9d6e71a3f86c5195e5ad512893a6e7de4b819bcc289cf9"
     },
     {
       "id": "pattern-decision-tree",
       "file": "assets/diagrams/pattern-decision-tree.png",
-      "sha256": "05f976967bf14a61ca3f603675909106cfc5651a2cfb373aad99fba30495fc88",
+      "sha256": "201b87c652a18c54d12ca486bd8d1294ece711478b1b3a0c50bb2be79638a100",
       "source": "assets/diagrams/src/pattern-decision-tree.gv",
       "description": "Pattern selection: questions that choose the shape of the work, then checks that add durable execution, evaluator-optimizer, or approval and intervention, each leaf labelled with its chapter",
       "vector": "assets/diagrams/pattern-decision-tree.pdf"
@@ -173,15 +183,15 @@
       "source": "assets/diagrams/src/pattern-react.gv",
       "vector": "assets/diagrams/pattern-react.pdf",
       "description": "Bounded ReAct: the reason-act-observe loop with the controller and limits outside it",
-      "sha256": "1342c365b65b915b19203f0854b6f2b864f6faa30209b9d969f9c20ded30ddc4"
+      "sha256": "236f6fb1a1b07bad9472c228de5b11076fcace7144f3468689a8c6bcff7f0b12"
     },
     {
       "id": "pattern-reflection",
       "file": "assets/diagrams/pattern-reflection.png",
       "source": "assets/diagrams/src/pattern-reflection.gv",
       "vector": "assets/diagrams/pattern-reflection.pdf",
-      "description": "Reflection: a bounded loop runs executable checks before an advisory judge; the acceptance engine outside it owns every exit—accept, reject to revise, or escalate to a person",
-      "sha256": "b08a87fc121d694cb47afaf169231adefb44b9e291ed743440ce1aeac61e50cd"
+      "description": "Reflection: a bounded loop runs executable checks before an advisory judge; the acceptance engine outside it owns every exit\u2014accept, reject to revise, or escalate to a person",
+      "sha256": "5e245413dffc2166fc964e18d6dd2f50a8ac9606c8ca3d44633d22a3a4614685"
     },
     {
       "id": "pattern-routing",
@@ -194,30 +204,34 @@
     {
       "id": "policy-to-guardrail",
       "file": "assets/diagrams/policy-to-guardrail.png",
-      "sha256": "8ad5b9c498355dbe4478a06e38f1f584775f978706286dd479a37205a7a44eb2",
       "source": "assets/diagrams/src/policy-to-guardrail.gv",
-      "vector": "assets/diagrams/policy-to-guardrail.pdf"
+      "vector": "assets/diagrams/policy-to-guardrail.pdf",
+      "description": "A policy sentence is extracted into a typed rule with its citation, checked for grounding in the corpus (rejected if unsupported), approved by an eligible owner, projected into DMN, graph, or rule form with its version recorded, and enforced at the effect boundary",
+      "sha256": "ac91b545ca98a1d14b783ed670bc0b2055edc81a30aeadd3c5f28339e0354ca8"
     },
     {
       "id": "portability",
       "file": "assets/diagrams/portability.png",
-      "sha256": "aada39c261eb9342fd986adee2556454c4680b0f3d7e397802a9a0c6a950a170",
       "source": "assets/diagrams/src/portability.gv",
-      "vector": "assets/diagrams/portability.pdf"
+      "vector": "assets/diagrams/portability.pdf",
+      "description": "Application code depends only on the platform contracts; behind them, framework adapters and provider adapters can each be swapped for an alternative",
+      "sha256": "4d432673ba0c599ad4914eecfca450ed27b4c26e1c4d7d72aeebe01091c4e6b7"
     },
     {
       "id": "reference-architecture",
       "file": "assets/diagrams/reference-architecture.png",
-      "sha256": "95df05d1ce386fe3a7358366341274e307d10056d3af66529f7f5573bb558f94",
       "source": "assets/diagrams/src/reference-architecture.gv",
-      "vector": "assets/diagrams/reference-architecture.pdf"
+      "vector": "assets/diagrams/reference-architecture.pdf",
+      "description": "Seven ownership planes stacked in request order, from experience and channels down to systems of record, each with its components and the request path descending through them, flanked by security and governance and by evaluation and operations as spines that cross every plane",
+      "sha256": "a0e92b2caa2f5fad2ae8c370192a9ab4c765835676cddf7fc1f71735ac7921f3"
     },
     {
       "id": "request-sequence",
       "file": "assets/diagrams/request-sequence.png",
-      "sha256": "9e8f2e8e8247be23bba33ce664f15a84a13e932ca5a80ba3b51858f584c3c03c",
       "source": "assets/diagrams/src/request-sequence.mmd",
-      "vector": "assets/diagrams/request-sequence.pdf"
+      "vector": "assets/diagrams/request-sequence.pdf",
+      "description": "Sequence of one request: the run service admits the run, assembles authorized context, obtains a typed proposal from the agent runtime, gets authorization and, for protected changes, a bound approval, invokes the Tool Gateway, which commits and returns a receipt, and evaluates acceptance before returning a verified outcome",
+      "sha256": "9649bd9923dbd92ad629c5dff448a19842c1728beac980d777db22cb3bdaa803"
     },
     {
       "id": "release-recovery",
@@ -238,9 +252,10 @@
     {
       "id": "runtime-offline",
       "file": "assets/diagrams/runtime-offline.png",
-      "sha256": "ecb4626c958ef46a12eaac28031e918829c6162437372245a50e06496635fe23",
       "source": "assets/diagrams/src/runtime-offline.gv",
-      "vector": "assets/diagrams/runtime-offline.pdf"
+      "vector": "assets/diagrams/runtime-offline.pdf",
+      "description": "Runtime adaptation inside one run (use or drop authorized context, retry or fall back within budget, stop or escalate) produces evidence, not changes; offline improvement diagnoses, proposes, validates, gains owner approval, and releases with rollback",
+      "sha256": "ecb4626c958ef46a12eaac28031e918829c6162437372245a50e06496635fe23"
     },
     {
       "id": "runtime-boundary",
@@ -261,16 +276,18 @@
     {
       "id": "security-boundaries",
       "file": "assets/diagrams/security-boundaries.png",
-      "sha256": "037876894c555047b1c60db042b68fac30ae72e2c05a58a1c0a53834cdeca260",
       "source": "assets/diagrams/src/security-boundaries.gv",
-      "vector": "assets/diagrams/security-boundaries.pdf"
+      "vector": "assets/diagrams/security-boundaries.pdf",
+      "description": "Trust boundaries: an authenticated user's delegated grant enters the platform; the agent runtime's output is untrusted, retrieved content is never trusted, and the model provider sits outside the boundary; proposals are re-authorized at the Tool Gateway before a committed effect",
+      "sha256": "901fe1fa4a9eea57eeb7f1cb5616b83233b4fe3de45fe7aa32604da9bc68d6cf"
     },
     {
       "id": "security-depth",
       "file": "assets/diagrams/security-depth.png",
-      "sha256": "f3fda106a8fd925e9fb86eec486ac75d980c465b24034285dd3cfc27524492fb",
       "source": "assets/diagrams/src/security-depth.gv",
-      "vector": "assets/diagrams/security-depth.pdf"
+      "vector": "assets/diagrams/security-depth.pdf",
+      "description": "Nine defense-in-depth layers, from channel and input through context, model output, agent workflow, identity and policy, tools and effects (the boundary that cannot be skipped), execution and egress, and supply chain, to detection and response",
+      "sha256": "dc012e368ae43f8388d35cdf859428518df24b8a6b3b936061653a5fe3674bc6"
     },
     {
       "id": "identity-delegation",
@@ -286,7 +303,7 @@
       "source": "assets/diagrams/src/effect-lifecycle.gv",
       "vector": "assets/diagrams/effect-lifecycle.pdf",
       "description": "Protected effect lifecycle with approval, idempotency, unknown outcomes, reconciliation, and compensation",
-      "sha256": "fcd56b704b586f8bb2b8855c293b857914920a4f76e4bd6923e968d3efd72a8a"
+      "sha256": "154d7c41964ffc60b914b7c6d4154039bd2dd9c8946bc2f7941c4bce9ce92256"
     },
     {
       "id": "sandbox-egress",
@@ -302,7 +319,7 @@
       "source": "assets/diagrams/src/skill-resolution.gv",
       "vector": "assets/diagrams/skill-resolution.pdf",
       "description": "Semantic discovery proposes candidates; deterministic resolution pins one digest or refuses",
-      "sha256": "b8802f4053d496afacdb1e51c0a63aa8430f2154ab715cf6d613ec8eca1a7d2a"
+      "sha256": "f02a96e0447360a392689350d0044b3065d5efaaf024cf6d8f0a4e4c96450cf5"
     },
     {
       "id": "supervisor-worker",
@@ -310,14 +327,15 @@
       "source": "assets/diagrams/src/supervisor-worker.gv",
       "vector": "assets/diagrams/supervisor-worker.pdf",
       "description": "Supervisor/worker with narrowed child grants, an explicit fan-in contract, and durable cancellation",
-      "sha256": "c0f2d101eb6e854fc45f81ec193ab8286313c9d05c582d1407c7ed95f6b06292"
+      "sha256": "a86ce75d92afc058c14c3390866fdcc911cbe301ae5d35e427ca0f5e87b582b1"
     },
     {
       "id": "system-overview",
       "file": "assets/diagrams/system-overview.png",
       "source": "assets/diagrams/src/system-overview.gv",
       "vector": "assets/diagrams/system-overview.pdf",
-      "sha256": "c799b2abf25dd9371c324b2b7f91184ea89ea2403257f8cae071bdc27cbbe7e4"
+      "description": "The whole system as seven bands, each mapped to the Parts that develop it, with the request descending from proposal through authorization to committed effect, evidence looping back to the runtime, and security and the platform drawn as spines beside every band",
+      "sha256": "90fa601d4b03dc91f3dcacde52be3d6da10bc23164dbe0d79965f89363f9e1d0"
     }
   ],
   "note": "Diagrams are generated from the editable sources in assets/diagrams/src/ by tools/render_diagrams.py. Each source renders to a vector PDF, which XeLaTeX embeds, and a raster PNG for the DOCX edition. Never hand-edit a render."
