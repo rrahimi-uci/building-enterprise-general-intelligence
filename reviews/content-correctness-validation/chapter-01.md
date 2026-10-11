@@ -37,7 +37,7 @@ Tables were read for categorical consistency, units and stated assumptions; no n
 
 ## Code Example Validation
 
-Registered example(s): prototype-levels; mortgage-cumulative-case C01. The pinned example/mortgage tests passed as a suite (264 passed); this does not establish semantic completeness. No chapter-specific code defect was confirmed in this pass.
+Registered example(s): prototype-levels (regions `demo`, `level-one`, `level-two`, `level-three`); mortgage-cumulative-case (region `c01`) [audited: corrected — written as the registry ids and `[[EXAMPLE:id#region]]` markers actually used in the chapter]. The pinned example/mortgage tests passed as a suite (264 passed); this does not establish semantic completeness. No chapter-specific code defect was confirmed in this pass.
 
 ## Equations and Quantitative Validation
 

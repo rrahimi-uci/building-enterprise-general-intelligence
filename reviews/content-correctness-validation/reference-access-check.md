@@ -70,3 +70,5 @@ Result: 54/54 attempted; HEAD statuses 200: 49, 202: 1, 403: 3, 404: 1.
 - **R43:** DOI resolved to the publisher but returned 403 to this client. The [DOI record](https://doi.org/10.1287/opre.9.3.383) and paper title were checked separately; full text may require access.
 
 No HEAD result certifies the reference's author, year, version, or support for every book claim. The substantive scope findings are in [evidence-ledger.md](evidence-ledger.md).
+
+[audited 2026-10-10: the 54 ids and URLs in the table are identical to `id`/`url` in `config/references.json` (no missing, extra or altered entries) and the 200/202/403/404 tally of 49/1/3/1 matches the rows. The R13 follow-up was re-confirmed: `GET https://doi.org/10.6028/NIST.AI.600-1` redirects to `https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf` and returns 200, although a HEAD on the PDF itself returns 404 — so the 404 is HEAD-specific, not a broken DOI. The 54 HEAD requests were not re-run by the audit; a separate spot-check covers five of them.]
