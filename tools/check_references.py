@@ -16,6 +16,7 @@ def book_release(root: Path) -> str:
     return json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]["version"]
 
 
+LIVING = ("Current documentation","Living guidance","Development status","Implementation overview")
 REQUIRED = {"id","type","author_or_organization","year","title","publication_or_version","url","supports","verification"}
 
 
@@ -41,11 +42,16 @@ def main() -> int:
         if not str(r.get("url","")).startswith("https://"): errors.append(f"{r.get('id')}: URL must use HTTPS")
         if len(str(r.get("supports","")))<25: errors.append(f"{r.get('id')}: permitted scope is too vague")
         if not re.fullmatch(r"\d{4}-\d{2}-\d{2}",str((r.get("verification") or {}).get("checked_on",""))): errors.append(f"{r.get('id')}: invalid verification date")
-        if r.get("publication_or_version") in {"Current documentation","Living guidance","Development status","Implementation overview"} and r.get("year") not in {"n.d.","2026"}:
-            warnings.append(f"{r.get('id')}: review year for living documentation")
+        year=str(r.get("year",""))
+        if not re.fullmatch(r"\d{4}|n\.d\.",year): errors.append(f"{r.get('id')}: year must be YYYY or n.d.")
         rec=verification.get(r.get("id"))
+        # Dating rule: living documentation is n.d. unless the page itself shows
+        # a date, and then the verification caveat must record that date's year.
+        if str(r.get("publication_or_version","")).startswith(LIVING) and year!="n.d." and year not in str((rec or {}).get("caveat","")):
+            errors.append(f"{r.get('id')}: living documentation must use n.d. unless its verification caveat records the date shown on the page")
         if not rec: errors.append(f"{r.get('id')}: missing verification record")
         elif rec.get("status") not in {"verified","verified_with_caveat"}: errors.append(f"{r.get('id')}: verification status is {rec.get('status')!r}")
+        elif rec.get("verified")!=(r.get("verification") or {}).get("checked_on"): errors.append(f"{r.get('id')}: verification record date {rec.get('verified')!r} differs from registry checked_on")
     markers=re.findall(r"\[(R\d{2})\]",manuscript)
     marker_ids=sorted(set(markers))
     unknown=sorted(set(marker_ids)-set(ids)); uncited=sorted(set(ids)-set(marker_ids))
@@ -66,7 +72,7 @@ def main() -> int:
                 online.append({"id":r["id"],"ok":False,"error":str(exc)})
                 warnings.append(f"{r['id']}: online check unavailable: {exc}")
     report={
-        "release":book_release(root),"checked":"2026-09-13","references":len(refs),
+        "release":book_release(root),"checked":refs_doc.get("verified_on",""),"references":len(refs),
         "citation_occurrences":len(markers),"cited_ids":marker_ids,
         "unknown_ids":unknown,"uncited_ids":uncited,"errors":errors,"warnings":warnings,
         "online_check":online,"verification_records":list(verification.values()),
@@ -75,7 +81,7 @@ def main() -> int:
     }
     (root/"reports").mkdir(exist_ok=True)
     (root/"reports/citation-verification.json").write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
-    lines=["# Citation Audit — Book v1.0.0","",f"**Result:** {'PASS' if not errors else 'FAIL'}",f"**References:** {len(refs)}",f"**Citation occurrences:** {len(markers)}",f"**Verified:** 2026-09-13","","All sources were checked against their recorded claim scope. The audit validates attribution, not the book's independently authored architecture recommendations.","","## Source-by-source status", "", "| ID | Status | Method | Caveat |", "|---|---|---|---|"]
+    lines=["# Citation Audit — Book v1.0.0","",f"**Result:** {'PASS' if not errors else 'FAIL'}",f"**References:** {len(refs)}",f"**Citation occurrences:** {len(markers)}",f"**Verified:** {refs_doc.get('verified_on','')}","","All sources were checked against their recorded claim scope. The audit validates attribution, not the book's independently authored architecture recommendations.","","## Source-by-source status", "", "| ID | Status | Method | Caveat |", "|---|---|---|---|"]
     for r in refs:
         rec=verification.get(r["id"],{})
         caveat=str(rec.get("caveat","")).replace("|","\\|")
