@@ -70,6 +70,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: enterprise-agentic-ai-book-v1.0.0-xelatex
+          retention-days: 14
           path: |
             dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf
             latex/build/*.log
