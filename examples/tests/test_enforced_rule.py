@@ -126,6 +126,23 @@ def test_a_missing_fact_is_unknown_never_false():
                  jurisdiction="US", on_date="2026-09-20")
 
 
+def test_a_false_condition_decides_even_when_another_input_is_missing():
+    # Kleene AND, as in the reference evaluator: false and unknown is false.
+    two = Rule(
+        rule_id="r_two_conditions", modality="obligation",
+        conditions=(Predicate("requested_ltv", ">", Decimal("0.80")),
+                    Predicate("pay_statement_age_days", ">", 60)),
+        outcome=Predicate("underwriter_approved", "=", True),
+        jurisdiction="US", responsible_party="human_underwriter", effective_from="2026-01-01",
+        source=SourceRef("mortgage_underwriting_policy", "sec_4_3", 0, 90, "a" * 64),
+    )
+    rule = EnforcedRule(two)
+    for facts in ({"requested_ltv": Decimal("0.70")}, {"pay_statement_age_days": 10}):
+        rule.enforce(facts, jurisdiction="US", on_date="2026-09-20")   # does not fire
+    with pytest.raises(UnknownUnderPolicy):
+        rule.enforce({"requested_ltv": Decimal("0.90")}, jurisdiction="US", on_date="2026-09-20")
+
+
 def test_two_rules_that_assign_one_subject_incompatible_values_are_refused_not_adjudicated():
     accept = Rule(
         rule_id="r_recent_statement_ok", modality="permission",

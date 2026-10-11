@@ -126,7 +126,7 @@
       "file": "assets/diagrams/knowledge-fabric.png",
       "source": "assets/diagrams/src/knowledge-fabric.gv",
       "vector": "assets/diagrams/knowledge-fabric.pdf",
-      "description": "Governance metadata over four knowledge representations (semantic index, ontology and graph, rules, catalogs), served through one knowledge resolution API that enforces permissions and feeds context, reasoning, constraints, and action to the agent runtime",
+      "description": "Governance metadata over four knowledge representations (semantic index, ontology and graph, rules, catalogs), served through one knowledge resolution API that resolves against the run's pinned release, enforces permissions, and feeds context, reasoning, constraints, and action to the agent runtime",
       "sha256": "0440b63202672ff4059cfbca783f1f13022ef5122f69fe39077a727b566025df"
     },
     {
@@ -223,7 +223,7 @@
       "source": "assets/diagrams/src/knowledge-lifecycle.gv",
       "vector": "assets/diagrams/knowledge-lifecycle.pdf",
       "description": "Two planes separated by a labelled boundary. In the knowledge control plane (global control tier), authoritative sources (regulations, standards, contracts, internal policies) pass to extraction, where a model proposes claims with exact spans and nothing is dropped; claims form a versioned, typed, deduplicated, schema-checked compliance knowledge graph with a content digest; a candidate release passes quality gates (schema, independent grounding, consistency, regression), where a blocking finding goes to targeted repair of the failed element and re-enters the gate while held objects are carried; an independent SME approves the exact candidate digest or requests changes back to Draft; the knowledge registry holds the release manifest and a live pointer per environment and feeds a staleness check back to the gates. Releases cross down, evidence crosses up, and no writes cross up: activating the pointer and resolving at admission give the runtime plane (regional cell) one pinned release per run, which the control points (Context Service, plan compiler, policy decision point, Tool Gateway, acceptance engine) consult when an agent step proposes; the result is a governed action or a refusal when an obligation is unmet or unknown; decision records with the release digest and rule ids become observations that return to extraction as a proposed change, never a write",
-      "sha256": "e221a117356844769995db211d9df44931e563e764e5c59af4ddb7236e59a0d4"
+      "sha256": "ebbb9b1321b4fa61c2b021f23b54f6306b066763df9b104eb6655f2f20c79cf8"
     },
     {
       "id": "portability",

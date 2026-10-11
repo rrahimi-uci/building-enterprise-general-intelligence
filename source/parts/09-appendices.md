@@ -457,7 +457,7 @@ Chapter 1 § The vocabulary this book assumes introduces the core terms; this gl
 | InterventionRequired | Run, task, or effect state used when correctness cannot be established automatically; it opens an intervention task | 15, 22 |
 | Intervention task | A typed request for human help with an uncertain run; its response is an input to the run and never approves an effect | 14 |
 | Knowledge graph | The governed, versioned instance of an ontology: typed nodes and edges with provenance, scope, and permissions, frozen into a release and traversed within bounds | 5 |
-| Knowledge registry | Control-plane store of ontology versions, knowledge objects, release manifests, and the live pointer (KnowledgeBinding) per stream and environment; the Knowledge Hub is its read-only runtime surface | 5 |
+| Knowledge registry | Control-plane store of ontology versions, knowledge objects, release manifests, and the live pointer (KnowledgeBinding) per stream, tenant, environment, and region; the Knowledge Hub is its read-only runtime surface | 5 |
 | Knowledge release | The immutable, content-addressed set of knowledge objects, ontology version, and source revisions that the registry publisher activated after a complete gate record and an independent approval; what a run pins | 5 |
 | KnowledgeArtifact | The Knowledge Hub's record of a governed artifact (document, chunk, extracted field, or rule) with its source digest and region, versions, verdicts, owner, and scope | 5 |
 | Layer | A deployable unit of the architecture (for example, Model access or Durable execution); layers serve the planes | 4 |

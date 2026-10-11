@@ -57,6 +57,7 @@ digraph knowledge_lifecycle {
   subgraph cluster_runtime {
     label="  Runtime plane · regional cell  "
     labeljust="l"
+    labelloc="b"
     fontsize=12
     fontcolor="#4A6078"
     color="#4A6078"
@@ -83,7 +84,7 @@ digraph knowledge_lifecycle {
 
   gates -> repair [label="blocking\nfinding", color="#A62C2C", fontcolor="#A62C2C", constraint=false]
   repair -> gates [label="repaired ·\nre-check", style=dashed, color="#A62C2C", fontcolor="#A62C2C", constraint=false]
-  approve -> extract [xlabel="  request changes ·\n  back to Draft  ", style=dashed,
+  approve -> graph_ [headlabel="request changes ·\nback to Draft", labeldistance=5.5, labelangle=-35, style=dashed,
                       color="#8A5600", fontcolor="#8A5600", constraint=false]
   approve -> registry [label="publish", color="#0D6E69", fontcolor="#0D6E69"]
   registry -> gates [label="staleness:\ntarget live release", style=dashed,

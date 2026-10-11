@@ -41,17 +41,22 @@ class EnforcedRule:
     rule: object
 
     def _satisfied(self, facts: dict) -> bool:
+        """Kleene AND: one false condition decides; otherwise a missing one is unknown."""
+        missing = []
         for predicate in self.rule.conditions:
             if predicate.variable not in facts:
-                raise UnknownUnderPolicy(
-                    f"{self.rule.rule_id} needs {predicate.variable}, which was not supplied"
-                )
+                missing.append(predicate.variable)
+                continue
             value = facts[predicate.variable]
             checks = {">": value > predicate.value, ">=": value >= predicate.value,
                       "<": value < predicate.value, "<=": value <= predicate.value,
                       "=": value == predicate.value, "!=": value != predicate.value}
             if not checks[predicate.operator]:
                 return False
+        if missing:
+            raise UnknownUnderPolicy(
+                f"{self.rule.rule_id} needs {', '.join(missing)}, which was not supplied"
+            )
         return True
 
     def enforce(self, facts: dict, *, jurisdiction: str, on_date: str) -> None:

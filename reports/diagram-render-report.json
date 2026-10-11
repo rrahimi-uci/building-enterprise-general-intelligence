@@ -303,12 +303,12 @@
       "id": "knowledge-lifecycle",
       "source": "knowledge-lifecycle.gv",
       "pixels": [
-        2727,
+        2560,
         3272
       ],
-      "effective_dpi": 398,
+      "effective_dpi": 374,
       "vector": true,
-      "sha256": "e221a117356844769995db211d9df44931e563e764e5c59af4ddb7236e59a0d4"
+      "sha256": "ebbb9b1321b4fa61c2b021f23b54f6306b066763df9b104eb6655f2f20c79cf8"
     },
     {
       "id": "portability",

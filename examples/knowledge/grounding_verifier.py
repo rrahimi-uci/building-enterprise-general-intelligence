@@ -8,7 +8,9 @@ the evidence sliced from those bytes -- never the text the claim brought with it
 
 Adapted from Policy Logic Forge [R48], commit c22dc450,
 agents/agent_09_grounding_verifier.py and utils/citations.py (MIT),
-reduced to one evidence record per claim. Synthetic data only.
+reduced to one evidence record per claim and to the deterministic half: the
+reference lets a model judge whether the evidence supports the claim, and
+also repairs near-miss quotes; both are omitted here. Synthetic data only.
 """
 from __future__ import annotations
 

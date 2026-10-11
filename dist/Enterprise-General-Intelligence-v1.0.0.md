@@ -2399,17 +2399,22 @@ class EnforcedRule:
     rule: object
 
     def _satisfied(self, facts: dict) -> bool:
+        """Kleene AND: one false condition decides; otherwise a missing one is unknown."""
+        missing = []
         for predicate in self.rule.conditions:
             if predicate.variable not in facts:
-                raise UnknownUnderPolicy(
-                    f"{self.rule.rule_id} needs {predicate.variable}, which was not supplied"
-                )
+                missing.append(predicate.variable)
+                continue
             value = facts[predicate.variable]
             checks = {">": value > predicate.value, ">=": value >= predicate.value,
                       "<": value < predicate.value, "<=": value <= predicate.value,
                       "=": value == predicate.value, "!=": value != predicate.value}
             if not checks[predicate.operator]:
                 return False
+        if missing:
+            raise UnknownUnderPolicy(
+                f"{self.rule.rule_id} needs {', '.join(missing)}, which was not supplied"
+            )
         return True
 
     def enforce(self, facts: dict, *, jurisdiction: str, on_date: str) -> None:
@@ -2453,19 +2458,19 @@ Four OMG standards already describe what most enterprises otherwise invent badly
 | CMMN [R46] | Case management, unordered work | Handles work with no fixed sequence without inventing one |
 | SBVR [R47] | Business vocabulary and rules | Resolves what a term means in this domain before acting on it |
 
-DMN earns its place fastest: a table whose hit policy is proved over finite inputs turns judgment calls into a testable lookup. BPMN pays off where a sequence is genuinely fixed; CMMN and SBVR where case work or vocabulary ambiguity is the problem. The reference implementation [R48] emits these models as fail-closed projections, BPMN only where the source states an order.
+DMN earns its place fastest: a table whose hit policy is proved over finite inputs turns judgment calls into a testable lookup. BPMN pays off where a sequence is genuinely fixed; CMMN and SBVR where case work or vocabulary ambiguity is the problem. The reference implementation [R48] emits DMN and BPMN as fail-closed projections, BPMN only where the source states an order.
 
 ## Turn policy prose into logic the system can enforce
 
 Extraction is probabilistic. Verification must not be. The pipeline that works separates the two and refuses to let the first vouch for itself.
 
-Consider a policy sentence that accepts a pay statement only within an age window. The runtime cannot safely enforce prose. The platform extracts a candidate rule with its exact source span, proves that the span says what the rule says, has an eligible owner approve the interpretation, compiles it, and records the version used for each case. Skip a link and the system may enforce a rule nobody can explain or prove is current.
+Consider a policy sentence that accepts a pay statement only within an age window. The runtime cannot safely enforce prose. The platform extracts a candidate rule with its exact source span, checks that the span says what the rule says, has an eligible owner approve the interpretation, compiles it, and records the version used for each case. Skip a link and the system may enforce a rule nobody can explain or prove is current.
 
 [[DIAGRAM:policy-to-guardrail|Figure 5-2 — Extract, prove, approve, and project: from policy text to an enforced constraint]]
 
 **Extract** is the part a language model does well: find the rules, type their conditions and outcomes, record where each came from.
 
-**Prove** is the part that decides whether to believe it. The critical move is that verification does not trust the citation a rule carries; it re-opens the pinned source, admits the claim only if its quoted text is literally present in the cited span, and records the evidence sliced from those bytes.
+**Prove** is the part that decides whether to believe it. Verification does not trust the citation a rule carries; it re-opens the pinned source, admits the claim only if its quoted text is literally present in the cited span, and records the evidence sliced from those bytes. A literal span proves the quote is real, not that it supports the rule: the reference verifier [R48] lets a model judge support only over evidence resolved as literal corpus text, and the listing keeps that deterministic half.
 
 🐍 · Admitting a claim only on a literal span of the bytes it cites
 
@@ -2525,7 +2530,7 @@ def verify(quote: str, source_ref, corpus: dict[str, str]) -> Verdict:
     return Verdict("supported", "quoted text found in the cited span", evidence)
 ```
 
-The listing adapts the reference implementation's verifier [R48], which admits a verdict only when it names evidence resolved as literal corpus text. A model that invents a rule will invent a plausible citation, so a well-formed citation proves nothing; what matters is whether the cited passage *says what the rule says*. In one run of the author's own compliance extraction pipeline built on this design, independent verification rejected 44% of the model-proposed dependency and conflict claims that a single structural screen had already accepted [R48]. That figure is author-reported, one measurement of one pipeline on one corpus, not a general rate; it is still the empirical case for independent verification.
+A model that invents a rule will invent a plausible citation, so a well-formed citation proves nothing; what matters is whether the cited passage *says what the rule says*. In one run of the author's own compliance extraction pipeline built on this design, independent verification rejected 44% of the model-proposed dependency and conflict claims that a single structural screen had already accepted [R48]. That figure is author-reported, one measurement on one corpus, not a general rate.
 
 **Approve.** An eligible owner accepts the interpretation; the approval, the source digest, and the rule version are recorded together. Verification shows the rule matches the text; approval makes it the organization's rule, bound to the candidate digest of the whole change (§ Change compliance knowledge the way you change software).
 
@@ -2665,7 +2670,7 @@ def facts_for_rules(cert: Certification) -> dict[str, object]:
 
 **Route and record.** Findings route by kind: a contradiction to human review (an InterventionTask, Chapter 14), an unlocated field to targeted repair of that field alone through the same gate, a missing input or unhandled kind to case management. A reviewer's correction is a new version, and the model's value stays in history; a job that extracted nothing reports a finding, never success. Everything lands in one record, the **KnowledgeArtifact** named in the chapter's first table: kind (document, chunk, field, rule), source digest and region, extractor and verifier versions, per-field verdicts, corroboration, status and route, owner, version and supersedes, effective range, scope, ACL, and data class. Status follows the knowledge lifecycle defined below, Draft through Revoked; *retired* is not a status but the retention event that follows deprecation or revocation. Deleting the source deletes the record, its history, and its derived facts through the lineage events Chapter 6 lists.
 
-**Version and re-process.** When the bytes, the extractor (Chapter 1's Friday), or the consuming policy changes, re-processing is a diff, not an overwrite: every field is changed, unchanged, review-held, or refused, nothing is dropped, only changed facts trigger re-evaluation, and a field under review never resolves itself. A run pins the knowledge release it read, and the release lists the digest of every record in it, so a six-month-old decision can be reproduced with its evidence.
+**Version and re-process.** When the bytes, the extractor (Chapter 1's Friday), or the consuming policy changes, re-processing is a diff, not an overwrite: every field is changed, unchanged, review-held, or refused, nothing is dropped, only changed facts trigger re-evaluation, and a field under review never resolves itself. A run pins the knowledge release it read, whose manifest lists every policy record's digest, and its ContextManifests name the case documents' record versions, so a six-month-old decision can be reproduced with its evidence.
 
 At the effect boundary the age-window rule reads `pay_statement_age_days` only from a servable record; otherwise its missing-input refusal fires. A forged net goes to review, so the rule still sees *unknown*; altered bytes fail the digest check; and the Tuesday instruction in an upload is labelled text, not a declared field, so it directs neither rule nor model.
 
@@ -2686,7 +2691,7 @@ Every representation above is only as good as the metadata that says whether to 
 | Release and status | Which release carries this version, in which lifecycle state: what a run pins |
 | Lifecycle | Review cadence and expiry |
 
-Without the document digest, a rule extracted from last year's policy still verifies against this year's text, and nothing notices that the ground moved. The source revision is authoritative; every index entry is a disposable projection of it (§ Ingest documents the way you extract rules).
+Without the document digest, a rule extracted from last year's policy still verifies against this year's text, and nothing notices that the ground moved.
 
 |  |
 | --- |
@@ -2874,7 +2879,7 @@ Chapter 1's control points, the plan compiler, and the acceptance engine read th
 | Context Service (Chapter 6) | Semantic view | Omit; held text is never a fact | Serve both, attributed |
 | Plan compiler (Chapter 12) | Bound rules and tables | Refuse the node | Refuse and escalate |
 | Policy decision point (Chapter 21) | Catalog definitions | Deny protected actions | Deny |
-| Tool Gateway (Chapter 22) | Enforced rules, verified facts | `UnknownUnderPolicy` | Refuse |
+| Tool Gateway (Chapter 22) | Enforced rules, verified facts | Refuse; missing input is `UnknownUnderPolicy` | Refuse |
 | Acceptance engine (Chapter 13) | Domain rules, criteria | Reject: evidence missing | Escalate |
 
 Three consultation rules come straight from the reference evaluator [R48]: only a completely lowered rule is evaluable, and an unproved table is refused before evaluation; unknown refuses, never defaults; incompatible assignments to one subject are refused, never adjudicated. The fourth is the platform's: that evaluator returns unknown for any rule scoped by jurisdiction or date, having no runtime context, and the control point supplies it.
@@ -3456,7 +3461,7 @@ A paved road has costs. Its abstractions lag new framework features, and the pla
 
 ## What the road looks like to a developer
 
-A developer meets the road as a few declarations. The mortgage team's agent declares its AgentSpec `mortgage-evidence-agent@0.1.0`; a Skill requirement `mortgage.evidence.read@^0.1`, which is a compatible range rather than a digest (Chapter 8 pins the digest per run); the tool `mortgage.case.read@1` at effect risk class R1 (Chapter 22); the knowledge snapshot `mortgage-policy@approved-2026.09`; budgets; and the permissions it needs. Those permissions are a ceiling, intersected with the caller's grants at run time (Chapter 21); declaring them grants nothing. The platform compiles these declarations to the Chapter 3 contracts, and those contracts, not the SDK's method names, are the stable interface.
+A developer meets the road as a few declarations. The mortgage team's agent declares its AgentSpec `mortgage-evidence-agent@0.1.0`; a Skill requirement `mortgage.evidence.read@^0.1`, which is a compatible range rather than a digest (Chapter 8 pins the digest per run); the tool `mortgage.case.read@1` at effect risk class R1 (Chapter 22); the knowledge release `mortgage-policy@2026.09`; budgets; and the permissions it needs. Those permissions are a ceiling, intersected with the caller's grants at run time (Chapter 21); declaring them grants nothing. The platform compiles these declarations to the Chapter 3 contracts, and those contracts, not the SDK's method names, are the stable interface.
 
 The command line walks the golden path; `agentctl` is an illustrative command surface, not a tool this book ships: from `agentctl init mortgage-evidence-agent` through `agentctl promote --from staging --to production --canary 5%` to `agentctl rollback mortgage-evidence-agent@0.1.0 --to 0.0.9`. Build one immutable artifact, pin everything listed in Chapter 27 § Versioned objects, and bind endpoints, identities, secrets, sources, quotas, regions, and review queues only at deployment.
 
@@ -9514,8 +9519,9 @@ class Registry:
 def publish(registry: Registry, stream: str, env: str, candidate: Candidate,
             gates: list[Gate], approval: Approval) -> Release:
     digest = candidate.digest()
-    if digest in registry.releases:            # a retry: no second version
-        return registry.releases[digest]
+    existing = registry.releases.get(digest)
+    if existing and registry.pointers.get((stream, env)) == digest:
+        return existing                        # a retry after success: no second version
     if {g.name for g in gates if g.passed} != set(GATES):
         raise PublishRefused("gate record incomplete or failed")
     if approval.approver == candidate.author:
@@ -9524,9 +9530,11 @@ def publish(registry: Registry, stream: str, env: str, candidate: Candidate,
         raise PublishRefused("the approval names a different candidate")
     if registry.pointers.get((stream, env)) != candidate.target_live:
         raise PublishRefused("stale: the live release moved after submission")
-    version = 1 + sum(r.stream == stream for r in registry.releases.values())
+    version = existing.version if existing else \
+        1 + sum(r.stream == stream for r in registry.releases.values())
     registry.releases[digest] = Release(stream, version, digest, candidate, approval)
     if registry.releases[digest].candidate.digest() != digest:   # verify before activating
+        del registry.releases[digest]          # an unverified bundle is never kept
         raise PublishRefused("stored bundle does not match its digest")
     registry.pointers[(stream, env)] = digest  # activation: the publication boundary
     return registry.releases[digest]
@@ -10611,7 +10619,7 @@ Chapter 1 § The vocabulary this book assumes introduces the core terms; this gl
 | InterventionRequired | Run, task, or effect state used when correctness cannot be established automatically; it opens an intervention task | 15, 22 |
 | Intervention task | A typed request for human help with an uncertain run; its response is an input to the run and never approves an effect | 14 |
 | Knowledge graph | The governed, versioned instance of an ontology: typed nodes and edges with provenance, scope, and permissions, frozen into a release and traversed within bounds | 5 |
-| Knowledge registry | Control-plane store of ontology versions, knowledge objects, release manifests, and the live pointer (KnowledgeBinding) per stream and environment; the Knowledge Hub is its read-only runtime surface | 5 |
+| Knowledge registry | Control-plane store of ontology versions, knowledge objects, release manifests, and the live pointer (KnowledgeBinding) per stream, tenant, environment, and region; the Knowledge Hub is its read-only runtime surface | 5 |
 | Knowledge release | The immutable, content-addressed set of knowledge objects, ontology version, and source revisions that the registry publisher activated after a complete gate record and an independent approval; what a run pins | 5 |
 | KnowledgeArtifact | The Knowledge Hub's record of a governed artifact (document, chunk, extracted field, or rule) with its source digest and region, versions, verdicts, owner, and scope | 5 |
 | Layer | A deployable unit of the architecture (for example, Model access or Durable execution); layers serve the planes | 4 |

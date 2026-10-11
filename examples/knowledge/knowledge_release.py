@@ -99,8 +99,9 @@ class Registry:
 def publish(registry: Registry, stream: str, env: str, candidate: Candidate,
             gates: list[Gate], approval: Approval) -> Release:
     digest = candidate.digest()
-    if digest in registry.releases:            # a retry: no second version
-        return registry.releases[digest]
+    existing = registry.releases.get(digest)
+    if existing and registry.pointers.get((stream, env)) == digest:
+        return existing                        # a retry after success: no second version
     if {g.name for g in gates if g.passed} != set(GATES):
         raise PublishRefused("gate record incomplete or failed")
     if approval.approver == candidate.author:
@@ -109,9 +110,11 @@ def publish(registry: Registry, stream: str, env: str, candidate: Candidate,
         raise PublishRefused("the approval names a different candidate")
     if registry.pointers.get((stream, env)) != candidate.target_live:
         raise PublishRefused("stale: the live release moved after submission")
-    version = 1 + sum(r.stream == stream for r in registry.releases.values())
+    version = existing.version if existing else \
+        1 + sum(r.stream == stream for r in registry.releases.values())
     registry.releases[digest] = Release(stream, version, digest, candidate, approval)
     if registry.releases[digest].candidate.digest() != digest:   # verify before activating
+        del registry.releases[digest]          # an unverified bundle is never kept
         raise PublishRefused("stored bundle does not match its digest")
     registry.pointers[(stream, env)] = digest  # activation: the publication boundary
     return registry.releases[digest]
