@@ -365,7 +365,7 @@ def summarize(client: OpenAI, evidence_metadata: str) -> str:
 
 **What it does well:** Read, summarize, classify, draft, translate, extract.
 
-**Where it stops:** Find out anything it was not told. A model asked "is this application's income evidence sufficient?" will produce a confident answer drawn from training data that may be two years stale, because producing an answer is the only thing it does. It has no mechanism for *not knowing*.
+**Where it stops:** Find out anything it was not told. A model asked "is this application's income evidence sufficient?" will produce a confident answer drawn from training data that may be two years stale, because producing an answer is the only thing it does. It has no reliable way of knowing what it does *not* know.
 
 ### Level two — a model with tools
 
@@ -556,7 +556,7 @@ chapters; this is enough to read on with.
 
 | Term | What it means here | Where it is developed |
 | --- | --- | --- |
-| **Idempotency key** | A caller-supplied identifier that lets a downstream system recognize a repeated request as the *same* request, so a retry updates nothing rather than creating a duplicate | Chapter 22 |
+| **Idempotency key** | A stable identifier the platform derives for one logical effect—never chosen by the model—that lets a downstream system recognize a repeated request as the *same* request, so a retry updates nothing rather than creating a duplicate | Chapter 22 |
 | **Effect ledger** | The platform's own durable record of every external change it attempted, its idempotency key, and its confirmed outcome — separate from the downstream system's record | Chapter 22 |
 | **Compensation** | A deliberate reversing action for a step that cannot be rolled back, because it already committed elsewhere | Chapter 22 |
 | **Downscoping** | Deriving a narrower credential from a broader one, so a delegated step can never exceed the authority of the step that delegated it | Chapter 21 |
@@ -641,7 +641,7 @@ the word is the same. They are not alternatives, and none replaces another.
 | API Gateway | Is this caller admitted to the platform at all? | Anything about agents or models |
 | A2A Gateway | May this external agent receive or return this task? (Chapter 19; internal delegation belongs to the Task Service, Chapter 18) | Which model answers or which business effect commits |
 | LLM Gateway | Which model may answer, under which data policy? | Whether an effect may happen |
-| Tool Gateway | May this effect happen, for this subject, exactly once? | Which model produced the proposal |
+| Tool Gateway | May this effect happen for this subject, as one logical effect a retry cannot repeat? | Which model produced the proposal; whether the downstream system committed (the receipt decides) |
 | MCP Gateway | Is this external server and tool trusted and eligible? | Whether the resulting effect is authorized |
 | Human approval gate | Has an authorized reviewer approved this exact proposal? | Current identity, policy, resource version, or effect receipt |
 
@@ -2492,7 +2492,7 @@ def verify(claim: str, source_ref, corpus: dict[str, str], *, min_overlap: float
     return Verdict(True, f"grounded at {overlap:.0%} overlap")
 ```
 
-A model that invents a rule will invent a plausible citation for it, so checking that a citation is well-formed proves nothing. Checking that the cited passage *says what the rule says* is a different operation, and it is the one that matters. In one run of a compliance extraction pipeline built on this design, independent verification rejected 44% of the dependency and conflict claims that the pipeline's own deterministic guard had already accepted [R48]. That figure is one measurement of one pipeline on one corpus; it is not a general rate. It is, however, the empirical case for making verification independent of extraction.
+A model that invents a rule will invent a plausible citation for it, so checking that a citation is well-formed proves nothing. Checking that the cited passage *says what the rule says* is a different operation, and it is the one that matters. In one run of the author's own compliance extraction pipeline built on this design, independent verification rejected 44% of the dependency and conflict claims that the pipeline's own deterministic guard had already accepted [R48]. That figure is author-reported: one measurement of one pipeline on one corpus, not a general rate. It is, however, the empirical case for making verification independent of extraction.
 
 **Approve.** An eligible owner accepts the interpretation; the approval, the source digest, and the rule version are recorded together. Verification shows the rule matches the text; approval makes it the organization's rule.
 
@@ -2560,7 +2560,7 @@ def union(left: dict[str, object], right: dict[str, object]) -> list[Attributed]
 
 
 def intersection(left: dict[str, object], right: dict[str, object]) -> list[Attributed]:
-    """Rules both sources assert. The highest-confidence knowledge available."""
+    """Rules both sources assert -- corroborated, not yet verified or authorized."""
     both = {s for s in left} | {s for s in right}
     return [a for a in union(left, right) if len(set(a.sources)) == len(both)]
 
@@ -2594,7 +2594,7 @@ def contradictions(left: dict[str, object], right: dict[str, object]) -> list[Co
 
 | Operation | Meaning | What an agent may do with the result |
 | --- | --- | --- |
-| Intersection | Asserted by both sources | Highest-confidence knowledge; safe to act on |
+| Intersection | Asserted by both sources | Corroborated, not verified; the scope, freshness, and permission checks below still apply before action |
 | Difference | Asserted by one source only | Scope-dependent; requires a jurisdiction check first |
 | Union | Every distinct rule, with per-source attribution | Complete coverage; conflicts still possible |
 | Contradiction | Rules that cannot both be satisfied | Stop, escalate, and never resolve automatically |
@@ -2914,7 +2914,7 @@ There is one RunManifest per run and one ContextManifest per AgentStepRequest; t
 
 |  |
 | --- |
-| **PERFORMANCE AND COST**  Measure answer quality against context size — most systems are past the point where more retrieval helps. |
+| **PERFORMANCE AND COST**  Measure answer quality against context size on your own workload. Past some point more retrieval adds tokens and distractors without adding accuracy; only measurement shows where that point is. |
 
 ## What the evidence lets us conclude
 
@@ -3162,7 +3162,7 @@ A paved road has costs. Its abstractions lag new framework features, and the pla
 
 A developer meets the road as a few declarations. The mortgage team's agent declares its AgentSpec `mortgage-evidence-agent@0.1.0`; a Skill requirement `mortgage.evidence.read@^0.1`, which is a compatible range rather than a digest (Chapter 8 pins the digest per run); the tool `mortgage.case.read@1` at effect risk class R1 (Chapter 22); the knowledge snapshot `mortgage-policy@approved-2026.09`; budgets; and the permissions it needs. Those permissions are a ceiling, intersected with the caller's grants at run time (Chapter 21); declaring them grants nothing. The platform compiles these declarations to the Chapter 3 contracts, and those contracts, not the SDK's method names, are the stable interface.
 
-The command line walks the golden path, from `agentctl init mortgage-evidence-agent` through `agentctl promote --from staging --to production --canary 5%` to `agentctl rollback mortgage-evidence-agent@0.1.0 --to 0.0.9`. Build one immutable artifact, pin everything listed in Chapter 27 § Versioned objects, and bind endpoints, identities, secrets, sources, quotas, regions, and review queues only at deployment.
+The command line walks the golden path; `agentctl` is an illustrative command surface, not a tool this book ships: from `agentctl init mortgage-evidence-agent` through `agentctl promote --from staging --to production --canary 5%` to `agentctl rollback mortgage-evidence-agent@0.1.0 --to 0.0.9`. Build one immutable artifact, pin everything listed in Chapter 27 § Versioned objects, and bind endpoints, identities, secrets, sources, quotas, regions, and review queues only at deployment.
 
 ## Test the contracts before you test the model
 
@@ -4674,16 +4674,20 @@ class AcceptanceEngine:
     """The only component that may accept. Checks decide; scores are evidence."""
 
     def __init__(self, thresholds: dict[str, float]) -> None:
-        self.thresholds = thresholds
+        self.thresholds = thresholds  # every criterion here must be scored to accept
 
     def decide(
         self, candidate: str, failures: tuple[CheckFailure, ...],
         scores: tuple[EvaluationResult, ...],
     ) -> AcceptanceDecision:
-        defects = tuple(f.invariant for f in failures) + tuple(
-            s.criterion for s in scores
-            if s.score < self.thresholds.get(s.criterion, 1.0)
-        )
+        defects = tuple(f.invariant for f in failures)
+        if not defects:  # judge evidence counts only once every executable check passes
+            scored = {s.criterion: s.score for s in scores}
+            defects = tuple(
+                criterion for criterion in dict.fromkeys((*self.thresholds, *scored))
+                if not math.isfinite(scored.get(criterion, math.nan))  # missing or NaN
+                or scored[criterion] < self.thresholds.get(criterion, 1.0)
+            )
         if defects:
             return AcceptanceDecision("rejected", defects, (candidate,))
         return AcceptanceDecision("accepted", (), (candidate,))
@@ -4696,6 +4700,10 @@ class AcceptanceEngine:
 
 @dataclass(frozen=True)
 class RevisionLimits:
+    """Spend is checked before acceptance and before every further call. A call's
+    cost is known only afterwards, so the last call can overrun the cap by its own
+    cost; that overrun escalates to a person instead of being accepted."""
+
     maximum_revisions: int = 2
     maximum_cost_usd: float = 1.0
 
@@ -4714,12 +4722,14 @@ async def evaluate_and_revise(
         failures = checks(candidate.text)            # executable invariants first
         scores = () if failures else await judge(candidate.text)  # qualitative only
         decision = engine.decide(candidate.text, failures, scores)
+        prior = previous if previous is not None else candidate.text
+        if spent > limits.maximum_cost_usd:          # over the cap: never accept, surface it
+            return engine.escalate(prior, candidate.text, decision.defects, "budget_exhausted")
         if decision.outcome == "accepted":
             return decision
-        prior = previous if previous is not None else candidate.text
         if decision.defects == previous_defects:     # new wording, same failure
             return engine.escalate(prior, candidate.text, decision.defects, "no_progress")
-        if spent >= limits.maximum_cost_usd:
+        if spent >= limits.maximum_cost_usd:         # nothing left for another call
             return engine.escalate(prior, candidate.text, decision.defects, "budget_exhausted")
         if revision == limits.maximum_revisions:
             return engine.escalate(prior, candidate.text, decision.defects, "maximum_revisions")
@@ -5276,7 +5286,7 @@ The base Run API is in Chapter 4. Durable execution adds these operations and tw
 
 ### Execution and persistence rules
 
-* Record model and external tool calls as activities whose results are persisted before workflow continuation. Replay returns the recorded result; it does not call the model or tool again.
+* Record model and external tool calls as activities whose results are persisted before workflow continuation. Replay returns the recorded result; it does not call the model or tool again. An attempt that fails before its result is recorded is retried even if its external call already succeeded, which is why side effects carry an effect key (below; Chapter 22).
 * Wait registration before acknowledgment; inbox before signal. Together they close the “event arrived before subscription” race.
 * For a side effect, persist intent/effect key before invocation and reconcile the receipt before an activity is considered complete (Chapter 22).
 * Use logical workflow time for decisions. Wall-clock access, random IDs, and dynamic configuration are provided as recorded events/side effects.
@@ -6641,7 +6651,7 @@ refuses it first, and how to recover.
 
 **Prevent.** ContextManifest, trust tiers, corroboration, signatures, freshness (Chapter 6 § The trust hierarchy of instructions).
 
-**First deterministic refusal.** Model/output: the claim-evidence verifier rejects claims without authorized evidence, and the run abstains or escalates on conflict.
+**First deterministic refusal.** Model/output: the claim-evidence verifier rejects claims without authorized evidence, and the run abstains or escalates on conflict. It proves provenance, not truth: a false claim inside an authorized source passes it, so a high-impact claim also needs the corroboration above or a human reviewer, and Chapter 23 bounds what a wrong decision can reach.
 
 **Recover.** Quarantine the artifact, invalidate the snapshot and caches, correct downstream decisions.
 
@@ -6653,7 +6663,7 @@ refuses it first, and how to recover.
 
 **Prevent.** Signed and approved ingestion with provenance (Chapter 5), source/index separation, ACLs, poisoning tests.
 
-**First deterministic refusal.** Context/memory: source, snapshot, and ACL filters admit only approved sources into the knowledge snapshot a run may read.
+**First deterministic refusal.** Context/memory: source, snapshot, and ACL filters admit only approved sources into the knowledge snapshot a run may read. They cannot see poison that arrived through an approved source; that residual risk falls to Chapter 5's independent verification and to the Recover step.
 
 **Recover.** Remove the data, rebuild a trusted index, invalidate caches, replay affected runs.
 
@@ -7322,8 +7332,12 @@ intervention-required result.
 
 When the downstream API has no idempotency key, reconcile by business
 predicate: target, intent fields, and a time window around the recorded
-dispatch. One match is Committed; none after the provider's visibility window
-is Declined; several, or an unverifiable match, is InterventionRequired.
+dispatch. One match is Committed. No match is Declined only after the
+visibility window the connector's manifest declares—the provider's bound on
+how long an accepted write can stay invisible to queries; an empty query
+before that bound, or from a provider that declares none, proves nothing.
+Several matches, an unverifiable match, or no declared window is
+InterventionRequired.
 Partial looks like the LOS creating the document request while the borrower
 notification fails.
 
@@ -7341,7 +7355,7 @@ discovery returns only what the run may use.
 | Security | Authentication mode, required scopes, resource model, tenant behavior, data classes |
 | Risk | read\_only, reversible, idempotent, destructive, financial/legal impact, approval policy |
 | Runtime | Timeout, retry class, concurrency key, rate limit, sandbox profile, egress allowlist |
-| Effects | Idempotency-key location, precondition/version field, effect receipt, compensation tool |
+| Effects | Idempotency-key location, precondition/version field, effect receipt, reconciliation query and visibility window, compensation tool |
 | Operations | SLO, health endpoint, trace semantics, cost unit, deprecation date, support contact |
 
 Resolve the manifest at dispatch, not at import; a risk class that lives only in
@@ -7574,12 +7588,15 @@ class EffectLedger:
     def commit(self, key: str, intent: dict[str, object], apply: Callable[[], str]) -> str:
         digest = hash_intent(intent)
         record = self._records.get(key)
-        if record is not None and record.state != "declined":
+        if record is not None:
+            # The intent hash is checked first, whatever the state: a declined
+            # key is still this intent's key, and a new intent needs a new key.
             if record.intent_hash != digest:
                 raise EffectConflict(f"{key} was reused with a different intent")
             if record.state == "committed":
                 return record.receipt  # a replay returns the original receipt
-            raise EffectOutcomeUnknown(f"{key} is {record.state}; refusing to re-apply")
+            if record.state != "declined":
+                raise EffectOutcomeUnknown(f"{key} is {record.state}; refusing to re-apply")
         # No record, or a decline that proved nothing happened: safe to apply.
         # Production writes "reserved" and "executing" durably before dispatch.
         record = self._records[key] = EffectRecord(digest, "reserved")
@@ -7981,11 +7998,12 @@ resumptions, and fan-out do not form one in-process call stack.
 
 ### Worked example — diagnosing a slow mortgage-evidence review
 
-Harborlight reports that a mortgage evidence review took twelve minutes. The
-summary looks plausible, so a request log alone would make the incident appear
-closed. The causal trace instead shows a three-minute queue wait, two retrieval
-attempts caused by a stale index, a four-minute human approval wait, and a
-loan-origination connector timeout whose effect record is **Unknown**. The
+Harborlight reports that a mortgage evidence review took twelve minutes to
+return its summary. The summary looks plausible, so a request log alone would
+make the incident appear closed. The causal trace instead shows a three-minute
+queue wait, two retrieval attempts caused by a stale index, a four-minute human
+approval wait, and a loan-origination connector timeout whose effect record is
+**Unknown**, so the run cannot close (Chapter 15 § Terminal correctness). The
 operator now has a safe next step: reconcile the LOS before retrying, then
 decide whether the latency problem belongs to capacity, retrieval freshness,
 human workflow, or effect recovery.
@@ -7995,7 +8013,7 @@ human workflow, or effect recovery.
 | Admission and queue | 3 min · queue | The run waited before any model work began | Queue age, capacity class, and assignment event |
 | Retrieval | 2 min · retry delay | The first context snapshot was stale and a second attempt ran | Index snapshot, ACL-filter count, freshness, query hash |
 | Approval | 4 min · human dwell | Human dwell dominated model latency | Proposal hash, approver role, wait and expiry timestamps |
-| Connector | 3 min · execution and reconciliation | The downstream call timed out after dispatch | Tool span, idempotency key, downstream request ID |
+| Connector | 3 min · execution | The downstream call timed out after dispatch | Tool span, idempotency key, downstream request ID |
 | Effect ledger | open · reconciliation | The mortgage document request cannot yet be called successful or declined | LOS receipt or reconciliation case; no blind retry |
 
 The first divergent decision is the stale index snapshot; the Unknown effect is
@@ -8067,7 +8085,7 @@ per slice.
 ### Trace and replay semantics
 
 * Propagate W3C traceparent/tracestate across HTTP, queues, MCP, and A2A. Use span links when work is triggered asynchronously or crosses an independently rooted remote trace.
-* Workflow replay (Chapter 15) re-executes history using recorded activity results. Diagnostic replay renders a recorded run without calling models or tools. A fork (Chapter 4 § Run API, `:fork`) is a new run from a checkpoint with explicitly changed versions; it mocks external effects or reauthorizes them. None of the three may create a live effect.
+* Workflow replay (Chapter 15) re-executes history using recorded activity results. Diagnostic replay renders a recorded run without calling models or tools. A fork (Chapter 4 § Run API, `:fork`) is a sandbox run from a checkpoint with explicitly changed versions; its external effects are mocked or read-only. None of the three may create a live effect; work that must change the outside world again is a new, separately authorized run under Chapter 22, not a replay.
 
 ## A workable implementation
 
@@ -8090,7 +8108,8 @@ per slice.
 | GET /v1/runs/{run\_id}/trace | Return role-redacted causal graph, span summaries, links, and authorized content handles |
 
 Forks use Chapter 4's `POST /v1/runs/{id}:fork`: a sandbox run whose external
-effects are mocked or read-only unless separately authorized. The Chapter 14
+effects are mocked or read-only; a run that must act again starts through
+`POST /v1/runs` with its own authorization. The Chapter 14
 operator console reads the trace API; its live run graph is a role-redacted
 view of this trace.
 
@@ -8428,7 +8447,7 @@ for a proof.
 | End-to-end | Real identity, source ACLs, queues, approvals, effects, audit | Staging tenant with synthetic data; canary in production with stop conditions |
 | Continuous | Drift, novel failures, cost/latency, policy incidents | Sampled online evals, human review, alerts, incident-to-test loop |
 
-Measure repeated-run reliability (pass^k or equivalent), not just best-of-one success.
+Measure repeated-run reliability as the share of tasks that pass on all k repeated trials (pass^k), not just best-of-one success; compute it from the trials themselves rather than raising a single-run pass rate to the k, which assumes independent trials.
 
 ### Worked example — average improvement, protected-slice regression
 
@@ -9527,7 +9546,8 @@ These are policy shapes, not universal numbers. Determine actual limits from tas
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Sizing method | Size from measured arrival rates and service-time distributions. Include fan-out, retry amplification, model/tool quotas, approval dwell time, tenant fairness, and headroom. Cost per verified success is more useful than token cost alone. | R43 |
+| Little’s Law | In a stable system, mean work in system equals arrival rate × mean time in system (L = λW); the chapter applies it per scarce resource, counting only active service time for permits. | R43 |
+| Sizing method (book-authored recommendation) | Size from measured arrival rates and service-time distributions. Include fan-out, retry amplification, model/tool quotas, approval dwell time, tenant fairness, and headroom. Cost per verified success is more useful than token cost alone. | — |
 
 The discussion above draws on R43. Appendix K lists the complete sources and records their authority, version, and scope.
 
@@ -9840,7 +9860,7 @@ Each row names the Chapter 17 card that describes the failure's usual cause.
 1. Stop dependent work and preserve cancellation intent.
 2. Load EffectRecord, intent hash, expected version, downstream request ID, and trace.
 3. Query the authoritative downstream system by idempotency key, resource ID, or business predicate.
-4. Classify the result in Chapter 22's effect states: Committed; Declined (proven absent); Partial; still Executing (check again within the provider's visibility window); or InterventionRequired (unprovable).
+4. Classify the result in Chapter 22's effect states: Committed; Declined (proven absent: no match after the visibility window the tool manifest declares); Partial; still Executing (check again within that window); or InterventionRequired (unprovable, including a provider that declares no window).
 5. Record evidence; then accept a Committed receipt, retry a Declined effect under the same logical key, compensate a Partial one, or open an intervention task (Chapter 14).
 6. Add the failure to simulation and release regression tests.
 
@@ -9881,7 +9901,7 @@ Each contract has one owner and one defining chapter, as indexed in Chapter 4 §
 
 # Appendix D — Choosing an Agent Framework
 
-> **Evidence context:** The comparison draws on current documentation for the OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Amazon Bedrock multi-agent collaboration, LangGraph and LangSmith, LlamaIndex Workflows, PydanticAI durable execution, Dapr Agents, Temporal, DBOS, MCP, A2A, OpenTelemetry GenAI conventions, and MLflow. It records declared capabilities, not a comparative production certification. The Claude Agent SDK, CrewAI, and Restate entries have no registered source in this edition; verify their current documentation and maturity before relying on them. **[R02][R05][R06][R07][R19][R20][R21][R25][R29][R31][R32][R33][R34][R35][R36][R37][R38]**
+> **Evidence context:** The comparison draws on current documentation for the OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Amazon Bedrock multi-agent collaboration, LangGraph and LangSmith, LlamaIndex Workflows, PydanticAI durable execution, Dapr Agents, Temporal, DBOS, Restate, MCP, A2A, OpenTelemetry GenAI conventions, MLflow, the Claude Agent SDK, Claude Managed Agents, and CrewAI. It records declared capabilities, not a comparative production certification; all of these are living documents, so verify current maturity before relying on any row. **[R02][R05][R06][R07][R19][R20][R21][R25][R29][R31][R32][R33][R34][R35][R36][R37][R38][R55][R56][R57][R58]**
 
 |  |
 | --- |
@@ -9892,7 +9912,7 @@ Each contract has one owner and one defining chapter, as indexed in Chapter 4 §
 | **Framework or standard** | **Strength** | **Enterprise caution** | **Recommended placement** |
 | --- | --- | --- | --- |
 | OpenAI Agents SDK | Compact Python runtime for agents, tools, handoffs, guardrails, structured outputs, sessions, tracing, MCP, HITL, RunState, and sandbox surfaces; a useful manager-versus-handoff distinction | SDK state is not workflow truth; provider gravity; the application still owns credentials, authorization, effects, durability, and long waits | Bounded AgentRuntime adapter (Chapter 3); an SDK handoff moves control inside one step, never accountability (Chapter 11). Book baseline: `openai-agents==0.22.2` with `openai==3.13.0` in the offline profile |
-| Claude Agent SDK and Managed Agents | Long-horizon harness design, hosted session and event model, sandbox/worker separation, guidance to start simple | Verify feature maturity and cost before adoption; enterprise effects and cross-vendor state stay externally governed | Research and coding workloads behind the same AgentRuntime boundary; keep run, effect, and audit state portable |
+| Claude Agent SDK and Managed Agents | The Agent SDK exposes Claude Code's agent loop, built-in tools, hooks, permissions, subagents, MCP, and sessions as a library; Managed Agents hosts that harness for long-running work with persisted sessions, a server-sent event stream, and managed or self-hosted sandboxes | Managed Agents is documented as beta; verify feature maturity and cost before adoption; enterprise effects and cross-vendor state stay externally governed | Research and coding workloads behind the same AgentRuntime boundary; keep run, effect, and audit state portable |
 | Google ADK and A2A | Composable agents and tools with Google Cloud integration; A2A 1.0 defines agent cards, tasks, messages, artifacts, bindings, and lifecycle operations | Cloud convenience and protocol interoperability do not supply capability trust, authorization equivalence, transaction semantics, or quality | ADK as one harness option behind the platform boundary; the A2A Gateway at cross-team and vendor boundaries (Chapter 19) |
 | Microsoft Agent Framework | Agent and workflow abstractions that converge AutoGen and Semantic Kernel concepts: typed sessions and middleware, graph workflows, telemetry, broad provider integrations | Some languages and features remain preview; Azure-centric managed integrations increase coupling; do not bind public contracts to framework messages or state | Behind adapters where the Microsoft ecosystem and typed middleware matter; pair with the durable and effect architecture |
 | LangGraph and LangSmith | Explicit graph state, checkpointers, interrupts, stores, time travel, human-in-the-loop, and trace/evaluation workflow | Graph checkpoints are not complete enterprise durability; identity, effects, policy, release, and audit still need integration; memory semantics remain application-defined | Application-level graph orchestration, optionally inside a separate durable workflow; keep external writes governed |
@@ -10051,7 +10071,7 @@ Chapter 1 § The vocabulary this book assumes introduces the core terms; this gl
 | Global control tier | The deployment tier that publishes signed, immutable definitions and holds no run state | 4 |
 | Guardrail | A probabilistic detector, such as an input or output check; its finding feeds a policy point and never decides authorization | 20 |
 | Handoff | An accountable transfer of task or interaction ownership that takes effect only when the recipient acknowledges; a framework handoff moves control, not accountability | 11 |
-| Idempotency key | A caller-supplied identifier that lets a downstream system recognize a repeated request as the same request | 22 |
+| Idempotency key | A stable identifier the platform derives from tenant, run, and logical effect and binds to an intent hash; passed to a downstream system that supports one so it recognizes a repeated request as the same request. The model never chooses it | 22 |
 | InterventionRequired | Run, task, or effect state used when correctness cannot be established automatically; it opens an intervention task | 15, 22 |
 | Intervention task | A typed request for human help with an uncertain run; its response is an input to the run and never approves an effect | 14 |
 | Layer | A deployable unit of the architecture (for example, Model access or Durable execution); layers serve the planes | 4 |
@@ -10070,7 +10090,7 @@ Chapter 1 § The vocabulary this book assumes introduces the core terms; this gl
 | Skill Pack | Certified, co-released set of compatible Skills with shared policy and evaluations; installing one grants nothing | 9 |
 | Subject | The principal whose delegated authority initiates a protected action | 21 |
 | TaskEnvelope | The contract every child task carries, in eight field groups | 18 |
-| Tool Gateway | Control point that decides whether an effect may happen, for this subject, exactly once; protocol-agnostic | 2, 22 |
+| Tool Gateway | Control point that decides whether an effect may happen for this subject and dispatches it as one logical effect under the effect ledger, so a retry cannot repeat it; it does not promise cross-system exactly-once delivery; protocol-agnostic | 2, 22 |
 | Trajectory | A run's ordered decisions viewed for evaluation | 25 |
 | Trust tier | The rank of a context segment's origin, from tier 1 system instructions to tier 4 retrieved data that can never direct behavior | 6 |
 | Unknown | Effect state when a mutation may have reached the downstream system and the platform holds neither a receipt nor proof of absence; it blocks retry and dependent work | 22 |
@@ -10368,6 +10388,10 @@ References are numbered by stable registry identifier. Each citation supports on
 * **[R37]** Dapr (2026). *Dapr Agents*. Current documentation. [Primary or authoritative source](https://docs.dapr.io/developing-ai/dapr-agents). Accessed 13 September 2026. **Supports:** Documents Dapr agent integration with workflows, actors, state, messaging, resiliency, and telemetry.
 * **[R38]** DBOS (2026). *DBOS AI Quickstart*. Current documentation. [Primary or authoritative source](https://docs.dbos.dev/ai/ai-quickstart). Accessed 13 September 2026. **Supports:** Documents durable long-running agent workflows, queues, waits, and framework integrations.
 * **[R48]** Rahimi, R. (2026). *Policy Logic Forge: compiling compliance policy text into typed, source-grounded executable decision logic*. Repository documentation, ARCHITECTURE.md §1.1. [Primary or authoritative source](https://github.com/rrahimi-uci/policy-logic-forge). Accessed 14 September 2026. **Supports:** Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction.
+* **[R55]** Anthropic (n.d.). *Agent SDK overview*. Current documentation. [Primary or authoritative source](https://code.claude.com/docs/en/agent-sdk/overview). Accessed 10 October 2026. **Supports:** Documents the Claude Agent SDK as Claude Code's agent loop packaged as a Python and TypeScript library with built-in tools, hooks, subagents, MCP, permissions, and sessions. Does not support maturity, cost, or enterprise-governance claims.
+* **[R56]** Anthropic (n.d.). *Claude Managed Agents overview*. Current documentation (beta). [Primary or authoritative source](https://platform.claude.com/docs/en/managed-agents/overview). Accessed 10 October 2026. **Supports:** Documents Managed Agents as a hosted agent harness in beta: agents, environments (Anthropic-managed or self-hosted sandboxes), sessions, and server-sent events with persisted history, intended for long-running work. Does not support production-readiness or cost claims.
+* **[R57]** CrewAI (n.d.). *CrewAI documentation: Introduction*. Current documentation. [Primary or authoritative source](https://docs.crewai.com/en/introduction). Accessed 10 October 2026. **Supports:** Documents Crews of role-playing agents and event-driven Flows. Does not support durability, permission, trace, or effect-semantics claims.
+* **[R58]** Restate (n.d.). *Restate documentation*. Current documentation. [Primary or authoritative source](https://docs.restate.dev/). Accessed 10 October 2026. **Supports:** Documents durable execution that resumes from completed steps after failure, durable timers, automatic retries, waiting for external events, and long-running processes. Does not support scale, maturity, or regional-recovery claims.
 
 ## Where each claim is supported
 
@@ -10429,6 +10453,10 @@ This matrix defines exactly what each citation is permitted to support. It preve
 | R52 | research | Introduces a benchmark of real GitHub issues evaluated with executable tests. | Verified 2026-10-10; re-check living sources before use. |
 | R53 | research | Introduces a benchmark of tool agents interacting with users under domain rules and reports inconsistent behavior across repeated trials. | Verified 2026-10-10; re-check living sources before use. |
 | R54 | research | Introduces an environment for evaluating tool-using agents' task utility and prompt-injection security together. | Verified 2026-10-10; re-check living sources before use. |
+| R55 | framework documentation | Documents the Claude Agent SDK as Claude Code's agent loop packaged as a Python and TypeScript library with built-in tools, hooks, subagents, MCP, permissions, and sessions. Does not support maturity, cost, or enterprise-governance claims. | Verified 2026-10-10; re-check living sources before use. |
+| R56 | framework documentation | Documents Managed Agents as a hosted agent harness in beta: agents, environments (Anthropic-managed or self-hosted sandboxes), sessions, and server-sent events with persisted history, intended for long-running work. Does not support production-readiness or cost claims. | Verified 2026-10-10; re-check living sources before use. |
+| R57 | framework documentation | Documents Crews of role-playing agents and event-driven Flows. Does not support durability, permission, trace, or effect-semantics claims. | Verified 2026-10-10; re-check living sources before use. |
+| R58 | framework documentation | Documents durable execution that resumes from completed steps after failure, durable timers, automatic retries, waiting for external events, and long-running processes. Does not support scale, maturity, or regional-recovery claims. | Verified 2026-10-10; re-check living sources before use. |
 
 # Appendix L — Capacity, Resilience, and Release Acceptance
 
@@ -10436,10 +10464,10 @@ This matrix defines exactly what each citation is permitted to support. It preve
 
 | **Quantity** | **Approximation** | **Caution** |
 | --- | --- | --- |
-| Effective work rate | lambda\_eff = lambda\_external × E[nodes] × E[fan-out] × retry\_multiplier | Estimate separately by tenant/risk/route. |
+| Effective work rate | lambda\_eff = lambda\_external × E[attempted activities per external run] | Measure attempted activities per run from traces for each resource class; the count already includes fan-out and retries, so do not multiply by them again. Estimate separately by tenant/risk/route. |
 | Offered concurrency | L = lambda\_eff × E[service time] | Little’s Law gives mean in-flight work under stable conditions [R43]. |
 | Permit pool | permits >= ceil(L / target\_utilization) | Use lower utilization for high-variance or rate-limited dependencies. |
-| Retry multiplier | 1 + p\_retry + p\_retry² + … up to the attempt cap | Correlated outages violate independence; simulate them. |
+| Retry multiplier | 1 + p\_retry + p\_retry² + … up to the attempt cap | Projects attempts from first-attempt counts only when traces are unavailable. Correlated outages violate independence; simulate them. |
 | Token demand | requests × (uncached input + cached input + output tokens) | Count tool schemas as input; track by model route and ContextManifest policy. |
 | Verified-success cost | (model + tool + compute + human-review cost) / accepted outcomes | Include failed, abandoned, and reconciled runs. |
 
