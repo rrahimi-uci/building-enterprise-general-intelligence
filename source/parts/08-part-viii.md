@@ -644,7 +644,8 @@ These are policy shapes, not universal numbers. Determine actual limits from tas
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Sizing method | Size from measured arrival rates and service-time distributions. Include fan-out, retry amplification, model/tool quotas, approval dwell time, tenant fairness, and headroom. Cost per verified success is more useful than token cost alone. | R43 |
+| Little’s Law | In a stable system, mean work in system equals arrival rate × mean time in system (L = λW); the chapter applies it per scarce resource, counting only active service time for permits. | R43 |
+| Sizing method (book-authored recommendation) | Size from measured arrival rates and service-time distributions. Include fan-out, retry amplification, model/tool quotas, approval dwell time, tenant fairness, and headroom. Cost per verified success is more useful than token cost alone. | — |
 
 The discussion above draws on R43. Appendix K lists the complete sources and records their authority, version, and scope.
 

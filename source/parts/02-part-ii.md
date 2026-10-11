@@ -419,7 +419,7 @@ Consider a policy sentence that says a pay statement is acceptable only within a
 
 [[EXAMPLE:grounding-verifier]]
 
-A model that invents a rule will invent a plausible citation for it, so checking that a citation is well-formed proves nothing. Checking that the cited passage *says what the rule says* is a different operation, and it is the one that matters. In one run of a compliance extraction pipeline built on this design, independent verification rejected 44% of the dependency and conflict claims that the pipeline's own deterministic guard had already accepted [R48]. That figure is one measurement of one pipeline on one corpus; it is not a general rate. It is, however, the empirical case for making verification independent of extraction.
+A model that invents a rule will invent a plausible citation for it, so checking that a citation is well-formed proves nothing. Checking that the cited passage *says what the rule says* is a different operation, and it is the one that matters. In one run of the author's own compliance extraction pipeline built on this design, independent verification rejected 44% of the dependency and conflict claims that the pipeline's own deterministic guard had already accepted [R48]. That figure is author-reported: one measurement of one pipeline on one corpus, not a general rate. It is, however, the empirical case for making verification independent of extraction.
 
 **Approve.** An eligible owner accepts the interpretation; the approval, the source digest, and the rule version are recorded together. Verification shows the rule matches the text; approval makes it the organization's rule.
 

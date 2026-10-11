@@ -123,6 +123,21 @@ def main() -> int:
     for level,title,line in headings:
         if level>prev+1: errors.append(f"Heading level skips from H{prev} to H{level} at line {line}: {title}")
         prev=level
+    # Chapter titles must agree across the manuscript H1s, config/book.json and
+    # config/chapter-covers.json. The renderers read headings from Markdown and
+    # covers from the cover spec, so drift in book.json never shows on a page;
+    # it surfaces later as a wrong catalog, navigation or Notion title.
+    h1_titles={int(n):t.strip() for n,t in re.findall(r'^# (\d{2}) — (.+)$',prose,re.M)}
+    meta_titles={c['number']:c['title'] for c in json.loads((root/'config/book.json').read_text(encoding='utf-8'))['structure']['chapters']}
+    cover_path=root/'config/chapter-covers.json'
+    cover_titles={c['chapter']:c['title'] for c in json.loads(cover_path.read_text(encoding='utf-8'))['chapters']} if cover_path.exists() else {}
+    title_mismatches=0
+    for n in range(1,29):
+        for label,table in (('config/book.json',meta_titles),('config/chapter-covers.json',cover_titles)):
+            if table and table.get(n)!=h1_titles.get(n):
+                title_mismatches+=1
+                errors.append(f"Chapter {n:02d} title drift: {label} has {table.get(n)!r}, manuscript H1 is {h1_titles.get(n)!r}")
+    checks['chapter_title_mismatches']=title_mismatches
     if text.count('```')%2: errors.append('Unbalanced fenced code blocks')
     checks['code_blocks']=len(re.findall(r'^```[^\n]*$',text,re.M))//2
     errors.extend(check_table_shapes(text))
