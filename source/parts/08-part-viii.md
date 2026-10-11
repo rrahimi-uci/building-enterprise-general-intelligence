@@ -99,7 +99,7 @@ The release gate (Chapter 25's ReleaseGateDecision) takes two inputs: the use ca
 
 A design review covers each area below; the chapter in parentheses holds its controls: outcome and acceptance (Chapters 2 and 13), deterministic boundary (2), state and effect ownership (15, 22), identity and delegation (21), context and memory (6), tool, MCP, and A2A trust (19), threats (20), evaluation truth (25), observability and privacy (24), recovery and release (27), capacity and cost (28), human oversight (14), and portability (3).
 
-Reviews also run on a fixed cadence. Incidents enter the daily review because incident response belongs inside organizational risk management [R42].
+Reviews also run on a fixed cadence. Incidents enter the daily or weekly review because incident response belongs inside organizational risk management [R42].
 
 | **Cadence** | **Input** | **Owner** | **Output** |
 | --- | --- | --- | --- |
@@ -387,7 +387,7 @@ The ordering in step 7 is this book's recommendation. Recovery is rehearsed with
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Supply chain | An SBOM describes components; SLSA provenance describes where and how an artifact was built. Use both, verify signatures and builder identity before promotion, and include model/prompt/Skill/policy/evaluation digests in the release manifest. | R17; R18 |
+| Supply chain | An SBOM describes components; SLSA provenance describes where and how an artifact was built and by which builder. Using both, verifying signatures and builder identity before promotion, and pinning model, prompt, Skill, policy, and evaluation digests in the release manifest are this book's recommendations. | R17; R18 |
 
 The discussion above draws on R17; R18. Appendix K lists the complete sources and records their authority, version, and scope.
 

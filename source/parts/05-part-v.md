@@ -85,7 +85,8 @@ Central coordination is easier to govern but can bottleneck; decentralized colla
 | CompletedPendingValidation | The owner submits artifacts through `:complete`; they stay quarantined | The Task Service, after schema, provenance, and acceptance checks |
 | Succeeded | Validation passes and the parent's join adopts the artifacts (Chapter 15 § Terminal correctness) | No one; terminal |
 | CancelRequested → Canceled | The parent persists cancellation intent; Canceled only after any executing mutation reconciles | The Task Service, once children acknowledge and effects settle |
-| Failed / Expired / InterventionRequired | A typed failure (including the receiver's rejection), a passed deadline, or an outcome no rule can settle | No one; the parent applies its join policy, and InterventionRequired opens an intervention task (Chapter 14) |
+| Failed / Expired | A typed failure (including the receiver's rejection) or a passed deadline | No one; terminal, and the parent applies its join policy |
+| InterventionRequired | An outcome no rule can settle; an intervention task opens (Chapter 14) | The intervention task's response; non-terminal until it resolves the task (Chapter 15 § Terminal correctness) |
 
 The receiver may reject, accept, request input, produce partial artifacts, complete, fail, or acknowledge cancellation. Terminal states reuse Chapter 15's run terminal names, and a terminal task accepts no new work; follow-up is a new task. Cancellation propagates downward by default; compensation does not propagate automatically and follows domain policy (Chapter 22).
 
@@ -368,7 +369,8 @@ Local states are the task lifecycle of Chapter 18; the gateway maps each remote 
 | CancelRequested | CancelTask sent; no terminal state yet | Stop issuing new authority; continue monitoring possible effects |
 | Canceled | TASK\_STATE\_CANCELED | Close only after any possible effect reconciles |
 | Failed | TASK\_STATE\_FAILED or TASK\_STATE\_REJECTED | Apply parent join policy |
-| Expired/InterventionRequired | Deadline passed or remote outcome ambiguous | Apply parent join/reconciliation policy; never resubmit automatically |
+| Expired | Deadline passed | Apply parent join policy; never resubmit automatically |
+| InterventionRequired | Remote outcome ambiguous | Open an intervention task and hold dependent work until its response; never resubmit automatically |
 
 ### Scalability, federation, and failure isolation
 

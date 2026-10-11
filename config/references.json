@@ -432,7 +432,7 @@
       "title": "OpenAI Agents SDK for Python",
       "publication_or_version": "Current documentation",
       "url": "https://openai.github.io/openai-agents-python",
-      "supports": "Documents agents, the runner, function tools, structured output types, input/output/tool guardrails, handoffs, sessions, results with interruptions and resumable RunState for human-in-the-loop approval, local and hosted shell-tool skills, and tracing with configurable sensitive-data capture.",
+      "supports": "Documents agents, the runner, function tools, structured output types, input/output/tool guardrails, handoffs, sessions, MCP integration, results with interruptions and resumable RunState for human-in-the-loop approval, local and hosted shell-tool skills, sandbox agents, and tracing with configurable sensitive-data capture.",
       "verification": {
         "checked_on": "2026-09-13",
         "status": "verified-primary-or-authoritative-source",
@@ -462,7 +462,7 @@
       "title": "Microsoft Agent Framework Overview",
       "publication_or_version": "Current documentation",
       "url": "https://learn.microsoft.com/en-us/agent-framework/overview",
-      "supports": "Documents Microsoft agent and workflow abstractions.",
+      "supports": "Documents Microsoft Agent Framework agents, graph-based workflows, sessions, middleware, telemetry, and model-provider integrations; states that it succeeds and combines AutoGen and Semantic Kernel and that its Go SDK is in public preview.",
       "verification": {
         "checked_on": "2026-09-13",
         "status": "verified-primary-or-authoritative-source",
@@ -492,7 +492,7 @@
       "title": "Multi-Agent Collaboration for Amazon Bedrock Agents",
       "publication_or_version": "Current documentation",
       "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/agents-multi-agent-collaboration.html",
-      "supports": "Documents the managed supervisor/collaborator pattern.",
+      "supports": "Documents the managed supervisor/collaborator pattern of Amazon Bedrock Agents, now Bedrock Agents Classic, and states that the service is no longer open to new customers, pointing to Amazon Bedrock AgentCore for similar capabilities.",
       "verification": {
         "checked_on": "2026-09-13",
         "status": "verified-primary-or-authoritative-source",
