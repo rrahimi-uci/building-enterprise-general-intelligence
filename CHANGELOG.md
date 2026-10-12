@@ -4,6 +4,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### PDF in dist
+
+- `make all` now ends with a `dist-pdf` step that keeps `dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf` current next to the Markdown, DOCX and TeX files: it compiles only when the PDF is missing or the content of the generated LaTeX, styles, diagram and cover renders or fonts changed since the last compile (compared by hash), and skips with a notice when XeLaTeX is not installed. `make release` now runs `make pdf`. The PDF stays gitignored and is never committed (CI publishes it as a build artifact).
+
 ### Diagram modernization, pilot: a TikZ design system and three restyled figures
 
 - New shared design system `latex/styles/professional-diagrams.sty`: semantic pastel palette (the book's existing house hues plus `navy` and `green`), card, decision, store, chip, pill, callout and group styles, rounded connectors, FontAwesome icons, Liberation Sans type scale (nothing under 9 pt at final size). Documented in `reviews/diagram-modernization/style-guide.md` with a style sheet; inventory of all 44 figures and a conversion plan in `reviews/diagram-modernization/inventory.md` and `pilot-report.md`.

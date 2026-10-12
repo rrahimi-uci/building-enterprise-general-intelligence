@@ -8,6 +8,7 @@ Run commands from the repository root, not from this directory:
 
 ```bash
 make pdf          # validates the LaTeX source first, then compiles
+make all          # builds everything and keeps the PDF in dist/ current (skips if XeLaTeX is missing)
 ./latex/compile.sh   # or the compile step on its own
 ```
 

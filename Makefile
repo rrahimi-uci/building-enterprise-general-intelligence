@@ -6,13 +6,14 @@ PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 ROOT := $(CURDIR)
 ZIP ?= $(abspath ../Enterprise-Agentic-AI-Book-v1.0.0-Complete-Package-with-LaTeX.zip)
 TEX_ENTRY := latex/Enterprise-General-Intelligence-v1.0.0.tex
+PDF_OUT := dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf
 
 .DEFAULT_GOAL := help
 
 PYTHON_EXAMPLES ?= $(if $(wildcard .venv-examples/bin/python),.venv-examples/bin/python,python3)
 
 .PHONY: help setup setup-examples all assemble cover chapter-covers diagrams build latex draft pdf references \
-        examples examples-run latex-validate validate deterministic qa-pdf latex-pdf \
+        examples examples-run latex-validate validate deterministic qa-pdf latex-pdf dist-pdf \
         package release clean distclean
 
 ## help: show the available targets
@@ -21,6 +22,7 @@ help:
 	@echo "  setup           create .venv, install Python deps, install missing TeX packages"
 	@echo "  draft           assemble + one XeLaTeX pass; fastest way to eyeball a change"
 	@echo "  pdf             full three-pass XeLaTeX build -> dist/*-LaTeX.pdf"
+	@echo "  all             build + latex + validate + the PDF in dist/ (rebuilt only when stale)"
 	@echo ""
 	@echo "Generation"
 	@echo "  assemble        source/parts/*.md -> book/manuscript.md + dist/*.md"
@@ -41,7 +43,7 @@ help:
 	@echo ""
 	@echo "Release"
 	@echo "  package         regenerate manifest + checksums, write the release ZIP"
-	@echo "  release         validate + deterministic + qa-pdf + package"
+	@echo "  release         validate + deterministic + qa-pdf + pdf + package"
 	@echo ""
 	@echo "Housekeeping"
 	@echo "  clean           remove generated QA/build artifacts"
@@ -64,7 +66,10 @@ setup-examples:
 	.venv-examples/bin/python -m pip install --upgrade pip
 	.venv-examples/bin/python -m pip install -r examples/requirements.txt
 
-all: build latex validate
+## all: everything a reader or reviewer needs in dist/ -- Markdown, DOCX, TeX and
+## the XeLaTeX PDF. The PDF step is skipped with a notice when XeLaTeX is not
+## installed, so `make all` still works on a machine without TeX.
+all: build latex validate dist-pdf
 
 assemble:
 	$(PYTHON) tools/assemble_manuscript.py --root "$(ROOT)"
@@ -132,6 +137,27 @@ latex-pdf: latex-validate
 	@./tools/bootstrap_tex.sh --check
 	./latex/compile.sh
 
+## dist-pdf: keep dist/*-LaTeX.pdf current. Compiles only when the PDF is missing
+## or the content of anything it is built from (generated LaTeX, styles, diagram
+## and cover renders, fonts) changed since the last compile -- compared by hash,
+## because the generated LaTeX is rewritten on every run and timestamps would
+## always look stale. Skips with a notice when XeLaTeX is unavailable. The PDF is
+## gitignored and never committed (see AGENTS.md); CI publishes it as an artifact.
+PDF_INPUT_DIRS := latex/content latex/styles latex/fonts assets/diagrams assets/cover cover-images
+PDF_STAMP := latex/build/.pdf-inputs.sha256
+dist-pdf: latex-validate
+	@if ! PATH="/Library/TeX/texbin:$$PATH" command -v xelatex >/dev/null 2>&1; then \
+		echo "dist-pdf: XeLaTeX not found; skipping $(PDF_OUT). Install TeX or use Dockerfile.latex / CI."; \
+	else \
+		mkdir -p latex/build; \
+		cur=$$( { find $(PDF_INPUT_DIRS) -type f ! -name '.DS_Store' ; ls latex/*.tex latex/*.sty ; } | LC_ALL=C sort | xargs shasum -a 256 | shasum -a 256 | cut -d' ' -f1 ); \
+		if [ -s "$(PDF_OUT)" ] && [ -f "$(PDF_STAMP)" ] && [ "$$(cat $(PDF_STAMP))" = "$$cur" ]; then \
+			echo "dist-pdf: $(PDF_OUT) is up to date."; \
+		else \
+			PATH="/Library/TeX/texbin:$$PATH" ./tools/bootstrap_tex.sh --check && PATH="/Library/TeX/texbin:$$PATH" ./latex/compile.sh && echo "$$cur" > $(PDF_STAMP); \
+		fi; \
+	fi
+
 ## package: runs the examples for real first, so the committed
 ## reports/examples-report.json is evidence of execution rather than of a
 ## metadata-only check. `validate` runs the checker without --run, which would
@@ -139,7 +165,7 @@ latex-pdf: latex-validate
 package: validate examples-run
 	$(PYTHON) tools/package_release.py --root "$(ROOT)" --output "$(ZIP)"
 
-release: validate deterministic qa-pdf package
+release: validate deterministic qa-pdf pdf package
 
 clean:
 	rm -rf qa/determinism latex/build
