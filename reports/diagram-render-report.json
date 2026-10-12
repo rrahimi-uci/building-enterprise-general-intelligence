@@ -4,146 +4,211 @@
   "records": [
     {
       "id": "anti-ambient-authority",
-      "source": "anti-ambient-authority.gv",
+      "source": "anti-ambient-authority.tikz.tex",
       "pixels": [
-        2330,
-        1685
+        2129,
+        1566
       ],
-      "effective_dpi": 340,
+      "effective_dpi": 311,
       "vector": true,
-      "sha256": "82ed3fa644591b113971f24c9f383d7e9d2fbef60b98fcbc3c75f5695cc533ea"
+      "sha256": "4bc9c815d9b8d3ae5e08cbad2cde37e5ba55f583a96aa5f5bfb74750e0921496",
+      "natural_inches": [
+        7.1,
+        5.22
+      ],
+      "placement_scale": 0.995
     },
     {
       "id": "anti-approval-binding",
-      "source": "anti-approval-binding.gv",
+      "source": "anti-approval-binding.tikz.tex",
       "pixels": [
-        2392,
-        2380
+        2129,
+        1665
       ],
-      "effective_dpi": 349,
+      "effective_dpi": 311,
       "vector": true,
-      "sha256": "c2a4f4889cd85f7feba4b7cd6f22cec922e3a5d8a03ffcac55a7b4ebf35d7d94"
+      "sha256": "1e9131e40a475a929d7c8e1b2116b2412a95d5b6c928e4e52825cb6cd7ec9575",
+      "natural_inches": [
+        7.1,
+        5.55
+      ],
+      "placement_scale": 0.995
     },
     {
       "id": "anti-before-after",
-      "source": "anti-before-after.gv",
+      "source": "anti-before-after.tikz.tex",
       "pixels": [
-        2331,
-        1286
+        2129,
+        1372
       ],
-      "effective_dpi": 340,
+      "effective_dpi": 311,
       "vector": true,
-      "sha256": "360fe352da7c84d9404c67dec0d62c3636e5e7bd621e9ab7821ed1a414ab37dd"
+      "sha256": "d9615b2c66f6638b9b589b8fbceef53ff173196872dac745c00b823996d9d6c8",
+      "natural_inches": [
+        7.1,
+        4.57
+      ],
+      "placement_scale": 0.995
     },
     {
       "id": "anti-retry-storm",
-      "source": "anti-retry-storm.gv",
+      "source": "anti-retry-storm.tikz.tex",
       "pixels": [
-        2374,
-        2534
+        2129,
+        2055
       ],
-      "effective_dpi": 347,
+      "effective_dpi": 311,
       "vector": true,
-      "sha256": "73eab0866632462f9312c4a6bfd1ca021b1d6a73758779b10178740dd92f138a"
+      "sha256": "59b6d15353029b759ef13a88b7ad178b9037065de249916e41f7e294e95f16c3",
+      "natural_inches": [
+        7.1,
+        6.85
+      ],
+      "placement_scale": 0.995
     },
     {
       "id": "book-map",
-      "source": "book-map.gv",
+      "source": "book-map.tikz.tex",
       "pixels": [
-        2505,
-        1818
+        2109,
+        1931
       ],
-      "effective_dpi": 366,
+      "effective_dpi": 308,
       "vector": true,
-      "sha256": "6f4351eb5ac059425c0e8c7e9c9815dcf747014d87fe8978f176686c1e1796da"
+      "sha256": "ba9fe7ddb04679d1f0626f7705c5919bd2b90f205d70b24be9a5e6dffac50909",
+      "natural_inches": [
+        7.03,
+        6.43
+      ],
+      "placement_scale": 1.004
     },
     {
       "id": "capability-ladder",
-      "source": "capability-ladder.gv",
+      "source": "capability-ladder.tikz.tex",
       "pixels": [
-        2261,
-        1331
+        2097,
+        1180
       ],
-      "effective_dpi": 330,
+      "effective_dpi": 306,
       "vector": true,
-      "sha256": "9e371a2a5a8d1efb6e1f982fb6e142451b665d5bfc4404c4aa7411c422e8c768"
+      "sha256": "23614608e30b6813f7bacda67f170b500c9788f5f9d1f93ebac9602ad9f074ba",
+      "natural_inches": [
+        6.99,
+        3.93
+      ],
+      "placement_scale": 1.01
     },
     {
       "id": "causal-trace",
-      "source": "causal-trace.gv",
+      "source": "causal-trace.tikz.tex",
       "pixels": [
-        2556,
-        2431
+        2068,
+        2288
       ],
-      "effective_dpi": 373,
+      "effective_dpi": 302,
       "vector": true,
-      "sha256": "65641d273c506c5bce28154a48ba46d6c8496c8be354cac080ee34dd60eda52a"
+      "sha256": "ac856030e4651c208f12268ae99875fc141e27bd9fc263ea892bebd8d5214d12",
+      "natural_inches": [
+        6.89,
+        7.62
+      ],
+      "placement_scale": 1.025
     },
     {
       "id": "context-pipeline",
-      "source": "context-pipeline.gv",
+      "source": "context-pipeline.tikz.tex",
       "pixels": [
-        2364,
-        2915
+        2056,
+        2240
       ],
-      "effective_dpi": 345,
+      "effective_dpi": 300,
       "vector": true,
-      "sha256": "b6eb4ec371d9c3699ebf3b81ff8aee9a21991a2d8e7e707c4813bb4d7581eb8e"
+      "sha256": "6aec80177b7f6d23d9b36463c5b5980fa719daa3ece9b98fb5120d35a56e8a1a",
+      "natural_inches": [
+        6.81,
+        7.42
+      ],
+      "placement_scale": 1.037
     },
     {
       "id": "deterministic-shell",
-      "source": "deterministic-shell.gv",
+      "source": "deterministic-shell.tikz.tex",
       "pixels": [
-        2379,
-        2371
+        2113,
+        1728
       ],
-      "effective_dpi": 347,
+      "effective_dpi": 308,
       "vector": true,
-      "sha256": "470b5cf7eb6a5b8ab0f082b914ed56c153b6dc03402a770c5b0c0b2166bae21b"
+      "sha256": "f2ad313554c69d0d39020fdf72ac5c68e15d406cbdd11fd85b49a0da5e24657e",
+      "natural_inches": [
+        7.04,
+        5.76
+      ],
+      "placement_scale": 1.002
     },
     {
       "id": "evaluation-gate",
-      "source": "evaluation-gate.gv",
+      "source": "evaluation-gate.tikz.tex",
       "pixels": [
-        2838,
-        2118
+        2106,
+        2441
       ],
-      "effective_dpi": 414,
+      "effective_dpi": 307,
       "vector": true,
-      "sha256": "00f01d625c3abda6b501960f35de5395ba3f6cc9cbf89de9c5217b03b6402e1e"
+      "sha256": "958d565846ad809436a284ca463ef0f01653efedbd8fcf7e554e8f185a8f3467",
+      "natural_inches": [
+        7.02,
+        8.13
+      ],
+      "placement_scale": 1.006
     },
     {
       "id": "developer-platform",
-      "source": "developer-platform.gv",
+      "source": "developer-platform.tikz.tex",
       "pixels": [
-        2262,
-        1469
+        2061,
+        1715
       ],
-      "effective_dpi": 330,
+      "effective_dpi": 301,
       "vector": true,
-      "sha256": "0f5c50101d3b8bee87d6c58d25a0327f49b8eaaae122a3d74c0e17842045f8d0"
+      "sha256": "2512ef903f3808c0078f4df7c4f464cfd5aa1260b7913330fd2b7c302988bafc",
+      "natural_inches": [
+        6.76,
+        5.62
+      ],
+      "placement_scale": 1.045
     },
     {
       "id": "dx-golden-path",
-      "source": "dx-golden-path.gv",
+      "source": "dx-golden-path.tikz.tex",
       "pixels": [
-        2292,
-        1196
+        2077,
+        1143
       ],
-      "effective_dpi": 335,
+      "effective_dpi": 303,
       "vector": true,
-      "sha256": "48e287314084041ba128fc6a8a8cf02652a7ef819d36acc8ae7c38ed98ce29dd"
+      "sha256": "2d76c0d940f7d0783a10fe1f3945362ee7f97c6b573d005a7929abbe763727c5",
+      "natural_inches": [
+        6.92,
+        3.81
+      ],
+      "placement_scale": 1.02
     },
     {
       "id": "gateway-roles",
-      "source": "gateway-roles.gv",
+      "source": "gateway-roles.tikz.tex",
       "pixels": [
-        2850,
-        1877
+        2130,
+        2113
       ],
-      "effective_dpi": 416,
+      "effective_dpi": 311,
       "vector": true,
-      "sha256": "7bb92651598b0bee720d97edd152f644257a4ad346a0ccb4aeb9b876abbf9f6d"
+      "sha256": "4fe414c50fa4deffb874e3f3f79f04c8e28a862409b7af610b123d4049ee1ef2",
+      "natural_inches": [
+        7.1,
+        7.04
+      ],
+      "placement_scale": 0.995
     },
     {
       "id": "governance-model",
@@ -163,102 +228,147 @@
     },
     {
       "id": "guardrail-sequence",
-      "source": "guardrail-sequence.mmd",
+      "source": "guardrail-sequence.tikz.tex",
       "pixels": [
-        2055,
-        2312
+        2097,
+        2352
       ],
-      "effective_dpi": 300,
+      "effective_dpi": 306,
       "vector": true,
-      "sha256": "29cffc8c28f909d92d09f6ea26303a95c86d39314b9d91edbff2edd6be56c87a"
+      "sha256": "7c8325b44168e0e0d832aaacfd39c03942bd75ce2a128c1d762c095012878ec7",
+      "natural_inches": [
+        6.99,
+        7.84
+      ],
+      "placement_scale": 1.01
     },
     {
       "id": "knowledge-fabric",
-      "source": "knowledge-fabric.gv",
+      "source": "knowledge-fabric.tikz.tex",
       "pixels": [
-        2458,
-        1461
+        2059,
+        1841
       ],
-      "effective_dpi": 359,
+      "effective_dpi": 301,
       "vector": true,
-      "sha256": "0440b63202672ff4059cfbca783f1f13022ef5122f69fe39077a727b566025df"
+      "sha256": "354a8d4414f971cb2938e2eb2314e485b1b1dfa4ecd9c29c2fd21b21f3eb422e",
+      "natural_inches": [
+        6.75,
+        6.03
+      ],
+      "placement_scale": 1.046
     },
     {
       "id": "learning-loop",
-      "source": "learning-loop.gv",
+      "source": "learning-loop.tikz.tex",
       "pixels": [
-        2267,
-        2017
+        2113,
+        1744
       ],
-      "effective_dpi": 331,
+      "effective_dpi": 308,
       "vector": true,
-      "sha256": "bd2da5d776297413d934d4e9e8130ce4ff60b61ef5ec7d60dacbff6a9c68453b"
+      "sha256": "b4900631ad8ce453a5a9cb2f035903ccbdb07046c88487fc9c97a3eb96dce485",
+      "natural_inches": [
+        7.04,
+        5.81
+      ],
+      "placement_scale": 1.002
     },
     {
       "id": "model-routing",
-      "source": "model-routing.gv",
+      "source": "model-routing.tikz.tex",
       "pixels": [
-        2295,
-        2292
+        2062,
+        2054
       ],
-      "effective_dpi": 335,
+      "effective_dpi": 301,
       "vector": true,
-      "sha256": "e03260926709c1a7ca9d6e71a3f86c5195e5ad512893a6e7de4b819bcc289cf9"
+      "sha256": "e3ddff477ebec65972074acf74cb415d97acd82124ef77e159f36967853b3bde",
+      "natural_inches": [
+        6.71,
+        6.69
+      ],
+      "placement_scale": 1.051
     },
     {
       "id": "pattern-decision-tree",
-      "source": "pattern-decision-tree.gv",
+      "source": "pattern-decision-tree.tikz.tex",
       "pixels": [
-        2296,
-        4032
+        2114,
+        2475
       ],
-      "effective_dpi": 335,
+      "effective_dpi": 309,
       "vector": true,
-      "sha256": "201b87c652a18c54d12ca486bd8d1294ece711478b1b3a0c50bb2be79638a100"
+      "sha256": "58c733b485865366ef2a8e5fc45def15b3b14d468794b1e60aacbff6a9830aa7",
+      "natural_inches": [
+        7.05,
+        8.25
+      ],
+      "placement_scale": 1.002
     },
     {
       "id": "pattern-durable",
-      "source": "pattern-durable.gv",
+      "source": "pattern-durable.tikz.tex",
       "pixels": [
-        2501,
-        3441
+        2088,
+        930
       ],
-      "effective_dpi": 365,
+      "effective_dpi": 305,
       "vector": true,
-      "sha256": "7a84f8e7e81ff4420268e59273727ebb6e483aecd57fd90616e629e6aae2a238"
+      "sha256": "b6caec76afbbb3f1a143df50d35a344f28ef0c0a3275061efc7140c3606c5670",
+      "natural_inches": [
+        6.96,
+        3.1
+      ],
+      "placement_scale": 1.014
     },
     {
       "id": "pattern-hitl",
-      "source": "pattern-hitl.gv",
+      "source": "pattern-hitl.tikz.tex",
       "pixels": [
-        2377,
-        1879
+        2129,
+        1532
       ],
-      "effective_dpi": 347,
+      "effective_dpi": 311,
       "vector": true,
-      "sha256": "a0fa5848a80112466e673dd6b2c62ec549634f69fa81ad01435ecdff9e10bb33"
+      "sha256": "3641aefa47a2aa880f8bbcf9d4090118fb4157eeff139878e9a84d8cd47ef713",
+      "natural_inches": [
+        7.1,
+        5.11
+      ],
+      "placement_scale": 0.995
     },
     {
       "id": "pattern-planning",
-      "source": "pattern-planning.gv",
+      "source": "pattern-planning.tikz.tex",
       "pixels": [
-        2340,
-        2022
+        2133,
+        1733
       ],
-      "effective_dpi": 342,
+      "effective_dpi": 311,
       "vector": true,
-      "sha256": "bff68b554b5b13b6fc8757ad25496cc6b9a867fb6c8c9bbf381d943ff7611004"
+      "sha256": "773601d9e3b28c4c9ff3ea343bb4bf47f894237bc6f3baf545499b3b0c7f9723",
+      "natural_inches": [
+        7.11,
+        5.78
+      ],
+      "placement_scale": 0.993
     },
     {
       "id": "pattern-react",
-      "source": "pattern-react.gv",
+      "source": "pattern-react.tikz.tex",
       "pixels": [
-        2262,
-        1232
+        2089,
+        1403
       ],
-      "effective_dpi": 330,
+      "effective_dpi": 305,
       "vector": true,
-      "sha256": "236f6fb1a1b07bad9472c228de5b11076fcace7144f3468689a8c6bcff7f0b12"
+      "sha256": "2383790864651ff0c3cebc36180308d82dcd50bbb85634dea18d9a722f9a3c81",
+      "natural_inches": [
+        6.96,
+        4.68
+      ],
+      "placement_scale": 1.014
     },
     {
       "id": "pattern-reflection",
@@ -278,168 +388,243 @@
     },
     {
       "id": "pattern-routing",
-      "source": "pattern-routing.gv",
+      "source": "pattern-routing.tikz.tex",
       "pixels": [
-        2293,
-        1833
-      ],
-      "effective_dpi": 335,
-      "vector": true,
-      "sha256": "27e8ba9404005895e3f1b1acf2a009ad40d6511e9c046884c2fed6b37780e0ba"
-    },
-    {
-      "id": "policy-to-guardrail",
-      "source": "policy-to-guardrail.gv",
-      "pixels": [
-        2315,
-        3153
-      ],
-      "effective_dpi": 338,
-      "vector": true,
-      "sha256": "ac91b545ca98a1d14b783ed670bc0b2055edc81a30aeadd3c5f28339e0354ca8"
-    },
-    {
-      "id": "document-ingestion",
-      "source": "document-ingestion.gv",
-      "pixels": [
-        2319,
-        2324
-      ],
-      "effective_dpi": 339,
-      "vector": true,
-      "sha256": "29f04fbe08ebafe6cccd549ea3efcd1a9297cfd610db6e1e400c7b69fdcb32b7"
-    },
-    {
-      "id": "knowledge-lifecycle",
-      "source": "knowledge-lifecycle.gv",
-      "pixels": [
-        2560,
-        3272
-      ],
-      "effective_dpi": 374,
-      "vector": true,
-      "sha256": "ebbb9b1321b4fa61c2b021f23b54f6306b066763df9b104eb6655f2f20c79cf8"
-    },
-    {
-      "id": "portability",
-      "source": "portability.gv",
-      "pixels": [
-        2560,
-        1164
-      ],
-      "effective_dpi": 374,
-      "vector": true,
-      "sha256": "4d432673ba0c599ad4914eecfca450ed27b4c26e1c4d7d72aeebe01091c4e6b7"
-    },
-    {
-      "id": "reference-architecture",
-      "source": "reference-architecture.gv",
-      "pixels": [
-        2822,
-        3080
-      ],
-      "effective_dpi": 412,
-      "vector": true,
-      "sha256": "a0e92b2caa2f5fad2ae8c370192a9ab4c765835676cddf7fc1f71735ac7921f3"
-    },
-    {
-      "id": "request-sequence",
-      "source": "request-sequence.mmd",
-      "pixels": [
-        2055,
-        1789
+        2058,
+        1920
       ],
       "effective_dpi": 300,
       "vector": true,
-      "sha256": "9649bd9923dbd92ad629c5dff448a19842c1728beac980d777db22cb3bdaa803"
+      "sha256": "afabfb672eb1e5314d0a63f3ff462eaac6118fe433575a19f51595351c34f7fb",
+      "natural_inches": [
+        6.72,
+        6.27
+      ],
+      "placement_scale": 1.05
+    },
+    {
+      "id": "policy-to-guardrail",
+      "source": "policy-to-guardrail.tikz.tex",
+      "pixels": [
+        2059,
+        2495
+      ],
+      "effective_dpi": 301,
+      "vector": true,
+      "sha256": "a1df0e9dab81470ae390a9c985a3fe45a29c0e2483cecabf6d561435f6f073e8",
+      "natural_inches": [
+        6.3,
+        7.63
+      ],
+      "placement_scale": 1.088
+    },
+    {
+      "id": "document-ingestion",
+      "source": "document-ingestion.tikz.tex",
+      "pixels": [
+        2089,
+        2348
+      ],
+      "effective_dpi": 305,
+      "vector": true,
+      "sha256": "a1e6632aa1a1afffe03f4da122d87bf11d6476eabac6c0cef638e3769a2f9467",
+      "natural_inches": [
+        6.96,
+        7.82
+      ],
+      "placement_scale": 1.014
+    },
+    {
+      "id": "knowledge-lifecycle",
+      "source": "knowledge-lifecycle.tikz.tex",
+      "pixels": [
+        2137,
+        2515
+      ],
+      "effective_dpi": 312,
+      "vector": true,
+      "sha256": "17ebb1858969c698988f1864772511fd2914ebeb878c22d2b554caf9122265aa",
+      "natural_inches": [
+        7.12,
+        8.38
+      ],
+      "placement_scale": 0.99
+    },
+    {
+      "id": "portability",
+      "source": "portability.tikz.tex",
+      "pixels": [
+        2152,
+        1186
+      ],
+      "effective_dpi": 314,
+      "vector": true,
+      "sha256": "f368a5f53fb350f0148536bc4c85c4aa096fd2fb1252f155a7b274e5a3c85f5b",
+      "natural_inches": [
+        7.17,
+        3.95
+      ],
+      "placement_scale": 0.985
+    },
+    {
+      "id": "reference-architecture",
+      "source": "reference-architecture.tikz.tex",
+      "pixels": [
+        2056,
+        2494
+      ],
+      "effective_dpi": 300,
+      "vector": true,
+      "sha256": "90d22dd9b0df44cfb9f39e01bce7c9fe8966ca09c16ae280f14b6aac9c653cb7",
+      "natural_inches": [
+        6.8,
+        8.26
+      ],
+      "placement_scale": 1.005
+    },
+    {
+      "id": "request-sequence",
+      "source": "request-sequence.tikz.tex",
+      "pixels": [
+        2097,
+        2435
+      ],
+      "effective_dpi": 306,
+      "vector": true,
+      "sha256": "ccd927be4b23b54e7b9a48808fbe518dfd558e42f70703d50a5310f91ce9079a",
+      "natural_inches": [
+        6.99,
+        8.11
+      ],
+      "placement_scale": 1.01
     },
     {
       "id": "release-recovery",
-      "source": "release-recovery.gv",
+      "source": "release-recovery.tikz.tex",
       "pixels": [
-        2613,
-        3139
+        2057,
+        2565
       ],
-      "effective_dpi": 381,
+      "effective_dpi": 300,
       "vector": true,
-      "sha256": "a63f80fa6f6ba3e673ee4caa1fe791b715d137a1e4ca4e07980e7883a5f30745"
+      "sha256": "818fba04edfad7c731a456416daa13b8a42d8a367f80cf63cbf82c62440fd553",
+      "natural_inches": [
+        6.41,
+        7.99
+      ],
+      "placement_scale": 1.039
     },
     {
       "id": "reliability-economics",
-      "source": "reliability-economics.gv",
+      "source": "reliability-economics.tikz.tex",
       "pixels": [
-        2747,
-        2438
+        2061,
+        2393
       ],
-      "effective_dpi": 401,
+      "effective_dpi": 301,
       "vector": true,
-      "sha256": "6f615778d5c8dbf95decf7adb569845831c9ed3f421064a14b070a16ff8742fe"
+      "sha256": "952d9937dc3fabfb721da840b955315027c64ac41d4e282f51631da94236abca",
+      "natural_inches": [
+        6.76,
+        7.85
+      ],
+      "placement_scale": 1.045
     },
     {
       "id": "runtime-offline",
-      "source": "runtime-offline.gv",
+      "source": "runtime-offline.tikz.tex",
       "pixels": [
-        2461,
-        4575
+        2118,
+        1238
       ],
-      "effective_dpi": 359,
+      "effective_dpi": 309,
       "vector": true,
-      "sha256": "ecb4626c958ef46a12eaac28031e918829c6162437372245a50e06496635fe23"
+      "sha256": "13578097e2d06522dc08789c25b9de6eef9905527e40ccedf50c3e2c97b3db78",
+      "natural_inches": [
+        7.06,
+        4.13
+      ],
+      "placement_scale": 1.0
     },
     {
       "id": "runtime-boundary",
-      "source": "runtime-boundary.gv",
+      "source": "runtime-boundary.tikz.tex",
       "pixels": [
-        2312,
-        2908
+        2133,
+        2451
       ],
-      "effective_dpi": 338,
+      "effective_dpi": 311,
       "vector": true,
-      "sha256": "ff9c4537372a24b0bef88702f6b4d07e59fc4a48c8b47dc76c8ce4523bc6273a"
+      "sha256": "76a12896aa69e5559c814853252e41f958dcad51d76a57eaba561bdc1e42eba6",
+      "natural_inches": [
+        7.11,
+        8.17
+      ],
+      "placement_scale": 0.993
     },
     {
       "id": "mortgage-case-lifecycle",
-      "source": "mortgage-case-lifecycle.gv",
+      "source": "mortgage-case-lifecycle.tikz.tex",
       "pixels": [
-        2310,
-        2930
+        2104,
+        1816
       ],
-      "effective_dpi": 337,
+      "effective_dpi": 307,
       "vector": true,
-      "sha256": "4a523f81ce1baa25e7bf3115f00121c8ce2f1e59e1ec87ebd4fd2c5ff602d9ab"
+      "sha256": "68e7013d55a13f1d00bc100988df73b48433eb0fb0c48287c4fba276f0668147",
+      "natural_inches": [
+        7.01,
+        6.05
+      ],
+      "placement_scale": 1.007
     },
     {
       "id": "security-boundaries",
-      "source": "security-boundaries.gv",
+      "source": "security-boundaries.tikz.tex",
       "pixels": [
-        2262,
-        1987
+        2077,
+        1939
       ],
-      "effective_dpi": 330,
+      "effective_dpi": 303,
       "vector": true,
-      "sha256": "901fe1fa4a9eea57eeb7f1cb5616b83233b4fe3de45fe7aa32604da9bc68d6cf"
+      "sha256": "aff1899eaf161388a0289646ed9e65b4308e69a026280eb52c8b61940b0ef757",
+      "natural_inches": [
+        6.92,
+        6.46
+      ],
+      "placement_scale": 1.02
     },
     {
       "id": "security-depth",
-      "source": "security-depth.gv",
+      "source": "security-depth.tikz.tex",
       "pixels": [
-        2269,
-        1903
+        2115,
+        2030
       ],
-      "effective_dpi": 331,
+      "effective_dpi": 309,
       "vector": true,
-      "sha256": "dc012e368ae43f8388d35cdf859428518df24b8a6b3b936061653a5fe3674bc6"
+      "sha256": "e039a5666dc3fcda7c325923713cf72dae55d1f8ab8a0c79ff6298964ab5993a",
+      "natural_inches": [
+        7.05,
+        6.77
+      ],
+      "placement_scale": 1.002
     },
     {
       "id": "identity-delegation",
-      "source": "identity-delegation.gv",
+      "source": "identity-delegation.tikz.tex",
       "pixels": [
-        2280,
-        3626
+        2056,
+        2357
       ],
-      "effective_dpi": 333,
+      "effective_dpi": 300,
       "vector": true,
-      "sha256": "aa1c2a8bd78d753d7a099b15beb6d7d56a3f4fef59529a8ad40a007031fd83f6"
+      "sha256": "97d8637f27302942bdb5c80ee23f7d769124296739f4f27e310e7b5eb3ac6043",
+      "natural_inches": [
+        6.81,
+        7.8
+      ],
+      "placement_scale": 1.037
     },
     {
       "id": "effect-lifecycle",
@@ -459,47 +644,67 @@
     },
     {
       "id": "sandbox-egress",
-      "source": "sandbox-egress.gv",
+      "source": "sandbox-egress.tikz.tex",
       "pixels": [
-        2448,
-        3145
+        2064,
+        2429
       ],
-      "effective_dpi": 357,
+      "effective_dpi": 301,
       "vector": true,
-      "sha256": "3ecd6681de6ecd40454bb982243e114639ba290c0799666d03465b857572db71"
+      "sha256": "bf8ba695751be92c80082191bc869d5ee06af813a1a3c1cf374a55375cbab352",
+      "natural_inches": [
+        6.88,
+        8.09
+      ],
+      "placement_scale": 1.025
     },
     {
       "id": "skill-resolution",
-      "source": "skill-resolution.gv",
+      "source": "skill-resolution.tikz.tex",
       "pixels": [
-        2717,
-        1294
+        2084,
+        1973
       ],
-      "effective_dpi": 397,
+      "effective_dpi": 304,
       "vector": true,
-      "sha256": "f02a96e0447360a392689350d0044b3065d5efaaf024cf6d8f0a4e4c96450cf5"
+      "sha256": "78ba56a45301bff805f72c11379595f78571c5c6eab93c7e853e83fc2cbdc9af",
+      "natural_inches": [
+        6.94,
+        6.57
+      ],
+      "placement_scale": 1.017
     },
     {
       "id": "supervisor-worker",
-      "source": "supervisor-worker.gv",
+      "source": "supervisor-worker.tikz.tex",
       "pixels": [
-        2614,
-        1501
+        2129,
+        1800
       ],
-      "effective_dpi": 382,
+      "effective_dpi": 311,
       "vector": true,
-      "sha256": "a86ce75d92afc058c14c3390866fdcc911cbe301ae5d35e427ca0f5e87b582b1"
+      "sha256": "9ec79473b066830846a1de6d61e1bf6d7e3b63ab8751d51224669d07263f53fd",
+      "natural_inches": [
+        7.1,
+        6.0
+      ],
+      "placement_scale": 0.995
     },
     {
       "id": "system-overview",
-      "source": "system-overview.gv",
+      "source": "system-overview.tikz.tex",
       "pixels": [
-        2890,
-        1979
+        2073,
+        2452
       ],
-      "effective_dpi": 422,
+      "effective_dpi": 303,
       "vector": true,
-      "sha256": "90fa601d4b03dc91f3dcacde52be3d6da10bc23164dbe0d79965f89363f9e1d0"
+      "sha256": "272008849b20e77ab36b697f98ca05041f1c132e7ae2d4f3cbb1add2364e1943",
+      "natural_inches": [
+        6.91,
+        8.17
+      ],
+      "placement_scale": 1.016
     }
   ],
   "errors": [],

@@ -1,0 +1,42 @@
+% Figure 7-2 -- Platform contracts with replaceable framework and provider adapters.
+% Restyled from portability.gv; content, grouping and edges are unchanged.
+%
+% Original element -> restyled element
+%   app        Application code                    -> plum card
+%   contracts  Platform contracts / AgentSpec . AgentStepRequest . ToolManifest
+%                                                  -> blue square-cornered card (title + list)
+%   cluster    Framework adapters (dashed, teal)   -> teal dashed group
+%     f1, f2   Agents SDK | Graph runner           -> two teal cards; dotted "or" link between
+%   cluster    Provider adapters (dashed, amber)   -> amber dashed group
+%     p1, p2   Model A | Model B                   -> two amber cards; dotted "or" link between
+%   edges      app > contracts "the only dependency" (solid);
+%              contracts > Framework adapters group "swap" (dashed);
+%              contracts > Provider adapters group "swap" (dashed);
+%              f1 -- f2 "or" and p1 -- p2 "or" (dotted, no arrowhead)
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+% Local macro (candidate for promotion): an adapter card in a dashed group.
+\newcommand{\dgadapter}[4]{% name, role, x, label
+  \node[dg card=#2, text width=72pt, inner xsep=8pt, align=center, minimum height=38pt]
+    (#1) at (#3,-224) {#4};}
+\begin{document}
+\begin{tikzpicture}
+  \node[dg card=plum, text width=150pt, align=center] (app) at (252,0)
+    {\dgcontent{Application code}{}{}};
+  \node[dg card=blue, square, text width=300pt, align=center] (con) at (252,-96)
+    {\dgcontent{Platform contracts}{AgentSpec · AgentStepRequest · ToolManifest}{}};
+
+  \dgadapter{f1}{teal}{56}{Agents SDK}
+  \dgadapter{f2}{teal}{188}{Graph runner}
+  \dggroup[dash pattern=on 5pt off 3pt]{fw}{teal}{Framework adapters}{(f1)(f2)}
+  \dgadapter{p1}{amber}{316}{Model A}
+  \dgadapter{p2}{amber}{448}{Model B}
+  \dggroup[dash pattern=on 5pt off 3pt]{pv}{amber}{Provider adapters}{(p1)(p2)}
+
+  \draw[flow in=blue] (app.south) -- node[pill=blue]{The only dependency} (con.north);
+  \draw[dashed flow, draw=dg-blue-line] (con.south -| fw.north) -- node[pill=blue]{Swap} (fw.north);
+  \draw[dashed flow, draw=dg-blue-line] (con.south -| pv.north) -- node[pill=blue]{Swap} (pv.north);
+  \draw[dotted flow, draw=dg-teal-line, -] (f1.east) -- node[pill=teal]{or} (f2.west);
+  \draw[dotted flow, draw=dg-amber-line, -] (p1.east) -- node[pill=amber]{or} (p2.west);
+\end{tikzpicture}
+\end{document}

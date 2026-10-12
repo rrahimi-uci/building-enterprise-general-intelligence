@@ -1,0 +1,69 @@
+% Figure 27-1 -- Immutable release promotion and recovery without rewriting
+% active history.
+% Restyled from release-recovery.gv; nodes, labels, edges, edge styles and
+% meaning are unchanged. Layout only is new.
+%
+% Original element -> restyled element
+%   source    Source and dependencies / content-addressed -> teal card
+%   bundle    Signed ReleaseManifest / compatibility + evidence (box) -> blue square card
+%   gate      Promotion gate (diamond)                    -> amber diamond
+%   canary    Canary binding / new starts only (box)      -> blue square card
+%   prior     Prior binding / new starts                  -> teal card
+%   active    Active runs / pinned history                -> plum card
+%   worker    Compatible worker / old or migrated         -> teal card
+%   reconcile Fence, reconcile / unknown effects (box)    -> amber square card
+%   recovery  Regional recovery / advance placement       -> plum card
+%   rollback  Rollback assignment / without rewriting history (box) -> red square card
+%   11 edges, same direction, labels and style:
+%     source>bundle, bundle>gate (unlabelled)    gate>canary "pass"
+%     gate>source "fail" (dashed, red)           canary>active "pinned at admission"
+%     prior>active "existing binding"            active>worker "compatible execution"
+%     canary>rollback "SLO/eval breach" (dashed, red)
+%     active>reconcile "timeout or failover" (dashed, amber)
+%     reconcile>recovery (unlabelled)            recovery>worker "resume by effect risk class"
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  % ---- promotion: source to gate ----
+  \node[dg card=teal, text width=140pt] (source) at (110,0)
+    {\dgcontent{Source and dependencies}{Content-addressed}{}};
+  \node[dg card=blue, square, text width=140pt] (bundle) at (110,-72)
+    {\dgcontent{Signed ReleaseManifest}{Compatibility + evidence}{}};
+  \node[dg decision=amber, minimum width=160pt, minimum height=62pt] (gate) at (110,-158)
+    {\dgcontent{Promotion gate}{}{}};
+
+  % ---- bindings ----
+  \node[dg card=blue, square, text width=140pt] (canary) at (110,-262)
+    {\dgcontent{Canary binding}{New starts only}{}};
+  \node[dg card=teal, text width=140pt] (prior) at (400,-262)
+    {\dgcontent{Prior binding}{New starts}{}};
+  \node[dg card=red, square, text width=140pt] (rollback) at (110,-358)
+    {\dgcontent{Rollback assignment}{Without rewriting history}{}};
+  \node[dg card=plum, text width=140pt] (active) at (345,-358)
+    {\dgcontent{Active runs}{Pinned history}{}};
+
+  % ---- recovery ----
+  \node[dg card=amber, square, text width=140pt] (reconcile) at (400,-450)
+    {\dgcontent{Fence, reconcile}{Unknown effects}{}};
+  \node[dg card=plum, text width=140pt] (recovery) at (400,-530)
+    {\dgcontent{Regional recovery}{Advance placement}{}};
+  \node[dg card=teal, text width=140pt] (worker) at (110,-530)
+    {\dgcontent{Compatible worker}{Old or migrated}{}};
+
+  % ---- connectors ----
+  \draw[flow in=blue] (source.south) -- (bundle.north);
+  \draw[flow in=blue] (bundle.south) -- (gate.north);
+  \draw[flow in=teal] (gate.south) -- node[pill=teal]{Pass} (canary.north);
+  \draw[dashed flow, draw=dg-red-line, turn] (gate.east) -- ++(48pt,0) |- (source.east);
+  \node[pill=red] at (238,-79) {Fail};
+  \draw[flow in=blue, turn] (canary.east) -| node[pill=blue,pos=0.25]{Pinned at\\admission} ([xshift=-45pt]active.north);
+  \draw[flow in=blue] (prior.south) -- node[pill=blue]{Existing binding} ([xshift=55pt]active.north);
+  \draw[dashed flow, draw=dg-red-line] (canary.south) -- node[pill=red]{SLO/eval\\breach} (rollback.north);
+  \draw[dashed flow, draw=dg-amber-line] ([xshift=55pt]active.south) -- node[pill=amber]{Timeout or failover} (reconcile.north);
+  \draw[flow in=blue] (reconcile.south) -- (recovery.north);
+  \draw[flow in=teal, turn] ([xshift=-50pt]active.south) -- (295,-478) -- (150,-478) -- ([xshift=40pt]worker.north);
+  \node[pill=teal] at (222,-478) {Compatible\\execution};
+  \draw[flow in=plum] (recovery.west) -- node[pill=plum]{Resume by\\effect risk class} (worker.east);
+\end{tikzpicture}
+\end{document}

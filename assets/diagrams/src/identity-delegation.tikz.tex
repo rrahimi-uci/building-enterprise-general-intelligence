@@ -1,0 +1,85 @@
+% Figure 21-1 -- Subject and actor identity narrowing.
+% Restyled from identity-delegation.gv; all 10 nodes, 11 edges, labels and the
+% solid/dashed distinction are unchanged. The original was 10.4 in tall in one
+% column; here the delegation chain and the credential path sit in two columns
+% so the figure is drawn at final size.
+%
+% Original element -> restyled element
+%   user         Subject / loan officer                       -> slate card
+%   run          Run service / preserves subject + actor      -> blue card
+%   policy       Exact policy? / subject . actor . purpose /
+%                resource . action . risk (diamond)           -> amber diamond
+%   parent_grant Parent capability / maximum permitted scope (note) -> cyan card, folded corner
+%   parent       Platform agent / actor: mortgage-evidence-agent -> teal card
+%   child_grant  Child grant = intersection / narrower scope .
+%                shorter TTL (note)                           -> cyan card, folded corner
+%   child        Specialist agent / actor: income-verification/v1 -> teal card
+%   gateway      Tool Gateway / re-authorize exact action     -> blue card
+%   sts          Credential broker / last-hop lease           -> amber card
+%   erp          LOS / audience = LOS / read mortgage:MORT-2026-000184 (cylinder) -> blue cylinder
+%   edges (11): user>run "authenticated subject"; run>policy "request + purpose";
+%     policy>parent_grant "allow + obligations" (dashed); parent_grant>parent
+%     "parent scope"; parent>child_grant "delegate" (dashed); child_grant>child
+%     "subset only"; child>gateway "proposal + chain"; gateway>policy "re-check
+%     exact action" (dashed, amber); policy>sts "approved scope" (dashed);
+%     sts>gateway "short-lived lease" (dashed); gateway>erp "last-hop credential"
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+
+% ---- local constructs (candidates for promotion to professional-diagrams.sty) ----
+% \dgdoccorner{node}{role}: the folded top-right corner of a note-shaped card.
+\newcommand{\dgdoccorner}[2]{%
+  \path[fill=white] ([xshift=-11pt]#1.north east) -- ([xshift=1pt,yshift=1pt]#1.north east)
+    -- ([yshift=-11pt]#1.north east) -- cycle;
+  \path[fill=dg-#2-pill, draw=dg-#2-line, line width=\dgstroke, line join=round]
+    ([xshift=-11pt]#1.north east) -- ([xshift=-11pt,yshift=-11pt]#1.north east)
+    -- ([yshift=-11pt]#1.north east) -- cycle;}
+
+\begin{document}
+\begin{tikzpicture}
+  % ---- top: subject, run service, exact policy ----
+  \node[dg card=slate, icon=id-badge, text width=88pt] (user) at (75,0)
+    {\dgcontent{Subject}{loan officer}{}};
+  \node[dg card=blue, text width=150pt] (run) at (330,0)
+    {\dgcontent{Run service}{preserves subject + actor}{}};
+  \node[dg decision=amber, text width=150pt, minimum width=270pt, minimum height=92pt] (policy) at (330,-100)
+    {\dgcontent{Exact policy?}{subject · actor · purpose\\resource · action · risk}{}};
+
+  % ---- left column: delegation chain ----
+  \node[dg card=cyan, square, text width=160pt] (pgrant) at (100,-205)
+    {\dgcontent{Parent capability}{maximum permitted scope}{}};
+  \dgdoccorner{pgrant}{cyan}
+  \node[dg card=teal, text width=160pt] (parent) at (100,-275)
+    {\dgcontent{Platform agent}{actor: mortgage-evidence-agent}{}};
+  \node[dg card=cyan, square, text width=160pt] (cgrant) at (100,-345)
+    {\dgcontent{Child grant = intersection}{narrower scope · shorter TTL}{}};
+  \dgdoccorner{cgrant}{cyan}
+  \node[dg card=teal, text width=160pt] (child) at (100,-415)
+    {\dgcontent{Specialist agent}{actor: income-verification/v1}{}};
+
+  % ---- right column: credential path ----
+  \node[dg card=amber, icon=key, text width=88pt] (sts) at (435,-215)
+    {\dgcontent{Credential broker}{last-hop lease}{}};
+  \node[dg card=blue, text width=142pt] (gateway) at (405,-415)
+    {\dgcontent{Tool Gateway}{re-authorize exact action}{}};
+  \node[dg store=blue, aspect=0.1, minimum width=190pt, minimum height=62pt, text width=170pt] (erp) at (385,-505)
+    {\dgcontent{LOS}{audience = LOS\\read mortgage:MORT-2026-000184}{}};
+
+  % ---- connectors ----
+  \draw[flow in=blue] (user.east) -- node[pill=blue]{Authenticated\\subject} (run.west);
+  \draw[flow in=blue] (run.south) -- node[pill=blue]{Request + purpose} (policy.north);
+  \draw[dashed flow, draw=dg-blue-line] ($(policy.south)!0.5!(policy.west)$) to[out=-120,in=90]
+    node[pill=blue,pos=0.5]{Allow + obligations} (pgrant.north);
+  \draw[flow in=blue] (pgrant.south) -- node[pill=blue]{Parent scope} (parent.north);
+  \draw[dashed flow, draw=dg-blue-line] (parent.south) -- node[pill=blue]{Delegate} (cgrant.north);
+  \draw[flow in=blue] (cgrant.south) -- node[pill=blue]{Subset only} (child.north);
+  \draw[flow in=blue] (child.east) -- node[pill=blue]{Proposal + chain} (gateway.west);
+  \draw[dashed flow, draw=dg-amber-line] ([xshift=-55pt]gateway.north) --
+    node[pill=amber,pos=0.45]{Re-check\\exact action} ($(policy.south)!0.15!(policy.east)$);
+  \draw[dashed flow, draw=dg-blue-line] ($(policy.south)!0.75!(policy.east)$) --
+    node[pill=blue]{Approved scope} (sts.north);
+  \draw[dashed flow, draw=dg-blue-line] (sts.south) -- node[pill=blue]{Short-lived lease}
+    ([xshift=30pt]gateway.north);
+  \draw[flow in=blue] ([xshift=-20pt]gateway.south) -- node[pill=blue]{Last-hop credential} (erp.north);
+\end{tikzpicture}
+\end{document}

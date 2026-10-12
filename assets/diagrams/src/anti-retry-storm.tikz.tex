@@ -1,0 +1,64 @@
+% Figure 17-3 -- AP-04 and AP-05, which compound.
+% Restyled from anti-retry-storm.gv; nodes, labels, edge labels and arrows are
+% unchanged. The ANTI-PATTERN / CORRECTION captions that sat at the foot of each
+% column become panel headers (dashed red panel = anti-pattern, solid teal =
+% correction).
+%
+% Original element -> restyled element
+%   bad  ANTI-PATTERN                       -> dashed red panel, header pill
+%   b1   Workflow x2                        -> teal card
+%   b2   Gateway x3                         -> blue card
+%   b3   HTTP client x3                     -> slate card
+%   b4   Registry / 18 calls (cylinder)     -> red cylinder
+%   b5   Timeout > failed > retry / mortgage request duplicated -> red card
+%   b1>b2>b3>b4>b5                          -> four red arrows
+%   good CORRECTION                         -> solid teal panel, header pill
+%   g1   Classify failure (diamond)         -> amber diamond
+%   g2   Workflow owns retry / shared budget -> teal card
+%   g3   Gateway x0 / client x0             -> slate card
+%   g4   Unknown effect / blocks retry      -> amber card
+%   g5   Reconcile against system of record (cylinder) -> plum cylinder
+%   g1>g2 "transient", g2>g3, g3>g4 "unknown", g4>g5 -> four teal arrows, two pills
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\input{assets/diagrams/src/_before-after.tex}
+\begin{document}
+\begin{tikzpicture}
+  % panel extents, so both panels share one top and bottom
+  \coordinate (padl-t) at (118,28);  \coordinate (padl-b) at (118,-388);
+  \coordinate (padr-t) at (382,28);  \coordinate (padr-b) at (382,-388);
+  % ---- anti-pattern (left) ----
+  \node[dg card=teal, icon=project-diagram, text width=170pt] (b1) at (118,0)
+    {\dgcontent{Workflow ×2}{}{}};
+  \node[dg card=blue, icon=concierge-bell, text width=170pt] (b2) at (118,-84)
+    {\dgcontent{Gateway ×3}{}{}};
+  \node[dg card=slate, icon=network-wired, text width=170pt] (b3) at (118,-168)
+    {\dgcontent{HTTP client ×3}{}{}};
+  \node[dg store=red, aspect=0.12, text width=140pt, minimum height=60pt] (b4) at (118,-266)
+    {\dgcontent{Registry}{18 calls}{}};
+  \node[dg card=red, icon=copy, text width=170pt, minimum height=48pt] (b5) at (118,-364)
+    {\dgcontent{Timeout → failed → retry}{mortgage request duplicated}{}};
+  \dgpanel[dash pattern=on 5pt off 3pt]{bad}{red}{times-circle}{ANTI-PATTERN}{}{(b1)(b2)(b3)(b4)(b5)(padl-t)(padl-b)}
+  \draw[flow in=red] (b1) -- (b2);
+  \draw[flow in=red] (b2) -- (b3);
+  \draw[flow in=red] (b3) -- (b4);
+  \draw[flow in=red] (b4) -- (b5);
+
+  % ---- correction (right) ----
+  \node[dg decision=amber, minimum width=204pt, minimum height=56pt] (g1) at (382,0)
+    {\dgcontent{Classify failure}{}{}};
+  \node[dg card=teal, icon=project-diagram, text width=170pt, minimum height=48pt] (g2) at (382,-88)
+    {\dgcontent{Workflow owns retry}{shared budget}{}};
+  \node[dg card=slate, icon=concierge-bell, text width=170pt, minimum height=48pt] (g3) at (382,-172)
+    {\dgcontent{Gateway ×0\\client ×0}{}{}};
+  \node[dg card=amber, icon=hand-paper, text width=170pt, minimum height=48pt] (g4) at (382,-264)
+    {\dgcontent{Unknown effect}{blocks retry}{}};
+  \node[dg store=plum, aspect=0.12, text width=140pt, minimum height=60pt] (g5) at (382,-358)
+    {\dgcontent{Reconcile against system of record}{}{}};
+  \dgpanel{good}{teal}{check-circle}{CORRECTION}{}{(g1)(g2)(g3)(g4)(g5)(padr-t)(padr-b)}
+  \draw[flow in=teal] (g1) -- node[pill=teal,pos=0.45]{transient} (g2);
+  \draw[flow in=teal] (g2) -- (g3);
+  \draw[flow in=teal] (g3) -- node[pill=teal,pos=0.45]{unknown} (g4);
+  \draw[flow in=teal] (g4) -- (g5);
+\end{tikzpicture}
+\end{document}

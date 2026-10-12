@@ -1,0 +1,55 @@
+% Figure 7-3 -- Developer golden path from scaffold to operated release.
+% Restyled from dx-golden-path.gv; content, flow and grouping are unchanged.
+%
+% Original element -> restyled element
+%   cluster "Golden path"                    -> slate group, title on top
+%   s1..s8 Scaffold, Develop, Debug, Evaluate, Package, Promote, Operate, Improve
+%                                            -> eight teal cards in the original
+%                                               2 x 4 serpentine (top row left to
+%                                               right, bottom row right to left)
+%   edges  s1>s2>s3>s4, s4>s5, s5>s6>s7>s8   -> eight solid blue connectors
+%   note   "Supplied by the platform, never assembled by hand: identity . tool
+%          manifests . pinned versions . traces . evidence"
+%                                            -> blue callout; the five listed words
+%                                               are chips (same words, no more)
+%   edges  note>s7, note>s6, note>s5 (dashed, blue, arrowheads on the steps)
+%                                            -> three dashed blue connectors
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\usetikzlibrary{matrix}
+\begin{document}
+\begin{tikzpicture}
+  \tikzset{gstep/.style={dg card=teal, text width=76pt, minimum height=38pt}}
+  % ---- top row, left to right ----
+  \node[gstep, icon=file-code]      (s1) at (66,0)   {\dgcontent{Scaffold}{}{}};
+  \node[gstep, icon=hammer]         (s2) at (188,0)  {\dgcontent{Develop}{}{}};
+  \node[gstep, icon=bug]            (s3) at (310,0)  {\dgcontent{Debug}{}{}};
+  \node[gstep, icon=clipboard-check](s4) at (432,0)  {\dgcontent{Evaluate}{}{}};
+  % ---- bottom row, right to left ----
+  \node[gstep, icon=box]            (s5) at (432,-74) {\dgcontent{Package}{}{}};
+  \node[gstep, icon=rocket]         (s6) at (310,-74) {\dgcontent{Promote}{}{}};
+  \node[gstep, icon=cog]            (s7) at (188,-74) {\dgcontent{Operate}{}{}};
+  \node[gstep, icon=chart-line]     (s8) at (66,-74)  {\dgcontent{Improve}{}{}};
+  \dggroup{path}{slate}{Golden path}{(s1)(s2)(s3)(s4)(s5)(s6)(s7)(s8)}
+
+  % ---- platform note ----
+  \node[callout=blue, text width=380pt, align=center, minimum height=62pt] (note) at (249,-178) {};
+  \node[font=\dgdescsize, text=dg-ink, align=center, inner sep=0pt]
+    at ([yshift=-14pt]note.north) {\bfseries Supplied by the platform, never assembled by hand:};
+  \matrix[matrix of nodes, column sep=8pt, row sep=0pt, nodes={chip=blue}, inner sep=0pt]
+    at ([yshift=-40pt]note.north)
+    { identity & tool manifests & pinned versions & traces & evidence \\ };
+
+  % ---- connectors ----
+  \draw[flow in=blue] (s1.east) -- (s2.west);
+  \draw[flow in=blue] (s2.east) -- (s3.west);
+  \draw[flow in=blue] (s3.east) -- (s4.west);
+  \draw[flow in=blue] (s4.south) -- (s5.north);
+  \draw[flow in=blue] (s5.west) -- (s6.east);
+  \draw[flow in=blue] (s6.west) -- (s7.east);
+  \draw[flow in=blue] (s7.west) -- (s8.east);
+  \draw[dashed flow, draw=dg-blue-line] (note.north -| s7.south) -- (s7.south);
+  \draw[dashed flow, draw=dg-blue-line] (note.north -| s6.south) -- (s6.south);
+  \draw[dashed flow, draw=dg-blue-line] (note.north -| s5.south) -- (s5.south);
+\end{tikzpicture}
+\end{document}

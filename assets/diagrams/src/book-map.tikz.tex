@@ -1,0 +1,57 @@
+% Figure 0-1 -- Narrative map from foundations to production operations.
+% Restyled from book-map.gv; content, order and hues are unchanged.
+%
+% Original element -> restyled element
+%   p1..p8  eight table rows read top to bottom, each a coloured number cell,
+%           a bold Part title and a grey topics strip
+%        -> eight row cards (\dgrow, a local macro): the number cell becomes a
+%           solid badge in the row's hue, the Part title the bold card title,
+%           the topics strip the right-hand column behind a hairline divider
+%   I Foundations | bounded reasoning, typed tools, runtime            -> teal
+%   II Architecture, Knowledge, and Context | planes, contracts,
+%      governed knowledge                                              -> cyan
+%   III The Developer Platform | SDK, Skills, delivery lifecycle       -> blue
+%   IV Patterns That Work---and Those That Fail | what to build, and
+%      what to stop building                                           -> blue
+%   V Working Together Across Boundaries | specialists, MCP, A2A       -> plum
+%   VI Security, Identity, and Control | identity, tools, effects,
+%      containment                                                     -> red
+%   VII Evidence, Evaluation, and Improvement | traces, evidence,
+%      continuous learning                                             -> amber
+%   VIII Running the System in the Real World | accountability,
+%      release, cost, reliability                                      -> slate
+%   edges: none (the source chain is invisible; order is the vertical order)
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+
+% ---- local macro (candidate for promotion to professional-diagrams.sty) ----
+% \dgrow[opts]{name}{role}{(x,y)}{badge}{content}: a row card with a solid
+% badge (number / numeral) in the role's border colour, inset at the left, and
+% text indented to clear it. \dgrowh = row height, \dgrowbw = badge width.
+\newlength{\dgrowh}  \setlength{\dgrowh}{46pt}
+\newlength{\dgrowbw} \setlength{\dgrowbw}{38pt}
+\newcommand{\dgrow}[6][]{%
+  \node[dg card=#3, minimum height=\dgrowh, text width=475pt,
+        execute at begin node={\leftskip=\dimexpr\dgrowbw+7pt\relax}, #1] (#2) at #4 {#6};
+  \node[rectangle, rounded corners=4pt, fill=dg-#3-line, text=white, font=\dgtitlesize,
+        inner sep=0pt, minimum width=\dgrowbw, minimum height=\dgrowh-14pt, anchor=west]
+    at ([xshift=7pt]#2.west) {#5};}
+
+\begin{document}
+\begin{tikzpicture}
+  % One row = card + badge (\dgrow) + title + hairline divider + topics column.
+  \newcommand{\bmrow}[6]{%
+    \dgrow{#1}{#2}{(248,#3)}{#4}{}
+    \node[anchor=base west, inner sep=0pt, text=dg-ink] at ([xshift=57pt,yshift=-3.6pt]#1.west) {\dgtitlesize #5};
+    \draw[dg-#2-line!45, line width=0.8pt] ([xshift=300pt,yshift=11pt]#1.west) -- ([xshift=300pt,yshift=-11pt]#1.west);
+    \node[anchor=base west, inner sep=0pt, text=dg-ink] at ([xshift=312pt,yshift=-3.3pt]#1.west) {\dgdescsize #6};}
+  \bmrow{p1}{teal}{0}{I}{Foundations}{bounded reasoning, typed tools, runtime}
+  \bmrow{p2}{cyan}{-58}{II}{Architecture, Knowledge, and Context}{planes, contracts, governed knowledge}
+  \bmrow{p3}{blue}{-116}{III}{The Developer Platform}{SDK, Skills, delivery lifecycle}
+  \bmrow{p4}{blue}{-174}{IV}{Patterns That Work---and Those That Fail}{what to build, and what to stop building}
+  \bmrow{p5}{plum}{-232}{V}{Working Together Across Boundaries}{specialists, MCP, A2A}
+  \bmrow{p6}{red}{-290}{VI}{Security, Identity, and Control}{identity, tools, effects, containment}
+  \bmrow{p7}{amber}{-348}{VII}{Evidence, Evaluation, and Improvement}{traces, evidence, continuous learning}
+  \bmrow{p8}{slate}{-406}{VIII}{Running the System in the Real World}{accountability, release, cost, reliability}
+\end{tikzpicture}
+\end{document}

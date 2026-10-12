@@ -1,0 +1,79 @@
+% Figure 23-1 -- Containment across execution and network boundaries.
+% Restyled from sandbox-egress.gv (current source: "Access Broker/STS");
+% nodes, labels, edges, edge styles and meaning are unchanged. Layout only is new:
+% the chain runs down the left leg, across the sandbox-to-egress boundary and
+% up the right leg; the three refusal edges converge on one refusal node below.
+%
+% Original element -> restyled element
+%   artifact   Mortgage document / untrusted content   -> red card
+%   inspect    Content inspection / label + provenance + taint -> cyan card
+%   capability Capability policy / tool . data . purpose . risk (diamond) -> amber diamond
+%   model      Model proposal / may be manipulated      -> teal card
+%   sandbox    Ephemeral sandbox / non-root . quotas . no secrets -> blue card
+%   egress     Egress proxy / canonical destination     -> blue card
+%   dlp        DLP + publication policy / payload class . approval (diamond) -> amber diamond
+%   credential Access Broker/STS / last-hop lease only (note) -> cyan card
+%   endpoint   Approved endpoint / bounded request      -> blue card
+%   effect     Effect ledger / receipt or Unknown       -> plum card
+%   refused    Refused / quarantined / reason + evidence -> red card
+%   12 edges, same direction and labels (blue unless stated):
+%     artifact>inspect "ingest"          inspect>capability "labeled context"
+%     capability>model "eligible scope"  capability>refused "denied" (red)
+%     model>sandbox "bounded proposal"   sandbox>egress "connection + payload"
+%     sandbox>refused "profile violation" (red)
+%     egress>dlp "one-use destination grant" (dashed)
+%     credential>egress "scoped secret" (dashed)
+%     dlp>endpoint "allowed"             dlp>refused "blocked / approval missing" (red)
+%     endpoint>effect "external result"
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  % ---- left leg: from the untrusted document to the sandbox ----
+  \node[dg card=red, icon=file-alt, text width=140pt] (artifact) at (118,0)
+    {\dgcontent{Mortgage document}{Untrusted content}{}};
+  \node[dg card=cyan, text width=140pt] (inspect) at (118,-80)
+    {\dgcontent{Content inspection}{Label + provenance + taint}{}};
+  \node[dg decision=amber, minimum width=190pt, minimum height=76pt] (capability) at (118,-176)
+    {\dgcontent{Capability policy}{tool · data · purpose · risk}{}};
+  \node[dg card=teal, icon=robot, text width=140pt] (model) at (118,-278)
+    {\dgcontent{Model proposal}{May be manipulated}{}};
+  \node[dg card=blue, text width=140pt] (sandbox) at (118,-362)
+    {\dgcontent{Ephemeral sandbox}{Non-root · quotas · no secrets}{}};
+
+  % ---- right leg: from the egress proxy to the effect ledger (read upward) ----
+  \node[dg card=cyan, icon=key, text width=140pt] (credential) at (382,-450)
+    {\dgcontent{Access Broker/STS}{Last-hop lease only}{}};
+  \node[dg card=blue, text width=140pt] (egress) at (382,-362)
+    {\dgcontent{Egress proxy}{Canonical destination}{}};
+  \node[dg decision=amber, minimum width=190pt, minimum height=76pt] (dlp) at (382,-266)
+    {\dgcontent{DLP + publication policy}{payload class · approval}{}};
+  \node[dg card=blue, text width=140pt] (endpoint) at (382,-170)
+    {\dgcontent{Approved endpoint}{Bounded request}{}};
+  \node[dg card=plum, icon=clipboard-list, text width=140pt] (effect) at (382,-80)
+    {\dgcontent{Effect ledger}{Receipt or Unknown}{}};
+
+  % ---- refusal ----
+  \node[dg card=red, text width=150pt] (refused) at (250,-538)
+    {\dgcontent{Refused / quarantined}{Reason + evidence}{}};
+
+  % ---- connectors ----
+  \draw[flow in=blue] (artifact.south) -- node[pill=blue]{Ingest} (inspect.north);
+  \draw[flow in=blue] (inspect.south) -- node[pill=blue]{Labeled context} (capability.north);
+  \draw[flow in=blue] (capability.south) -- node[pill=blue]{Eligible scope} (model.north);
+  \draw[flow in=blue] (model.south) -- node[pill=blue]{Bounded proposal} (sandbox.north);
+  \draw[flow in=blue] (sandbox.east) -- node[pill=blue]{Connection\\+ payload} (egress.west);
+  \draw[dashed flow, draw=dg-cyan-line] (credential.north) -- node[pill=cyan]{Scoped secret} (egress.south);
+  \draw[dashed flow, draw=dg-blue-line] (egress.north) -- node[pill=blue]{One-use\\destination grant} (dlp.south);
+  \draw[flow in=blue] (dlp.north) -- node[pill=blue]{Allowed} (endpoint.south);
+  \draw[flow in=blue] (endpoint.north) -- node[pill=blue]{External result} (effect.south);
+
+  % refusals (red)
+  \draw[flow in=red, turn] (capability.west) -- (8,-176) |- (refused.west);
+  \node[pill=red] at (62,-538) {Denied};
+  \draw[flow in=red, turn] (sandbox.south) -- (118,-476) -- (210,-476) -- ([xshift=-40pt]refused.north);
+  \node[pill=red] at (118,-428) {Profile\\violation};
+  \draw[flow in=red, turn] (dlp.east) -- (492,-266) |- (refused.east);
+  \node[pill=red] at (440,-538) {Blocked /\\approval missing};
+\end{tikzpicture}
+\end{document}

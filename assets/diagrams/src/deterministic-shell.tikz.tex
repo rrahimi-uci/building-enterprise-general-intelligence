@@ -1,0 +1,66 @@
+% Figure 2-1 -- The deterministic shell around one model proposal.
+% Restyled from deterministic-shell.gv; content, flow and refusals are unchanged.
+%
+% Original element -> restyled element
+%   hg GATE | hr WHAT IT REFUSES -> two column headings (navy, red) over hairline rules
+%   p v a c y k  "1 . Propose" .. "6 . Accept"
+%        -> six gate cards (\dgrow, a local macro): the number is the solid badge,
+%           the name the bold title; hues teal / blue / blue / plum / plum / amber
+%   p>v>a>c>y>k (solid blue) -> five blue downward connectors
+%   pm  "the model's only job" (teal text, no box) -> teal callout beside Propose
+%   vm am cm ym km  the five refusals (red boxes): malformed, or a tool version
+%        we do not publish | well-formed, but not permitted for this subject and
+%        resource | a duplicate, recognised by its idempotency key | a timeout --
+%        unknown effect, reconcile before retrying | evidence missing or staler
+%        than policy allows -> five red cards
+%   v>vm a>am c>cm y>ym k>km (dashed red, gate to refusal) -> five dashed red arrows
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+
+% ---- local macro (candidate for promotion to professional-diagrams.sty) ----
+% \dgrow[opts]{name}{role}{(x,y)}{badge}{content}: a row card with a solid
+% badge (number / numeral) in the role's border colour, inset at the left, and
+% text indented to clear it. \dgrowh = row height, \dgrowbw = badge width.
+\newlength{\dgrowh}  \setlength{\dgrowh}{44pt}
+\newlength{\dgrowbw} \setlength{\dgrowbw}{24pt}
+\newcommand{\dgrow}[6][]{%
+  \node[dg card=#3, minimum height=\dgrowh, text width=475pt,
+        execute at begin node={\leftskip=\dimexpr\dgrowbw+7pt\relax}, #1] (#2) at #4 {#6};
+  \node[rectangle, rounded corners=4pt, fill=dg-#3-line, text=white, font=\dgtitlesize,
+        inner sep=0pt, minimum width=\dgrowbw, minimum height=\dgrowh-14pt, anchor=west]
+    at ([xshift=7pt]#2.west) {#5};}
+
+\begin{document}
+\begin{tikzpicture}
+  % ---- column headings ----
+  \node[anchor=south west, inner sep=0pt, text=dg-navy-ink, font=\dggroupsize] at (2,46) {GATE};
+  \draw[dg-navy-line, line width=1pt, line cap=round] (0,42) -- (176,42);
+  \node[anchor=south west, inner sep=0pt, text=dg-red-ink, font=\dggroupsize] at (248,46) {WHAT IT REFUSES};
+  \draw[dg-red-line, line width=1pt, line cap=round] (246,42) -- (496,42);
+
+  % ---- gates (left column) ----
+  \dgrow[text width=155pt]{g1}{teal} {(88,0)}   {1}{\dgcontent{Propose}{}{}}
+  \dgrow[text width=155pt]{g2}{blue} {(88,-66)} {2}{\dgcontent{Validate}{}{}}
+  \dgrow[text width=155pt]{g3}{blue} {(88,-132)}{3}{\dgcontent{Authorize}{}{}}
+  \dgrow[text width=155pt]{g4}{plum} {(88,-198)}{4}{\dgcontent{Commit}{}{}}
+  \dgrow[text width=155pt]{g5}{plum} {(88,-264)}{5}{\dgcontent{Verify}{}{}}
+  \dgrow[text width=155pt]{g6}{amber}{(88,-330)}{6}{\dgcontent{Accept}{}{}}
+  \foreach \a/\b in {g1/g2, g2/g3, g3/g4, g4/g5, g5/g6}
+    \draw[flow in=blue] (\a.south) -- (\b.north);
+
+  % ---- the model's only job ----
+  \node[callout=teal, anchor=west, text=dg-teal-ink, minimum height=28pt] (pm) at (248,0)
+    {the model's only job};
+
+  % ---- refusals (right column) ----
+  \foreach \i/\g/\t in {1/g2/{malformed, or a tool version we do not publish},
+                        2/g3/{well-formed, but not permitted for this subject and resource},
+                        3/g4/{a duplicate, recognised by its idempotency key},
+                        4/g5/{a timeout — unknown effect, reconcile before retrying},
+                        5/g6/{evidence missing or staler than policy allows}} {
+    \node[dg card=red, text width=224pt, minimum height=44pt, anchor=west] (r\i)
+      at ([xshift=70pt]\g.east) {\dgcontent{}{\t}{}};
+    \draw[dashed flow, draw=dg-red-line] (\g.east) -- (r\i.west);
+  }
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,10 @@
+# Content observations, group a (raised, not changed)
+
+1. **`dx-golden-path` (Figure 7-3): "Improve" has no edge back to "Scaffold".** The inventory calls it a cycle, but the source ends at Improve; the serpentine reads as a loop only by position. Kept as in the source.
+2. **`pattern-planning` (Figure 12-1): the label says "replan re-enters the compiler" but the edge ends on "Candidate plan".** The candidate plan feeds the compiler, so the claim holds in effect, but the arrowhead lands on the plan card, not the compiler. Kept as in the source (edge target unchanged).
+3. **`pattern-react` (Figure 10-1): "Act (read tools only)" is the only place the read-only rule appears.** The dashed "mutation" exit leaves from Reason, not Act; consistent with the header comment, noted only because a reader may look for the mutation on the Act card.
+4. **`reliability-economics` (Figure 28-1): "Safe degradation" has no outgoing path other than the dotted edge to the usage store.** It is neither accepted nor terminal; what happens to a deferred or drafted request next is not drawn. Kept.
+5. **`reliability-economics`: two "pressure" edges to degradation leave different nodes** (Admission "pressure", Bounded execution "budget or capacity pressure"); the second runs after admission, so the same word covers two moments. Kept.
+6. **`supervisor-worker` (Figure 18-1): "owns completion" ends at the Fan-in contract, not at "Accepted outcome".** The supervisor "owns the outcome, always", but the drawn edge stops at the contract. Kept.
+7. **`supervisor-worker`: the assignment said the labels were recently changed to the Harborlight specialists.** The source on this branch (based on main at a5a98e1) still reads "Child task: document extraction / income verification / property review" and "Worker A/B/C"; the figure follows that source. If a relabelling lands later, only the node texts change.
+8. **`learning-loop` (Figure 25-3): "Approve" has no rejection path.** The ring is one-way; a refused recommendation has no drawn route back (Detect or Diagnose). Kept; the caption describes the ten steps in order.

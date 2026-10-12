@@ -1,0 +1,44 @@
+% Figure 12-1 -- Plan-execute. Planning is compilation, not permission.
+% Restyled from pattern-planning.gv; content, flow and the replan loop are unchanged.
+%
+% Original element -> restyled element
+%   goal Goal                                   -> slate card
+%   plan Candidate plan / model output          -> teal card
+%   comp Plan compiler / -> typed IR            -> blue card
+%   val  Validate / policy . tools . budget (diamond) -> amber diamond
+%   exec Execute steps / deterministic          -> plum card
+%   rej  Rejected / naming the step             -> red card
+%   edges: goal>plan>comp>val (solid blue); val>exec (solid blue);
+%          val>rej (dashed red); exec>plan "replan re-enters the compiler"
+%          (dashed teal, outside loop on the left, ends on the Candidate plan
+%          card exactly as in the source; plan feeds the compiler)
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  \node[dg card=slate, icon=bullseye, text width=70pt] (goal) at (250,0)
+    {\dgcontent{Goal}{}{}};
+  \node[dg card=teal, icon=file-alt, text width=130pt] (plan) at (250,-74)
+    {\dgcontent{Candidate plan}{model output}{}};
+  \node[dg card=blue, icon=cog, text width=130pt] (comp) at (250,-150)
+    {\dgcontent{Plan compiler}{→ typed IR}{}};
+  \node[dg decision=amber, minimum width=230pt, minimum height=74pt] (val) at (250,-258)
+    {\dgtitlesize Validate\\[1pt]{\dgdescsize policy · tools · budget}};
+  \node[dg card=plum, icon=play-circle, text width=130pt] (exec) at (112,-370)
+    {\dgcontent{Execute steps}{deterministic}{}};
+  \node[dg card=red, icon=ban, text width=130pt] (rej) at (388,-370)
+    {\dgcontent{Rejected}{naming the step}{}};
+
+  \draw[flow in=blue] (goal) -- (plan);
+  \draw[flow in=blue] (plan) -- (comp);
+  \draw[flow in=blue] (comp) -- (val);
+  \draw[flow in=blue, turn] (val.west) -| (exec.north);
+  \draw[dashed flow, draw=dg-red-line, turn] (val.east) -| (rej.north);
+  \draw[dashed flow, draw=dg-teal-line, rounded corners=16pt] (exec.west) -- ++(-34pt,0) |-
+    (plan.west);
+  \path (exec.west) ++(-34pt,0) coordinate (lp);
+  \coordinate (lm) at (0,-200);
+  \node[pill=teal] at (lp |- lm)
+    {Replan re-enters\\[-1pt]{\fontsize{9}{10}\selectfont\mdseries the compiler}};
+\end{tikzpicture}
+\end{document}

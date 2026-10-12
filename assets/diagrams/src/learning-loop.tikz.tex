@@ -1,0 +1,37 @@
+% Figure 25-3 -- The continuous improvement loop.
+% Restyled from learning-loop.gv; content, flow and the closed loop are unchanged.
+%
+% Original element -> restyled element
+%   observe, measure, learn        -> teal rounded cards
+%   detect, diagnose, recommend,
+%   validate                       -> blue square-cornered cards (boxes in the source)
+%   approve "owner or pre-approved class" -> amber square card, three-line note as in the source
+%   deploy, monitor                -> plum rounded cards
+%   edges (ten, all one direction, clockwise as in the source ring):
+%     observe>measure>detect>diagnose>recommend>validate>approve>deploy>monitor>learn>observe
+%     -> ten solid blue connectors that arc gently outward along the ring
+%   layout: the circo ring becomes an ellipse with Approve at top left and
+%   Observe at lower right, exactly the source's positions.
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  \tikzset{lc/.style={text width=76pt, minimum height=38pt}}
+  \node[dg card=amber, square, lc, icon=gavel, minimum height=60pt] (approve) at (-68,179)
+    {\dgcontent{Approve}{owner or\\pre-approved\\class}{}};
+  \node[dg card=plum, lc, icon=rocket]      (deploy)    at (68,179)    {\dgcontent{Deploy}{}{}};
+  \node[dg card=plum, lc, icon=heartbeat]   (monitor)   at (166,106)   {\dgcontent{Monitor}{}{}};
+  \node[dg card=teal, lc, icon=graduation-cap] (learn)  at (200,0)     {\dgcontent{Learn}{}{}};
+  \node[dg card=teal, lc, icon=eye]         (observe)   at (166,-106)  {\dgcontent{Observe}{}{}};
+  \node[dg card=teal, lc, icon=chart-bar]   (measure)   at (68,-179)   {\dgcontent{Measure}{}{}};
+  \node[dg card=blue, square, lc, icon=search]         (detect)    at (-68,-179)  {\dgcontent{Detect}{}{}};
+  \node[dg card=blue, square, lc, icon=stethoscope]    (diagnose)  at (-166,-106) {\dgcontent{Diagnose}{}{}};
+  \node[dg card=blue, square, lc, icon=lightbulb]      (recommend) at (-200,0)    {\dgcontent{Recommend}{}{}};
+  \node[dg card=blue, square, lc, icon=check-double]   (validate)  at (-166,106)  {\dgcontent{Validate}{}{}};
+
+  \foreach \a/\b in {observe/measure, measure/detect, detect/diagnose, diagnose/recommend,
+                     recommend/validate, validate/approve, approve/deploy, deploy/monitor,
+                     monitor/learn, learn/observe}
+    \draw[flow in=blue] (\a) to[bend left=9] (\b);
+\end{tikzpicture}
+\end{document}

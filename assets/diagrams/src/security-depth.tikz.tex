@@ -1,0 +1,46 @@
+% Figure 20-1 -- Defense-in-depth layers.
+% Restyled from security-depth.gv; content, order and hues are unchanged.
+%
+% Original element -> restyled element
+%   l1..l9  nine table rows read top to bottom, each a coloured number cell and
+%           a line "Layer name -- controls"
+%        -> nine row cards (\dgrow, a local macro): the number cell becomes a
+%           solid badge in the row's hue; the layer name is the bold card title
+%           and the controls after the dash are the description beneath it
+%           (the dash separator is replaced by the line break)
+%   1 Channel / input     slate   2 Context / memory   cyan   3 Model / output  blue
+%   4 Agent / workflow    teal    5 Identity / policy  amber  6 Tools / effects red
+%   7 Execution / egress  blue    8 Supply chain / release slate
+%   9 Detection / response plum
+%   row 6 (Tools / effects) is the emphasised row of the source (double border):
+%        heavier 2.4 pt border here; shape and weight, not colour, mark it
+%   edges: none (the source chain is invisible; order is the vertical order)
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+
+% ---- local macro (candidate for promotion to professional-diagrams.sty) ----
+% \dgrow[opts]{name}{role}{(x,y)}{badge}{content}: a row card with a solid
+% badge (number / numeral) in the role's border colour, inset at the left, and
+% text indented to clear it. \dgrowh = row height, \dgrowbw = badge width.
+\newlength{\dgrowh}  \setlength{\dgrowh}{44pt}
+\newlength{\dgrowbw} \setlength{\dgrowbw}{34pt}
+\newcommand{\dgrow}[6][]{%
+  \node[dg card=#3, minimum height=\dgrowh, text width=475pt,
+        execute at begin node={\leftskip=\dimexpr\dgrowbw+7pt\relax}, #1] (#2) at #4 {#6};
+  \node[rectangle, rounded corners=4pt, fill=dg-#3-line, text=white, font=\dgtitlesize,
+        inner sep=0pt, minimum width=\dgrowbw, minimum height=\dgrowh-14pt, anchor=west]
+    at ([xshift=7pt]#2.west) {#5};}
+
+\begin{document}
+\begin{tikzpicture}
+  \dgrow{l1}{slate}{(248,0)}{1}{\dgcontent{Channel / input}{authentication, injection and jailbreak detection}{}}
+  \dgrow{l2}{cyan}{(248,-54)}{2}{\dgcontent{Context / memory}{source trust, ACL, provenance, poisoning}{}}
+  \dgrow{l3}{blue}{(248,-108)}{3}{\dgcontent{Model / output}{approved route, schema, content safety, DLP}{}}
+  \dgrow{l4}{teal}{(248,-162)}{4}{\dgcontent{Agent / workflow}{budgets, deadlines, loop and fan-out caps}{}}
+  \dgrow{l5}{amber}{(248,-216)}{5}{\dgcontent{Identity / policy}{subject and workload identity, RBAC/ABAC}{}}
+  \dgrow[line width=2.4pt]{l6}{red}{(248,-270)}{6}{\dgcontent{Tools / effects}{the effect boundary that cannot be skipped}{}}
+  \dgrow{l7}{blue}{(248,-324)}{7}{\dgcontent{Execution / egress}{sandbox, secrets isolation, destination policy}{}}
+  \dgrow{l8}{slate}{(248,-378)}{8}{\dgcontent{Supply chain / release}{locks, SBOM, signatures, provenance}{}}
+  \dgrow{l9}{plum}{(248,-432)}{9}{\dgcontent{Detection / response}{monitoring, containment, revocation}{}}
+\end{tikzpicture}
+\end{document}

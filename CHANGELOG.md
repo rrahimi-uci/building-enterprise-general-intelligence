@@ -4,6 +4,14 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Diagram modernization: all 44 figures in TikZ
+
+- The remaining 41 figures are redrawn in the shared TikZ design system, so every diagram now has an editable `assets/diagrams/src/<id>.tikz.tex` source and no Graphviz or Mermaid sources remain in use. Content is unchanged: each figure keeps its nodes, labels, edge directions and styles, groups and annotations (checked element by element against the original).
+- Groups converted: stacks, ladders and maps; decision trees; before/after pairs (one shared panel template, `_before-after.tex`); flows with feedback loops; pipelines and state machines; layered and plane architectures including Figure 4-1 (40 chips, 9 groups); and both sequence diagrams (a native TikZ sequence kit, `_sequence-kit.tex`, replaces Mermaid).
+- About a dozen figures that the book used to shrink to 69–85 % (labels printing at 7.5–9 pt) are redrawn compactly and placed at full size, so text is 9 pt or larger throughout.
+- Fixed `tools/validate_latex.py` holding `release-recovery.png` to the chapter-cover resolution because its id contains the word "cover"; it now matches the `assets/cover/` prefix.
+- Review material in `reviews/diagram-modernization/`: per-group reports, before/after pairs and the technical content observations raised for separate review (none acted on).
+
 ### PDF in dist
 
 - `make all` now ends with a `dist-pdf` step that keeps `dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf` current next to the Markdown, DOCX and TeX files: it compiles only when the PDF is missing or the content of the generated LaTeX, styles, diagram and cover renders or fonts changed since the last compile (compared by hash), and skips with a notice when XeLaTeX is not installed. `make release` now runs `make pdf`. The PDF stays gitignored and is never committed (CI publishes it as a build artifact).

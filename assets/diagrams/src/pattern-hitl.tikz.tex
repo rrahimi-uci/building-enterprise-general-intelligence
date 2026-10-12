@@ -1,0 +1,57 @@
+% Figure 14-1 -- Approval versus intervention, which are routinely conflated.
+% Restyled from pattern-hitl.gv; both columns, their headings, the four steps
+% each and the arrows (heading to first step, then down) are unchanged. The two
+% headings become the panel headers, and the arrow out of each heading starts at
+% that header pill.
+%
+% Original element -> restyled element
+%   ha  APPROVAL (heading)                    -> plum panel, header pill
+%   a1  Run reaches a protected effect        -> plum card
+%   a2  Immutable proposal + digest (note)    -> plum dog-eared note
+%   a3  Approver decides before it happens    -> plum card
+%   a4  Decision bound to that digest         -> plum card
+%   ha>a1>a2>a3>a4                            -> four plum arrows
+%   hb  INTERVENTION (heading)                -> blue panel, header pill
+%   b1  Run raises an escalation, or operator acts in flight -> blue card
+%   b2  Supply input . choose . correct state . cancel       -> blue card
+%   b3  Workflow signal, not a message        -> blue card
+%   b4  Recorded as an operational event      -> blue card
+%   hb>b1>b2>b3>b4                            -> four blue arrows
+%   rank=same pairs a_i / b_i                 -> the four cards sit on the same rows
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\input{assets/diagrams/src/_before-after.tex}
+\renewcommand{\dgheadgap}{30pt}
+\begin{document}
+\begin{tikzpicture}
+  % ---- approval (left) ----
+  \node[dg card=plum, icon=shield-alt, text width=170pt, minimum height=48pt] (a1) at (118,0)
+    {\dgcontent{Run reaches a protected effect}{}{}};
+  \node[dg note=plum, icon=file-signature, text width=170pt, minimum height=48pt] (a2) at (118,-76)
+    {\dgcontent{Immutable proposal + digest}{}{}};
+  \node[dg card=plum, icon=gavel, text width=170pt, minimum height=48pt] (a3) at (118,-152)
+    {\dgcontent{Approver decides before it happens}{}{}};
+  \node[dg card=plum, icon=link, text width=170pt, minimum height=48pt] (a4) at (118,-228)
+    {\dgcontent{Decision bound to that digest}{}{}};
+  \dgpanel{appr}{plum}{user-check}{APPROVAL}{}{(a1)(a2)(a3)(a4)}
+  \draw[flow in=plum] (appr-head) -- (a1);
+  \draw[flow in=plum] (a1) -- (a2);
+  \draw[flow in=plum] (a2) -- (a3);
+  \draw[flow in=plum] (a3) -- (a4);
+
+  % ---- intervention (right) ----
+  \node[dg card=blue, icon=bell, text width=170pt, minimum height=48pt] (b1) at (382,0)
+    {\dgcontent{Run raises an escalation, or operator acts in flight}{}{}};
+  \node[dg card=blue, icon=sliders-h, text width=170pt, minimum height=48pt] (b2) at (382,-76)
+    {\dgcontent{Supply input · choose ·\\correct state · cancel}{}{}};
+  \node[dg card=blue, icon=bolt, text width=170pt, minimum height=48pt] (b3) at (382,-152)
+    {\dgcontent{Workflow signal, not a message}{}{}};
+  \node[dg card=blue, icon=clipboard-list, text width=170pt, minimum height=48pt] (b4) at (382,-228)
+    {\dgcontent{Recorded as an operational event}{}{}};
+  \dgpanel{intv}{blue}{hand-paper}{INTERVENTION}{}{(b1)(b2)(b3)(b4)}
+  \draw[flow in=blue] (intv-head) -- (b1);
+  \draw[flow in=blue] (b1) -- (b2);
+  \draw[flow in=blue] (b2) -- (b3);
+  \draw[flow in=blue] (b3) -- (b4);
+\end{tikzpicture}
+\end{document}

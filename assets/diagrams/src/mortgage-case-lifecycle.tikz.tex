@@ -1,0 +1,58 @@
+% Figure 1-1 -- The cumulative mortgage case, its first bottleneck, and the
+% ownership boundaries that later chapters will extend.
+% Restyled from mortgage-case-lifecycle.gv; nodes, labels, edges, edge styles
+% and meaning are unchanged. Layout only is new.
+%
+% Original element -> restyled element
+%   intake    Synthetic intake / MORT-2026-000184 (note)   -> cyan card
+%   summary   Evidence summary / model candidate           -> teal card
+%   missing   Required evidence / complete? (diamond)      -> amber diamond
+%   request   Request missing / pay statement              -> blue card
+%   verify    Verify evidence / source + freshness         -> blue card
+%   calculate Calculate / Decimal ratios                   -> blue card
+%   review    Underwriter review / human decision          -> plum card
+%   los       Loan-origination / system (box)              -> slate square card
+%   stop      No approval / no external write              -> red card
+%   9 edges, one per original edge, same direction, same label, same style:
+%     intake>summary "metadata only" (dotted)   summary>missing "candidate"
+%     missing>request "no"                      missing>verify "yes"
+%     request>verify "after arrival" (dashed)   verify>calculate "accepted evidence"
+%     calculate>review "recommendation"         review>los "authorized effect only" (dashed)
+%     summary>stop "unsupported claim" (dashed)
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  % ---- nodes ----
+  \node[dg card=cyan, icon=file-alt, text width=128pt] (intake) at (88,0)
+    {\dgcontent{Synthetic intake}{MORT-2026-000184}{}};
+  \node[dg card=teal, text width=128pt] (summary) at (88,-80)
+    {\dgcontent{Evidence summary}{Model candidate}{}};
+  \node[dg decision=amber, minimum width=176pt, minimum height=76pt] (missing) at (88,-182)
+    {\dgcontent{Required evidence}{complete?}{}};
+  \node[dg card=blue, icon=clipboard-check, text width=128pt] (verify) at (88,-290)
+    {\dgcontent{Verify evidence}{Source + freshness}{}};
+  \node[dg card=slate, square, icon=server, text width=128pt] (los) at (88,-390)
+    {\dgcontent{Loan-origination}{System}{}};
+  \node[dg card=red, text width=128pt] (stop) at (420,-80)
+    {\dgcontent{No approval}{No external write}{}};
+  \node[dg card=blue, text width=128pt] (request) at (420,-182)
+    {\dgcontent{Request missing}{Pay statement}{}};
+  \node[dg card=blue, icon=calculator, text width=128pt] (calculate) at (420,-290)
+    {\dgcontent{Calculate}{Decimal ratios}{}};
+  \node[dg card=plum, icon=users, text width=128pt] (review) at (420,-390)
+    {\dgcontent{Underwriter review}{Human decision}{}};
+
+  % ---- edges ----
+  \draw[dotted flow, draw=dg-cyan-line] (intake.south) -- node[pill=cyan]{Metadata only} (summary.north);
+  \draw[flow in=teal] (summary.south) -- node[pill=teal]{Candidate} (missing.north);
+  \draw[flow in=amber] (missing.east) -- node[pill=amber]{No} (request.west);
+  \draw[flow in=blue] (missing.south) -- node[pill=blue]{Yes} (verify.north);
+  \draw[dashed flow, draw=dg-blue-line, turn] ([xshift=-30pt]request.south) |- node[pill=blue,pos=0.8]{After arrival}
+    ([yshift=-0pt]$(verify.north)+(40pt,24pt)$) -- ([xshift=40pt]verify.north);
+  \draw[flow in=blue] (verify.east) -- node[pill=blue]{Accepted\\evidence} (calculate.west);
+  \draw[flow in=plum] (calculate.south) -- node[pill=plum]{Recommendation} (review.north);
+  \draw[dashed flow, draw=dg-plum-line] (review.west) -- node[pill=plum]{Authorized\\effect only} (los.east);
+  \draw[dashed flow, draw=dg-red-line] (summary.east) -- node[pill=red]{Unsupported\\claim} (stop.west);
+\end{tikzpicture}
+\end{document}

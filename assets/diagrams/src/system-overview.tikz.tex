@@ -1,0 +1,82 @@
+% Figure 1-3 -- The whole system at a thousand feet.
+% Restyled from system-overview.gv; every band, rail, label and edge is kept.
+% Layout only is new: seven band cards in one column, the two rails beside them.
+%
+% Original element -> restyled element
+%   ch   II . IV   Channels / who asks for work, and who sees the result        -> slate band card
+%   rt   I . IV    Agent runtime / bounded reasoning, patterns, durable run state -> teal band card
+%   ma   V         Collaboration / specialists, peer agents, external protocols  -> plum band card
+%   kn   II        Knowledge / governed knowledge, rules, catalogs, per-run context -> cyan band card
+%   gw   IV-VII    Control points / admission, inference, effects, and approval  -> blue band card
+%   sor  --        Systems of record / where effects commit and stay authoritative -> plum band card
+%   obs  VII       Evidence / traces, evaluation, the loop into the next release -> amber band card
+%        (the Part badge, a filled cell in the source, is a filled tab at the left of each card)
+%   cluster "VI . Security"   Identity, Least privilege, Guardrails, Approvals,
+%        Containment, Audit, Fail closed                  -> red group with 7 chips, top to bottom
+%   cluster "III . VIII . Platform"  Golden paths, SDK, Release, Operations,
+%        Governance, Cost, Incidents                      -> slate group with 7 chips
+%   authority axis (solid blue): ch>rt "proposes", rt>ma, ma>kn, kn>gw "authorizes",
+%        gw>sor "commits", sor>obs                         -> six solid blue arrows, same pills
+%   obs>rt "learns" (dotted amber)                        -> dotted amber loop in the right gap
+%   Guardrails>rt, Guardrails>gw (dashed red)             -> two dashed red arrows in the left gap
+%   Golden paths>rt, Release>obs (dashed slate)           -> two dashed slate arrows in the right gap
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  % Local helpers (candidates for the shared package: \dgband, rail chip).
+  \tikzset{
+    band card/.style={dg card=#1, text width=204pt, minimum height=52pt,
+      execute at begin node={\leftskip=50pt\relax}},
+    band badge/.style={rectangle, rounded corners=4pt, fill=dg-#1-line, text=white,
+      font=\fontsize{9}{10.8}\selectfont\bfseries, minimum width=40pt, minimum height=40pt,
+      inner sep=0pt, align=center},
+    rail chip/.style={dg card=#1, text width=66pt, inner xsep=6pt, inner ysep=4pt,
+      minimum height=26pt, align=center, font=\dgnotesize},
+  }
+  % \band{name}{role}{row}{badge}{title}{description}
+  \newcommand{\band}[6]{%
+    \node[band card=#2] (#1) at (184,{-(#3-1)*84}) {\dgcontent{#5}{#6}{}};
+    \node[band badge=#2] at ([xshift=26pt]#1.west) {#4};}
+
+  % ---- the seven bands, authority narrowing from top to bottom ----
+  \band{ch}{slate}{1}{II · IV}{Channels}{who asks for work,\\and who sees the result}
+  \band{rt}{teal}{2}{I · IV}{Agent runtime}{bounded reasoning, patterns,\\durable run state}
+  \band{ma}{plum}{3}{V}{Collaboration}{specialists, peer agents,\\external protocols}
+  \band{kn}{cyan}{4}{II}{Knowledge}{governed knowledge, rules,\\catalogs, per-run context}
+  \band{gw}{blue}{5}{IV–VII}{Control points}{admission, inference,\\effects, and approval}
+  \band{sor}{plum}{6}{—}{Systems of record}{where effects commit\\and stay authoritative}
+  \band{obs}{amber}{7}{VII}{Evidence}{traces, evaluation, the loop\\into the next release}
+
+  % ---- the two rails ----
+  \foreach \i/\t [count=\n from 1] in {1/Identity, 2/Least privilege, 3/Guardrails, 4/Approvals,
+                                       5/Containment, 6/Audit, 7/Fail closed}
+    \node[rail chip=red] (c\n) at (0,{-(\i-1)*84}) {\t};
+  \dggroup{sec}{red}{VI · Security}{(c1)(c2)(c3)(c4)(c5)(c6)(c7)}
+
+  \foreach \i/\t [count=\n from 1] in {1/Golden paths, 2/SDK, 3/Release, 4/Operations,
+                                       5/Governance, 6/Cost, 7/Incidents}
+    \node[rail chip=slate] (p\n) at (383,{-(\i-1)*84}) {\t};
+  \dggroup{plat}{slate}{III · VIII · Platform}{(p1)(p2)(p3)(p4)(p5)(p6)(p7)}
+
+  % ---- authority axis ----
+  \draw[flow in=blue] (ch.south) -- node[pill=blue,pos=0.4]{Proposes} (rt.north);
+  \draw[flow in=blue] (rt.south) -- (ma.north);
+  \draw[flow in=blue] (ma.south) -- (kn.north);
+  \draw[flow in=blue] (kn.south) -- node[pill=blue,pos=0.4]{Authorizes} (gw.north);
+  \draw[flow in=blue] (gw.south) -- node[pill=blue,pos=0.4]{Commits} (sor.north);
+  \draw[flow in=blue] (sor.south) -- (obs.north);
+
+  % ---- evidence closes the loop back to the runtime (dotted) ----
+  \draw[dotted flow, draw=dg-amber-line, rounded corners=5pt] (296,-494) -- (308,-494)
+    -- node[pill=amber,rotate=90,pos=0.5]{Learns} (308,-94) -- (296,-94);
+
+  % ---- security touches the runtime and the control points (dashed red) ----
+  \draw[dashed flow, draw=dg-red-line, rounded corners=5pt] (39,-163) -- (62,-163) -- (62,-84) -- (72,-84);
+  \draw[dashed flow, draw=dg-red-line, rounded corners=5pt] (39,-173) -- (62,-173) -- (62,-336) -- (72,-336);
+
+  % ---- platform touches the runtime and the evidence band (dashed slate) ----
+  \draw[dashed flow, draw=dg-slate-line, rounded corners=5pt] (p1.west) -- (324,0) -- (324,-74) -- (296,-74);
+  \draw[dashed flow, draw=dg-slate-line, rounded corners=5pt] (p3.west) -- (324,-168) -- (324,-514) -- (296,-514);
+\end{tikzpicture}
+\end{document}
