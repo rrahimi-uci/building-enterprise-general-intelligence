@@ -5,7 +5,7 @@
   "measurements": {
     "main_tex_sha256": "030dbb47d3d4c01938bd28629a7d3e7b2479913ab12f91a48f1cd7b9f636d5d7",
     "content_tex_sha256": "4b594c3ee16cf11638a7bbb13121829839c2366055f3b352edeb478a7d8cf450",
-    "style_sha256": "40c967d11d614bbcc15b62d973047318754a6a3d554a0ed639320e64ff1f3ff8",
+    "style_sha256": "b5da9d5cf7b29a58d85da7498fba6e010ce46cf6e146297627e99a1beb56e86a",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
