@@ -1,0 +1,187 @@
+% professional-diagrams.sty -- shared TikZ design system for the book's figures.
+%
+% A diagram source (assets/diagrams/src/<id>.tikz.tex) is a small standalone
+% document that loads this package and draws nodes, groups and connectors with
+% the styles below. tools/render_diagrams.py compiles it with XeLaTeX from the
+% repository root (so the bundled fonts resolve at latex/fonts/) with
+% TEXINPUTS pointing at this directory.
+%
+% Design contract (see reviews/diagram-modernization/style-guide.md):
+%   * Draw at final size. The figure is placed at the 7.06in text width, so a
+%     canvas of about 7in wide is shown 1:1 and 9pt here is 9pt on the page.
+%   * Meaning is never carried by colour alone: shape (diamond = decision,
+%     cylinder = store), line style (solid / dashed / dotted) and text carry it.
+%   * Every role is a pastel fill + a dark same-hue border + dark text, so the
+%     figure still reads in greyscale print.
+%
+% Palette, type scale, spacing constants, card/pill/callout/group/edge styles,
+% icon helpers.  Keep this file small: it is the one place the look is defined.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{professional-diagrams}[2026/10/12 v0.1 TikZ design system for the book diagrams]
+
+\RequirePackage{fontspec}
+\RequirePackage{xcolor}
+\RequirePackage{etoolbox}
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta,calc,positioning,fit,backgrounds,shapes.geometric,shapes.misc,
+  shadows,bending,decorations.markings}
+\RequirePackage{fontawesome5}
+
+% ---- Typography -----------------------------------------------------------
+% Same family and bundled files as latex/bookstyle.sty, so a figure matches the
+% body text. Paths are relative to the repository root (the compile cwd).
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\setmainfont[
+  Path=latex/fonts/,
+  UprightFont=LiberationSans-Regular.ttf,
+  BoldFont=LiberationSans-Bold.ttf,
+  ItalicFont=LiberationSans-Italic.ttf,
+  BoldItalicFont=LiberationSans-BoldItalic.ttf
+]{Liberation Sans}
+\renewcommand{\familydefault}{\rmdefault}
+% Labels in a figure are never hyphenated; a long word wraps whole or the card widens.
+\hyphenpenalty=10000 \exhyphenpenalty=10000
+
+% Type scale (pt, at final size). Nothing in a figure is set below 9pt.
+\newcommand{\dgtitlesize}{\fontsize{10.5}{12.6}\selectfont\bfseries}
+\newcommand{\dgdescsize}{\fontsize{9.5}{11.6}\selectfont}
+\newcommand{\dgnotesize}{\fontsize{9}{11}\selectfont}
+\newcommand{\dglabelsize}{\fontsize{9}{10.8}\selectfont\bfseries}
+\newcommand{\dggroupsize}{\fontsize{9.5}{11.4}\selectfont\bfseries}
+
+% ---- Palette --------------------------------------------------------------
+% \dgrole{name}{fill}{line}{ink}{pill}: pastel surface, dark border/accent, the
+% darkest text tone of the hue, and the stronger tint used behind edge-label
+% pills. `line` also colours icons and arrows.
+% Roles follow the book's house style (styles/DESIGN-SYSTEM.md section 10a).
+\newcommand{\dgrole}[5]{%
+  \definecolor{dg-#1-fill}{HTML}{#2}%
+  \definecolor{dg-#1-line}{HTML}{#3}%
+  \definecolor{dg-#1-ink}{HTML}{#4}%
+  \definecolor{dg-#1-pill}{HTML}{#5}%
+  \colorlet{dg-#1-soft}{dg-#1-fill!55!white}}
+\dgrole{teal}{E4F4F1}{0D6E69}{084B47}{CDEAE6}   % generation, agent runtime, iteration
+\dgrole{blue}{E6F0FB}{1450A3}{0E3A78}{D0E1F6}   % processing, validation, platform services
+\dgrole{cyan}{E3F4F8}{0B6076}{084357}{CBE9F0}   % knowledge, evidence, advisory reasoning
+\dgrole{amber}{FFF2D9}{8A5600}{613C00}{FAE5B8}  % decisions, acceptance, gates
+\dgrole{red}{FCE8E8}{A62C2C}{7A1D1D}{F7D3D3}    % failure, refusal, escalation, intervention
+\dgrole{plum}{F5E8F7}{6A2E6E}{4A1F4D}{EBD2EE}   % human, specialised reasoning, committed effect
+\dgrole{slate}{ECF1F7}{4A6078}{2F4256}{DAE3ED}  % secondary, external, neutral
+\dgrole{navy}{DCE5F2}{12233F}{12233F}{C6D3E8}   % structure, headers
+\dgrole{green}{E3F5E6}{2D7A3A}{1D5227}{CBEACF}  % success, completion
+\definecolor{dg-ink}{HTML}{12233F}       % primary text
+\definecolor{dg-note}{HTML}{4A5F76}      % subdued annotation text (AA on every pastel)
+\definecolor{dg-edge}{HTML}{3A4F6B}      % default connector
+
+% ---- Spacing constants ----------------------------------------------------
+\newlength{\dgradius}   \setlength{\dgradius}{6pt}      % card corner radius
+\newlength{\dgpadx}     \setlength{\dgpadx}{10pt}       % card horizontal padding
+\newlength{\dgpady}     \setlength{\dgpady}{7pt}        % card vertical padding
+\newlength{\dgstroke}   \setlength{\dgstroke}{1pt}      % card border
+\newlength{\dgedge}     \setlength{\dgedge}{1.2pt}      % connector stroke
+\newif\ifdgshadow       \dgshadowtrue                   % soft card shadow on/off
+
+% ---- Text helpers ---------------------------------------------------------
+% \dgcontent{title}{description}{annotation}: any argument may be empty.
+\newcommand{\dgcontent}[3]{%
+  \ifblank{#1}{}{{\dgtitlesize\color{dg-ink}#1}}%
+  \ifblank{#2}{}{\ifblank{#1}{}{\\[1.5pt]}{\dgdescsize\color{dg-ink}#2}}%
+  \ifblank{#3}{}{\\[2pt]{\dgnotesize\color{dg-note}#3}}}
+
+% Icons: \dgicon{name} draws a FontAwesome 5 solid glyph.
+\newcommand{\dgicon}[1]{\faIcon{#1}}
+
+% ---- Roles as TikZ styles -------------------------------------------------
+\newcommand{\dgcurrentrole}{slate}
+
+\tikzset{
+  % Coordinates are points: 1 unit = 1pt, so a 500-unit canvas is about 7in.
+  every picture/.style={x=1pt, y=1pt},
+  >={Stealth[length=6.5pt,width=5.5pt]},
+  % Soft shadow that is faint in print; \dgshadowfalse removes it.
+  dg shadow/.style={general shadow={fill=black, opacity=0.12, shadow xshift=0.4pt,
+      shadow yshift=-1.6pt, shadow scale=1}},
+  % Card = rounded pastel surface + darker same-hue border.
+  dg card/.style={/utils/exec={\gdef\dgcurrentrole{#1}},
+    rectangle, rounded corners=\dgradius, line width=\dgstroke,
+    fill=dg-#1-fill, draw=dg-#1-line, text=dg-ink,
+    inner xsep=\dgpadx, inner ysep=\dgpady, align=left,
+    text width=4cm, minimum height=34pt, font=\dgdescsize, anchor=center,
+    dg shadow},
+  % Platform service: the same card with tighter corners (box vs rounded box).
+  square/.style={rounded corners=2.5pt},
+  % Decision: a diamond (shape carries the meaning as well as the colour).
+  dg decision/.style={/utils/exec={\gdef\dgcurrentrole{#1}},
+    diamond, aspect=2.4, line width=\dgstroke, rounded corners=1.5pt,
+    fill=dg-#1-fill, draw=dg-#1-line, text=dg-ink, inner sep=0pt,
+    align=center, font=\dgdescsize, dg shadow},
+  % Store: a cylinder for ledgers, registries and records.
+  dg store/.style={/utils/exec={\gdef\dgcurrentrole{#1}},
+    cylinder, shape border rotate=90, aspect=0.22, line width=\dgstroke,
+    fill=dg-#1-fill, draw=dg-#1-line, text=dg-ink, inner xsep=\dgpadx,
+    inner ysep=\dgpady, align=center, font=\dgdescsize, dg shadow},
+  % Card with a leading icon; the text is indented to clear the glyph.
+  icon/.style={execute at begin node={\leftskip=2.1em\relax},
+    append after command={
+      node[anchor=center, text=dg-\dgcurrentrole-line, font=\Large,
+           inner sep=0pt]
+        at ($(\tikzlastnode.west)+(\dgpadx+0.6em,0)$) {\dgicon{#1}}}},
+  % Pill: rounded edge label, coloured by the meaning of the path.
+  pill/.style={/utils/exec={\gdef\dgcurrentrole{#1}},
+    sharp corners, rounded rectangle, rounded rectangle arc length=180, fill=dg-#1-pill,
+    draw=none, text=dg-#1-ink, inner xsep=8pt, inner ysep=3pt, align=center,
+    font=\dglabelsize},
+  % Chip: tiny rounded tag, for words the source already lists (e.g. the four
+  % checks "schema, evidence, arithmetic, policy").
+  chip/.style={rectangle, rounded corners=4pt, fill=white, draw=dg-#1-line!45,
+    line width=0.6pt, text=dg-ink, inner xsep=5pt, inner ysep=3.5pt,
+    font=\dgnotesize, align=center, minimum height=22pt},
+  % Callout: borderless soft panel for an annotation.
+  callout/.style={rectangle, rounded corners=\dgradius, fill=dg-#1-soft,
+    draw=dg-#1-line!25, line width=0.5pt, text=dg-ink, inner xsep=8pt,
+    inner ysep=5pt, align=left, font=\dgdescsize},
+  % Group: titled container drawn on the background layer.
+  dg group/.style={rectangle, rounded corners=9pt, fill=dg-#1-fill!45,
+    draw=dg-#1-line!70, line width=0.8pt, inner sep=12pt},
+  dg group dashed/.style={dg group=#1, dash pattern=on 5pt off 3pt},
+  group label/.style={anchor=north west, font=\dggroupsize,
+    text=dg-#1-ink, inner xsep=2pt},
+  % Connectors.
+  flow/.style={line width=\dgedge, draw=dg-edge, ->, shorten >=1.2pt,
+    shorten <=0.6pt, line cap=round, line join=round},
+  flow in/.style={flow, draw=dg-#1-line},
+  dashed flow/.style={flow, dash pattern=on 5pt off 3.5pt},
+  dotted flow/.style={flow, dash pattern=on 0.2pt off 3pt, line cap=round},
+  turn/.style={rounded corners=8pt},
+  % Text that sits on a connector without a pill: subdued, tight.
+  edge text/.style={sharp corners, font=\dgnotesize, text=dg-note, inner sep=2pt, align=left},
+}
+
+% \dgshadowfalse in a source's preamble removes every card shadow.
+\AtBeginDocument{\ifdgshadow\else\tikzset{dg shadow/.style={}}\fi}
+
+% ---- Layer helper ---------------------------------------------------------
+\pgfdeclarelayer{dgback}
+\pgfsetlayers{dgback,main}
+
+% \dggroup[options]{name}{role}{Title}{fit nodes}: draws a titled container
+% around existing nodes on the background layer. The title sits in a band above
+% the contents (22pt of extra top margin on top of the 12pt padding).
+% \dggroupbelow is the same with the title in a band below, for groups whose
+% connectors enter from the top and would otherwise cross the title.
+\newcommand{\dggroup}[5][]{%
+  \begin{pgfonlayer}{dgback}
+    \node[fit=#5, inner sep=0pt] (#2-core) {};
+    \coordinate (#2-edge) at ([yshift=22pt]#2-core.north);
+    \node[dg group=#3, fit=(#2-core)(#2-edge), #1] (#2) {};
+    \node[group label=#3] at ([xshift=10pt,yshift=-9pt]#2.north west) {#4};
+  \end{pgfonlayer}}
+\newcommand{\dggroupbelow}[5][]{%
+  \begin{pgfonlayer}{dgback}
+    \node[fit=#5, inner sep=0pt] (#2-core) {};
+    \coordinate (#2-edge) at ([yshift=-22pt]#2-core.south);
+    \node[dg group=#3, fit=(#2-core)(#2-edge), #1] (#2) {};
+    \node[group label=#3, anchor=south west] at ([xshift=10pt,yshift=9pt]#2.south west) {#4};
+  \end{pgfonlayer}}
+
+\endinput

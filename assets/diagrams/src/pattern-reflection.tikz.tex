@@ -1,0 +1,66 @@
+% Figure 13-1 -- Reflection. Improvement without self-certification.
+% Restyled from pattern-reflection.gv; content, flow and exits are unchanged.
+%
+% Original element -> restyled element
+%   pro  Produce candidate            -> teal card, document icon
+%   chk  Executable checks + four     -> blue card; the four words
+%        words "schema . evidence .      (schema, evidence, arithmetic, policy)
+%        arithmetic . policy"            become four chips (same words, no more)
+%   ev   Judge / qualitative . advisory -> cyan card
+%   gate Acceptance engine / checks first . judge score as evidence -> red card
+%   out  Accepted                     -> amber card
+%   hum  Human intervention / both versions attached -> red card
+%   rev  Revise / from typed defects and rationale   -> teal card
+%   cap  Revision cap / n attempts . spend           -> blue card
+%   edges: pro>chk, chk>ev, chk>gate (dashed, "fails . judge skipped"),
+%          ev>gate ("score + rationale . never self-accepts"), gate>out
+%          ("accepted"), gate>rev ("rejected"), gate>hum ("escalated /
+%          cap . no progress"), rev>pro ("while under cap"), cap>rev (dashed)
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  % ---- cards ----
+  \node[dg card=teal, icon=file-code, text width=150pt] (pro) at (296,0)
+    {\dgcontent{Produce candidate}{}{}};
+  \node[dg card=blue, text width=262pt, minimum height=76pt] (chk) at (186,-92) {};
+  \node[anchor=west, text=dg-blue-line, font=\Large, inner sep=0pt]
+    at ([shift={(11pt,-19pt)}]chk.north west) {\dgicon{clipboard-check}};
+  \node[anchor=west, inner sep=0pt]
+    at ([shift={(31pt,-19pt)}]chk.north west) {\dgcontent{Executable checks}{}{}};
+  \foreach \i/\ic/\t in {-1.5/database/Schema, -0.5/file-alt/Evidence,
+                         0.5/calculator/Arithmetic, 1.5/shield-alt/Policy}
+    \node[chip=blue, minimum width=62pt] at ([xshift=\i*68pt,yshift=-12pt]chk.center)
+      {\textcolor{dg-blue-line}{\dgicon{\ic}}\hspace{3.5pt}\t};
+  \node[dg card=cyan, icon=user-friends, text width=96pt] (jud) at (58,-205)
+    {\dgcontent{Judge}{Qualitative · advisory}{}};
+  \node[dg card=red, icon=cog, text width=150pt] (gate) at (268,-285)
+    {\dgcontent{Acceptance engine}{Checks first · judge score as evidence}{}};
+  \node[dg card=amber, icon=trophy, text width=62pt] (out) at (58,-392)
+    {\dgcontent{Accepted}{}{}};
+  \node[dg card=red, icon=users, text width=104pt] (hum) at (268,-392)
+    {\dgcontent{Human intervention}{Both versions attached}{}};
+  \node[dg card=teal, icon=pen, text width=96pt] (rev) at (414,-392)
+    {\dgcontent{Revise}{From typed defects and rationale}{}};
+  \node[dg card=blue, icon=database, text width=98pt] (cap) at (414,-205)
+    {\dgcontent{Revision cap}{n attempts · spend}{}};
+
+  % ---- connectors ----
+  \draw[flow in=teal] (pro.south) to[out=-90,in=90] ([xshift=58pt]chk.north);
+  \draw[flow in=teal] ([xshift=30pt]chk.south west) to[out=-90,in=90] ([xshift=10pt]jud.north);
+  \draw[dashed flow] ([xshift=82pt]chk.south) -- node[edge text,anchor=west,xshift=5pt]
+    {{\bfseries\color{dg-ink}Fails}\\[1pt]Judge skipped} (gate.north);
+  \draw[flow in=red, rounded corners=8pt] (jud.south) -- (jud.south |- gate.west) --
+    node[pill=red]{Score + rationale\\[-1pt]{\fontsize{9}{10}\selectfont\mdseries never self-accepts}}
+    (gate.west);
+  \draw[flow in=amber] ([xshift=-40pt]gate.south) to[out=-90,in=90]
+    node[pill=amber,pos=0.5]{Accepted} (out.north);
+  \draw[flow in=red] (gate.south) -- node[pill=red]
+    {Escalated\\[-1pt]{\fontsize{9}{10}\selectfont\mdseries cap · no progress}} (hum.north);
+  \draw[flow in=teal, turn] (gate.east) -| node[pill=teal,pos=0.8]{Rejected}
+    ([xshift=-26pt]rev.north);
+  \draw[dashed flow, draw=dg-blue-line] ([xshift=26pt]cap.south) -- ([xshift=26pt]rev.north);
+  \draw[flow in=teal, rounded corners=16pt] (rev.east) -- ++(22pt,0) |- (pro.east);
+  \node[pill=teal] at ($(pro.east)+(62pt,0)$) {While under cap};
+\end{tikzpicture}
+\end{document}

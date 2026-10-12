@@ -10,10 +10,17 @@
 #
 #   ./tools/bootstrap_tex.sh          # install what is missing
 #   ./tools/bootstrap_tex.sh --check  # report only, exit 1 if anything is missing
+#   ./tools/bootstrap_tex.sh --diagrams  # also the packages `make diagrams` needs
+#                                        # to compile the TikZ figures (the book
+#                                        # build itself never needs them)
 set -euo pipefail
 
 CHECK_ONLY=0
-[[ "${1:-}" == "--check" ]] && CHECK_ONLY=1
+WITH_DIAGRAMS=0
+for arg in "$@"; do
+  [[ "$arg" == "--check" ]] && CHECK_ONLY=1
+  [[ "$arg" == "--diagrams" ]] && WITH_DIAGRAMS=1
+done
 
 # style-file -> tlmgr package. The style file is what \RequirePackage asks for;
 # the tlmgr package is what actually has to be installed, and the two differ
@@ -36,6 +43,12 @@ REQUIREMENTS=(
   "environ:environ"       "trimspaces:trimspaces"
   "tikzfill.image:tikzfill" "pdfcol:pdfcol"
 )
+
+# Needed only to render TikZ figures (tools/render_diagrams.py), not to build the
+# book from the committed renders; CI therefore never asks for them.
+if [[ $WITH_DIAGRAMS -eq 1 ]]; then
+  REQUIREMENTS+=("standalone:standalone" "fontawesome5:fontawesome5")
+fi
 
 # BasicTeX installs here but does not always put it on a non-login shell's PATH.
 [[ -d /Library/TeX/texbin ]] && PATH="/Library/TeX/texbin:$PATH"

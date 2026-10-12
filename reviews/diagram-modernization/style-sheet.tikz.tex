@@ -1,0 +1,47 @@
+% Style sheet for latex/styles/professional-diagrams.sty -- every construct once.
+% Not a book figure and not in config/diagrams.json. Compile from the repo root:
+%   TEXINPUTS=latex/styles: xelatex -output-directory=/tmp reviews/diagram-modernization/style-sheet.tikz.tex
+%   pdftoppm -r 200 -png -singlefile /tmp/style-sheet.tikz.pdf reviews/diagram-modernization/style-sheet
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  % ---- 1. Roles ----
+  \node[anchor=west, font=\dggroupsize, text=dg-ink] at (0,0) {1  ROLES  (fill, border, text, pill)};
+  \foreach \r/\x/\m in {teal/0/{generation, runtime}, blue/100/{processing, service}, cyan/200/{knowledge, advisory},
+                        amber/300/{decision, acceptance}, red/400/{failure, escalation}} {
+    \node[dg card=\r, text width=60pt, minimum height=52pt, anchor=north west] (r\r) at (\x,-14) {\dgcontent{\r}{\m}{}};
+    \node[pill=\r, anchor=north west] at (\x,-78) {pill};}
+  \foreach \r/\x/\m in {plum/0/{human, effect}, slate/100/{secondary, external}, navy/200/{structure}, green/300/{success}} {
+    \node[dg card=\r, text width=60pt, minimum height=52pt, anchor=north west] at (\x,-100) {\dgcontent{\r}{\m}{}};
+    \node[pill=\r, anchor=north west] at (\x,-164) {pill};}
+  % ---- 2. Anatomy ----
+  \node[anchor=west, font=\dggroupsize, text=dg-ink] at (0,-190) {2  NODES};
+  \node[dg card=teal, icon=cog, text width=130pt, anchor=north west] (anat) at (0,-204)
+    {\dgcontent{Title (10.5 pt bold)}{Description (9.5 pt)}{Annotation (9 pt, subdued)}};
+  \node[dg card=blue, square, icon=server, text width=100pt, anchor=north west] at (175,-204)
+    {\dgcontent{Service card}{square corners}{}};
+  \node[dg decision=amber, minimum width=120pt, minimum height=56pt, anchor=north west] at (330,-204)
+    {\dgcontent{Decision}{diamond}{}};
+  \node[dg store=plum, minimum width=100pt, anchor=north west] at (0,-284)
+    {\dgcontent{Store}{cylinder}{}};
+  \node[chip=blue, anchor=north west, minimum width=70pt] at (150,-298)
+    {\textcolor{dg-blue-line}{\dgicon{database}}\hspace{3.5pt}Chip};
+  \node[callout=teal, anchor=north west, text width=120pt] at (250,-290)
+    {{\dgtitlesize\color{dg-teal-ink}Callout}\\[1.5pt]{\dgdescsize soft panel, no icon}};
+  \node[font=\dgnotesize, text=dg-note, anchor=north west] at (400,-300)
+    {edge text, no pill};
+  % ---- 3. Group + connectors ----
+  \node[anchor=west, font=\dggroupsize, text=dg-ink] at (0,-372) {3  GROUPS AND CONNECTORS};
+  \node[dg card=slate, text width=50pt, anchor=north west] (a) at (0,-424) {\dgcontent{A}{}{}};
+  \node[dg card=slate, text width=50pt, anchor=north west] (b) at (150,-424) {\dgcontent{B}{}{}};
+  \node[dg card=slate, text width=50pt, anchor=north west] (c) at (300,-424) {\dgcontent{C}{}{}};
+  \node[dg card=slate, text width=50pt, anchor=north west] (d) at (450,-424) {\dgcontent{D}{}{}};
+  \dggroup{g1}{blue}{Solid group}{(a)(b)}
+  \dggroup[dash pattern=on 5pt off 3pt]{g2}{teal}{Dashed group}{(c)(d)}
+  \draw[flow in=blue] (a.east) -- node[pill=blue]{solid flow} (b.west);
+  \draw[dashed flow, draw=dg-amber-line] (b.south) -- node[pill=amber]{dashed} ++(0,-40pt);
+  \draw[dotted flow, draw=dg-cyan-line] (c.east) -- node[pill=cyan]{dotted} (d.west);
+  \draw[flow in=red, turn] (d.south) -- ++(0,-62pt) -| node[pill=red,pos=0.25]{loop} (a.south);
+\end{tikzpicture}
+\end{document}
