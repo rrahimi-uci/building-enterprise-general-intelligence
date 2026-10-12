@@ -1,0 +1,52 @@
+% Figure 8-1 -- Discovery proposes; resolution disposes.
+% Restyled from skill-resolution.gv; nodes, labels, edges, edge styles and
+% meaning are unchanged. Layout only is new: the two side headings become the
+% titles of two groups (discovery above, resolution below).
+%
+% Original element -> restyled element
+%   need  Capability need / "read mortgage evidence"          -> teal card
+%   cat   Catalog search / semantic, broad                    -> cyan card
+%   cand  Candidates / mortgage.evidence.read @ 0.1.0, 0.1.1 (note) -> cyan card
+%   pol   Policy evaluation against the run envelope / tenant . purpose . grants . region . risk (diamond) -> amber diamond
+%   pin   Pinned release / sha256:9f3c... exactly one         -> blue card
+%   no    Refusal / naming the rule that denied it            -> red card
+%   d1    heading "DISCOVERY . what exists"                   -> title of the cyan group around need, cat, cand
+%   d2    heading "RESOLUTION . what this run may use"        -> title of the amber group around pol, pin, no
+%   mr    "the model may describe the need -- and nothing below" (red text beside Candidates) -> red callout beside Candidates
+%   edges need>cat, cat>cand, cand>pol, pol>pin (solid, unlabelled); pol>no (dashed, red, unlabelled)
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  % ---- discovery ----
+  \node[dg card=teal, text width=196pt] (need) at (170,0)
+    {\dgcontent{Capability need}{``read mortgage evidence''}{}};
+  \node[dg card=cyan, icon=search, text width=196pt] (cat) at (170,-66)
+    {\dgcontent{Catalog search}{Semantic, broad}{}};
+  \node[dg card=cyan, text width=196pt] (cand) at (170,-132)
+    {\dgcontent{Candidates}{mortgage.evidence.read @ 0.1.0, 0.1.1}{}};
+  \coordinate (dl) at (18,-66);
+  \coordinate (dr) at (322,-66);
+  \dggroup{discovery}{cyan}{DISCOVERY · what exists}{(need)(cat)(cand)(dl)(dr)}
+  \node[callout=red, text=dg-red-ink, text width=118pt] (mr) at (428,-132)
+    {\dgdescsize The model may describe the need — and nothing below};
+
+  % ---- resolution ----
+  \node[dg decision=amber, minimum width=300pt, minimum height=92pt] (pol) at (170,-274)
+    {\dgcontent{Policy evaluation against the run envelope}{tenant · purpose · grants · region · risk}{}};
+  \node[dg card=blue, text width=130pt] (pin) at (95,-380)
+    {\dgcontent{Pinned release}{sha256:9f3c… — exactly one}{}};
+  \node[dg card=red, text width=110pt] (no) at (245,-380)
+    {\dgcontent{Refusal}{Naming the rule that denied it}{}};
+  \coordinate (rl) at (18,-274);
+  \coordinate (rr) at (322,-274);
+  \dggroup{resolution}{amber}{RESOLUTION · what this run may use}{(pol)(pin)(no)(rl)(rr)}
+
+  % ---- connectors ----
+  \draw[flow in=blue] (need.south) -- (cat.north);
+  \draw[flow in=blue] (cat.south) -- (cand.north);
+  \draw[flow in=blue] (cand.south) -- (pol.north);
+  \draw[flow in=blue] (95,-297) -- (pin.north);
+  \draw[dashed flow, draw=dg-red-line] (245,-297) -- (no.north);
+\end{tikzpicture}
+\end{document}
