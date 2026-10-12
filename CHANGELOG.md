@@ -4,6 +4,20 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Chapter 5: compliance knowledge as a governed release (step 2 of the compliance-knowledge update)
+
+- Chapter 5 now treats compliance knowledge (requirement, obligation, control, constraint, definition) as a versioned asset. New sections cover the layer model, the two planes (control plane and runtime plane, with the knowledge registry, release, live pointer, and per-run pin), "Change compliance knowledge the way you change software" (change unit, nine gates in the reference implementation's order, routed findings, the lifecycle Draft → Certified → Approved → Active → Deprecated → Revoked, and activation as the publication boundary), and "Obligations enforced at every control point" with the Harborlight thread. The ontology subsection defines the schema and conformance checks in plain graph terms; the only standards are BPMN, DMN, SBVR, and CMMN. Figure 5-4 (`knowledge-lifecycle`) added; Figures 5-1 and 5-3 gain "release" labels.
+- § Combine knowledge without flattening its differences folds into the consistency gate; the capability catalog and its example move to Chapter 8; the PRODUCTION CONSIDERATION box is replaced by the control-point section.
+- Chapter 27 gains § Knowledge releases: the CI/CD stage table, tenant extensions, publication, promotion, and rollback; the Knowledge release row replaces Knowledge snapshot, and "current under freshness policy" is restricted to the retrieval index.
+- Examples: `rule-as-guardrail` renamed `enforced-rule` with a `pinned` region and six new tests (two adapted from Policy Logic Forge [R48]); `knowledge-graph#shapes`; new `gate-record` (regions `routes`, `budget`, adapted from Policy Logic Forge with credit) and `knowledge-release` (regions `publish`, `promote`).
+- Touch points in Chapters 3, 4, 6, 7, 8, 9, 12, 13, 17, 20, 21, 22, 24, 25, 26; Appendix A gains P-13 and a Knowledge row, Appendix B a triage row, Appendix C KnowledgeRelease and KnowledgeBinding, Appendix H twelve terms. Four paragraphs that began with "Figure N", and so rendered as captions in LaTeX, are reworded (Chapters 1, 4, 26; Appendix A).
+
+### Chapter 5: document ingestion (step 1 of the compliance-knowledge update)
+
+- New § Ingest documents the way you extract rules: the second pay statement goes through intake, extraction, verification against its pinned bytes, routing, and one KnowledgeArtifact record, so the age-window rule reads only supported facts. Forged, tampered, resubmitted, and instruction-carrying statements are refused. Figure 5-3 (`document-ingestion`) added.
+- New `document-ingestion` example (regions `record`, `verify`) with ten behavioural tests. `grounding-verifier`, adapted from Policy Logic Forge [R48] with credit, now admits a claim only on a literal span and records the evidence sliced from the bytes; two tests added. The guardrail and policy-to-rule tests gain the pay-statement age window.
+- R48 widened to the pinned commit c22dc450 and the elements the book points at; the 44% sentence and evidence row say "model-proposed" claims and "a single structural screen". One-line pointers added in Chapters 4, 6, 18, 20, 22, 24, 25 and Appendices C (KnowledgeArtifact) and H (KnowledgeArtifact, Verification status).
+
 ### Correctness validation, pass 2
 
 - Citations: evidence rows that cited a source beyond its scope are split into the sourced fact and a labelled book recommendation (Chapters 1, 6, 7, 9, 12, 13, 15, 21, 23, 25, 27); Chapter 21 no longer cites R06 for workload identity.

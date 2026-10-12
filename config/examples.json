@@ -539,12 +539,29 @@
       "book_chapters": [5],
       "path": "examples/knowledge/grounding_verifier.py",
       "language": "python",
-      "title": "Rebuilding a claim's evidence instead of trusting its citation",
+      "title": "Admitting a claim only on a literal span of the bytes it cites",
       "verify": "test",
       "tests": [
         "examples/tests/test_grounding_verifier.py"
       ],
-      "libraries": []
+      "libraries": [],
+      "adapted_from": "Policy Logic Forge [R48], commit c22dc450: agents/agent_09_grounding_verifier.py and utils/citations.py (MIT)"
+    },
+    {
+      "id": "document-ingestion",
+      "book_chapters": [5],
+      "path": "examples/knowledge/document_ingestion.py",
+      "language": "python",
+      "title": "A document's fields verified against its bytes before they become facts",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_document_ingestion.py"
+      ],
+      "libraries": [],
+      "regions": {
+        "record": "Intake record, typed fields with unit and origin, and duplicate detection.",
+        "verify": "Independent verification, consistency, routes, and fail-closed facts."
+      }
     },
     {
       "id": "knowledge-graph",
@@ -556,19 +573,25 @@
       "tests": [
         "examples/tests/test_knowledge_graph.py"
       ],
-      "libraries": []
+      "libraries": [],
+      "regions": {
+        "shapes": "Schema conformance checks that report and never repair, and a conforming graph frozen to a content digest."
+      }
     },
     {
-      "id": "rule-as-guardrail",
+      "id": "enforced-rule",
       "book_chapters": [5],
-      "path": "examples/knowledge/rule_as_guardrail.py",
+      "path": "examples/knowledge/enforced_rule.py",
       "language": "python",
       "title": "A policy rule enforced at the effect boundary",
       "verify": "test",
       "tests": [
-        "examples/tests/test_rule_as_guardrail.py"
+        "examples/tests/test_enforced_rule.py"
       ],
-      "libraries": []
+      "libraries": [],
+      "regions": {
+        "pinned": "Only the rules of the knowledge release a run pinned are evaluable, and every outcome cites its digest."
+      }
     },
     {
       "id": "set-operations",
@@ -583,8 +606,41 @@
       "libraries": []
     },
     {
+      "id": "gate-record",
+      "book_chapters": [5, 27],
+      "path": "examples/knowledge/gate_record.py",
+      "language": "python",
+      "title": "Gate findings routed by kind, and a quality budget that cannot pass by rounding",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_gate_record.py"
+      ],
+      "libraries": [],
+      "regions": {
+        "routes": "Findings routed to human review, targeted repair, or case management by kind; unknown kinds fail closed.",
+        "budget": "A fixed-denominator gate record and an integer-floor budget for held objects."
+      },
+      "adapted_from": "Policy Logic Forge [R48], commit c22dc450: utils/semantic_routing.py and utils/quality_budget.py (MIT)"
+    },
+    {
+      "id": "knowledge-release",
+      "book_chapters": [27],
+      "path": "examples/knowledge/knowledge_release.py",
+      "language": "python",
+      "title": "A knowledge change published only after gates, an independent approval, and a verified bundle",
+      "verify": "test",
+      "tests": [
+        "examples/tests/test_knowledge_release.py"
+      ],
+      "libraries": [],
+      "regions": {
+        "publish": "Candidate digest, complete gate record, independent approval, staleness check, verify, then activate.",
+        "promote": "Promotion of the identical digest, rollback by pointer, and admission-time resolution."
+      }
+    },
+    {
       "id": "capability-catalog",
-      "book_chapters": [5],
+      "book_chapters": [8],
       "path": "examples/knowledge/capability_catalog.py",
       "language": "python",
       "title": "Discovering a capability with its effects and prerequisites",

@@ -85,7 +85,7 @@ A paved road has costs. Its abstractions lag new framework features, and the pla
 
 ## What the road looks like to a developer
 
-A developer meets the road as a few declarations. The mortgage team's agent declares its AgentSpec `mortgage-evidence-agent@0.1.0`; a Skill requirement `mortgage.evidence.read@^0.1`, which is a compatible range rather than a digest (Chapter 8 pins the digest per run); the tool `mortgage.case.read@1` at effect risk class R1 (Chapter 22); the knowledge snapshot `mortgage-policy@approved-2026.09`; budgets; and the permissions it needs. Those permissions are a ceiling, intersected with the caller's grants at run time (Chapter 21); declaring them grants nothing. The platform compiles these declarations to the Chapter 3 contracts, and those contracts, not the SDK's method names, are the stable interface.
+A developer meets the road as a few declarations. The mortgage team's agent declares its AgentSpec `mortgage-evidence-agent@0.1.0`; a Skill requirement `mortgage.evidence.read@^0.1`, which is a compatible range rather than a digest (Chapter 8 pins the digest per run); the tool `mortgage.case.read@1` at effect risk class R1 (Chapter 22); the knowledge release `mortgage-policy@2026.09`; budgets; and the permissions it needs. Those permissions are a ceiling, intersected with the caller's grants at run time (Chapter 21); declaring them grants nothing. The platform compiles these declarations to the Chapter 3 contracts, and those contracts, not the SDK's method names, are the stable interface.
 
 The command line walks the golden path; `agentctl` is an illustrative command surface, not a tool this book ships: from `agentctl init mortgage-evidence-agent` through `agentctl promote --from staging --to production --canary 5%` to `agentctl rollback mortgage-evidence-agent@0.1.0 --to 0.0.9`. Build one immutable artifact, pin everything listed in Chapter 27 § Versioned objects, and bind endpoints, identities, secrets, sources, quotas, regions, and review queues only at deployment.
 
@@ -119,7 +119,7 @@ The suite below makes the portability row executable. It drives any adapter with
 
 **✓** One immutable artifact crosses every environment; endpoints, identities, secrets, sources, quotas, regions, and review queues bind at deployment.
 
-**✓** SDKs, adapters, model aliases, tool schemas, Skills, MCP servers, policy bundles, evaluators, and knowledge snapshots are pinned in the ReleaseManifest.
+**✓** SDKs, adapters, model aliases, tool schemas, Skills, MCP servers, policy bundles, and evaluators are pinned in the ReleaseManifest, which also declares the knowledge streams and ontology major versions it accepts; release digests are resolved per run (Chapter 5).
 
 **✓** A model or provider swap ships as a behavior change with evaluation, canary, and rollback — never as configuration.
 
@@ -191,7 +191,7 @@ interface:
 
 requires:
   tools:     [mortgage.case.read@1, mortgage.document.read@1]
-  knowledge: [mortgage-policy@approved-2026.09]
+  knowledge: [mortgage-policy@2026.09]
   runtime:   {max_turns: 6, deadline_s: 45}
 
 policy:
@@ -227,7 +227,7 @@ Every change, even one instruction sentence, produces a new digest and must re-p
 | Agent | A configured worker that runs bounded steps and requires Skills | AgentSpec, executed as AgentStepRequest (Chapter 3) | Application team | AgentRuntime |
 | Skill Pack | Compatible, co-released Skills plus shared policy and evaluations | SkillPackManifest (Chapter 9) | Pack owner | Registry and release (Chapter 27) |
 
-One deterministic operation with an effect is a tool; model judgment over several tools or sources, reused across agents, is a Skill; anything that owns a run, its acceptance, and its topology is an agent. Chapter 5's capability catalog is the discovery view across the tool and Skill registries; the registries stay separate because their contracts and enforcement points differ.
+One deterministic operation with an effect is a tool; model judgment over several tools or sources, reused across agents, is a Skill; anything that owns a run, its acceptance, and its topology is an agent. The capability catalog below is the discovery view across the tool and Skill registries; the registries stay separate because their contracts and enforcement points differ.
 
 ### Discovery is not permission
 
@@ -240,8 +240,7 @@ governed capability quietly becomes ungoverned.
 might satisfy a stated need, and it may legitimately return several. It answers
 *what exists*. Its candidates are input to resolution, not a menu for the
 model. When a model must choose among Skills, it sees only a shortlist that
-resolution has already made eligible (Chapter 5 § Capability and API catalog;
-AP-12 in Chapter 17).
+resolution has already made eligible (AP-12 in Chapter 17).
 
 **Resolution** is deterministic and restrictive. Given one requirement and the
 run's envelope, it filters by tenant, purpose, subject and actor grants, data
@@ -260,6 +259,12 @@ The asymmetry matters. Discovery may be fuzzy because nothing it returns is yet
 permitted. Resolution may not, because its output is what will actually run.
 A system that lets a model pick from discovery results has skipped the gate and
 is back to ungoverned capability with a registry in front of it.
+
+The catalog discovery searches says what the agent may do, with the consequences attached. A tool list says what exists; a capability catalog says whether an action mutates, what must be true first, who may invoke it, and whether a retry is safe.
+
+[[EXAMPLE:capability-catalog]]
+
+A capability the caller may not invoke should never appear, because a listed-but-forbidden tool is an invitation to try. The catalog does not own these entries; it indexes the Skill manifests of this chapter and the ToolManifests of Chapter 22 for discovery, and every invocation still resolves against those registries.
 
 The pinned release is compiled into the step. Its instructions enter the ContextManifest at trust tier 2 (Chapter 6 § The trust hierarchy of instructions); its `requires.tools` becomes the step's eligible tool versions and its `runtime` block the step's bounds in the AgentStepRequest (Chapter 3 § The request is bounded before the model sees it); its digest is recorded in the RunManifest (Chapter 4 § RunManifest).
 
@@ -385,7 +390,7 @@ A pack build produces a CompatibilityReport; any failed check blocks the pack fr
 | Tool schemas | Two Skills require incompatible versions of one tool |
 | Policy obligations | Skills declare conflicting data-class or region constraints |
 | Workflow contracts | A workflow template expects a Skill output the pack does not provide |
-| Knowledge versions | Skills pin different snapshots of the same source |
+| Knowledge versions | Skills require different releases of one knowledge stream, or ontology major versions that cannot coexist |
 | Runtime and model requirements | Skills need different adapter or model capabilities |
 | Deprecation windows | A pinned Skill's compatibility window ends before the pack's support window |
 

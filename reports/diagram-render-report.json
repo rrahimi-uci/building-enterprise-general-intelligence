@@ -1,6 +1,6 @@
 {
-  "diagrams": 42,
-  "with_vector": 42,
+  "diagrams": 44,
+  "with_vector": 44,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -18,33 +18,33 @@
       "source": "anti-approval-binding.gv",
       "pixels": [
         2392,
-        2083
+        2380
       ],
       "effective_dpi": 349,
       "vector": true,
-      "sha256": "e1c5b392d5d685077e6aba313e3d8875a518d3c8fd9c62b32f4b2be9c15df9bf"
+      "sha256": "c2a4f4889cd85f7feba4b7cd6f22cec922e3a5d8a03ffcac55a7b4ebf35d7d94"
     },
     {
       "id": "anti-before-after",
       "source": "anti-before-after.gv",
       "pixels": [
-        2343,
-        1729
+        2331,
+        1286
       ],
-      "effective_dpi": 342,
+      "effective_dpi": 340,
       "vector": true,
-      "sha256": "2a2d53351d1ed6a067d53086380c5543b98c24a08d51bfbbc6343edaba559a3f"
+      "sha256": "360fe352da7c84d9404c67dec0d62c3636e5e7bd621e9ab7821ed1a414ab37dd"
     },
     {
       "id": "anti-retry-storm",
       "source": "anti-retry-storm.gv",
       "pixels": [
         2374,
-        2186
+        2534
       ],
       "effective_dpi": 347,
       "vector": true,
-      "sha256": "fddd9b20d9c24cfc25d823e08c1405ab694b738287654441cb6e2e794a2a4740"
+      "sha256": "73eab0866632462f9312c4a6bfd1ca021b1d6a73758779b10178740dd92f138a"
     },
     {
       "id": "book-map",
@@ -72,12 +72,12 @@
       "id": "causal-trace",
       "source": "causal-trace.gv",
       "pixels": [
-        3287,
-        2369
+        2556,
+        2431
       ],
-      "effective_dpi": 480,
+      "effective_dpi": 373,
       "vector": true,
-      "sha256": "0b19c15851a2e8fe51c79413a5cd7fdbf0485937b4a230659b2c4f10ca49b76c"
+      "sha256": "65641d273c506c5bce28154a48ba46d6c8496c8be354cac080ee34dd60eda52a"
     },
     {
       "id": "context-pipeline",
@@ -105,12 +105,12 @@
       "id": "evaluation-gate",
       "source": "evaluation-gate.gv",
       "pixels": [
-        4014,
-        2099
+        2838,
+        2118
       ],
-      "effective_dpi": 586,
+      "effective_dpi": 414,
       "vector": true,
-      "sha256": "fa414e7cc7da8b066e4d54e773d3516d5c893d7c7c92359c074976184836cb50"
+      "sha256": "00f01d625c3abda6b501960f35de5395ba3f6cc9cbf89de9c5217b03b6402e1e"
     },
     {
       "id": "developer-platform",
@@ -138,45 +138,45 @@
       "id": "gateway-roles",
       "source": "gateway-roles.gv",
       "pixels": [
-        4578,
-        1428
+        2850,
+        1877
       ],
-      "effective_dpi": 668,
+      "effective_dpi": 416,
       "vector": true,
-      "sha256": "c4171d7e82e160267fc2123fc50b05d3adbe489d40dda9a26307ee727da4adfb"
+      "sha256": "7bb92651598b0bee720d97edd152f644257a4ad346a0ccb4aeb9b876abbf9f6d"
     },
     {
       "id": "governance-model",
       "source": "governance-model.gv",
       "pixels": [
         2287,
-        1532
+        1590
       ],
       "effective_dpi": 334,
       "vector": true,
-      "sha256": "f7770bb832a0847b46f9be3caf5b998cb0dc5d69dc176bc8e3e3e99a6486488f"
+      "sha256": "a04f069bff5fffe8a7e1fbdebce4ed97431e6d022dfdbbdc97d8461d9b55d345"
     },
     {
       "id": "guardrail-sequence",
       "source": "guardrail-sequence.mmd",
       "pixels": [
         2055,
-        1234
+        2312
       ],
       "effective_dpi": 300,
       "vector": true,
-      "sha256": "19213cd981b5270f406bf88d72f4ac3a0dda5c054f8639ce85037a5d18a13c85"
+      "sha256": "29cffc8c28f909d92d09f6ea26303a95c86d39314b9d91edbff2edd6be56c87a"
     },
     {
       "id": "knowledge-fabric",
       "source": "knowledge-fabric.gv",
       "pixels": [
-        2271,
-        1524
+        2458,
+        1461
       ],
-      "effective_dpi": 332,
+      "effective_dpi": 359,
       "vector": true,
-      "sha256": "e3594f380182974c59c2a947190a04cebe564d8fe244d6aa839d2b073818b976"
+      "sha256": "0440b63202672ff4059cfbca783f1f13022ef5122f69fe39077a727b566025df"
     },
     {
       "id": "learning-loop",
@@ -204,12 +204,12 @@
       "id": "pattern-decision-tree",
       "source": "pattern-decision-tree.gv",
       "pixels": [
-        2321,
-        4264
+        2296,
+        4032
       ],
-      "effective_dpi": 339,
+      "effective_dpi": 335,
       "vector": true,
-      "sha256": "05f976967bf14a61ca3f603675909106cfc5651a2cfb373aad99fba30495fc88"
+      "sha256": "201b87c652a18c54d12ca486bd8d1294ece711478b1b3a0c50bb2be79638a100"
     },
     {
       "id": "pattern-durable",
@@ -248,23 +248,23 @@
       "id": "pattern-react",
       "source": "pattern-react.gv",
       "pixels": [
-        2376,
-        2121
+        2262,
+        1232
       ],
-      "effective_dpi": 347,
+      "effective_dpi": 330,
       "vector": true,
-      "sha256": "1342c365b65b915b19203f0854b6f2b864f6faa30209b9d969f9c20ded30ddc4"
+      "sha256": "236f6fb1a1b07bad9472c228de5b11076fcace7144f3468689a8c6bcff7f0b12"
     },
     {
       "id": "pattern-reflection",
       "source": "pattern-reflection.gv",
       "pixels": [
-        2342,
-        1452
+        2363,
+        1471
       ],
-      "effective_dpi": 342,
+      "effective_dpi": 345,
       "vector": true,
-      "sha256": "b08a87fc121d694cb47afaf169231adefb44b9e291ed743440ce1aeac61e50cd"
+      "sha256": "5e245413dffc2166fc964e18d6dd2f50a8ac9606c8ca3d44633d22a3a4614685"
     },
     {
       "id": "pattern-routing",
@@ -281,45 +281,67 @@
       "id": "policy-to-guardrail",
       "source": "policy-to-guardrail.gv",
       "pixels": [
-        2322,
-        3195
+        2315,
+        3153
+      ],
+      "effective_dpi": 338,
+      "vector": true,
+      "sha256": "ac91b545ca98a1d14b783ed670bc0b2055edc81a30aeadd3c5f28339e0354ca8"
+    },
+    {
+      "id": "document-ingestion",
+      "source": "document-ingestion.gv",
+      "pixels": [
+        2319,
+        2324
       ],
       "effective_dpi": 339,
       "vector": true,
-      "sha256": "8ad5b9c498355dbe4478a06e38f1f584775f978706286dd479a37205a7a44eb2"
+      "sha256": "29f04fbe08ebafe6cccd549ea3efcd1a9297cfd610db6e1e400c7b69fdcb32b7"
+    },
+    {
+      "id": "knowledge-lifecycle",
+      "source": "knowledge-lifecycle.gv",
+      "pixels": [
+        2560,
+        3272
+      ],
+      "effective_dpi": 374,
+      "vector": true,
+      "sha256": "ebbb9b1321b4fa61c2b021f23b54f6306b066763df9b104eb6655f2f20c79cf8"
     },
     {
       "id": "portability",
       "source": "portability.gv",
       "pixels": [
-        2265,
-        964
+        2560,
+        1164
       ],
-      "effective_dpi": 331,
+      "effective_dpi": 374,
       "vector": true,
-      "sha256": "aada39c261eb9342fd986adee2556454c4680b0f3d7e397802a9a0c6a950a170"
+      "sha256": "4d432673ba0c599ad4914eecfca450ed27b4c26e1c4d7d72aeebe01091c4e6b7"
     },
     {
       "id": "reference-architecture",
       "source": "reference-architecture.gv",
       "pixels": [
-        4209,
-        2789
+        2822,
+        3080
       ],
-      "effective_dpi": 614,
+      "effective_dpi": 412,
       "vector": true,
-      "sha256": "95df05d1ce386fe3a7358366341274e307d10056d3af66529f7f5573bb558f94"
+      "sha256": "a0e92b2caa2f5fad2ae8c370192a9ab4c765835676cddf7fc1f71735ac7921f3"
     },
     {
       "id": "request-sequence",
       "source": "request-sequence.mmd",
       "pixels": [
         2055,
-        1210
+        1789
       ],
       "effective_dpi": 300,
       "vector": true,
-      "sha256": "9e8f2e8e8247be23bba33ce664f15a84a13e932ca5a80ba3b51858f584c3c03c"
+      "sha256": "9649bd9923dbd92ad629c5dff448a19842c1728beac980d777db22cb3bdaa803"
     },
     {
       "id": "release-recovery",
@@ -380,23 +402,23 @@
       "id": "security-boundaries",
       "source": "security-boundaries.gv",
       "pixels": [
-        2268,
-        1910
+        2262,
+        1987
       ],
-      "effective_dpi": 331,
+      "effective_dpi": 330,
       "vector": true,
-      "sha256": "037876894c555047b1c60db042b68fac30ae72e2c05a58a1c0a53834cdeca260"
+      "sha256": "901fe1fa4a9eea57eeb7f1cb5616b83233b4fe3de45fe7aa32604da9bc68d6cf"
     },
     {
       "id": "security-depth",
       "source": "security-depth.gv",
       "pixels": [
-        2266,
-        1928
+        2269,
+        1903
       ],
       "effective_dpi": 331,
       "vector": true,
-      "sha256": "f3fda106a8fd925e9fb86eec486ac75d980c465b24034285dd3cfc27524492fb"
+      "sha256": "dc012e368ae43f8388d35cdf859428518df24b8a6b3b936061653a5fe3674bc6"
     },
     {
       "id": "identity-delegation",
@@ -413,12 +435,12 @@
       "id": "effect-lifecycle",
       "source": "effect-lifecycle.gv",
       "pixels": [
-        3203,
-        3212
+        2285,
+        3257
       ],
-      "effective_dpi": 468,
+      "effective_dpi": 334,
       "vector": true,
-      "sha256": "fcd56b704b586f8bb2b8855c293b857914920a4f76e4bd6923e968d3efd72a8a"
+      "sha256": "154d7c41964ffc60b914b7c6d4154039bd2dd9c8946bc2f7941c4bce9ce92256"
     },
     {
       "id": "sandbox-egress",
@@ -435,34 +457,34 @@
       "id": "skill-resolution",
       "source": "skill-resolution.gv",
       "pixels": [
-        2636,
+        2717,
         1294
       ],
-      "effective_dpi": 385,
+      "effective_dpi": 397,
       "vector": true,
-      "sha256": "b8802f4053d496afacdb1e51c0a63aa8430f2154ab715cf6d613ec8eca1a7d2a"
+      "sha256": "f02a96e0447360a392689350d0044b3065d5efaaf024cf6d8f0a4e4c96450cf5"
     },
     {
       "id": "supervisor-worker",
       "source": "supervisor-worker.gv",
       "pixels": [
-        3224,
-        1442
+        2614,
+        1501
       ],
-      "effective_dpi": 471,
+      "effective_dpi": 382,
       "vector": true,
-      "sha256": "c0f2d101eb6e854fc45f81ec193ab8286313c9d05c582d1407c7ed95f6b06292"
+      "sha256": "a86ce75d92afc058c14c3390866fdcc911cbe301ae5d35e427ca0f5e87b582b1"
     },
     {
       "id": "system-overview",
       "source": "system-overview.gv",
       "pixels": [
-        3794,
-        1851
+        2890,
+        1979
       ],
-      "effective_dpi": 554,
+      "effective_dpi": 422,
       "vector": true,
-      "sha256": "c799b2abf25dd9371c324b2b7f91184ea89ea2403257f8cae071bdc27cbbe7e4"
+      "sha256": "90fa601d4b03dc91f3dcacde52be3d6da10bc23164dbe0d79965f89363f9e1d0"
     }
   ],
   "errors": [],

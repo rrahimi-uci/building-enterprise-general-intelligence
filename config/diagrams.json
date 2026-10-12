@@ -126,8 +126,8 @@
       "file": "assets/diagrams/knowledge-fabric.png",
       "source": "assets/diagrams/src/knowledge-fabric.gv",
       "vector": "assets/diagrams/knowledge-fabric.pdf",
-      "description": "Governance metadata over four knowledge representations (semantic index, ontology and graph, rules, catalogs), served through one knowledge resolution API that enforces permissions and feeds context, reasoning, constraints, and action to the agent runtime",
-      "sha256": "e3594f380182974c59c2a947190a04cebe564d8fe244d6aa839d2b073818b976"
+      "description": "Governance metadata over four knowledge representations (semantic index, ontology and graph, rules, catalogs), served through one knowledge resolution API that resolves against the run's pinned release, enforces permissions, and feeds context, reasoning, constraints, and action to the agent runtime",
+      "sha256": "0440b63202672ff4059cfbca783f1f13022ef5122f69fe39077a727b566025df"
     },
     {
       "id": "learning-loop",
@@ -208,6 +208,22 @@
       "vector": "assets/diagrams/policy-to-guardrail.pdf",
       "description": "A policy sentence is extracted into a typed rule with its citation, checked for grounding in the corpus (rejected if unsupported), approved by an eligible owner, projected into DMN, graph, or rule form with its version recorded, and enforced at the effect boundary",
       "sha256": "ac91b545ca98a1d14b783ed670bc0b2055edc81a30aeadd3c5f28339e0354ca8"
+    },
+    {
+      "id": "document-ingestion",
+      "file": "assets/diagrams/document-ingestion.png",
+      "source": "assets/diagrams/src/document-ingestion.gv",
+      "vector": "assets/diagrams/document-ingestion.pdf",
+      "description": "A pay statement's bytes and digest pass intake (scan, classify, ACL, label as data), then a language model proposes typed fields with regions, units, confidence, and extractor version; independent verification re-opens the pinned bytes and checks literal spans, internal consistency, and agreement with the case; supported records become a KnowledgeArtifact that feeds the Semantic view as labelled data and the enforced rule as facts, while contradicted or unverifiable fields are routed to human review, targeted repair of one field, or case management and are not served; an extractor or policy change produces a diff rather than an overwrite",
+      "sha256": "29f04fbe08ebafe6cccd549ea3efcd1a9297cfd610db6e1e400c7b69fdcb32b7"
+    },
+    {
+      "id": "knowledge-lifecycle",
+      "file": "assets/diagrams/knowledge-lifecycle.png",
+      "source": "assets/diagrams/src/knowledge-lifecycle.gv",
+      "vector": "assets/diagrams/knowledge-lifecycle.pdf",
+      "description": "Two planes separated by a labelled boundary. In the knowledge control plane (global control tier), authoritative sources (regulations, standards, contracts, internal policies) pass to extraction, where a model proposes claims with exact spans and nothing is dropped; claims form a versioned, typed, deduplicated, schema-checked compliance knowledge graph with a content digest; a candidate release passes quality gates (schema, independent grounding, consistency, regression), where a blocking finding goes to targeted repair of the failed element and re-enters the gate while held objects are carried; an independent SME approves the exact candidate digest or requests changes back to Draft; the knowledge registry holds the release manifest and a live pointer per environment and feeds a staleness check back to the gates. Releases cross down, evidence crosses up, and no writes cross up: activating the pointer and resolving at admission give the runtime plane (regional cell) one pinned release per run, which the control points (Context Service, plan compiler, policy decision point, Tool Gateway, acceptance engine) consult when an agent step proposes; the result is a governed action or a refusal when an obligation is unmet or unknown; decision records with the release digest and rule ids become observations that return to extraction as a proposed change, never a write",
+      "sha256": "ebbb9b1321b4fa61c2b021f23b54f6306b066763df9b104eb6655f2f20c79cf8"
     },
     {
       "id": "portability",

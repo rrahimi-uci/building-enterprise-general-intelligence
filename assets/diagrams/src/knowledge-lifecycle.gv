@@ -1,0 +1,100 @@
+// Figure 5-4 — Compliance knowledge has two planes.
+// Message: the control plane develops compliance knowledge through gates and an
+// independent approval into a release; the registry's live pointer is the only
+// way down; the runtime enforces one pinned release per run; and only evidence
+// crosses back up, as a proposed change. A blocking finding goes to targeted
+// repair and re-enters the gate; held objects continue to approval.
+// The control-plane order follows the reference implementation's pipeline
+// (source, extraction, typed graph, gates, repair loop); nothing in the figure
+// names it. Approval, registry, pointer and the runtime plane are the book's own.
+digraph knowledge_lifecycle {
+  rankdir = TB
+  graph [pad=0.12, ranksep=0.14, nodesep=0.30, forcelabels=true]
+  node [fontsize=12]
+  edge [fontsize=12]
+
+  subgraph cluster_control {
+    label="  Knowledge control plane · global control tier  "
+    labeljust="l"
+    fontsize=12
+    fontcolor="#4A6078"
+    color="#4A6078"
+    style="dashed,rounded"
+    margin=12
+
+    sources [label="Authoritative sources · regulations\nstandards · contracts · internal policies",
+             fillcolor="#EEF4FA", color="#4A6078", style=filled]
+    extract [label="Extraction · model proposes\nexact spans · nothing dropped",
+             fillcolor="#E7F5F3", color="#0D6E69"]
+    graph_ [label="Versioned compliance knowledge\ngraph · typed · deduplicated\nschema checked · content digest",
+            shape=cylinder, style=filled, fillcolor="#EDF3FC", color="#1450A3"]
+    repair [label="Targeted repair\nfailed element only\nre-enters the gate",
+            fillcolor="#FCECEC", color="#A62C2C"]
+    gates [label="Quality gates\nschema · grounding\n(independent)\nconsistency · regression",
+           shape=diamond, style=filled, fillcolor="#FFF4DF", color="#8A5600",
+           height=1.2, width=2.5, margin="0.02,0.02"]
+    approve [label="Independent SME\napproval · exact\ncandidate digest",
+             shape=diamond, style=filled, fillcolor="#FFF4DF", color="#8A5600",
+             height=0.95, width=2.5, margin="0.02,0.02"]
+    registry [label="Knowledge registry\nrelease manifest\nlive pointer per environment",
+              fillcolor="#EAF3FB", color="#1450A3", style=filled]
+
+    { rank=same; sources; extract }
+    { rank=same; repair; gates }
+    { rank=same; registry; approve }
+    sources -> extract [label="  bytes +\n  digests  "]
+    extract -> graph_ [label="  typed claims + provenance  "]
+    repair -> gates [style=invis]
+    sources -> repair [style=invis]
+    repair -> registry [style=invis]
+    graph_ -> gates [label="  candidate release  "]
+    gates -> approve [label="  complete gate record\n  (held objects carried)", color="#0D6E69", fontcolor="#0D6E69"]
+  }
+
+  boundary [shape=plaintext, style="", fontsize=12, fontcolor="#4A6078",
+            label="activate pointer · resolve at admission\nreleases cross down · evidence up · no writes up"]
+
+  subgraph cluster_runtime {
+    label="  Runtime plane · regional cell  "
+    labeljust="l"
+    labelloc="b"
+    fontsize=12
+    fontcolor="#4A6078"
+    color="#4A6078"
+    style="dashed,rounded"
+    margin=12
+
+    production [label="Production compliance knowledge\none pinned release per run (RunManifest)",
+                shape=note, style=filled, fillcolor="#E6F5F9", color="#0B6076"]
+    controls [label="Control points · Context Service\nplan compiler · policy decision point\nTool Gateway · acceptance engine",
+              fillcolor="#EAF3FB", color="#1450A3", style=filled]
+    agent [label="Agent step\nproposes", fillcolor="#E7F5F3", color="#0D6E69"]
+    effect [label="Governed action or refusal\nunmet or unknown = refuse",
+            fillcolor="#F7ECF8", color="#6A2E6E"]
+    observe [label="Observations\ndecision records · refusals\ncontradictions · SME feedback",
+             shape=cylinder, style=filled, fillcolor="#EDF3FC", color="#1450A3"]
+
+    { rank=same; controls; agent }
+    { rank=same; effect; observe }
+    controls -> agent [label="  authorized context\n  eligible tools  "]
+    agent -> controls [label="  proposal  "]
+    effect -> observe [label="  decision record\n  release digest · rule ids  ", style=dotted,
+                       color="#0B6076", fontcolor="#0B6076"]
+  }
+
+  gates -> repair [label="blocking\nfinding", color="#A62C2C", fontcolor="#A62C2C", constraint=false]
+  repair -> gates [label="repaired ·\nre-check", style=dashed, color="#A62C2C", fontcolor="#A62C2C", constraint=false]
+  approve -> graph_ [headlabel="request changes ·\nback to Draft", labeldistance=5.5, labelangle=-35, style=dashed,
+                      color="#8A5600", fontcolor="#8A5600", constraint=false]
+  approve -> registry [label="publish", color="#0D6E69", fontcolor="#0D6E69"]
+  registry -> gates [label="staleness:\ntarget live release", style=dashed,
+                     color="#4A6078", fontcolor="#4A6078", constraint=false]
+
+  registry -> boundary [arrowhead=none, penwidth=2.2]
+  boundary -> production [penwidth=2.2]
+
+  production -> controls [label="  pinned release (digest)  "]
+  controls -> effect [label="  permit or refuse  "]
+  observe -> extract [xlabel="  proposed change\n  (never a write)  ", style=dashed,
+                      color="#4A6078", fontcolor="#4A6078", constraint=false]
+}

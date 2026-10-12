@@ -40,11 +40,11 @@ Every additional agent introduces another scheduler, context boundary, identity,
 
 [[DIAGRAM:supervisor-worker|Figure 18-1 — Supervisor/worker: narrowed child grants, an explicit fan-in contract, and durable cancellation]]
 
-Harborlight’s supervisor owns the evidence-package outcome and creates durable child tasks for document extraction, income verification, property review, and policy explanation. Each child receives only the capability, evidence, budget, deadline, and cancellation scope it needs.
+Harborlight’s supervisor owns the evidence-package outcome and creates durable child tasks for document extraction, income verification, property review, and policy explanation. The extraction child runs Chapter 5's document ingestion as a capability and returns a KnowledgeArtifact, not free text. Each child receives only the capability, evidence, budget, deadline, and cancellation scope it needs.
 
 Each child's authority is a *capability envelope*: the maximum actions, resources, purposes, data classes, regions, risk, cost, delegation depth, and lifetime it may use. The Task Service derives it from the parent's envelope by intersection and refuses any child envelope that is not a provable subset. Chapter 21 defines the envelope and gives the subset proof.
 
-Fan-in is explicit: wait for all, quorum, first valid, or fallback. Artifact conflicts use deterministic precedence, source freshness, confidence thresholds, or human resolution. Free-form conversation may help agents explain results, but it cannot replace task status, ownership, artifact, or effect records.
+Fan-in is explicit: wait for all, quorum, first valid, or fallback. Artifact conflicts use deterministic precedence, source freshness, verification status (Chapter 5), confidence thresholds, or human resolution. Free-form conversation may help agents explain results, but it cannot replace task status, ownership, artifact, or effect records.
 
 Nested delegation multiplies cost and risk. The Task Service caps depth, children, concurrency, total turns, total tokens, external calls, and wall-clock time across the entire task tree (the AP-11 correction). Parent cancellation propagates as durable intent; a child with an executing mutation must reconcile before acknowledging final cancellation (Chapter 22 § A reliable protocol for changing the outside world).
 

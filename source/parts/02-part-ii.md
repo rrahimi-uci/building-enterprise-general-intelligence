@@ -36,7 +36,7 @@ The planes and layers are two views of the same system. Planes tell you who owns
 
 Read the figure downward: each band is one ownership plane and lists its main components, and the solid path traces one request from intent to committed effect, narrowing in authority at every step. *Security and governance* and *Evaluation and operations* are drawn as vertical spines rather than bands because neither sits between two planes — the policy decision point is consulted at admission, at run control, and again at the gateways, and the collector gathers from every plane. Dashed edges are control, dotted edges are evidence, and the bottom band sits outside the trust boundary: nothing there is assumed, and everything returned from it is revalidated.
 
-Figure 1-3 drew the same system as orientation bands. Figure 4-1 refines them into ownership planes:
+Chapter 1's Figure 1-3 drew the same system as orientation bands; Figure 4-1 refines them into ownership planes:
 
 | Figure 1-3 band | Chapter 4 plane |
 | --- | --- |
@@ -55,7 +55,7 @@ Figure 1-3 drew the same system as orientation bands. Figure 4-1 refines them in
 | Experience and channels | Intent, interaction, review, accessibility, recourse | Request and interaction record | UI state is not approval or workflow truth |
 | Agent applications | Domain instructions, topology, response assembly | AgentSpec, Skill manifest, application release | Cannot mint authority or directly commit protected effects |
 | Runtime and workflow | Run graph, deadlines, budgets, retries, cancellation, checkpoints, joins | RunManifest, run state, TaskEnvelope | Transcript is evidence, not execution state |
-| Knowledge, context, and memory | Governed knowledge, authorized evidence, provenance, snapshots, governed persistence | ContextManifest, MemoryRecord | Retrieved text remains untrusted data |
+| Knowledge, context, and memory | Governed knowledge, authorized evidence, provenance, snapshots, governed persistence | KnowledgeRelease, ContextManifest, MemoryRecord | Retrieved text remains untrusted data |
 | Gateways and integration | LLM routing, tool façades, effects, MCP/A2A, APIs, events | RoutingDecision, ToolManifest, EffectRecord, protocol envelope | Revalidate identity, policy, schema, and tenancy |
 | Security and governance | Identity, least privilege, RBAC/ABAC, guardrails, approval, DLP, audit | PolicyDecision, CapabilityEnvelope, ApprovalRequest/Decision | Protected actions fail closed; ambiguous effects become unknown |
 | Evaluation and operations | Tracing, evaluation, SLOs, incidents, release, capacity, learning | Trace graph, EvaluationResult, ChangeBundle, ReleaseManifest | Monitoring cannot self-promote behavior change |
@@ -75,7 +75,7 @@ The Runtime and workflow plane builds the AgentStepRequest; the Agent applicatio
 | Business truth | Domain system | Read an authorized projection | Replace truth with a summary |
 | Effects | Effect Service (Chapter 22) and downstream receipt | Propose arguments | Assert a mutation completed |
 | Approval | Approval Service (Chapter 14) | Generate rationale and preview | Reuse Boolean or stale conversational consent |
-| Knowledge | Governed source/snapshot catalog | Synthesize evidence | Treat similarity as truth or freshness |
+| Knowledge | Knowledge registry and Hub (Chapter 5) | Synthesize evidence | Treat similarity as truth or freshness, or resolve against an unreleased version |
 | Learning | Evaluation, dataset, release services | Recommend a candidate | Self-certify or self-deploy |
 
 ## The decisions that shape the system
@@ -122,7 +122,7 @@ to serve it.
 | Durable execution | Workflow engine, timers, signal handlers, checkpoint/event store | Crash recovery, pause/resume, retries, compensation, replay |
 | Model access | LLM Gateway, router, prompt assembler, structured-output validator | Provider abstraction, routing, caching, quotas, redaction |
 | Tool and protocol access | Tool Gateway, Effect Service, MCP Gateway, A2A Gateway, connectors | Discovery, authorization, invocation, effects, isolation, versioning |
-| Knowledge and context services | Context Service, Enterprise Knowledge Hub (Chapter 5), search/vector index, catalog/lineage, memory service | Authorized retrieval, provenance, ACLs, governed memory; shared stores: see § Where each kind of state belongs |
+| Knowledge and context services | Context Service, Enterprise Knowledge Hub and knowledge registry (Chapter 5), search/vector index, catalog/lineage, memory service | Authorized retrieval, provenance, ACLs, governed memory; shared stores: see § Where each kind of state belongs |
 | Sandboxed execution | Sandboxed workers, code/browser runners, egress proxy | Resource isolation and constrained side effects |
 | Trust and governance | IdP, STS, workload identity, PDP/PEP, Approval Service, secrets, audit/WORM | Least privilege, tenant isolation, policy, approval, evidence and retention |
 | Operations and improvement | OTel collector, trace store, metrics, eval service, incident tooling | Debug, replay, evaluate, optimize, alert, and promote |
@@ -152,7 +152,7 @@ It applies deterministic eligibility before any optimization; Chapter 28 treats 
 | **Boundary** | **Treat as untrusted** | **Mandatory controls** | **Developed in** |
 | --- | --- | --- | --- |
 | User/tenant → platform | Prompts, attachments, callback URLs | AuthN, tenant binding, malware/content scan, request schema, quotas | Chapter 21 |
-| Knowledge → model | Documents, email, web text, OCR, metadata | Provenance, ACL filters before retrieval, instruction/data labeling, DLP | Chapter 6 |
+| Knowledge → model | Documents, email, web text, OCR, metadata | Provenance, ACL filters before retrieval, instruction/data labeling, DLP | Chapters 5–6 |
 | Model → orchestrator | Plans, arguments, classifications, generated code | Strict schema, allowlists, invariant checks, confidence/risk routing | Chapter 2 |
 | Orchestrator → tool | Requested action and delegated context | PDP decision, downscoped token, idempotency, dry-run/approval, audit | Chapters 21–22 |
 | Agent → agent | Claims, artifacts, status, requested authority | Authenticated channel, signed task envelope, scope intersection, limits | Chapters 18–19 |
@@ -162,7 +162,7 @@ It applies deterministic eligibility before any optimization; Chapter 28 treats 
 
 ## Global control and regional cells
 
-The platform separates a global control tier from regional execution cells. The global tier publishes signed, immutable definitions—AgentSpecs, policy bundles, ReleaseManifests—and holds no run state. Each run has a home cell holding its run control, durable workflow, bounded agent workers (AgentRuntime and its adapters, Chapter 3), LLM Gateway, Tool Gateway, context services, effect ledger, artifact store, and regional telemetry and audit pipelines. Cells bound residency and blast radius: definitions fan out, while active tenant runs stay regional. A cell that cannot reach the global tier continues pinned in-flight work but fails closed on high-risk admission when it cannot verify freshness; Chapter 27 covers the operations.
+The platform separates a global control tier from regional execution cells. The global tier publishes signed, immutable definitions—AgentSpecs, policy bundles, ReleaseManifests, knowledge releases—and holds no run state. Each run has a home cell holding its run control, durable workflow, bounded agent workers (AgentRuntime and its adapters, Chapter 3), LLM Gateway, Tool Gateway, context services, effect ledger, artifact store, and regional telemetry and audit pipelines. Cells bound residency and blast radius: definitions fan out, while active tenant runs stay regional. A cell that cannot reach the global tier continues pinned in-flight work but fails closed on high-risk admission when it cannot verify freshness; Chapter 27 covers the operations.
 
 Scale stateless APIs horizontally, partition state by tenant and run, shard workflow history and trace indexes, and isolate workload classes through queues and concurrency pools.
 
@@ -194,6 +194,7 @@ A reference architecture becomes implementable when every arrow has an API or ev
 | TaskEnvelope | Runtime and workflow | Chapter 18 |
 | AgentStepRequest/AgentStepResult | Runtime and workflow → Agent applications | Chapter 3 |
 | ContextManifest, MemoryRecord | Knowledge, context, and memory | Chapter 6 |
+| KnowledgeRelease | Knowledge, context, and memory | Chapter 5 |
 | Skill manifest | Agent applications | Chapter 8 |
 | CapabilityEnvelope, CredentialLease | Security and governance | Chapter 21 |
 | PolicyDecision | Security and governance | Chapter 21 |
@@ -221,7 +222,7 @@ Chapter 15 adds the durable-execution operations (events:ingest, :pause, :resume
 
 ### RunManifest
 
-The RunManifest is written once, at admission (step 2). It references the promoted ReleaseManifest it was resolved from (Chapter 27), which already pins the agent build, prompt bundle, policy bundle, and tool contracts, and records only what is resolved for this run: the Skill and pack digests, the knowledge snapshots, the model route chosen within the release's eligible set, the runtime adapter, the capability envelope, the budget, and the use-case tier (Chapter 26). Every AgentStepRequest (Chapter 3) and every ContextManifest (Chapter 6) references it. It never changes; a run that needs different versions is a new run or an explicit migration (Chapter 15). Its model is in § A sensible place to start.
+The RunManifest is written once, at admission (step 2). It references the promoted ReleaseManifest it was resolved from (Chapter 27), which already pins the agent build, prompt bundle, policy bundle, and tool contracts, and records only what is resolved for this run: the Skill and pack digests, the knowledge snapshots (the release digests resolved from the knowledge streams the ReleaseManifest declares, Chapter 5), the model route chosen within the release's eligible set, the runtime adapter, the capability envelope, the budget, and the use-case tier (Chapter 26). Every AgentStepRequest (Chapter 3) and every ContextManifest (Chapter 6) references it. It never changes; a run that needs different versions is a new run or an explicit migration (Chapter 15). Its model is in § A sensible place to start.
 
 ### Artifact contract
 
@@ -245,6 +246,7 @@ Events record facts that already happened (`run.status.changed`); commands go th
 | Relational operational DB | Run projections, manifests, budgets, ownership, approvals, effect ledger, dedup keys | Strong transactions, optimistic versions, row-level security |
 | Object store | Prompts by digest, large tool outputs, artifacts, evidence bundles, replay fixtures | Immutable/versioned objects, hashes, retention lock, tenant keys |
 | Search/vector index | ACL-aware chunks and embeddings derived from source systems | Source revision/provenance, pre-retrieval authorization, rebuild/delete pipeline |
+| Knowledge registry | Ontology versions, knowledge objects, release manifests, live pointers per environment | Immutable releases by digest; audited pointer moves; retained while any RunManifest references them |
 | Conversation and memory stores | Conversation turns (append-only); approved cross-run MemoryRecords | Tenant+subject partitioning, write policy, TTL, deletion tombstones (Chapter 6) |
 | Event log/broker | CloudEvents, status changes, business triggers | At-least-once, partitions, schema registry, outbox/inbox, DLQ/quarantine |
 | Trace/metric store | OTel spans, metrics, logs with content references | Tiered retention, sampling, redaction, restricted content access |
@@ -309,21 +311,20 @@ The reference architecture names a knowledge, context, and memory plane but not 
 
 |  |
 | --- |
-| **WHERE THE MORTGAGE CASE STANDS** Harborlight's evidence agent can retrieve the underwriting policy and quote it accurately. It still recommends proceeding with an application whose property or income profile the policy excludes, because retrieving a sentence is not the same as being bound by it. The platform team stops adding documents to the index and starts treating policy as governed knowledge. |
+| **WHERE THE MORTGAGE CASE STANDS** Harborlight's evidence agent can retrieve the underwriting policy and quote it accurately. It still recommends proceeding with an application whose property or income profile the policy excludes, because retrieving a sentence is not the same as being bound by it. The platform team stops adding documents to the index and starts treating policy as governed knowledge. The second pay statement has arrived, and nothing yet tells a verified field from a model's reading of a PDF. |
 
 |  |
 | --- |
-| **THE DESIGN CHOICE** Treat institutional knowledge as governed artifacts with owners, versions, scope, and provenance — not as a corpus. Retrieval becomes one consumer of those artifacts rather than the knowledge itself. |
+| **THE DESIGN CHOICE** Treat institutional knowledge as governed artifacts with owners, scope, and provenance, released like software and pinned per run — not as a corpus. Retrieval, traversal, and enforcement consume a release, never "current". |
 
 ## Why retrieval alone is not a knowledge strategy
 
 Chapter 4 gave knowledge, context, and memory one plane; this chapter fills its
 knowledge half. Teams often say “put the knowledge in a vector store” when they
-really mean four different jobs: supply context, support reasoning, enforce
-constraints, and enable action. Those jobs have different owners and different
-failure modes. This chapter separates them and uses the Harborlight case to
-show why a single semantic index cannot be the evidence source, the inference
-model, the policy engine, and the tool catalog at once.
+mean four jobs: supply context, support reasoning, enforce constraints, and
+enable action. Those jobs have different owners and failure modes, and the
+Harborlight case shows why one semantic index cannot be the evidence source,
+the inference model, the policy engine, and the tool catalog at once.
 
 ## Why similarity cannot tell you what to trust
 
@@ -331,28 +332,44 @@ model, the policy engine, and the tool catalog at once.
 
 | State owner | Trust boundary | Scale unit | Failure containment | Core contracts |
 | --- | --- | --- | --- | --- |
-| Knowledge Hub and its registries | authored source to governed artifact | artifact · domain · tenant | one artifact version | KnowledgeArtifact · Rule · Capability · ResolutionQuery |
+| Knowledge registry and Hub | authored source to released knowledge | artifact · domain · tenant | one release | KnowledgeArtifact · KnowledgeRelease · Rule · ResolutionQuery |
 
 Retrieval-augmented generation answers one question well: *what text is relevant to this?* Enterprises then ask it three questions it was never designed for; Figure 5-1 shows all four behind one governed resolution surface.
 
 | Mode | The question | Representation | How it fails when wrong |
 | --- | --- | --- | --- |
 | Context | What is the situation? | Documents, embeddings, semantic search | Plausible grounding that is stale, superseded, or outside the reader's authority |
-| Reasoning | What should happen? | Ontology, knowledge graph, decision models | Correct facts, invalid inference |
+| Reasoning | What should happen? | Ontology, knowledge graph (traversal), decision models (evaluation) | Correct facts, invalid inference |
 | Constraints | What may I do? | Policies and permissions as enforceable rules | The agent explains the rule, then violates it |
 | Action | How do I do it? | Capability and API contracts | Right decision, wrong or unauthorized effect |
 
-The fourth column is the argument. Each mode fails differently, so each needs different evidence and different tests. A system that cannot say which mode failed cannot be debugged, and a similarity score is not evidence of authority, currency, or permission.
+The fourth column is the argument: each mode fails differently and needs its own evidence and tests, and a similarity score is not evidence of authority, currency, or permission.
 
-The clearest case is the one Harborlight hit. An underwriting policy excludes a property or income condition. Retrieval returns the policy, the model quotes it, and the agent proceeds anyway, because nothing in the pipeline was responsible for *enforcing* the exclusion. The document was context. Nobody made it a constraint.
+Harborlight hit the clearest case. Retrieval returns the policy that excludes a property or income condition, the model quotes it, and the agent proceeds anyway, because nothing was responsible for *enforcing* the exclusion. The document was context. Nobody made it a constraint.
+
+## Compliance knowledge is made of layers, and the layers are different kinds of thing
+
+Harborlight must enforce **compliance knowledge**, taken from regulations, standards, contracts, and internal policies. A **requirement** is a statement in an authoritative source that the organization must satisfy; an **obligation** is the duty derived from it, with subject, scope, modality, and effective period; a **control** discharges it (an enforced rule, check, approval, or review); a **constraint** is a control's true, false, or unknown reading at a control point; a **definition** is a term the others depend on. Chapters 13 and 21 bind obligations to one run or action.
+
+Each layer derives from the one above and is a different kind of thing:
+
+| Layer | Kind and identity | Checked by |
+| --- | --- | --- |
+| Authoritative sources | Artifact: bytes, by digest | Digest match |
+| Extracted requirements and definitions | Artifact: candidate claims with span and verdict | `grounding` |
+| Ontology | Model: kinds, relationships, properties, vocabulary; MAJOR.MINOR.PATCH | `knowledge-schema` |
+| Obligations, controls, definitions | Artifact: graph and rules in a release, by digest | Every gate and an approval |
+| Approval and activation | Decisions, bound to a candidate digest | `independent-approval`, `release-integrity` |
+
+The KnowledgeArtifact is the control-plane record; Chapter 6's KnowledgeObject is the Semantic view's projection of one inside a release. The reference implementation this chapter follows, the author's Policy Logic Forge repository [R48], carries a source reference and evidence span on each rule field.
 
 ## How enterprise knowledge becomes usable
 
-Each representation in the knowledge fabric is derived from—and traceable back to—the source above it. That lineage lets an engineer explain why a rule exists, detect when the source changed, and rebuild every derived artifact. A constraint that cannot point to the sentence or decision behind it is not an enforceable policy; it is an opinion encoded in software.
+Each representation below keeps its lineage to the layer above. A constraint that cannot point to the sentence or decision behind it is not an enforceable policy; it is an opinion encoded in software.
 
 ### Semantic knowledge
 
-Documents, policies, procedures, standards, and prior decisions, reached through embeddings and hybrid search. Chapter 6 owns how retrieved evidence enters a model call—authorization order, ranking, token allocation, and the ContextManifest. What belongs here is what makes retrieval *governed*: source authority, effective dates, jurisdiction, supersession, and the difference between text that appears in a document and text that is authoritative.
+Documents, policies, procedures, standards, and prior decisions, reached through embeddings and hybrid search. Chapter 6 owns how retrieved evidence enters a model call. What belongs here is what makes retrieval *governed*: source authority, effective dates, jurisdiction, supersession, and the difference between text that appears in a document and text that is authoritative.
 
 A retrieved passage should never reach a model without the metadata that decides whether it still applies.
 
@@ -364,7 +381,13 @@ Entities, relationships, dependencies, and the organization's own semantics. Tra
 
 Traversal must be bounded. An unbounded walk over an enterprise graph is a denial of service against your own agent, and a cycle makes it non-terminating.
 
-The honest caveat: ontologies are where enterprise knowledge programs go to die. The useful heuristic is to model only what an agent must traverse to make a decision it cannot make otherwise, and to let a modeling exercise justify itself one query at a time.
+The **ontology** is the schema the graph conforms to: entity kinds, allowed relationships, required properties with types and units, and the SBVR vocabulary naming them. A statement is a typed node or edge, a typed rule, or a decision-table row; the graph format is the platform's choice. Conformance checks report every violation and repair none; a conforming graph freezes into an instance identified by its content digest.
+
+[[EXAMPLE:knowledge-graph#shapes]]
+
+Types come from declarations, never from names alone, as in the reference implementation [R48]. Reasoning means bounded traversal and deterministic evaluation, never open-ended inference, so a decision stays reproducible.
+
+The honest caveat: ontologies are where enterprise knowledge programs go to die. Model only what an agent must traverse to decide, and let modeling justify itself one query at a time.
 
 ### Business rules as enforceable constraints
 
@@ -372,29 +395,21 @@ The core of the layer. A rule an agent reads is documentation; a rule the platfo
 
 [[EXAMPLE:policy-to-rule]]
 
-Scope is required, not optional. A rule whose applicability is implicit will be applied where it does not belong, which is the most common way a correctly extracted rule still produces a wrong decision. Identity by content rather than by assigned identifier is what lets two independent extractions of one sentence recognize each other later.
+Scope is required: a rule whose applicability is implicit will be applied where it does not belong. Identity by content lets two independent extractions of one sentence recognize each other.
 
 Enforcement then happens where intent becomes action:
 
-[[EXAMPLE:rule-as-guardrail]]
+[[EXAMPLE:enforced-rule]]
 
-Note the refusal on missing input. A rule check that reads *unknown* as *permitted* is not a control. Three-valued evaluation — true, false, unknown — is what stops an absent field from silently authorizing an effect.
+Note the refusal on missing input. A rule check that reads *unknown* as *permitted* is not a control; three-valued evaluation stops an absent field from silently authorizing an effect.
 
 ### Business data catalog
 
-Entities, fields, definitions, ownership, lineage, sensitivity, and access constraints, described so an agent can discover and query data safely. A column name is not a definition, and a schema without a sensitivity class cannot tell an agent which fields it must not put in a prompt—the class Chapter 6's context pipeline uses to redact before a prompt is built.
-
-### Capability and API catalog
-
-What the agent may do, with the consequences attached. A tool list says what exists; a capability catalog says whether an action mutates, what must be true first, who may invoke it, and whether a retry is safe.
-
-[[EXAMPLE:capability-catalog]]
-
-Filtering during discovery matters more than it looks. A capability the caller may not invoke should never appear (Chapter 8 § Discovery is not permission; AP-12), because a listed-but-forbidden tool is an invitation to try. The catalog does not own these entries; it indexes the Skill manifests of Chapter 8 and the ToolManifests of Chapter 22 for discovery, and every invocation still resolves against those registries.
+Entities, fields, definitions, ownership, lineage, sensitivity, and access constraints, described so an agent can discover and query data safely. A column name is not a definition, and a schema without a sensitivity class cannot tell an agent which fields it must not put in a prompt.
 
 ### Process and decision models
 
-Four OMG standards already describe what most enterprises are otherwise inventing badly. The question to ask of each is not whether it is rigorous but what an agent can do with it that it could not do with prose.
+Four OMG standards already describe what most enterprises otherwise invent badly. Ask of each what an agent can do with it that it could not do with prose.
 
 | Standard | Represents | What an agent does with it |
 | --- | --- | --- |
@@ -403,56 +418,61 @@ Four OMG standards already describe what most enterprises are otherwise inventin
 | CMMN [R46] | Case management, unordered work | Handles work with no fixed sequence without inventing one |
 | SBVR [R47] | Business vocabulary and rules | Resolves what a term means in this domain before acting on it |
 
-DMN earns its place fastest. A decision table with a declared hit policy is the one artifact that turns a class of judgment calls into a lookup, and a lookup can be tested. BPMN pays off where the sequence is genuinely fixed and the cost of skipping a step is high. CMMN and SBVR are narrower; adopt them when case work or vocabulary ambiguity is the actual problem, not because the set is incomplete without them.
+DMN earns its place fastest: a table whose hit policy is proved over finite inputs turns judgment calls into a testable lookup. BPMN pays off where a sequence is genuinely fixed; CMMN and SBVR where case work or vocabulary ambiguity is the problem. The reference implementation [R48] emits DMN and BPMN as fail-closed projections, BPMN only where the source states an order.
 
 ## Turn policy prose into logic the system can enforce
 
 Extraction is probabilistic. Verification must not be. The pipeline that works separates the two and refuses to let the first vouch for itself.
 
-Consider a policy sentence that says a pay statement is acceptable only within a particular age window. The source document is authoritative, but the runtime cannot safely enforce prose. The platform extracts a candidate rule with its exact source span, proves that the span says what the rule says, has an eligible owner approve the interpretation, compiles the approved rule, and records the version used for each case. Skip a link in that chain and the system may enforce a rule nobody can explain or prove is current.
+Consider a policy sentence that accepts a pay statement only within an age window. The runtime cannot safely enforce prose. The platform extracts a candidate rule with its exact source span, checks that the span says what the rule says, has an eligible owner approve the interpretation, compiles it, and records the version used for each case. Skip a link and the system may enforce a rule nobody can explain or prove is current.
 
 [[DIAGRAM:policy-to-guardrail|Figure 5-2 — Extract, prove, approve, and project: from policy text to an enforced constraint]]
 
 **Extract** is the part a language model does well: find the rules, type their conditions and outcomes, record where each came from.
 
-**Prove** is the part that decides whether to believe it. The critical move is that verification does not trust the citation a rule carries; it rebuilds the evidence from the raw corpus and compares.
+**Prove** is the part that decides whether to believe it. Verification does not trust the citation a rule carries; it re-opens the pinned source, admits the claim only if its quoted text is literally present in the cited span, and records the evidence sliced from those bytes. A literal span proves the quote is real, not that it supports the rule: the reference verifier [R48] lets a model judge support only over evidence resolved as literal corpus text, and the listing keeps that deterministic half.
 
 [[EXAMPLE:grounding-verifier]]
 
-A model that invents a rule will invent a plausible citation for it, so checking that a citation is well-formed proves nothing. Checking that the cited passage *says what the rule says* is a different operation, and it is the one that matters. In one run of the author's own compliance extraction pipeline built on this design, independent verification rejected 44% of the dependency and conflict claims that the pipeline's own deterministic guard had already accepted [R48]. That figure is author-reported: one measurement of one pipeline on one corpus, not a general rate. It is, however, the empirical case for making verification independent of extraction.
+A model that invents a rule will invent a plausible citation, so a well-formed citation proves nothing; what matters is whether the cited passage *says what the rule says*. In one run of the author's own compliance extraction pipeline built on this design, independent verification rejected 44% of the model-proposed dependency and conflict claims that a single structural screen had already accepted [R48]. That figure is author-reported, one measurement on one corpus, not a general rate.
 
-**Approve.** An eligible owner accepts the interpretation; the approval, the source digest, and the rule version are recorded together. Verification shows the rule matches the text; approval makes it the organization's rule.
+**Approve.** An eligible owner accepts the interpretation; the approval, the source digest, and the rule version are recorded together. Verification shows the rule matches the text; approval makes it the organization's rule, bound to the candidate digest of the whole change (§ Change compliance knowledge the way you change software).
 
 **Project** turns what survived into the standards-compliant models above, and into the constraints the runtime enforces at the effect boundary.
+
+The age-window rule now needs a fact, the statement's age, and that fact comes from a document too.
 
 |  |
 | --- |
 | **COMMON PITFALL**  Treating extraction confidence as grounding. A high-confidence rule with a fabricated citation is more dangerous than a low-confidence one, because it will pass review. Verify against the corpus, not against the model's own certainty. |
 
-## Combine knowledge without flattening its differences
+## Ingest documents the way you extract rules
 
-An enterprise never has one knowledge base. It has a regulator's and its own, last quarter's and this quarter's, one business unit's and another's. Agents must operate across them, and that requires defined operations rather than a merge.
+An applicant's pay statement arrives through a channel the platform does not trust. Until it is verified it is not evidence; it is bytes.
 
-[[EXAMPLE:set-operations]]
+**Intake.** Intake computes the digest, inspects the content, classifies the kind, records origin, tenant, case, ACL pointer, and retention class, and labels the artifact as data before any model sees it (Chapter 20's ingest row). The digest is authoritative; the text, like every index entry, is a projection carrying its source revision, ACL pointer, and deletion state. A statement resubmitted under a new name has the first one's digest, so it is not a second statement.
 
-| Operation | Meaning | What an agent may do with the result |
-| --- | --- | --- |
-| Intersection | Asserted by both sources | Corroborated, not verified; the scope, freshness, and permission checks below still apply before action |
-| Difference | Asserted by one source only | Scope-dependent; requires a jurisdiction check first |
-| Union | Every distinct rule, with per-source attribution | Complete coverage; conflicts still possible |
-| Contradiction | Rules that cannot both be satisfied | Stop, escalate, and never resolve automatically |
+**Extract and normalize.** A model proposes typed fields, each with its region, a confidence, and the extractor version: model route and prompt digest. Normalization puts the unit on the field, parses dates and money, and marks each value *extracted* (the document states it) or *derived* (the platform computed it, such as the statement's age in days). The document kind's schema, not the model, declares which fields are decision-material, and a field the schema does not declare is held, never guessed into place.
 
-Three properties are worth stating as rules of the architecture.
+[[EXAMPLE:document-ingestion#record]]
 
-**Union is not merge.** Combining two knowledge bases must preserve which source asserted each rule and what its original identifier was. A union that flattens attribution destroys the only information that can later resolve a conflict.
+The gate in Figure 5-3 is Figure 5-2's: verification reads the bytes, not the extraction.
 
-**A contradiction is a result, not an error.** Two authoritative sources that disagree is a finding about the organization, frequently a valuable one. The platform's job is to surface it with structured evidence — the shared subject, each side's requirement, and why they cannot both hold — not to pick a winner quietly.
+[[DIAGRAM:document-ingestion|Figure 5-3 — Document ingestion: intake, extract, verify against the bytes, route, record, serve]]
 
-**Semantic equivalence never overrides deterministic alignment.** Where rules align by identifier or citation, that alignment stands. Model-judged equivalence is advisory, marked for review, and never allowed to change a deterministic match.
+**Verify.** Verification re-opens the pinned bytes and checks, in order: the digest matches; each extracted field's quoted text is literally in its region, through the rule lane's verifier; the value parsed from those bytes equals the record's; the record is internally consistent (net equals gross minus deductions); and it agrees with the case, such as the employer on the application. Derived fields are checked against their verified inputs, never against text; no statement prints its own age. Each field receives exactly one verdict (supported, contradicted, or insufficient evidence); a verifier that skips one fails closed. Admission then follows the grounding gate (§ Change compliance knowledge the way you change software): no facts until every decision-material field is supported. Confidence plays no part.
+
+[[EXAMPLE:document-ingestion#verify]]
 
 |  |
 | --- |
-| **ARCHITECTURE GUIDANCE**  Define these operations over typed rules with declared scope, not over documents. Two documents cannot be intersected; two rule sets can. If your knowledge base cannot support the algebra, it is a corpus with a search box. |
+| **SECURITY AND GOVERNANCE**  Verification proves the document says it, not that it is true. An internally consistent forgery passes this gate; only an independent source, such as the payroll provider of Chapter 17 or a human reviewer, catches it. Record corroboration separately, and never let a decision that needs the truth rest on verification alone. |
+
+**Route and record.** Findings route by kind: a contradiction to human review (an InterventionTask, Chapter 14), an unlocated field to targeted repair of that field alone through the same gate, a missing input or unhandled kind to case management. A reviewer's correction is a new version, and the model's value stays in history; a job that extracted nothing reports a finding, never success. Everything lands in one record, the **KnowledgeArtifact** named in the chapter's first table: kind (document, chunk, field, rule), source digest and region, extractor and verifier versions, per-field verdicts, corroboration, status and route, owner, version and supersedes, effective range, scope, ACL, and data class. Status follows the knowledge lifecycle defined below, Draft through Revoked; *retired* is not a status but the retention event that follows deprecation or revocation. Deleting the source deletes the record, its history, and its derived facts through the lineage events Chapter 6 lists.
+
+**Version and re-process.** When the bytes, the extractor (Chapter 1's Friday), or the consuming policy changes, re-processing is a diff, not an overwrite: every field is changed, unchanged, review-held, or refused, nothing is dropped, only changed facts trigger re-evaluation, and a field under review never resolves itself. A run pins the knowledge release it read, whose manifest lists every policy record's digest, and its ContextManifests name the case documents' record versions, so a six-month-old decision can be reproduced with its evidence.
+
+At the effect boundary the age-window rule reads `pay_statement_age_days` only from a servable record; otherwise its missing-input refusal fires. A forged net goes to review, so the rule still sees *unknown*; altered bytes fail the digest check; and the Tuesday instruction in an upload is labelled text, not a declared field, so it directs neither rule nor model.
 
 ## Why provenance determines what you can trust
 
@@ -465,17 +485,88 @@ Every representation above is only as good as the metadata that says whether to 
 | Effective from / until | Whether it applied on the date in question |
 | Jurisdiction and scope | Whether it applies to this subject at all |
 | Provenance | The passage, offsets, and document digest it derives from: content provenance, distinct from the build provenance of released artifacts in Chapter 27 |
-| Confidence and status | Authoritative, inferred, or draft |
+| Confidence | Authoritative or inferred |
+| Verification and corroboration | Whether the source says it, and whether an independent source agrees |
 | Permissions and data class | Who may see it, and whether it may enter a prompt |
+| Release and status | Which release carries this version, in which lifecycle state: what a run pins |
 | Lifecycle | Review cadence and expiry |
 
-The document digest deserves emphasis. Without it, a rule extracted from last year's policy still verifies against this year's text, and nothing in the system notices that the ground moved.
-
-Freshness follows from the same rule: the source revision is authoritative, and every index entry is a disposable projection that carries its source revision, ACL pointer, ingestion time, and deletion state. Ingestion runs as separate extract, classify, ACL, chunk, embed, and index stages with independent cursors, so a failed embedding never blocks an ACL deletion.
+Without the document digest, a rule extracted from last year's policy still verifies against this year's text, and nothing notices that the ground moved.
 
 |  |
 | --- |
 | **SECURITY AND GOVERNANCE**  Permissions belong to the knowledge artifact, enforced at the resolution boundary. Filtering retrieved passages after the model has seen them is not access control; it is redaction after disclosure. |
+
+## Two planes: develop compliance knowledge, consume releases
+
+Compliance knowledge is developed in one plane and used in another (Figure 5-4). The **control plane**, in Chapter 4's global control tier, extracts, validates, versions, approves, publishes, and deprecates; owners and SMEs write to it, an assistant only proposes, and one service identity, the **registry publisher**, releases and activates. The reference implementation [R48] is a control plane with no runtime consumer.
+
+What the platform adds beyond it starts at the interface. The **knowledge registry** holds ontology versions, objects, release manifests, and a live pointer per stream, tenant, environment, and region. A **knowledge release** is the immutable, content-addressed set of objects, ontology version, and source revisions the publisher activated. At admission each stream the ReleaseManifest declares resolves to a release digest in the RunManifest's `knowledge_snapshots` (Chapter 4). The **runtime plane** then reads only that pin, through the Hub's resolve (admission only), search, bounded query, and three-valued evaluate operations, none of which accepts "current".
+
+[[DIAGRAM:knowledge-lifecycle|Figure 5-4 — Compliance knowledge has two planes: the control plane develops and releases it, the runtime plane enforces one pinned release per run, and only evidence crosses back up]]
+
+Releases cross down; evidence crosses up as decision records, refusals, contradictions, SME corrections, and Chapter 25's ChangeBundle drafts, never as a write. No control point re-resolves a stream mid-run; stale knowledge needs a new run or a migration (Chapter 15).
+
+## Change compliance knowledge the way you change software
+
+A **knowledge change** is the reviewable unit. It names its objects by stable id, its rationale and source digests, and its version bump, and resolves into one candidate whose **candidate digest** covers the content, the pinned upstream base, the live release it replaces, and the resolver version. A change deprecates, never deletes; removing or renaming an ontology kind is a MAJOR version with a migration. Chapter 27 § Knowledge releases covers the CI/CD stages, tenant extensions, promotion, and rollback.
+
+Gates run on the resolved candidate, not the textual diff. A model may locate evidence or propose a merge, a verdict, or a change; only a deterministic check turns it into a gate result. The reference implementation [R48] runs structural invariants, then targeted repair of only the failed fields, then independent grounding rebuilt from the corpus. The gates keep that order and add what a release needs that a build does not.
+
+| Gate | Checks | Fails closed on |
+| --- | --- | --- |
+| `knowledge-schema` | Kinds, relationships, properties, units; the rule contract | A blocking violation |
+| `change-contract` | Touched equals declared; rationale, sources, version | A mismatch |
+| `duplicate-overlap` | Identical objects merge, keeping all provenance | Lost provenance |
+| `grounding` | A literal span in the pinned bytes; one verdict per claim | An unsupported decision-material claim; incomplete output |
+| `consistency` | Same subject and scope, incompatible outcomes; finite domains enumerated; undefined terms held | An unresolved candidate; an unproved table |
+| `regression` | Golden and boundary cases; every object changed, unchanged, review-held, or refused | A regressed case; an object without status |
+| `staleness` | Revisions, base, digests, and input fingerprints still match | Any mismatch: Stale |
+| `independent-approval` | An eligible SME, not the author, approved this digest | Self-approval; another digest |
+| `release-integrity` | Bundle verified; version once; pointer compare-and-swap; every object accounted for | Any failure: the old release stays live |
+
+Gates prove form, provenance, and bounded properties; consistency is a filter for the SME, not a proof, and only the approver judges meaning. A finding holds an object as `review-held`, excluded from evaluation but visible in the release, and routes it by kind: a contradiction or judgment call to human review, a structure defect to targeted repair that re-enters the gate, an evidence gap to case management, as for documents. Every gate reports objects examined over objects in the release; an empty suite reports zero, not a pass.
+
+[[EXAMPLE:gate-record#routes]]
+
+Consistency rests on operations over typed rule sets. A union keeps each rule's sources and identifiers; a contradiction is surfaced with its evidence and never settled by picking a winner; model-judged equivalence never overrides an alignment by identifier or citation. The reference implementation [R48] adds finite-domain proofs this listing omits.
+
+[[EXAMPLE:set-operations]]
+
+### What the platform adds beyond the reference implementation
+
+The reference implementation stops at a certified build. Release states reuse Chapter 8's names, add Approved because meaning has no automated oracle, and drop Staged because a release is Active per environment:
+
+| State | Means |
+| --- | --- |
+| Draft | Not resolvable; flagged Stale if its target moved |
+| Certified | Complete gate record; held objects excluded from evaluation |
+| Approved | Independently approved on this digest; any edit returns it to Draft |
+| Active | Named by a live pointer; new runs resolve it |
+| Deprecated | Kept for runs that pinned it, through the compatibility window |
+| Revoked | Not resolvable; in-flight runs pause or migrate by risk class |
+
+Retirement follows as a retention event; a release is kept while any retained RunManifest references it. **Activation is the publication boundary**: the publisher rechecks, stores and verifies the bundle, then moves the pointer. Until then the runtime cannot see the candidate, and a failed publish leaves the old release live. Activation changes behavior without an agent release, so it is a Chapter 26 change class with independent approval as the floor.
+
+The analogy breaks where meaning matters: a clean merge is not valid knowledge, sources change upstream on their own schedule, and two jurisdictions may legitimately disagree.
+
+## Obligations enforced at every control point
+
+Chapter 1's control points, the plan compiler, and the acceptance engine read the same pinned release; the latter two remain lifecycle controls, not control points. Knowledge is **approved** for a run when the publisher activated it after a complete gate record and an independent approval, the RunManifest pinned it, and it is not Revoked. Every decision records the release digest.
+
+| Consumer | Reads | Missing, ambiguous, or revoked | Contradicted |
+| --- | --- | --- | --- |
+| Context Service (Chapter 6) | Semantic view | Omit; held text is never a fact | Serve both, attributed |
+| Plan compiler (Chapter 12) | Bound rules and tables | Refuse the node | Refuse and escalate |
+| Policy decision point (Chapter 21) | Catalog definitions | Deny protected actions | Deny |
+| Tool Gateway (Chapter 22) | Enforced rules, verified facts | Refuse; missing input is `UnknownUnderPolicy` | Refuse |
+| Acceptance engine (Chapter 13) | Domain rules, criteria | Reject: evidence missing | Escalate |
+
+Three consultation rules come straight from the reference evaluator [R48]: only a completely lowered rule is evaluable, and an unproved table is refused before evaluation; unknown refuses, never defaults; incompatible assignments to one subject are refused, never adjudicated. The fourth is the platform's: that evaluator returns unknown for any rule scoped by jurisdiction or date, having no runtime context, and the control point supplies it.
+
+[[EXAMPLE:enforced-rule#pinned]]
+
+When Harborlight's upstream requirement on current income evidence shortens the age window, consistency reads the two thresholds as declared supersession, and an income rule whose term "qualifying income" is undefined is held. The rest is the platform's: the underwriting policy owner, not the author, approves; `mortgage-policy@2026.10` activates in staging and is promoted by digest; `RUN-98217` keeps `2026.09`; a plan node needing the held rule is refused at compile time. When a wrong value is found, production rolls back by pointer and runs on `2026.10` are listed for re-evaluation.
 
 ## Reference architecture: the Enterprise Knowledge Hub
 
@@ -483,33 +574,29 @@ Agents must not hold connection strings to six stores. They ask one service, whi
 
 | Hub view | Holds | Answers | Serves mode / built from |
 | --- | --- | --- | --- |
-| Governance | Ownership, versions, effective dates, permissions, lifecycle | May this agent see this, and is it current? | All modes / § Why provenance determines what you can trust |
+| Governance (registry) | Ownership, versions, releases, effective dates, permissions | May this run see this, and which release is it in? | All modes / § Two planes: develop compliance knowledge, consume releases |
 | Semantic | Documents and embeddings | What text is relevant? | Context / § Semantic knowledge |
 | Structural | Ontology, graph, data catalog | What is related to what, and what does this field mean? | Reasoning / § Ontology and knowledge graph, § Business data catalog |
 | Normative | Rules, decision tables, vocabulary | What is required, permitted, or forbidden? | Constraints / § Business rules as enforceable constraints, DMN, SBVR |
 | Procedural | Process and case models | In what order, and what may not be skipped? | Reasoning / BPMN, CMMN |
-| Capability | Tools, APIs, effects, prerequisites | What can be done, and at what cost? | Action / § Capability and API catalog |
+| Capability | Tools, APIs, effects, prerequisites | What can be done, and at what cost? | Action / the capability catalog, Chapter 8 |
 
-One query surface sits above all six. Permissions are enforced there, attribution is attached there, and an agent that asks for knowledge it may not have receives a refusal rather than a filtered answer.
-
-The Hub is the knowledge half of the knowledge, context, and memory plane (Chapter 4). It has two kinds of caller: the Context Service, which resolves pre-step context (Chapter 6), and read-only tools invoked through the Tool Gateway during a step (Chapter 3). Both reach the same permissions and attribution; neither holds store connections.
-
-|  |
-| --- |
-| **PRODUCTION CONSIDERATION**  Version the knowledge layer alongside the agent. An agent release pinned to a policy version (the RunManifest's `knowledge_snapshots`, Chapter 4) is reproducible; one that resolves against "current" changes behavior when a document changes, with no deployment and no trace. |
+Ingestion fills the Semantic view with labelled text and the Normative view's rules with supported facts. The Hub is the knowledge half of Chapter 4's knowledge, context, and memory plane, with two callers: the Context Service before a step (Chapter 6) and read-only tools through the Tool Gateway during one (Chapter 3). Both resolve against the run's pinned release with the same permissions and attribution; neither holds store connections.
 
 ## What the evidence lets us conclude
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | Standards scope | BPMN, DMN, CMMN, and SBVR are OMG specifications; each citation supports the existence and semantics of its own standard and nothing about its suitability for agentic systems. That assessment is book-authored. | R44; R45; R46; R47 |
-| Verification measurement | The 44% rejection figure is one run of one compliance pipeline on one corpus, reported in the book author's own implementation repository. It is evidence that independent verification finds real errors, not a general error rate for extraction. | R48 |
+| Verification measurement | On one documented run of the author's own pipeline, independent re-verification against the corpus rejected 44% of model-proposed dependency and conflict claims that a single structural screen had accepted. Evidence that structure checks are not grounding; not an error rate for extraction, rules, or documents. | R48 |
+| Reference implementation | At the pinned commit the author's repository has the build-time mechanisms this chapter points at; it has no release, approval, pointer, or runtime, and shows nothing about other systems. | R48 |
+| Knowledge lifecycle (book-authored recommendation) | The object model, graph presentation, planes, gates, states, and everything from approval onward are the book's own. | — |
 
 The discussion above draws on R44; R45; R46; R47; R48. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
-The examples above are the reference implementation, and each is executed in continuous integration. Composed, they show the shape of the Hub: a rule extracted with provenance, verified against its corpus, placed in a graph, reconciled against a second source, and finally enforced at the effect boundary.
+The examples above are the reference implementation, and each is executed in continuous integration. Composed, they show the Hub's shape: a rule extracted with provenance, verified, placed in a conforming graph, reconciled against a second source, released through gates and an independent approval, and enforced from a run's pin over verified document facts.
 
 ## If this fails in production
 
@@ -517,10 +604,11 @@ The examples above are the reference implementation, and each is executed in con
 | --- | --- | --- |
 | Agent quotes the right policy and violates it | The rule is context, never a constraint | Is any rule evaluated at the effect boundary? |
 | Correct answer in staging, wrong in production | Scope or effective date not enforced | Does the rule declare jurisdiction and effective_from, and are they checked? |
-| Two runs disagree on identical input | Resolution against "current" rather than a pinned version | Is the knowledge version recorded in the RunManifest (Chapter 4)? |
-| A conflict surfaces only after an incident | Contradictions resolved silently at merge | Does the union preserve per-source attribution? |
-| An agent selects a mutating tool for a read | Capability discovery filters on names, not effects | Does the catalog carry each capability's effect semantics and risk class (Chapter 22), and is discovery filtered on them? |
+| Two runs disagree on identical input | Resolution against "current" rather than a pinned release | Does each RunManifest name a release digest, and did the two runs pin different releases? |
+| A rule changed in production and nobody can say who approved it | A change merged without a candidate digest and an independent approval | Does the release manifest record the author and a different approving human? |
 | Provenance points at text that does not support the rule | Citation trusted rather than verified | Is verification rebuilding evidence from the corpus? |
+| A model's reading of a pay statement reaches a rule as a fact | Extraction served without verification | Does the effect boundary receive only supported fields? |
+| Extraction quality drops after a model change, unnoticed | Extractor version not recorded; no re-processing diff | Does each record carry its extractor version, and does a change produce a diff? |
 
 If the vector index is being treated as the source of truth, the repair is structural; see AP-09 in Chapter 17.
 
@@ -534,11 +622,13 @@ If the vector index is being treated as the source of truth, the repair is struc
 
 **✓** Missing inputs refuse rather than default to permitted.
 
+**✓** Every extracted field resolves to a region in a digest-pinned document and carries a verdict; every check has a consumer that can refuse.
+
 **✓** Union preserves per-source attribution; contradictions are escalated, never auto-resolved.
 
-**✓** Capability discovery filters on granted actions, prerequisites, and data class before returning results.
+**✓** Every RunManifest names the knowledge release digests it resolved; no control point reads "current".
 
-**✓** The knowledge version used by a run is recorded in its RunManifest (Chapter 4).
+**✓** No knowledge change reaches a live pointer without a complete gate record and an independent approval of its candidate digest; rollback rewrites nothing.
 
 **✓** Permissions are enforced at the resolution boundary, not after the model has seen the passage.
 
@@ -548,6 +638,7 @@ If the vector index is being treated as the source of truth, the repair is struc
 2. Find a question your retrieval system answers plausibly and wrongly. Identify which of the four consumption modes it actually needed.
 3. Compute the intersection of two overlapping policy sets in your domain. Inspect the differences before the union.
 4. Take a rule your agents are expected to follow and make it refuse an effect in a test.
+5. List the decision-material fields of one document your agents read, and write the consistency checks that would catch a forged one.
 
 ## Questions to bring to design review
 
@@ -558,7 +649,8 @@ If the vector index is being treated as the source of truth, the repair is struc
 | What happens when two authoritative sources disagree? | Contradiction is a first-class result |
 | Where is a policy enforced, as opposed to described? | Constraints exist outside the prompt |
 | What does the system do when a required input is missing? | Unknown is not silently treated as permitted |
-| Can you reproduce a decision made six months ago? | Knowledge is versioned and pinned per run |
+| How does a value from a document become a fact a rule may evaluate? | Through a verifier that re-opens the bytes, and a record that says so |
+| Can you reproduce a decision made six months ago? | The RunManifest names a release digest that still resolves, and its manifest names the approver |
 
 ## Where this leads next
 
@@ -598,7 +690,7 @@ These sources often appear together in a prompt, which makes it tempting to stor
 | --- | --- | --- | --- |
 | Workflow state | Current node, variables, child tasks, budgets, approvals | Durable run history (Chapter 15); context reads the RunStateProjection | Strong transition rules; versioned; queryable; replay-safe |
 | Conversation | Recent messages, channel state, current clarification | Conversation service / document DB | Append-only turns; compact with source links; not authoritative business state |
-| Enterprise knowledge | Policies, contracts, code, tickets, records, catalogs | Source systems + governed search/vector/graph indexes, through the Hub (Chapter 5) | Source remains authoritative; ACL filter before retrieval; freshness and lineage |
+| Enterprise knowledge | Policies, contracts, code, tickets, records, catalogs | Source systems + governed search/vector/graph indexes, through the Hub (Chapter 5) | Source remains authoritative; resolved against the release the run pinned; ACL filter before retrieval; freshness and lineage |
 | Working memory | Scratch notes, candidate plan, intermediate hypotheses | Run-scoped state or object artifacts | TTL; no automatic cross-run reuse; label confidence and provenance |
 | Long-term memory | Approved preferences, reusable facts, learned procedures | Governed memory service / relational + search index | Explicit write policy, consent, provenance, TTL, ACL, correction/deletion |
 
@@ -620,7 +712,7 @@ enterprise knowledge, and memory—and each passes every stage.
 | 2 · Candidate sources | Choose candidate sources, including memory, which passes its own policy gate | Searching corpora the purpose does not justify |
 | 3 · Authorize | Filter by tenant, subject, and resource ACL | The classic RAG leak: retrieving what the caller may not read |
 | 4 · Fetch pinned versions | Read immutable snapshots named in the RunManifest (Chapter 4) | A run that cannot be replayed because sources moved |
-| 5 · Classify and sanitize | Label each segment's kind and trust tier (see the hierarchy below), strip active content | Instructions embedded in retrieved documents |
+| 5 · Classify and sanitize | Label each segment's kind and trust tier (see the hierarchy below), re-check the data label assigned at ingestion (Chapter 5), strip active content | Instructions embedded in retrieved documents |
 | 6 · Deduplicate | Collapse near-identical chunks | One loud document crowding out the rest of the evidence |
 | 7 · Rank | Order by relevance, freshness, source authority and effective dates (Chapter 5) | Similarity alone deciding what the model believes |
 | 8 · Allocate tokens | Allocate tokens within per-section caps fixed before retrieval | Silent truncation dropping the constraint that mattered |
@@ -712,7 +804,7 @@ Working memory is run-scoped; long-term memory carries the obligations above.
 
 ### Who should own each decision
 
-The Conversation Service owns turns; the Workflow Projection Service owns canonical run state; the Context Service's assembler creates an ephemeral model-input projection; its Retrieval Broker, the client of the Chapter 5 Hub, queries governed knowledge; the Memory Service owns approved cross-run memory; the Provenance Service tracks lineage; and the Compaction Service produces source-linked summaries. No component can silently promote a conversation statement into workflow truth or long-term memory.
+The Conversation Service owns turns; the Workflow Projection Service owns canonical run state; the Context Service's assembler creates an ephemeral model-input projection; its Retrieval Broker, the client of the Chapter 5 Hub, queries governed knowledge, including the records Chapter 5's document ingestion produces; the Memory Service owns approved cross-run memory; the Provenance Service tracks lineage; and the Compaction Service produces source-linked summaries. No component can silently promote a conversation statement into workflow truth or long-term memory.
 
 ### The contracts between components
 
@@ -721,7 +813,7 @@ The Conversation Service owns turns; the Workflow Projection Service owns canoni
 | POST /v1/context:assemble | Build a token-bounded context from pinned instructions, run state, conversation, knowledge, and memory under a policy and data budget |
 | GET /v1/runs/{run\_id} (Chapters 4 and 15) | The canonical state projection and state\_version that context reads; never the transcript |
 | POST /v1/conversations/{id}/turns | Append an immutable user/agent/tool turn with provenance, classification, and client idempotency key |
-| POST /v1/knowledge:search | The Hub's query surface (Chapter 5): hybrid search with subject+actor context, source allowlist, freshness, filters, top-k, and required citations |
+| POST /v1/knowledge:search | The Hub's query surface (Chapter 5): hybrid search within the run's pinned release, with subject+actor context, source allowlist, freshness, filters, top-k, and required citations; resolve, query, and evaluate are in Chapter 5 |
 | POST /v1/memories | Propose/write a governed memory with scope, provenance, confidence, consent, TTL, and deduplication key; policy may require review |
 | GET /v1/memories:search | Search only memories visible to the subject/purpose/run; returns confidence and source lineage |
 | PATCH /v1/memories/{memory\_id} | Correct via optimistic version; preserves previous version and reason |
@@ -737,7 +829,7 @@ The Conversation Service owns turns; the Workflow Projection Service owns canoni
 | ContextManifest | context ID, run ID, RunManifest digest, node ID, step request ID, revision, policy version, per-section caps and allocation, ordered segments, omitted candidate IDs, redactions, manifest hash, created time |
 | ContextSegment | segment ID, kind and trust tier, source URI/revision, content hash, authorization decision ID, freshness, token count |
 | MemoryRecord | memory ID, tenant, subject/team scope, type, canonical value, provenance, confidence, consent, purpose allowlist, TTL, status, supersedes |
-| KnowledgeObject | source URI/revision, object/chunk IDs, text/blob reference, embedding version, metadata, ACL pointer, ingestion cursor, deletion state |
+| KnowledgeObject | source URI/revision, object/chunk IDs, text/blob reference, embedding version, metadata, ACL pointer, ingestion cursor, verification status, release digest, deletion state |
 | SummarySnapshot | input segment hashes, summary hash/reference, model/prompt version, coverage map, unresolved facts, expiry; immutable |
 
 There is one RunManifest per run and one ContextManifest per AgentStepRequest; the ContextManifest references the RunManifest digest. Tool results observed inside the step's loop are appended as tier-four segments in a new manifest revision recorded on each model span.

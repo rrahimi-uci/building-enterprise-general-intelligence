@@ -412,7 +412,7 @@ which is why the figure draws it as a spine beside the stack rather than a layer
 within it, and why it gets a Part of its own. The platform that builds,
 releases and runs the system is drawn the same way and for the same reason.
 
-Figure 4-1 in Chapter 4 opens these bands into planes and components; Chapter 4
+Chapter 4 opens these bands into planes and components in Figure 4-1 and
 maps its names to these. The notation carries over — solid is the request,
 dashed is control, dotted is evidence.
 
@@ -964,6 +964,7 @@ Mortgage business state for `MORT-2026-000184` is different:
 | Workflow stage | `EVIDENCE_REVIEW` |
 | Evidence status | Application, first pay statement, and purchase agreement available; second pay statement missing |
 | Policy | `policy://mortgage@2026.09` |
+| Knowledge | Release `mortgage-policy@2026.09`, pinned at admission (Chapter 5) |
 | Approval | Pending for the exact evidence-request proposal |
 | Committed effects | `MORTGAGE-DOC-REQ-000184` recorded, if approved and committed |
 | Resource version | Mortgage case version 1 |
@@ -992,6 +993,7 @@ The release path is adapter contract tests, recorded-trace replay, tool-schema t
 | `sdk` | `openai-agents@0.22.2` |
 | `model_route` | `reasoning-standard@4` |
 | `policy` | `policy://mortgage@2026.09` |
+| `knowledge_snapshots` | `mortgage-policy@2026.09` |
 
 Each step's `ContextManifest` is recorded with its `AgentStepRequest`, not in the run manifest. Together they make a production result reconstructable and explainable even after the framework, model, prompt, or adapter has changed. Chapter 27 covers deployment and recovery gates; Chapter 24 covers the trace evidence used in comparison.
 

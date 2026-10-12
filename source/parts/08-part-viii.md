@@ -49,7 +49,7 @@ This framing also explains why a central board alone scales poorly. A board can 
 
 ## Share responsibility without losing accountability
 
-Figure 26-1 shows the split. Central services provide identity and policy, evidence and audit, and risk tiers and exceptions once; domain teams decide in context; and the review board engages in proportion to risk tier, not to team.
+The split is shown in Figure 26-1. Central services provide identity and policy, evidence and audit, and risk tiers and exceptions once; domain teams decide in context; and the review board engages in proportion to risk tier, not to team.
 
 [[DIAGRAM:governance-model|Figure 26-1 — Federated governance with centralized control services]]
 
@@ -59,6 +59,7 @@ Figure 26-1 shows the split. Central services provide identity and policy, evide
 | Risk tier/autonomy | Risk owner | Threat/data/effect assessment and controls |
 | Platform contracts | Platform product owner | RFC, compatibility/migration, SLO |
 | Data/context/memory purpose | Data owner | Source, ACL, purpose, retention, deletion, quality |
+| Knowledge release | Knowledge owner: domain owner for rules and vocabulary, data owner for sources | Gate record, independent approval, release manifest (Chapter 5) |
 | Tool/effect authorization | Resource owner | Tool contract, permission, idempotency/reconciliation, approval policy |
 | Model/provider/route | Model governance owner | Capability, evaluation, data terms, region, cost, resilience |
 | Evaluator/dataset truth | Domain evaluation owner | Lineage, rubric, calibration, uncertainty |
@@ -95,7 +96,7 @@ The tier sets the minimum controls. Review stays predictable when every rule has
 
 Principles and standards are argued; policy-as-code and configuration are executed.
 
-The release gate (Chapter 25's ReleaseGateDecision) takes two inputs: the use case's tier and the change class. In T0–T2 use cases, pre-approved low-risk change classes (metadata, documentation, evaluated prompt wording) may promote automatically on passing gates. A change in the "Require human governance" row of Chapter 25 § Close the loop without handing control to the model always requires a named approver, whatever the tier. In T3–T4 use cases every behavior change needs the release owner's recorded approval and a canary; T4 adds independent assurance.
+The release gate (Chapter 25's ReleaseGateDecision) takes two inputs: the use case's tier and the change class. In T0–T2 use cases, pre-approved low-risk change classes (metadata, documentation, evaluated prompt wording) may promote automatically on passing gates. A change in the "Require human governance" row of Chapter 25 § Close the loop without handing control to the model always requires a named approver, whatever the tier. In T3–T4 use cases every behavior change needs the release owner's recorded approval and a canary; T4 adds independent assurance. A knowledge activation (Chapter 5) changes behavior without an agent release, so it is a change class under the same rule, with independent SME approval as its floor.
 
 A design review covers each area below; the chapter in parentheses holds its controls: outcome and acceptance (Chapters 2 and 13), deterministic boundary (2), state and effect ownership (15, 22), identity and delegation (21), context and memory (6), tool, MCP, and A2A trust (19), threats (20), evaluation truth (25), observability and privacy (24), recovery and release (27), capacity and cost (28), human oversight (14), and portability (3).
 
@@ -230,7 +231,7 @@ For an agentic system, behavior is spread across more than application code. A m
 
 A production release pins every object in the table below, plus dashboards, runbooks, rollout, and rollback plans. The platform records these in an immutable ReleaseManifest; each run's RunManifest references it.
 
-Four records keep this precise. A ChangeBundle is a proposed change (Chapter 25's Recommend stage); it becomes a ReleaseManifest only when promoted. A ReleaseManifest—the "release bundle" in this chapter's prose—is the immutable, signed graph listed in § Versioned objects. An EnvironmentBinding says which ReleaseManifest new starts receive for a tenant, use case, environment, and region. A RunManifest (Chapter 4) is resolved once at admission: it records the ReleaseManifest digest plus the run's subject, purpose, budget, risk tier, and knowledge-snapshot choice. The ReleaseManifest fixes the eligible Skill and pack versions; each RunManifest records the digests resolved from that set (Chapter 8). Rollback changes an EnvironmentBinding; it never edits a ReleaseManifest or a RunManifest.
+Four records keep this precise. A ChangeBundle is a proposed change (Chapter 25's Recommend stage); it becomes a ReleaseManifest only when promoted. A ReleaseManifest—the "release bundle" in this chapter's prose—is the immutable, signed graph listed in § Versioned objects. An EnvironmentBinding says which ReleaseManifest new starts receive for a tenant, use case, environment, and region. A RunManifest (Chapter 4) is resolved once at admission: it records the ReleaseManifest digest plus the run's subject, purpose, budget, risk tier, and the knowledge release digests it resolved (Chapter 5). The ReleaseManifest fixes the eligible Skill and pack versions; each RunManifest records the digests resolved from that set (Chapter 8). Rollback changes an EnvironmentBinding; it never edits a ReleaseManifest or a RunManifest.
 
 ### Versioned objects
 
@@ -245,7 +246,7 @@ Four records keep this precise. A ChangeBundle is a proposed change (Chapter 25'
 | Model route | Provider model ID/version + decoding/config + fallback chain | Quality, safety, latency, cost, regional/compliance evals |
 | Policy bundle | Signed version + effective period | Policy tests, separation of duties, emergency rollback |
 | Data/schema | Versioned contract and migration | Backward/forward compatibility and lineage checks |
-| Knowledge snapshot | Source revision/index build ID + ACL snapshot strategy | Freshness, ACL correctness, deletion propagation |
+| Knowledge release | Registry release digest: ontology version, object digests, source revisions, approvals | Chapter 5 gates and independent SME approval; the Semantic index also: freshness, ACL correctness, deletion propagation |
 | Eval dataset/rubric | Immutable examples, provenance, reviewer/version | Coverage, leakage review, judge calibration |
 | Runtime image | Signed digest + SBOM/provenance | Vulnerability, sandbox, supply-chain checks |
 | Artifact | Content hash + schema + creator run/version | Classification, destination policy, retention |
@@ -264,7 +265,7 @@ Chapter 15 keeps compatible workers and explicit migrations for in-flight histor
 
 * Tool/model fallback is itself a versioned route with eval evidence. “Same family” or “newer model” is not proof of compatibility.
 * Policies can impose emergency deny outside the pinned bundle; the run records both the original policy and the current higher-precedence denial.
-* Knowledge snapshots may be “as-of,” “current under freshness policy,” or a recorded set of source revisions. The manifest states which reproducibility level applies.
+* Knowledge snapshots may be “as-of,” “current under freshness policy,” or a recorded set of source revisions, and the manifest states which applies. “Current under freshness policy” is permitted only for the Semantic view's retrieval index; rules, vocabulary, and the ontology are always a recorded knowledge release.
 
 ### A release walkthrough
 
@@ -279,6 +280,36 @@ The distinction between a release and a deployment becomes concrete during a too
 | Region fails during a write | Fence the old writer, restore, reconcile, then advance placement (§ Regional recovery) | No effect is assumed absent merely because the request timed out |
 
 This is why “roll back the model” is usually incomplete. If the prompt, tool schema, policy, workflow build, or retrieved knowledge strategy also changed, restoring one model identifier does not restore the behavior. The smallest safe rollback unit is the release bundle, while emergency deny and credential revocation remain separate controls that can take effect immediately and be recorded alongside the pinned release.
+
+### Knowledge releases
+
+Compliance knowledge (Chapter 5) has its own release stream, and activating a release changes behavior without an agent release. The software stages map onto it:
+
+| **Software stage** | **Knowledge equivalent** | **Record** |
+| --- | --- | --- |
+| Source code | Requirements, obligations, controls as typed rules, vocabulary, ontology, graph data, tenant extensions | KnowledgeArtifact; ontology version |
+| Lockfile | The pinned upstream base release | Pinned base of the stream |
+| Pull request | One knowledge change, frozen as a candidate digest | Change record |
+| Build | Base, tenant extension, and ontology resolved into one content-addressed candidate | Release digest |
+| Lint and tests | Chapter 5's gates: golden decision and refusal cases, impact diff | Gate record |
+| Code review | Independent SME approval of the whole candidate | Approval in the release manifest |
+| Deploy | The registry publisher moves the live pointer | KnowledgeBinding |
+| Promotion and rollback | The identical digest moves forward; the pointer moves back | Activation record |
+| Monitoring | Refusals, unknown verdicts, contradictions, superseded citations | Chapter 25 evidence; ChangeBundle draft |
+
+One change is one branch. A long-lived knowledge branch goes stale: by the time it merges, the base and the live release have moved, and semantic conflicts hide in a clean textual merge. A tenant's deviation is a **tenant extension** over a pinned shared base, never a fork. For rules, stricter than the base is flagged and allowed, and looser than a base floor blocks. For the ontology, an extension may add kinds, relationships, properties, and terms but never remove, rename, or redefine a base element; that needs a new major stream. Every scope dimension an extension uses is declared in the ontology, never hard-coded in an evaluator. Extensions are tenant-private, and an upstream base bump re-checks each one against the new floor. A hotfix takes the same path with priority review; break-glass is an ExceptionWaiver (Chapter 26), never a bypass.
+
+Publication follows Chapter 5's boundary: one approval lets the registry publisher recheck, store and verify the bundle, allocate the version once per attempt, and move the pointer.
+
+[[EXAMPLE:knowledge-release#publish]]
+
+Promotion carries the identical digest, and a target whose pointer diverged blocks until reconciled. Rollback moves the pointer back, mints no version, rewrites nothing, and marks open changes Stale; in-flight runs keep their pin unless the release is revoked. A repository revert alone is not a rollback, because the pointer is runtime truth.
+
+[[EXAMPLE:knowledge-release#promote]]
+
+Each gate record reports its denominator and holds objects against an integer budget, so rounding, dropped held objects, or a changed cohort cannot make a release pass. The listing adapts the quality budget of Policy Logic Forge [R48], the reference implementation Chapter 5 follows.
+
+[[EXAMPLE:gate-record#budget]]
 
 ## Promotion as a chain of evidence
 
@@ -389,7 +420,7 @@ The ordering in step 7 is this book's recommendation. Recovery is rehearsed with
 | --- | --- | --- |
 | Supply chain | An SBOM describes components; SLSA provenance describes where and how an artifact was built and by which builder. Using both, verifying signatures and builder identity before promotion, and pinning model, prompt, Skill, policy, and evaluation digests in the release manifest are this book's recommendations. | R17; R18 |
 
-The discussion above draws on R17; R18. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R17; R18; R48. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 

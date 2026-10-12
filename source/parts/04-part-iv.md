@@ -423,6 +423,7 @@ Each node kind is executed by a mechanism defined elsewhere: `llm_activity` is a
 * Data-flow classification can stay equal or become more restrictive. A node cannot send restricted data to a capability whose manifest/region/purpose is incompatible.
 * Mutating nodes require idempotency/effect semantics (Chapter 22) and any policy-required preview, approval (Chapter 14), or compensation. An R4 (irreversible or privileged) commit remains a deterministic domain operation.
 * Loops require a deterministic guard plus maximum iterations, wall time, cost, and a no-progress detector using the no-progress signatures of Chapter 10; unbounded loops and unhandled terminal paths are rejected. Delegation depth and parallel fan-out are statically bounded; see AP-11 for why per-child limits do not compose.
+* A node that evaluates a rule or decision table binds to the run's pinned knowledge release; a node that needs an object the release does not hold as evaluable (absent, review-held, or Revoked) is refused here, naming the object (Chapter 5).
 * The compiler estimates critical path, maximum fan-out, worst-case calls/cost, and required quota. Admission (Chapter 28) may reject, defer, or require approval before commit.
 
 ## Revise without rewriting history
@@ -591,7 +592,7 @@ Independent evaluation does not mean asking the same model to reread its answer 
 
 [[DIAGRAM:pattern-reflection|Figure 13-1 — A bounded revise loop whose verdict is advisory; acceptance happens outside it]]
 
-Reflection asks, “What is missing or inconsistent?” Evaluation asks, “Does this candidate meet an acceptance rubric?” In the mortgage case, the contradictory address is caught by an executable check against the application projection; whether the recommendation overstates confidence is the kind of qualitative criterion a calibrated judge may assess. Combining reflection and evaluation can improve complex artifacts, but only if the roles are explicit and bounded. The platform runs executable checks before any model judge: schema, evidence presence, policy, effect state, resource version, arithmetic, and deterministic domain rules.
+Reflection asks, “What is missing or inconsistent?” Evaluation asks, “Does this candidate meet an acceptance rubric?” In the mortgage case, the contradictory address is caught by an executable check against the application projection; whether the recommendation overstates confidence is the kind of qualitative criterion a calibrated judge may assess. Combining reflection and evaluation can improve complex artifacts, but only if the roles are explicit and bounded. The platform runs executable checks before any model judge: schema, evidence presence, policy, effect state, resource version, arithmetic, and deterministic domain rules from the run's pinned knowledge release (Chapter 5).
 
 Qualitative criteria—clarity, completeness, grounded synthesis, or policy-explanation quality—may use calibrated judges. Judge prompt, model route, examples, sampling parameters, and rubric are versioned. A judge used at runtime must already be calibrated: Chapter 25 § Layer tests from contracts to outcomes defines how judges are measured against human labels and gated for release. Inside a run, a judge score is one input to the acceptance decision; it is never permission to access data or commit a transaction (see AP-10).
 
@@ -1306,7 +1307,7 @@ Everything an agent believes arrives through one of these three channels, and al
 
 **What it looks like in practice.** An obsolete policy chunk applies a superseded spending limit, and the answer cites the document by name, which is what makes the reviewer believe it.
 
-**How to replace it.** Governed sources and snapshots hold authority; the index is a derived locator whose hits are verified for ACL, freshness, and supersession before the content reaches the model. Migrate in steps: Vector hit → action becomes source + ACL + snapshot → evidence → decision.
+**How to replace it.** Governed sources and snapshots hold authority, and the snapshot is a pinned knowledge release (Chapter 5); the index is a derived locator whose hits are verified for ACL, freshness, and supersession before the content reaches the model. Migrate in steps: Vector hit → action becomes source + ACL + snapshot → evidence → decision.
 
 **How to know the repair worked.** Track evidence age at decision time, source disagreement rate, ACL mismatches at retrieval, and citations pointing at superseded revisions. The cost: authoritative lookup adds latency to every retrieval. Apply it in proportion to what the answer will be used for; drafting assistance and payment authorization do not need the same guarantee.
 

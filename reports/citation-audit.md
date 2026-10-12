@@ -2,7 +2,7 @@
 
 **Result:** PASS
 **References:** 58
-**Citation occurrences:** 147
+**Citation occurrences:** 156
 **Verified:** 2026-10-11
 
 All sources were checked against their recorded claim scope. The audit validates attribution, not the book's independently authored architecture recommendations.
@@ -58,7 +58,7 @@ All sources were checked against their recorded claim scope. The audit validates
 | R45 | verified_with_caveat | OMG specification page | Version 1.5, formal, August 2024, as cited. OMG has since published DMN 1.6 (formal, September 2026) and a 1.7 beta; the book's pin to 1.5 remains a valid citation but 1.5 is no longer the latest formal version. |
 | R46 | verified | OMG specification page | Version 1.1, formal, December 2016; still the latest formal CMMN version. |
 | R47 | verified | OMG specification page | Version 1.5, formal, December 2019; still the latest formal SBVR version. |
-| R48 | verified_with_caveat | direct inspection of ARCHITECTURE.md §1.1 at the pinned commit | Book-authored project. The link is pinned to commit 393364f (4 September 2026), the latest change to ARCHITECTURE.md; §1.1 states that one real run rejected 44% of dependency and conflict claims. The figure is self-reported and was not independently reproduced. |
+| R48 | verified_with_caveat | direct inspection of a read-only clone at commit c22dc450 (2026-09-11): ARCHITECTURE.md, docs/, and the modules and tests named in the registry scope; nothing executed | Book-authored project. Scope widened to the elements the book points at (registry supports text). The URL stays pinned to commit 393364f (4 September 2026), the latest change to ARCHITECTURE.md, whose content is identical at c22dc450; §§1.1 and 2.3 state that one historical run rejected 44% of model-proposed dependency and conflict claims a single structural screen had accepted. The figure is self-reported and was not independently reproduced. The quality budget and decision-material claim classification are defined and tested but not wired into the pipeline stages. |
 | R49 | verified | direct primary-source review | arXiv abstract page fetched: title, authors, arXiv:2308.08155, submitted 16 August 2023. |
 | R50 | verified | direct primary-source review | arXiv abstract page fetched; comment 'Published in ICLR 2024'. Year follows the recorded venue (2024). |
 | R51 | verified | direct primary-source review | arXiv abstract page fetched: title, authors, arXiv:2311.12983, submitted 21 November 2023. |
