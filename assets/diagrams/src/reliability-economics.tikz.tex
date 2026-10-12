@@ -1,0 +1,67 @@
+% Figure 28-1 -- Admission, bounded execution, and outcome-based operating feedback.
+% Restyled from reliability-economics.gv; content, flow, loops and edge styles are unchanged.
+%
+% Original element -> restyled element
+%   request  Request / workload + deadline          -> teal card
+%   admit    Admission / risk + budget (diamond)    -> amber diamond
+%   queue    Fair queue / capacity permits          -> blue square-cornered card (box in the source)
+%   execute  Bounded execution / model . tools . human -> teal card
+%   verify   Verify outcome / quality . safety . effect (diamond) -> amber diamond
+%   success  Accepted result / evidence recorded    -> plum card
+%   terminal Terminal or intervention / not accepted -> red card
+%   degrade  Safe degradation / defer . draft . route -> amber square-cornered card
+%   feedback Usage and SLO / feedback               -> blue square-cornered card
+%   edges (12):
+%     request>admit (solid blue); admit>queue "admit" (solid teal);
+%     admit>degrade "pressure" (dashed amber); queue>execute (solid blue);
+%     execute>verify (solid blue); execute>degrade "budget or capacity pressure"
+%     (dashed amber); verify>success "pass" (solid teal); verify>terminal "fail"
+%     (solid red); success>feedback, degrade>feedback, terminal>feedback (dotted blue);
+%     feedback>admit "tune permits and routes" (dashed blue, outside loop on the left)
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  \node[dg card=teal, icon=inbox, text width=130pt] (req) at (205,0)
+    {\dgcontent{Request}{workload + deadline}{}};
+  \node[dg decision=amber, minimum width=210pt, minimum height=68pt] (adm) at (205,-76)
+    {\dgtitlesize Admission\\[1pt]{\dgdescsize risk + budget}};
+  \node[dg card=blue, square, icon=stream, text width=118pt] (que) at (205,-170)
+    {\dgcontent{Fair queue}{capacity permits}{}};
+  \node[dg card=teal, icon=cog, text width=118pt] (exe) at (205,-246)
+    {\dgcontent{Bounded execution}{model · tools · human}{}};
+  \node[dg decision=amber, minimum width=230pt, minimum height=68pt] (ver) at (205,-336)
+    {\dgtitlesize Verify outcome\\[1pt]{\dgdescsize quality · safety · effect}};
+  \node[dg card=plum, icon=check-circle, text width=102pt] (suc) at (108,-440)
+    {\dgcontent{Accepted result}{evidence recorded}{}};
+  \node[dg card=red, icon=exclamation-triangle, text width=124pt] (ter) at (306,-440)
+    {\dgcontent{Terminal or intervention}{not accepted}{}};
+  \node[dg card=blue, square, icon=chart-line, text width=118pt] (fee) at (205,-520)
+    {\dgcontent{Usage and SLO}{feedback}{}};
+  \node[dg card=amber, square, icon=life-ring, text width=104pt] (deg) at (410,-336)
+    {\dgcontent{Safe degradation}{defer · draft · route}{}};
+
+  % ---- main flow ----
+  \draw[flow in=blue] (req) -- (adm);
+  \draw[flow in=teal] (adm) -- node[pill=teal] {Admit} (que);
+  \draw[flow in=blue] (que) -- (exe);
+  \draw[flow in=blue] (exe) -- (ver);
+  \draw[flow in=teal] (ver.south) to[out=-90,in=90] node[pill=teal,pos=0.55] {Pass} (suc.north);
+  \draw[flow in=red] (ver.south) to[out=-90,in=90] node[pill=red,pos=0.55] {Fail} (ter.north);
+
+  % ---- degradation (dashed amber) ----
+  \draw[dashed flow, draw=dg-amber-line, rounded corners=12pt] (adm.east) -- (497,-76) -- (497,-336) -- (deg.east);
+  \node[pill=amber] at (405,-76) {Pressure};
+  \draw[dashed flow, draw=dg-amber-line, rounded corners=12pt] (exe.east) -| 
+    node[pill=amber, pos=0.78] {Budget or capacity\\[-1pt]{\fontsize{9}{10}\selectfont\mdseries pressure}} (deg.north);
+
+  % ---- outcomes feed usage (dotted blue) ----
+  \draw[dotted flow, draw=dg-blue-line] (suc.south) to[out=-90,in=90] ([xshift=-40pt]fee.north);
+  \draw[dotted flow, draw=dg-blue-line] (ter.south) to[out=-90,in=90] ([xshift=40pt]fee.north);
+  \draw[dotted flow, draw=dg-blue-line, turn] (deg.south) |- (fee.east);
+
+  % ---- operating feedback (dashed blue, outside loop on the left) ----
+  \draw[dashed flow, draw=dg-blue-line, rounded corners=16pt] (fee.west) -- (22,-520) -- (22,-76) -- (adm.west);
+  \node[pill=blue] at (84,-520) {Tune permits\\[-1pt]{\fontsize{9}{10}\selectfont\mdseries and routes}};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,43 @@
+% Figure 10-1 -- Bounded ReAct. The loop is inside; the limits are outside.
+% Restyled from pattern-react.gv; content, flow and the three exits are unchanged.
+%
+% Original element -> restyled element
+%   ctl Controller / turns . time . cost . no-progress -> blue card (outside the loop)
+%   rea Reason                                  -> teal card
+%   act Act / (read tools only)                 -> cyan card
+%   obs Observe / typed . provenance            -> cyan card
+%   acc Acceptance engine                       -> amber card
+%   pro Proposed effect / leaves the loop       -> plum card
+%   edges: rea>act, act>obs (solid teal); obs>rea "next need" (solid teal,
+%          outside loop on the left); ctl>rea "admits each turn" (dashed blue);
+%          rea>acc "answer: accept?" (solid amber); rea>pro "mutation" (dashed plum)
+%   layout: the loop is one column on the left, the two exits fan out to the
+%   right, so neither exit sits inside the loop; the controller stays above it.
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  \node[dg card=blue, icon=sliders-h, text width=170pt] (ctl) at (150,0)
+    {\dgcontent{Controller}{turns · time · cost · no-progress}{}};
+  \node[dg card=teal, icon=brain, text width=170pt] (rea) at (150,-100)
+    {\dgcontent{Reason}{}{}};
+  \node[dg card=cyan, icon=wrench, text width=120pt] (act) at (150,-195)
+    {\dgcontent{Act}{(read tools only)}{}};
+  \node[dg card=cyan, icon=binoculars, text width=120pt] (obs) at (150,-290)
+    {\dgcontent{Observe}{typed · provenance}{}};
+  \node[dg card=amber, icon=clipboard-check, text width=120pt] (acc) at (420,-100)
+    {\dgcontent{Acceptance engine}{}{}};
+  \node[dg card=plum, icon=paper-plane, text width=120pt] (pro) at (420,-195)
+    {\dgcontent{Proposed effect}{leaves the loop}{}};
+
+  \draw[dashed flow, draw=dg-blue-line] (ctl) -- node[pill=blue] {Admits each turn} (rea);
+  \draw[flow in=teal] (rea) -- (act);
+  \draw[flow in=teal] (act) -- (obs);
+  \draw[flow in=teal, rounded corners=16pt] (obs.west) -- ++(-54pt,0) |-
+    node[pill=teal, pos=0.25] {Next need} (rea.west);
+  \draw[flow in=amber] (rea.east) -- node[pill=amber]
+    {Answer:\\[-1pt]{\fontsize{9}{10}\selectfont\mdseries accept?}} (acc.west);
+  \draw[dashed flow, draw=dg-plum-line, turn] ([xshift=-10pt]rea.south east) |-
+    node[pill=plum, pos=0.78] {Mutation} (pro.west);
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,58 @@
+% Figure 18-1 -- Supervisor/worker, with the parts that make it governable.
+% Restyled from supervisor-worker.gv (current labels); content, flow and annotations are unchanged.
+%
+% Original element -> restyled element
+%   sup  Supervisor / owns the outcome, always     -> teal card
+%   t1..t3 Child task / document extraction | income verification | property review
+%                                                  -> three blue cards (the source's note shapes)
+%   w1..w3 Worker A | Worker B | Worker C          -> three cyan cards
+%   join Fan-in contract / all . quorum . first valid . fallback (diamond) -> amber diamond
+%   out  Accepted outcome                          -> plum card
+%   grant "each child grant is an intersection, never a copy" (free red text beside the children)
+%                                                  -> red callout beside the children row
+%   canc  "cancellation is durable intent - a running mutation reconciles first"
+%         (free red text beside the workers)       -> red callout beside the workers row
+%   edges: sup>t1,t2,t3 (solid blue); t1>w1, t2>w2, t3>w3 (solid blue);
+%          w1,w2,w3>join (solid blue); join>out (solid amber);
+%          sup>join "owns completion" (dashed plum, long ownership edge, drawn
+%          down the left side instead of the right so the annotations stay beside the rows)
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  \tikzset{col/.style={text width=92pt, minimum height=40pt},
+           note red/.style={callout=red, text=dg-red-ink, text width=96pt, font=\dgdescsize}}
+  \node[dg card=teal, icon=user-tie, text width=146pt] (sup) at (212,0)
+    {\dgcontent{Supervisor}{owns the outcome, always}{}};
+
+  \node[dg card=blue, col] (t1) at (90,-96)  {\dgcontent{Child task}{document extraction}{}};
+  \node[dg card=blue, col] (t2) at (212,-96) {\dgcontent{Child task}{income verification}{}};
+  \node[dg card=blue, col] (t3) at (334,-96) {\dgcontent{Child task}{property review}{}};
+
+  \node[dg card=cyan, col, minimum height=34pt] (w1) at (90,-186)  {\dgcontent{Worker A}{}{}};
+  \node[dg card=cyan, col, minimum height=34pt] (w2) at (212,-186) {\dgcontent{Worker B}{}{}};
+  \node[dg card=cyan, col, minimum height=34pt] (w3) at (334,-186) {\dgcontent{Worker C}{}{}};
+
+  \node[dg decision=amber, minimum width=272pt, minimum height=76pt] (join) at (212,-292)
+    {\dgtitlesize Fan-in contract\\[1pt]{\dgdescsize all · quorum · first valid · fallback}};
+  \node[dg card=plum, icon=trophy, text width=130pt] (out) at (212,-386)
+    {\dgcontent{Accepted outcome}{}{}};
+
+  \node[note red] (grant) at (458,-96)  {each child grant is an intersection, never a copy};
+  \node[note red] (canc)  at (458,-196) {cancellation is durable intent — a running mutation reconciles first};
+
+  % ---- fan-out, fan-in ----
+  \foreach \t/\dx in {t1/-44pt, t2/0pt, t3/44pt}
+    \draw[flow in=blue] ([xshift=\dx]sup.south) to[out=-90,in=90] (\t.north);
+  \foreach \t/\w in {t1/w1, t2/w2, t3/w3}
+    \draw[flow in=blue] (\t) -- (\w);
+  \draw[flow in=blue] (w1.south) to[out=-90,in=90] ($(join.center)+(-84pt,11pt)$);
+  \draw[flow in=blue] (w2.south) -- (join.north);
+  \draw[flow in=blue] (w3.south) to[out=-90,in=90] ($(join.center)+(84pt,11pt)$);
+  \draw[flow in=amber] (join) -- (out);
+
+  % ---- ownership edge (dashed plum) ----
+  \draw[dashed flow, draw=dg-plum-line, rounded corners=16pt] (sup.west) -- (14,0) -- (14,-292) -- (join.west);
+  \node[pill=plum] at (76,0) {Owns\\[-1pt]{\fontsize{9}{10}\selectfont\mdseries completion}};
+\end{tikzpicture}
+\end{document}
