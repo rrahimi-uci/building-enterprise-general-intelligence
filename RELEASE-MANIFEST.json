@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 30965,
-      "sha256": "06c6b8ad883fcf49f0916e69b59999f628d0f7ac9c25770f7a77abfd76f4044d"
+      "bytes": 31740,
+      "sha256": "e7d54bb5b1c23787e5fa3334b25a00337b2bfe4e18b53a9e794508da592c1471"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -971,8 +971,8 @@
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.docx",
-      "bytes": 41651875,
-      "sha256": "36e3f74a5a5c0c75015d69c0ce37dadd9f36fd3dda6811439a3b3fd0e5c40392"
+      "bytes": 41651436,
+      "sha256": "5b61e3f7c2b1f739fa750b2cd69b9cf9f58a4c776ae0c33b4dfa7626b44587c5"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.md",
@@ -1511,8 +1511,8 @@
     },
     {
       "path": "latex/bookstyle.sty",
-      "bytes": 15232,
-      "sha256": "40c967d11d614bbcc15b62d973047318754a6a3d554a0ed639320e64ff1f3ff8"
+      "bytes": 15615,
+      "sha256": "b5da9d5cf7b29a58d85da7498fba6e010ce46cf6e146297627e99a1beb56e86a"
     },
     {
       "path": "latex/compile.sh",
@@ -1872,32 +1872,32 @@
     {
       "path": "qa/build-report.json",
       "bytes": 309,
-      "sha256": "b2fd08c63f838c52a337a23718e281971c21d40a9349fca388853a63ebfb9515"
+      "sha256": "4c449381bcabd8e63a80b16bd5203ab4ef4f5a79143cfb5aa187922a3ab09e4d"
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 41651875,
-      "sha256": "36e3f74a5a5c0c75015d69c0ce37dadd9f36fd3dda6811439a3b3fd0e5c40392"
+      "bytes": 41651436,
+      "sha256": "5b61e3f7c2b1f739fa750b2cd69b9cf9f58a4c776ae0c33b4dfa7626b44587c5"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 41651875,
-      "sha256": "36e3f74a5a5c0c75015d69c0ce37dadd9f36fd3dda6811439a3b3fd0e5c40392"
+      "bytes": 41651436,
+      "sha256": "5b61e3f7c2b1f739fa750b2cd69b9cf9f58a4c776ae0c33b4dfa7626b44587c5"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "487924a6d5d38ea70bd3949da32414e7c5c4823c4c904ccd40d853f52c311437"
+      "sha256": "33e5fc2d4d120164876800e68dba2806b1b1b7c8c08d1a6238361ee3bafcf356"
     },
     {
       "path": "qa/latex-validation-report.json",
       "bytes": 16895,
-      "sha256": "c083aa8fff4b973841d08b4134d0e50f2d1e65d6b6347d0e8bf02dd9cf14539b"
+      "sha256": "8555820df8c552ef2e046a4d370c75e30156f46e3f05406e83ead4f38803e1c8"
     },
     {
       "path": "qa/validation-report.json",
       "bytes": 910,
-      "sha256": "d00013c6cdecbc9c8be171305aff8d8e7243d8f008193ec96498fe759ad37ff0"
+      "sha256": "223e7a7fe8d5db40aa0079ab762078c005a18b98cfc915f0e54a4b440c1dc62e"
     },
     {
       "path": "reports/assembly-report.json",
@@ -1977,7 +1977,7 @@
     {
       "path": "reports/validation-summary.md",
       "bytes": 900,
-      "sha256": "307a168b87c9ef772ae48391180ee489f2a6ffa1f08ffb4dc00da08b5ad5ee38"
+      "sha256": "22b5a003ed5341dd9e04bab3118b8ef2c0fc71a22dca6deb013d5ecf64a538f0"
     },
     {
       "path": "requirements.txt",
@@ -2971,8 +2971,8 @@
     },
     {
       "path": "tools/build_book.py",
-      "bytes": 27423,
-      "sha256": "c077952bf79e67d7bb902de47de5a45a0547c6cda3a71ef4426019b8d784dd7e"
+      "bytes": 28022,
+      "sha256": "93ed90fceb82190e105f6c8d0148165a4a65b500eff2b809e14d6e17be947186"
     },
     {
       "path": "tools/build_latex.py",

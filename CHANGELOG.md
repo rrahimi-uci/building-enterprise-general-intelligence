@@ -4,6 +4,12 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### No empty pages before chapters
+
+- **PDF:** every chapter used to be preceded by a blank page (28 in all) because the chapter-cover macro switched the page geometry, which forced an extra page break. The cover is now placed with a page-sized overlay, so each cover is one full page followed directly by the chapter; the PDF drops from 364 to 336 pages with no blank pages.
+- **DOCX:** the cover, Part and title pages no longer rely on paragraphs that hold a page break; they start with `page_break_before` (a one-point anchor paragraph for Part pages), so a full page can no longer push an empty page or a stray empty line in front of a chapter.
+- Markdown and the TeX entry file contain no page layout, so they are unchanged; the LaTeX fix is in `latex/bookstyle.sty`.
+
 ### Diagram modernization: all 44 figures in TikZ
 
 - The remaining 41 figures are redrawn in the shared TikZ design system, so every diagram now has an editable `assets/diagrams/src/<id>.tikz.tex` source and no Graphviz or Mermaid sources remain in use. Content is unchanged: each figure keeps its nodes, labels, edge directions and styles, groups and annotations (checked element by element against the original).

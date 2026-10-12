@@ -19,7 +19,7 @@ from PIL import Image
 from docx import Document
 from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT,WD_ROW_HEIGHT_RULE
-from docx.enum.text import WD_ALIGN_PARAGRAPH,WD_BREAK
+from docx.enum.text import WD_ALIGN_PARAGRAPH,WD_LINE_SPACING
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
@@ -195,22 +195,24 @@ def set_num(p,num_id):
     numPr=p._p.get_or_add_pPr().get_or_add_numPr()
     numPr.get_or_add_ilvl().val=0; numPr.get_or_add_numId().val=num_id
 
-def add_page_break(doc):
-    p=doc.add_paragraph(); p.add_run().add_break(WD_BREAK.PAGE)
-
 def add_paragraph(doc,text,cfg,style='Normal',align=None):
     p=doc.add_paragraph(style=style); add_inline(p,text,cfg)
     if align is not None: p.alignment=align
     return p
 
 def add_part(doc,ident,title,intro,cfg):
-    C=cfg['design']['colors']; add_page_break(doc)
+    C=cfg['design']['colors']
+    # A one-point anchor paragraph starts the page: unlike a paragraph holding a break, it
+    # cannot spill onto an empty page when the previous page is full.
+    anchor=doc.add_paragraph(); anchor.paragraph_format.page_break_before=True; anchor.paragraph_format.space_before=Pt(0); anchor.paragraph_format.space_after=Pt(0)
+    anchor.paragraph_format.line_spacing_rule=WD_LINE_SPACING.EXACTLY; anchor.paragraph_format.line_spacing=Pt(1)
     t=doc.add_table(rows=1,cols=1); t.autofit=False; row=t.rows[0]; row.height=Inches(8.45); row.height_rule=WD_ROW_HEIGHT_RULE.EXACTLY; cell=t.cell(0,0); cell.vertical_alignment=WD_CELL_VERTICAL_ALIGNMENT.CENTER; shade(cell,C['navy']); cell_margins(cell,300,320,300,320)
     p=cell.paragraphs[0]; p.alignment=WD_ALIGN_PARAGRAPH.CENTER; r=p.add_run('PART '+ident); r.font.name=cfg['design']['fonts']['sans']; r.font.size=Pt(15); r.font.bold=True; r.font.color.rgb=color(C['cyan'])
     p=cell.add_paragraph(style='Book Part'); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.add_run(title.upper())
     if intro:
         p=cell.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_before=Pt(18); r=p.add_run(intro); r.font.name=cfg['design']['fonts']['sans']; r.font.size=Pt(11); r.font.color.rgb=color('D8E8F5')
-    add_page_break(doc)
+    # No trailing break paragraph: whatever follows starts its own page with page_break_before,
+    # so a page that is already full cannot push an empty page into the book.
 
 def add_code_run(p,text,lang,cfg):
     # Lightweight deterministic lexical colors; source text is never changed.
@@ -298,9 +300,11 @@ def diagram_alt(root,key,caption):
 def add_chapter_cover(doc,path,alt=None):
     # One US Letter cover page per chapter, set like the book cover: the page
     # holds only the image, followed by a page break into the chapter itself.
-    p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_after=Pt(0); shape=p.add_run().add_picture(str(path),width=Inches(7.05))
+    p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_after=Pt(0); p.paragraph_format.page_break_before=True
+    shape=p.add_run().add_picture(str(path),width=Inches(7.05))
     if alt: set_alt_text(shape,alt)
-    add_page_break(doc)
+    # The chapter heading that follows carries page_break_before, so the cover page holds
+    # only the image: a separate break paragraph here could spill onto an empty page.
 
 def add_diagram(doc,root,key,caption,cfg):
     path=root/'assets/diagrams'/f'{key}.png'
@@ -334,24 +338,23 @@ def build(root:Path,out:Path,template_only=False):
         for block_index,b in enumerate(parsed):
             blocks+=1; kind=b[0]
             if kind=='cover':
-                p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_after=Pt(0); shape=p.add_run().add_picture(str(cover),width=Inches(7.05)); set_alt_text(shape,f"Book cover: {cfg['book']['title']}, {cfg['book']['author']}"); add_page_break(doc); continue
+                p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_after=Pt(0); shape=p.add_run().add_picture(str(cover),width=Inches(7.05)); set_alt_text(shape,f"Book cover: {cfg['book']['title']}, {cfg['book']['author']}"); continue
             if kind=='part': add_part(doc,b[1],b[2],b[3],cfg); after_part=True; lead_keep_next=False; continue
             if kind=='heading':
                 level,text=b[1],b[2]
                 if level==1 and not title_seen:
-                    p=doc.add_paragraph(style='Title'); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; add_inline(p,text,cfg); title_seen=True; continue
+                    p=doc.add_paragraph(style='Title'); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.page_break_before=True; add_inline(p,text,cfg); title_seen=True; continue
                 style=f'Heading {level}'
                 cover=None
                 if level==1:
                     num=re.match(r'^(\d{2}) — ',text); cover=chapter_cover_path(root,num.group(1)) if num else None
                     if cover is not None:
                         if not cover.exists(): raise FileNotFoundError(f'Missing chapter cover {cover}')
-                        if not after_part: add_page_break(doc)
                         add_chapter_cover(doc,cover,chapter_cover_alt(root,num.group(1)))
                 p=doc.add_paragraph(style=style); add_inline(p,text,cfg); p.paragraph_format.keep_with_next=True
                 if level==1:
                     is_chapter=bool(re.match(r'^\d{2} — ',text) or text.startswith('Appendix '))
-                    p.paragraph_format.page_break_before=False if cover is not None or (after_part and is_chapter) else True  # a cover page already ended with its own break
+                    p.paragraph_format.page_break_before=True  # every chapter, appendix and front-matter H1 starts its own page
                     after_part=False
                 lead_keep_next=level in (2,3)
                 continue
