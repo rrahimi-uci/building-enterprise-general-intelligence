@@ -268,10 +268,10 @@ def main() -> int:
         if path.suffix.lower() == ".pdf":
             continue
         with Image.open(path) as image:
-            target_width = 8.5 if "cover" in value else 7.06
+            target_width = 8.5 if value.startswith("assets/cover/") else 7.06
             effective_dpi = image.width / target_width
             image_quality.append({"file": value, "pixels": [image.width, image.height], "effective_dpi": round(effective_dpi, 1)})
-            minimum = 295 if "cover" in value else 220
+            minimum = 295 if value.startswith("assets/cover/") else 220
             if effective_dpi < minimum:
                 errors.append("Insufficient image resolution: " + value + " at " + format(effective_dpi, ".1f") + " dpi")
     # Chapter covers: full-bleed Letter pages, so measure against 8.5in like the cover.
