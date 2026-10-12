@@ -7,6 +7,7 @@ progress it escalates with both candidate versions instead of raising.
 """
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from typing import Awaitable, Callable, Literal
 
@@ -50,16 +51,20 @@ class AcceptanceEngine:
     """The only component that may accept. Checks decide; scores are evidence."""
 
     def __init__(self, thresholds: dict[str, float]) -> None:
-        self.thresholds = thresholds
+        self.thresholds = thresholds  # every criterion here must be scored to accept
 
     def decide(
         self, candidate: str, failures: tuple[CheckFailure, ...],
         scores: tuple[EvaluationResult, ...],
     ) -> AcceptanceDecision:
-        defects = tuple(f.invariant for f in failures) + tuple(
-            s.criterion for s in scores
-            if s.score < self.thresholds.get(s.criterion, 1.0)
-        )
+        defects = tuple(f.invariant for f in failures)
+        if not defects:  # judge evidence counts only once every executable check passes
+            scored = {s.criterion: s.score for s in scores}
+            defects = tuple(
+                criterion for criterion in dict.fromkeys((*self.thresholds, *scored))
+                if not math.isfinite(scored.get(criterion, math.nan))  # missing or NaN
+                or scored[criterion] < self.thresholds.get(criterion, 1.0)
+            )
         if defects:
             return AcceptanceDecision("rejected", defects, (candidate,))
         return AcceptanceDecision("accepted", (), (candidate,))
@@ -72,6 +77,10 @@ class AcceptanceEngine:
 
 @dataclass(frozen=True)
 class RevisionLimits:
+    """Spend is checked before acceptance and before every further call. A call's
+    cost is known only afterwards, so the last call can overrun the cap by its own
+    cost; that overrun escalates to a person instead of being accepted."""
+
     maximum_revisions: int = 2
     maximum_cost_usd: float = 1.0
 
@@ -90,12 +99,14 @@ async def evaluate_and_revise(
         failures = checks(candidate.text)            # executable invariants first
         scores = () if failures else await judge(candidate.text)  # qualitative only
         decision = engine.decide(candidate.text, failures, scores)
+        prior = previous if previous is not None else candidate.text
+        if spent > limits.maximum_cost_usd:          # over the cap: never accept, surface it
+            return engine.escalate(prior, candidate.text, decision.defects, "budget_exhausted")
         if decision.outcome == "accepted":
             return decision
-        prior = previous if previous is not None else candidate.text
         if decision.defects == previous_defects:     # new wording, same failure
             return engine.escalate(prior, candidate.text, decision.defects, "no_progress")
-        if spent >= limits.maximum_cost_usd:
+        if spent >= limits.maximum_cost_usd:         # nothing left for another call
             return engine.escalate(prior, candidate.text, decision.defects, "budget_exhausted")
         if revision == limits.maximum_revisions:
             return engine.escalate(prior, candidate.text, decision.defects, "maximum_revisions")

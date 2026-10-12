@@ -180,8 +180,8 @@
       "file": "assets/diagrams/pattern-reflection.png",
       "source": "assets/diagrams/src/pattern-reflection.gv",
       "vector": "assets/diagrams/pattern-reflection.pdf",
-      "description": "Reflection: a bounded loop runs executable checks before an advisory judge; acceptance is decided outside it",
-      "sha256": "9fbec2c722322b571a9f99dda87e9bb8c298fd553f5f6c21d4f977097e79424f"
+      "description": "Reflection: a bounded loop runs executable checks before an advisory judge; the acceptance engine outside it owns every exit—accept, reject to revise, or escalate to a person",
+      "sha256": "b08a87fc121d694cb47afaf169231adefb44b9e291ed743440ce1aeac61e50cd"
     },
     {
       "id": "pattern-routing",

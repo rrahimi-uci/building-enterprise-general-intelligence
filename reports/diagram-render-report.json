@@ -259,12 +259,12 @@
       "id": "pattern-reflection",
       "source": "pattern-reflection.gv",
       "pixels": [
-        2283,
-        1522
+        2342,
+        1452
       ],
-      "effective_dpi": 333,
+      "effective_dpi": 342,
       "vector": true,
-      "sha256": "9fbec2c722322b571a9f99dda87e9bb8c298fd553f5f6c21d4f977097e79424f"
+      "sha256": "b08a87fc121d694cb47afaf169231adefb44b9e291ed743440ce1aeac61e50cd"
     },
     {
       "id": "pattern-routing",

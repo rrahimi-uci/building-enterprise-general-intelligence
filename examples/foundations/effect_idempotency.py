@@ -58,12 +58,15 @@ class EffectLedger:
     def commit(self, key: str, intent: dict[str, object], apply: Callable[[], str]) -> str:
         digest = hash_intent(intent)
         record = self._records.get(key)
-        if record is not None and record.state != "declined":
+        if record is not None:
+            # The intent hash is checked first, whatever the state: a declined
+            # key is still this intent's key, and a new intent needs a new key.
             if record.intent_hash != digest:
                 raise EffectConflict(f"{key} was reused with a different intent")
             if record.state == "committed":
                 return record.receipt  # a replay returns the original receipt
-            raise EffectOutcomeUnknown(f"{key} is {record.state}; refusing to re-apply")
+            if record.state != "declined":
+                raise EffectOutcomeUnknown(f"{key} is {record.state}; refusing to re-apply")
         # No record, or a decline that proved nothing happened: safe to apply.
         # Production writes "reserved" and "executing" durably before dispatch.
         record = self._records[key] = EffectRecord(digest, "reserved")

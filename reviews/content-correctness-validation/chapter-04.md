@@ -32,7 +32,7 @@ Tables were read for categorical consistency, units and stated assumptions; no n
 
 ## Code Example Validation
 
-Registered example(s): contracts platform. The pinned example/mortgage tests passed as a suite (264 passed); this does not establish semantic completeness. No chapter-specific code defect was confirmed in this pass.
+Registered example(s): contracts (region `platform`) [audited: corrected — registry id and marker region as used in the chapter]. The pinned example/mortgage tests passed as a suite (264 passed); this does not establish semantic completeness. No chapter-specific code defect was confirmed in this pass.
 
 ## Equations and Quantitative Validation
 

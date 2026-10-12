@@ -221,7 +221,7 @@ Each row names the Chapter 17 card that describes the failure's usual cause.
 1. Stop dependent work and preserve cancellation intent.
 2. Load EffectRecord, intent hash, expected version, downstream request ID, and trace.
 3. Query the authoritative downstream system by idempotency key, resource ID, or business predicate.
-4. Classify the result in Chapter 22's effect states: Committed; Declined (proven absent); Partial; still Executing (check again within the provider's visibility window); or InterventionRequired (unprovable).
+4. Classify the result in Chapter 22's effect states: Committed; Declined (proven absent: no match after the visibility window the tool manifest declares); Partial; still Executing (check again within that window); or InterventionRequired (unprovable, including a provider that declares no window).
 5. Record evidence; then accept a Committed receipt, retry a Declined effect under the same logical key, compensate a Partial one, or open an intervention task (Chapter 14).
 6. Add the failure to simulation and release regression tests.
 
@@ -262,7 +262,7 @@ Each contract has one owner and one defining chapter, as indexed in Chapter 4 §
 
 # Appendix D — Choosing an Agent Framework
 
-> **Evidence context:** The comparison draws on current documentation for the OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Amazon Bedrock multi-agent collaboration, LangGraph and LangSmith, LlamaIndex Workflows, PydanticAI durable execution, Dapr Agents, Temporal, DBOS, MCP, A2A, OpenTelemetry GenAI conventions, and MLflow. It records declared capabilities, not a comparative production certification. The Claude Agent SDK, CrewAI, and Restate entries have no registered source in this edition; verify their current documentation and maturity before relying on them. **[R02][R05][R06][R07][R19][R20][R21][R25][R29][R31][R32][R33][R34][R35][R36][R37][R38]**
+> **Evidence context:** The comparison draws on current documentation for the OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Amazon Bedrock multi-agent collaboration, LangGraph and LangSmith, LlamaIndex Workflows, PydanticAI durable execution, Dapr Agents, Temporal, DBOS, Restate, MCP, A2A, OpenTelemetry GenAI conventions, MLflow, the Claude Agent SDK, Claude Managed Agents, and CrewAI. It records declared capabilities, not a comparative production certification; all of these are living documents, so verify current maturity before relying on any row. **[R02][R05][R06][R07][R19][R20][R21][R25][R29][R31][R32][R33][R34][R35][R36][R37][R38][R55][R56][R57][R58]**
 
 |  |
 | --- |
@@ -273,7 +273,7 @@ Each contract has one owner and one defining chapter, as indexed in Chapter 4 §
 | **Framework or standard** | **Strength** | **Enterprise caution** | **Recommended placement** |
 | --- | --- | --- | --- |
 | OpenAI Agents SDK | Compact Python runtime for agents, tools, handoffs, guardrails, structured outputs, sessions, tracing, MCP, HITL, RunState, and sandbox surfaces; a useful manager-versus-handoff distinction | SDK state is not workflow truth; provider gravity; the application still owns credentials, authorization, effects, durability, and long waits | Bounded AgentRuntime adapter (Chapter 3); an SDK handoff moves control inside one step, never accountability (Chapter 11). Book baseline: `openai-agents==0.22.2` with `openai==3.13.0` in the offline profile |
-| Claude Agent SDK and Managed Agents | Long-horizon harness design, hosted session and event model, sandbox/worker separation, guidance to start simple | Verify feature maturity and cost before adoption; enterprise effects and cross-vendor state stay externally governed | Research and coding workloads behind the same AgentRuntime boundary; keep run, effect, and audit state portable |
+| Claude Agent SDK and Managed Agents | The Agent SDK exposes Claude Code's agent loop, built-in tools, hooks, permissions, subagents, MCP, and sessions as a library; Managed Agents hosts that harness for long-running work with persisted sessions, a server-sent event stream, and managed or self-hosted sandboxes | Managed Agents is documented as beta; verify feature maturity and cost before adoption; enterprise effects and cross-vendor state stay externally governed | Research and coding workloads behind the same AgentRuntime boundary; keep run, effect, and audit state portable |
 | Google ADK and A2A | Composable agents and tools with Google Cloud integration; A2A 1.0 defines agent cards, tasks, messages, artifacts, bindings, and lifecycle operations | Cloud convenience and protocol interoperability do not supply capability trust, authorization equivalence, transaction semantics, or quality | ADK as one harness option behind the platform boundary; the A2A Gateway at cross-team and vendor boundaries (Chapter 19) |
 | Microsoft Agent Framework | Agent and workflow abstractions that converge AutoGen and Semantic Kernel concepts: typed sessions and middleware, graph workflows, telemetry, broad provider integrations | Some languages and features remain preview; Azure-centric managed integrations increase coupling; do not bind public contracts to framework messages or state | Behind adapters where the Microsoft ecosystem and typed middleware matter; pair with the durable and effect architecture |
 | LangGraph and LangSmith | Explicit graph state, checkpointers, interrupts, stores, time travel, human-in-the-loop, and trace/evaluation workflow | Graph checkpoints are not complete enterprise durability; identity, effects, policy, release, and audit still need integration; memory semantics remain application-defined | Application-level graph orchestration, optionally inside a separate durable workflow; keep external writes governed |
@@ -432,7 +432,7 @@ Chapter 1 § The vocabulary this book assumes introduces the core terms; this gl
 | Global control tier | The deployment tier that publishes signed, immutable definitions and holds no run state | 4 |
 | Guardrail | A probabilistic detector, such as an input or output check; its finding feeds a policy point and never decides authorization | 20 |
 | Handoff | An accountable transfer of task or interaction ownership that takes effect only when the recipient acknowledges; a framework handoff moves control, not accountability | 11 |
-| Idempotency key | A caller-supplied identifier that lets a downstream system recognize a repeated request as the same request | 22 |
+| Idempotency key | A stable identifier the platform derives from tenant, run, and logical effect and binds to an intent hash; passed to a downstream system that supports one so it recognizes a repeated request as the same request. The model never chooses it | 22 |
 | InterventionRequired | Run, task, or effect state used when correctness cannot be established automatically; it opens an intervention task | 15, 22 |
 | Intervention task | A typed request for human help with an uncertain run; its response is an input to the run and never approves an effect | 14 |
 | Layer | A deployable unit of the architecture (for example, Model access or Durable execution); layers serve the planes | 4 |
@@ -451,7 +451,7 @@ Chapter 1 § The vocabulary this book assumes introduces the core terms; this gl
 | Skill Pack | Certified, co-released set of compatible Skills with shared policy and evaluations; installing one grants nothing | 9 |
 | Subject | The principal whose delegated authority initiates a protected action | 21 |
 | TaskEnvelope | The contract every child task carries, in eight field groups | 18 |
-| Tool Gateway | Control point that decides whether an effect may happen, for this subject, exactly once; protocol-agnostic | 2, 22 |
+| Tool Gateway | Control point that decides whether an effect may happen for this subject and dispatches it as one logical effect under the effect ledger, so a retry cannot repeat it; it does not promise cross-system exactly-once delivery; protocol-agnostic | 2, 22 |
 | Trajectory | A run's ordered decisions viewed for evaluation | 25 |
 | Trust tier | The rank of a context segment's origin, from tier 1 system instructions to tier 4 retrieved data that can never direct behavior | 6 |
 | Unknown | Effect state when a mutation may have reached the downstream system and the platform holds neither a receipt nor proof of absence; it blocks retry and dependent work | 22 |
@@ -817,10 +817,10 @@ This matrix defines exactly what each citation is permitted to support. It preve
 
 | **Quantity** | **Approximation** | **Caution** |
 | --- | --- | --- |
-| Effective work rate | lambda\_eff = lambda\_external × E[nodes] × E[fan-out] × retry\_multiplier | Estimate separately by tenant/risk/route. |
+| Effective work rate | lambda\_eff = lambda\_external × E[attempted activities per external run] | Measure attempted activities per run from traces for each resource class; the count already includes fan-out and retries, so do not multiply by them again. Estimate separately by tenant/risk/route. |
 | Offered concurrency | L = lambda\_eff × E[service time] | Little’s Law gives mean in-flight work under stable conditions [R43]. |
 | Permit pool | permits >= ceil(L / target\_utilization) | Use lower utilization for high-variance or rate-limited dependencies. |
-| Retry multiplier | 1 + p\_retry + p\_retry² + … up to the attempt cap | Correlated outages violate independence; simulate them. |
+| Retry multiplier | 1 + p\_retry + p\_retry² + … up to the attempt cap | Projects attempts from first-attempt counts only when traces are unavailable. Correlated outages violate independence; simulate them. |
 | Token demand | requests × (uncached input + cached input + output tokens) | Count tool schemas as input; track by model route and ContextManifest policy. |
 | Verified-success cost | (model + tool + compute + human-review cost) / accepted outcomes | Include failed, abandoned, and reconciled runs. |
 

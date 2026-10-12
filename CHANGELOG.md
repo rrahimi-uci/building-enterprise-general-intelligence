@@ -4,6 +4,26 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Correctness review corrections
+
+All 21 findings of the correctness review (PR #81) were re-verified against the source; 20 are corrected here and one (the R48 run artifact) is labelled and left open. Dispositions are recorded under each finding in `reviews/content-correctness-validation/`.
+
+- Chapter 1: the level-one model "has no reliable way of knowing what it does *not* know"; the Tool Gateway row no longer promises "exactly once", and the idempotency key is defined as platform-derived and never model-chosen (also in Appendix H).
+- Chapter 5: the intersection of two knowledge sets is "corroborated, not verified" — scope, freshness and permission checks still apply before action (table and `set-operations` docstring); the 44% figure is labelled author-reported, from one run of the author's own pipeline.
+- Chapter 6: the "most systems are past the point where more retrieval helps" claim becomes a measure-on-your-own-workload recommendation.
+- Chapter 7: `agentctl` is identified as an illustrative command surface, not a tool the book ships.
+- Chapter 13: the `evaluator-optimizer` example never accepts a candidate that overran the spend cap and starts no call once spend reaches it; every configured criterion needs a finite score, and executable checks are decided before judge evidence; the one-call overrun that remains is documented on `RevisionLimits`. Three tests added.
+- Figure 13-1 redrawn: the judge feeds only the acceptance engine, which owns every exit — accepted, rejected to revise, escalated to a person.
+- Chapter 15: an activity that fails before its result is recorded is retried even if its external call succeeded, which is why side effects carry an effect key.
+- Chapter 20: the T-04 and T-05 first refusals state their residual risk (provenance is not truth; poison inside an approved source) and point to corroboration, human review and Chapter 23.
+- Chapter 22: `effect-idempotency` checks the intent hash before any state handling, so a declined or proven-absent key re-applies only the same intent and rejects a different one with `EffectConflict`; Declined-by-absence requires a manifest-declared visibility window, otherwise InterventionRequired (ToolManifest Effects row and Appendix B step 4 aligned). Tests added.
+- Chapter 24: the worked trace "took twelve minutes to return its summary" and the run cannot close while the effect is Unknown; a fork is a sandbox run with mocked or read-only effects, and acting again is a new, separately authorized run.
+- Chapter 25: pass^k is defined as the empirical all-k pass rate; the independence assumption behind p^k is stated.
+- Chapter 28 and Appendix L: R43 supports only L = λW and the sizing method is a book-authored recommendation; λ_eff = λ_external × E[attempted activities per external run], measured from traces, with the retry multiplier reserved for when traces are unavailable.
+- Appendix D: R55–R58 (Claude Agent SDK, Claude Managed Agents (beta), CrewAI, Restate) registered as `n.d.` living documentation with narrow scopes; the Claude row describes documented capabilities with a beta caution. The registry grows to 58 references and 147 citation occurrences.
+- Metadata: the 22 stale chapter titles in `config/book.json` now match the manuscript, and `make validate` fails on any title drift between the manuscript, `config/book.json` and `config/chapter-covers.json`.
+- Review folder: example-id lists and the QA-date statement corrected by an accuracy audit; dispositions, an implementation-status section and updated counts added.
+
 ### Appendices and final cross-Part pass (continuity review, WP-A)
 
 - Appendix B names the Chapter 17 card behind each symptom and classifies a missing receipt in Chapter 22's effect states.

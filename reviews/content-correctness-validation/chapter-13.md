@@ -33,6 +33,8 @@ Registered visual(s): pattern-reflection. Marker/caption ownership was checked a
   **Evidence:** Visual inspection of rendered PNG against the loop and chapter caption.
   **Recommended correction:** Draw an explicit acceptance-engine reject/escalate branch or label the current arrows as advisory feedback.
 
+  **Disposition (2026-10-11):** confirmed-adjusted (Low) — `assets/diagrams/src/pattern-reflection.gv` redrawn: the judge now feeds only the acceptance engine ("score + rationale · never self-accepts"), and the engine owns every exit — accepted, rejected → Revise, escalated (cap · no progress) → Human intervention; the PNG/PDF were re-rendered and the `config/diagrams.json` description and sha256 updated (this corrective PR). The new rendering has not yet been inspected at print scale.
+
 ## Table and Chart Validation
 
 Tables were read for categorical consistency, units and stated assumptions; no numerical discrepancy was confirmed here unless listed below. Illustrative values are not empirical measurements. No independent cell-by-cell external attestation is claimed.
@@ -48,12 +50,16 @@ Registered example(s): evaluator-optimizer. The pinned example/mortgage tests pa
   **Evidence:** Code increments `spent` at line 89, accepts at 93–94, and only checks budget at 98–99. Existing test accepts two $0.60 candidates under a $1.00 cap after $1.20 spend.
   **Recommended correction:** Check an enforceable pre-call budget/reservation and validate actual cost before acceptance; document unavoidable post-call overage separately and test it.
 
+  **Disposition (2026-10-11):** confirmed — a candidate whose generation cost broke the cap is now escalated (`budget_exhausted`), never accepted, and no further call starts once spend ≥ cap; two tests were added that fail on the previous code (this corrective PR). Documented limitation, not eliminated: a call's cost is known only afterwards and the `Generator` protocol carries no cost ceiling, so there is no per-call reservation and the last call can still overrun the cap by its own cost (stated on `RevisionLimits`). The existing two-$0.60 test therefore still spends $1.20 under a $1.00 cap, but now ends in escalation rather than acceptance.
+
 - **Location:** examples/patterns/evaluator_optimizer.py:52-65
   **Status:** Confirmed Error; **Category:** Code; **Severity:** High; **Confidence:** High.
   **Current content:** Configured judge thresholds govern acceptance.
   **Finding:** An empty score tuple satisfies the loop vacuously and accepts a candidate although required `accuracy` score is missing.
   **Evidence:** `AcceptanceEngine({"accuracy": 0.8}).decide("answer", (), ())` returned `accepted` in the pinned test environment.
   **Recommended correction:** Reject/escalate when a required criterion is missing, unknown or non-finite; add a missing-score test.
+
+  **Disposition (2026-10-11):** confirmed — `AcceptanceEngine.decide` now requires every configured criterion to be present with a finite score before it can accept, and consults judge evidence only once every executable check has passed; a test covers the missing, NaN and substitute-criterion cases (this corrective PR).
 
 ## Equations and Quantitative Validation
 
@@ -79,6 +85,6 @@ No separate confirmed finding in this category during this pass; absence of a fi
 
 ## Recommended Corrections
 
-1. Check an enforceable pre-call budget/reservation and validate actual cost before acceptance; document unavoidable post-call overage separately and test it.
-2. Reject/escalate when a required criterion is missing, unknown or non-finite; add a missing-score test.
-3. Draw an explicit acceptance-engine reject/escalate branch or label the current arrows as advisory feedback.
+1. Check an enforceable pre-call budget/reservation and validate actual cost before acceptance; document unavoidable post-call overage separately and test it. (applied with adjustment: cost is validated before acceptance and before every further call, and the overage is documented and tested; no pre-call reservation was added because the generator has no cost ceiling, so the one-call overrun remains)
+2. Reject/escalate when a required criterion is missing, unknown or non-finite; add a missing-score test. (applied)
+3. Draw an explicit acceptance-engine reject/escalate branch or label the current arrows as advisory feedback. (applied: both branches drawn)

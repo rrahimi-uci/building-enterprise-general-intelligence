@@ -27,6 +27,8 @@ Citation presence was checked, but not every cited page was independently re-rea
   **Evidence:** [Little, Operations Research 9(3), DOI 10.1287/opre.9.3.383](https://doi.org/10.1287/opre.9.3.383); registry scope for R43 expressly limits support to Little's Law.
   **Recommended correction:** Attach R43 only to the formula; label other advice as book-authored recommendations or cite suitable independent evidence.
 
+  **Disposition (2026-10-11):** confirmed — the evidence row is split: R43 now supports only a "Little's Law" row (L = λW, applied per scarce resource and counting only active service time for permits), and the sizing method is a separate row labelled "book-authored recommendation" with no source ("—") (this corrective PR). The 120/min × 4 min = 480 example is unchanged.
+
 ## Images and Diagram Validation
 
 Registered visual(s): reliability-economics; model-routing. Marker/caption ownership was checked against the chapter and registry; generated-image existence and baseline structural QA are documented in the overall report. No specific arrow/label error was confirmed here. Full print-scale inspection of every visual and all cover-image prose remains a separate verification gate.
@@ -63,4 +65,4 @@ No separate confirmed finding in this category during this pass; absence of a fi
 
 ## Recommended Corrections
 
-1. Attach R43 only to the formula; label other advice as book-authored recommendations or cite suitable independent evidence.
+1. Attach R43 only to the formula; label other advice as book-authored recommendations or cite suitable independent evidence. (applied: labelled book-authored; no independent evidence cited)
