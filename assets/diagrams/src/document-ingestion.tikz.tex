@@ -1,0 +1,76 @@
+% Figure 5-3 -- Document ingestion: intake, extract, verify against the bytes,
+% route, record, serve.
+% Restyled from document-ingestion.gv (current source); nodes, edges, labels,
+% edge styles and the two loops back are unchanged. Layout only is new.
+%
+% Original element -> restyled element
+%   doc      Source document / PAY-000184-02 / bytes + digest (note) -> cyan card with folded corner
+%   intake   Intake / scan . classify . ACL / label as data (square box) -> blue square card
+%   extract  Extract and normalize / model proposes fields with / region . unit .
+%            confidence / extractor version                          -> teal card
+%   verify   Literal span in the bytes? Consistent? (diamond)        -> amber diamond
+%   record   KnowledgeArtifact / digest . regions . verdicts . release / versions:
+%            diff, not overwrite (cylinder)                          -> blue cylinder
+%   route    Route by finding kind (diamond)                         -> amber diamond
+%   semantic Semantic view for the Retrieval Broker (Ch 6)           -> blue square card
+%   rule     Enforced rule / supported facts only                    -> plum card
+%   reject   Not served / contradicted or unverifiable               -> red card
+%   10 edges: doc>intake "bytes"; intake>extract "text + structure"; extract>verify
+%     "candidate fields"; verify>doc dotted cyan "re-opens the pinned bytes";
+%     verify>record teal "supported"; verify>route red "contradicted or insufficient";
+%     route>extract dashed "repair one field"; route>reject "human review or case
+%     management"; record>semantic "text as data"; record>rule "facts"
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+
+% ---- local constructs (candidates for promotion to professional-diagrams.sty) ----
+% \dgdoccorner{node}{role}: the folded top-right corner of a note-shaped card.
+\newcommand{\dgdoccorner}[2]{%
+  \path[fill=white] ([xshift=-11pt]#1.north east) -- ([xshift=1pt,yshift=1pt]#1.north east)
+    -- ([yshift=-11pt]#1.north east) -- cycle;
+  \path[fill=dg-#2-pill, draw=dg-#2-line, line width=\dgstroke, line join=round]
+    ([xshift=-11pt]#1.north east) -- ([xshift=-11pt,yshift=-11pt]#1.north east)
+    -- ([yshift=-11pt]#1.north east) -- cycle;}
+
+\begin{document}
+\begin{tikzpicture}
+  % ---- nodes ----
+  \node[dg card=cyan, icon=file-alt, text width=104pt] (doc) at (72,0)
+    {\dgcontent{Source document}{PAY-000184-02\\bytes + digest}{}};
+  \dgdoccorner{doc}{cyan}
+  \node[dg card=blue, square, text width=150pt] (intake) at (325,0)
+    {\dgcontent{Intake}{scan · classify · ACL\\label as data}{}};
+  \node[dg card=teal, text width=190pt] (extract) at (325,-100)
+    {\dgcontent{Extract and normalize}{model proposes fields with\\region · unit · confidence\\extractor version}{}};
+  \node[dg decision=amber, text width=110pt, minimum width=210pt, minimum height=92pt] (verify) at (325,-232)
+    {\dgcontent{}{Literal span\\in the bytes?\\Consistent?}{}};
+  \node[dg decision=amber, text width=90pt, minimum width=158pt, minimum height=66pt] (route) at (325,-392)
+    {\dgcontent{}{Route by\\finding kind}{}};
+  \node[dg store=blue, aspect=0.07, minimum width=215pt, minimum height=66pt, text width=190pt] (record) at (120,-392)
+    {\dgcontent{KnowledgeArtifact}{digest · regions · verdicts · release\\versions: diff, not overwrite}{}};
+  \node[dg card=blue, square, text width=96pt] (semantic) at (60,-505)
+    {\dgcontent{Semantic view}{for the Retrieval\\Broker (Ch 6)}{}};
+  \node[dg card=plum, text width=82pt] (rule) at (205,-505)
+    {\dgcontent{Enforced rule}{supported\\facts only}{}};
+  \node[dg card=red, text width=106pt] (reject) at (325,-505)
+    {\dgcontent{Not served}{contradicted or\\unverifiable}{}};
+
+  % ---- connectors ----
+  \draw[flow in=blue] (doc.east) -- node[pill=blue]{Bytes} (intake.west);
+  \draw[flow in=blue] (intake.south) -- node[pill=blue]{Text + structure} (extract.north);
+  \draw[flow in=blue] (extract.south) -- node[pill=blue]{Candidate fields} (verify.north);
+  \draw[dotted flow, draw=dg-cyan-line, turn] (verify.west) -| node[pill=cyan,pos=0.78]
+    {Re-opens the\\pinned bytes} (doc.south);
+  \draw[flow in=teal] (verify.south west) to[out=-125,in=70] node[pill=teal,pos=0.45]{Supported}
+    ([xshift=40pt]record.north);
+  \draw[flow in=red] (verify.south) -- node[pill=red]
+    {Contradicted or\\insufficient} (route.north);
+  \draw[dashed flow, draw=dg-blue-line, rounded corners=14pt] (route.east) -- (466,-392) |-
+    node[pill=blue,pos=0.38]{Repair\\one field} (extract.east);
+  \draw[flow in=blue] (route.south) -- node[pill=blue]{Human review or\\case management} (reject.north);
+  \draw[flow in=blue] ([xshift=-45pt]record.south) to[out=-90,in=90] node[pill=blue]{Text as data}
+    ([xshift=10pt]semantic.north);
+  \draw[flow in=blue] ([xshift=45pt]record.south) to[out=-90,in=90] node[pill=blue]{Facts}
+    (rule.north);
+\end{tikzpicture}
+\end{document}
