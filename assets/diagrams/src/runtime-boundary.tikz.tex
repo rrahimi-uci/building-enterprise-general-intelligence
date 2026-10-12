@@ -1,0 +1,76 @@
+% Figure 3-1 -- One bounded agent step across the platform/framework boundary.
+% Restyled from runtime-boundary.gv; the 11 nodes, the cluster and the 12 edges
+% (direction, label, solid/dashed/dotted) are unchanged. Layout only is new.
+%
+% Original element -> restyled element
+%   request  AgentStepRequest / identity . context . bounds -> blue card (document icon; was a note shape)
+%   adapter  AgentRuntime adapter / translate . constrain . map -> teal card
+%   result   AgentStepResult / proposal . evidence . usage  -> cyan card (document icon; was a note shape)
+%   cluster  "Bounded framework execution . no enterprise authority" -> teal group
+%     agent  Agent loop / reason . observe . stop           -> teal card
+%     model  Model provider / inference only                -> slate card
+%     tool_call  Eligible tool / proposal                   -> teal card
+%   gateway  Tool Gateway / validate . authorize . dispatch -> blue card
+%   policy   Exact resource and policy? (diamond)           -> amber diamond
+%   domain   Domain service / commit business effect        -> blue card
+%   refuse   Refuse / no effect                             -> red card
+%   receipt  Effect receipt / workflow evidence (cylinder)  -> plum cylinder
+%   edges    request>adapter "bounded contract"; adapter>cluster "framework-native
+%            inputs"; agent>model "inference" (dashed); model>agent "response" (dashed);
+%            agent>tool_call "choose"; cluster>result "structured outcome";
+%            cluster>gateway "proposal only" (from the tool_call); gateway>policy
+%            "re-check exact action" (dashed, amber); policy>domain "allowed";
+%            policy>refuse "denied" (red); domain>receipt "verified commit" (plum);
+%            result>receipt "linked evidence" (dotted, plum)
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  % ---- contract in ----
+  \node[dg card=blue, icon=file-alt, text width=140pt, align=left] (req) at (110,0)
+    {\dgcontent{AgentStepRequest}{Identity · context · bounds}{}};
+  \node[dg card=teal, text width=150pt, align=center] (adp) at (110,-74)
+    {\dgcontent{AgentRuntime adapter}{Translate · constrain · map}{}};
+
+  % ---- bounded framework execution ----
+  \node[dg card=teal, text width=150pt, align=center] (agent) at (110,-182)
+    {\dgcontent{Agent loop}{Reason · observe · stop}{}};
+  \node[dg card=slate, text width=100pt, align=center] (model) at (60,-268)
+    {\dgcontent{Model provider}{Inference only}{}};
+  \node[dg card=teal, text width=84pt, align=center] (tool) at (232,-268)
+    {\dgcontent{Eligible tool}{Proposal}{}};
+  \dggroup{fw}{teal}{Bounded framework execution · no enterprise authority}{(agent)(model)(tool)}
+
+  % ---- contract out ----
+  \node[dg card=cyan, icon=file-alt, text width=118pt, align=left] (res) at (392,-74)
+    {\dgcontent{AgentStepResult}{Proposal · evidence · usage}{}};
+
+  % ---- platform-owned path ----
+  \node[dg card=blue, text width=140pt, align=center] (gw) at (90,-372)
+    {\dgcontent{Tool Gateway}{Validate · authorize · dispatch}{}};
+  \node[dg decision=amber, minimum width=200pt, minimum height=64pt] (pol) at (372,-372)
+    {\dgcontent{Exact resource}{and policy?}{}};
+  \node[dg card=blue, text width=100pt, align=center] (dom) at (322,-452)
+    {\dgcontent{Domain service}{Commit business effect}{}};
+  \node[dg card=red, text width=50pt, align=center] (ref) at (432,-452)
+    {\dgcontent{Refuse}{No effect}{}};
+  \node[dg store=plum, aspect=0.12, text width=104pt, minimum height=40pt] (rec) at (322,-540)
+    {\dgcontent{Effect receipt}{Workflow evidence}{}};
+
+  % ---- connectors ----
+  \draw[flow in=blue] (req.south) -- node[pill=blue]{Bounded contract} (adp.north);
+  \draw[flow in=blue] (adp.south) -- node[pill=blue]{Framework-native inputs} (adp.south |- fw.north);
+  \draw[dashed flow, draw=dg-slate-line] ([xshift=-80pt]agent.south) -- node[pill=slate]{Inference} ([xshift=-30pt]model.north);
+  \draw[dashed flow, draw=dg-slate-line] ([xshift=30pt]model.north) -- node[pill=slate]{Response} ([xshift=-20pt]agent.south);
+  \draw[flow in=blue] ([xshift=82pt]agent.south) -- node[pill=blue]{Choose} ([xshift=-40pt]tool.north);
+  \draw[flow in=blue, turn] (agent.east -| fw.east) -| node[pill=blue,pos=0.3]{Structured\\outcome} (res.south);
+  \draw[flow in=blue, turn] (tool.south) -- (232,-333) --
+    node[pill=blue]{Proposal only} (90,-333) -- (gw.north);
+  \draw[dashed flow, draw=dg-amber-line] (gw.east) -- node[pill=amber]{Re-check\\exact action} (pol.west);
+  \draw[flow in=blue] (pol.south west) -- node[pill=blue]{Allowed} (pol.south west |- dom.north);
+  \draw[flow in=red] (pol.south east) -- node[pill=red]{Denied} (pol.south east |- ref.north);
+  \draw[flow in=plum] (dom.south) -- node[pill=plum]{Verified commit} (dom.south |- rec.north);
+  \draw[dotted flow, draw=dg-plum-line, turn] (res.east) -- (488,-74) -- (488,-542) --
+    node[pill=plum]{Linked evidence} (rec.east);
+\end{tikzpicture}
+\end{document}
