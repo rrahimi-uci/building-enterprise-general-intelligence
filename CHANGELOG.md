@@ -10,7 +10,7 @@ All notable changes follow semantic versioning and are recorded here.
 - Groups converted: stacks, ladders and maps; decision trees; before/after pairs (one shared panel template, `_before-after.tex`); flows with feedback loops; pipelines and state machines; layered and plane architectures including Figure 4-1 (40 chips, 9 groups); and both sequence diagrams (a native TikZ sequence kit, `_sequence-kit.tex`, replaces Mermaid).
 - About a dozen figures that the book used to shrink to 69–85 % (labels printing at 7.5–9 pt) are redrawn compactly and placed at full size, so text is 9 pt or larger throughout.
 - Fixed `tools/validate_latex.py` holding `release-recovery.png` to the chapter-cover resolution because its id contains the word "cover"; it now matches the `assets/cover/` prefix.
-- Review material in `reviews/diagram-modernization/`: per-group reports, before/after pairs and 40 technical content observations raised for separate review (none acted on).
+- Review material in `reviews/diagram-modernization/`: per-group reports, before/after pairs and the technical content observations raised for separate review (none acted on).
 
 ### PDF in dist
 
