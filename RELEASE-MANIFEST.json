@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 28818,
-      "sha256": "12ef865471513beeaec0f7d8262c302b6d2d9d3c211dd8b7897fa602edc2e070"
+      "bytes": 29118,
+      "sha256": "4fe1eb53414adcd0a04a4b98c2f59a82f8f7dcb9c8c0e9f44879101eeb9e3f67"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -76,8 +76,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 16936,
-      "sha256": "d7ab241f78d9c3c57b9fb391000b8f92bafc6a1e3920178fa5d698e98413654a"
+      "bytes": 16981,
+      "sha256": "2624fa1eca80d3b175cd0566bbb9966e017ea8adac71dd9a5cce610a9c9467cd"
     },
     {
       "path": "RELEASE-CHECKLIST.md",
@@ -1506,8 +1506,8 @@
     },
     {
       "path": "latex/compile.sh",
-      "bytes": 708,
-      "sha256": "28e733bd763b6975f73fd79e854a7887117fd3ab34e37022bc7febd709b536d2"
+      "bytes": 1038,
+      "sha256": "b33e257d5dc4e18339a0a11f1dafa3bdbc6c0bb0202c53da1b496198e9158ca9"
     },
     {
       "path": "latex/content/book-content.tex",
@@ -2681,8 +2681,8 @@
     },
     {
       "path": "tools/build_latex.py",
-      "bytes": 33792,
-      "sha256": "55d664c84e4a2fefb69c99e33041e2b13e62fc959f17afe7eb769b1f492a9596"
+      "bytes": 34123,
+      "sha256": "ad580d56d11c41af319c9d14d12c4d1222d130446eb4ae9a6f3e0656c98aa132"
     },
     {
       "path": "tools/callouts.py",
