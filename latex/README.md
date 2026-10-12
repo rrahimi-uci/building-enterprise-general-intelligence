@@ -34,6 +34,7 @@ A GitHub Actions workflow is also provided at `.github/workflows/latex.yml`.
 - `bookstyle.sty` — page geometry, embedded fonts, palette, headings, Part/chapter pages, tables, code, callouts, figures, headers, footers, links, and PDF metadata.
 - `content/book-content.tex` — generated semantic content. Do **not** hand-edit.
 - `fonts/` — bundled Liberation Sans and Liberation Mono files plus license.
+- `styles/professional-diagrams.sty` — the shared TikZ design system for the book's figures. It is not loaded by the book itself: `tools/render_diagrams.py` compiles each `assets/diagrams/src/<id>.tikz.tex` with XeLaTeX (from the repository root, with `TEXINPUTS` pointing here) into a cropped vector PDF, and rasterises the PNG used by the DOCX edition from that PDF. Only the rendered PDFs enter the book build, so CI never compiles TikZ; `make diagrams` does, locally.
 - `reference/DOCX-layout-reference-draft.pdf` — the pre-release draft's cross-format visual baseline, rendered from DOCX. Kept for comparison; the topology has since changed, so it no longer matches the current page count. Regenerate with `make qa-pdf` where LibreOffice is available.
 - `compile.sh` — deterministic local build entry point.
 
@@ -72,6 +73,8 @@ installs only what is missing, into your user texmf tree, without `sudo`.
 `fancyhdr`, `titlesec`, `caption`, `hyperref`, `bookmark`, `listings`,
 `tcolorbox`, `needspace`, `setspace`, `lastpage`, `pdflscape`, `etoolbox`, and
 `amssymb`.
+
+**Diagram rendering only** (`make diagrams`, not the book build): `standalone`, `fontawesome5`, and the `tikz` libraries `arrows.meta`, `calc`, `positioning`, `fit`, `backgrounds`, `shapes.geometric`, `shapes.misc`, `shadows`, `bending`, `decorations.markings`; also `pdftoppm`, `pdfinfo`, `pdffonts` (poppler). `./tools/bootstrap_tex.sh --diagrams` installs the TeX packages.
 
 **Transitive dependencies** — pulled in by `tcolorbox[most]` and easy to miss,
 because the failure surfaces as a missing file inside a tcolorbox library rather

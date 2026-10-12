@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 """Render every diagram from its editable source to vector PDF and raster PNG.
 
+Three kinds of editable source, one output contract. A diagram's source is one of:
+
+  * `<id>.gv`        Graphviz, house style from `_theme.gv`
+  * `<id>.mmd`       Mermaid (sequence diagrams)
+  * `<id>.tikz.tex`  a standalone TikZ document that loads the shared design
+                     system `latex/styles/professional-diagrams.sty`; compiled
+                     with XeLaTeX, PNG rasterised from the resulting PDF
+
 Two outputs, because the two editions need different things:
 
   * PDF  -- vector, embedded by XeLaTeX. Stays sharp at any zoom and in print,
@@ -21,6 +29,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
+import os
 import re
 import shutil
 import subprocess
@@ -52,6 +62,17 @@ def splice_theme(source: str, theme: str) -> str:
 # contract once scaled up, so the raster dpi is chosen per diagram from its
 # natural width. The vector PDF is unaffected -- it scales losslessly.
 MAX_RENDER_DPI = 700
+
+# TikZ figures are drawn at final size, so the PDF is placed at ~1:1. The book
+# floats a figure at the 7.06in text width, capped at 0.86 of the 9.67in text
+# height; a figure that would be scaled below TIKZ_MIN_SCALE shrinks its 9pt
+# minimum text under the 8.5pt floor, so it must be redrawn, not shrunk.
+TEXT_WIDTH_INCHES = 7.06
+FIGURE_MAX_HEIGHT_INCHES = 8.3
+TIKZ_MIN_SCALE = 0.95
+TIKZ_SOURCE_SUFFIX = ".tikz.tex"
+# Fixed so the XeLaTeX PDFs (creation date, trailer ID) are byte-stable.
+TIKZ_SOURCE_DATE_EPOCH = "1767225600"
 
 
 def natural_width_inches(staged: Path) -> float:
@@ -91,6 +112,85 @@ def render_mermaid(source: Path, config: Path, pdf: Path, png: Path) -> None:
                         "-o", str(png), str(svg)], check=True, capture_output=True)
 
 
+def pdf_page_inches(pdf: Path) -> tuple[float, float]:
+    """Natural page size of a rendered PDF, from poppler's pdfinfo."""
+    info = subprocess.run(["pdfinfo", str(pdf)], check=True, capture_output=True, text=True).stdout
+    match = re.search(r"Page size:\s+([\d.]+) x ([\d.]+) pts", info)
+    if not match:
+        raise ValueError("pdfinfo did not report a page size")
+    return float(match.group(1)) / 72.0, float(match.group(2)) / 72.0
+
+
+def unembedded_fonts(pdf: Path) -> list[str]:
+    """Names of fonts in the PDF that are not embedded (a print-QA failure)."""
+    listing = subprocess.run(["pdffonts", str(pdf)], check=True, capture_output=True, text=True).stdout
+    bad = []
+    for line in listing.splitlines()[2:]:
+        columns = line.split()
+        # Columns: name type encoding emb sub uni object-id; `emb` is the first yes/no.
+        flags = [c for c in columns if c in ("yes", "no")]
+        if flags and flags[0] == "no":
+            bad.append(columns[0])
+    return bad
+
+
+def tex_error_excerpt(log: str) -> str:
+    """The first TeX error with its context lines, not the memory-usage tail."""
+    lines = log.splitlines()
+    for index, line in enumerate(lines):
+        if line.startswith("!") or re.match(r"^\S+\.tex:\d+:", line):
+            return "\n".join(lines[index:index + 6])
+    return "\n".join(lines[-12:])
+
+
+def render_tikz(root: Path, source: Path, pdf: Path, png: Path) -> dict:
+    """Compile a TikZ source with XeLaTeX and rasterise the PDF for the DOCX edition.
+
+    XeLaTeX runs from the repository root so the design system's relative font
+    path (latex/fonts/) resolves exactly as it does in the book build. The
+    standalone class crops the PDF to the drawing, so no external crop step is
+    needed. A failed compile raises with the tail of the log: a TikZ error must
+    fail `make diagrams` loudly, never leave a stale render behind.
+    """
+    for binary in ("xelatex", "pdftoppm", "pdfinfo", "pdffonts"):
+        if shutil.which(binary) is None:
+            raise RuntimeError(f"{binary} is not installed (needed for TikZ diagrams)")
+    with tempfile.TemporaryDirectory() as work:
+        env = dict(os.environ)
+        env["TEXINPUTS"] = str(root / "latex" / "styles") + os.pathsep + env.get("TEXINPUTS", "")
+        env["SOURCE_DATE_EPOCH"] = TIKZ_SOURCE_DATE_EPOCH
+        env["FORCE_SOURCE_DATE"] = "1"
+        run = subprocess.run(
+            ["xelatex", "-interaction=nonstopmode", "-halt-on-error", "-file-line-error",
+             f"-output-directory={work}", str(source.relative_to(root))],
+            cwd=root, env=env, capture_output=True, text=True)
+        compiled = Path(work) / (source.name[: -len(".tex")] + ".pdf")
+        if run.returncode != 0 or not compiled.exists():
+            log = (Path(work) / (source.name[: -len(".tex")] + ".log"))
+            raise RuntimeError("XeLaTeX failed for " + source.name + ":\n"
+                               + tex_error_excerpt(log.read_text(errors="replace") if log.exists()
+                                                   else run.stdout))
+        width_in, height_in = pdf_page_inches(compiled)
+        scale = min(TEXT_WIDTH_INCHES / width_in, FIGURE_MAX_HEIGHT_INCHES / height_in)
+        problems = []
+        if scale < TIKZ_MIN_SCALE:
+            problems.append(f"placed at {scale:.2f}x ({width_in:.2f} x {height_in:.2f} in natural): "
+                            f"9pt text would print below 8.5pt; redraw within "
+                            f"{TEXT_WIDTH_INCHES} x {FIGURE_MAX_HEIGHT_INCHES} in")
+        missing = unembedded_fonts(compiled)
+        if missing:
+            problems.append("fonts not embedded: " + ", ".join(missing))
+        if problems:
+            raise RuntimeError(source.name + ": " + "; ".join(problems))
+        shutil.copy2(compiled, pdf)
+        # Same contract as the Graphviz path: pixels / 6.85in >= 255 dpi, so a
+        # figure narrower than the column is rasterised denser.
+        dpi = min(MAX_RENDER_DPI, math.ceil(RENDER_DPI * max(1.0, PUBLICATION_WIDTH_INCHES / width_in)))
+        subprocess.run(["pdftoppm", "-r", str(dpi), "-png", "-singlefile", str(pdf),
+                        str(png.with_suffix(""))], check=True, capture_output=True)
+    return {"natural_inches": [round(width_in, 2), round(height_in, 2)], "placement_scale": round(scale, 3)}
+
+
 def identical_png(candidate: Path, existing: Path) -> bool:
     if not existing.exists():
         return False
@@ -113,20 +213,29 @@ def main() -> int:
     theme = source_dir / "_theme.gv"
     mermaid_config = source_dir / "_theme.mermaid.json"
 
-    for binary in ("dot", "rsvg-convert"):
-        if shutil.which(binary) is None:
+    # Only the renderers a source actually needs are required: a checkout that
+    # has converted every diagram to TikZ does not need Graphviz, and vice versa.
+    registry = json.loads((root / "config" / "diagrams.json").read_text(encoding="utf-8"))
+    needed = {"dot": any(d.get("source", "").endswith(".gv") for d in registry["diagrams"]),
+              "rsvg-convert": any(d.get("source", "").endswith(".mmd") for d in registry["diagrams"]),
+              "mmdc": any(d.get("source", "").endswith(".mmd") for d in registry["diagrams"]),
+              "xelatex": any(d.get("source", "").endswith(TIKZ_SOURCE_SUFFIX) for d in registry["diagrams"])}
+    for binary, required in needed.items():
+        if required and not args.check and shutil.which(binary) is None:
             print(json.dumps({"pass": False, "errors": [f"{binary} is not installed"]}, indent=2))
             return 1
 
-    registry = json.loads((root / "config" / "diagrams.json").read_text(encoding="utf-8"))
-    records, errors = [], []
+    records, errors, tikz_info = [], [], {}
 
     for entry in registry["diagrams"]:
         diagram_id = entry["id"]
         if args.only and args.only != diagram_id:
             continue
-        source = next((source_dir / f"{diagram_id}{ext}" for ext in (".gv", ".mmd")
-                       if (source_dir / f"{diagram_id}{ext}").exists()), None)
+        # The registry's `source` is authoritative; fall back to the id for old entries.
+        recorded = root / entry["source"] if entry.get("source") else None
+        source = recorded if recorded and recorded.exists() else next(
+            (source_dir / f"{diagram_id}{ext}" for ext in (TIKZ_SOURCE_SUFFIX, ".gv", ".mmd")
+             if (source_dir / f"{diagram_id}{ext}").exists()), None)
         if source is None:
             errors.append(f"{diagram_id}: no editable source in assets/diagrams/src/")
             continue
@@ -137,13 +246,18 @@ def main() -> int:
             with tempfile.TemporaryDirectory() as work:
                 staged_pdf, staged_png = Path(work) / "d.pdf", Path(work) / "d.png"
                 try:
-                    if source.suffix == ".gv":
+                    if source.name.endswith(TIKZ_SOURCE_SUFFIX):
+                        tikz_info[diagram_id] = render_tikz(root, source, staged_pdf, staged_png)
+                    elif source.suffix == ".gv":
                         render_graphviz(source, theme, staged_pdf, staged_png)
                     else:
                         render_mermaid(source, mermaid_config, staged_pdf, staged_png)
                 except subprocess.CalledProcessError as failure:
                     errors.append(f"{diagram_id}: render failed -- "
-                                  + failure.stderr.decode()[-200:].strip())
+                                  + (failure.stderr or b"").decode()[-200:].strip())
+                    continue
+                except (RuntimeError, ValueError) as failure:
+                    errors.append(f"{diagram_id}: {failure}")
                     continue
                 if not identical_png(staged_png, png):
                     shutil.copy2(staged_png, png)
@@ -161,7 +275,22 @@ def main() -> int:
                           f"is below the {MINIMUM_DPI} dpi contract")
         records.append({"id": diagram_id, "source": source.name, "pixels": [width, height],
                         "effective_dpi": round(dpi), "vector": pdf.exists(),
-                        "sha256": sha256(png)})
+                        "sha256": sha256(png), **tikz_info.get(diagram_id, {})})
+
+    # Keep the registry's recorded digests equal to the renders on disk, so a
+    # re-rendered figure never needs a hand-edited checksum (and a hand edit
+    # cannot drift from the file). Written only when something changed, in the
+    # file's own format, so an unchanged registry stays byte-identical.
+    if not args.check and not errors:
+        digests = {r["id"]: r["sha256"] for r in records}
+        changed = False
+        for entry in registry["diagrams"]:
+            if entry["id"] in digests and entry.get("sha256") != digests[entry["id"]]:
+                entry["sha256"] = digests[entry["id"]]
+                changed = True
+        if changed:
+            (root / "config" / "diagrams.json").write_text(
+                json.dumps(registry, indent=2) + "\n", encoding="utf-8")
 
     report = {"diagrams": len(records), "with_vector": sum(1 for r in records if r["vector"]),
               "records": records, "errors": errors, "pass": not errors}

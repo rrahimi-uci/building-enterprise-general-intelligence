@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import subprocess
 import re
 import shutil
 import sys
@@ -14,6 +15,39 @@ from collections import Counter
 from PIL import Image
 from fontTools.ttLib import TTFont
 
+
+
+DIAGRAM_SOURCE_SUFFIXES = (".gv", ".mmd", ".tikz.tex")
+
+
+def tikz_source_errors(root: Path, entry: dict) -> list[str]:
+    """Contract for a diagram whose editable source is TikZ (`<id>.tikz.tex`).
+
+    The source must use the shared design system (so the look stays one edit),
+    must have a vector render (the XeLaTeX edition embeds it), and that render
+    must embed every font. Other source kinds only need a recognised suffix.
+    """
+    source = entry.get("source", "")
+    name = entry.get("id", "?")
+    if not source:
+        return []
+    if not source.endswith(DIAGRAM_SOURCE_SUFFIXES):
+        return [f"{name}: unrecognised diagram source type {source} (expected .gv, .mmd or .tikz.tex)"]
+    if not source.endswith(".tikz.tex") or not (root / source).exists():
+        return []
+    problems = []
+    if "professional-diagrams" not in (root / source).read_text(encoding="utf-8"):
+        problems.append(f"{name}: TikZ source {source} does not load the professional-diagrams package")
+    vector = entry.get("vector")
+    if not vector:
+        problems.append(f"{name}: a TikZ diagram must record a vector render")
+    elif (root / vector).exists() and shutil.which("pdffonts"):
+        listing = subprocess.run(["pdffonts", str(root / vector)], capture_output=True, text=True).stdout
+        unembedded = [row.split()[0] for row in listing.splitlines()[2:]
+                      if [c for c in row.split() if c in ("yes", "no")][:1] == ["no"]]
+        if unembedded:
+            problems.append(f"{name}: vector render has unembedded fonts: {', '.join(unembedded)}")
+    return problems
 
 def book_release(root: Path) -> str:
     """The single source of the release identifier.
@@ -215,6 +249,7 @@ def main() -> int:
             errors.append(f"{d['id']}: editable source {d['source']} is missing")
         if d.get("vector") and not (root / d["vector"]).exists():
             errors.append(f"{d['id']}: vector render {d['vector']} is missing")
+        errors.extend(tikz_source_errors(root, d))
     if set(diagram_paths) != registered_files:
         missing = sorted(registered_files - set(diagram_paths))
         extra = sorted(set(diagram_paths) - registered_files)
