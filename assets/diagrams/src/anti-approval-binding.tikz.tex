@@ -1,0 +1,53 @@
+% Figure 17-4 -- AP-06. Boolean consent versus proposal-bound, expiring approval.
+% Restyled from anti-approval-binding.gv (current source: evidence package v3
+% to v5, "Approval bound to digest . expires", "Commit . key = logical effect").
+% The ANTI-PATTERN / CORRECTION captions that sat at the foot of each column
+% become panel headers (dashed red panel = anti-pattern, solid teal = correction).
+%
+% Original element -> restyled element
+%   bad  ANTI-PATTERN                          -> dashed red panel, header pill
+%   b1   Reviewer sees evidence package v3     -> slate card
+%   b2   approved = true                       -> red card
+%   b3   Case moves to v5; package gains a document (note) -> red dog-eared note
+%   b4   Submits unreviewed package v5         -> red card
+%   b1>b2>b3>b4                                -> three red arrows
+%   good CORRECTION                            -> solid teal panel, header pill
+%   g1   Immutable proposal / digest + policy version (note) -> cyan dog-eared note
+%   g2   Approval bound to digest . expires    -> blue card
+%   g3   Digest still matches? (diamond)       -> amber diamond
+%   g4   Commit / key = logical effect         -> teal card
+%   g1>g2>g3 -> two teal arrows; g3>g4 labelled "yes" -> teal arrow + pill
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\input{assets/diagrams/src/_before-after.tex}
+\begin{document}
+\begin{tikzpicture}
+  % ---- anti-pattern (left) ----
+  \node[dg card=slate, icon=eye, text width=170pt, minimum height=48pt] (b1) at (118,0)
+    {\dgcontent{Reviewer sees evidence package v3}{}{}};
+  \node[dg card=red, icon=toggle-on, text width=170pt, minimum height=48pt] (b2) at (118,-91)
+    {\dgcontent{approved = true}{}{}};
+  \node[dg note=red, icon=file-alt, text width=170pt, minimum height=48pt] (b3) at (118,-182)
+    {\dgcontent{Case moves to v5; package gains a document}{}{}};
+  \node[dg card=red, icon=paper-plane, text width=170pt, minimum height=48pt] (b4) at (118,-274)
+    {\dgcontent{Submits unreviewed package v5}{}{}};
+  \dgpanel[dash pattern=on 5pt off 3pt]{bad}{red}{times-circle}{ANTI-PATTERN}{}{(b1)(b2)(b3)(b4)}
+  \draw[flow in=red] (b1) -- (b2);
+  \draw[flow in=red] (b2) -- (b3);
+  \draw[flow in=red] (b3) -- (b4);
+
+  % ---- correction (right) ----
+  \node[dg note=cyan, icon=file-alt, text width=170pt, minimum height=48pt] (g1) at (382,0)
+    {\dgcontent{Immutable proposal}{digest + policy version}{}};
+  \node[dg card=blue, icon=link, text width=170pt, minimum height=48pt] (g2) at (382,-84)
+    {\dgcontent{Approval bound to digest · expires}{}{}};
+  \node[dg decision=amber, minimum width=204pt, minimum height=66pt] (g3) at (382,-173)
+    {\dgcontent{Digest still matches?}{}{}};
+  \node[dg card=teal, icon=check-double, text width=170pt, minimum height=48pt] (g4) at (382,-274)
+    {\dgcontent{Commit}{key = logical effect}{}};
+  \dgpanel{good}{teal}{check-circle}{CORRECTION}{}{(g1)(g2)(g3)(g4)}
+  \draw[flow in=teal] (g1) -- (g2);
+  \draw[flow in=teal] (g2) -- (g3);
+  \draw[flow in=teal] (g3) -- node[pill=teal]{yes} (g4);
+\end{tikzpicture}
+\end{document}

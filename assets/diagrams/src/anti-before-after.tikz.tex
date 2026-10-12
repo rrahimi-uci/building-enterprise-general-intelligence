@@ -1,0 +1,49 @@
+% Figure 17-1 -- Autonomous monolith versus governed agentic architecture.
+% Restyled from anti-before-after.gv; the two titled clusters, the three concerns
+% on the same rows, and the single dashed amber edge with its label are
+% unchanged. Same panel template as the other ANTI-PATTERN / CORRECTION figures
+% (dashed red panel = anti-pattern, solid teal = governed).
+%
+% Original element -> restyled element
+%   cluster "Anti-pattern / the autonomous monolith" -> dashed red panel, header pill
+%   b1 Decides, authorizes, acts   -> red card
+%   b2 State in the conversation   -> red card
+%   b3 Effects with no receipt     -> red card
+%   cluster "Governed / the same capabilities, separated" -> solid teal panel, header pill
+%   a1 Agent proposes              -> teal card
+%   a2 Platform authorizes (square box) -> blue square-cornered card
+%   a3 Gateway commits once, with a receipt (cylinder) -> blue cylinder
+%   sep "separate the decision from the authority" -> amber pill on the dashed edge
+%   edge b1 -- sep --> a1 (dashed, amber, arrowhead at a1) -> one dashed amber arrow with the pill
+%   (the source draws no edges inside a cluster; none are added)
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\input{assets/diagrams/src/_before-after.tex}
+\setlength{\dgpanelw}{190pt}
+\tikzset{panel head/.append style={minimum height=44pt}}
+\begin{document}
+\begin{tikzpicture}
+  \coordinate (padl-b) at (95,-206);  \coordinate (padr-b) at (405,-206);
+  % ---- anti-pattern (left) ----
+  \node[dg card=red, icon=cog, text width=130pt, minimum height=52pt] (b1) at (95,0)
+    {\dgcontent{Decides, authorizes, acts}{}{}};
+  \node[dg card=red, icon=comments, text width=130pt, minimum height=52pt] (b2) at (95,-84)
+    {\dgcontent{State in the conversation}{}{}};
+  \node[dg card=red, icon=bolt, text width=130pt, minimum height=52pt] (b3) at (95,-168)
+    {\dgcontent{Effects with no receipt}{}{}};
+  \dgpanel[dash pattern=on 5pt off 3pt]{bad}{red}{times-circle}{Anti-pattern}{the autonomous monolith}{(b1)(b2)(b3)(padl-b)}
+
+  % ---- governed (right) ----
+  \node[dg card=teal, icon=robot, text width=130pt, minimum height=52pt] (a1) at (405,0)
+    {\dgcontent{Agent proposes}{}{}};
+  \node[dg card=blue, square, icon=shield-alt, text width=130pt, minimum height=52pt] (a2) at (405,-84)
+    {\dgcontent{Platform authorizes}{}{}};
+  \node[dg store=blue, aspect=0.12, text width=130pt, minimum height=64pt] (a3) at (405,-171)
+    {\dgcontent{Gateway commits once, with a receipt}{}{}};
+  \dgpanel{good}{teal}{check-circle}{Governed}{the same capabilities, separated}{(a1)(a2)(a3)(padr-b)}
+
+  % ---- the one dashed edge ----
+  \draw[dashed flow, draw=dg-amber-line] (b1.east) -- node[pill=amber]
+    {separate the decision\\[-1pt]from the authority} (a1.west);
+\end{tikzpicture}
+\end{document}
