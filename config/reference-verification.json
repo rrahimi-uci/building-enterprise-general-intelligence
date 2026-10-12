@@ -370,5 +370,33 @@
     "status": "verified",
     "method": "direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope)",
     "verified": "2026-10-10"
+  },
+  {
+    "id": "R55",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-10-10",
+    "caveat": "Living documentation fetched on the verification date; the former docs.claude.com path now redirects here. Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R56",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-10-10",
+    "caveat": "Living documentation fetched on the verification date; the page labels Managed Agents beta. Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R57",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-10-10",
+    "caveat": "Living documentation fetched on the verification date; the page carries no version or date. Source identity and recorded claim scope were reviewed on the primary page."
+  },
+  {
+    "id": "R58",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-10-10",
+    "caveat": "Living documentation fetched on the verification date; the page carries no version or date. Source identity and recorded claim scope were reviewed on the primary page."
   }
 ]

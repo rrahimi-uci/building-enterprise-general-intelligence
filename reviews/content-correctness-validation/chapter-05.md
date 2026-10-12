@@ -15,6 +15,8 @@ The chapter's main scope is knowledge authority, rule sets, provenance, projecti
   **Evidence:** A shared stale source or overlapping but differently scoped rules can appear in both sets; Chapters 5–6 themselves require provenance, scope, freshness and ACLs.
   **Recommended correction:** Treat intersection as corroboration only; require current scoped authority, independent provenance where relevant, and policy check before action.
 
+  **Disposition (2026-10-11):** confirmed — the intersection row now reads "Corroborated, not verified; the scope, freshness, and permission checks below still apply before action", and the `intersection` docstring in `examples/knowledge/set_operations.py:73` is aligned ("corroborated, not yet verified or authorized") (this corrective PR). Related, from A-K: the 44% sentence at :422 now says the figure is author-reported, from one run of the author's own pipeline.
+
 ## Claims Requiring Validation
 
 No separate confirmed finding in this category during this pass; absence of a finding does not certify exhaustive validation.
@@ -61,4 +63,4 @@ No separate confirmed finding in this category during this pass; absence of a fi
 
 ## Recommended Corrections
 
-1. Treat intersection as corroboration only; require current scoped authority, independent provenance where relevant, and policy check before action.
+1. Treat intersection as corroboration only; require current scoped authority, independent provenance where relevant, and policy check before action. (applied)

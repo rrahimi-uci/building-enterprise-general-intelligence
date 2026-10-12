@@ -166,7 +166,7 @@ have not placed in the prompt.
 
 **What it does well:** Read, summarize, classify, draft, translate, extract.
 
-**Where it stops:** Find out anything it was not told. A model asked "is this application's income evidence sufficient?" will produce a confident answer drawn from training data that may be two years stale, because producing an answer is the only thing it does. It has no mechanism for *not knowing*.
+**Where it stops:** Find out anything it was not told. A model asked "is this application's income evidence sufficient?" will produce a confident answer drawn from training data that may be two years stale, because producing an answer is the only thing it does. It has no reliable way of knowing what it does *not* know.
 
 ### Level two — a model with tools
 
@@ -343,7 +343,7 @@ chapters; this is enough to read on with.
 
 | Term | What it means here | Where it is developed |
 | --- | --- | --- |
-| **Idempotency key** | A caller-supplied identifier that lets a downstream system recognize a repeated request as the *same* request, so a retry updates nothing rather than creating a duplicate | Chapter 22 |
+| **Idempotency key** | A stable identifier the platform derives for one logical effect—never chosen by the model—that lets a downstream system recognize a repeated request as the *same* request, so a retry updates nothing rather than creating a duplicate | Chapter 22 |
 | **Effect ledger** | The platform's own durable record of every external change it attempted, its idempotency key, and its confirmed outcome — separate from the downstream system's record | Chapter 22 |
 | **Compensation** | A deliberate reversing action for a step that cannot be rolled back, because it already committed elsewhere | Chapter 22 |
 | **Downscoping** | Deriving a narrower credential from a broader one, so a delegated step can never exceed the authority of the step that delegated it | Chapter 21 |
@@ -428,7 +428,7 @@ the word is the same. They are not alternatives, and none replaces another.
 | API Gateway | Is this caller admitted to the platform at all? | Anything about agents or models |
 | A2A Gateway | May this external agent receive or return this task? (Chapter 19; internal delegation belongs to the Task Service, Chapter 18) | Which model answers or which business effect commits |
 | LLM Gateway | Which model may answer, under which data policy? | Whether an effect may happen |
-| Tool Gateway | May this effect happen, for this subject, exactly once? | Which model produced the proposal |
+| Tool Gateway | May this effect happen for this subject, as one logical effect a retry cannot repeat? | Which model produced the proposal; whether the downstream system committed (the receipt decides) |
 | MCP Gateway | Is this external server and tool trusted and eligible? | Whether the resulting effect is authorized |
 | Human approval gate | Has an authorized reviewer approved this exact proposal? | Current identity, policy, resource version, or effect receipt |
 

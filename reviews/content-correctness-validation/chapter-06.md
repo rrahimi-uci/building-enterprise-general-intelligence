@@ -19,6 +19,8 @@ No separate confirmed finding in this category during this pass; absence of a fi
   **Evidence:** No defined population, context-size comparison or measured quality curve accompanies the sentence.
   **Recommended correction:** Replace with a workload-specific test recommendation, or cite reproducible multi-system evidence and define the population.
 
+  **Disposition (2026-10-11):** confirmed-adjusted — the prevalence claim at :760 is replaced by a workload-measurement recommendation ("Measure answer quality against context size on your own workload. Past some point more retrieval adds tokens and distractors without adding accuracy; only measurement shows where that point is."); no citation was added, so the Needs Verification status is closed by removing the unsupported claim rather than by sourcing it (this corrective PR).
+
 ## Missing or Weak References
 
 Citation presence was checked, but not every cited page was independently re-read against every attached clause. Any unsupported broad claim identified is listed under Claims Requiring Validation.
@@ -61,4 +63,4 @@ No separate confirmed finding in this category during this pass; absence of a fi
 
 ## Recommended Corrections
 
-1. Replace with a workload-specific test recommendation, or cite reproducible multi-system evidence and define the population.
+1. Replace with a workload-specific test recommendation, or cite reproducible multi-system evidence and define the population. (applied: first alternative taken; no citation added)

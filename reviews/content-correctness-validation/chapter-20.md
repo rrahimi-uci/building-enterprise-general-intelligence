@@ -19,6 +19,8 @@ No separate confirmed finding in this category during this pass; absence of a fi
   **Evidence:** A fabricated statement embedded in an approved, signed source can have valid ACL, lineage and a matching quote while remaining false.
   **Recommended correction:** State the residual misinformation risk and add independent corroboration, source correction/quarantine and human adjudication for high-impact claims.
 
+  **Disposition (2026-10-11):** confirmed-adjusted — the T-04 and T-05 first-refusal entries gain residual-risk clauses: the claim-evidence verifier "proves provenance, not truth", so a high-impact claim also needs the corroboration above or a human reviewer, with Chapter 23 bounding the blast radius; the T-05 source/snapshot/ACL filters "cannot see poison that arrived through an approved source", which falls to Chapter 5's independent verification and the Recover step (this corrective PR). The checks stay labelled first deterministic refusals; what changed is that their scope is now stated.
+
 ## Missing or Weak References
 
 Citation presence was checked, but not every cited page was independently re-read against every attached clause. Any unsupported broad claim identified is listed under Claims Requiring Validation.
@@ -63,4 +65,4 @@ No separate confirmed finding in this category during this pass; absence of a fi
 
 ## Recommended Corrections
 
-1. State the residual misinformation risk and add independent corroboration, source correction/quarantine and human adjudication for high-impact claims.
+1. State the residual misinformation risk and add independent corroboration, source correction/quarantine and human adjudication for high-impact claims. (applied: risk stated and pointed to the existing corroboration, Recover and human-review steps; no new control added)

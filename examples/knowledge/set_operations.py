@@ -70,7 +70,7 @@ def union(left: dict[str, object], right: dict[str, object]) -> list[Attributed]
 
 
 def intersection(left: dict[str, object], right: dict[str, object]) -> list[Attributed]:
-    """Rules both sources assert. The highest-confidence knowledge available."""
+    """Rules both sources assert -- corroborated, not yet verified or authorized."""
     both = {s for s in left} | {s for s in right}
     return [a for a in union(left, right) if len(set(a.sources)) == len(both)]
 

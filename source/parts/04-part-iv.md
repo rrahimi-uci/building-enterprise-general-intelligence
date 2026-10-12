@@ -1067,7 +1067,7 @@ The base Run API is in Chapter 4. Durable execution adds these operations and tw
 
 ### Execution and persistence rules
 
-* Record model and external tool calls as activities whose results are persisted before workflow continuation. Replay returns the recorded result; it does not call the model or tool again.
+* Record model and external tool calls as activities whose results are persisted before workflow continuation. Replay returns the recorded result; it does not call the model or tool again. An attempt that fails before its result is recorded is retried even if its external call already succeeded, which is why side effects carry an effect key (below; Chapter 22).
 * Wait registration before acknowledgment; inbox before signal. Together they close the “event arrived before subscription” race.
 * For a side effect, persist intent/effect key before invocation and reconcile the receipt before an activity is considered complete (Chapter 22).
 * Use logical workflow time for decisions. Wall-clock access, random IDs, and dynamic configuration are provided as recorded events/side effects.

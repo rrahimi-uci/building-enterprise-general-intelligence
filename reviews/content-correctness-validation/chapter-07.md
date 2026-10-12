@@ -41,6 +41,8 @@ Registered example(s): adapter-conformance. The pinned example/mortgage tests pa
   **Evidence:** Repository search finds the commands in manuscript prose but no CLI entry point. They may be illustrative, but are not identified as such.
   **Recommended correction:** Mark these as conceptual/pseudocommands or supply a tested CLI, including expected flags and output.
 
+  **Disposition (2026-10-11):** confirmed-adjusted — `source/parts/03-part-iii.md:90` now states that "`agentctl` is an illustrative command surface, not a tool this book ships"; no CLI was implemented, so the commands remain conceptual and are labelled as such (this corrective PR).
+
 ## Equations and Quantitative Validation
 
 Any displayed arithmetic/formulas were checked against their stated assumptions where tractable. No chapter-specific mathematical defect was confirmed unless listed below.
@@ -65,4 +67,4 @@ No separate confirmed finding in this category during this pass; absence of a fi
 
 ## Recommended Corrections
 
-1. Mark these as conceptual/pseudocommands or supply a tested CLI, including expected flags and output.
+1. Mark these as conceptual/pseudocommands or supply a tested CLI, including expected flags and output. (applied: labelled illustrative; no CLI supplied)
