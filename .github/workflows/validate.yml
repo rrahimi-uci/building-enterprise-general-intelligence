@@ -40,8 +40,10 @@ jobs:
             exit 1
           fi
       - uses: actions/upload-artifact@v4
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
         with:
           name: book-v1.0.0-validation
+          retention-days: 14
           path: |
             dist/
             reports/
