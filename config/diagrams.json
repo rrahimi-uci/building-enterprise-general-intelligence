@@ -108,10 +108,10 @@
     {
       "id": "governance-model",
       "file": "assets/diagrams/governance-model.png",
-      "source": "assets/diagrams/src/governance-model.gv",
+      "source": "assets/diagrams/src/governance-model.tikz.tex",
       "vector": "assets/diagrams/governance-model.pdf",
       "description": "Central control services for identity and policy, evidence and audit, and risk tiers and exceptions supply grants, evidence, and thresholds to domain agent teams that decide in context; only high-risk work goes to a review board scaled to risk tier",
-      "sha256": "a04f069bff5fffe8a7e1fbdebce4ed97431e6d022dfdbbdc97d8461d9b55d345"
+      "sha256": "befe6c19ffc00a70427adb8ea41e8a0c283f07775385c96956b6860a06a61fb5"
     },
     {
       "id": "guardrail-sequence",
@@ -188,10 +188,10 @@
     {
       "id": "pattern-reflection",
       "file": "assets/diagrams/pattern-reflection.png",
-      "source": "assets/diagrams/src/pattern-reflection.gv",
+      "source": "assets/diagrams/src/pattern-reflection.tikz.tex",
       "vector": "assets/diagrams/pattern-reflection.pdf",
       "description": "Reflection: a bounded loop runs executable checks before an advisory judge; the acceptance engine outside it owns every exit\u2014accept, reject to revise, or escalate to a person",
-      "sha256": "5e245413dffc2166fc964e18d6dd2f50a8ac9606c8ca3d44633d22a3a4614685"
+      "sha256": "3d7226a23ec7251741b8a2462c8a67a6c7d79acf6b16762fa505a58c29df19af"
     },
     {
       "id": "pattern-routing",
@@ -316,10 +316,10 @@
     {
       "id": "effect-lifecycle",
       "file": "assets/diagrams/effect-lifecycle.png",
-      "source": "assets/diagrams/src/effect-lifecycle.gv",
+      "source": "assets/diagrams/src/effect-lifecycle.tikz.tex",
       "vector": "assets/diagrams/effect-lifecycle.pdf",
       "description": "Protected effect lifecycle with approval, idempotency, unknown outcomes, reconciliation, and compensation",
-      "sha256": "154d7c41964ffc60b914b7c6d4154039bd2dd9c8946bc2f7941c4bce9ce92256"
+      "sha256": "3fc0a9fac1cc05db3c652532d420dc50af5c0d4d1bb83b5ddfc1390859798e72"
     },
     {
       "id": "sandbox-egress",

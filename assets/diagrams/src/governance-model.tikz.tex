@@ -1,0 +1,47 @@
+% Figure 26-1 -- Federated governance with centralized control services.
+% Restyled from governance-model.gv; content, flow and grouping are unchanged.
+%
+% Original element -> restyled element
+%   cluster "Central control services . built once" -> blue group, title on top
+%   c1/c2/c3 Identity and policy | Evidence and audit | Risk tiers and
+%            exceptions                               -> three blue square-cornered
+%            cards (box = service, as in the source)
+%   cluster "Domain teams . decide in context"        -> teal group (title stays below, as in the source)
+%   d1/d2/d3 Mortgage evidence agents | Supply chain agents | Service agents
+%                                                     -> three teal rounded cards
+%   board    Review board . proportional to risk tier, not to team -> amber card
+%   edges    c1>d1 "grants", c2>d2 "evidence", c3>d3 "thresholds" (solid),
+%            d2>board "high-risk only" (dashed, amber)
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  % ---- central control services ----
+  \node[dg card=blue, square, icon=id-badge, text width=112pt, minimum height=46pt] (c1) at (88,0)
+    {\dgcontent{Identity and policy}{}{}};
+  \node[dg card=blue, square, icon=clipboard-list, text width=112pt, minimum height=46pt] (c2) at (252,0)
+    {\dgcontent{Evidence and audit}{}{}};
+  \node[dg card=blue, square, icon=balance-scale, text width=112pt, minimum height=46pt] (c3) at (416,0)
+    {\dgcontent{Risk tiers and exceptions}{}{}};
+  \dggroup{central}{blue}{Central control services · built once}{(c1)(c2)(c3)}
+
+  % ---- domain teams ----
+  \node[dg card=teal, icon=robot, text width=112pt, minimum height=46pt] (d1) at (88,-150)
+    {\dgcontent{Mortgage evidence agents}{}{}};
+  \node[dg card=teal, icon=link, text width=112pt, minimum height=46pt] (d2) at (252,-150)
+    {\dgcontent{Supply chain agents}{}{}};
+  \node[dg card=teal, icon=concierge-bell, text width=112pt, minimum height=46pt] (d3) at (416,-150)
+    {\dgcontent{Service agents}{}{}};
+  \dggroupbelow{domains}{teal}{Domain teams · decide in context}{(d1)(d2)(d3)}
+
+  % ---- review board ----
+  \node[dg card=amber, icon=gavel, text width=290pt] (board) at (252,-282)
+    {\dgcontent{Review board}{Proportional to risk tier, not to team}{}};
+
+  % ---- connectors ----
+  \draw[flow in=blue] (c1.south) -- node[pill=blue]{Grants} (d1.north);
+  \draw[flow in=blue] (c2.south) -- node[pill=blue]{Evidence} (d2.north);
+  \draw[flow in=blue] (c3.south) -- node[pill=blue]{Thresholds} (d3.north);
+  \draw[dashed flow, draw=dg-amber-line] (d2.south) -- node[pill=amber,pos=0.72]{High-risk only} (board.north);
+\end{tikzpicture}
+\end{document}
