@@ -1,0 +1,79 @@
+% Figure 24-1 -- A causal run trace and a separate protected audit ledger.
+% Restyled from causal-trace.gv; all 12 nodes, 17 edges, labels, solid / dashed /
+% dotted styles and edge colours are unchanged. Layout only is new: the run stays
+% one column, the trace index moves to its left (it receives four edges), the
+% content vault and audit ledger sit at its right beside the steps that write to them.
+%
+% Original element -> restyled element
+%   run      Run root / stable run_id                      -> teal card
+%   admit    Admission / release + policy                  -> blue card
+%   workflow Workflow task / checkpoint + task_id          -> blue card
+%   context  Retrieval / authorized context                -> teal card
+%   model    Model turn / route + tokens                   -> teal card
+%   policy   Policy decision / reason + obligations (diamond) -> amber diamond
+%   tool     Tool / remote task / span link + effect key   -> blue card
+%   effect   Effect outcome / receipt or Unknown           -> plum card
+%   outcome  Accepted outcome / user + business record     -> plum card
+%   trace    Trace index / redacted spans + causal links (cylinder)  -> blue cylinder
+%   audit    Audit ledger / complete protected events (cylinder)     -> plum cylinder
+%   vault    Content vault / controlled payload handles (cylinder)   -> cyan cylinder
+%   17 edges: the 8 solid run steps run>admit>workflow>context>model>policy>tool>
+%     effect>outcome; dashed workflow>tool "queue / resume"; dotted (evidence)
+%     run, workflow, model, tool > trace (blue); policy, effect > audit (plum);
+%     context, model > vault (cyan)
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+
+\tikzset{run step/.style={text width=130pt, minimum height=38pt}}
+
+\begin{document}
+\begin{tikzpicture}
+  % ---- the run (one column) ----
+  \node[dg card=teal, run step] (run) at (232,0)
+    {\dgcontent{Run root}{stable run\_id}{}};
+  \node[dg card=blue, run step] (admit) at (232,-58)
+    {\dgcontent{Admission}{release + policy}{}};
+  \node[dg card=blue, run step] (workflow) at (232,-116)
+    {\dgcontent{Workflow task}{checkpoint + task\_id}{}};
+  \node[dg card=teal, run step] (context) at (232,-174)
+    {\dgcontent{Retrieval}{authorized context}{}};
+  \node[dg card=teal, run step] (model) at (232,-232)
+    {\dgcontent{Model turn}{route + tokens}{}};
+  \node[dg decision=amber, text width=110pt, minimum width=176pt, minimum height=72pt] (policy) at (232,-308)
+    {\dgcontent{Policy decision}{reason + obligations}{}};
+  \node[dg card=blue, run step] (tool) at (232,-384)
+    {\dgcontent{Tool / remote task}{span link + effect key}{}};
+  \node[dg card=plum, run step] (effect) at (232,-442)
+    {\dgcontent{Effect outcome}{receipt or Unknown}{}};
+  \node[dg card=plum, run step] (outcome) at (232,-500)
+    {\dgcontent{Accepted outcome}{user + business record}{}};
+
+  % ---- the three stores ----
+  \node[dg store=blue, aspect=0.14, minimum width=114pt, minimum height=72pt, text width=96pt] (trace) at (62,-232)
+    {\dgcontent{Trace index}{redacted spans + causal links}{}};
+  \node[dg store=cyan, aspect=0.14, minimum width=116pt, minimum height=72pt, text width=98pt] (vault) at (430,-203)
+    {\dgcontent{Content vault}{controlled payload handles}{}};
+  \node[dg store=plum, aspect=0.14, minimum width=116pt, minimum height=72pt, text width=98pt] (audit) at (430,-376)
+    {\dgcontent{Audit ledger}{complete protected events}{}};
+
+  % ---- the run: solid steps ----
+  \foreach \a/\b in {run/admit, admit/workflow, workflow/context, context/model,
+                     model/policy, policy/tool, tool/effect, effect/outcome}
+    \draw[flow in=blue] (\a.south) -- (\b.north);
+
+  % ---- dashed: queue / resume skips the middle of the run ----
+  \draw[dashed flow, draw=dg-blue-line, turn] (workflow.east) -| (330,-270) |- (tool.east);
+  \node[pill=blue] at (330,-268) {Queue /\\resume};
+  % ---- dotted: spans to the trace index ----
+  \draw[dotted flow, draw=dg-blue-line, turn] (run.west) -| ([xshift=-30pt]trace.north);
+  \draw[dotted flow, draw=dg-blue-line, turn] (workflow.west) -| ([xshift=26pt]trace.north);
+  \draw[dotted flow, draw=dg-blue-line] (model.west) -- (trace.east);
+  \draw[dotted flow, draw=dg-blue-line, turn] (tool.west) -| (trace.south);
+  % ---- dotted: protected decisions and effects to the audit ledger ----
+  \draw[dotted flow, draw=dg-plum-line, turn] (policy.east) -| ([xshift=-24pt]audit.north);
+  \draw[dotted flow, draw=dg-plum-line, turn] (effect.east) -| ([xshift=24pt]audit.south);
+  % ---- dotted: payload handles to the content vault ----
+  \draw[dotted flow, draw=dg-cyan-line] (context.east) -- ([yshift=14pt]vault.west);
+  \draw[dotted flow, draw=dg-cyan-line] (model.east) -- ([yshift=-14pt]vault.west);
+\end{tikzpicture}
+\end{document}

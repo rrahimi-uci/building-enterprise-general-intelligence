@@ -1,0 +1,106 @@
+% Figure 25-1 -- Candidate evaluation and a risk-tiered release gate.
+% Restyled from evaluation-gate.gv; all 13 nodes, 18 edges, labels, colours of
+% the paths and the dashed regression feedback are unchanged. Layout only is new.
+%
+% Original element -> restyled element
+%   dataset   Immutable dataset / cases + slices + provenance (cylinder) -> blue cylinder
+%   candidate Candidate release / model . prompt . tools . policy (note) -> teal card, folded corner
+%   baseline  Pinned baseline / manifest + prior results (note)          -> cyan card, folded corner
+%   run       Evaluation orchestrator / seeds . environments . budget    -> blue card
+%   contract  Deterministic checks / schema . auth . budget . effects    -> blue card
+%   trajectory Trajectory checks / tools . order . evidence . handoff    -> teal card
+%   quality   Calibrated quality / judge + human labels + uncertainty    -> amber card
+%   slices    Slice comparison / risk . region . task . tenant           -> blue card
+%   gate      Risk-tier release gate / protected invariants first (diamond) -> amber diamond
+%   promote   Promote to canary / ReleaseManifest + rollback             -> plum card
+%   waiver    Waiver required / owner + expiry + evidence                -> amber card
+%   block     Block release / regression or invariant failure            -> red card
+%   case      Review and reduce / new regression case (note)             -> red card, folded corner
+%   edges (18): dataset, candidate, baseline > run (3); run > the four checks (4);
+%     the four checks > gate (4); gate > promote "pass" (plum), gate > waiver
+%     "residual risk" (amber), gate > block "fail" (red); waiver > promote
+%     "approved + expires" (amber), waiver > block "denied" (red); block > case
+%     "privacy-reviewed" (red); case > dataset dashed red "future regression"
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+
+% ---- local constructs (candidates for promotion to professional-diagrams.sty) ----
+% \dgdoccorner{node}{role}: the folded top-right corner of a note-shaped card.
+\newcommand{\dgdoccorner}[2]{%
+  \path[fill=white] ([xshift=-11pt]#1.north east) -- ([xshift=1pt,yshift=1pt]#1.north east)
+    -- ([yshift=-11pt]#1.north east) -- cycle;
+  \path[fill=dg-#2-pill, draw=dg-#2-line, line width=\dgstroke, line join=round]
+    ([xshift=-11pt]#1.north east) -- ([xshift=-11pt,yshift=-11pt]#1.north east)
+    -- ([yshift=-11pt]#1.north east) -- cycle;}
+% check card: the four parallel checks are narrow, so their title may wrap.
+\tikzset{check/.style={inner xsep=8pt, text width=94pt, minimum height=74pt}}
+
+\begin{document}
+\begin{tikzpicture}
+  % ---- inputs ----
+  \node[dg card=teal, square, text width=114pt] (candidate) at (67,0)
+    {\dgcontent{Candidate release}{model · prompt ·\\tools · policy}{}};
+  \dgdoccorner{candidate}{teal}
+  \node[dg card=cyan, square, text width=114pt] (baseline) at (224,0)
+    {\dgcontent{Pinned baseline}{manifest +\\prior results}{}};
+  \dgdoccorner{baseline}{cyan}
+  \node[dg store=blue, aspect=0.12, minimum width=130pt, minimum height=62pt, text width=110pt] (dataset) at (375,0)
+    {\dgcontent{Immutable dataset}{cases + slices\\+ provenance}{}};
+
+  % ---- orchestrator ----
+  \node[dg card=blue, text width=230pt] (run) at (224,-74)
+    {\dgcontent{Evaluation orchestrator}{seeds · environments · budget}{}};
+
+  % ---- four checks ----
+  \node[dg card=blue, check] (contract) at (56,-164)
+    {\dgcontent{Deterministic checks}{schema · auth · budget · effects}{}};
+  \node[dg card=teal, check] (trajectory) at (168,-164)
+    {\dgcontent{Trajectory checks}{tools · order · evidence · handoff}{}};
+  \node[dg card=amber, check] (quality) at (280,-164)
+    {\dgcontent{Calibrated quality}{judge + human labels + uncertainty}{}};
+  \node[dg card=blue, check] (slices) at (392,-164)
+    {\dgcontent{Slice comparison}{risk · region · task · tenant}{}};
+
+  % ---- gate and outcomes ----
+  \node[dg decision=amber, text width=170pt, minimum width=280pt, minimum height=72pt] (gate) at (224,-258)
+    {\dgcontent{Risk-tier release gate}{protected invariants first}{}};
+  \node[dg card=amber, text width=150pt] (waiver) at (224,-348)
+    {\dgcontent{Waiver required}{owner + expiry + evidence}{}};
+  \node[dg card=plum, text width=110pt] (promote) at (100,-444)
+    {\dgcontent{Promote to canary}{ReleaseManifest + rollback}{}};
+  \node[dg card=red, text width=104pt] (block) at (392,-444)
+    {\dgcontent{Block release}{regression or invariant failure}{}};
+  \node[dg card=red, square, text width=104pt] (case) at (392,-518)
+    {\dgcontent{Review and reduce}{new regression case}{}};
+  \dgdoccorner{case}{red}
+
+  % ---- inputs -> orchestrator ----
+  \draw[flow in=blue, turn] ([xshift=-10pt]candidate.south) -- ++(0,-12pt) -| ([xshift=-60pt]run.north);
+  \draw[flow in=blue] (baseline.south) -- (run.north);
+  \draw[flow in=blue, turn] ([xshift=10pt]dataset.south) -- ++(0,-12pt) -| ([xshift=60pt]run.north);
+
+  % ---- orchestrator -> checks (fan out) ----
+  \foreach \dx/\c in {-96/contract, -32/trajectory, 32/quality, 96/slices}
+    \draw[flow in=blue, turn] ([xshift=\dx pt]run.south) -- ++(0,-13pt) -| (\c.north);
+
+  % ---- checks -> gate (fan in); y of the diamond's upper edges at x=104/168/280/344 ----
+  \draw[flow in=blue, turn] (contract.south) -- ++(0,-13pt) -| (124,-247.7);
+  \draw[flow in=blue] (trajectory.south) -- (168,-236.4);
+  \draw[flow in=blue] (quality.south) -- (280,-236.4);
+  \draw[flow in=blue, turn] (slices.south) -- ++(0,-13pt) -| (324,-247.7);
+
+  % ---- gate outcomes ----
+  \draw[flow in=amber] (gate.south) -- node[pill=amber]{Residual risk} (waiver.north);
+  \draw[flow in=plum, turn] (gate.west) -| node[pill=plum,pos=0.75]{Pass} ([xshift=-25pt]promote.north);
+  \draw[flow in=red, turn] (gate.east) -| node[pill=red,pos=0.8]{Fail} ([xshift=22pt]block.north);
+  \draw[flow in=amber] (waiver.south west) to[out=-100,in=70] node[pill=amber,pos=0.45]
+    {Approved +\\expires} ([xshift=40pt]promote.north);
+  \draw[flow in=red] (waiver.south east) to[out=-80,in=110] node[pill=red,pos=0.45]{Denied}
+    ([xshift=-30pt]block.north);
+  \draw[flow in=red] (block.south) -- node[pill=red]{Privacy-reviewed} (case.north);
+
+  % ---- regression feedback ----
+  \draw[dashed flow, draw=dg-red-line, rounded corners=14pt] (case.east) -- (464,-518) |- (dataset.east);
+  \node[pill=red] at (464,-266) {Future\\regression};
+\end{tikzpicture}
+\end{document}

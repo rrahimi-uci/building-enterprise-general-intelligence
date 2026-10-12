@@ -1,0 +1,87 @@
+% Figure 6-1 -- The context build pipeline.
+% Restyled from context-pipeline.gv; the ten stages, their order and numbers,
+% the three margin annotations and the manifest note shape are unchanged.
+%
+% Original element -> restyled element
+%   s1  "1 . Parse request"          -> slate card; the number "1" is a badge, the words are the card text
+%   s2  "2 . Candidate sources"      -> cyan card, badge 2
+%   s3  "3 . Authorize"              -> red card with a heavier border (as in the source), badge 3
+%   s4  "4 . Fetch pinned versions"  -> cyan card, badge 4
+%   s5  "5 . Classify and sanitize"  -> cyan card, badge 5
+%   s6  "6 . Deduplicate"            -> cyan card, badge 6
+%   s7  "7 . Rank"                   -> cyan card, badge 7
+%   s8  "8 . Allocate tokens"        -> cyan card, badge 8
+%   s9  "9 . Ordered references"     -> blue card, badge 9
+%   s10 "10 . ContextManifest"       -> amber card with a folded corner (the source's note shape), badge 10
+%   mdl "model request"              -> teal card
+%   n3  "before a single byte is fetched"          -> red annotation panel beside stage 3
+%   n9  "references only - no content yet"         -> slate annotation panel beside stage 9
+%   nm  "the only boundary that materializes bytes" -> teal annotation panel beside "model request"
+%   edges: s1>s2>s3>s4>s5>s6>s7>s8>s9>s10>mdl (10 solid arrows, same direction)
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+
+% ---- local constructs (candidates for promotion to professional-diagrams.sty) ----
+% num=<n>: a round number badge at the left of a card (same slot as icon=...).
+% \dgdoccorner{node}{role}: the folded top-right corner of a note-shaped card.
+\tikzset{
+  num/.style={execute at begin node={\leftskip=2.75em\relax},
+    append after command={
+      node[circle, fill=dg-\dgcurrentrole-line, text=white, minimum size=19pt,
+           inner sep=0pt, font=\dglabelsize]
+        at ($(\tikzlastnode.west)+(\dgpadx+0.95em,0)$) {#1}}},
+  note tag/.style={callout=#1, minimum height=33pt, text=dg-#1-ink, text width=170pt, font=\dgdescsize},
+  leader/.style={draw=dg-#1-line!70, line width=0.8pt, line cap=round},
+}
+
+\newcommand{\dgdoccorner}[2]{%
+  \path[fill=white] ([xshift=-11pt]#1.north east) -- ([xshift=1pt,yshift=1pt]#1.north east)
+    -- ([yshift=-11pt]#1.north east) -- cycle;
+  \path[fill=dg-#2-pill, draw=dg-#2-line, line width=\dgstroke, line join=round]
+    ([xshift=-11pt]#1.north east) -- ([xshift=-11pt,yshift=-11pt]#1.north east)
+    -- ([yshift=-11pt]#1.north east) -- cycle;}
+
+\begin{document}
+\begin{tikzpicture}
+  % ---- stages (centre x = 130, pitch 49) ----
+  \node[dg card=slate, num=1, text width=225pt, minimum height=33pt] (s1) at (130,0)
+    {\dgcontent{Parse request}{}{}};
+  \node[dg card=cyan, num=2, text width=225pt, minimum height=33pt] (s2) at (130,-49)
+    {\dgcontent{Candidate sources}{}{}};
+  \node[dg card=red, num=3, text width=225pt, minimum height=33pt, line width=1.8pt] (s3) at (130,-98)
+    {\dgcontent{Authorize}{}{}};
+  \node[dg card=cyan, num=4, text width=225pt, minimum height=33pt] (s4) at (130,-147)
+    {\dgcontent{Fetch pinned versions}{}{}};
+  \node[dg card=cyan, num=5, text width=225pt, minimum height=33pt] (s5) at (130,-196)
+    {\dgcontent{Classify and sanitize}{}{}};
+  \node[dg card=cyan, num=6, text width=225pt, minimum height=33pt] (s6) at (130,-245)
+    {\dgcontent{Deduplicate}{}{}};
+  \node[dg card=cyan, num=7, text width=225pt, minimum height=33pt] (s7) at (130,-294)
+    {\dgcontent{Rank}{}{}};
+  \node[dg card=cyan, num=8, text width=225pt, minimum height=33pt] (s8) at (130,-343)
+    {\dgcontent{Allocate tokens}{}{}};
+  \node[dg card=blue, num=9, text width=225pt, minimum height=33pt] (s9) at (130,-392)
+    {\dgcontent{Ordered references}{}{}};
+  \node[dg card=amber, num=10, text width=225pt, minimum height=33pt] (s10) at (130,-441)
+    {\dgcontent{ContextManifest}{}{}};
+  \node[dg card=teal, num={\dgicon{paper-plane}}, text width=225pt, minimum height=33pt] (mdl) at (130,-490)
+    {\dgcontent{Model request}{}{}};
+
+  \dgdoccorner{s10}{amber}
+
+  % ---- annotations beside the three load-bearing steps ----
+  \node[note tag=red, anchor=west] (n3) at (300,-98)
+    {Before a single byte is fetched};
+  \node[note tag=slate, anchor=west] (n9) at (300,-392)
+    {References only \textemdash\\no content yet};
+  \node[note tag=teal, anchor=west] (nm) at (300,-490)
+    {The only boundary that materializes bytes};
+  \draw[leader=red] (s3.east) -- (n3.west);
+  \draw[leader=slate] (s9.east) -- (n9.west);
+  \draw[leader=teal] (mdl.east) -- (nm.west);
+
+  % ---- flow ----
+  \foreach \a/\b in {s1/s2, s2/s3, s3/s4, s4/s5, s5/s6, s6/s7, s7/s8, s8/s9, s9/s10, s10/mdl}
+    \draw[flow in=blue] (\a.south) -- (\b.north);
+\end{tikzpicture}
+\end{document}
