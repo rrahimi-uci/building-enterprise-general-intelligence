@@ -4,6 +4,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### LaTeX PDF output
+
+- The generated XeLaTeX build script now creates `dist/` when needed, verifies both the compiled and final PDF are non-empty, and reports the final `dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf` path. TeX auxiliaries and the intermediate PDF remain in `latex/build/`.
+
 ### Chapter 5: compliance knowledge as a governed release (step 2 of the compliance-knowledge update)
 
 - Chapter 5 now treats compliance knowledge (requirement, obligation, control, constraint, definition) as a versioned asset. New sections cover the layer model, the two planes (control plane and runtime plane, with the knowledge registry, release, live pointer, and per-run pin), "Change compliance knowledge the way you change software" (change unit, nine gates in the reference implementation's order, routed findings, the lifecycle Draft → Certified → Approved → Active → Deprecated → Revoked, and activation as the publication boundary), and "Obligations enforced at every control point" with the Harborlight thread. The ontology subsection defines the schema and conformance checks in plain graph terms; the only standards are BPMN, DMN, SBVR, and CMMN. Figure 5-4 (`knowledge-lifecycle`) added; Figures 5-1 and 5-3 gain "release" labels.
