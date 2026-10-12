@@ -15,9 +15,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Regenerate the LaTeX source from the canonical Markdown and hand it to the
-  # compile job. This is what keeps a stale committed book-content.tex from
-  # silently producing a green build of yesterday's text.
+  # Regenerate and validate LaTeX source before compilation. The compile job
+  # checks out the same commit; the stale-source check below proves its tracked
+  # book-content.tex matches freshly generated source without an artifact hop.
   latex-source:
     runs-on: ubuntu-latest
     steps:
@@ -39,26 +39,12 @@ jobs:
             git diff --stat -- latex/content/ dist/ book/manuscript.md
             exit 1
           fi
-      - uses: actions/upload-artifact@v4
-        with:
-          name: latex-source
-          path: |
-            latex/content/book-content.tex
-            book/manuscript.md
-          retention-days: 7
-
   xelatex:
     needs: latex-source
     runs-on: ubuntu-latest
     container: texlive/texlive:latest-full
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: latex-source
-          # Restores latex/content/book-content.tex and book/manuscript.md over
-          # the checkout, so the PDF is built from freshly generated source.
-          path: .
       - run: chmod +x latex/compile.sh && latex/compile.sh
       - name: Summarize the build
         run: |
@@ -68,6 +54,7 @@ jobs:
           echo "- undefined references: $(grep -c 'undefined' "$LOG" || true)" >> "$GITHUB_STEP_SUMMARY"
           echo "- overfull boxes: $(grep -c 'Overfull' "$LOG" || true)" >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
         with:
           name: enterprise-agentic-ai-book-v1.0.0-xelatex
           retention-days: 14
