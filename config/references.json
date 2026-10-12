@@ -813,6 +813,66 @@
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
+    },
+    {
+      "id": "R55",
+      "type": "framework documentation",
+      "author_or_organization": "Anthropic",
+      "year": "n.d.",
+      "title": "Agent SDK overview",
+      "publication_or_version": "Current documentation",
+      "url": "https://code.claude.com/docs/en/agent-sdk/overview",
+      "supports": "Documents the Claude Agent SDK as Claude Code's agent loop packaged as a Python and TypeScript library with built-in tools, hooks, subagents, MCP, permissions, and sessions. Does not support maturity, cost, or enterprise-governance claims.",
+      "verification": {
+        "checked_on": "2026-10-10",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R56",
+      "type": "framework documentation",
+      "author_or_organization": "Anthropic",
+      "year": "n.d.",
+      "title": "Claude Managed Agents overview",
+      "publication_or_version": "Current documentation (beta)",
+      "url": "https://platform.claude.com/docs/en/managed-agents/overview",
+      "supports": "Documents Managed Agents as a hosted agent harness in beta: agents, environments (Anthropic-managed or self-hosted sandboxes), sessions, and server-sent events with persisted history, intended for long-running work. Does not support production-readiness or cost claims.",
+      "verification": {
+        "checked_on": "2026-10-10",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R57",
+      "type": "framework documentation",
+      "author_or_organization": "CrewAI",
+      "year": "n.d.",
+      "title": "CrewAI documentation: Introduction",
+      "publication_or_version": "Current documentation",
+      "url": "https://docs.crewai.com/en/introduction",
+      "supports": "Documents Crews of role-playing agents and event-driven Flows. Does not support durability, permission, trace, or effect-semantics claims.",
+      "verification": {
+        "checked_on": "2026-10-10",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
+    },
+    {
+      "id": "R58",
+      "type": "framework documentation",
+      "author_or_organization": "Restate",
+      "year": "n.d.",
+      "title": "Restate documentation",
+      "publication_or_version": "Current documentation",
+      "url": "https://docs.restate.dev/",
+      "supports": "Documents durable execution that resumes from completed steps after failure, durable timers, automatic retries, waiting for external events, and long-running processes. Does not support scale, maturity, or regional-recovery claims.",
+      "verification": {
+        "checked_on": "2026-10-10",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
+      }
     }
   ]
 }

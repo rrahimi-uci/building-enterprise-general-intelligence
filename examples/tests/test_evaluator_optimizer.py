@@ -76,5 +76,36 @@ async def test_spend_limit_escalates_with_both_versions():
     assert decision.candidates == ("v1 9 Elm St.", f"v2 {APPLICATION_ADDRESS} overstated.")
 
 
+async def test_a_candidate_that_overran_the_cap_is_escalated_not_accepted():
+    # Passes every check and the judge, but its own generation cost broke the cap.
+    generate, _ = scripted(f"Ready pending review. {APPLICATION_ADDRESS}.", cost=1.5)
+    run_judge, _ = judge(0.9)
+    decision = await evaluate_and_revise("recommend", generate, address_check, run_judge, engine)
+    assert decision.outcome == "escalated" and decision.reason == "budget_exhausted"
+    assert decision.defects == (), "the overrun, not a quality defect, is what the person sees"
+
+
+async def test_no_call_starts_once_spend_reaches_the_cap():
+    generate, calls = scripted("v1 9 Elm St.", "v2 9 Elm St. again", "v3 9 Elm St. once more", cost=0.5)
+    run_judge, _ = judge(0.9)
+    limits = RevisionLimits(maximum_revisions=5, maximum_cost_usd=1.0)
+    decision = await evaluate_and_revise("recommend", generate, address_check, run_judge, engine, limits)
+    assert decision.outcome == "escalated"
+    assert decision.reason in ("budget_exhausted", "no_progress")
+    assert len(calls) == 2, "spend reached $1.00 after two calls; a third may not start"
+
+
+def test_a_missing_or_non_finite_required_score_is_a_defect():
+    strict = AcceptanceEngine({"accuracy": 0.8})
+    assert strict.decide("answer", (), ()).outcome == "rejected"
+    assert strict.decide("answer", (), ()).defects == ("accuracy",)
+    nan = (EvaluationResult("accuracy", float("nan"), "", "judge@3"),)
+    assert strict.decide("answer", (), nan).defects == ("accuracy",)
+    other = (EvaluationResult("clarity", 1.0, "", "judge@3"),)
+    assert strict.decide("answer", (), other).defects == ("accuracy",), "another criterion is no substitute"
+    good = (EvaluationResult("accuracy", 0.85, "", "judge@3"),)
+    assert strict.decide("answer", (), good).outcome == "accepted"
+
+
 def test_a_judge_result_carries_no_verdict():
     assert "accepted" not in {f.name for f in fields(EvaluationResult)}

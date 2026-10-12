@@ -33,4 +33,36 @@ Baseline `6ebbc8b`, reviewed 2026-10-10. Status vocabulary: **Confirmed Error** 
 - [AWS Bedrock multi-agent documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/agents-multi-agent-collaboration.html) supports Appendix D's Classic-maintenance caveat at review time. Recheck living product status before release.
 - [Little's original paper](https://doi.org/10.1287/opre.9.3.383) establishes the mean queueing identity, not the book's utilization, fairness or economic recommendations.
 - A repository URL resolving, a citation ID matching, or a test importing an SDK does **not** establish substantive claim support or live effect safety.
-- Every registry URL received an HTTP HEAD check; see [the access log](reference-access-check.md) for all 54 statuses and GET/browser follow-up on non-200 responses.
+- Every registry URL received an HTTP HEAD check; see [the access log](reference-access-check.md) for all 54 statuses [58 registered after this corrective PR; R55–R58 were verified separately on 2026-10-10] and GET/browser follow-up on non-200 responses.
+
+[audited 2026-10-10: all relative links in this ledger resolve (ten chapter/appendix reports, metadata-title-drift.md, reference-access-check.md, `examples/patterns/evaluator_optimizer.py`, `examples/foundations/effect_idempotency.py`, `assets/diagrams/pattern-reflection.png`, which is the registered Figure 13-1). The three quoted line ranges were opened and point at the described code: lines 87–99 are the `evaluate_and_revise` loop in which `spent` accrues (89), `accepted` returns (93–94) before the `maximum_cost_usd` check (98–99); lines 52–65 are `AcceptanceEngine.__init__`/`decide`, which accept on empty `scores`; lines 58–69 are `EffectLedger.commit`, where a `declined` record bypasses the `intent_hash` comparison (61–63) and is overwritten (69). External links: the four registry URLs used here are the registry URLs; the non-registry links (Temporal OpenRouter integration page, two OpenAI developer pages, Policy Logic Forge `ARCHITECTURE.md`) all returned HTTP 200. The Temporal page does describe per-Activity retry policy and one HTTP call per attempt; whether it supports the exact C15 wording is left to the C15 fixing agent. Statuses in this table equal the `**Status:**` labels in the chapter and appendix reports for all 21 ids (8 Confirmed Error, 10 Potential Issue, 3 Needs Verification).]
+
+## Dispositions (2026-10-11)
+
+Each finding was re-verified against the source before it was fixed; the table above is left as recorded. **Confirmed** means the finding held as written; **confirmed-adjusted** means it held but its wording, severity or scope was narrowed; none was rejected or ruled out of scope. The full disposition text sits under each finding in its chapter or appendix report.
+
+| ID | Disposition | Where / note |
+| --- | --- | --- |
+| C01 | confirmed-adjusted | Ch 1 :169 "no reliable way of knowing what it does *not* know" |
+| C05 | confirmed | Ch 5 intersection row "corroborated, not verified"; `set_operations.py` docstring aligned |
+| C06 | confirmed-adjusted | Ch 6 :760 prevalence claim replaced by a measure-your-own-workload recommendation; no citation added |
+| C07 | confirmed-adjusted | Ch 7 :90 `agentctl` labelled an illustrative command surface |
+| C13a | confirmed | Overrun candidate escalated, never accepted; no call once spend ≥ cap; tests added. **Documented limitation:** no per-call reservation (the generator has no cost ceiling), so the last call can still overrun the cap by its own cost — stated on `RevisionLimits` |
+| C13b | confirmed | Every configured criterion must be present and finite; executable checks decided first; test added |
+| C13c | confirmed-adjusted (Low) | Figure 13-1 redrawn: judge → engine only; engine owns accept / reject→Revise / escalate→Human; sha updated; print-scale check pending |
+| C15 | confirmed-adjusted (Medium) | Ch 15 :1070 retry-after-unrecorded-result sentence added |
+| C20 | confirmed-adjusted | T-04/T-05 refusals state residual risk (provenance ≠ truth) and point to corroboration, Recover, human review, Ch 23 |
+| C22a | confirmed | Intent hash checked before any state handling; different intent after Declined/absent → `EffectConflict`; tests added |
+| C22b | confirmed-adjusted | Declined-by-absence requires a manifest-declared visibility window, else InterventionRequired; ToolManifest row and Appendix B step 4 aligned |
+| C24a | confirmed-adjusted | Wording ("to return its summary"; run cannot close); arithmetic was correct, "Confirmed Error" overstated |
+| C24b | confirmed | Fork = sandbox run with mocked/read-only effects; acting again = new authorized run via `POST /v1/runs` |
+| C25 | confirmed-adjusted | pass^k defined as empirical all-k pass rate; independence assumption stated; no citation |
+| C28 | confirmed | Evidence row split; R43 supports L = λW only; sizing method labelled book-authored |
+| A-D | confirmed | R55–R58 registered (n.d., checked 2026-10-10); Appendix D cites them; Claude row rewritten with beta caution; CrewAI "rapid prototyping" kept as book judgment |
+| A-H1 | confirmed-adjusted | Appendix H and Ch 1 :431 Tool Gateway no longer "exactly once" |
+| A-H2 | confirmed-adjusted | Idempotency key platform-derived, intent-bound, never model-chosen (Appendix H, Ch 1 :346) |
+| A-K | confirmed-adjusted, **partially addressed** | Ch 5 :422 labels 44% author-reported, single run. **Open:** pinned run artifact with numerator/denominator still needs the author's data |
+| A-L | confirmed-adjusted | λ_eff = λ_external × E[attempted activities per external run], measured per resource class; retry multiplier only without traces |
+| B-01 | confirmed | 22 `config/book.json` titles synchronized; `validate_book.py` title-equality check added (`chapter_title_mismatches` = 0) |
+
+Tally: 8 confirmed, 12 confirmed-adjusted, 1 confirmed-adjusted and partially addressed (A-K), 0 rejected, 0 out of scope.

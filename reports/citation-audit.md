@@ -1,8 +1,8 @@
 # Citation Audit — Book v1.0.0
 
 **Result:** PASS
-**References:** 54
-**Citation occurrences:** 139
+**References:** 58
+**Citation occurrences:** 147
 **Verified:** 2026-09-13
 
 All sources were checked against their recorded claim scope. The audit validates attribution, not the book's independently authored architecture recommendations.
@@ -65,6 +65,10 @@ All sources were checked against their recorded claim scope. The audit validates
 | R52 | verified | direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope) |  |
 | R53 | verified | direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope) |  |
 | R54 | verified | direct fetch of the arXiv abstract page (title, authors, identifier, venue note, abstract scope) |  |
+| R55 | verified | direct primary-source review | Living documentation fetched on the verification date; the former docs.claude.com path now redirects here. Source identity and recorded claim scope were reviewed on the primary page. |
+| R56 | verified | direct primary-source review | Living documentation fetched on the verification date; the page labels Managed Agents beta. Source identity and recorded claim scope were reviewed on the primary page. |
+| R57 | verified | direct primary-source review | Living documentation fetched on the verification date; the page carries no version or date. Source identity and recorded claim scope were reviewed on the primary page. |
+| R58 | verified | direct primary-source review | Living documentation fetched on the verification date; the page carries no version or date. Source identity and recorded claim scope were reviewed on the primary page. |
 
 ## Errors
 

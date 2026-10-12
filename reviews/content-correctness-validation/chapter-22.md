@@ -19,6 +19,8 @@ No separate confirmed finding in this category during this pass; absence of a fi
   **Evidence:** A delayed/asynchronous write can commit after the query window; the chapter's own Unknown semantics require proof, not a negative best-effort lookup.
   **Recommended correction:** Condition Declined on an explicit authoritative finality/visibility contract; otherwise retain Unknown or InterventionRequired.
 
+  **Disposition (2026-10-11):** confirmed-adjusted — Declined-by-absence now requires the visibility window the connector's manifest declares; an empty query before that bound, or from a provider that declares none, "proves nothing" and resolves to InterventionRequired. The ToolManifest Effects row (now listing the reconciliation query and visibility window) and Appendix B triage step 4 were aligned (this corrective PR). Adjustment: Declined stays reachable under a declared contract rather than being withdrawn in favour of a permanent Unknown.
+
 ## Missing or Weak References
 
 Citation presence was checked, but not every cited page was independently re-read against every attached clause. Any unsupported broad claim identified is listed under Claims Requiring Validation.
@@ -46,6 +48,8 @@ Registered example(s): effect-idempotency. The pinned example/mortgage tests pas
   **Evidence:** Code condition `record.state != "declined"` gates the hash comparison. Local reproduction accepted a changed intent after `DownstreamDeclined`. This contradicts source/parts/06-part-vi.md:929.
   **Recommended correction:** Compare intent hash for every existing record before state-specific retry handling; use a new key for a new intent and retain the prior record; test declined and reconciled-absent cases.
 
+  **Disposition (2026-10-11):** confirmed — `EffectLedger.commit` now compares the intent hash before any state handling; a Declined or reconciled-absent record re-applies only the same intent and raises `EffectConflict` for a different one without running the callable or overwriting the prior record. Tests for the declined and reconciled-absent cases were added and fail on the previous code (this corrective PR).
+
 ## Equations and Quantitative Validation
 
 Any displayed arithmetic/formulas were checked against their stated assumptions where tractable. No chapter-specific mathematical defect was confirmed unless listed below.
@@ -70,5 +74,5 @@ No separate confirmed finding in this category during this pass; absence of a fi
 
 ## Recommended Corrections
 
-1. Compare intent hash for every existing record before state-specific retry handling; use a new key for a new intent and retain the prior record; test declined and reconciled-absent cases.
-2. Condition Declined on an explicit authoritative finality/visibility contract; otherwise retain Unknown or InterventionRequired.
+1. Compare intent hash for every existing record before state-specific retry handling; use a new key for a new intent and retain the prior record; test declined and reconciled-absent cases. (applied)
+2. Condition Declined on an explicit authoritative finality/visibility contract; otherwise retain Unknown or InterventionRequired. (applied with adjustment: the contract is the manifest-declared visibility window; without one the state is InterventionRequired)

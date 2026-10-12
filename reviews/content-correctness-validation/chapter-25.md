@@ -32,7 +32,7 @@ Tables were read for categorical consistency, units and stated assumptions; no n
 
 ## Code Example Validation
 
-Registered example(s): MLflow evaluation and trajectory evaluation. The pinned example/mortgage tests passed as a suite (264 passed); this does not establish semantic completeness. No chapter-specific code defect was confirmed in this pass.
+Registered example(s): mlflow-evaluation; mlflow-trajectory-evaluation [audited: corrected — the original text named no ids; these are the two registry entries and markers for Chapter 25]. The pinned example/mortgage tests passed as a suite (264 passed); this does not establish semantic completeness. No chapter-specific code defect was confirmed in this pass.
 
 ## Equations and Quantitative Validation
 
@@ -44,6 +44,8 @@ Any displayed arithmetic/formulas were checked against their stated assumptions 
   **Finding:** `pass^k` is a valid shorthand only for identically distributed independent attempts. The chapter does not state that assumption; repeated runs often share model, prompt, source and failure mode. The phrase `or equivalent` softens the claim, so this is an ambiguity rather than a demonstrated bad calculation.
   **Evidence:** Probability of k successes is `P(A1∩…∩Ak)`, equal to `p^k` only under the stated assumptions.
   **Recommended correction:** Measure empirical all-k pass on paired repeated trajectories; allow `p^k` only as an explicitly labeled IID approximation.
+
+  **Disposition (2026-10-11):** confirmed-adjusted — :391 now defines repeated-run reliability "as the share of tasks that pass on all k repeated trials (pass^k)", computed "from the trials themselves rather than raising a single-run pass rate to the k, which assumes independent trials". No citation was added: R53's registered scope does not cover the metric's definition (this corrective PR).
 
 ## Terminology and Consistency Issues
 
@@ -65,4 +67,4 @@ No separate confirmed finding in this category during this pass; absence of a fi
 
 ## Recommended Corrections
 
-1. Measure empirical all-k pass on paired repeated trajectories; allow `p^k` only as an explicitly labeled IID approximation.
+1. Measure empirical all-k pass on paired repeated trajectories; allow `p^k` only as an explicitly labeled IID approximation. (applied: empirical definition adopted; the p^k shortcut is named with its independence assumption rather than offered as an approximation)

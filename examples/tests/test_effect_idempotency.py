@@ -47,8 +47,24 @@ def test_a_received_decline_is_recorded_and_releases_the_key():
     with pytest.raises(DownstreamDeclined):
         ledger.commit(KEY, INTENT, raising(DownstreamDeclined("422: case is locked")))
     assert ledger.get(KEY).state == "declined"
-    # The decline proved nothing happened, so a later attempt may apply.
+    # The decline proved nothing happened, so a later attempt with the same
+    # intent may apply under the same logical key.
     assert ledger.commit(KEY, INTENT, lambda: "receipt") == "receipt"
+
+
+def test_a_declined_key_still_rejects_a_different_intent():
+    ledger = EffectLedger()
+    with pytest.raises(DownstreamDeclined):
+        ledger.commit(KEY, INTENT, raising(DownstreamDeclined("422: case is locked")))
+    original = ledger.get(KEY).intent_hash
+    calls = []
+    with pytest.raises(EffectConflict):
+        ledger.commit(KEY, {**INTENT, "document_kind": "bank_statement"},
+                      lambda: calls.append(1) or "receipt-2")
+    assert calls == [], "a new intent needs a new key; it must not run under the old one"
+    record = ledger.get(KEY)
+    assert (record.state, record.intent_hash) == ("declined", original), \
+        "the declined record is history and is never overwritten"
 
 
 def test_a_timeout_is_unknown_and_is_never_re_applied():
@@ -72,6 +88,9 @@ def test_reconciliation_settles_an_unknown_effect_from_evidence():
     assert ledger.commit("found", INTENT, lambda: "duplicate") == "doc-request-771"
 
     ledger.reconcile("absent", outcome="absent", evidence="no request in window")
+    with pytest.raises(EffectConflict):  # proven absent releases the key for this intent only
+        ledger.commit("absent", {**INTENT, "document_kind": "bank_statement"}, lambda: "other")
+    assert ledger.get("absent").state == "declined"
     assert ledger.commit("absent", INTENT, lambda: "receipt") == "receipt"
 
     ledger.reconcile("unclear", outcome="unprovable", evidence="two candidate matches")

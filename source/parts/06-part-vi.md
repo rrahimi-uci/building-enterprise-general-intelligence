@@ -157,7 +157,7 @@ refuses it first, and how to recover.
 
 **Prevent.** ContextManifest, trust tiers, corroboration, signatures, freshness (Chapter 6 § The trust hierarchy of instructions).
 
-**First deterministic refusal.** Model/output: the claim-evidence verifier rejects claims without authorized evidence, and the run abstains or escalates on conflict.
+**First deterministic refusal.** Model/output: the claim-evidence verifier rejects claims without authorized evidence, and the run abstains or escalates on conflict. It proves provenance, not truth: a false claim inside an authorized source passes it, so a high-impact claim also needs the corroboration above or a human reviewer, and Chapter 23 bounds what a wrong decision can reach.
 
 **Recover.** Quarantine the artifact, invalidate the snapshot and caches, correct downstream decisions.
 
@@ -169,7 +169,7 @@ refuses it first, and how to recover.
 
 **Prevent.** Signed and approved ingestion with provenance (Chapter 5), source/index separation, ACLs, poisoning tests.
 
-**First deterministic refusal.** Context/memory: source, snapshot, and ACL filters admit only approved sources into the knowledge snapshot a run may read.
+**First deterministic refusal.** Context/memory: source, snapshot, and ACL filters admit only approved sources into the knowledge snapshot a run may read. They cannot see poison that arrived through an approved source; that residual risk falls to Chapter 5's independent verification and to the Recover step.
 
 **Recover.** Remove the data, rebuild a trusted index, invalidate caches, replay affected runs.
 
@@ -727,8 +727,12 @@ intervention-required result.
 
 When the downstream API has no idempotency key, reconcile by business
 predicate: target, intent fields, and a time window around the recorded
-dispatch. One match is Committed; none after the provider's visibility window
-is Declined; several, or an unverifiable match, is InterventionRequired.
+dispatch. One match is Committed. No match is Declined only after the
+visibility window the connector's manifest declares—the provider's bound on
+how long an accepted write can stay invisible to queries; an empty query
+before that bound, or from a provider that declares none, proves nothing.
+Several matches, an unverifiable match, or no declared window is
+InterventionRequired.
 Partial looks like the LOS creating the document request while the borrower
 notification fails.
 
@@ -746,7 +750,7 @@ discovery returns only what the run may use.
 | Security | Authentication mode, required scopes, resource model, tenant behavior, data classes |
 | Risk | read\_only, reversible, idempotent, destructive, financial/legal impact, approval policy |
 | Runtime | Timeout, retry class, concurrency key, rate limit, sandbox profile, egress allowlist |
-| Effects | Idempotency-key location, precondition/version field, effect receipt, compensation tool |
+| Effects | Idempotency-key location, precondition/version field, effect receipt, reconciliation query and visibility window, compensation tool |
 | Operations | SLO, health endpoint, trace semantics, cost unit, deprecation date, support contact |
 
 Resolve the manifest at dispatch, not at import; a risk class that lives only in
