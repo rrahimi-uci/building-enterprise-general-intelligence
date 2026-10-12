@@ -1,0 +1,50 @@
+% Figure 5-2 -- Extract, prove, approve, project.
+% Restyled from policy-to-guardrail.gv (current source: "Enforced rule at the
+% effect boundary"); nodes, labels, edges and meaning are unchanged.
+%
+% Original element -> restyled element
+%   policy  Policy text + the quoted pay-statement sentence (note) -> slate card, title + quotation
+%   extract Extract / typed rule, scope, citation       -> teal rounded card
+%   prove   Grounded in / the corpus? (diamond)         -> amber diamond
+%   reject  Rejected / citation not supported           -> red rounded card, beside the diamond
+%   approve Approve / eligible owner accepts            -> amber rounded card
+%   project Project / DMN . graph . rule (box)          -> blue square card
+%   guard   Enforced rule at the / effect boundary (box)-> red square card
+%   action  Governed action                             -> plum rounded card
+%   7 edges, same direction and labels:
+%     policy>extract "language model"   extract>prove "claim + citation"
+%     prove>reject "no" (red)           prove>approve "yes" (teal)
+%     approve>project "rule version recorded"
+%     project>guard "enforceable"       guard>action "permitted"
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  % ---- nodes ----
+  \node[dg card=slate, icon=file-alt, text width=190pt] (policy) at (150,0)
+    {\dgcontent{Policy text}{``A pay statement is acceptable\\only within the age window''}{}};
+  \node[dg card=teal, text width=186pt] (extract) at (150,-84)
+    {\dgcontent{Extract}{Typed rule, scope, citation}{}};
+  \node[dg decision=amber, minimum width=200pt, minimum height=78pt] (prove) at (150,-178)
+    {\dgcontent{Grounded in}{the corpus?}{}};
+  \node[dg card=red, text width=124pt] (reject) at (415,-178)
+    {\dgcontent{Rejected}{Citation not supported}{}};
+  \node[dg card=amber, icon=users, text width=186pt] (approve) at (150,-270)
+    {\dgcontent{Approve}{Eligible owner accepts}{}};
+  \node[dg card=blue, square, text width=186pt] (project) at (150,-346)
+    {\dgcontent{Project}{DMN · graph · rule}{}};
+  \node[dg card=red, square, icon=shield-alt, text width=186pt] (guard) at (150,-422)
+    {\dgcontent{Enforced rule at the effect boundary}{}{}};
+  \node[dg card=plum, text width=186pt] (action) at (150,-498)
+    {\dgcontent{Governed action}{}{}};
+
+  % ---- edges ----
+  \draw[flow in=blue] (policy.south) -- node[pill=blue]{Language model} (extract.north);
+  \draw[flow in=teal] (extract.south) -- node[pill=teal]{Claim + citation} (prove.north);
+  \draw[flow in=red] (prove.east) -- node[pill=red]{No} (reject.west);
+  \draw[flow in=teal] (prove.south) -- node[pill=teal]{Yes} (approve.north);
+  \draw[flow in=blue] (approve.south) -- node[pill=blue]{Rule version recorded} (project.north);
+  \draw[flow in=blue] (project.south) -- node[pill=blue]{Enforceable} (guard.north);
+  \draw[flow in=blue] (guard.south) -- node[pill=blue]{Permitted} (action.north);
+\end{tikzpicture}
+\end{document}
