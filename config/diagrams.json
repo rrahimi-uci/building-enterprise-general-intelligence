@@ -7,7 +7,7 @@
       "source": "assets/diagrams/src/anti-ambient-authority.tikz.tex",
       "vector": "assets/diagrams/anti-ambient-authority.pdf",
       "description": "AP-03 ambient authority versus a narrowed capability envelope and a short-lived credential lease",
-      "sha256": "82ed3fa644591b113971f24c9f383d7e9d2fbef60b98fcbc3c75f5695cc533ea"
+      "sha256": "4bc9c815d9b8d3ae5e08cbad2cde37e5ba55f583a96aa5f5bfb74750e0921496"
     },
     {
       "id": "anti-approval-binding",
@@ -15,7 +15,7 @@
       "source": "assets/diagrams/src/anti-approval-binding.tikz.tex",
       "vector": "assets/diagrams/anti-approval-binding.pdf",
       "description": "AP-06 Boolean consent versus proposal-bound, expiring approval",
-      "sha256": "c2a4f4889cd85f7feba4b7cd6f22cec922e3a5d8a03ffcac55a7b4ebf35d7d94"
+      "sha256": "1e9131e40a475a929d7c8e1b2116b2412a95d5b6c928e4e52825cb6cd7ec9575"
     },
     {
       "id": "anti-before-after",
@@ -23,7 +23,7 @@
       "source": "assets/diagrams/src/anti-before-after.tikz.tex",
       "vector": "assets/diagrams/anti-before-after.pdf",
       "description": "AP-01 side by side: an autonomous monolith that decides, authorizes, and acts, keeps state in the conversation, and leaves effects without receipts, against a governed design where the agent proposes, the platform authorizes, and the gateway commits once with a receipt",
-      "sha256": "360fe352da7c84d9404c67dec0d62c3636e5e7bd621e9ab7821ed1a414ab37dd"
+      "sha256": "d9615b2c66f6638b9b589b8fbceef53ff173196872dac745c00b823996d9d6c8"
     },
     {
       "id": "anti-retry-storm",
@@ -31,7 +31,7 @@
       "source": "assets/diagrams/src/anti-retry-storm.tikz.tex",
       "vector": "assets/diagrams/anti-retry-storm.pdf",
       "description": "AP-04/AP-05 layered retries and timeout-as-failure versus one retry owner",
-      "sha256": "73eab0866632462f9312c4a6bfd1ca021b1d6a73758779b10178740dd92f138a"
+      "sha256": "59b6d15353029b759ef13a88b7ad178b9037065de249916e41f7e294e95f16c3"
     },
     {
       "id": "book-map",
@@ -39,7 +39,7 @@
       "source": "assets/diagrams/src/book-map.tikz.tex",
       "vector": "assets/diagrams/book-map.pdf",
       "description": "The eight Parts in reading order, each with its title and the topics it develops, from foundations to running the system in the real world",
-      "sha256": "6f4351eb5ac059425c0e8c7e9c9815dcf747014d87fe8978f176686c1e1796da"
+      "sha256": "ba9fe7ddb04679d1f0626f7705c5919bd2b90f205d70b24be9a5e6dffac50909"
     },
     {
       "id": "capability-ladder",
@@ -47,7 +47,7 @@
       "source": "assets/diagrams/src/capability-ladder.tikz.tex",
       "vector": "assets/diagrams/capability-ladder.pdf",
       "description": "The four levels from a model to an enterprise agentic system, with what each adds and the failure class it introduces",
-      "sha256": "9e371a2a5a8d1efb6e1f982fb6e142451b665d5bfc4404c4aa7411c422e8c768"
+      "sha256": "23614608e30b6813f7bacda67f170b500c9788f5f9d1f93ebac9602ad9f074ba"
     },
     {
       "id": "causal-trace",
@@ -55,7 +55,7 @@
       "source": "assets/diagrams/src/causal-trace.tikz.tex",
       "vector": "assets/diagrams/causal-trace.pdf",
       "description": "A causal run trace links asynchronous work while protected decisions and effects enter a separate audit ledger",
-      "sha256": "65641d273c506c5bce28154a48ba46d6c8496c8be354cac080ee34dd60eda52a"
+      "sha256": "ac856030e4651c208f12268ae99875fc141e27bd9fc263ea892bebd8d5214d12"
     },
     {
       "id": "context-pipeline",
@@ -63,7 +63,7 @@
       "source": "assets/diagrams/src/context-pipeline.tikz.tex",
       "vector": "assets/diagrams/context-pipeline.pdf",
       "description": "The ten-stage context build pipeline, with authorization before retrieval and byte materialization last",
-      "sha256": "b6eb4ec371d9c3699ebf3b81ff8aee9a21991a2d8e7e707c4813bb4d7581eb8e"
+      "sha256": "6aec80177b7f6d23d9b36463c5b5980fa719daa3ece9b98fb5120d35a56e8a1a"
     },
     {
       "id": "deterministic-shell",
@@ -71,7 +71,7 @@
       "source": "assets/diagrams/src/deterministic-shell.tikz.tex",
       "vector": "assets/diagrams/deterministic-shell.pdf",
       "description": "The six gates between a model proposal and an accepted effect, and what each one refuses",
-      "sha256": "470b5cf7eb6a5b8ab0f082b914ed56c153b6dc03402a770c5b0c0b2166bae21b"
+      "sha256": "f2ad313554c69d0d39020fdf72ac5c68e15d406cbdd11fd85b49a0da5e24657e"
     },
     {
       "id": "evaluation-gate",
@@ -79,7 +79,7 @@
       "source": "assets/diagrams/src/evaluation-gate.tikz.tex",
       "vector": "assets/diagrams/evaluation-gate.pdf",
       "description": "Candidate evaluation combines deterministic checks, calibrated judges, slices, and a risk-tiered release gate",
-      "sha256": "00f01d625c3abda6b501960f35de5395ba3f6cc9cbf89de9c5217b03b6402e1e"
+      "sha256": "958d565846ad809436a284ca463ef0f01653efedbd8fcf7e554e8f185a8f3467"
     },
     {
       "id": "developer-platform",
@@ -87,7 +87,7 @@
       "source": "assets/diagrams/src/developer-platform.tikz.tex",
       "vector": "assets/diagrams/developer-platform.pdf",
       "description": "Four stacked layers: team-owned agents, tools, Skills and evaluation datasets; the SDK's portable contracts; shared platform services; and identity, policy, evidence, and tracing that no team re-implements",
-      "sha256": "0f5c50101d3b8bee87d6c58d25a0327f49b8eaaae122a3d74c0e17842045f8d0"
+      "sha256": "2512ef903f3808c0078f4df7c4f464cfd5aa1260b7913330fd2b7c302988bafc"
     },
     {
       "id": "dx-golden-path",
@@ -95,7 +95,7 @@
       "source": "assets/diagrams/src/dx-golden-path.tikz.tex",
       "vector": "assets/diagrams/dx-golden-path.pdf",
       "description": "The golden path from scaffold through develop, debug, evaluate, package, promote, and operate to improve, with identity, tool manifests, pinned versions, traces, and evidence supplied by the platform",
-      "sha256": "48e287314084041ba128fc6a8a8cf02652a7ef819d36acc8ae7c38ed98ce29dd"
+      "sha256": "2d76c0d940f7d0783a10fe1f3945362ee7f97c6b573d005a7929abbe763727c5"
     },
     {
       "id": "gateway-roles",
@@ -103,7 +103,7 @@
       "source": "assets/diagrams/src/gateway-roles.tikz.tex",
       "vector": "assets/diagrams/gateway-roles.pdf",
       "description": "Each control point and the question it answers: the API Gateway admits the caller, the LLM Gateway chooses the model under policy, the Tool Gateway decides whether an effect may happen once, the MCP and A2A Gateways vet external servers and agents, and human approval binds to one exact proposal before a protected effect reaches a system of record",
-      "sha256": "7bb92651598b0bee720d97edd152f644257a4ad346a0ccb4aeb9b876abbf9f6d"
+      "sha256": "4fe414c50fa4deffb874e3f3f79f04c8e28a862409b7af610b123d4049ee1ef2"
     },
     {
       "id": "governance-model",
@@ -119,7 +119,7 @@
       "source": "assets/diagrams/src/guardrail-sequence.tikz.tex",
       "vector": "assets/diagrams/guardrail-sequence.pdf",
       "description": "Sequence for one protected effect: a content detector inspects untrusted content and passes a finding to the policy engine, which refuses or, after any required human approval, authorizes the Tool Gateway to enforce the exact resource, check the idempotency ledger, commit once, and return a receipt",
-      "sha256": "29cffc8c28f909d92d09f6ea26303a95c86d39314b9d91edbff2edd6be56c87a"
+      "sha256": "7c8325b44168e0e0d832aaacfd39c03942bd75ce2a128c1d762c095012878ec7"
     },
     {
       "id": "knowledge-fabric",
@@ -127,7 +127,7 @@
       "source": "assets/diagrams/src/knowledge-fabric.tikz.tex",
       "vector": "assets/diagrams/knowledge-fabric.pdf",
       "description": "Governance metadata over four knowledge representations (semantic index, ontology and graph, rules, catalogs), served through one knowledge resolution API that resolves against the run's pinned release, enforces permissions, and feeds context, reasoning, constraints, and action to the agent runtime",
-      "sha256": "0440b63202672ff4059cfbca783f1f13022ef5122f69fe39077a727b566025df"
+      "sha256": "354a8d4414f971cb2938e2eb2314e485b1b1dfa4ecd9c29c2fd21b21f3eb422e"
     },
     {
       "id": "learning-loop",
@@ -135,7 +135,7 @@
       "source": "assets/diagrams/src/learning-loop.tikz.tex",
       "vector": "assets/diagrams/learning-loop.pdf",
       "description": "The continuous-improvement cycle: observe, measure, detect, diagnose, recommend, validate, approve (by an owner or a pre-approved change class), deploy, monitor, and learn",
-      "sha256": "bd2da5d776297413d934d4e9e8130ce4ff60b61ef5ec7d60dacbff6a9c68453b"
+      "sha256": "b4900631ad8ce453a5a9cb2f035903ccbdb07046c88487fc9c97a3eb96dce485"
     },
     {
       "id": "model-routing",
@@ -143,12 +143,12 @@
       "source": "assets/diagrams/src/model-routing.tikz.tex",
       "vector": "assets/diagrams/model-routing.pdf",
       "description": "Policy-first model routing: residency and retention, then model approval for the purpose, must pass before capability decides between the cheapest approved model that meets the bar and a higher-capability approved model; a failed policy check refuses or escalates",
-      "sha256": "e03260926709c1a7ca9d6e71a3f86c5195e5ad512893a6e7de4b819bcc289cf9"
+      "sha256": "e3ddff477ebec65972074acf74cb415d97acd82124ef77e159f36967853b3bde"
     },
     {
       "id": "pattern-decision-tree",
       "file": "assets/diagrams/pattern-decision-tree.png",
-      "sha256": "201b87c652a18c54d12ca486bd8d1294ece711478b1b3a0c50bb2be79638a100",
+      "sha256": "58c733b485865366ef2a8e5fc45def15b3b14d468794b1e60aacbff6a9830aa7",
       "source": "assets/diagrams/src/pattern-decision-tree.tikz.tex",
       "description": "Pattern selection: questions that choose the shape of the work, then checks that add durable execution, evaluator-optimizer, or approval and intervention, each leaf labelled with its chapter",
       "vector": "assets/diagrams/pattern-decision-tree.pdf"
@@ -159,7 +159,7 @@
       "source": "assets/diagrams/src/pattern-durable.tikz.tex",
       "vector": "assets/diagrams/pattern-durable.pdf",
       "description": "Durable execution: checkpoints, process death, replay, and effect adoption",
-      "sha256": "7a84f8e7e81ff4420268e59273727ebb6e483aecd57fd90616e629e6aae2a238"
+      "sha256": "b6caec76afbbb3f1a143df50d35a344f28ef0c0a3275061efc7140c3606c5670"
     },
     {
       "id": "pattern-hitl",
@@ -167,7 +167,7 @@
       "source": "assets/diagrams/src/pattern-hitl.tikz.tex",
       "vector": "assets/diagrams/pattern-hitl.pdf",
       "description": "Proposal-bound approval versus intervention raised by the run or taken by an operator on a run in flight",
-      "sha256": "a0fa5848a80112466e673dd6b2c62ec549634f69fa81ad01435ecdff9e10bb33"
+      "sha256": "3641aefa47a2aa880f8bbcf9d4090118fb4157eeff139878e9a84d8cd47ef713"
     },
     {
       "id": "pattern-planning",
@@ -175,7 +175,7 @@
       "source": "assets/diagrams/src/pattern-planning.tikz.tex",
       "vector": "assets/diagrams/pattern-planning.pdf",
       "description": "Plan-execute: a candidate plan compiled to typed IR and validated before any step runs",
-      "sha256": "bff68b554b5b13b6fc8757ad25496cc6b9a867fb6c8c9bbf381d943ff7611004"
+      "sha256": "773601d9e3b28c4c9ff3ea343bb4bf47f894237bc6f3baf545499b3b0c7f9723"
     },
     {
       "id": "pattern-react",
@@ -183,14 +183,14 @@
       "source": "assets/diagrams/src/pattern-react.tikz.tex",
       "vector": "assets/diagrams/pattern-react.pdf",
       "description": "Bounded ReAct: the reason-act-observe loop with the controller and limits outside it",
-      "sha256": "236f6fb1a1b07bad9472c228de5b11076fcace7144f3468689a8c6bcff7f0b12"
+      "sha256": "2383790864651ff0c3cebc36180308d82dcd50bbb85634dea18d9a722f9a3c81"
     },
     {
       "id": "pattern-reflection",
       "file": "assets/diagrams/pattern-reflection.png",
       "source": "assets/diagrams/src/pattern-reflection.tikz.tex",
       "vector": "assets/diagrams/pattern-reflection.pdf",
-      "description": "Reflection: a bounded loop runs executable checks before an advisory judge; the acceptance engine outside it owns every exit—accept, reject to revise, or escalate to a person",
+      "description": "Reflection: a bounded loop runs executable checks before an advisory judge; the acceptance engine outside it owns every exit\u2014accept, reject to revise, or escalate to a person",
       "sha256": "3d7226a23ec7251741b8a2462c8a67a6c7d79acf6b16762fa505a58c29df19af"
     },
     {
@@ -199,7 +199,7 @@
       "source": "assets/diagrams/src/pattern-routing.tikz.tex",
       "vector": "assets/diagrams/pattern-routing.pdf",
       "description": "Routing: a deterministic eligible set comes first, classification selects a specialist, and exact authorization decides whether it may act",
-      "sha256": "27e8ba9404005895e3f1b1acf2a009ad40d6511e9c046884c2fed6b37780e0ba"
+      "sha256": "afabfb672eb1e5314d0a63f3ff462eaac6118fe433575a19f51595351c34f7fb"
     },
     {
       "id": "policy-to-guardrail",
@@ -207,7 +207,7 @@
       "source": "assets/diagrams/src/policy-to-guardrail.tikz.tex",
       "vector": "assets/diagrams/policy-to-guardrail.pdf",
       "description": "A policy sentence is extracted into a typed rule with its citation, checked for grounding in the corpus (rejected if unsupported), approved by an eligible owner, projected into DMN, graph, or rule form with its version recorded, and enforced at the effect boundary",
-      "sha256": "ac91b545ca98a1d14b783ed670bc0b2055edc81a30aeadd3c5f28339e0354ca8"
+      "sha256": "a1df0e9dab81470ae390a9c985a3fe45a29c0e2483cecabf6d561435f6f073e8"
     },
     {
       "id": "document-ingestion",
@@ -215,15 +215,15 @@
       "source": "assets/diagrams/src/document-ingestion.tikz.tex",
       "vector": "assets/diagrams/document-ingestion.pdf",
       "description": "A pay statement's bytes and digest pass intake (scan, classify, ACL, label as data), then a language model proposes typed fields with regions, units, confidence, and extractor version; independent verification re-opens the pinned bytes and checks literal spans, internal consistency, and agreement with the case; supported records become a KnowledgeArtifact that feeds the Semantic view as labelled data and the enforced rule as facts, while contradicted or unverifiable fields are routed to human review, targeted repair of one field, or case management and are not served; an extractor or policy change produces a diff rather than an overwrite",
-      "sha256": "29f04fbe08ebafe6cccd549ea3efcd1a9297cfd610db6e1e400c7b69fdcb32b7"
+      "sha256": "a1e6632aa1a1afffe03f4da122d87bf11d6476eabac6c0cef638e3769a2f9467"
     },
     {
       "id": "knowledge-lifecycle",
       "file": "assets/diagrams/knowledge-lifecycle.png",
-      "source": "assets/diagrams/src/knowledge-lifecycle.gv",
+      "source": "assets/diagrams/src/knowledge-lifecycle.tikz.tex",
       "vector": "assets/diagrams/knowledge-lifecycle.pdf",
       "description": "Two planes separated by a labelled boundary. In the knowledge control plane (global control tier), authoritative sources (regulations, standards, contracts, internal policies) pass to extraction, where a model proposes claims with exact spans and nothing is dropped; claims form a versioned, typed, deduplicated, schema-checked compliance knowledge graph with a content digest; a candidate release passes quality gates (schema, independent grounding, consistency, regression), where a blocking finding goes to targeted repair of the failed element and re-enters the gate while held objects are carried; an independent SME approves the exact candidate digest or requests changes back to Draft; the knowledge registry holds the release manifest and a live pointer per environment and feeds a staleness check back to the gates. Releases cross down, evidence crosses up, and no writes cross up: activating the pointer and resolving at admission give the runtime plane (regional cell) one pinned release per run, which the control points (Context Service, plan compiler, policy decision point, Tool Gateway, acceptance engine) consult when an agent step proposes; the result is a governed action or a refusal when an obligation is unmet or unknown; decision records with the release digest and rule ids become observations that return to extraction as a proposed change, never a write",
-      "sha256": "ebbb9b1321b4fa61c2b021f23b54f6306b066763df9b104eb6655f2f20c79cf8"
+      "sha256": "17ebb1858969c698988f1864772511fd2914ebeb878c22d2b554caf9122265aa"
     },
     {
       "id": "portability",
@@ -231,15 +231,15 @@
       "source": "assets/diagrams/src/portability.tikz.tex",
       "vector": "assets/diagrams/portability.pdf",
       "description": "Application code depends only on the platform contracts; behind them, framework adapters and provider adapters can each be swapped for an alternative",
-      "sha256": "4d432673ba0c599ad4914eecfca450ed27b4c26e1c4d7d72aeebe01091c4e6b7"
+      "sha256": "f368a5f53fb350f0148536bc4c85c4aa096fd2fb1252f155a7b274e5a3c85f5b"
     },
     {
       "id": "reference-architecture",
       "file": "assets/diagrams/reference-architecture.png",
-      "source": "assets/diagrams/src/reference-architecture.gv",
+      "source": "assets/diagrams/src/reference-architecture.tikz.tex",
       "vector": "assets/diagrams/reference-architecture.pdf",
       "description": "Seven ownership planes stacked in request order, from experience and channels down to systems of record, each with its components and the request path descending through them, flanked by security and governance and by evaluation and operations as spines that cross every plane",
-      "sha256": "a0e92b2caa2f5fad2ae8c370192a9ab4c765835676cddf7fc1f71735ac7921f3"
+      "sha256": "90d22dd9b0df44cfb9f39e01bce7c9fe8966ca09c16ae280f14b6aac9c653cb7"
     },
     {
       "id": "request-sequence",
@@ -247,7 +247,7 @@
       "source": "assets/diagrams/src/request-sequence.tikz.tex",
       "vector": "assets/diagrams/request-sequence.pdf",
       "description": "Sequence of one request: the run service admits the run, assembles authorized context, obtains a typed proposal from the agent runtime, gets authorization and, for protected changes, a bound approval, invokes the Tool Gateway, which commits and returns a receipt, and evaluates acceptance before returning a verified outcome",
-      "sha256": "9649bd9923dbd92ad629c5dff448a19842c1728beac980d777db22cb3bdaa803"
+      "sha256": "ccd927be4b23b54e7b9a48808fbe518dfd558e42f70703d50a5310f91ce9079a"
     },
     {
       "id": "release-recovery",
@@ -255,7 +255,7 @@
       "source": "assets/diagrams/src/release-recovery.tikz.tex",
       "vector": "assets/diagrams/release-recovery.pdf",
       "description": "Immutable release promotion and regional recovery without rewriting active run history",
-      "sha256": "a63f80fa6f6ba3e673ee4caa1fe791b715d137a1e4ca4e07980e7883a5f30745"
+      "sha256": "818fba04edfad7c731a456416daa13b8a42d8a367f80cf63cbf82c62440fd553"
     },
     {
       "id": "reliability-economics",
@@ -263,7 +263,7 @@
       "source": "assets/diagrams/src/reliability-economics.tikz.tex",
       "vector": "assets/diagrams/reliability-economics.pdf",
       "description": "Admission, bounded execution, and outcome-based operating feedback",
-      "sha256": "6f615778d5c8dbf95decf7adb569845831c9ed3f421064a14b070a16ff8742fe"
+      "sha256": "952d9937dc3fabfb721da840b955315027c64ac41d4e282f51631da94236abca"
     },
     {
       "id": "runtime-offline",
@@ -271,7 +271,7 @@
       "source": "assets/diagrams/src/runtime-offline.tikz.tex",
       "vector": "assets/diagrams/runtime-offline.pdf",
       "description": "Runtime adaptation inside one run (use or drop authorized context, retry or fall back within budget, stop or escalate) produces evidence, not changes; offline improvement diagnoses, proposes, validates, gains owner approval, and releases with rollback",
-      "sha256": "ecb4626c958ef46a12eaac28031e918829c6162437372245a50e06496635fe23"
+      "sha256": "13578097e2d06522dc08789c25b9de6eef9905527e40ccedf50c3e2c97b3db78"
     },
     {
       "id": "runtime-boundary",
@@ -279,7 +279,7 @@
       "source": "assets/diagrams/src/runtime-boundary.tikz.tex",
       "vector": "assets/diagrams/runtime-boundary.pdf",
       "description": "A bounded agent step crosses a platform-owned contract while authorization, effects, and receipts remain outside the framework",
-      "sha256": "ff9c4537372a24b0bef88702f6b4d07e59fc4a48c8b47dc76c8ce4523bc6273a"
+      "sha256": "76a12896aa69e5559c814853252e41f958dcad51d76a57eaba561bdc1e42eba6"
     },
     {
       "id": "mortgage-case-lifecycle",
@@ -287,7 +287,7 @@
       "source": "assets/diagrams/src/mortgage-case-lifecycle.tikz.tex",
       "vector": "assets/diagrams/mortgage-case-lifecycle.pdf",
       "description": "The synthetic mortgage case evolves from evidence summary through verification and calculation to human review, with missing evidence and unsupported claims as explicit bottlenecks",
-      "sha256": "4a523f81ce1baa25e7bf3115f00121c8ce2f1e59e1ec87ebd4fd2c5ff602d9ab"
+      "sha256": "68e7013d55a13f1d00bc100988df73b48433eb0fb0c48287c4fba276f0668147"
     },
     {
       "id": "security-boundaries",
@@ -295,7 +295,7 @@
       "source": "assets/diagrams/src/security-boundaries.tikz.tex",
       "vector": "assets/diagrams/security-boundaries.pdf",
       "description": "Trust boundaries: an authenticated user's delegated grant enters the platform; the agent runtime's output is untrusted, retrieved content is never trusted, and the model provider sits outside the boundary; proposals are re-authorized at the Tool Gateway before a committed effect",
-      "sha256": "901fe1fa4a9eea57eeb7f1cb5616b83233b4fe3de45fe7aa32604da9bc68d6cf"
+      "sha256": "aff1899eaf161388a0289646ed9e65b4308e69a026280eb52c8b61940b0ef757"
     },
     {
       "id": "security-depth",
@@ -303,7 +303,7 @@
       "source": "assets/diagrams/src/security-depth.tikz.tex",
       "vector": "assets/diagrams/security-depth.pdf",
       "description": "Nine defense-in-depth layers, from channel and input through context, model output, agent workflow, identity and policy, tools and effects (the boundary that cannot be skipped), execution and egress, and supply chain, to detection and response",
-      "sha256": "dc012e368ae43f8388d35cdf859428518df24b8a6b3b936061653a5fe3674bc6"
+      "sha256": "e039a5666dc3fcda7c325923713cf72dae55d1f8ab8a0c79ff6298964ab5993a"
     },
     {
       "id": "identity-delegation",
@@ -311,7 +311,7 @@
       "source": "assets/diagrams/src/identity-delegation.tikz.tex",
       "vector": "assets/diagrams/identity-delegation.pdf",
       "description": "Subject and actor identity narrow through a child task before a last-hop credential is issued",
-      "sha256": "aa1c2a8bd78d753d7a099b15beb6d7d56a3f4fef59529a8ad40a007031fd83f6"
+      "sha256": "97d8637f27302942bdb5c80ee23f7d769124296739f4f27e310e7b5eb3ac6043"
     },
     {
       "id": "effect-lifecycle",
@@ -327,7 +327,7 @@
       "source": "assets/diagrams/src/sandbox-egress.tikz.tex",
       "vector": "assets/diagrams/sandbox-egress.pdf",
       "description": "Containment across capability, sandbox, egress, credential, DLP, and effect boundaries",
-      "sha256": "3ecd6681de6ecd40454bb982243e114639ba290c0799666d03465b857572db71"
+      "sha256": "bf8ba695751be92c80082191bc869d5ee06af813a1a3c1cf374a55375cbab352"
     },
     {
       "id": "skill-resolution",
@@ -335,7 +335,7 @@
       "source": "assets/diagrams/src/skill-resolution.tikz.tex",
       "vector": "assets/diagrams/skill-resolution.pdf",
       "description": "Semantic discovery proposes candidates; deterministic resolution pins one digest or refuses",
-      "sha256": "f02a96e0447360a392689350d0044b3065d5efaaf024cf6d8f0a4e4c96450cf5"
+      "sha256": "78ba56a45301bff805f72c11379595f78571c5c6eab93c7e853e83fc2cbdc9af"
     },
     {
       "id": "supervisor-worker",
@@ -343,15 +343,15 @@
       "source": "assets/diagrams/src/supervisor-worker.tikz.tex",
       "vector": "assets/diagrams/supervisor-worker.pdf",
       "description": "Supervisor/worker with narrowed child grants, an explicit fan-in contract, and durable cancellation",
-      "sha256": "a86ce75d92afc058c14c3390866fdcc911cbe301ae5d35e427ca0f5e87b582b1"
+      "sha256": "9ec79473b066830846a1de6d61e1bf6d7e3b63ab8751d51224669d07263f53fd"
     },
     {
       "id": "system-overview",
       "file": "assets/diagrams/system-overview.png",
-      "source": "assets/diagrams/src/system-overview.gv",
+      "source": "assets/diagrams/src/system-overview.tikz.tex",
       "vector": "assets/diagrams/system-overview.pdf",
       "description": "The whole system as seven bands, each mapped to the Parts that develop it, with the request descending from proposal through authorization to committed effect, evidence looping back to the runtime, and security and the platform drawn as spines beside every band",
-      "sha256": "90fa601d4b03dc91f3dcacde52be3d6da10bc23164dbe0d79965f89363f9e1d0"
+      "sha256": "272008849b20e77ab36b697f98ca05041f1c132e7ae2d4f3cbb1add2364e1943"
     }
   ],
   "note": "Diagrams are generated from the editable sources in assets/diagrams/src/ by tools/render_diagrams.py. Each source renders to a vector PDF, which XeLaTeX embeds, and a raster PNG for the DOCX edition. Never hand-edit a render."

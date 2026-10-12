@@ -33,170 +33,170 @@
       {
         "file": "assets/diagrams/book-map.png",
         "pixels": [
-          2505,
-          1818
+          2109,
+          1931
         ],
-        "effective_dpi": 354.8
+        "effective_dpi": 298.7
       },
       {
         "file": "assets/diagrams/mortgage-case-lifecycle.png",
         "pixels": [
-          2310,
-          2930
+          2104,
+          1816
         ],
-        "effective_dpi": 327.2
+        "effective_dpi": 298.0
       },
       {
         "file": "assets/diagrams/capability-ladder.png",
         "pixels": [
-          2261,
-          1331
+          2097,
+          1180
         ],
-        "effective_dpi": 320.3
+        "effective_dpi": 297.0
       },
       {
         "file": "assets/diagrams/system-overview.png",
         "pixels": [
-          2890,
-          1979
+          2073,
+          2452
         ],
-        "effective_dpi": 409.3
+        "effective_dpi": 293.6
       },
       {
         "file": "assets/diagrams/gateway-roles.png",
         "pixels": [
-          2850,
-          1877
+          2130,
+          2113
         ],
-        "effective_dpi": 403.7
+        "effective_dpi": 301.7
       },
       {
         "file": "assets/diagrams/deterministic-shell.png",
         "pixels": [
-          2379,
-          2371
+          2113,
+          1728
         ],
-        "effective_dpi": 337.0
+        "effective_dpi": 299.3
       },
       {
         "file": "assets/diagrams/runtime-boundary.png",
         "pixels": [
-          2312,
-          2908
+          2133,
+          2451
         ],
-        "effective_dpi": 327.5
+        "effective_dpi": 302.1
       },
       {
         "file": "assets/diagrams/reference-architecture.png",
         "pixels": [
-          2822,
-          3080
+          2056,
+          2494
         ],
-        "effective_dpi": 399.7
+        "effective_dpi": 291.2
       },
       {
         "file": "assets/diagrams/request-sequence.png",
         "pixels": [
-          2055,
-          1789
+          2097,
+          2435
         ],
-        "effective_dpi": 291.1
+        "effective_dpi": 297.0
       },
       {
         "file": "assets/diagrams/knowledge-fabric.png",
         "pixels": [
-          2458,
-          1461
+          2059,
+          1841
         ],
-        "effective_dpi": 348.2
+        "effective_dpi": 291.6
       },
       {
         "file": "assets/diagrams/policy-to-guardrail.png",
         "pixels": [
-          2315,
-          3153
+          2059,
+          2495
         ],
-        "effective_dpi": 327.9
+        "effective_dpi": 291.6
       },
       {
         "file": "assets/diagrams/document-ingestion.png",
         "pixels": [
-          2319,
-          2324
+          2089,
+          2348
         ],
-        "effective_dpi": 328.5
+        "effective_dpi": 295.9
       },
       {
         "file": "assets/diagrams/knowledge-lifecycle.png",
         "pixels": [
-          2560,
-          3272
+          2137,
+          2515
         ],
-        "effective_dpi": 362.6
+        "effective_dpi": 302.7
       },
       {
         "file": "assets/diagrams/context-pipeline.png",
         "pixels": [
-          2364,
-          2915
+          2056,
+          2240
         ],
-        "effective_dpi": 334.8
+        "effective_dpi": 291.2
       },
       {
         "file": "assets/diagrams/developer-platform.png",
         "pixels": [
-          2262,
-          1469
+          2061,
+          1715
         ],
-        "effective_dpi": 320.4
+        "effective_dpi": 291.9
       },
       {
         "file": "assets/diagrams/portability.png",
         "pixels": [
-          2560,
-          1164
+          2152,
+          1186
         ],
-        "effective_dpi": 362.6
+        "effective_dpi": 304.8
       },
       {
         "file": "assets/diagrams/dx-golden-path.png",
         "pixels": [
-          2292,
-          1196
+          2077,
+          1143
         ],
-        "effective_dpi": 324.6
+        "effective_dpi": 294.2
       },
       {
         "file": "assets/diagrams/skill-resolution.png",
         "pixels": [
-          2717,
-          1294
+          2084,
+          1973
         ],
-        "effective_dpi": 384.8
+        "effective_dpi": 295.2
       },
       {
         "file": "assets/diagrams/pattern-react.png",
         "pixels": [
-          2262,
-          1232
+          2089,
+          1403
         ],
-        "effective_dpi": 320.4
+        "effective_dpi": 295.9
       },
       {
         "file": "assets/diagrams/pattern-routing.png",
         "pixels": [
-          2293,
-          1833
+          2058,
+          1920
         ],
-        "effective_dpi": 324.8
+        "effective_dpi": 291.5
       },
       {
         "file": "assets/diagrams/pattern-planning.png",
         "pixels": [
-          2340,
-          2022
+          2133,
+          1733
         ],
-        "effective_dpi": 331.4
+        "effective_dpi": 302.1
       },
       {
         "file": "assets/diagrams/pattern-reflection.png",
@@ -209,98 +209,98 @@
       {
         "file": "assets/diagrams/pattern-hitl.png",
         "pixels": [
-          2377,
-          1879
+          2129,
+          1532
         ],
-        "effective_dpi": 336.7
+        "effective_dpi": 301.6
       },
       {
         "file": "assets/diagrams/pattern-durable.png",
         "pixels": [
-          2501,
-          3441
+          2088,
+          930
         ],
-        "effective_dpi": 354.2
+        "effective_dpi": 295.8
       },
       {
         "file": "assets/diagrams/pattern-decision-tree.png",
         "pixels": [
-          2296,
-          4032
+          2114,
+          2475
         ],
-        "effective_dpi": 325.2
+        "effective_dpi": 299.4
       },
       {
         "file": "assets/diagrams/anti-before-after.png",
         "pixels": [
-          2331,
-          1286
+          2129,
+          1372
         ],
-        "effective_dpi": 330.2
+        "effective_dpi": 301.6
       },
       {
         "file": "assets/diagrams/anti-ambient-authority.png",
         "pixels": [
-          2330,
-          1685
+          2129,
+          1566
         ],
-        "effective_dpi": 330.0
+        "effective_dpi": 301.6
       },
       {
         "file": "assets/diagrams/anti-retry-storm.png",
         "pixels": [
-          2374,
-          2534
+          2129,
+          2055
         ],
-        "effective_dpi": 336.3
+        "effective_dpi": 301.6
       },
       {
         "file": "assets/diagrams/anti-approval-binding.png",
         "pixels": [
-          2392,
-          2380
+          2129,
+          1665
         ],
-        "effective_dpi": 338.8
+        "effective_dpi": 301.6
       },
       {
         "file": "assets/diagrams/supervisor-worker.png",
         "pixels": [
-          2614,
-          1501
+          2129,
+          1800
         ],
-        "effective_dpi": 370.3
+        "effective_dpi": 301.6
       },
       {
         "file": "assets/diagrams/security-depth.png",
         "pixels": [
-          2269,
-          1903
+          2115,
+          2030
         ],
-        "effective_dpi": 321.4
+        "effective_dpi": 299.6
       },
       {
         "file": "assets/diagrams/security-boundaries.png",
         "pixels": [
-          2262,
-          1987
+          2077,
+          1939
         ],
-        "effective_dpi": 320.4
+        "effective_dpi": 294.2
       },
       {
         "file": "assets/diagrams/guardrail-sequence.png",
         "pixels": [
-          2055,
-          2312
+          2097,
+          2352
         ],
-        "effective_dpi": 291.1
+        "effective_dpi": 297.0
       },
       {
         "file": "assets/diagrams/identity-delegation.png",
         "pixels": [
-          2280,
-          3626
+          2056,
+          2357
         ],
-        "effective_dpi": 322.9
+        "effective_dpi": 291.2
       },
       {
         "file": "assets/diagrams/effect-lifecycle.png",
@@ -313,42 +313,42 @@
       {
         "file": "assets/diagrams/sandbox-egress.png",
         "pixels": [
-          2448,
-          3145
+          2064,
+          2429
         ],
-        "effective_dpi": 346.7
+        "effective_dpi": 292.4
       },
       {
         "file": "assets/diagrams/causal-trace.png",
         "pixels": [
-          2556,
-          2431
+          2068,
+          2288
         ],
-        "effective_dpi": 362.0
+        "effective_dpi": 292.9
       },
       {
         "file": "assets/diagrams/evaluation-gate.png",
         "pixels": [
-          2838,
-          2118
+          2106,
+          2441
         ],
-        "effective_dpi": 402.0
+        "effective_dpi": 298.3
       },
       {
         "file": "assets/diagrams/runtime-offline.png",
         "pixels": [
-          2461,
-          4575
+          2118,
+          1238
         ],
-        "effective_dpi": 348.6
+        "effective_dpi": 300.0
       },
       {
         "file": "assets/diagrams/learning-loop.png",
         "pixels": [
-          2267,
-          2017
+          2113,
+          1744
         ],
-        "effective_dpi": 321.1
+        "effective_dpi": 299.3
       },
       {
         "file": "assets/diagrams/governance-model.png",
@@ -361,26 +361,26 @@
       {
         "file": "assets/diagrams/release-recovery.png",
         "pixels": [
-          2613,
-          3139
+          2057,
+          2565
         ],
-        "effective_dpi": 307.4
+        "effective_dpi": 291.4
       },
       {
         "file": "assets/diagrams/reliability-economics.png",
         "pixels": [
-          2747,
-          2438
+          2061,
+          2393
         ],
-        "effective_dpi": 389.1
+        "effective_dpi": 291.9
       },
       {
         "file": "assets/diagrams/model-routing.png",
         "pixels": [
-          2295,
-          2292
+          2062,
+          2054
         ],
-        "effective_dpi": 325.1
+        "effective_dpi": 292.1
       },
       {
         "file": "cover-images/chapter-01-what-turns-an-llm-call-into-a-production-system.png",
