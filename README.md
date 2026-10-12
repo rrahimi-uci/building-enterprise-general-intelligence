@@ -226,8 +226,9 @@ Committed — tracked release evidence, listed in `CHECKSUMS.sha256`:
 Not committed — regenerable, and gitignored so rebuilds do not churn binaries
 through history:
 
-- `dist/…-LaTeX.pdf` — built by `make pdf`, published as a CI artifact on every
-  push and attached to the GitHub Release when a tag is pushed
+- `dist/…-LaTeX.pdf` — built and verified as a non-empty file by `make pdf`;
+  published as a CI artifact on main/tag/manual runs and attached to the GitHub
+  Release when a tag is pushed
 - `latex/build/` — TeX auxiliaries, logs, and the intermediate PDF
 - `qa/render/*.pdf` and `qa/render/visual-contact-sheet.png` — QA only
 
