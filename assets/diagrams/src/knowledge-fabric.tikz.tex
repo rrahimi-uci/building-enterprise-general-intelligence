@@ -1,0 +1,62 @@
+% Figure 5-1 -- The enterprise knowledge fabric and its four consumption modes.
+% Restyled from knowledge-fabric.gv; content, order and edges are unchanged.
+%
+% Original element -> restyled element
+%   gov   bar "Governance . owner . version . release . effective dates .
+%         provenance . permissions"           -> amber bar card (title, then the list)
+%   reps  4-cell row Semantic index (RAG) | Ontology (and graph) |
+%         Rules (SBVR . DMN) | Catalogs (data . capability)
+%                                             -> four cards, blue / cyan / red / plum
+%                                                as in the source, inside one blue row panel
+%   api   bar "Knowledge resolution API . one surface . pinned release .
+%         permissions enforced here"          -> blue square-cornered bar card
+%   modes 4-cell row Context (what is the situation) | Reasoning (what should
+%         happen) | Constraints (what may I do) | Action (how do I do it)
+%                                             -> four teal cards in one teal row panel
+%   agent bar "Agent runtime"                 -> teal bar card
+%   edges gov > reps (dashed, "governs"); reps > api; api > modes; modes > agent
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+% Local macros (candidates for promotion): a row cell and an untitled row panel.
+\newcommand{\dgrowcell}[5]{% name, role, x,y, content
+  \node[dg card=#2, text width=92pt, inner xsep=7pt, minimum height=44pt, align=center] (#1) at (#3,#4) {#5};}
+\newcommand{\dgrowpanel}[3]{% name, role, fit list
+  \begin{pgfonlayer}{dgback}
+    \node[fit=#3, inner sep=7pt, rounded corners=9pt, fill=white, draw=dg-#2-line!45,
+          line width=0.8pt] (#1) {};
+  \end{pgfonlayer}}
+\begin{document}
+\begin{tikzpicture}
+  % ---- governance bar ----
+  \node[dg card=amber, text width=454pt, align=center, minimum height=46pt] (gov) at (0,0)
+    {\dgcontent{Governance}{owner · version · release · effective dates · provenance · permissions}{}};
+
+  % ---- representations row ----
+  \dgrowcell{r1}{blue}{-177}{-96}{\dgcontent{\mdseries\fontsize{10}{12}\selectfont\strut Semantic index}{}{RAG}}
+  \dgrowcell{r2}{cyan}{-59}{-96}{\dgcontent{\mdseries\fontsize{10}{12}\selectfont\strut Ontology}{}{and graph}}
+  \dgrowcell{r3}{red}{59}{-96}{\dgcontent{\mdseries\fontsize{10}{12}\selectfont\strut Rules}{}{SBVR · DMN}}
+  \dgrowcell{r4}{plum}{177}{-96}{\dgcontent{\mdseries\fontsize{10}{12}\selectfont\strut Catalogs}{}{data · capability}}
+  \dgrowpanel{reps}{blue}{(r1)(r2)(r3)(r4)}
+
+  % ---- API bar ----
+  \node[dg card=blue, square, text width=454pt, align=center, minimum height=46pt] (api) at (0,-192)
+    {\dgcontent{Knowledge resolution API}{one surface · pinned release · permissions enforced here}{}};
+
+  % ---- consumption modes row ----
+  \dgrowcell{m1}{teal}{-177}{-288}{\dgcontent{\strut Context}{}{what is the situation}}
+  \dgrowcell{m2}{teal}{-59}{-288}{\dgcontent{\strut Reasoning}{}{what should happen}}
+  \dgrowcell{m3}{teal}{59}{-288}{\dgcontent{\strut Constraints}{}{what may I do}}
+  \dgrowcell{m4}{teal}{177}{-288}{\dgcontent{\strut Action}{}{how do I do it}}
+  \dgrowpanel{modes}{teal}{(m1)(m2)(m3)(m4)}
+
+  % ---- agent runtime ----
+  \node[dg card=teal, text width=454pt, align=center, minimum height=40pt] (agent) at (0,-380)
+    {\dgcontent{Agent runtime}{}{}};
+
+  % ---- connectors ----
+  \draw[dashed flow, draw=dg-amber-line] (gov.south) -- node[pill=amber,pos=0.45]{Governs} (reps.north);
+  \draw[flow in=blue] (reps.south) -- (api.north);
+  \draw[flow in=blue] (api.south) -- (modes.north);
+  \draw[flow in=blue] (modes.south) -- (agent.north);
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,66 @@
+% Figure 1-4 -- Control points and the questions they answer.
+% Restyled from gateway-roles.gv; the 11 nodes, 11 edges, their directions and
+% dashed/solid styles and every label are unchanged. Layout only is new: the
+% four external/outcome nodes sit on one bottom row.
+%
+% Original element -> restyled element
+%   api      API Gateway / is this caller admitted?        -> slate card (top)
+%   agent    Agent runtime / proposes                      -> teal card
+%   a2a      A2A Gateway / may this external agent take the task? -> plum card
+%   llm      LLM Gateway / which model, under what policy? -> amber card
+%   tool     Tool Gateway / may this effect happen, and once? -> red card
+%   mcp      MCP Gateway / is this server trusted?         -> blue card
+%   approval Human approval / is this exact proposal approved? -> amber diamond
+%   prov     Model providers          -> slate card         peers  External agents -> slate card
+%   ext      External MCP servers     -> slate card         sys    Systems of record -> blue cylinder
+%   edges    api>agent "admitted"; agent>llm "inference"; agent>tool "effects";
+%            llm>prov; tool>sys "read or pre-approved"; tool>approval "protected
+%            effect" (dashed); approval>sys "approved once"; tool>mcp "external
+%            tools" (dashed); mcp>ext; agent<>a2a "external tasks" (dashed, both
+%            directions); a2a>peers
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  % ---- control points ----
+  \node[dg card=slate, text width=108pt, align=center] (api) at (245,0)
+    {\dgcontent{API Gateway}{Is this caller admitted?}{}};
+  \node[dg card=teal, text width=108pt, align=center] (agent) at (245,-98)
+    {\dgcontent{Agent runtime}{Proposes}{}};
+  \node[dg card=amber, text width=108pt, align=center] (llm) at (64,-206)
+    {\dgcontent{LLM Gateway}{Which model, under what policy?}{}};
+  \node[dg card=red, text width=108pt, align=center] (tool) at (245,-206)
+    {\dgcontent{Tool Gateway}{May this effect happen, and once?}{}};
+  \node[dg card=plum, text width=108pt, align=center] (a2a) at (436,-206)
+    {\dgcontent{A2A Gateway}{May this external agent take the task?}{}};
+  \node[dg card=blue, square, text width=92pt, align=center] (mcp) at (168,-318)
+    {\dgcontent{MCP Gateway}{Is this server trusted?}{}};
+  \node[dg decision=amber, text width=96pt, minimum width=166pt, minimum height=98pt] (appr) at (340,-318)
+    {\dgcontent{Human approval}{Is this exact proposal approved?}{}};
+
+  % ---- outside / outcome row ----
+  \node[dg card=slate, text width=80pt, align=center] (prov) at (64,-462)
+    {\dgcontent{}{Model providers}{}};
+  \node[dg card=slate, text width=80pt, align=center] (ext) at (168,-462)
+    {\dgcontent{}{External MCP servers}{}};
+  \node[dg store=blue, aspect=0.15, text width=106pt, minimum height=46pt] (sys) at (302,-462)
+    {\dgcontent{}{Systems of record}{}};
+  \node[dg card=slate, text width=80pt, align=center] (peers) at (436,-462)
+    {\dgcontent{}{External agents}{}};
+
+  % ---- connectors ----
+  \draw[flow in=blue] (api.south) -- node[pill=blue]{Admitted} (agent.north);
+  \draw[flow in=blue, turn] (agent.west) -| node[pill=blue,pos=0.3]{Inference} (llm.north);
+  \draw[flow in=blue] (agent.south) -- node[pill=blue]{Effects} (tool.north);
+  \draw[dashed flow, draw=dg-plum-line, <->, turn] (agent.east) -| node[pill=plum,pos=0.3]{External tasks} (a2a.north);
+  \draw[flow in=blue] (llm.south) -- (prov.north);
+  \draw[flow in=blue] (a2a.south) -- (peers.north);
+  \draw[flow in=blue] (mcp.south) -- (ext.north);
+  \draw[dashed flow, draw=dg-blue-line] ([xshift=-30pt]tool.south) to[out=-90,in=90]
+    node[pill=blue]{External tools} (mcp.north);
+  \draw[dashed flow, draw=dg-amber-line] ([xshift=30pt]tool.south) to[out=-90,in=90]
+    node[pill=amber]{Protected effect} (appr.north);
+  \draw[flow in=blue] (tool.south) -- node[pill=blue,pos=0.78]{Read or\\pre-approved} (tool.south |- sys.north);
+  \draw[flow in=blue] (appr.south) -- node[pill=blue,pos=0.42]{Approved\\once} (appr.south |- sys.north);
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,62 @@
+% Figure 20-2 -- Agentic security trust boundaries.
+% Restyled from security-boundaries.gv; content, grouping, edges (direction, label,
+% solid/dashed) are unchanged. Layout only is new.
+%
+% Original element -> restyled element
+%   user    User / authenticated                    -> slate card
+%   cluster "Platform trust boundary" (dashed, blue) -> blue dashed group (title at bottom, as in the source)
+%     run   Run service                             -> blue square card
+%     agent Agent runtime / untrusted output        -> amber square card
+%     tool  Tool Gateway                            -> blue square card
+%   cluster "Outside the boundary" (dashed, red)    -> red dashed group (title at bottom)
+%     model Model provider                          -> red card
+%     docs  Retrieved content / untrusted input     -> red card
+%   sys     System of record (cylinder)             -> blue cylinder
+%   edges   user>run "delegated grant"; run>agent "bounded step";
+%           agent>model "prompt" (dashed, blue); docs>agent "never trusted"
+%           (dashed, red); agent>tool "proposal, re-authorized" (amber);
+%           tool>sys "committed effect"
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  \node[dg card=slate, text width=116pt, align=center] (user) at (100,0)
+    {\dgcontent{User}{Authenticated}{}};
+
+  % ---- platform trust boundary ----
+  \node[dg card=blue, square, text width=116pt, align=center] (run) at (100,-98)
+    {\dgcontent{Run service}{}{}};
+  \node[dg card=amber, square, text width=116pt, align=center] (agent) at (100,-196)
+    {\dgcontent{Agent runtime}{Untrusted output}{}};
+  \node[dg card=blue, square, text width=116pt, align=center] (tool) at (100,-294)
+    {\dgcontent{Tool Gateway}{}{}};
+  \begin{pgfonlayer}{dgback}
+    \node[fit=(run)(agent)(tool), inner sep=0pt] (tcore) {};
+    \coordinate (tedge) at ([yshift=-22pt]tcore.south);
+    \node[dg group dashed=blue, fit=(tcore)(tedge)] (trusted) {};
+    \node[group label=blue, anchor=south east, align=right]
+      at ([xshift=-10pt,yshift=9pt]trusted.south east) {Platform trust\\boundary};
+  \end{pgfonlayer}
+
+  % ---- outside the boundary ----
+  \node[dg card=red, text width=108pt, align=center, minimum height=38pt] (model) at (430,-182)
+    {\dgcontent{Model provider}{}{}};
+  \node[dg card=red, text width=108pt, align=center] (docs) at (430,-262)
+    {\dgcontent{Retrieved content}{Untrusted input}{}};
+  \dggroupbelow[dash pattern=on 5pt off 3pt]{outside}{red}{Outside the boundary}{(model)(docs)}
+
+  \node[dg store=blue, aspect=0.1, text width=104pt, minimum height=44pt] (sys) at (100,-420)
+    {\dgcontent{}{System of record}{}};
+
+  % ---- connectors ----
+  \draw[flow in=blue] (user.south) -- node[pill=blue]{Delegated grant} (run.north);
+  \draw[flow in=blue] (run.south) -- node[pill=blue]{Bounded step} (agent.north);
+  \draw[dashed flow, draw=dg-blue-line] ([yshift=14pt]agent.east) --
+    node[pill=blue]{Prompt} ([yshift=14pt]agent.east -| model.west);
+  \draw[dashed flow, draw=dg-red-line, turn] (docs.west) -- (320,-262) -- (320,-210) --
+    node[pill=red]{Never trusted} ([yshift=-14pt]agent.east);
+  \draw[flow in=amber] (agent.south) -- node[pill=amber]{Proposal,\\re-authorized} (tool.north);
+  \draw[flow in=blue] ([xshift=-30pt]tool.south) -- node[pill=blue,pos=0.7]{Committed effect}
+    ([xshift=-30pt]tool.south |- sys.north);
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,39 @@
+% Figure 7-1 -- Agentic developer platform and SDK capability stack.
+% Restyled from developer-platform.gv; content, grouping and order are unchanged.
+%
+% Original element -> restyled element
+%   apps     band "Team-owned . differentiated"  -> plum group (title on top), 4 plum cells:
+%            Domain agents | Domain tools | Skills . Skill Packs (+ "domain-owned") | Eval datasets
+%   sdk      band "SDK . portable contracts"     -> teal group, 4 teal cells:
+%            AgentSpec | ToolManifest | AgentStepRequest | ContextManifest
+%   platform band "Platform . shared and operated" -> blue group, 4 blue cells:
+%            Run service | Tool Gateway | LLM Gateway | Skill registry
+%   control  band "Control . never re-implemented by a team" -> red group, 4 red cells:
+%            Identity | Policy | Evidence | Tracing
+%   edges    apps > sdk > platform > control are invisible in the source (stacking
+%            order only); no connector is drawn.
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+% Local macro (candidate for promotion): a tier cell, a centred card in a band.
+\newcommand{\dgcell}[4]{% name, role, position, content
+  \node[dg card=#2, text width=92pt, minimum height=40pt, align=center,
+        inner xsep=8pt, anchor=center, font=\fontsize{10}{12}\selectfont] (#1) at (#3) {\strut #4};}
+\newcommand{\dgcellrow}[7]{% prefix, role, y, c1..c4 (x on a 4-column grid)
+  \dgcell{#1a}{#2}{62,#3}{#4}\dgcell{#1b}{#2}{176,#3}{#5}%
+  \dgcell{#1c}{#2}{290,#3}{#6}\dgcell{#1d}{#2}{404,#3}{#7}}
+\begin{document}
+\begin{tikzpicture}
+  \dgcellrow{ap}{plum}{0}{Domain agents}{Domain tools}
+    {Skills · Skill Packs\\[1pt]{\dgnotesize\color{dg-note}domain-owned}}{Eval datasets}
+  \dggroup{apps}{plum}{Team-owned · differentiated}{(apa)(apb)(apc)(apd)}
+
+  \dgcellrow{sd}{teal}{-102}{AgentSpec}{ToolManifest}{AgentStepRequest}{ContextManifest}
+  \dggroup{sdk}{teal}{SDK · portable contracts}{(sda)(sdb)(sdc)(sdd)}
+
+  \dgcellrow{pl}{blue}{-204}{Run service}{Tool Gateway}{LLM Gateway}{Skill registry}
+  \dggroup{platform}{blue}{Platform · shared and operated}{(pla)(plb)(plc)(pld)}
+
+  \dgcellrow{co}{red}{-306}{Identity}{Policy}{Evidence}{Tracing}
+  \dggroup{control}{red}{Control · never re-implemented by a team}{(coa)(cob)(coc)(cod)}
+\end{tikzpicture}
+\end{document}

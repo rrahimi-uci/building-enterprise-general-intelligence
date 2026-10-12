@@ -1,0 +1,57 @@
+% Figure 25-2 -- Runtime adaptation and offline improvement boundary.
+% Restyled from runtime-offline.gv; content, order, grouping and the single
+% bridge are unchanged. Layout only is new: both chains run left to right so the
+% figure fills the text width instead of a 3.5 x 7.2 in column.
+%
+% Original element -> restyled element
+%   cluster "Runtime . bounded, inside one run" -> teal group (title on top)
+%     r1  Use authorized context or drop optional context -> teal card
+%     r2  Retry or fall back within budget                -> teal card
+%     r3  Stop, ask, or escalate                          -> teal card
+%     r1 > r2 > r3 (solid)
+%   cluster "Offline . governed, changes the system" -> blue group (title below,
+%                                                        because the bridge enters from above)
+%     o1  Diagnose from traces      -> blue square card
+%     o2  Propose change            -> blue square card
+%     o3  Validate on held-out set  -> blue square card
+%     gate Owner approval           -> amber rounded card (rounded box, as in the source)
+%     o4  Release with rollback     -> blue square card
+%     o1 > o2 > o3 > gate > o4 (solid)
+%   bridge  r3 > Offline cluster "evidence, not a change" (dashed, amber)
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+% Local macro (candidate for promotion): a step card in a left-to-right chain.
+\newcommand{\dgstep}[6]{% name, role, x, y, text width, label
+  \node[dg card=#2, square, text width=#5, inner xsep=7pt, align=center, minimum height=46pt]
+    (#1) at (#3,#4) {\dgcontent{}{#6}{}};}
+\begin{document}
+\begin{tikzpicture}
+  % ---- runtime ----
+  \node[dg card=teal, text width=126pt, inner xsep=7pt, align=center, minimum height=46pt] (r1) at (70,0)
+    {\dgcontent{}{Use authorized context or drop optional context}{}};
+  \node[dg card=teal, text width=126pt, inner xsep=7pt, align=center, minimum height=46pt] (r2) at (236,0)
+    {\dgcontent{}{Retry or fall back within budget}{}};
+  \node[dg card=teal, text width=126pt, inner xsep=7pt, align=center, minimum height=46pt] (r3) at (402,0)
+    {\dgcontent{}{Stop, ask, or escalate}{}};
+  \dggroup{runtime}{teal}{Runtime · bounded, inside one run}{(r1)(r2)(r3)}
+  \draw[flow in=blue] (r1.east) -- (r2.west);
+  \draw[flow in=blue] (r2.east) -- (r3.west);
+
+  % ---- offline ----
+  \dgstep{o1}{blue}{41}{-170}{68pt}{Diagnose from traces}
+  \dgstep{o2}{blue}{138.5}{-170}{68pt}{Propose change}
+  \dgstep{o3}{blue}{236}{-170}{68pt}{Validate on held-out set}
+  \node[dg card=amber, text width=68pt, inner xsep=7pt, align=center, minimum height=46pt]
+    (gate) at (333.5,-170) {\dgcontent{}{Owner approval}{}};
+  \dgstep{o4}{blue}{431}{-170}{68pt}{Release with rollback}
+  \dggroupbelow{offline}{blue}{Offline · governed, changes the system}{(o1)(o2)(o3)(gate)(o4)}
+  \draw[flow in=blue] (o1.east) -- (o2.west);
+  \draw[flow in=blue] (o2.east) -- (o3.west);
+  \draw[flow in=blue] (o3.east) -- (gate.west);
+  \draw[flow in=blue] (gate.east) -- (o4.west);
+
+  % ---- bridge ----
+  \draw[dashed flow, draw=dg-amber-line, turn] (r3.south) -- ++(0,-48pt) -|
+    node[pill=amber,pos=0.25]{Evidence, not a change} (o1 |- offline.north);
+\end{tikzpicture}
+\end{document}
