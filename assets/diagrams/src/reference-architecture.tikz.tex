@@ -1,0 +1,152 @@
+% Figure 4-1 -- The reference architecture as seven ownership planes.
+% Restyled from reference-architecture.gv; every plane, chip, rail and edge is kept.
+% Layout only is new (planes as rows of chips, the two spines as side rails).
+%
+% Original element -> restyled element
+%   cluster "Experience and channels" (slate band)    -> slate plane: Chat and UI, API clients,
+%        Operator console (chips); the invisible placeholder e3 is not drawn
+%   cluster "Edge and admission" (dashed, italic)     -> dashed slate sub-plane: API Gateway . WAF,
+%        Tenant router, Request validator (chips); invisible d3 not drawn
+%   cluster "Runtime and workflow" (teal)             -> teal plane: Run API, Planner . coordinator,
+%        Workflow engine, Checkpoint store (cylinder)
+%   cluster "Agent applications" (teal)               -> teal plane: AgentSpec, Bounded agent workers,
+%        Topology . handoffs, Skills
+%   cluster "Knowledge, context, and memory" (cyan)   -> cyan plane: Context Service, Knowledge Hub,
+%        Search . vector index (cylinder), Memory service
+%   cluster "Gateways and integration / the only way out" (blue) -> blue plane (second phrase
+%        set regular on the same title line): LLM Gateway, Tool Gateway, MCP . A2A, Egress proxy
+%   cluster "Systems of record and providers / outside the trust boundary" (plum) -> plum plane:
+%        Domain systems (cylinder), MCP servers, Partner agents, Model providers
+%   cluster "Security and governance" (left spine, red) -> red rail, 7 chips: IdP . STS, Workload
+%        identity, PDP / PEP, Guardrails, Secrets . leases, Approval Service, Audit . WORM
+%   cluster "Evaluation and operations" (right spine, amber) -> amber rail, 7 chips: OTel collector,
+%        Trace store, Evaluation service, Datasets, SLOs . cost, Incident tooling, ReleaseManifest
+%   request path (solid blue, labelled): API clients>API Gateway "intent"; Request validator>Run API
+%        "admitted run"; Planner>Context Service "assemble context"; Context Service>Bounded agent
+%        workers "AgentStepRequest"; Bounded agent workers>Tool Gateway "authorized proposal";
+%        Tool Gateway>Domain systems "committed effect"
+%   control (dashed red, three): PDP / PEP>API Gateway, PDP / PEP>Run API, PDP / PEP>LLM Gateway
+%   evidence (dotted amber, three, arrow at the collector): Request validator, Topology . handoffs,
+%        Egress proxy > OTel collector
+%   Chip order inside a plane changed only where it straightens the request path into one column
+%   (API clients, Knowledge Hub / Context Service, Skills / Topology, MCP servers / Domain systems).
+\documentclass[border=3pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  % Local helpers (candidates for the shared package: plane chip, plane group).
+  \tikzset{
+    dg shadow/.style={},
+    pchip/.style={rectangle, rounded corners=4pt, line width=0.8pt, fill=dg-#1-fill,
+      draw=dg-#1-line, text=dg-ink, font=\dgnotesize, text width=54pt, align=center,
+      inner xsep=3pt, inner ysep=3pt, minimum height=28pt, minimum width=60pt},
+    pcyl/.style={dg store=#1, line width=0.8pt, aspect=0.12, text width=54pt,
+      inner xsep=3pt, inner ysep=2pt, minimum height=30pt, minimum width=60pt,
+      font=\dgnotesize},
+    plane title/.style={anchor=north west, font=\dggroupsize, text=dg-#1-ink, inner sep=0pt},
+  }
+  % \pc{name}{role}{x,y}{text}
+  \newcommand{\pc}[4]{\node[pchip=#2] (#1) at (#3) {#4};}
+  \newcommand{\pcyl}[4]{\node[pcyl=#2] (#1) at (#3) {#4};}
+  % \plane{name}{role}{title}{ytop}{ybottom}: one ownership plane, 273pt wide at x = 104..377;
+  % the title sits at the top right so the request path (one column) never crosses it.
+  \newcommand{\plane}[5]{%
+    \begin{pgfonlayer}{dgback}
+      \node[dg group=#2, anchor=north west, inner sep=0pt, minimum width=273pt,
+            minimum height={(#4)-(#5)}] (#1) at (104,#4) {};
+      \node[plane title=#2, anchor=north east, align=right] at (368,{(#4)-6}) {#3};
+    \end{pgfonlayer}}
+
+  % column centres 143 / 208 / 273 / 338
+  % ---- Experience and channels ----
+  \pc{e1}{slate}{143,-36}{API clients}
+  \pc{e0}{slate}{208,-36}{Chat and UI}
+  \pc{e2}{slate}{273,-36}{Operator console}
+  \pc{d0}{slate}{143,-84}{API Gateway\\· WAF}
+  \pc{d1}{slate}{208,-84}{Tenant router}
+  \pc{d2}{slate}{273,-84}{Request validator}
+  \begin{pgfonlayer}{dgback}
+    \node[fit=(d0)(d1)(d2), inner sep=0pt] (edge-core) {};
+    \coordinate (edge-top) at ([yshift=8pt]edge-core.north);
+    \node[dg group=slate, dash pattern=on 4pt off 3pt, inner sep=6pt, fit=(edge-core)(edge-top)] (edge) {};
+    \node[plane title=slate, anchor=north east, font=\fontsize{9.5}{11.4}\selectfont\itshape]
+      at ([xshift=-7pt,yshift=-4pt]edge.north east) {Edge and admission};
+  \end{pgfonlayer}
+  \plane{exp}{slate}{Experience and channels}{0}{-113}
+
+  % ---- Runtime and workflow ----
+  \pc{r0}{teal}{143,-181}{Run API}
+  \pc{r1}{teal}{208,-181}{Planner ·\\coordinator}
+  \pc{r2}{teal}{273,-181}{Workflow engine}
+  \pcyl{r3}{teal}{338,-181}{Checkpoint store}
+  \plane{run}{teal}{Runtime and workflow}{-145}{-204}
+
+  % ---- Knowledge, context, and memory ----
+  \pc{k1}{cyan}{143,-272}{Knowledge Hub}
+  \pc{k0}{cyan}{208,-272}{Context Service}
+  \pcyl{k2}{cyan}{273,-272}{Search · vector index}
+  \pc{k3}{cyan}{338,-272}{Memory service}
+  \plane{know}{cyan}{Knowledge, context, and memory}{-236}{-295}
+
+  % ---- Agent applications ----
+  \pc{a0}{teal}{143,-363}{AgentSpec}
+  \pc{a1}{teal}{208,-363}{Bounded agent workers}
+  \pc{a3}{teal}{273,-363}{Skills}
+  \pc{a2}{teal}{338,-363}{Topology ·\\handoffs}
+  \plane{agent}{teal}{Agent applications}{-327}{-386}
+
+  % ---- Gateways and integration ----
+  \pc{g0}{blue}{143,-465}{LLM Gateway}
+  \pc{g1}{blue}{208,-465}{Tool Gateway}
+  \pc{g2}{blue}{273,-465}{MCP · A2A}
+  \pc{g3}{blue}{338,-465}{Egress proxy}
+  \plane{gw}{blue}{Gateways and integration\\{\mdseries\itshape the only way out}}{-418}{-488}
+
+  % ---- Systems of record and providers ----
+  \pc{s1}{plum}{143,-567}{MCP servers}
+  \pcyl{s0}{plum}{208,-567}{Domain systems}
+  \pc{s2}{plum}{273,-567}{Partner agents}
+  \pc{s3}{plum}{338,-567}{Model providers}
+  \plane{sor}{plum}{Systems of record and providers\\{\mdseries\itshape outside the trust boundary}}{-520}{-590}
+
+  % ---- Security and governance (left spine) ----
+  \begin{pgfonlayer}{dgback}
+    \node[dg group=red, anchor=north west, minimum width=82pt, minimum height=590pt, inner sep=0pt] (sec) at (0,0) {};
+    \node[plane title=red, align=left] at ([xshift=8pt,yshift=-6pt]sec.north west) {Security and\\governance};
+  \end{pgfonlayer}
+  \foreach \i/\t [count=\n from 0] in {1/IdP · STS, 2/Workload\\identity, 3/{PDP / PEP}, 4/Guardrails,
+                                       5/Secrets ·\\leases, 6/Approval\\Service, 7/Audit · WORM}
+    \node[pchip=red, minimum width=66pt, text width=60pt] (v\n) at (41,{-50-\n*81.7}) {\t};
+
+  % ---- Evaluation and operations (right spine) ----
+  \begin{pgfonlayer}{dgback}
+    \node[dg group=amber, anchor=north west, minimum width=82pt, minimum height=590pt, inner sep=0pt] (obs) at (403,0) {};
+    \node[plane title=amber, align=left] at ([xshift=8pt,yshift=-6pt]obs.north west) {Evaluation and\\operations};
+  \end{pgfonlayer}
+  \foreach \i/\t [count=\n from 0] in {1/OTel collector, 2/Trace store, 3/Evaluation\\service, 4/Datasets,
+                                       5/SLOs · cost, 6/Incident\\tooling, 7/ReleaseManifest}
+    \node[pchip=amber, minimum width=66pt, text width=60pt] (o\n) at (444,{-50-\n*81.7}) {\t};
+
+  % ---- request path (solid blue, descends one column) ----
+  \draw[flow in=blue] (e1.south) -- node[pill=blue,anchor=west,xshift=6pt]{Intent} (d0.north);
+  \draw[flow in=blue, turn] (d2.south) -- (273,-129) -- node[pill=blue]{Admitted run} (143,-129) -- (r0.north);
+  \draw[flow in=blue] (r1.south) -- (k0.north);
+  \node[pill=blue,anchor=west] at (214,-220) {Assemble context};
+  \draw[flow in=blue] (k0.south) -- (a1.north);
+  \node[pill=blue,anchor=west] at (214,-311) {AgentStepRequest};
+  \draw[flow in=blue] (a1.south) -- (g1.north);
+  \node[pill=blue,anchor=west] at (214,-402) {Authorized proposal};
+  \draw[flow in=blue] (g1.south) -- (s0.north);
+  \node[pill=blue,anchor=west] at (214,-504) {Committed effect};
+
+  % ---- control (dashed red): one decision point, three enforcement points ----
+  \draw[dashed flow, draw=dg-red-line, rounded corners=5pt] (v2.east) -- (93,-213.4) -- (93,-84) -- (d0.west);
+  \draw[dashed flow, draw=dg-red-line, rounded corners=5pt] (v2.east) -- (93,-213.4) -- (93,-181) -- (r0.west);
+  \draw[dashed flow, draw=dg-red-line, rounded corners=5pt] (v2.east) -- (93,-213.4) -- (93,-465) -- (g0.west);
+
+  % ---- evidence (dotted amber): three producers, one collector ----
+  \draw[dotted flow, draw=dg-amber-line, rounded corners=5pt] (d2.east) -- (384,-84) -- (384,-42) -- (o0.west |- 0,-42);
+  \draw[dotted flow, draw=dg-amber-line, rounded corners=5pt] (a2.east) -- (390,-363) -- (390,-50) -- (o0.west);
+  \draw[dotted flow, draw=dg-amber-line, rounded corners=5pt] (g3.east) -- (396,-465) -- (396,-58) -- (o0.west |- 0,-58);
+\end{tikzpicture}
+\end{document}
