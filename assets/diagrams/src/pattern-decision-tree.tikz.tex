@@ -1,0 +1,89 @@
+% Figure 16-1 -- Pattern selection decision tree.
+% Restyled from pattern-decision-tree.gv; content, branches and leaves are
+% unchanged. Re-laid out compactly (the Graphviz render was 10.7 in tall and
+% was shrunk to fit the page): each question sits on a left spine and each
+% "yes" leaf is placed to its right, so both panels fit at 100 percent.
+%
+% Original element -> restyled element
+%   cluster "1 . Choose the shape of the work"        -> slate group, title on top
+%     q1 Path known in advance?                       -> amber diamond
+%     q2 Several known specialists or paths?          -> amber diamond
+%     q3 Next step depends on observation?            -> amber diamond
+%     p1 Deterministic workflow (Ch 12/15)            -> teal card, "Ch 12/15" as annotation
+%     p2 Routing / handoff (Ch 11)                    -> teal card, "Ch 11"
+%     p3 Bounded ReAct (Ch 10)                        -> teal card, "Ch 10"
+%     p4 Plan compilation (Ch 12)                     -> teal card, "Ch 12"
+%     edges q1>p1 "yes", q1>q2 "no", q2>p2 "yes", q2>q3 "no", q3>p3 "yes",
+%           q3>p4 "no"
+%   cluster "2 . Then add what the obligation needs"  -> slate group, title on top
+%     c1 Outlives one request?                        -> amber diamond
+%     c2 Draft quality needs revision?                -> amber diamond
+%     c3 Effect needs human authority?                -> amber diamond
+%     a1 Durable execution (Ch 15)                    -> teal card, "Ch 15"
+%     a2 Evaluator-optimizer (Ch 13)                  -> teal card, "Ch 13"
+%     a3 Approval / intervention (Ch 14)              -> teal card, "Ch 14"
+%     edges c1>a1 "yes", c1>c2 "then", c2>a2 "yes", c2>c3 "then", c3>a3 "yes"
+%   p4>c1 dashed slate "every shape, then" (cluster to cluster) -> dashed slate
+%     arrow from the bottom of panel 1 (below Plan compilation) to the top of panel 2
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+% local: a two-line bold question inside a diamond (each line sized on its own,
+% because align=center restarts the font after a line break)
+\newcommand{\dgq}[2]{{\dgtitlesize #1}\\{\dgtitlesize #2}}
+\begin{document}
+\begin{tikzpicture}
+  % ================= panel 1: the shape of the work =================
+  \node[dg decision=amber, minimum width=190pt, minimum height=54pt] (q1) at (150,0)
+    {\dgq{Path known}{in advance?}};
+  \node[dg decision=amber, minimum width=190pt, minimum height=54pt] (q2) at (150,-72)
+    {\dgq{Several known}{specialists or paths?}};
+  \node[dg decision=amber, minimum width=190pt, minimum height=54pt] (q3) at (150,-144)
+    {\dgq{Next step depends}{on observation?}};
+  \node[dg card=teal, text width=130pt, anchor=west] (p1) at (308,0)
+    {\dgcontent{Deterministic workflow}{Ch 12/15}{}};
+  \node[dg card=teal, text width=130pt, anchor=west] (p2) at (308,-72)
+    {\dgcontent{Routing / handoff}{Ch 11}{}};
+  \node[dg card=teal, text width=130pt, anchor=west] (p3) at (308,-144)
+    {\dgcontent{Bounded ReAct}{Ch 10}{}};
+  \node[dg card=teal, text width=130pt] (p4) at (150,-214)
+    {\dgcontent{Plan compilation}{Ch 12}{}};
+  \coordinate (L1) at (12,0);
+  \coordinate (R1) at (484,0);
+  \dggroup{shape}{slate}{1 · Choose the shape of the work}{(q1)(q2)(q3)(p1)(p2)(p3)(p4)(L1)(R1)}
+
+  % ================= panel 2: what the obligation needs =================
+  \node[dg decision=amber, minimum width=190pt, minimum height=54pt] (c1) at (150,-338)
+    {\dgq{Outlives one}{request?}};
+  \node[dg decision=amber, minimum width=190pt, minimum height=54pt] (c2) at (150,-410)
+    {\dgq{Draft quality}{needs revision?}};
+  \node[dg decision=amber, minimum width=190pt, minimum height=54pt] (c3) at (150,-482)
+    {\dgq{Effect needs}{human authority?}};
+  \node[dg card=teal, text width=130pt, anchor=west] (a1) at (308,-338)
+    {\dgcontent{Durable execution}{Ch 15}{}};
+  \node[dg card=teal, text width=130pt, anchor=west] (a2) at (308,-410)
+    {\dgcontent{Evaluator–optimizer}{Ch 13}{}};
+  \node[dg card=teal, text width=130pt, anchor=west] (a3) at (308,-482)
+    {\dgcontent{Approval / intervention}{Ch 14}{}};
+  \coordinate (L2) at (12,-482);
+  \coordinate (R2) at (484,-482);
+  \dggroup{checks}{slate}{2 · Then add what the obligation needs}{(c1)(c2)(c3)(a1)(a2)(a3)(L2)(R2)}
+
+  % ================= connectors =================
+  % panel 1
+  \draw[flow in=teal] (q1.east) -- node[pill=teal]{Yes} (p1.west);
+  \draw[flow in=blue] (q1.south) -- node[pill=blue, anchor=west, xshift=5pt]{No} (q2.north);
+  \draw[flow in=teal] (q2.east) -- node[pill=teal]{Yes} (p2.west);
+  \draw[flow in=blue] (q2.south) -- node[pill=blue, anchor=west, xshift=5pt]{No} (q3.north);
+  \draw[flow in=teal] (q3.east) -- node[pill=teal]{Yes} (p3.west);
+  \draw[flow in=blue] (q3.south) -- node[pill=blue, anchor=west, xshift=5pt]{No} (p4.north);
+  % panel 2
+  \draw[flow in=teal] (c1.east) -- node[pill=teal]{Yes} (a1.west);
+  \draw[flow in=blue] (c1.south) -- node[pill=slate, anchor=west, xshift=5pt]{Then} (c2.north);
+  \draw[flow in=teal] (c2.east) -- node[pill=teal]{Yes} (a2.west);
+  \draw[flow in=blue] (c2.south) -- node[pill=slate, anchor=west, xshift=5pt]{Then} (c3.north);
+  \draw[flow in=teal] (c3.east) -- node[pill=teal]{Yes} (a3.west);
+  % between the panels
+  \draw[dashed flow, draw=dg-slate-line] (shape.south -| p4) --
+    node[pill=slate, anchor=west, xshift=5pt]{Every shape, then} (checks.north -| p4);
+\end{tikzpicture}
+\end{document}

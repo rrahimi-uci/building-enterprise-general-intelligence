@@ -1,0 +1,50 @@
+% Figure 11-1 -- Routing. Selection is not authority.
+% Restyled from pattern-routing.gv; content, branches and the authorization
+% convergence are unchanged.
+%
+% Original element -> restyled element
+%   req  Request                                      -> slate card
+%   eli  Eligible set / purpose . authority . region / health . release -> blue card
+%   cls  Classify / intent . confidence               -> amber diamond
+%   s1 s2  Specialist A, Specialist B                 -> teal cards
+%   fb   Fallback / human or safe default             -> slate card
+%   pol  Exact authorization / may this subject invoke it? -> red card
+%   edges  req>eli (plain), eli>cls "eligible only", cls>s1 "high", cls>s2 "high",
+%          cls>fb "low confidence" (slate), s1>pol and s2>pol (dashed red)
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+% local: a two-line bold question inside a diamond (each line sized on its own,
+% because align=center restarts the font after a line break)
+\newcommand{\dgq}[2]{{\dgtitlesize #1}\\{\dgtitlesize #2}}
+\begin{document}
+\begin{tikzpicture}
+  % ---- spine ----
+  \node[dg card=slate, text width=90pt] (req) at (248,0)
+    {\dgcontent{Request}{}{}};
+  \node[dg card=blue, text width=200pt] (eli) at (248,-82)
+    {\dgcontent{Eligible set}{purpose · authority · region\\health · release}{}};
+  \node[dg decision=amber, minimum width=190pt, minimum height=72pt] (cls) at (248,-195)
+    {\dgq{Classify}{intent · confidence}};
+
+  % ---- outcomes ----
+  \node[dg card=teal, text width=96pt] (s1) at (78,-312)
+    {\dgcontent{Specialist A}{}{}};
+  \node[dg card=teal, text width=96pt] (s2) at (248,-312)
+    {\dgcontent{Specialist B}{}{}};
+  \node[dg card=slate, text width=130pt] (fb) at (418,-312)
+    {\dgcontent{Fallback}{human or safe default}{}};
+
+  % ---- authorization, after the specialists ----
+  \node[dg card=red, text width=190pt] (pol) at (163,-406)
+    {\dgcontent{Exact authorization}{may this subject invoke it?}{}};
+
+  % ---- connectors ----
+  \draw[flow in=blue] (req.south) -- (eli.north);
+  \draw[flow in=blue] (eli.south) -- node[pill=blue]{Eligible only} (cls.north);
+  \draw[flow in=blue, turn] (cls.west) -| node[pill=blue, pos=0.8]{High} (s1.north);
+  \draw[flow in=blue] (cls.south) -- node[pill=blue]{High} (s2.north);
+  \draw[flow in=slate, turn] (cls.east) -| node[pill=slate, pos=0.8]{Low confidence} (fb.north);
+  \draw[dashed flow, draw=dg-red-line] (s1.south) to[out=-90,in=90] ([xshift=-40pt]pol.north);
+  \draw[dashed flow, draw=dg-red-line] (s2.south) to[out=-90,in=90] ([xshift=40pt]pol.north);
+\end{tikzpicture}
+\end{document}
