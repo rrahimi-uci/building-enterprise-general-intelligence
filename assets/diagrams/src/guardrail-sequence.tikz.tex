@@ -1,0 +1,68 @@
+% Figure 20-3 -- Detection, policy, and enforcement for one protected effect.
+% Restyled from guardrail-sequence.mmd (current version); participants, messages
+% (order, direction, label, solid/dotted), frames and branch conditions unchanged.
+% Layout only is new. Uses the local sequence kit (_sequence-kit.tex).
+%
+% Original element -> restyled element
+%   participant Agent Runtime      -> teal header card, robot icon
+%   participant Content detector   -> cyan header card, search icon
+%   participant Policy Engine      -> amber header card, balance-scale icon
+%   participant Approval Service   -> plum header card, user-check icon
+%   participant Tool Gateway       -> blue header card, plug icon
+%   participant System of Record   -> slate header card, database icon
+%   12 messages, in source order, each one \sqcall (solid) / \sqret (dotted) / \sqself:
+%     1  Agent -> Detector   proposed action + content                       solid
+%     2  Detector -> itself  inspect untrusted content                       self
+%     3  Detector -> Policy  finding (risk label), action, subject, resource solid
+%     4  Policy -> itself    evaluate policy with the finding as one input   self
+%     5  Policy -> Agent     refuse, nothing dispatched                      dotted (in alt [not permitted])
+%     6  Policy -> Approval  request approval                                solid  (in inner alt [requires human approval])
+%     7  Approval -> Policy  signed approval, bound to this proposal         dotted (in inner alt)
+%     8  Policy -> Tool      authorized invocation                           dotted (in alt [permitted])
+%     9  Tool -> itself      enforce exact resource, check idempotency ledger self
+%    10  Tool -> System      commit once                                    solid
+%    11  System -> Tool      receipt                                        dotted
+%    12  Tool -> Agent       effect record + evidence                       dotted
+%   frames: outer alt  [not permitted] | divider | [permitted]; inner alt [requires human approval]
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\input{assets/diagrams/src/_sequence-kit.tex}
+\begin{document}
+\begin{tikzpicture}
+  % columns
+  \def\xA{40}\def\xD{124}\def\xP{208}\def\xV{292}\def\xT{376}\def\xS{460}
+  \def\yend{-554}
+  \tikzset{sq head/.append style={text width=64pt}}
+
+  % participants and lifelines
+  \sqhead{teal}{robot}{\xA}{Agent\\Runtime}
+  \sqhead{cyan}{search}{\xD}{Content\\detector}
+  \sqhead{amber}{balance-scale}{\xP}{Policy\\Engine}
+  \sqhead{plum}{user-check}{\xV}{Approval\\Service}
+  \sqhead{blue}{plug}{\xT}{Tool\\Gateway}
+  \sqhead{slate}{database}{\xS}{System of\\Record}
+  \sqlife{teal}{\xA}{\yend}\sqlife{cyan}{\xD}{\yend}\sqlife{amber}{\xP}{\yend}
+  \sqlife{plum}{\xV}{\yend}\sqlife{blue}{\xT}{\yend}\sqlife{slate}{\xS}{\yend}
+
+  % frames (rectangles go to the background layer; conditions sit above the lifelines)
+  \sqframe{alt}{5}{495}{-214}{-544}{[not permitted]}
+  \sqdivider{[permitted]}{5}{495}{-274}
+  \def\sqcondfill{dg-amber-fill!85}
+  \sqframe[fill=dg-amber-fill!85]{alt}{188}{358}{-296}{-388}{[requires human approval]}
+  \def\sqcondfill{dg-amber-fill!40}
+
+  % messages (cursor \sqy set per row)
+  \def\sqy{-80}\sqcall{teal}{\xA}{\xD}{proposed action + content}                           % 1
+  \def\sqy{-104}\sqself{cyan}{\xD}{r}{inspect untrusted content}                            % 2
+  \def\sqy{-158}\sqcall{cyan}{\xD}{\xP}{finding (risk label),\\action, subject, resource}   % 3
+  \def\sqy{-184}\sqself{amber}{\xP}{r}{evaluate policy with\\the finding as one input}      % 4
+  \def\sqy{-252}\sqret{red}{\xP}{\xA}{refuse, nothing dispatched}                           % 5
+  \def\sqy{-334}\sqcall{amber}{\xP}{\xV}{request approval}                                  % 6
+  \def\sqy{-374}\sqret{plum}{\xV}{\xP}{signed approval,\\bound to this proposal}            % 7
+  \def\sqy{-414}\sqret{amber}{\xP}{\xT}{authorized invocation}                              % 8
+  \def\sqy{-440}\sqself{blue}{\xT}{l}{enforce exact resource,\\check idempotency ledger}    % 9
+  \def\sqy{-480}\sqcall{blue}{\xT}{\xS}{commit once}                                        % 10
+  \def\sqy{-506}\sqret{slate}{\xS}{\xT}{receipt}                                            % 11
+  \def\sqy{-532}\sqret{blue}{\xT}{\xA}{effect record + evidence}                            % 12
+\end{tikzpicture}
+\end{document}

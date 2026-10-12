@@ -1,0 +1,99 @@
+% _sequence-kit.tex -- native TikZ sequence-diagram kit for the book's figures.
+%
+% Included (not compiled on its own) by the sequence diagrams:
+%     \input{assets/diagrams/src/_sequence-kit.tex}
+% The path is relative to the repository root, which is the compile directory of
+% tools/render_diagrams.py. It builds only on professional-diagrams.sty (palette,
+% type scale, pill, callout) and defines nothing in the shared package.
+%
+% Drawing model: a running vertical cursor \sqy (points, negative downwards). A
+% figure sets \sqy, then draws participants, lifelines, messages, notes and frames
+% at known x columns:
+%
+%   \sqhead[opts]{role}{icon}{x}{Title}   header card centred at x, top at y = 0
+%   \sqlife{role}{x}{ybottom}             dashed lifeline from under the header
+%   \sqdown{dy}                           move the cursor down by dy
+%   \sqcall[pill opts]{role}{x1}{x2}{label}  solid message, x1 -> x2, label pill above the line
+%   \sqret[pill opts]{role}{x1}{x2}{label}   dotted (return) message
+%   \sqself[pill opts]{role}{x}{r|l}{label}  self-message loop (15pt tall); label right or left
+%   \sqnote{role}{x1}{x2}{label}          note box over the lifelines x1..x2, top at the cursor
+%   \sqframe[opts]{kind}{x1}{x2}{ytop}{ybot}{cond}  alt/opt frame with title tab and [condition]
+%   \sqdivider{cond}{x1}{x2}{y}           dashed branch divider inside a frame with [condition]
+%
+% Meaning is never colour alone: a solid arrow is a call, a dotted arrow is a
+% return, a frame carries its kind ("alt", "opt") and its [condition] as words,
+% the participant kind is in its title. The pill colour is the role of the sender.
+\newcommand{\sqheadh}{54}                       % header card height (pt)
+\def\sqy{0}
+\newcommand{\sqdown}[1]{\pgfmathsetmacro{\sqy}{\sqy-(#1)}}
+
+% Participant header: pastel card, icon above the title, centred. `person` makes it
+% a capsule (an actor is a person, not a service).
+\tikzset{
+  sq head/.style={dg card=#1, align=center, text width=50pt, inner xsep=4pt,
+    inner ysep=5pt, minimum height=\sqheadh pt, anchor=north, font=\fontsize{9.5}{11.4}\selectfont\bfseries},
+  sq person/.style={rounded corners=16pt},
+  sq life/.style={line width=0.8pt, dash pattern=on 3.5pt off 3pt, line cap=butt},
+  sq tab/.style={rectangle, rounded corners=3pt, fill=dg-amber-line, text=white,
+    font=\fontsize{9}{10.8}\selectfont\bfseries, inner xsep=6pt, inner ysep=2.5pt,
+    anchor=north west},
+  sq cond/.style={font=\fontsize{9}{10.8}\selectfont\bfseries, text=dg-amber-ink,
+    anchor=west, inner sep=0pt},
+}
+
+\newcommand{\sqhead}[5][]{%
+  \node[sq head=#2, #1] (sqh-#4) at (#4,0)
+    {{\color{dg-#2-line}\Large\dgicon{#3}}\\[1.5pt]#5};}
+
+\newcommand{\sqlife}[3]{%
+  \draw[sq life, draw=dg-#1-line!55] (#2,-\sqheadh) -- (#2,#3);}
+
+% Solid call: line in the sender's colour, label pill sitting above the line so the
+% arrow tip is never covered.
+\newcommand{\sqcall}[5][]{%
+  \draw[flow in=#2] (#3,\sqy) -- (#4,\sqy);
+  \node[pill=#2, anchor=south, inner ysep=2.5pt, #1]
+    at ({(#3+#4)/2},{\sqy+2}) {#5};}
+
+\newcommand{\sqret}[5][]{%
+  \draw[dotted flow, draw=dg-#2-line] (#3,\sqy) -- (#4,\sqy);
+  \node[pill=#2, anchor=south, inner ysep=2.5pt, #1]
+    at ({(#3+#4)/2},{\sqy+2}) {#5};}
+
+% Self-message: out, down 15pt, back to the lifeline with the arrowhead.
+\newcommand{\sqself}[5][]{%
+  \draw[flow in=#2, rounded corners=4pt] (#3,\sqy) -- ++(22,0) -- ++(0,-15) -- ++(-22,0);
+  \ifx r#4\relax
+    \node[pill=#2, anchor=west, inner ysep=2.5pt, #1] at ({#3+28},{\sqy-7.5}) {#5};
+  \else
+    \node[pill=#2, anchor=east, inner ysep=2.5pt, #1] at ({#3-8},{\sqy-7.5}) {#5};
+  \fi}
+
+% Note over a span of lifelines; opaque, so the lifelines pass behind it.
+\newcommand{\sqnote}[4]{%
+  \node[callout=#1, draw=dg-#1-line!70, line width=0.8pt, anchor=north,
+        minimum width={#3-(#2)+22pt}, minimum height=22pt, align=center]
+    at ({(#2+#3)/2},\sqy) {#4};}
+
+% alt / opt frame. The rectangle and tab sit on the background layer (lifelines and
+% messages draw over them); the [condition] text sits on the main layer with a halo
+% of the frame's own fill so a lifeline never strikes through it. Call \sqframe and
+% \sqdivider AFTER the lifelines. \sqcondfill must equal the frame fill ([opts]).
+\def\sqcondfill{dg-amber-fill!40}
+\newcommand{\sqframe}[7][]{%
+  \begin{pgfonlayer}{dgback}
+    \node[rectangle, rounded corners=5pt, fill=dg-amber-fill!40, draw=dg-amber-line!85,
+          line width=0.9pt, inner sep=0pt, anchor=north west, #1,
+          minimum width={#4-(#3)}, minimum height={#5-(#6)}] (sqf-#2-#3) at (#3,#5) {};
+    \node[sq tab] (sqt-#2-#3) at ([xshift=-0.45pt,yshift=0.45pt]sqf-#2-#3.north west) {#2};
+  \end{pgfonlayer}
+  \node[sq cond, fill=\sqcondfill, inner xsep=2pt, inner ysep=0.5pt] at ([xshift=5pt,yshift=-1.5pt]sqt-#2-#3.east) {#7};}
+
+\newcommand{\sqdivider}[4]{%
+  \begin{pgfonlayer}{dgback}
+    \draw[dg-amber-line!85, line width=0.9pt, dash pattern=on 4pt off 3pt] (#2,#4) -- (#3,#4);
+  \end{pgfonlayer}
+  \node[sq cond, anchor=north west, fill=\sqcondfill, inner xsep=2pt, inner ysep=1pt]
+    at ({#2+5},{#4-3}) {#1};}
+
+\endinput

@@ -1,0 +1,78 @@
+% Figure 4-2 -- Request to verified outcome.
+% Restyled from request-sequence.mmd; the actor, participants, 16 messages (order,
+% direction, label, solid/dotted), the note and the opt block are unchanged. Layout
+% only is new. No step numbers (the source deliberately has none: the eight numbered
+% steps live in the table beneath the figure). Uses the local sequence kit.
+%
+% Original element -> restyled element
+%   actor User                   -> plum capsule header, user icon (person = capsule shape)
+%   participant Run Service      -> blue header card, cog icon
+%   participant Context Service  -> cyan header card, layer-group icon
+%   participant Agent Runtime    -> teal header card, robot icon
+%   participant Policy & Identity-> amber header card, id-badge icon
+%   participant Approval Service -> plum header card, user-check icon
+%   participant Tool Gateway     -> blue header card, plug icon
+%   participant System of Record -> slate header card, database icon
+%   16 messages, in source order (\sqcall solid, \sqret dotted, \sqself):
+%     1  User -> Run          request + delegated grant                      solid
+%     2  Run -> itself        admit run, write RunManifest                   self
+%     3  Run -> Context       assemble authorized context                    solid
+%     4  Context -> Run       context manifest id                            dotted
+%     5  Run -> Agent         bounded step (AgentStepRequest)                solid
+%     6  Agent -> Run         typed proposal (AgentStepResult)               dotted
+%        Note over Run,Policy: the model proposes, the platform decides      -> cyan note box
+%     7  Run -> Policy        authorize this action for this subject         solid
+%     8  Policy -> Run        grant, or refusal                              dotted
+%        opt [protected change]                                              -> amber frame, "opt" tab
+%     9  Run -> Approval      approval request bound to the proposal         solid
+%    10  Approval -> Run      approval decision                              dotted
+%    11  Run -> Tool          invoke with logical effect key                 solid
+%    12  Tool -> System       commit effect                                  solid
+%    13  System -> Tool       receipt                                        dotted
+%    14  Tool -> Run          effect record                                  dotted
+%    15  Run -> itself        evaluate acceptance criteria                   self
+%    16  Run -> User          verified outcome + evidence                    dotted
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\input{assets/diagrams/src/_sequence-kit.tex}
+\begin{document}
+\begin{tikzpicture}
+  % columns
+  \def\xU{32}\def\xR{94}\def\xC{156}\def\xA{218}\def\xP{280}\def\xV{342}\def\xT{404}\def\xS{466}
+  \def\yend{-574}
+
+  % participants and lifelines
+  \sqhead[sq person]{plum}{user}{\xU}{User\\\hphantom{.}}
+  \sqhead{blue}{cog}{\xR}{Run\\Service}
+  \sqhead{cyan}{layer-group}{\xC}{Context\\Service}
+  \sqhead{teal}{robot}{\xA}{Agent\\Runtime}
+  \sqhead{amber}{id-badge}{\xP}{Policy \&\\Identity}
+  \sqhead{plum}{user-check}{\xV}{Approval\\Service}
+  \sqhead{blue}{plug}{\xT}{Tool\\Gateway}
+  \sqhead{slate}{database}{\xS}{System of\\Record}
+  \sqlife{plum}{\xU}{\yend}\sqlife{blue}{\xR}{\yend}\sqlife{cyan}{\xC}{\yend}\sqlife{teal}{\xA}{\yend}
+  \sqlife{amber}{\xP}{\yend}\sqlife{plum}{\xV}{\yend}\sqlife{blue}{\xT}{\yend}\sqlife{slate}{\xS}{\yend}
+
+  % opt frame (rectangle behind the lifelines, condition above them)
+  \sqframe{opt}{62}{356}{-314}{-396}{[protected change]}
+
+  % messages (cursor \sqy set per row)
+  \def\sqy{-78}\sqcall[xshift=14pt]{plum}{\xU}{\xR}{request + delegated grant}                  % 1
+  \def\sqy{-102}\sqself{blue}{\xR}{r}{admit run, write RunManifest}                            % 2
+  \def\sqy{-143}\sqcall{blue}{\xR}{\xC}{assemble authorized context}                           % 3
+  \def\sqy{-168}\sqret{cyan}{\xC}{\xR}{context manifest id}                                    % 4
+  \def\sqy{-193}\sqcall{blue}{\xR}{\xA}{bounded step (AgentStepRequest)}                       % 5
+  \def\sqy{-218}\sqret{teal}{\xA}{\xR}{typed proposal (AgentStepResult)}                       % 6
+  \def\sqy{-229}\sqnote{cyan}{\xR}{\xP}{the model proposes, the platform decides}              % note
+  \def\sqy{-277}\sqcall{blue}{\xR}{\xP}{authorize this action for this subject}                % 7
+  \def\sqy{-302}\sqret{amber}{\xP}{\xR}{grant, or refusal}                                     % 8
+  \def\sqy{-358}\sqcall{blue}{\xR}{\xV}{approval request bound to the proposal}                % 9
+  \def\sqy{-383}\sqret{plum}{\xV}{\xR}{approval decision}                                      % 10
+  \def\sqy{-422}\sqcall{blue}{\xR}{\xT}{invoke with logical effect key}                        % 11
+  \def\sqy{-447}\sqcall{blue}{\xT}{\xS}{commit effect}                                         % 12
+  \def\sqy{-472}\sqret{slate}{\xS}{\xT}{receipt}                                               % 13
+  \def\sqy{-497}\sqret{blue}{\xT}{\xR}{effect record}                                          % 14
+  \def\sqy{-521}\sqself{blue}{\xR}{r}{evaluate acceptance criteria}                            % 15
+  \def\sqy{-562}\sqret[xshift=16pt]{blue}{\xR}{\xU}{verified outcome + evidence}               % 16
+\end{tikzpicture}
+\end{document}
