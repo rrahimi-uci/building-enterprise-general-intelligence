@@ -24,6 +24,7 @@ One canonical source in `source/parts/*.md` produces three synchronized represen
 ```bash
 make setup      # .venv + Python dependencies + any missing TeX packages
 make pdf        # validate the LaTeX source, then compile to dist/*-LaTeX.pdf
+make all        # Markdown, DOCX, TeX and the PDF in dist/ (PDF rebuilt only when stale)
 make help       # every available target, grouped by purpose
 ```
 

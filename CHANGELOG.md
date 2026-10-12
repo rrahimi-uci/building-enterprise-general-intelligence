@@ -4,6 +4,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### PDF in dist
+
+- `make all` now ends with a `dist-pdf` step that keeps `dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf` current next to the Markdown, DOCX and TeX files: it compiles only when the PDF is missing or the content of the generated LaTeX, styles, diagram and cover renders or fonts changed since the last compile (compared by hash), and skips with a notice when XeLaTeX is not installed. `make release` now runs `make pdf`. The PDF stays gitignored and is never committed (CI publishes it as a build artifact).
+
 ### LaTeX PDF output
 
 - The generated XeLaTeX build script now creates `dist/` when needed, verifies both the compiled and final PDF are non-empty, and reports the final `dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf` path. TeX auxiliaries and the intermediate PDF remain in `latex/build/`.
