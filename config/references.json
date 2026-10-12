@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
-  "citation_style": "Numbered source identifiers [R01]\u2026[R54]; bibliography ordered by identifier; accessed date shown for online sources.",
+  "citation_style": "Numbered source identifiers [R01]\u2026[R58]; bibliography ordered by identifier; accessed date shown for online sources.",
   "release": "1.0.0",
-  "verified_on": "2026-09-13",
+  "verified_on": "2026-10-11",
   "references": [
     {
       "id": "R01",
@@ -14,7 +14,7 @@
       "url": "https://arxiv.org/abs/2210.03629",
       "supports": "Defines ReAct and reports benchmark results for interleaved reasoning and action.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -23,13 +23,13 @@
       "id": "R02",
       "type": "industry guidance",
       "author_or_organization": "Temporal Technologies",
-      "year": "2024",
+      "year": "2025",
       "title": "The Definitive Guide to Durable Execution",
-      "publication_or_version": "Temporal documentation",
+      "publication_or_version": "Temporal blog",
       "url": "https://temporal.io/blog/what-is-durable-execution",
-      "supports": "Explains crash-resilient workflow execution, replay, durable timers, and long-running processes.",
+      "supports": "Defines durable execution as crash-proof execution that resumes in a new process after failure, with reliable long waits and long-running processes. Does not describe a specific replay or event-history mechanism.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -37,14 +37,14 @@
     {
       "id": "R03",
       "type": "architecture pattern",
-      "author_or_organization": "AWS Prescriptive Guidance",
-      "year": "2024",
+      "author_or_organization": "Amazon Web Services",
+      "year": "n.d.",
       "title": "Transactional Outbox Pattern",
-      "publication_or_version": "AWS Prescriptive Guidance",
+      "publication_or_version": "AWS Prescriptive Guidance: Cloud design patterns, architectures, and implementations",
       "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
       "supports": "Supports atomic state/event publication and duplicate-consumer considerations.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -53,13 +53,13 @@
       "id": "R04",
       "type": "standard",
       "author_or_organization": "Cloud Native Computing Foundation",
-      "year": "2024",
+      "year": "2022",
       "title": "CloudEvents Specification",
-      "publication_or_version": "CloudEvents 1.0.x",
-      "url": "https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md",
+      "publication_or_version": "CloudEvents 1.0.2",
+      "url": "https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md",
       "supports": "Defines a portable event envelope and event identity semantics.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -74,7 +74,7 @@
       "url": "https://modelcontextprotocol.io/specification/2026-07-28",
       "supports": "Defines the stateless MCP core, resources, prompts, tools, and extensions.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -89,7 +89,7 @@
       "url": "https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization",
       "supports": "Defines MCP HTTP authorization and audience/resource protections.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -104,7 +104,7 @@
       "url": "https://a2a-protocol.org/v1.0.1/specification",
       "supports": "Defines agent cards, tasks, messages, artifacts, bindings, authorization surfaces, and lifecycle operations.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -119,7 +119,7 @@
       "url": "https://datatracker.ietf.org/doc/html/rfc8693",
       "supports": "Defines subject/actor semantics for token exchange, delegation, and impersonation.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -134,7 +134,7 @@
       "url": "https://datatracker.ietf.org/doc/html/rfc8707",
       "supports": "Defines resource indicators used to constrain token audience.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -149,7 +149,7 @@
       "url": "https://datatracker.ietf.org/doc/html/rfc9728",
       "supports": "Defines protected-resource metadata used in authorization discovery.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -164,7 +164,7 @@
       "url": "https://csrc.nist.gov/pubs/sp/800/207/final",
       "supports": "Supports resource-centric, continuously evaluated trust and explicit policy enforcement.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -176,10 +176,10 @@
       "year": "2023",
       "title": "Artificial Intelligence Risk Management Framework (AI RMF 1.0)",
       "publication_or_version": "NIST AI 100-1",
-      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "url": "https://doi.org/10.6028/NIST.AI.100-1",
       "supports": "Defines voluntary Govern, Map, Measure, and Manage risk-management functions.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -194,7 +194,7 @@
       "url": "https://doi.org/10.6028/NIST.AI.600-1",
       "supports": "Provides cross-sector generative-AI risk considerations across the AI lifecycle.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -209,7 +209,7 @@
       "url": "https://www.iso.org/standard/42001",
       "supports": "Defines requirements for an AI management system and continual improvement.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -218,13 +218,13 @@
       "id": "R15",
       "type": "community guidance",
       "author_or_organization": "OWASP GenAI Security Project",
-      "year": "2026",
-      "title": "OWASP Top 10 for Agentic Applications",
+      "year": "2025",
+      "title": "OWASP Top 10 for Agentic Applications for 2026",
       "publication_or_version": "2026 edition",
       "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
       "supports": "Prioritizes major agentic-application security risks and mitigations.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -233,13 +233,13 @@
       "id": "R16",
       "type": "community guidance",
       "author_or_organization": "OWASP Cheat Sheet Series",
-      "year": "2026",
+      "year": "n.d.",
       "title": "AI Agent Security Cheat Sheet",
       "publication_or_version": "Living guidance",
       "url": "https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html",
       "supports": "Provides practical controls for identity, tools, memory, output, and monitoring.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -248,13 +248,13 @@
       "id": "R17",
       "type": "community standard",
       "author_or_organization": "SLSA Project",
-      "year": "2026",
+      "year": "2025",
       "title": "SLSA Specification",
       "publication_or_version": "v1.2",
       "url": "https://slsa.dev/spec/v1.2",
       "supports": "Defines supply-chain security tracks, levels, and provenance requirements.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -263,13 +263,13 @@
       "id": "R18",
       "type": "official guidance",
       "author_or_organization": "CISA",
-      "year": "2026",
-      "title": "Software Bill of Materials Resources",
+      "year": "n.d.",
+      "title": "Software Bill of Materials (SBOM)",
       "publication_or_version": "Living guidance",
-      "url": "https://www.cisa.gov/sbom",
+      "url": "https://www.cisa.gov/topics/information-communications-technology-supply-chain-security/sbom",
       "supports": "Supports SBOM practices; distinct from build provenance.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -278,13 +278,13 @@
       "id": "R19",
       "type": "observability standard",
       "author_or_organization": "OpenTelemetry",
-      "year": "2026",
+      "year": "n.d.",
       "title": "Generative AI Semantic Conventions",
       "publication_or_version": "Development status",
       "url": "https://github.com/open-telemetry/semantic-conventions-genai",
       "supports": "Defines emerging GenAI spans, events, metrics, agent, provider, and MCP mappings.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -295,11 +295,11 @@
       "author_or_organization": "MLflow",
       "year": "2026",
       "title": "LLM and Agent Evaluation",
-      "publication_or_version": "MLflow 3.x",
-      "url": "https://mlflow.org/docs/latest/genai/eval-monitor/",
+      "publication_or_version": "MLflow 3.15.2 documentation",
+      "url": "https://mlflow.org/docs/3.15.2/genai/eval-monitor/",
       "supports": "Documents evaluation datasets, feedback, judges, systematic evaluation, and production monitoring.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -314,7 +314,7 @@
       "url": "https://mlflow.org/releases/3.15.2",
       "supports": "Pins the reproducibility baseline used for book examples.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -323,13 +323,13 @@
       "id": "R22",
       "type": "framework documentation",
       "author_or_organization": "Confident AI",
-      "year": "2026",
+      "year": "n.d.",
       "title": "DeepEval Metrics Introduction",
-      "publication_or_version": "Current documentation",
+      "publication_or_version": "Current documentation (v4.2.8 at access)",
       "url": "https://deepeval.com/docs/metrics-introduction",
       "supports": "Documents component, RAG, tool, task, and agent-oriented evaluation metrics.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -338,13 +338,13 @@
       "id": "R23",
       "type": "framework documentation",
       "author_or_organization": "Arize AI",
-      "year": "2026",
+      "year": "n.d.",
       "title": "Phoenix Documentation",
       "publication_or_version": "Current documentation",
       "url": "https://arize.com/docs/phoenix",
       "supports": "Documents OpenInference/OTel tracing, datasets, experiments, evaluation, and prompt/version workflows.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -353,13 +353,13 @@
       "id": "R24",
       "type": "framework documentation",
       "author_or_organization": "Ragas",
-      "year": "2026",
+      "year": "2025",
       "title": "Agent Evaluation Metrics",
       "publication_or_version": "Current documentation",
       "url": "https://docs.ragas.io/en/latest/concepts/metrics/available_metrics/agents",
       "supports": "Documents tool-call and agent-goal evaluation metrics.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -368,13 +368,13 @@
       "id": "R25",
       "type": "framework documentation",
       "author_or_organization": "LangChain",
-      "year": "2026",
+      "year": "n.d.",
       "title": "LangSmith Evaluation",
       "publication_or_version": "Current documentation",
       "url": "https://docs.langchain.com/langsmith/evaluation",
       "supports": "Documents offline and online evaluation, datasets, experiments, and production-trace workflows.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -383,13 +383,13 @@
       "id": "R26",
       "type": "vendor documentation",
       "author_or_organization": "OpenAI",
-      "year": "2026",
+      "year": "n.d.",
       "title": "Evaluate Agent Workflows",
       "publication_or_version": "Current documentation",
       "url": "https://developers.openai.com/api/docs/guides/agent-evals",
       "supports": "Documents datasets, graders, trace grading, and regression evaluation.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -404,7 +404,7 @@
       "url": "https://www.anthropic.com/engineering/building-effective-agents",
       "supports": "Distinguishes workflows from agents and recommends earning orchestration complexity.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -419,7 +419,7 @@
       "url": "https://www.anthropic.com/engineering/multi-agent-research-system",
       "supports": "Reports multi-agent research architecture and token/context trade-offs.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -428,13 +428,13 @@
       "id": "R29",
       "type": "framework documentation",
       "author_or_organization": "OpenAI",
-      "year": "2026",
+      "year": "n.d.",
       "title": "OpenAI Agents SDK for Python",
       "publication_or_version": "Current documentation",
       "url": "https://openai.github.io/openai-agents-python",
-      "supports": "Documents agents, tools, guardrails, handoffs, sessions, results, and tracing.",
+      "supports": "Documents agents, the runner, function tools, structured output types, input/output/tool guardrails, handoffs, sessions, MCP integration, results with interruptions and resumable RunState for human-in-the-loop approval, local and hosted shell-tool skills, sandbox agents, and tracing with configurable sensitive-data capture.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -449,7 +449,7 @@
       "url": "https://github.com/openai/openai-agents-python/releases/tag/v0.22.2",
       "supports": "Pins the SDK baseline used for concrete adapter examples.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -462,9 +462,9 @@
       "title": "Microsoft Agent Framework Overview",
       "publication_or_version": "Current documentation",
       "url": "https://learn.microsoft.com/en-us/agent-framework/overview",
-      "supports": "Documents Microsoft agent and workflow abstractions.",
+      "supports": "Documents Microsoft Agent Framework agents, graph-based workflows, sessions, middleware, telemetry, and model-provider integrations; states that it succeeds and combines AutoGen and Semantic Kernel and that its Go SDK is in public preview.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -473,13 +473,13 @@
       "id": "R32",
       "type": "framework documentation",
       "author_or_organization": "Google",
-      "year": "2026",
+      "year": "n.d.",
       "title": "Agent Development Kit: Agents",
       "publication_or_version": "Current documentation",
       "url": "https://adk.dev/agents",
       "supports": "Documents Google ADK agent and multi-agent abstractions.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -488,13 +488,13 @@
       "id": "R33",
       "type": "framework documentation",
       "author_or_organization": "Amazon Web Services",
-      "year": "2026",
-      "title": "Multi-Agent Collaboration for Amazon Bedrock Agents",
+      "year": "n.d.",
+      "title": "Use Multi-Agent Collaboration with Amazon Bedrock Agents",
       "publication_or_version": "Current documentation",
       "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/agents-multi-agent-collaboration.html",
-      "supports": "Documents the managed supervisor/collaborator pattern.",
+      "supports": "Documents the managed supervisor/collaborator pattern of Amazon Bedrock Agents, now Bedrock Agents Classic, and states that the service is no longer open to new customers, pointing to Amazon Bedrock AgentCore for similar capabilities.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -503,13 +503,13 @@
       "id": "R34",
       "type": "framework documentation",
       "author_or_organization": "LangChain",
-      "year": "2026",
+      "year": "n.d.",
       "title": "LangGraph Persistence",
       "publication_or_version": "Current documentation",
       "url": "https://docs.langchain.com/oss/python/langgraph/persistence",
       "supports": "Documents checkpointers, thread state, stores, and persistence.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -518,13 +518,13 @@
       "id": "R35",
       "type": "framework documentation",
       "author_or_organization": "LlamaIndex",
-      "year": "2026",
+      "year": "n.d.",
       "title": "LlamaIndex Workflows",
       "publication_or_version": "Current documentation",
-      "url": "https://docs.llamaindex.ai/en/stable/module_guides/workflow/",
+      "url": "https://developers.llamaindex.ai/python/llamaagents/workflows/",
       "supports": "Documents event-driven asynchronous workflow abstractions.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -533,13 +533,13 @@
       "id": "R36",
       "type": "framework documentation",
       "author_or_organization": "Pydantic",
-      "year": "2026",
-      "title": "PydanticAI Durable Execution",
+      "year": "n.d.",
+      "title": "Pydantic AI: Durable Execution",
       "publication_or_version": "Current documentation",
       "url": "https://pydantic.dev/docs/ai/capabilities/durable_execution/overview",
       "supports": "Documents typed agent integration with durable-execution backends.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -554,7 +554,7 @@
       "url": "https://docs.dapr.io/developing-ai/dapr-agents",
       "supports": "Documents Dapr agent integration with workflows, actors, state, messaging, resiliency, and telemetry.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -563,13 +563,13 @@
       "id": "R38",
       "type": "framework documentation",
       "author_or_organization": "DBOS",
-      "year": "2026",
+      "year": "n.d.",
       "title": "DBOS AI Quickstart",
       "publication_or_version": "Current documentation",
       "url": "https://docs.dbos.dev/ai/ai-quickstart",
       "supports": "Documents durable long-running agent workflows, queues, waits, and framework integrations.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -584,7 +584,7 @@
       "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
       "supports": "Primary legal text for EU data-protection principles and rights.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -594,12 +594,12 @@
       "type": "official legal guidance",
       "author_or_organization": "European Commission",
       "year": "2026",
-      "title": "European AI Act: Regulatory Framework",
+      "title": "AI Act",
       "publication_or_version": "Implementation overview",
       "url": "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
       "supports": "Official implementation overview; legal advice must use the binding text and applicable jurisdiction.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -608,13 +608,13 @@
       "id": "R41",
       "type": "standard",
       "author_or_organization": "W3C",
-      "year": "2023",
+      "year": "2024",
       "title": "Web Content Accessibility Guidelines (WCAG) 2.2",
-      "publication_or_version": "W3C Recommendation",
-      "url": "https://www.w3.org/TR/WCAG22/",
+      "publication_or_version": "W3C Recommendation, 12 December 2024",
+      "url": "https://www.w3.org/TR/2024/REC-WCAG22-20241212/",
       "supports": "Defines accessibility success criteria relevant to human-review interfaces.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -629,7 +629,7 @@
       "url": "https://csrc.nist.gov/pubs/sp/800/61/r3/final",
       "supports": "Supports incident-response integration with organizational risk management.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -644,7 +644,7 @@
       "url": "https://doi.org/10.1287/opre.9.3.383",
       "supports": "Primary source for Little\u2019s Law; book sizing equations remain workload-specific approximations.",
       "verification": {
-        "checked_on": "2026-09-13",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -659,7 +659,7 @@
       "url": "https://www.omg.org/spec/BPMN/2.0.2",
       "supports": "Defines BPMN process modelling notation and its execution semantics. Supports the existence and semantics of the standard only, not any claim about its suitability for agentic planning.",
       "verification": {
-        "checked_on": "2026-09-14",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated scope; re-verify living documentation before reuse."
       }
@@ -674,7 +674,7 @@
       "url": "https://www.omg.org/spec/DMN/1.5",
       "supports": "Defines DMN decision tables, hit policies, and FEEL. Supports the existence and semantics of the standard only, not any claim about agent decision quality.",
       "verification": {
-        "checked_on": "2026-09-14",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated scope; re-verify living documentation before reuse."
       }
@@ -689,7 +689,7 @@
       "url": "https://www.omg.org/spec/CMMN/1.1",
       "supports": "Defines CMMN case modelling for unordered, event-driven work. Supports the existence and semantics of the standard only.",
       "verification": {
-        "checked_on": "2026-09-14",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated scope; re-verify living documentation before reuse."
       }
@@ -704,7 +704,7 @@
       "url": "https://www.omg.org/spec/SBVR/1.5",
       "supports": "Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only.",
       "verification": {
-        "checked_on": "2026-09-14",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated scope; re-verify living documentation before reuse."
       }
@@ -715,11 +715,11 @@
       "author_or_organization": "Rahimi, R.",
       "year": "2026",
       "title": "Policy Logic Forge: compiling compliance policy text into typed, source-grounded executable decision logic",
-      "publication_or_version": "Repository documentation, ARCHITECTURE.md \u00a71.1",
-      "url": "https://github.com/rrahimi-uci/policy-logic-forge",
+      "publication_or_version": "ARCHITECTURE.md \u00a71.1 at commit 393364f",
+      "url": "https://github.com/rrahimi-uci/policy-logic-forge/blob/393364fae6700c10f4f6f7f024e67a63631a2f9a/ARCHITECTURE.md#11-the-evidence-spine",
       "supports": "Book-authored implementation. Supports the reported measurement that independent grounding verification rejected 44% of dependency and conflict claims on one documented run of that pipeline. Does not support any general error rate for language-model extraction.",
       "verification": {
-        "checked_on": "2026-09-14",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated scope; re-verify living documentation before reuse."
       }
@@ -734,7 +734,7 @@
       "url": "https://arxiv.org/abs/2308.08155",
       "supports": "Presents AutoGen, a framework in which multiple agents converse using LLMs, human input, and tools. Supports only the description of multi-agent conversation as a composition mechanism.",
       "verification": {
-        "checked_on": "2026-10-10",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -743,13 +743,13 @@
       "id": "R50",
       "type": "research",
       "author_or_organization": "Liu et al.",
-      "year": "2023",
+      "year": "2024",
       "title": "AgentBench: Evaluating LLMs as Agents",
       "publication_or_version": "ICLR 2024 / arXiv:2308.03688",
       "url": "https://arxiv.org/abs/2308.03688",
       "supports": "Introduces an eight-environment agent benchmark and reports wide performance differences between models, attributed mainly to weak long-term reasoning, decision-making, and instruction following.",
       "verification": {
-        "checked_on": "2026-10-10",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -764,7 +764,7 @@
       "url": "https://arxiv.org/abs/2311.12983",
       "supports": "Introduces 466 real-world questions that are simple for humans but require tools, browsing, and multimodality, and reports a large human-versus-model gap.",
       "verification": {
-        "checked_on": "2026-10-10",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -773,13 +773,13 @@
       "id": "R52",
       "type": "research",
       "author_or_organization": "Jimenez et al.",
-      "year": "2023",
+      "year": "2024",
       "title": "SWE-bench: Can Language Models Resolve Real-World GitHub Issues?",
       "publication_or_version": "ICLR 2024 / arXiv:2310.06770",
       "url": "https://arxiv.org/abs/2310.06770",
       "supports": "Introduces a benchmark of real GitHub issues evaluated with executable tests.",
       "verification": {
-        "checked_on": "2026-10-10",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -794,7 +794,7 @@
       "url": "https://arxiv.org/abs/2406.12045",
       "supports": "Introduces a benchmark of tool agents interacting with users under domain rules and reports inconsistent behavior across repeated trials.",
       "verification": {
-        "checked_on": "2026-10-10",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -809,7 +809,7 @@
       "url": "https://arxiv.org/abs/2406.13352",
       "supports": "Introduces an environment for evaluating tool-using agents' task utility and prompt-injection security together.",
       "verification": {
-        "checked_on": "2026-10-10",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -824,7 +824,7 @@
       "url": "https://code.claude.com/docs/en/agent-sdk/overview",
       "supports": "Documents the Claude Agent SDK as Claude Code's agent loop packaged as a Python and TypeScript library with built-in tools, hooks, subagents, MCP, permissions, and sessions. Does not support maturity, cost, or enterprise-governance claims.",
       "verification": {
-        "checked_on": "2026-10-10",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -839,7 +839,7 @@
       "url": "https://platform.claude.com/docs/en/managed-agents/overview",
       "supports": "Documents Managed Agents as a hosted agent harness in beta: agents, environments (Anthropic-managed or self-hosted sandboxes), sessions, and server-sent events with persisted history, intended for long-running work. Does not support production-readiness or cost claims.",
       "verification": {
-        "checked_on": "2026-10-10",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -850,11 +850,11 @@
       "author_or_organization": "CrewAI",
       "year": "n.d.",
       "title": "CrewAI documentation: Introduction",
-      "publication_or_version": "Current documentation",
+      "publication_or_version": "Current documentation (v1.15.27 at access)",
       "url": "https://docs.crewai.com/en/introduction",
       "supports": "Documents Crews of role-playing agents and event-driven Flows. Does not support durability, permission, trace, or effect-semantics claims.",
       "verification": {
-        "checked_on": "2026-10-10",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
@@ -869,7 +869,7 @@
       "url": "https://docs.restate.dev/",
       "supports": "Documents durable execution that resumes from completed steps after failure, durable timers, automatic retries, waiting for external events, and long-running processes. Does not support scale, maturity, or regional-recovery claims.",
       "verification": {
-        "checked_on": "2026-10-10",
+        "checked_on": "2026-10-11",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }

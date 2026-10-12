@@ -138,7 +138,7 @@ Tables must answer a decision, comparison, contract, or traceability question—
 - Prefer source dimensions that render crisply at 300 dpi.
 - Put `[[DIAGRAM:id|caption]]` on its own line; the ID must exist in `config/diagrams.json`.
 - Caption immediately follows the image in DOCX and is embedded in the marker for Markdown portability.
-- Labels use the book font/color system, remain legible in grayscale, and avoid text smaller than 9 pt at final size.
+- Labels use the book font/color system, remain legible in grayscale, and avoid text smaller than 9 pt at final size. Check the printed size, not the source size: a figure wider than about 7.5 inches is scaled down to the column, and its labels with it.
 - Show trust boundaries, data/control flows, and policy enforcement explicitly when relevant.
 - Do not use decorative AI images inside technical chapters.
 - Replacement assets require registry, checksum, PDF, and contact-sheet review.

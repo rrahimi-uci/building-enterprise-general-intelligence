@@ -176,3 +176,10 @@ def test_consumers_deduplicate_on_source_and_id():
     seen = {deduplication_key(e) for e in (first, redelivered, other)}
     assert seen == {("urn:harborlight:agent-platform", "evt_1"),
                     ("urn:harborlight:agent-platform", "evt_2")}
+
+
+def test_extension_attributes_use_valid_cloudevents_names_on_the_wire():
+    wire = event(causation_id="evt_0").to_wire()
+    assert {"tenantid", "correlationid", "causationid"} <= wire.keys()
+    assert not {"tenant_id", "correlation_id", "causation_id"} & wire.keys()
+    assert all(name.isalnum() and name == name.lower() for name in wire)

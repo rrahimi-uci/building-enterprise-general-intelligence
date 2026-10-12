@@ -279,15 +279,34 @@ def chapter_cover_path(root,number):
         if f"{c['chapter']:02d}"==number: return root/data['output_dir']/c['file']
     return None
 
-def add_chapter_cover(doc,path):
+def set_alt_text(shape,text):
+    # Word reads the drawing's docPr/@descr as the image's alternative text.
+    # Without it a screen reader announces every figure as an unnamed picture.
+    shape._inline.docPr.set('descr',text)
+
+def chapter_cover_alt(root,number):
+    data=json.loads((root/'config/chapter-covers.json').read_text(encoding='utf-8'))
+    for c in data['chapters']:
+        if f"{c['chapter']:02d}"==number: return f"Chapter {c['chapter']} cover: {c['title']}. {c['focus']}"
+    return f"Chapter {int(number)} cover"
+
+def diagram_alt(root,key,caption):
+    for d in json.loads((root/'config/diagrams.json').read_text(encoding='utf-8'))['diagrams']:
+        if d['id']==key and d.get('description'): return d['description']
+    return caption
+
+def add_chapter_cover(doc,path,alt=None):
     # One US Letter cover page per chapter, set like the book cover: the page
     # holds only the image, followed by a page break into the chapter itself.
-    p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_after=Pt(0); p.add_run().add_picture(str(path),width=Inches(7.05)); add_page_break(doc)
+    p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_after=Pt(0); shape=p.add_run().add_picture(str(path),width=Inches(7.05))
+    if alt: set_alt_text(shape,alt)
+    add_page_break(doc)
 
 def add_diagram(doc,root,key,caption,cfg):
     path=root/'assets/diagrams'/f'{key}.png'
     if not path.exists(): raise FileNotFoundError(f'Missing diagram {path}')
-    p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_before=Pt(4); p.paragraph_format.space_after=Pt(2); p.add_run().add_picture(str(path),width=Inches(cfg['design']['diagram_width_inches']))
+    p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_before=Pt(4); p.paragraph_format.space_after=Pt(2); shape=p.add_run().add_picture(str(path),width=Inches(cfg['design']['diagram_width_inches']))
+    set_alt_text(shape,diagram_alt(root,key,caption))
     c=doc.add_paragraph(style='Caption'); c.alignment=WD_ALIGN_PARAGRAPH.CENTER; add_inline(c,caption,cfg)
 
 def normalize_zip(path:Path):
@@ -315,7 +334,7 @@ def build(root:Path,out:Path,template_only=False):
         for block_index,b in enumerate(parsed):
             blocks+=1; kind=b[0]
             if kind=='cover':
-                p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_after=Pt(0); p.add_run().add_picture(str(cover),width=Inches(7.05)); add_page_break(doc); continue
+                p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_after=Pt(0); shape=p.add_run().add_picture(str(cover),width=Inches(7.05)); set_alt_text(shape,f"Book cover: {cfg['book']['title']}, {cfg['book']['author']}"); add_page_break(doc); continue
             if kind=='part': add_part(doc,b[1],b[2],b[3],cfg); after_part=True; lead_keep_next=False; continue
             if kind=='heading':
                 level,text=b[1],b[2]
@@ -328,7 +347,7 @@ def build(root:Path,out:Path,template_only=False):
                     if cover is not None:
                         if not cover.exists(): raise FileNotFoundError(f'Missing chapter cover {cover}')
                         if not after_part: add_page_break(doc)
-                        add_chapter_cover(doc,cover)
+                        add_chapter_cover(doc,cover,chapter_cover_alt(root,num.group(1)))
                 p=doc.add_paragraph(style=style); add_inline(p,text,cfg); p.paragraph_format.keep_with_next=True
                 if level==1:
                     is_chapter=bool(re.match(r'^\d{2} — ',text) or text.startswith('Appendix '))

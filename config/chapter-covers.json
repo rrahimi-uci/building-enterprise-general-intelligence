@@ -42,7 +42,7 @@
    "part": "I",
    "file": "chapter-01-what-turns-an-llm-call-into-a-production-system.png",
    "title": "What Turns an LLM Call into a Production System",
-   "focus": "The model reasons and proposes; the surrounding system owns truth.",
+   "focus": "The model proposes; the surrounding system owns state, authority, and effects.",
    "themes": [
     "Bounded reasoning",
     "Ownership boundaries",
@@ -78,7 +78,7 @@
      },
      {
       "id": "truth",
-      "label": "Where truth lives",
+      "label": "Where state lives",
       "box": [
        1.9,
        3.95,
@@ -1107,7 +1107,7 @@
       "label": "enforce",
       "route": "straight",
       "to_side": "top",
-      "label_t": 0.3,
+      "label_t": 0.12,
       "label_fixed": true
      },
      {
@@ -1405,7 +1405,7 @@
     "Pinned releases"
    ],
    "diagram": {
-    "title": "Rebuilt plumbing vs paved road",
+    "title": "Rebuilt safety layer vs paved road",
     "groups": [
      {
       "id": "before",
@@ -1482,7 +1482,7 @@
      {
       "id": "domain_teams",
       "label": "Domain teams",
-      "sub": "differentiated behaviour",
+      "sub": "differentiated behavior",
       "kind": "actor",
       "at": [
        9.1,
@@ -1559,7 +1559,7 @@
     "components": [
      {
       "ref": "before",
-      "name": "Rebuilt plumbing"
+      "name": "Rebuilt safety layer"
      },
      {
       "ref": "divergence",
@@ -1956,16 +1956,16 @@
    "title": "Use ReAct Without Creating a Runaway Loop",
    "focus": "Keep the reasoning loop inside; keep limits and stopping outside.",
    "themes": [
-    "Fit before loop",
+    "Information-dependent steps",
     "External limits",
     "Mutations as proposals"
    ],
    "diagram": {
-    "title": "Fit, bound, then exit",
+    "title": "The loop is inside, the limits are outside",
     "groups": [
      {
       "id": "g_fit",
-      "label": "Fit test",
+      "label": "Use ReAct only when",
       "box": [
        0.15,
        3.05,
@@ -2002,7 +2002,7 @@
      },
      {
       "id": "g_exit",
-      "label": "Governed exits",
+      "label": "Outside the loop",
       "box": [
        9.75,
        0.35,
@@ -2229,7 +2229,7 @@
     "components": [
      {
       "ref": "fit",
-      "name": "Fit test first"
+      "name": "Information-dependent steps"
      },
      {
       "ref": "ctl",
@@ -2785,7 +2785,7 @@
      },
      {
       "id": "g_decide",
-      "label": "Decided elsewhere",
+      "label": "Acceptance outside",
       "box": [
        8.2,
        0.35,
@@ -2819,7 +2819,7 @@
      },
      {
       "id": "refl",
-      "label": "Reflector",
+      "label": "Reflection",
       "sub": "structured defects",
       "kind": "model",
       "at": [
@@ -3087,7 +3087,7 @@
      {
       "id": "approver",
       "label": "Approver",
-      "sub": "authority · SoD",
+      "sub": "separation of duties",
       "kind": "human",
       "at": [
        6.0,
@@ -3493,9 +3493,9 @@
    "title": "Choose Patterns That Fit Real Enterprise Work",
    "focus": "Start from the obligation, then choose the smallest pattern that protects it.",
    "themes": [
-    "Hidden obligations",
+    "Obligation first",
     "Smallest pattern",
-    "Honest trade-offs"
+    "What it costs"
    ],
    "diagram": {
     "title": "Choose by obligation, not fashion",
@@ -3560,8 +3560,8 @@
      },
      {
       "id": "obligation",
-      "label": "Hidden Obligation",
-      "sub": "cannot be violated",
+      "label": "Obligation",
+      "sub": "the system cannot violate",
       "kind": "control",
       "at": [
        1.75,
@@ -3591,8 +3591,8 @@
      },
      {
       "id": "cost",
-      "label": "Honest Cost",
-      "sub": "latency · effort",
+      "label": "What It Costs",
+      "sub": "latency · cost",
       "kind": "record",
       "at": [
        5.6,
@@ -3887,7 +3887,7 @@
     "Explicit joins"
    ],
    "diagram": {
-    "title": "Conversation advises, workflow decides",
+    "title": "Conversation is not a coordination protocol",
     "groups": [
      {
       "id": "g_workflow",
@@ -3904,7 +3904,7 @@
      },
      {
       "id": "g_advisory",
-      "label": "Advisory conversation",
+      "label": "Recommend only",
       "box": [
        9.4,
        0.75,
@@ -4077,12 +4077,12 @@
      {
       "from": "coord",
       "to": "outcome",
-      "label": "commit"
+      "label": "transition"
      },
      {
       "from": "agents",
       "to": "outcome",
-      "label": "declare done",
+      "label": "terminal transition",
       "style": "prohibited",
       "from_side": "bottom",
       "to_side": "bottom",
@@ -4267,7 +4267,9 @@
       "to": "mcpgw",
       "label": "pinned manifest",
       "route": "straight",
-      "label_t": 0.42
+      "label_t": 0.42,
+      "label_dx": -34,
+      "label_dy": 14
      },
      {
       "from": "registry",
@@ -4282,7 +4284,8 @@
       "label": "tool call",
       "route": "straight",
       "offset": -28,
-      "label_t": 0.3
+      "label_t": 0.3,
+      "label_dy": -24
      },
      {
       "from": "mcpgw",
@@ -4291,7 +4294,9 @@
       "style": "feedback",
       "route": "straight",
       "offset": -28,
-      "label_t": 0.62
+      "label_t": 0.5,
+      "label_dy": 26,
+      "label_dx": 30
      },
      {
       "from": "agent",
@@ -5006,10 +5011,10 @@
    "part": "VI",
    "file": "chapter-23-contain-the-damage-when-a-model-is-manipulated.png",
    "title": "Contain the Damage When a Model Is Manipulated",
-   "focus": "Assume the model is manipulated; independent limits keep the failure local.",
+   "focus": "Assume the model is manipulated; each independent control must refuse on its own.",
    "themes": [
     "Assume manipulation",
-    "Blast-radius limits",
+    "Limit what it can reach",
     "Scoped kill switches"
    ],
    "diagram": {
@@ -5017,7 +5022,7 @@
     "groups": [
      {
       "id": "envelope",
-      "label": "Capability envelope",
+      "label": "Capability boundary",
       "box": [
        0.1,
        2.75,
@@ -5058,7 +5063,7 @@
      {
       "id": "model",
       "label": "Manipulated model",
-      "sub": "may obey injection",
+      "sub": "injection may manipulate",
       "kind": "model",
       "at": [
        1.75,
@@ -5068,7 +5073,7 @@
      },
      {
       "id": "data_ctl",
-      "label": "Pre-retrieval authz",
+      "label": "Data authorization",
       "sub": "label, minimize fields",
       "kind": "control",
       "at": [
@@ -5102,7 +5107,7 @@
      {
       "id": "effect_ctl",
       "label": "Effect controls",
-      "sub": "approval, receipts",
+      "sub": "approval, effect checks",
       "kind": "control",
       "at": [
        6.0,
@@ -5112,7 +5117,7 @@
      },
      {
       "id": "data",
-      "label": "Enterprise data",
+      "label": "Tenant data",
       "kind": "store",
       "at": [
        10.4,
@@ -5224,7 +5229,7 @@
     "components": [
      {
       "ref": "data_ctl",
-      "name": "Authorize before retrieval"
+      "name": "Authorized fields only"
      },
      {
       "ref": "secret_broker",
@@ -5307,7 +5312,7 @@
      },
      {
       "id": "run_id",
-      "label": "Run identity",
+      "label": "Run and release",
       "sub": "which run, release?",
       "kind": "record",
       "at": [
@@ -5421,7 +5426,7 @@
     "components": [
      {
       "ref": "run_id",
-      "name": "Run identity"
+      "name": "Run and release"
      },
      {
       "ref": "decision",
@@ -5450,7 +5455,7 @@
     "No self-certification"
    ],
    "diagram": {
-    "title": "Automate, govern, prohibit",
+    "title": "The automation boundary",
     "groups": [
      {
       "id": "auto",
@@ -5607,7 +5612,7 @@
      {
       "from": "release",
       "to": "halt",
-      "label": "breach",
+      "label": "stop condition",
       "route": "straight"
      },
      {

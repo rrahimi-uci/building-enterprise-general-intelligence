@@ -239,9 +239,12 @@ agent and tool spans and records a decision attribute.
 The examples use OpenTelemetry-compatible context propagation and MLflow 3.15.2
 (pinned) tracing. `mlflow.openai.autolog()` captures OpenAI calls, while
 explicit spans cover platform-owned boundaries; the example below records the
-context-manifest ID, not the context body. The pinned 3.15.2 `autolog`
-defaults `disable_openai_agent_tracer` to true, so the examples pass `False` to
-register MLflow's Agents SDK trace processor; the example's test asserts that
+context-manifest ID, not the context body. In the pinned 3.15.2, `autolog`
+registers MLflow's Agents SDK trace processor whatever the setting;
+`disable_openai_agent_tracer`, true by default, decides whether it first
+removes the SDK's own exporter to OpenAI's tracing backend. The examples pass
+`False`, which keeps that exporter beside MLflow's; it sends nothing without an
+API key, but a deployment that must keep traces in-house should leave the
 default. `RunConfig(trace_include_sensitive_data=False)` remains a separate
 privacy control.
 
@@ -543,7 +546,7 @@ cause, and prefer deterministic code when the decision has become stable.
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
 | MLflow baseline | This book pins MLflow 3.15.2 as a reproducibility baseline for its examples. It is not labeled latest; feature availability, experimental status, and compatibility must be re-verified against release notes and current documentation before implementation. | R21 |
-| Evaluation limit | A passing model judge is probabilistic evidence, not proof. Security, authorization, schema, budget, effect, and acceptance invariants remain deterministic release blockers. Protect against benchmark leakage and tune judges with human feedback. | R20; R13 |
+| Evaluation limit | R20 documents model judges alongside human feedback attached to traces; R13 asks evaluators to document possible train/test contamination of benchmarks. The book's recommendation, not a sourced finding, is that a passing judge is probabilistic evidence, not proof, and that security, authorization, schema, budget, effect, and acceptance invariants remain deterministic release blockers. | R20; R13 |
 
 The discussion above draws on R13; R20; R21. Appendix K lists the complete sources and records their authority, version, and scope.
 

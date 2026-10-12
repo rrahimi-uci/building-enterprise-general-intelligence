@@ -6,7 +6,7 @@
 digraph pattern_react {
   rankdir = TB
   graph [ranksep=0.34, nodesep=0.26]
-  node [shape=box, style="filled,rounded", penwidth=1.4, fontsize=10.5,
+  node [shape=box, style="filled,rounded", penwidth=1.4, fontsize=12,
         margin="0.12,0.07", height=0.40, width=1.5]
   edge [arrowsize=0.65, penwidth=1.5, color="#0D6E69"]
 
@@ -19,9 +19,11 @@ digraph pattern_react {
   pro [label="Proposed effect\nleaves the loop", fillcolor="#F7ECF8", color="#6A2E6E", width=1.9]
 
   rea -> act -> obs
-  obs -> rea [label=" next need", fontsize=9, fontcolor="#4A6078"]
+  obs -> rea [label=" next need", fontsize=10.5, fontcolor="#4A6078"]
   ctl -> rea [color="#1450A3", style=dashed, arrowsize=0.55, label=" admits each turn",
-              fontsize=9, fontcolor="#1450A3"]
-  obs -> acc [color="#8A5600", label=" accept?", fontsize=9, fontcolor="#8A5600"]
-  rea -> pro [color="#6A2E6E", style=dashed, label=" mutation", fontsize=9, fontcolor="#6A2E6E"]
+              fontsize=10.5, fontcolor="#1450A3"]
+  // The answer is a terminal decision from the reasoning step; observations
+  // feed the next turn, never the acceptance engine.
+  rea -> acc [color="#8A5600", label=" answer:\n accept?", fontsize=10.5, fontcolor="#8A5600"]
+  rea -> pro [color="#6A2E6E", style=dashed, label=" mutation", fontsize=10.5, fontcolor="#6A2E6E"]
 }

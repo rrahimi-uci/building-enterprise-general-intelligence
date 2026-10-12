@@ -1,26 +1,33 @@
 // Figure 17-1 — Autonomous monolith versus governed agentic architecture.
-// Message: the failure is a responsibility boundary, not a model choice. Stacked
-// rather than side by side so the same three concerns line up for comparison.
+// Message: the failure is a responsibility boundary, not a model choice. Side by
+// side, with the same three concerns on the same rows for comparison.
 digraph anti_before_after {
   rankdir = TB
-  graph [ranksep=0.35, nodesep=0.22]
-  node [width=1.55, fontsize=11]
+  graph [ranksep=0.35, nodesep=0.22, ordering=out]
+  node [width=1.55, fontsize=12.5]
 
   subgraph cluster_before {
-    label="  Anti-pattern · the autonomous monolith  "; labeljust="l"; fontsize=11.5; fontcolor="#A62C2C"
+    label="Anti-pattern\nthe autonomous monolith"; labeljust="c"; fontsize=12.5; fontcolor="#A62C2C"
     color="#A62C2C"; style="rounded"; margin=12; bgcolor="#FDF5F5"
     b1 [label="Decides,\nauthorizes, acts", fillcolor="#FCECEC", color="#A62C2C"]
     b2 [label="State in the\nconversation", fillcolor="#FCECEC", color="#A62C2C"]
     b3 [label="Effects with\nno receipt", fillcolor="#FCECEC", color="#A62C2C"]
     b1 -> b2 -> b3 [style=invis]
   }
+  sep [shape=plaintext, style="", label="separate the decision\nfrom the authority",
+       fontsize=11.5, fontcolor="#8A5600", margin="0.04,0.02"]
   subgraph cluster_after {
-    label="  Governed · the same capabilities, separated  "; labeljust="l"; fontsize=11.5; fontcolor="#0D6E69"
+    label="Governed\nthe same capabilities, separated"; labeljust="c"; fontsize=12.5; fontcolor="#0D6E69"
     color="#0D6E69"; style="rounded"; margin=12; bgcolor="#F4FBFA"
     a1 [label="Agent\nproposes", fillcolor="#E7F5F3", color="#0D6E69"]
     a2 [label="Platform\nauthorizes", fillcolor="#EAF3FB", color="#1450A3", style=filled]
     a3 [label="Gateway commits\nonce, with a receipt", fillcolor="#EDF3FC", color="#1450A3", shape=cylinder, style=filled]
     a1 -> a2 -> a3 [style=invis]
   }
-  b1 -> a1 [label="  separate the decision\n  from the authority  ", color="#8A5600", fontcolor="#8A5600", style=dashed]
+  // minlen=0 keeps the two clusters on the same ranks, so the three concerns
+  // line up row by row. As an ordinary edge it pushed the governed cluster
+  // down a rank and ran the arrow through that cluster's label. The label is
+  // a node between the clusters, so it never sits on the arrow.
+  b1 -> sep [color="#8A5600", style=dashed, arrowhead=none, minlen=0]
+  sep -> a1 [color="#8A5600", style=dashed, minlen=0]
 }

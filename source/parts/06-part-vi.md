@@ -603,10 +603,10 @@ JSON · implementation excerpt
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Non-human identity | Workload identity proves the actor; delegation proves whose authority and purpose it uses. Rotate and revoke both credentials and capability grants. A valid service identity is not sufficient authorization. | R06; R08 |
+| Non-human identity | Token exchange distinguishes the subject on whose behalf a token acts from the actor that holds it. The book's recommendation, not a sourced finding, is that workload identity proves the actor, delegation proves whose authority and purpose it uses, both credentials and capability grants rotate and revoke, and a valid service identity is not sufficient authorization. | R08 |
 | Audience-bound last-hop credentials | Resource indicators constrain token audience; protected-resource metadata lets a client discover which authorization server protects a resource; neither defines enterprise policy. | R09; R10 |
 
-The discussion above draws on R06; R08; R09; R10. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R08; R09; R10. Appendix K lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -708,7 +708,7 @@ A protected mutation moves through Reserved → Executing → Committed, with br
 
 [[DIAGRAM:effect-lifecycle|Figure 22-1 — Protected effect lifecycle: reservation, approval, unknown outcomes, and reconciliation]]
 
-The terminal states are deliberately more expressive than success and failure.
+The outcome states are deliberately more expressive than success and failure.
 **Declined** means the effect was proven not to happen; **Unknown** means the
 system lacks proof and must stop dependent work; **Partial** means some business
 components changed; and **InterventionRequired** means automation cannot safely
@@ -1020,7 +1020,7 @@ review dates is Chapter 26's.
 
 ## The containment path
 
-[[DIAGRAM:sandbox-egress|Figure 23-1 — Containing manipulated content at capability, sandbox, egress, credential, and effect boundaries]]
+[[DIAGRAM:sandbox-egress|Figure 23-1 — Containing manipulated content at capability, sandbox, egress, credential, DLP, and effect boundaries]]
 
 Read this figure as a containment argument. The input may be malicious and the
 model may select the wrong operation, but the request still has to pass an
@@ -1126,9 +1126,9 @@ than abandoned. Its release-side counterpart is Chapter 27's Emergency Control.
 
 | **Claim or correction** | **Grounded statement** | **Source IDs** |
 | --- | --- | --- |
-| Supply-chain admission | SBOM inventory and SLSA build provenance answer different questions; runtime admission should verify both for pinned artifacts. | R17; R18 |
+| Supply-chain admission | SBOM inventory and SLSA build provenance answer different questions. Verifying both for pinned artifacts at runtime admission is this book's recommendation. | R17; R18 |
 | Data minimization and deletion (EU context only) | GDPR principles inform minimization and erasure obligations for EU personal data; jurisdiction-specific analysis is still required. | R39 |
-| Incident control | Pre-wire kill switches by tenant, agent release, tool, connector, model route, and data source. A kill switch must stop new risky work while preserving evidence and effect reconciliation. | R15 |
+| Incident control | R15 recommends kill switches that can disable specific tools, prompts, or agent connections, and credential revocation to contain rogue agents. Extending the scopes to tenant, agent release, connector, model route, and data source, and requiring a kill switch to preserve evidence and effect reconciliation, are this book's recommendations. | R15 |
 
 The discussion above draws on R15; R17; R18; R39. Appendix K lists the complete sources and records their authority, version, and scope.
 

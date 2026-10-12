@@ -4,6 +4,17 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Correctness validation, pass 2
+
+- Citations: evidence rows that cited a source beyond its scope are split into the sourced fact and a labelled book recommendation (Chapters 1, 6, 7, 9, 12, 13, 15, 21, 23, 25, 27); Chapter 21 no longer cites R06 for workload identity.
+- Factual fixes: valid CloudEvents extension names (Chapter 4, Appendix C, and the `CloudEvent` example, which now serializes `tenantid`, `correlationid`, `causationid`); the OpenAI Agents SDK ships skills at 0.22.2 (Chapter 8); MLflow 3.15.2's `disable_openai_agent_tracer` explained correctly (Chapter 24 and example comments); R02 no longer cited for replay.
+- Appendix D: unsupported CrewAI, Dapr, Pydantic AI and ADK claims removed; A2A pinned to 1.0.1; OWASP ranking stated precisely.
+- Consistency: InterventionRequired is non-terminal in Chapters 15, 18 and 19; Chapter 22 calls its effect states "outcome states"; Chapter 26's cadence matches its table; Chapter 2's proposal JSON is labelled as a flattened view of the contract.
+- Registry: corrected years, titles and labels; version-specific links pinned; living documentation dated `n.d.` unless the page shows a date, enforced by `tools/check_references.py`; all 58 entries verified 2026-10-11; R29, R31 and R33 scopes widened and R02's narrowed after re-reading the sources.
+- Appendix K's source copy is a generated-section stub; its standards group is "Protocols and technical standards".
+- XeLaTeX edition: 0 overfull lines (was 478); table headers never doubled or stranded; headings and code labels kept with what follows; curly quotes restored.
+- Diagrams and covers: 18 figures reworked for legibility and agreement with their chapters; 35 cover labels in 10 chapters reworded to their chapter's own text; alt text on every DOCX image; Figure 23-1's caption names DLP.
+
 ### Correctness review corrections
 
 All 21 findings of the correctness review (PR #81) were re-verified against the source; 20 are corrected here and one (the R48 run artifact) is labelled and left open. Dispositions are recorded under each finding in `reviews/content-correctness-validation/`.

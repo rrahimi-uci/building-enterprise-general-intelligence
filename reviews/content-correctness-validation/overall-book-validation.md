@@ -115,3 +115,7 @@ The corrective PR that follows this review re-verified all 21 findings against t
 3. Appendix D's CrewAI "rapid prototyping" strength is retained as book judgment; R57 supports only Crews and Flows.
 4. Dating of living documentation is inconsistent across the registry: R55–R58 use `n.d.`, while R20–R38 and R48 carry `2026`. A later registry pass should pick one convention.
 5. Print-scale visual inspection of the redrawn Figure 13-1 and of the edited Appendix D and L tables has not been done; `make pdf` and `make qa-pdf` were not run locally (CI compiles the XeLaTeX edition).
+
+## Pass 2 (2026-10-11)
+
+The gaps this report listed as unchecked (claim-level citation support, numbers and tables, print-scale visuals, freshness, registry metadata) were checked in a second pass: 89 findings (46 confirmed, 40 potential, 3 needing verification), most fixed. See [pass-2/README.md](pass-2/README.md).

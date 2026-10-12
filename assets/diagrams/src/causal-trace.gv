@@ -3,7 +3,7 @@
 // decisions and effects. Stable IDs and links survive queues and retries.
 digraph causal_trace {
   rankdir = TB
-  graph [ranksep=0.30, nodesep=0.24, compound=true]
+  graph [ranksep=0.30, nodesep=0.60, compound=true]
   node [shape=box, style="filled,rounded", penwidth=1.4, fontsize=10.5,
         margin="0.12,0.07", height=0.43, width=2.15]
   edge [arrowsize=0.65, penwidth=1.5, color="#1450A3"]
@@ -39,5 +39,10 @@ digraph causal_trace {
   context -> vault [style=dotted, color="#0B6076", constraint=false]
   model -> vault [style=dotted, color="#0B6076", constraint=false]
 
-  { rank=same; trace; audit; vault }
+  // Each store sits beside the stretch of the run that writes to it, so the
+  // evidence edges run sideways instead of crossing the whole figure. With
+  // all three stores in one top row, eight dotted edges tangled over the run.
+  { rank=same; workflow; trace }
+  { rank=same; model; vault }
+  { rank=same; tool; audit }
 }

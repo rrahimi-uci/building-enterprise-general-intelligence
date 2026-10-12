@@ -25,10 +25,10 @@ digraph skill_resolution {
   pin  [label="Pinned release\nsha256:9f3c… — exactly one", fillcolor="#EAF3FB", color="#1450A3"]
   no   [label="Refusal\nnaming the rule that denied it", fillcolor="#FCECEC", color="#A62C2C"]
 
-  d1 [label=<<B><FONT POINT-SIZE="10" COLOR="#0B6076">DISCOVERY &#183; what exists</FONT></B>>, shape=plaintext, style=""]
-  d2 [label=<<B><FONT POINT-SIZE="10" COLOR="#8A5600">RESOLUTION &#183; what this run may use</FONT></B>>, shape=plaintext, style=""]
+  d1 [label=<<B><FONT POINT-SIZE="11" COLOR="#0B6076">DISCOVERY &#183; what exists</FONT></B>>, shape=plaintext, style=""]
+  d2 [label=<<B><FONT POINT-SIZE="11" COLOR="#8A5600">RESOLUTION &#183; what this run may use</FONT></B>>, shape=plaintext, style=""]
   mr [label="the model may describe\nthe need — and nothing below", shape=plaintext,
-      style="", fontsize=9.5, fontcolor="#A62C2C"]
+      style="", fontsize=10.5, fontcolor="#A62C2C"]
 
   need -> cat -> cand -> pol -> pin
   pol -> no [color="#A62C2C", style=dashed, penwidth=1.3]
