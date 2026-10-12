@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 548,
+  "file_count": 549,
   "files": [
     {
       "path": ".gitattributes",
@@ -2348,6 +2348,11 @@
       "path": "reviews/diagram-modernization/pilot/pattern-reflection-before-after.png",
       "bytes": 59672,
       "sha256": "c1f0cd9d9069ec08a9635b85b01c21cb5d0208a8a56e5b78b0342c5e7cdbc5b5"
+    },
+    {
+      "path": "reviews/diagram-modernization/pilot-report.md",
+      "bytes": 12781,
+      "sha256": "494c0bcd3ea1fa1ed472c5d869d24395fe3135383b3c6f6b023828f12c86a5f9"
     },
     {
       "path": "reviews/diagram-modernization/style-guide.md",
