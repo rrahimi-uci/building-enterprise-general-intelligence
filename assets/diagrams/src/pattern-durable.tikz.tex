@@ -1,0 +1,47 @@
+% Figure 15-1 -- Durable execution. The run outlives the process.
+% Restyled from pattern-durable.gv; content, flow and loops are unchanged.
+%
+% Original element -> restyled element
+%   st  Step executes                          -> teal card
+%   ck  Checkpoint appended (cylinder)         -> blue cylinder
+%   wt  Wait / timer . signal . human          -> amber card
+%   die Process dies                           -> red card
+%   rec Replay to last checkpoint              -> blue card
+%   led Effect ledger / adopt, do not repeat (cylinder) -> plum cylinder
+%   edges: st>ck, ck>wt (solid teal); wt>st "resume" (solid teal, outside loop
+%          over the top); wt>die (dashed red); die>rec (solid blue);
+%          rec>led (dashed plum); rec>st "continue" (solid blue, returns to the step)
+%   layout: the vertical chain becomes two rows: the run on top, the recovery
+%   path below it, so both return loops stay short and uncrossed.
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  % ---- the run (top row) ----
+  \node[dg card=teal, icon=play, text width=96pt] (st) at (66,0)
+    {\dgcontent{Step executes}{}{}};
+  \node[dg store=blue, minimum width=116pt, minimum height=46pt] (ck) at (245,0)
+    {\dgcontent{Checkpoint}{appended}{}};
+  \node[dg card=amber, icon=hourglass-half, text width=122pt] (wt) at (424,0)
+    {\dgcontent{Wait}{timer · signal · human}{}};
+
+  % ---- recovery (bottom row) ----
+  \node[dg store=plum, minimum width=122pt, minimum height=46pt] (led) at (66,-132)
+    {\dgcontent{Effect ledger}{adopt, do not repeat}{}};
+  \node[dg card=blue, icon=history, text width=110pt] (rec) at (245,-132)
+    {\dgcontent{Replay to last checkpoint}{}{}};
+  \node[dg card=red, icon=power-off, text width=88pt] (die) at (424,-132)
+    {\dgcontent{Process dies}{}{}};
+
+  % ---- connectors ----
+  \draw[flow in=teal] (st) -- (ck);
+  \draw[flow in=teal] (ck) -- (wt);
+  \draw[flow in=teal, rounded corners=16pt] (wt.north) -- ++(0,34pt) -|
+    node[pill=teal, pos=0.25] {Resume} (st.north);
+  \draw[dashed flow, draw=dg-red-line] (wt.south) -- (die.north);
+  \draw[flow in=blue] (die.west) -- (rec.east);
+  \draw[dashed flow, draw=dg-plum-line] (rec.west) -- (led.east);
+  \draw[flow in=blue, rounded corners=12pt] ([xshift=-26pt]rec.north) -- ++(0,34pt) -|
+    node[pill=blue, pos=0.25] {Continue} ([xshift=26pt]st.south);
+\end{tikzpicture}
+\end{document}
