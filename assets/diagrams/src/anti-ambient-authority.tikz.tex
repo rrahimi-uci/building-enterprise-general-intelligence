@@ -1,0 +1,50 @@
+% Figure 17-2 -- AP-03. Ambient authority versus a narrowed capability envelope
+% and a short-lived credential lease.
+% Restyled from anti-ambient-authority.gv; nodes, labels, arrows and the two
+% panels are unchanged. The two ANTI-PATTERN / CORRECTION captions that sat at
+% the foot of each column in the Graphviz render become panel headers
+% (dashed red panel = anti-pattern, solid teal panel = correction).
+%
+% Original element -> restyled element
+%   bad  ANTI-PATTERN (caption)   -> dashed red panel, header pill
+%   b1   Agent worker                                  -> teal card
+%   b2   Shared service account / no expiry . no subject -> red card
+%   b3   Every system that account can reach (cylinder) -> red cylinder
+%   b1>b2>b3                                           -> two red arrows
+%   good CORRECTION (caption)     -> solid teal panel, header pill
+%   g1   Agent worker / subject + workload             -> teal card
+%   g2   Policy decision / capability envelope (diamond) -> amber diamond
+%   g3   Credential lease / one action . minutes       -> blue card
+%   g4   One resource (cylinder)                       -> plum cylinder
+%   g1>g2>g3>g4                                        -> three teal arrows
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\input{assets/diagrams/src/_before-after.tex}
+\begin{document}
+\begin{tikzpicture}
+  % ---- anti-pattern (left) ----
+  \node[dg card=teal, icon=robot, text width=170pt] (b1) at (118,0)
+    {\dgcontent{Agent worker}{}{}};
+  \node[dg card=red, icon=key, text width=170pt] (b2) at (118,-128)
+    {\dgcontent{Shared service account}{no expiry · no subject}{}};
+  \node[dg store=red, aspect=0.12, text width=140pt, minimum height=64pt] (b3) at (118,-256)
+    {\dgcontent{Every system that account can reach}{}{}};
+  \dgpanel[dash pattern=on 5pt off 3pt]{bad}{red}{times-circle}{ANTI-PATTERN}{}{(b1)(b2)(b3)}
+  \draw[flow in=red] (b1) -- (b2);
+  \draw[flow in=red] (b2) -- (b3);
+
+  % ---- correction (right) ----
+  \node[dg card=teal, icon=robot, text width=170pt] (g1) at (382,0)
+    {\dgcontent{Agent worker}{subject + workload}{}};
+  \node[dg decision=amber, minimum width=204pt, minimum height=66pt] (g2) at (382,-84)
+    {\dgcontent{Policy decision}{capability envelope}{}};
+  \node[dg card=blue, icon=ticket-alt, text width=170pt] (g3) at (382,-168)
+    {\dgcontent{Credential lease}{one action · minutes}{}};
+  \node[dg store=plum, aspect=0.12, text width=140pt, minimum height=64pt] (g4) at (382,-256)
+    {\dgcontent{One resource}{}{}};
+  \dgpanel{good}{teal}{check-circle}{CORRECTION}{}{(g1)(g2)(g3)(g4)}
+  \draw[flow in=teal] (g1) -- (g2);
+  \draw[flow in=teal] (g2) -- (g3);
+  \draw[flow in=teal] (g3) -- (g4);
+\end{tikzpicture}
+\end{document}

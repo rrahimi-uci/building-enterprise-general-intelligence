@@ -1,0 +1,42 @@
+% _before-after.tex -- local macros shared by the five "two panels side by side"
+% figures (anti-ambient-authority, anti-approval-binding, anti-before-after,
+% anti-retry-storm, pattern-hitl). Not a figure: it is \input by those sources so
+% the panels, headers, dog-eared note shape and arrow clearances are identical.
+% Candidate for promotion into latex/styles/professional-diagrams.sty.
+%
+%   \dgpanel[options]{name}{role}{icon}{Title}{Subtitle}{(node)(node)...}
+%     titled panel on the background layer around the given nodes, with a
+%     centred header pill (icon + Title, optional Subtitle line) above them.
+%     Nodes: name-core (the contents), name-head (the header pill), name (panel).
+%     dash pattern=on 5pt off 3pt in [options] marks an anti-pattern panel
+%     (dashed border, so the distinction survives greyscale).
+%   dg note=<role>   card with a folded top-right corner (the source's "note").
+\newlength{\dgpanelw}\setlength{\dgpanelw}{236pt}
+\newcommand{\dgheadgap}{16pt}
+\tikzset{
+  panel head/.style={rectangle, rounded corners=11pt, fill=dg-#1-pill,
+    draw=dg-#1-line, line width=0.8pt, text=dg-#1-ink, inner xsep=14pt,
+    inner ysep=5pt, align=center, font=\dggroupsize, minimum height=24pt},
+  dg note/.style={/utils/exec={\gdef\dgcurrentrole{#1}}, rectangle, text=dg-ink,
+    inner xsep=\dgpadx, inner ysep=\dgpady, align=left, text width=4cm,
+    minimum height=34pt, font=\dgdescsize, anchor=center, draw=none, fill=none,
+    path picture={
+      \draw[line width=\dgstroke, line join=round, fill=dg-#1-fill, draw=dg-#1-line]
+        (path picture bounding box.south west) --
+        (path picture bounding box.north west) --
+        ([xshift=-11pt]path picture bounding box.north east) --
+        ([yshift=-11pt]path picture bounding box.north east) --
+        (path picture bounding box.south east) -- cycle;
+      \draw[line width=\dgstroke, line join=round, fill=dg-#1-line!22, draw=dg-#1-line]
+        ([xshift=-11pt]path picture bounding box.north east) --
+        ([shift={(-11pt,-11pt)}]path picture bounding box.north east) --
+        ([yshift=-11pt]path picture bounding box.north east);}},
+}
+\newcommand{\dgpanel}[7][]{%
+  \node[fit=#7, inner sep=0pt] (#2-core) {};
+  \node[panel head=#3, anchor=south] (#2-head) at ([yshift=\dgheadgap]#2-core.north)
+    {\textcolor{dg-#3-line}{\dgicon{#4}}\hspace{6pt}{\dgtitlesize #5}%
+     \ifblank{#6}{}{\\[1.5pt]{\dgdescsize\mdseries #6}}};
+  \begin{pgfonlayer}{dgback}
+    \node[dg group=#3, fit=(#2-core)(#2-head), minimum width=\dgpanelw, #1] (#2) {};
+  \end{pgfonlayer}}
