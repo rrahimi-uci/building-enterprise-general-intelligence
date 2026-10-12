@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 539,
+  "file_count": 548,
   "files": [
     {
       "path": ".gitattributes",
@@ -51,13 +51,13 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 6446,
-      "sha256": "d06c3c833727bb32fe73822e16c33ce7d9f15c9af2583f88806b6d1e3ed4c209"
+      "bytes": 7124,
+      "sha256": "da1f15f657f413d4f2e0358a8f3a869e4cc62d970ef24efbcc162e4669445fdd"
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 27260,
-      "sha256": "d2090d062bec39a6e6af897b17985222640fa9147cd37f12629bc211d51436d7"
+      "bytes": 28818,
+      "sha256": "12ef865471513beeaec0f7d8262c302b6d2d9d3c211dd8b7897fa602edc2e070"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -71,13 +71,13 @@
     },
     {
       "path": "Makefile",
-      "bytes": 6148,
-      "sha256": "d528bf1735aa485dae62794863fc8dcf440640d546dd70442f3cadd6045a2c72"
+      "bytes": 6243,
+      "sha256": "81ca576e8ffdf28fabd52e4eb9f72f4a04e8b4590a7f9b0fcf2bb62ae9aa8797"
     },
     {
       "path": "README.md",
-      "bytes": 16798,
-      "sha256": "321deef5b9c58107d2d8a9851eed7b2e3516a0d64b24de14151f13964e05674f"
+      "bytes": 16936,
+      "sha256": "d7ab241f78d9c3c57b9fb391000b8f92bafc6a1e3920178fa5d698e98413654a"
     },
     {
       "path": "RELEASE-CHECKLIST.md",
@@ -216,13 +216,13 @@
     },
     {
       "path": "assets/diagrams/effect-lifecycle.pdf",
-      "bytes": 36099,
-      "sha256": "dd20f74b4b74a1f9dd657506b575b45c082ae9e387b2edd0a709bf4bd6bdddea"
+      "bytes": 32318,
+      "sha256": "64f4ff11b0c51951ccf76fbc09561035caeaf780755b713f53dd0b5a32ad7d6a"
     },
     {
       "path": "assets/diagrams/effect-lifecycle.png",
-      "bytes": 509626,
-      "sha256": "154d7c41964ffc60b914b7c6d4154039bd2dd9c8946bc2f7941c4bce9ce92256"
+      "bytes": 303541,
+      "sha256": "3fc0a9fac1cc05db3c652532d420dc50af5c0d4d1bb83b5ddfc1390859798e72"
     },
     {
       "path": "assets/diagrams/evaluation-gate.pdf",
@@ -246,13 +246,13 @@
     },
     {
       "path": "assets/diagrams/governance-model.pdf",
-      "bytes": 22137,
-      "sha256": "1f269133de082665a207780629236788bf645432a60c99ab838312837aeae85f"
+      "bytes": 26355,
+      "sha256": "f26bead60e55bb26477d7ca13054679940c02ca48af4067f80382b34be6b512e"
     },
     {
       "path": "assets/diagrams/governance-model.png",
-      "bytes": 158769,
-      "sha256": "a04f069bff5fffe8a7e1fbdebce4ed97431e6d022dfdbbdc97d8461d9b55d345"
+      "bytes": 127013,
+      "sha256": "befe6c19ffc00a70427adb8ea41e8a0c283f07775385c96956b6860a06a61fb5"
     },
     {
       "path": "assets/diagrams/guardrail-sequence.pdf",
@@ -376,13 +376,13 @@
     },
     {
       "path": "assets/diagrams/pattern-reflection.pdf",
-      "bytes": 18918,
-      "sha256": "40c2d384e7b8c5e89b9e8819b4d81d032bc4038f832a886c4ec4f2e0ccbf3b55"
+      "bytes": 30388,
+      "sha256": "44b9137704cabf422d16a1412e2c0556f0cd93c744b04c76c25c9c73b349bd69"
     },
     {
       "path": "assets/diagrams/pattern-reflection.png",
-      "bytes": 237235,
-      "sha256": "5e245413dffc2166fc964e18d6dd2f50a8ac9606c8ca3d44633d22a3a4614685"
+      "bytes": 205617,
+      "sha256": "3d7226a23ec7251741b8a2462c8a67a6c7d79acf6b16762fa505a58c29df19af"
     },
     {
       "path": "assets/diagrams/pattern-routing.pdf",
@@ -585,9 +585,9 @@
       "sha256": "68494da3a558c624ab3c56de2497c25368573811430c583a6dc5d28ae5432391"
     },
     {
-      "path": "assets/diagrams/src/effect-lifecycle.gv",
-      "bytes": 2737,
-      "sha256": "108867908bc41b4c4dcce7f5189ff10c97e8aa44b10b84b391585eb0616b17e7"
+      "path": "assets/diagrams/src/effect-lifecycle.tikz.tex",
+      "bytes": 4700,
+      "sha256": "e7c66419fa32dd8442faa1b028051fd579c6e7db37a4fc0848461a37ae432c5e"
     },
     {
       "path": "assets/diagrams/src/evaluation-gate.gv",
@@ -600,9 +600,9 @@
       "sha256": "7546cb04c2daf044365cc1ae4680c4232fcd2a4691bcd1595a3df04e9e82a2b8"
     },
     {
-      "path": "assets/diagrams/src/governance-model.gv",
-      "bytes": 1598,
-      "sha256": "fba595d85ea1ac4d2bb68f7b14980b54c7dae5917d8185c9f8d30d0f53e9ebc0"
+      "path": "assets/diagrams/src/governance-model.tikz.tex",
+      "bytes": 2721,
+      "sha256": "e5a8f8b4f6d0b625ada1a45136217a20848a1969f84f5094cf8da0b99a788437"
     },
     {
       "path": "assets/diagrams/src/guardrail-sequence.mmd",
@@ -665,9 +665,9 @@
       "sha256": "0cc4b4a96ffb5e49c122f05eb039a87ece891e1fc0cd2f68c5b762a7052a6f6d"
     },
     {
-      "path": "assets/diagrams/src/pattern-reflection.gv",
-      "bytes": 2152,
-      "sha256": "c092dfd6c6dc45111d203de9ed94e5e50a9a81b7115443c683a4510a9966f5d9"
+      "path": "assets/diagrams/src/pattern-reflection.tikz.tex",
+      "bytes": 4035,
+      "sha256": "d28c8f109268b1aa5439b1924629a828af55c84903bb4858bc56c31fcf4faf9c"
     },
     {
       "path": "assets/diagrams/src/pattern-routing.gv",
@@ -786,8 +786,8 @@
     },
     {
       "path": "config/diagrams.json",
-      "bytes": 23578,
-      "sha256": "0be02ba88d2d1a98f97211c4c04fd04d2eaedfbb0832bdc87954bf8db3850e10"
+      "bytes": 23596,
+      "sha256": "5b4f7b16f80b185573adf02643a0cce9238ad9bc58c24312bf6139e447bfa876"
     },
     {
       "path": "config/examples.json",
@@ -961,8 +961,8 @@
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.docx",
-      "bytes": 45193528,
-      "sha256": "369b56f971e21f371d9f8bb39e744d45dc36052aa14d3eba8b0fbeb43b003605"
+      "bytes": 44954909,
+      "sha256": "c22796a0e0c1f9758e50e1744a32808941de46f32435823540922a63bc4f0964"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.md",
@@ -1496,8 +1496,8 @@
     },
     {
       "path": "latex/README.md",
-      "bytes": 5349,
-      "sha256": "a607f2727fc2d52a5f5b90b72cc7b87b5b0155c428c49157ca906787cd4875e9"
+      "bytes": 6201,
+      "sha256": "a6dd0f5bc6e821ec3d3f62d72ee8bcc317c1aa82d6b7c38532df52833a8a645e"
     },
     {
       "path": "latex/bookstyle.sty",
@@ -1563,6 +1563,11 @@
       "path": "latex/reference/DOCX-layout-reference-draft.pdf",
       "bytes": 6954693,
       "sha256": "44ead28b866b949652c02618e8dbf95113233126915de69a768071731cf550e4"
+    },
+    {
+      "path": "latex/styles/professional-diagrams.sty",
+      "bytes": 10130,
+      "sha256": "6f3e4ccf8ca7493ac89e49c4b89c3c57500a4d7d7b40b37c185156b04f7bf177"
     },
     {
       "path": "mortgage_case/__init__.py",
@@ -1857,32 +1862,32 @@
     {
       "path": "qa/build-report.json",
       "bytes": 309,
-      "sha256": "8b5bb5107b272c73ce8db67e7a7f87a5b37f072e9807db1a2a00a76040e91f40"
+      "sha256": "7006b7424d4e64738093b457c50cef881bc3039f961c768db81f51635f0e3ce3"
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 45193528,
-      "sha256": "369b56f971e21f371d9f8bb39e744d45dc36052aa14d3eba8b0fbeb43b003605"
+      "bytes": 44954909,
+      "sha256": "c22796a0e0c1f9758e50e1744a32808941de46f32435823540922a63bc4f0964"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 45193528,
-      "sha256": "369b56f971e21f371d9f8bb39e744d45dc36052aa14d3eba8b0fbeb43b003605"
+      "bytes": 44954909,
+      "sha256": "c22796a0e0c1f9758e50e1744a32808941de46f32435823540922a63bc4f0964"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "a27206b86c0a01a153ec8070ce533907018bef092b045b0b682de56b84334c16"
+      "sha256": "b182369d2f21a16bd728b695721f10178db33cc9e2e5328309a849a469556875"
     },
     {
       "path": "qa/latex-validation-report.json",
       "bytes": 16896,
-      "sha256": "190309607e0aae8bec5d0334175784ee00633cc187c5f522e9eec15653c58e16"
+      "sha256": "3d0be00747393cc62121f42c916a7e847f7e4311cfbbd92c829cb562f98ee739"
     },
     {
       "path": "qa/validation-report.json",
       "bytes": 910,
-      "sha256": "310d957535180fd0b380a04dc4ca50e36b5e41944b74a4b6c098472b71ddc0f0"
+      "sha256": "8d4e0435a1079f1cd35952f1fa974e230b4865ed0be5f74d2e5de53676eab2d7"
     },
     {
       "path": "reports/assembly-report.json",
@@ -1911,8 +1916,8 @@
     },
     {
       "path": "reports/diagram-render-report.json",
-      "bytes": 12051,
-      "sha256": "237691cf4913077ee289d3315c7e51b7019bc87f3d5b485e78efc4c6b619af19"
+      "bytes": 12351,
+      "sha256": "82c641b04973db8177630a5f03f944136adbf19c28e449447d92c6a8295479db"
     },
     {
       "path": "reports/editorial-audit.md",
@@ -1962,7 +1967,7 @@
     {
       "path": "reports/validation-summary.md",
       "bytes": 900,
-      "sha256": "648cf5e629185462a95655c9077a9688220669cf11d0c3e594d23424e5041771"
+      "sha256": "97d49e2171f180fb8a1e4826d59a124f1dcb65028ad5b896673b40021e286994"
     },
     {
       "path": "requirements.txt",
@@ -2320,6 +2325,46 @@
       "sha256": "5e8a81ad70d605fd65f42a8a8a3eccfefa957215a7bdea5201237a71c399cf39"
     },
     {
+      "path": "reviews/diagram-modernization/content-observations.md",
+      "bytes": 5832,
+      "sha256": "2b0a034c73a1e7c8509290c846575163eca00b96e11b87f39c95311835cf2a05"
+    },
+    {
+      "path": "reviews/diagram-modernization/inventory.md",
+      "bytes": 10542,
+      "sha256": "b2a297e94b8da4aaa5e80af66bedeba537ca94c2076b4bc13a8a6134e07159b5"
+    },
+    {
+      "path": "reviews/diagram-modernization/pilot/effect-lifecycle-before-after.png",
+      "bytes": 86236,
+      "sha256": "baf63bbfa1d68241aaecc9a2ab87dec74211ada7b2ca361ac59bdc573fd02b50"
+    },
+    {
+      "path": "reviews/diagram-modernization/pilot/governance-model-before-after.png",
+      "bytes": 47940,
+      "sha256": "ae9f4f59bc87bb0138ec70290b9500d93ba3a7cf2c2bc0d0abbbc1ea58c48fe9"
+    },
+    {
+      "path": "reviews/diagram-modernization/pilot/pattern-reflection-before-after.png",
+      "bytes": 59672,
+      "sha256": "c1f0cd9d9069ec08a9635b85b01c21cb5d0208a8a56e5b78b0342c5e7cdbc5b5"
+    },
+    {
+      "path": "reviews/diagram-modernization/style-guide.md",
+      "bytes": 9434,
+      "sha256": "71bcd4f1f4a3a948f8a52e860505a4b43f69bea580180822f606c0373486d17e"
+    },
+    {
+      "path": "reviews/diagram-modernization/style-sheet.png",
+      "bytes": 33446,
+      "sha256": "c47b52d6793d9dcf241ad661304c2d1d1993db16def99264cecaab250ab564fd"
+    },
+    {
+      "path": "reviews/diagram-modernization/style-sheet.tikz.tex",
+      "bytes": 3397,
+      "sha256": "7c7749657ca3bac5553c5951dfe8cd9a9f91575e9d47b78d5bd69bde6f8a0373"
+    },
+    {
       "path": "reviews/knowledge-management-in-enterprise/chapter-update-plan.md",
       "bytes": 199556,
       "sha256": "b711bbf3d2ec5ecaf2b18c1edb9cc8ae2820db43cee006be989fcb44629778e5"
@@ -2521,8 +2566,8 @@
     },
     {
       "path": "styles/DESIGN-SYSTEM.md",
-      "bytes": 13725,
-      "sha256": "fab97478c475b1de8fbafcad368f1ba857ffb3d64dbd2a4c4f2e579481a7edb2"
+      "bytes": 14516,
+      "sha256": "40b4ff1822a9ac88094ecfdf02ae55b09925758d2b4102a4662ca6cb55542649"
     },
     {
       "path": "styles/DOCX-STYLES.md",
@@ -2621,8 +2666,8 @@
     },
     {
       "path": "tools/bootstrap_tex.sh",
-      "bytes": 3871,
-      "sha256": "af109c718ae51cec5aff1ab819dbe18526358b9667ec3f897ac036502980e0aa"
+      "bytes": 4461,
+      "sha256": "f587427bca05f63f98bc730ba06078e65ecbc3e176f1a5488084d9a7ed719e5c"
     },
     {
       "path": "tools/build_book.py",
@@ -2686,8 +2731,8 @@
     },
     {
       "path": "tools/render_diagrams.py",
-      "bytes": 7617,
-      "sha256": "3b5e3a4a31a2afb8f3a164712d89b7f8279adb903997ca465590260f3cae011a"
+      "bytes": 14926,
+      "sha256": "1d6beac5d84eb871ce3c9b1dbd149f48dc2eedef47d588ff093c1d7b41079542"
     },
     {
       "path": "tools/render_pdf_qa.py",
@@ -2701,8 +2746,8 @@
     },
     {
       "path": "tools/validate_latex.py",
-      "bytes": 20901,
-      "sha256": "81aff5be97ce5cd9f16d69e2dbd0c8257c4d29e9f596c81ed4756acfe9c9f8c9"
+      "bytes": 22578,
+      "sha256": "d5fc92977b19e87981661ef6830d17f18c59a7518439ecd465b3981cc8c2f46d"
     },
     {
       "path": "tools/validate_mortgage_stage_registry.py",
