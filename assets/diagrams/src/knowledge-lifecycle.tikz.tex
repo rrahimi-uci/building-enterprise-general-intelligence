@@ -1,0 +1,126 @@
+% Figure 5-4 -- Compliance knowledge has two planes.
+% Restyled from knowledge-lifecycle.gv; every node, edge, label, group and the
+% boundary note are kept. Layout only is new (see the element map).
+%
+% Original element -> restyled element
+%   cluster "Knowledge control plane . global control tier" -> slate dashed group, title on top
+%   sources  Authoritative sources . regulations / standards . contracts . internal policies
+%                                                  -> slate square card (box, as in the source)
+%   extract  Extraction . model proposes / exact spans . nothing dropped -> teal rounded card
+%   graph_   Versioned compliance knowledge graph . typed . deduplicated / schema checked .
+%            content digest (cylinder)             -> blue cylinder (store)
+%   repair   Targeted repair / failed element only / re-enters the gate -> red rounded card
+%   gates    Quality gates / schema . grounding / (independent) / consistency . regression
+%            (diamond)                              -> amber diamond
+%   approve  Independent SME / approval . exact / candidate digest (diamond) -> amber diamond
+%   registry Knowledge registry / release manifest / live pointer per environment -> blue square card
+%   boundary activate pointer . resolve at admission / releases cross down . evidence up .
+%            no writes up (plain text on a thick line) -> note beside the thick connector
+%   cluster "Runtime plane . regional cell"         -> slate dashed group (title at the top right)
+%   production Production compliance knowledge / one pinned release per run (RunManifest)
+%            (note shape)                            -> cyan card with a folded corner
+%   controls Control points . Context Service / plan compiler . policy decision point /
+%            Tool Gateway . acceptance engine        -> blue square card
+%   agent    Agent step / proposes                   -> teal rounded card
+%   effect   Governed action or refusal / unmet or unknown = refuse -> plum rounded card
+%   observe  Observations / decision records . refusals / contradictions . SME feedback
+%            (cylinder)                              -> blue cylinder
+%   17 visible edges (solid unless noted; the original's three invisible ordering edges are not drawn):
+%     sources>extract "bytes + digests"; extract>graph "typed claims + provenance";
+%     graph>gates "candidate release"; gates>approve "complete gate record (held objects
+%     carried)" (teal); gates>repair "blocking finding" (red); repair>gates "repaired .
+%     re-check" (red, dashed); approve>graph "request changes . back to Draft" (amber,
+%     dashed); approve>registry "publish" (teal); registry>gates "staleness: target live
+%     release" (slate, dashed); registry>boundary (thick, no head); boundary>production
+%     (thick) -- drawn as one thick connector with the note beside it; production>controls "pinned release (digest)"; controls>agent "authorized
+%     context / eligible tools"; agent>controls "proposal"; controls>effect "permit or
+%     refuse"; effect>observe "decision record / release digest . rule ids" (cyan, dotted);
+%     observe>extract "proposed change (never a write)" (slate, dashed)
+\documentclass[border=3pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  % Local helpers (candidates for the shared package: plane group with a corner title, note card).
+  \tikzset{
+    kc/.style={inner ysep=5pt, minimum height=40pt},
+    thick edge/.style={line width=2.4pt, draw=dg-edge, ->, >={Stealth[length=9pt,width=8pt]}, shorten >=1pt},
+  }
+
+  % ============================ control plane ==============================
+  \node[dg card=slate, square, kc, text width=150pt] (src) at (100,0)
+    {\dgcontent{Authoritative sources}{regulations · standards\\contracts · internal policies}{}};
+  \node[dg card=teal, kc, text width=160pt] (ext) at (352,0)
+    {\dgcontent{Extraction}{model proposes\\exact spans · nothing dropped}{}};
+  \node[dg store=blue, kc, aspect=0.07, text width=160pt] (gra) at (352,-72)
+    {\dgcontent{Versioned compliance knowledge}{graph · typed · deduplicated\\schema checked · content digest}{}};
+  \node[dg card=red, kc, text width=104pt] (rep) at (77,-167)
+    {\dgcontent{Targeted repair}{failed element only\\re-enters the gate}{}};
+  \node[dg decision=amber, minimum width=236pt, minimum height=90pt, text width=130pt] (gat) at (322,-167)
+    {\dgcontent{Quality gates}{schema · grounding\\(independent)\\consistency · regression}{}};
+  \node[dg decision=amber, minimum width=176pt, minimum height=68pt, text width=96pt] (app) at (322,-266)
+    {\dgcontent{Independent SME}{approval · exact\\candidate digest}{}};
+  \node[dg card=blue, square, kc, text width=132pt] (reg) at (91,-266)
+    {\dgcontent{Knowledge registry}{release manifest\\live pointer per environment}{}};
+  \coordinate (ctl-right) at (498,0);
+  \dggroup[dash pattern=on 5pt off 3pt]{control}{slate}{Knowledge control plane · global control tier}
+    {(src)(ext)(gra)(rep)(gat)(app)(reg)(ctl-right)}
+
+  % ============================= runtime plane =============================
+  \node[dg card=cyan, square, kc, text width=200pt] (prod) at (125,-374)
+    {\dgcontent{Production compliance knowledge}{one pinned release per run (RunManifest)}{}};
+  \node[dg card=blue, square, kc, text width=186pt] (ctl) at (118,-436)
+    {\dgcontent{Control points · Context Service}{plan compiler · policy decision point\\Tool Gateway · acceptance engine}{}};
+  \node[dg card=teal, kc, text width=90pt] (agt) at (392,-436)
+    {\dgcontent{Agent step}{proposes}{}};
+  \node[dg card=plum, kc, text width=124pt] (eff) at (87,-506)
+    {\dgcontent{Governed action or refusal}{unmet or unknown = refuse}{}};
+  \node[dg store=blue, kc, aspect=0.09, text width=140pt] (obs) at (412,-506)
+    {\dgcontent{Observations}{decision records · refusals\\contradictions · SME feedback}{}};
+  \coordinate (rt-right) at (498,-506);
+  \begin{pgfonlayer}{dgback}
+    \node[fit=(prod)(ctl)(agt)(eff)(obs)(rt-right), inner sep=0pt] (runtime-core) {};
+    \node[dg group=slate, dash pattern=on 5pt off 3pt, fit=(runtime-core), inner sep=12pt] (runtime) {};
+    \node[group label=slate, anchor=north east] at ([xshift=-36pt,yshift=-9pt]runtime.north east)
+      {Runtime plane · regional cell};
+  \end{pgfonlayer}
+
+  % ============================ control plane edges =========================
+  \draw[flow in=blue] (src.east) -- node[pill=blue]{Bytes +\\digests} (ext.west);
+  \draw[flow in=blue] (ext.south) -- node[pill=blue,anchor=east,xshift=-8pt]{Typed claims + provenance} (gra.north);
+  \draw[flow in=blue] ([xshift=-30pt]gra.south) --
+    node[pill=blue,anchor=west,xshift=8pt]{Candidate release} (gat.north);
+  \draw[flow in=teal] (gat.south) --
+    node[pill=teal,anchor=west,xshift=14pt]{Complete gate record\\{\fontsize{9}{10}\selectfont\mdseries (held objects carried)}} (app.north);
+  % repair loop: blocking finding goes to repair (solid), repaired work re-enters the gate (dashed)
+  \draw[flow in=red] ($(gat.west)+(44.5pt,-17pt)$) -- node[pill=red]{Blocking\\finding} ($(rep.east)+(0,-17pt)$);
+  \draw[dashed flow, draw=dg-red-line] ($(rep.east)+(0,17pt)$) -- node[pill=red]{Repaired ·\\re-check} ($(gat.west)+(44.5pt,17pt)$);
+  % request changes: back to Draft (the graph), around the right of the diamonds
+  \draw[dashed flow, draw=dg-amber-line, rounded corners=6pt] (app.east) -- (462,-266) --
+    node[pill=amber,rotate=90,pos=0.7]{Request changes ·\\back to Draft} (462,-72) -- (gra.east);
+  \draw[flow in=teal] (app.west) -- node[pill=teal]{Publish} (reg.east);
+  \draw[dashed flow, draw=dg-slate-line] ([xshift=56pt]reg.north) to[out=90,in=-150]
+    node[pill=slate,anchor=east,pos=0.3,xshift=-6pt]{Staleness:\\target live release} ($(gat.west)!0.55!(gat.south)$);
+
+  % ---- boundary: the registry's live pointer is the only way down ----
+  \coordinate (bA) at (125,-288);
+  \draw[thick edge] (bA) -- (bA |- prod.north);
+  \node[edge text, anchor=west] at (137,-327)
+    {activate pointer · resolve at admission\\releases cross down · evidence up · no writes up};
+
+  % ============================ runtime plane edges =========================
+  \draw[flow in=blue] (prod.south) -- node[pill=blue,anchor=west,xshift=8pt]{Pinned release (digest)} (prod.south |- ctl.north);
+  \draw[flow in=blue] ([yshift=11pt]ctl.east) --
+    node[pill=blue,anchor=south,yshift=2pt]{Authorized context\\{\fontsize{9}{10}\selectfont\mdseries eligible tools}}
+    ([yshift=11pt]agt.west);
+  \draw[flow in=blue] ([yshift=-11pt]agt.west) --
+    node[pill=blue,anchor=north,yshift=-2pt]{Proposal} ([yshift=-11pt]ctl.east);
+  \draw[flow in=blue] ([xshift=-48pt]ctl.south) --
+    node[pill=blue,anchor=west,xshift=8pt]{Permit or refuse} ([xshift=-48pt]ctl.south |- eff.north);
+  \draw[dotted flow, draw=dg-cyan-line] (eff.east) --
+    node[pill=cyan]{Decision record\\{\fontsize{9}{10}\selectfont\mdseries release digest · rule ids}} (obs.west);
+
+  % ---- evidence goes back up as a proposed change, never a write ----
+  \draw[dashed flow, draw=dg-slate-line, rounded corners=8pt] ([xshift=72pt]obs.north) |- (ext.east);
+  \node[pill=slate, anchor=east] at (477,-327) {Proposed change\\(never a write)};
+\end{tikzpicture}
+\end{document}
