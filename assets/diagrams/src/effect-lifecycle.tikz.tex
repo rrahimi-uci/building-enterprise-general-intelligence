@@ -1,0 +1,68 @@
+% Figure 22-1 -- Protected effect lifecycle.
+% Restyled from effect-lifecycle.gv; states, transitions, labels and the
+% solid/dashed distinction are unchanged. Layout only is new.
+%
+% Original element -> restyled element
+%   proposal Typed proposal / canonical intent        -> teal card
+%   reserved Reserved / logical key + hash            -> blue card
+%   approval Approval gate / R3/R4 only (diamond)     -> amber diamond
+%   executing Executing / downstream request ID       -> blue card
+%   committed Committed / verified receipt            -> plum card
+%   declined Declined / proven absent                 -> slate card
+%   unknown Unknown / stop dependent work             -> red card
+%   reconcile Reconcile / query downstream (diamond)  -> amber diamond
+%   partial Partial / intervention path               -> red card
+%   intervention InterventionRequired / no safe automatic answer -> red card
+%   compensating Compensating / authorized reversal   -> amber card
+%   compensated Compensated / original receipt retained -> plum card
+%   16 edges: see the \draw block, one per original edge, same direction,
+%   same label, dashed where the source is dashed.
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  % ---- states ----
+  \node[dg card=teal, text width=130pt] (proposal) at (245,0)
+    {\dgcontent{Typed proposal}{Canonical intent}{}};
+  \node[dg card=blue, text width=130pt] (reserved) at (245,-68)
+    {\dgcontent{Reserved}{Logical key + hash}{}};
+  \node[dg decision=amber, minimum width=170pt, minimum height=62pt] (approval) at (405,-148)
+    {\dgcontent{Approval gate}{R3/R4 only}{}};
+  \node[dg card=blue, text width=130pt] (executing) at (245,-228)
+    {\dgcontent{Executing}{Downstream request ID}{}};
+  \node[dg card=slate, text width=100pt] (declined) at (405,-310)
+    {\dgcontent{Declined}{Proven absent}{}};
+  \node[dg card=red, text width=130pt] (unknown) at (245,-310)
+    {\dgcontent{Unknown}{Stop dependent work}{}};
+  \node[dg card=plum, text width=100pt] (committed) at (68,-310)
+    {\dgcontent{Committed}{Verified receipt}{}};
+  \node[dg decision=amber, minimum width=170pt, minimum height=66pt] (reconcile) at (245,-396)
+    {\dgcontent{Reconcile}{Query downstream}{}};
+  \node[dg card=amber, text width=100pt] (compensating) at (68,-424)
+    {\dgcontent{Compensating}{Authorized reversal}{}};
+  \node[dg card=red, text width=130pt] (partial) at (245,-504)
+    {\dgcontent{Partial}{Intervention path}{}};
+  \node[dg card=red, text width=130pt] (intervention) at (405,-504)
+    {\dgcontent{InterventionRequired}{No safe automatic answer}{}};
+  \node[dg card=plum, text width=100pt] (compensated) at (68,-504)
+    {\dgcontent{Compensated}{Original receipt retained}{}};
+
+  % ---- transitions ----
+  \draw[flow in=blue] (proposal.south) -- node[pill=blue]{Reserve key} (reserved.north);
+  \draw[flow in=blue] (reserved.south) -- node[pill=blue]{R0–R2: dispatch once} (executing.north);
+  \draw[dashed flow, draw=dg-amber-line, turn] ([yshift=-8pt]reserved.east) -| node[pill=amber,pos=0.8]{R3/R4} (approval.north);
+  \draw[dashed flow, draw=dg-blue-line, turn] (approval.south west) |- node[pill=blue,pos=0.3]{Approved: dispatch once} (executing.east);
+  \draw[dashed flow, draw=dg-red-line] (approval.south east) -- node[pill=red,pos=0.62]{Denied /\\expired} ([xshift=42pt]declined.north);
+  \draw[flow in=red, turn] ([yshift=8pt]reserved.east) -| node[pill=red,pos=0.2]{Precondition fails} (492,-310) -- (declined.east);
+  \draw[flow in=blue, turn] (executing.west) -| node[pill=blue,pos=0.75]{Receipt verified} (committed.north);
+  \draw[flow in=red] (executing.south) -- node[pill=red]{Timeout / lost ack} (unknown.north);
+  \draw[dashed flow, draw=dg-amber-line] (unknown.south) -- node[pill=amber]{No blind retry} (reconcile.north);
+  \draw[flow in=blue] (reconcile.north west) to[out=150,in=-60] node[pill=blue]{Found committed} ([xshift=30pt]committed.south);
+  \draw[flow in=blue, turn] (reconcile.east) -| node[pill=blue,pos=0.8]{Proven absent} (declined.south);
+  \draw[flow in=blue] (reconcile.south) -- node[pill=blue]{Some changes} (partial.north);
+  \draw[flow in=blue] (reconcile.south east) to[out=-60,in=90] node[pill=blue]{Cannot prove} ([xshift=-30pt]intervention.north);
+  \draw[dashed flow, draw=dg-blue-line] (committed.south) -- node[pill=blue]{Fresh approval} (compensating.north);
+  \draw[flow in=blue] (compensating.south) -- node[pill=blue]{Reversal receipt} (compensated.north);
+  \draw[flow in=red, rounded corners=8pt] (compensating.east) -- ++(14pt,0) |- node[pill=red,pos=0.75]{Reversal fails} (405,-556) -- (intervention.south);
+\end{tikzpicture}
+\end{document}

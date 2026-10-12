@@ -147,14 +147,19 @@
     },
     {
       "id": "governance-model",
-      "source": "governance-model.gv",
+      "source": "governance-model.tikz.tex",
       "pixels": [
-        2287,
-        1590
+        2069,
+        1537
       ],
-      "effective_dpi": 334,
+      "effective_dpi": 302,
       "vector": true,
-      "sha256": "a04f069bff5fffe8a7e1fbdebce4ed97431e6d022dfdbbdc97d8461d9b55d345"
+      "sha256": "befe6c19ffc00a70427adb8ea41e8a0c283f07775385c96956b6860a06a61fb5",
+      "natural_inches": [
+        6.89,
+        5.12
+      ],
+      "placement_scale": 1.024
     },
     {
       "id": "guardrail-sequence",
@@ -257,14 +262,19 @@
     },
     {
       "id": "pattern-reflection",
-      "source": "pattern-reflection.gv",
+      "source": "pattern-reflection.tikz.tex",
       "pixels": [
-        2363,
-        1471
+        2108,
+        1846
       ],
-      "effective_dpi": 345,
+      "effective_dpi": 308,
       "vector": true,
-      "sha256": "5e245413dffc2166fc964e18d6dd2f50a8ac9606c8ca3d44633d22a3a4614685"
+      "sha256": "3d7226a23ec7251741b8a2462c8a67a6c7d79acf6b16762fa505a58c29df19af",
+      "natural_inches": [
+        7.02,
+        6.15
+      ],
+      "placement_scale": 1.005
     },
     {
       "id": "pattern-routing",
@@ -433,14 +443,19 @@
     },
     {
       "id": "effect-lifecycle",
-      "source": "effect-lifecycle.gv",
+      "source": "effect-lifecycle.tikz.tex",
       "pixels": [
-        2285,
-        3257
+        2064,
+        2455
       ],
-      "effective_dpi": 334,
+      "effective_dpi": 301,
       "vector": true,
-      "sha256": "154d7c41964ffc60b914b7c6d4154039bd2dd9c8946bc2f7941c4bce9ce92256"
+      "sha256": "3fc0a9fac1cc05db3c652532d420dc50af5c0d4d1bb83b5ddfc1390859798e72",
+      "natural_inches": [
+        6.88,
+        8.18
+      ],
+      "placement_scale": 1.015
     },
     {
       "id": "sandbox-egress",

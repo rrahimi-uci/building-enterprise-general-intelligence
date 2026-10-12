@@ -201,10 +201,10 @@
       {
         "file": "assets/diagrams/pattern-reflection.png",
         "pixels": [
-          2363,
-          1471
+          2108,
+          1846
         ],
-        "effective_dpi": 334.7
+        "effective_dpi": 298.6
       },
       {
         "file": "assets/diagrams/pattern-hitl.png",
@@ -305,10 +305,10 @@
       {
         "file": "assets/diagrams/effect-lifecycle.png",
         "pixels": [
-          2285,
-          3257
+          2064,
+          2455
         ],
-        "effective_dpi": 323.7
+        "effective_dpi": 292.4
       },
       {
         "file": "assets/diagrams/sandbox-egress.png",
@@ -353,10 +353,10 @@
       {
         "file": "assets/diagrams/governance-model.png",
         "pixels": [
-          2287,
-          1590
+          2069,
+          1537
         ],
-        "effective_dpi": 323.9
+        "effective_dpi": 293.1
       },
       {
         "file": "assets/diagrams/release-recovery.png",

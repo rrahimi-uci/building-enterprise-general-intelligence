@@ -147,7 +147,7 @@ make pdf        # three-pass XeLaTeX -> dist/*-LaTeX.pdf
 ├── assets/
 │   ├── cover/                    # source artwork and generated cover
 │   ├── diagrams/                 # rendered diagrams: PDF for print, PNG for DOCX
-│   │   └── src/                  # ← editable diagram sources (.gv, .mmd)
+│   │   └── src/                  # ← editable diagram sources (.gv, .mmd, .tikz.tex)
 ├── cover-images/                 # generated Letter-size chapter cover visuals
 │
 ├── book/manuscript.md            # generated canonical assembly; do not hand-edit
@@ -182,7 +182,7 @@ never in generated content.
 2. Create a working branch or copy of the repository.
 3. Edit one or more canonical files under `source/parts/`.
 4. If adding a cited claim, update `config/references.json`, allocate the next stable `Rxx`, and add `[Rxx]` at the sentence or paragraph that needs support.
-5. If adding a diagram, add its source/export to `assets/diagrams/`, update `config/diagrams.json`, and place `[[DIAGRAM:id|caption]]` on its own line.
+5. If adding a diagram, add its editable source to `assets/diagrams/src/` (`.tikz.tex` for the publication style, see `reviews/diagram-modernization/style-guide.md`), register it in `config/diagrams.json`, run `make diagrams`, and place `[[DIAGRAM:id|caption]]` on its own line.
 6. Run `make assemble`, review the Markdown diff, then run `make build latex` to regenerate DOCX and the LaTeX source.
 7. Run `make validate`. Resolve all errors; do not suppress a check without recording the rationale.
 8. Run `make pdf` and inspect the changed pages. For release candidates also run `make qa-pdf` and inspect the contact sheet and chapter-start report.

@@ -77,8 +77,9 @@ assemble:
 cover:
 	$(PYTHON) tools/generate_cover.py --root "$(ROOT)"
 
-## diagrams: render assets/diagrams/src/*.{gv,mmd} to vector PDF for XeLaTeX and
-## raster PNG for DOCX. Needs graphviz and, for sequence diagrams, mermaid-cli.
+## diagrams: render assets/diagrams/src/*.{gv,mmd,tikz.tex} to vector PDF for XeLaTeX
+## and raster PNG for DOCX. Needs graphviz (.gv), mermaid-cli (.mmd) and XeLaTeX +
+## poppler (.tikz.tex; ./tools/bootstrap_tex.sh --diagrams installs the TeX packages).
 diagrams:
 	$(PYTHON) tools/render_diagrams.py --root "$(ROOT)"
 

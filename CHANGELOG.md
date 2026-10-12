@@ -8,6 +8,12 @@ All notable changes follow semantic versioning and are recorded here.
 
 - `make all` now ends with a `dist-pdf` step that keeps `dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf` current next to the Markdown, DOCX and TeX files: it compiles only when the PDF is missing or the content of the generated LaTeX, styles, diagram and cover renders or fonts changed since the last compile (compared by hash), and skips with a notice when XeLaTeX is not installed. `make release` now runs `make pdf`. The PDF stays gitignored and is never committed (CI publishes it as a build artifact).
 
+### Diagram modernization, pilot: a TikZ design system and three restyled figures
+
+- New shared design system `latex/styles/professional-diagrams.sty`: semantic pastel palette (the book's existing house hues plus `navy` and `green`), card, decision, store, chip, pill, callout and group styles, rounded connectors, FontAwesome icons, Liberation Sans type scale (nothing under 9 pt at final size). Documented in `reviews/diagram-modernization/style-guide.md` with a style sheet; inventory of all 44 figures and a conversion plan in `reviews/diagram-modernization/inventory.md` and `pilot-report.md`.
+- `tools/render_diagrams.py` accepts `assets/diagrams/src/<id>.tikz.tex` as an editable source: XeLaTeX renders the vector PDF, the DOCX PNG is rasterised from it at the 255 dpi contract. A compile error, an unembedded font, or a figure that would be placed below 95 percent scale fails `make diagrams`. The registry's `source` is authoritative and the renderer keeps `sha256` equal to the render. `tools/validate_latex.py` checks TikZ sources load the package, have a vector render and embed their fonts; `tools/bootstrap_tex.sh --diagrams` installs `standalone` and `fontawesome5`.
+- Figures 13-1 (`pattern-reflection`), 22-1 (`effect-lifecycle`) and 26-1 (`governance-model`) restyled in TikZ with unchanged content; their `.gv` sources are removed (history keeps them). The other 41 figures still render from Graphviz and Mermaid. Technical doubts about the originals are recorded in `reviews/diagram-modernization/content-observations.md`, not changed.
+
 ### LaTeX PDF output
 
 - The generated XeLaTeX build script now creates `dist/` when needed, verifies both the compiled and final PDF are non-empty, and reports the final `dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf` path. TeX auxiliaries and the intermediate PDF remain in `latex/build/`.
