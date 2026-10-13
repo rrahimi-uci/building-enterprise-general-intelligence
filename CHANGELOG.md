@@ -4,6 +4,17 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Part I review comments (DOCX review, 2026-10-13)
+
+- **Title-page date is the build month.** The front matter carries `{{BUILD_DATE}}`; `tools/build_info.py` resolves it for the Markdown, DOCX and LaTeX editions (the LaTeX entry point no longer hard-codes "September 2026"). `SOURCE_DATE_EPOCH` pins it for byte-for-byte rebuilds.
+- **Preface:** removed the sentence about canonical Markdown and the companion package.
+- **Glossary last, and a book index.** The glossary moves to Appendix L; Appendices I–L become H–K (companion guide H, coding-agent prompt I, references J, capacity K), and every cross-reference, the reader-path table, the source TOC, tools and docs follow. A new index after Appendix L is generated from `config/index-terms.json` (97 terms, every glossary term included) by `tools/book_index.py`: chapter and appendix locators in Markdown, a two-column makeindex page index in the PDF, and Word XE fields under an INDEX field in the DOCX whose cached result is the Markdown list. `make validate` checks that all three carry the same 663 locators.
+- **Part pages are structured.** Every Part intro is now a lead paragraph, one bullet per chapter (or chapter group), and a closing line; both renderers set it ragged right on the Part page. Part VI's second paragraph, which used to fall off its Part page onto a page of its own, is now on it.
+- **Level three corrected (Chapter 1, Figure 1-2).** "Runs forever; loses everything on restart" overstated the failure: the OpenAI Agents SDK stops a run at a turn limit (ten by default), can persist conversation history in sessions, serializes paused runs, and lists durable-execution integrations. The text, the levels table and Figure 1-2 now say the loop stops only at a turn limit and that a restart loses state the runtime did not save, and that restored conversation state is not business truth. R29's scope was widened to the documented defaults and re-verified against the docs and the v0.22.2 source.
+- **Stale reasoning (Chapter 2).** The principle no longer reads as permission to reason from stale data: every context is a snapshot, the platform reduces staleness by rebuilding context from authoritative stores, and the version check at commit is the guarantee.
+- **Why the SDK sits behind AgentRuntime (Chapter 3)** gains a concrete example: five teams meeting the SDK's defaults (turn-limit exception, tracing on with sensitive data) separately, and what that does to one event's meaning, trace data and upgrades.
+- **Figure 3-2** (`boundary-tests`, TikZ): the restart test and the replaceability test as two decision flows.
+
 ### No empty pages before chapters
 
 - **PDF:** every chapter used to be preceded by a blank page (28 in all) because the chapter-cover macro switched the page geometry, which forced an extra page break. The cover is now placed with a page-sized overlay, so each cover is one full page followed directly by the chapter; the PDF drops from 364 to 336 pages with no blank pages.

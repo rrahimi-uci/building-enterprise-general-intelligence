@@ -148,6 +148,8 @@ def main() -> int:
         "compact_tables": content.count(r"\begin{tabular}"),
         "callout_tables": sum(content.count(r"\begin{" + name + "}") for name in callouts.ENVIRONMENTS),
         "citation_occurrences": content.count(r"\BookCitation{"),
+        "index_marks": content.count(r"\index{"),
+        "index_pages": content.count(r"\BookIndex"),
     }
     expected = {
         "narrative_parts": 8,
@@ -159,6 +161,12 @@ def main() -> int:
     for key, value in expected.items():
         if measurements[key] != value:
             errors.append("Expected " + str(value) + " " + key + ", found " + str(measurements[key]))
+    # Every index locator in the Markdown edition is one \index mark here.
+    assembly = json.loads((root / "reports" / "assembly-report.json").read_text(encoding="utf-8"))
+    if measurements["index_marks"] != assembly.get("index_locators"):
+        errors.append(f"LaTeX has {measurements['index_marks']} index marks; the index has {assembly.get('index_locators')} locators")
+    if measurements["index_pages"] != 1 or r"\makeindex" not in style:
+        errors.append("The LaTeX edition must print the index exactly once")
     target_ids = set(re.findall(r"\\BookReferenceTarget\{(R\d{2})\}", content))
     citation_ids = set(re.findall(r"\\BookCitation\{(R\d{2})\}", content))
     measurements["reference_targets"] = len(target_ids)

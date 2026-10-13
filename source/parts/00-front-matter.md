@@ -2,7 +2,7 @@
 
 # Building an Enterprise General Intelligence Platform
 
-Book v1.0.0 · Publication Release · September 2026
+Book v1.0.0 · Publication Release · {{BUILD_DATE}}
 
 **Reza Rahimi, PhD**
 
@@ -27,9 +27,6 @@ The examples use a fictional Harborlight mortgage case as a thread. It is not a
 claim that mortgage underwriting can be delegated to a model; it is a useful
 stress test because the case has sensitive evidence, human judgment, policy,
 long waits, and protected effects.
-
-The book is maintained from canonical Markdown with registered references,
-diagrams, and runnable examples; Appendix I describes the companion package.
 
 ## How to read the claims in this book
 
@@ -75,8 +72,8 @@ checkpoints.
 | Enterprise / solution architect | Parts I–VIII | Boundaries, contracts, topology, integration, security, and lifecycle |
 | Platform engineer | Parts I–III, Chapter 15, Parts V–VIII | Reusable platform services, SDKs, gateways, telemetry, release, and operations |
 | Application developer | Parts I–IV, Chapter 22, Part VII | Agent design, knowledge, tools, Skills, tests, debugging, and improvement |
-| Security / risk / privacy | Chapter 1, Parts II, V, VI, VIII and Appendices F, K | Knowledge governance, threat controls, evidence, approvals, exceptions, and assurance |
-| SRE / operations | Chapter 1, Chapter 15, Parts VII, VIII and Appendices B, L | SLOs, incidents, recovery, capacity, and verified-success economics |
+| Security / risk / privacy | Chapter 1, Parts II, V, VI, VIII and Appendices F, J | Knowledge governance, threat controls, evidence, approvals, exceptions, and assurance |
+| SRE / operations | Chapter 1, Chapter 15, Parts VII, VIII and Appendices B, K | SLOs, incidents, recovery, capacity, and verified-success economics |
 
 Every path assumes Chapter 1's vocabulary.
 
@@ -169,8 +166,12 @@ Together, these principles establish a simple operating contract: agents provide
 - E. What This Architecture Means for Research
 - F. Known Limits and the Controls That Contain Them
 - G. A Practical Roadmap for Enterprise Adoption
-- H. Glossary
-- I. Companion Implementation Guide: Harborlight Mortgage
-- J. Prompt and Acceptance Criteria for a Coding Agent
-- K. References and Evidence Scope
-- L. Capacity, Resilience, and Release Acceptance
+- H. Companion Implementation Guide: Harborlight Mortgage
+- I. Prompt and Acceptance Criteria for a Coding Agent
+- J. References and Evidence Scope
+- K. Capacity, Resilience, and Release Acceptance
+- L. Glossary
+
+## Index
+
+- Key terms and where the book discusses them

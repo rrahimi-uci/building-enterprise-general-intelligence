@@ -20,7 +20,7 @@ Ensure each citation is credible, accurate, current enough for its claim, and sc
 4. Add `[Rxx]` next to the supported claim. Do not cite at a distance that makes scope ambiguous.
 5. If evidence is partial, weaken the prose or split the claim. If unavailable, remove/qualify it—never infer support.
 6. Record maturity, deprecation, maintenance, jurisdiction, and pinning caveats.
-7. Run `tools/check_references.py`; assemble to regenerate Appendices K and M.
+7. Run `tools/check_references.py`; assemble to regenerate Appendix J (references and the claim-scope matrix).
 8. Produce/update `reports/citation-verification.json` and `reports/citation-audit.md`.
 
 ## Critical distinctions

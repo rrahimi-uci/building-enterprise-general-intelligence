@@ -1,0 +1,775 @@
+{
+  "schema_version": "1.0",
+  "description": "Book index. One entry per indexed term. The assembler writes the Markdown index from it, and the DOCX and XeLaTeX renderers place index marks with the same rule (tools/book_index.py): the first mention of a term in each chapter or appendix, prose only. Glossary entries take their defining chapter (bold) from Appendix L; other entries give it in defined_in. scope=defined restricts a generic word to its defining chapters.",
+  "excluded_units": [
+    "J",
+    "L"
+  ],
+  "entries": [
+    {
+      "term": "A2A Gateway",
+      "glossary": "A2A Gateway",
+      "match": [
+        "A2A Gateway"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Acceptance criteria",
+      "glossary": "Acceptance criteria",
+      "match": [
+        "acceptance criteria",
+        "acceptance criterion"
+      ]
+    },
+    {
+      "term": "Acceptance engine",
+      "glossary": "Acceptance engine",
+      "match": [
+        "acceptance engine"
+      ]
+    },
+    {
+      "term": "AcceptanceDecision",
+      "glossary": "AcceptanceDecision",
+      "match": [
+        "AcceptanceDecision"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Activity",
+      "glossary": "Activity",
+      "match": [
+        "activity",
+        "activities"
+      ],
+      "scope": "defined"
+    },
+    {
+      "term": "Actor",
+      "glossary": "Actor",
+      "match": [
+        "actor"
+      ],
+      "scope": "defined"
+    },
+    {
+      "term": "AgentRuntime",
+      "glossary": "AgentRuntime",
+      "match": [
+        "AgentRuntime"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "AgentSpec",
+      "glossary": "AgentSpec",
+      "match": [
+        "AgentSpec"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "AgentStepRequest and AgentStepResult",
+      "glossary": "AgentStepRequest / AgentStepResult",
+      "match": [
+        "AgentStepRequest",
+        "AgentStepResult"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "API Gateway",
+      "glossary": "API Gateway",
+      "match": [
+        "API Gateway"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Approval",
+      "glossary": "Approval",
+      "match": [
+        "approval"
+      ],
+      "scope": "defined"
+    },
+    {
+      "term": "Artifact",
+      "glossary": "Artifact",
+      "match": [
+        "artifact"
+      ],
+      "scope": "defined"
+    },
+    {
+      "term": "Audience binding",
+      "glossary": "Audience binding",
+      "match": [
+        "audience binding",
+        "audience-bound"
+      ]
+    },
+    {
+      "term": "Authorization",
+      "glossary": "Authorization",
+      "match": [
+        "authorization"
+      ],
+      "scope": "defined"
+    },
+    {
+      "term": "Canary",
+      "glossary": "Canary",
+      "match": [
+        "canary",
+        "canaries"
+      ]
+    },
+    {
+      "term": "Candidate digest",
+      "glossary": "Candidate digest",
+      "match": [
+        "candidate digest"
+      ]
+    },
+    {
+      "term": "Capability envelope",
+      "glossary": "Capability envelope",
+      "match": [
+        "capability envelope"
+      ]
+    },
+    {
+      "term": "Causal run trace",
+      "glossary": "Causal run trace",
+      "match": [
+        "causal run trace",
+        "causal trace"
+      ]
+    },
+    {
+      "term": "Change class",
+      "glossary": "Change class",
+      "match": [
+        "change class"
+      ]
+    },
+    {
+      "term": "ChangeBundle",
+      "glossary": "ChangeBundle",
+      "match": [
+        "ChangeBundle"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Child task",
+      "glossary": "Child task",
+      "match": [
+        "child task"
+      ]
+    },
+    {
+      "term": "Compensation",
+      "glossary": "Compensation",
+      "match": [
+        "compensation"
+      ]
+    },
+    {
+      "term": "Compliance knowledge",
+      "glossary": "Compliance knowledge",
+      "match": [
+        "compliance knowledge"
+      ]
+    },
+    {
+      "term": "ContextManifest",
+      "glossary": "ContextManifest",
+      "match": [
+        "ContextManifest"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Control",
+      "glossary": "Control",
+      "match": [
+        "control"
+      ],
+      "scope": "defined"
+    },
+    {
+      "term": "Credential lease",
+      "glossary": "Credential lease",
+      "match": [
+        "credential lease"
+      ]
+    },
+    {
+      "term": "Deterministic shell",
+      "glossary": "Deterministic shell",
+      "match": [
+        "deterministic shell"
+      ]
+    },
+    {
+      "term": "Downscoping",
+      "glossary": "Downscoping",
+      "match": [
+        "downscoping",
+        "down-scoped",
+        "downscoped"
+      ]
+    },
+    {
+      "term": "Effect",
+      "glossary": "Effect",
+      "match": [
+        "effect"
+      ],
+      "scope": "defined"
+    },
+    {
+      "term": "Effect ledger",
+      "glossary": "Effect ledger",
+      "match": [
+        "effect ledger"
+      ]
+    },
+    {
+      "term": "Effect risk class (R0–R4)",
+      "glossary": "Effect risk class (R0–R4)",
+      "match": [
+        "risk class"
+      ]
+    },
+    {
+      "term": "Enforced rule",
+      "glossary": "Enforced rule",
+      "match": [
+        "enforced rule"
+      ]
+    },
+    {
+      "term": "EnvironmentBinding",
+      "glossary": "EnvironmentBinding",
+      "match": [
+        "EnvironmentBinding"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "EvaluationResult",
+      "glossary": "EvaluationResult",
+      "match": [
+        "EvaluationResult"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "EvidenceRef",
+      "glossary": "EvidenceRef",
+      "match": [
+        "EvidenceRef"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Federated task",
+      "glossary": "Federated task",
+      "match": [
+        "federated task"
+      ]
+    },
+    {
+      "term": "Global control tier",
+      "glossary": "Global control tier",
+      "match": [
+        "global control tier"
+      ]
+    },
+    {
+      "term": "Guardrail",
+      "glossary": "Guardrail",
+      "match": [
+        "guardrail"
+      ]
+    },
+    {
+      "term": "Handoff",
+      "glossary": "Handoff",
+      "match": [
+        "handoff"
+      ]
+    },
+    {
+      "term": "Idempotency key",
+      "glossary": "Idempotency key",
+      "match": [
+        "idempotency key"
+      ]
+    },
+    {
+      "term": "InterventionRequired",
+      "glossary": "InterventionRequired",
+      "match": [
+        "InterventionRequired"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Intervention task",
+      "glossary": "Intervention task",
+      "match": [
+        "intervention task"
+      ]
+    },
+    {
+      "term": "Knowledge graph",
+      "glossary": "Knowledge graph",
+      "match": [
+        "knowledge graph"
+      ]
+    },
+    {
+      "term": "Knowledge registry",
+      "glossary": "Knowledge registry",
+      "match": [
+        "knowledge registry"
+      ]
+    },
+    {
+      "term": "Knowledge release",
+      "glossary": "Knowledge release",
+      "match": [
+        "knowledge release"
+      ]
+    },
+    {
+      "term": "KnowledgeArtifact",
+      "glossary": "KnowledgeArtifact",
+      "match": [
+        "KnowledgeArtifact"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Layer",
+      "glossary": "Layer",
+      "match": [
+        "layer"
+      ],
+      "scope": "defined"
+    },
+    {
+      "term": "LLM Gateway",
+      "glossary": "LLM Gateway",
+      "match": [
+        "LLM Gateway"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "MCP Gateway",
+      "glossary": "MCP Gateway",
+      "match": [
+        "MCP Gateway"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Obligation",
+      "glossary": "Obligation",
+      "match": [
+        "obligation"
+      ],
+      "scope": "defined"
+    },
+    {
+      "term": "Ontology",
+      "glossary": "Ontology",
+      "match": [
+        "ontology",
+        "ontologies"
+      ]
+    },
+    {
+      "term": "Plan IR",
+      "glossary": "Plan IR",
+      "match": [
+        "Plan IR"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Plane",
+      "glossary": "Plane",
+      "match": [
+        "plane"
+      ],
+      "scope": "defined"
+    },
+    {
+      "term": "Provenance",
+      "glossary": "Provenance",
+      "match": [
+        "provenance"
+      ]
+    },
+    {
+      "term": "Purpose",
+      "glossary": "Purpose",
+      "match": [
+        "purpose"
+      ],
+      "scope": "defined"
+    },
+    {
+      "term": "Regional execution cell",
+      "glossary": "Regional execution cell",
+      "match": [
+        "regional execution cell",
+        "regional cell"
+      ]
+    },
+    {
+      "term": "Registry publisher",
+      "glossary": "Registry publisher",
+      "match": [
+        "registry publisher"
+      ]
+    },
+    {
+      "term": "Release gate",
+      "glossary": "Release gate",
+      "match": [
+        "release gate"
+      ]
+    },
+    {
+      "term": "ReleaseManifest",
+      "glossary": "ReleaseManifest",
+      "match": [
+        "ReleaseManifest"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Requirement",
+      "glossary": "Requirement",
+      "match": [
+        "requirement"
+      ],
+      "scope": "defined"
+    },
+    {
+      "term": "Run",
+      "glossary": "Run",
+      "match": [
+        "run"
+      ],
+      "scope": "defined"
+    },
+    {
+      "term": "RunManifest",
+      "glossary": "RunManifest",
+      "match": [
+        "RunManifest",
+        "run manifest"
+      ]
+    },
+    {
+      "term": "Skill",
+      "glossary": "Skill",
+      "match": [
+        "Skill"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Skill Pack",
+      "glossary": "Skill Pack",
+      "match": [
+        "Skill Pack"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Subject",
+      "glossary": "Subject",
+      "match": [
+        "subject"
+      ],
+      "scope": "defined"
+    },
+    {
+      "term": "TaskEnvelope",
+      "glossary": "TaskEnvelope",
+      "match": [
+        "TaskEnvelope"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Tenant extension",
+      "glossary": "Tenant extension",
+      "match": [
+        "tenant extension"
+      ]
+    },
+    {
+      "term": "Tool Gateway",
+      "glossary": "Tool Gateway",
+      "match": [
+        "Tool Gateway"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Trajectory",
+      "glossary": "Trajectory",
+      "match": [
+        "trajectory",
+        "trajectories"
+      ]
+    },
+    {
+      "term": "Trust tier",
+      "glossary": "Trust tier",
+      "match": [
+        "trust tier"
+      ]
+    },
+    {
+      "term": "Unknown",
+      "glossary": "Unknown",
+      "match": [
+        "Unknown"
+      ],
+      "case_sensitive": true,
+      "scope": "defined"
+    },
+    {
+      "term": "Use-case tier (T0–T4)",
+      "glossary": "Use-case tier (T0–T4)",
+      "match": [
+        "use-case tier"
+      ]
+    },
+    {
+      "term": "ValidationReport",
+      "glossary": "ValidationReport",
+      "match": [
+        "ValidationReport"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Verification status",
+      "glossary": "Verification status",
+      "match": [
+        "verification status",
+        "supported, contradicted"
+      ]
+    },
+    {
+      "term": "Workflow execution",
+      "glossary": "Workflow execution",
+      "match": [
+        "workflow execution"
+      ]
+    },
+    {
+      "term": "A2A (Agent2Agent protocol)",
+      "match": [
+        "A2A"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        "19"
+      ]
+    },
+    {
+      "term": "Anti-pattern catalog",
+      "match": [
+        "anti-pattern"
+      ],
+      "defined_in": [
+        "17"
+      ]
+    },
+    {
+      "term": "Autonomous monolith",
+      "match": [
+        "autonomous monolith"
+      ],
+      "defined_in": [
+        "17"
+      ]
+    },
+    {
+      "term": "Circuit breaker",
+      "match": [
+        "circuit breaker"
+      ]
+    },
+    {
+      "term": "Data loss prevention (DLP)",
+      "match": [
+        "DLP"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Durable workflow",
+      "match": [
+        "durable workflow"
+      ],
+      "defined_in": [
+        "15"
+      ]
+    },
+    {
+      "term": "Harborlight mortgage case",
+      "match": [
+        "Harborlight",
+        "MORT-2026-000184"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        "1"
+      ]
+    },
+    {
+      "term": "Human-in-the-loop",
+      "match": [
+        "human-in-the-loop",
+        "human review"
+      ],
+      "defined_in": [
+        "14"
+      ]
+    },
+    {
+      "term": "Kill switch",
+      "match": [
+        "kill switch"
+      ]
+    },
+    {
+      "term": "Least agency",
+      "match": [
+        "least agency"
+      ],
+      "defined_in": [
+        "2"
+      ]
+    },
+    {
+      "term": "Little’s Law",
+      "match": [
+        "Little’s Law",
+        "Little's Law"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        "28"
+      ]
+    },
+    {
+      "term": "MCP (Model Context Protocol)",
+      "match": [
+        "MCP"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        "19"
+      ]
+    },
+    {
+      "term": "MLflow",
+      "match": [
+        "MLflow"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "OpenAI Agents SDK",
+      "match": [
+        "OpenAI Agents SDK",
+        "Agents SDK"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        "3"
+      ]
+    },
+    {
+      "term": "OpenTelemetry",
+      "match": [
+        "OpenTelemetry"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Outbox",
+      "match": [
+        "outbox"
+      ]
+    },
+    {
+      "term": "Policy engine",
+      "match": [
+        "policy engine"
+      ]
+    },
+    {
+      "term": "Prompt injection",
+      "match": [
+        "prompt injection",
+        "injected instruction"
+      ],
+      "defined_in": [
+        "23"
+      ]
+    },
+    {
+      "term": "ReAct",
+      "match": [
+        "ReAct"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        "10"
+      ]
+    },
+    {
+      "term": "Restart test",
+      "match": [
+        "restart test"
+      ],
+      "defined_in": [
+        "3"
+      ]
+    },
+    {
+      "term": "Replaceability test",
+      "match": [
+        "replaceability test"
+      ],
+      "defined_in": [
+        "3"
+      ]
+    },
+    {
+      "term": "Service-level objective (SLO)",
+      "match": [
+        "SLO"
+      ],
+      "case_sensitive": true
+    }
+  ]
+}

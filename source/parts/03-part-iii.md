@@ -1,11 +1,13 @@
 # PART III — THE DEVELOPER PLATFORM
 
 Parts I and II defined the contracts; this Part decides who builds them once.
-Chapter 7 describes the paved road (platform-owned contracts, adapters,
-services, and a golden path) and doubles as a map: most of its services are
-developed in Parts IV–VIII. Chapters 8 and 9 define what teams reuse on that
-road: the versioned Skill and the Skill Pack. Three owners share it: the
-platform team, domain-capability owners, and application teams.
+
+- **Chapter 7** describes the paved road (platform-owned contracts, adapters, services, and a golden path) and doubles as a map: most of its services are developed in Parts IV–VIII.
+- **Chapter 8** defines the versioned Skill, the unit teams reuse on that road.
+- **Chapter 9** combines compatible Skills into Skill Packs and a coherent domain platform.
+
+Three owners share the road: the platform team, domain-capability owners, and
+application teams.
 
 # 07 — Build a Paved Road for Agent Teams
 
@@ -100,7 +102,7 @@ Most defects are cheaper to catch without a model. The platform makes those test
 | Framework abstractions | OpenAI, Microsoft, and Google each document their own agent abstractions; the Microsoft and Google frameworks also document workflow or multi-agent structures. | R29; R31; R32 |
 | Framework portability (book-authored recommendation) | Do not assume these SDKs share cancellation, streaming, tool, approval, or error semantics. A shared contract does not make them interchangeable; only adapter conformance tests demonstrate parity, and any gap is recorded as a known limitation rather than assumed away. | — |
 
-The discussion above draws on R29; R31; R32. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R29; R31; R32. Appendix J lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -312,7 +314,7 @@ The registry scales as a read-heavy service in the global control tier with immu
 | --- | --- | --- |
 | Terminology | Skill is a platform-owned package in this book. It is not identical to A2A AgentSkill metadata, to Skills served over MCP, or to the skills the OpenAI Agents SDK can attach to its shell tool. Interchange requires an explicit adapter and loss analysis. | R05; R07; R29 |
 
-The discussion above draws on R05; R07; R29. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R05; R07; R29. Appendix J lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -448,7 +450,7 @@ A pack is executable supply chain because Skill instructions direct behavior (tr
 | Supply-chain risk | OWASP's agent-security guidance lists compromise of third-party tools, APIs, and data sources as a key agent risk; SLSA defines build-provenance requirements and levels. | R16; R17 |
 | Distribution security (book-authored recommendation) | Treat a Skill Pack as executable supply chain: pin dependencies and tool schemas, produce an SBOM and signed provenance, scan transitive content and binaries, enforce publisher trust, and support revocation without rewriting historical runs. | — |
 
-The discussion above draws on R16; R17. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R16; R17. Appendix J lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 

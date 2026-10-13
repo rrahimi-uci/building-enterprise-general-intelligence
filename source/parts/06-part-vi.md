@@ -2,18 +2,18 @@
 
 This Part asks what happens when the model is wrong, manipulated, or simply
 given more reach than it needs. It applies defense in depth to content,
-identity, delegated authority, tools, code, data, memory, remote agents, and
-the software supply chain. Every control is tied to a boundary, a decision, a
-signal, and a recovery path so “security” remains an engineering property.
+identity, delegated authority, tools, code, data, memory, remote agents, and the
+software supply chain, and ties every control to a boundary, a decision, a
+signal, and a recovery path. Each control answers a different question, and
+none can stand in for another:
 
-Assume the model can be manipulated. Each control then answers a different
-question, and none can stand in for another. Chapter 20 places detection,
-policy, and enforcement, maps the threats they face, and sets out incident
-response. Chapter 21 decides who may act, and with how much authority.
-Chapter 22 decides whether an effect may commit, retry, or recover. Chapter 23
-limits what a manipulated plan can still reach. The model may propose an
-action, while deterministic services decide whether the action is eligible,
-safe to execute, and complete enough to report.
+- **Chapter 20** places detection, policy, and enforcement, maps the threats they face, and sets out incident response.
+- **Chapter 21** decides who may act, and with how much authority.
+- **Chapter 22** decides whether an effect may commit, retry, or recover.
+- **Chapter 23** limits what a manipulated plan can still reach.
+
+The model may propose an action; deterministic services decide whether it is
+eligible, safe to execute, and complete enough to report.
 
 # 20 — Security Starts Outside the Prompt
 
@@ -355,7 +355,7 @@ create privacy-reviewed regression cases.
 | Threat coverage | The catalog is cross-checked against OWASP agentic-security guidance and zero-trust boundary principles. It enumerates known classes, not all classes: each new tool, protocol, and autonomy surface introduces threats the list does not yet name. The durable control is the boundary architecture, not the completeness of the enumeration. | R11; R15; R16 |
 | Incident lifecycle | The phase structure aligns with NIST SP 800-61 Rev. 3's integration of incident response into cybersecurity risk management. The agent-specific phases, Revoke and Reconcile, are book-authored recommendations. | R42 |
 
-The discussion above draws on R11; R15; R16; R42. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R11; R15; R16; R42. Appendix J lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -606,7 +606,7 @@ JSON · implementation excerpt
 | Non-human identity | Token exchange distinguishes the subject on whose behalf a token acts from the actor that holds it. The book's recommendation, not a sourced finding, is that workload identity proves the actor, delegation proves whose authority and purpose it uses, both credentials and capability grants rotate and revoke, and a valid service identity is not sufficient authorization. | R08 |
 | Audience-bound last-hop credentials | Resource indicators constrain token audience; protected-resource metadata lets a client discover which authorization server protects a resource; neither defines enterprise policy. | R09; R10 |
 
-The discussion above draws on R08; R09; R10. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R08; R09; R10. Appendix J lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -934,7 +934,7 @@ but it cannot skip a stage by changing the wording of its next message.
 | Event delivery | Transactional outbox and CloudEvents identity support at-least-once publication with consumer deduplication. | R03; R04 |
 | Effect correctness (book-authored recommendation) | Idempotency is scoped to one logical intent; reusing a key with a different intent is a conflict; an unknown write is not retried until reconciliation establishes Committed or Declined. | — |
 
-The discussion above draws on R03; R04. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R03; R04. Appendix J lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -1132,7 +1132,7 @@ than abandoned. Its release-side counterpart is Chapter 27's Emergency Control.
 | Data minimization and deletion (EU context only) | GDPR principles inform minimization and erasure obligations for EU personal data; jurisdiction-specific analysis is still required. | R39 |
 | Incident control | R15 recommends kill switches that can disable specific tools, prompts, or agent connections, and credential revocation to contain rogue agents. Extending the scopes to tenant, agent release, connector, model route, and data source, and requiring a kill switch to preserve evidence and effect reconciliation, are this book's recommendations. | R15 |
 
-The discussion above draws on R15; R17; R18; R39. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R15; R17; R18; R39. Appendix J lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 

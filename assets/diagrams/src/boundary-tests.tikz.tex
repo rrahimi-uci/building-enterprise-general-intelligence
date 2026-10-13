@@ -1,0 +1,67 @@
+% Figure 3-2 -- The two tests for the framework boundary.
+% New in v1.0.0 review (no Graphviz original). Every label comes from Chapter 3
+% § Two tests for the boundary.
+%
+% Chapter text -> figure element
+%   restart test: "all agent workers crash at 2:00 a.m. ... the platform
+%     replaces the SDK and deploys a new adapter"   -> red start card
+%   "If losing framework state means losing the business process"
+%                                                   -> amber decision
+%   "the framework owns too much"                   -> red outcome (No)
+%   the six facts the organization must still know -> blue record card (Yes)
+%   "None of those facts should require reconstructing an SDK session object"
+%                                                   -> slate card, dashed: the
+%                                                      discarded SDK session
+%   replaceability test: "Would the organization still need this record if it
+%     replaced the framework tomorrow?"             -> amber decision
+%   healthy migration changes adapter, agent construction, tool binding,
+%     tracing integration, framework-specific tests -> teal outcome (No)
+%   records that must not be framework-owned        -> blue outcome (Yes)
+%   "a framework is replaceable only when replacing it does not require
+%     migrating enterprise truth"                   -> amber rule callout
+\documentclass[border=6pt]{standalone}
+\usepackage{professional-diagrams}
+\begin{document}
+\begin{tikzpicture}
+  % ================= the restart test =================
+  \node[dg card=red, icon=server, text width=104pt] (crash) at (72,0)
+    {\dgcontent{Restart and replace}{2:00 a.m.: every agent worker crashes; the SDK is swapped for a new adapter}{}};
+  \node[dg decision=amber, minimum width=146pt, minimum height=66pt] (rq) at (240,0)
+    {Business process\\recoverable without\\the SDK session?};
+  \node[dg card=red, text width=106pt] (rno) at (425,0)
+    {\dgcontent{Framework owns too much}{Losing framework state loses the business process}{}};
+  \node[dg card=slate, text width=104pt] (lost) at (72,-118)
+    {\dgcontent{Discarded}{SDK sessions and framework state}{}};
+  \node[dg card=blue, square, icon=database, text width=301pt] (ryes) at (327.5,-118)
+    {\dgcontent{The boundary holds: platform records still say}{MORT-2026-000184 exists · evidence review incomplete · document request pending · approval APR-718 pending · policy://mortgage@2026.09 applied · no effect receipt yet}{}};
+  \coordinate (L1) at (12,0); \coordinate (R1) at (488,0);
+  \dggroup{restart}{navy}{The restart test}{(crash)(rq)(rno)(lost)(ryes)(L1)(R1)}
+
+  \draw[flow] (crash.east) -- (rq.west);
+  \draw[flow in=red] (rq.east) -- node[pill=red, pos=0.42]{No} (rno.west);
+  \draw[flow in=blue] (rq.south) -- node[pill=blue]{Yes} (rq.south |- ryes.north);
+  \draw[dashed flow, draw=dg-slate-line] (crash.south) -- (lost.north);
+
+  % ================= the replaceability test =================
+  \node[dg card=slate, icon=file-alt, text width=104pt] (rec) at (72,-262)
+    {\dgcontent{A record}{kept by the agent system}{}};
+  \node[dg decision=amber, minimum width=146pt, minimum height=66pt] (pq) at (240,-262)
+    {Still needed if the\\framework were\\replaced tomorrow?};
+  \node[dg card=teal, text width=106pt] (pno) at (425,-262)
+    {\dgcontent{Framework-specific}{Adapter, agent construction, tool binding, tracing integration, framework tests}{}};
+  \node[dg card=blue, square, icon=database, text width=301pt] (pyes) at (327.5,-380)
+    {\dgcontent{The platform must own it}{Workflow history · approval records · business transactions · public APIs · audit history · identity · authorization}{}};
+  \node[edge text, text width=120pt] (pnote) at (72,-380)
+    {A healthy migration changes only the framework-specific side.};
+  \coordinate (L2) at (12,-262); \coordinate (R2) at (488,-262);
+  \dggroup{replace}{navy}{The replaceability test}{(rec)(pq)(pno)(pyes)(pnote)(L2)(R2)}
+
+  \draw[flow] (rec.east) -- (pq.west);
+  \draw[flow in=teal] (pq.east) -- node[pill=teal, pos=0.42]{No} (pno.west);
+  \draw[flow in=blue] (pq.south) -- node[pill=blue]{Yes} (pq.south |- pyes.north);
+
+  % ================= the rule =================
+  \node[callout=amber, text width=460pt, align=center] (rule) at (250,-452)
+    {\textbf{A framework is replaceable only when replacing it does not require migrating enterprise truth.}};
+\end{tikzpicture}
+\end{document}

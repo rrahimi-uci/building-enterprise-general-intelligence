@@ -42,12 +42,20 @@
       "sha256": "ba9fe7ddb04679d1f0626f7705c5919bd2b90f205d70b24be9a5e6dffac50909"
     },
     {
+      "id": "boundary-tests",
+      "file": "assets/diagrams/boundary-tests.png",
+      "source": "assets/diagrams/src/boundary-tests.tikz.tex",
+      "vector": "assets/diagrams/boundary-tests.pdf",
+      "description": "The restart test and the replaceability test: after a crash or a framework swap, business truth must survive in platform records, and only framework-specific parts change in a healthy migration",
+      "sha256": "560595b4f957a93b15bc998ee85d44058619f48eb509e0e1476a3ee1ee11959a"
+    },
+    {
       "id": "capability-ladder",
       "file": "assets/diagrams/capability-ladder.png",
       "source": "assets/diagrams/src/capability-ladder.tikz.tex",
       "vector": "assets/diagrams/capability-ladder.pdf",
       "description": "The four levels from a model to an enterprise agentic system, with what each adds and the failure class it introduces",
-      "sha256": "23614608e30b6813f7bacda67f170b500c9788f5f9d1f93ebac9602ad9f074ba"
+      "sha256": "5cb30a5d102d4bdff07bb5a4a614510ce8d5e96b324ac39ceae8e91e0c09c168"
     },
     {
       "id": "causal-trace",

@@ -29,6 +29,12 @@
 \RequirePackage{pdflscape}
 \RequirePackage{amssymb}
 \RequirePackage{textcomp}
+\RequirePackage{makeidx}
+\RequirePackage{multicol}
+
+% The book index. tools/book_index.py places the \index marks; makeindex sorts
+% them with latex/bookindex.ist between the first and second XeLaTeX passes.
+\makeindex
 
 % Redistributable fonts are bundled with the LaTeX project.
 \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
@@ -162,7 +168,7 @@
     \vspace{16pt}
     {\color{white}\fontsize{28}{33}\selectfont\bfseries\MakeUppercase{#2}\par}
     \vspace{26pt}
-    \begin{minipage}{0.78\textwidth}\centering\color[HTML]{D8E8F5}\fontsize{11}{16}\selectfont #3\end{minipage}
+    \begin{minipage}{0.78\textwidth}\raggedright\setlength{\parskip}{8pt}\let\BookPartBold\textbf\renewcommand{\textbf}[1]{{\color{white}\BookPartBold{##1}}}\color[HTML]{D8E8F5}\fontsize{11}{16}\selectfont #3\end{minipage}
   \end{center}
   \vfill\clearpage\nopagecolor\color{BookInk}\pagestyle{fancy}%
 }
@@ -316,6 +322,24 @@
 \renewcommand*\@pnumwidth{1.9em}
 \renewcommand*\l@part[2]{\addpenalty{-\@highpenalty}\vskip 0.8em plus 1pt\setlength\@tempdima{2.2em}\begingroup\parindent\z@\rightskip\@pnumwidth\parfillskip-\@pnumwidth{\leavevmode\color{BookNavy}\large\bfseries #1\hfil\hb@xt@\@pnumwidth{\hss #2}}\par\endgroup}
 \makeatother
+
+% Part page intro: lead and closing paragraphs plus a chapter list, set ragged
+% right in a centred measure (the DOCX edition does the same).
+\newenvironment{BookPartList}{\begin{itemize}[leftmargin=1.3em,itemsep=3pt,topsep=6pt,partopsep=0pt,label=\textcolor{BookCyan}{\textbullet}]\color[HTML]{D8E8F5}}{\end{itemize}}
+
+% The index: two columns after its own front-matter style heading, listed in
+% the table of contents after the last appendix. Bold page numbers mark where a
+% term is defined, as in the Markdown index.
+\newcommand{\BookIndexLetter}[1]{\par\vspace{7pt}{\color{BookNavy}\fontsize{11}{13}\selectfont\bfseries #1\par}\nopagebreak\vspace{2pt}}
+\renewenvironment{theindex}{%
+  \BookFrontChapter{Index}%
+  {\color{BookSlate}\small Bold page numbers mark where a term is defined.\par}\vspace{8pt}%
+  \begin{multicols}{2}\raggedright\fontsize{8.8}{11}\selectfont
+  \setlength{\parskip}{0pt}\setlength{\parindent}{0pt}%
+  \renewcommand{\item}{\par\hangindent=1.2em}%
+  \renewcommand{\indexspace}{}}%
+  {\end{multicols}}
+\newcommand{\BookIndex}{\clearpage\printindex}
 
 % Print safety: colors stay enabled, but every pale panel has dark text.
 \AtBeginDocument{\color{BookInk}}

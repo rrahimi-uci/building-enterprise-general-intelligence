@@ -1,12 +1,13 @@
 # PART VIII — RUNNING THE SYSTEM IN THE REAL WORLD
 
-Shipping the first version is the easy milestone. The hard work is operating
-the system when usage grows, people change roles, vendors drift, and a run is
-still active during a deployment. Part VII produced evidence and candidate
-changes. This Part decides who may approve them (Chapter 26), how approved
-change reaches production without disturbing work in flight (Chapter 27), and
-how much work the platform admits, and at what cost, when demand peaks
-(Chapter 28).
+Shipping the first version is the easy milestone. The hard work is operating the
+system when usage grows, people change roles, vendors drift, and a run is still
+active during a deployment. Part VII produced evidence and candidate changes;
+this Part decides what happens to them:
+
+- **Chapter 26** decides who may approve a change.
+- **Chapter 27** releases approved change without disturbing work in flight.
+- **Chapter 28** decides how much work the platform admits, and at what cost, when demand peaks.
 
 # 26 — Make Governance Part of How the Platform Runs
 
@@ -155,7 +156,7 @@ An exception starts as a request that names the exact control gap, its scope, an
 | Regulatory applicability | NIST AI RMF and its Generative AI Profile are voluntary guidance; ISO/IEC 42001 specifies a management system; the OWASP Top 10 for Agentic Applications is community security guidance; the EU AI Act creates binding obligations that vary by risk category and by whether the enterprise acts as provider or deployer. Mapping a control in this book to a clause is engineering evidence, not legal advice, and qualified jurisdiction-specific review remains required. | R12; R13; R14; R15; R40 |
 | Incident response | NIST SP 800-61 Rev. 3 integrates incident response into organizational cybersecurity risk management. Feeding incidents into the governance cadence and the GovernanceRecord is this book's recommendation. | R42 |
 
-The discussion above draws on R12; R13; R14; R15; R40; R42. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R12; R13; R14; R15; R40; R42. Appendix J lists the complete sources and records their authority, version, and scope.
 
 ## If this fails in production
 
@@ -420,7 +421,7 @@ The ordering in step 7 is this book's recommendation. Recovery is rehearsed with
 | --- | --- | --- |
 | Supply chain | An SBOM describes components; SLSA provenance describes where and how an artifact was built and by which builder. Using both, verifying signatures and builder identity before promotion, and pinning model, prompt, Skill, policy, and evaluation digests in the release manifest are this book's recommendations. | R17; R18 |
 
-The discussion above draws on R17; R18; R48. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R17; R18; R48. Appendix J lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -521,7 +522,7 @@ Optimization becomes confused when one number is treated as the whole system. La
 | How much can the system accept? | Queue age, service-time distribution, permits, and downstream quota | CPU utilization without provider limits |
 | Did the system do the right thing? | Acceptance rate, groundedness, effect correctness, and failure recovery | “The request returned 200” |
 
-For a stable workload, Little’s Law gives a useful first estimate: `average work in system = arrival rate × average time in system`. Apply it to each scarce resource separately. Runs *in the system* include durable waits: a mortgage run waiting nine days for the second pay statement holds history and a timer but no worker, because Chapter 15 suspends idle workflows. Work *holding a permit* counts only active service time. If the platform admits 120 runs per minute and each run spends four minutes of active service time holding a workflow-worker permit, about 480 permits are in use; waiting runs add to stored state and approval queues, not to that number. That estimate is not a capacity guarantee: fan-out, retries, provider quotas, and burstiness can require more permits. It locates the question a load test must answer; Appendix L § Quantitative sizing method gives the effective work rate and the permit-pool formula.
+For a stable workload, Little’s Law gives a useful first estimate: `average work in system = arrival rate × average time in system`. Apply it to each scarce resource separately. Runs *in the system* include durable waits: a mortgage run waiting nine days for the second pay statement holds history and a timer but no worker, because Chapter 15 suspends idle workflows. Work *holding a permit* counts only active service time. If the platform admits 120 runs per minute and each run spends four minutes of active service time holding a workflow-worker permit, about 480 permits are in use; waiting runs add to stored state and approval queues, not to that number. That estimate is not a capacity guarantee: fan-out, retries, provider quotas, and burstiness can require more permits. It locates the question a load test must answer; Appendix K § Quantitative sizing method gives the effective work rate and the permit-pool formula.
 
 ## Optimize the trajectory, not the token
 
@@ -648,7 +649,7 @@ Measure route distribution and eligibility, task success and quality by route, s
 
 ### Scalability mechanics
 
-* Size each pool with the permit-pool formula in Appendix L, then verify with queue-age SLOs.
+* Size each pool with the permit-pool formula in Appendix K, then verify with queue-age SLOs.
 * Hierarchical token buckets: organization → environment → tenant → agent → user → run → provider/tool.
 * Use hierarchical distributed rate limiting with regional allocations and periodic reconciliation; no request should require a synchronous global lock. Keep a safety margin for clock/network skew and provider quota uncertainty.
 * Partition queues and worker pools by latency class, effect risk class, region/residency, sandbox profile, model/tool compatibility, and data classification—but avoid per-tenant queues unless isolation or volume justifies the operational cardinality.
@@ -678,7 +679,7 @@ These are policy shapes, not universal numbers. Determine actual limits from tas
 | Little’s Law | In a stable system, mean work in system equals arrival rate × mean time in system (L = λW); the chapter applies it per scarce resource, counting only active service time for permits. | R43 |
 | Sizing method (book-authored recommendation) | Size from measured arrival rates and service-time distributions. Include fan-out, retry amplification, model/tool quotas, approval dwell time, tenant fairness, and headroom. Cost per verified success is more useful than token cost alone. | — |
 
-The discussion above draws on R43. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R43. Appendix J lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 

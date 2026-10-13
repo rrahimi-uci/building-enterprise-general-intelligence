@@ -29,14 +29,17 @@ When representations disagree, fix the canonical source/configuration and regene
 | Code | fenced block + language | styled line-numbered panel | line-numbered wrap-safe listing | code block + language |
 | Callout | one-column table opening with the bold kind | shaded cell, `Book Callout` style | typed breakable `tcolorbox` | callout block or labeled paragraph |
 | Diagram | registered marker | embedded image + Caption | aspect-safe figure + caption | image + caption/file reference |
-| Citation | `[Rxx]` | linked/styled marker | hyperlink to Appendix K target | literal stable marker |
-| Reference | generated Appendix K | rendered bibliography | same generated bibliography | same text/order |
+| Citation | `[Rxx]` | linked/styled marker | hyperlink to Appendix J target | literal stable marker |
+| Reference | generated Appendix J | rendered bibliography | same generated bibliography | same text/order |
+| Index | `# Index` + generated list, chapter/appendix locators | XE marks + INDEX field; cached result is the Markdown list | `\index` marks + makeindex page index | the Markdown list |
+| Title-page date | `{{BUILD_DATE}}` resolved to the build month | same text | same text | same text |
 
 ## Equivalence rules
 
 - Title, author, version, release date, Part/chapter/appendix titles and order, prose, tables, captions, code, citation IDs, and reference entries must match semantically.
 - Generated Markdown must match `book/manuscript.md` byte for byte.
 - DOCX and LaTeX may contain page breaks, headers, footers, linked navigation, style metadata, fields, and syntax color not represented in Markdown.
+- The index has the same terms and the same locator set in every edition (one rule in `tools/book_index.py`); only the locator form differs: chapter and appendix in Markdown, page in PDF and in an updated DOCX.
 - Notion may split the book into navigation pages and attach artifacts; it must not silently alter approved prose or evidence scope.
 - Renderer-specific line wrapping and page counts may differ across Word/LibreOffice, but page-start and standalone-divider invariants must remain.
 

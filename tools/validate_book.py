@@ -3,6 +3,7 @@
 from __future__ import annotations
 import argparse, hashlib, json, re, sys, zipfile
 from pathlib import Path
+import book_index
 from collections import Counter
 from docx import Document
 from PIL import Image
@@ -96,7 +97,8 @@ def main() -> int:
     if '\r' in text: errors.append('Canonical Markdown contains CR characters')
     if distmd.exists() and distmd.read_bytes()!=md.read_bytes(): errors.append('Canonical and distributable Markdown are not byte-identical')
     checks['parts']=len(re.findall(r'^# PART [IVXLCDM]+ — ',text,re.M)); checks['chapters']=len(re.findall(r'^# \d{2} — ',text,re.M)); checks['appendices']=len(re.findall(r'^# Appendix [A-Z] — ',text,re.M))
-    # Current topology: 8 Parts, 28 chapters, 12 appendices (Appendix M folded into K).
+    # Current topology: 8 Parts, 28 chapters, 12 appendices (Appendix M folded into
+    # the references appendix), the glossary last among them, then the index.
     expected={'parts':8,'chapters':28,'appendices':12}
     for k,v in expected.items():
         if checks[k]!=v: errors.append(f"Expected {v} {k}, found {checks[k]}")
@@ -104,6 +106,26 @@ def main() -> int:
     if chapter_nums!=list(range(1,29)): errors.append(f"Chapter sequence is invalid: {chapter_nums}")
     appendix_ids=re.findall(r'^# Appendix ([A-Z]) — ',text,re.M)
     if appendix_ids!=[chr(ord('A')+i) for i in range(12)]: errors.append(f"Appendix sequence is invalid: {appendix_ids}")
+    h1s=re.findall(r'^# (.+)$',re.sub(r'(?ms)^```.*?^```','',text),re.M)
+    if not h1s or h1s[-1]!=book_index.INDEX_HEADING: errors.append(f"The index must be the book's last H1, found {h1s[-1:]}")
+    if len(h1s)<2 or h1s[-2]!='Appendix L — Glossary': errors.append(f"The glossary must be the last appendix, found {h1s[-2:-1]}")
+    # The title-page date is the build month (tools/build_info.py), never a literal.
+    if '{{BUILD_DATE}}' in text: errors.append('Unresolved {{BUILD_DATE}} token in the manuscript')
+    if not re.search(r'^Book v\d+\.\d+\.\d+ · Publication Release · (January|February|March|April|May|June|July|August|September|October|November|December) \d{4}$',text,re.M): errors.append('Title-page build date line is missing or malformed')
+    # Index: every glossary term is indexed, every term is located, and each
+    # term's defining chapter is among its locators.
+    index_entries=book_index.load_terms(root,text)
+    found=book_index.scan(text,index_entries,book_index.excluded_units(root))
+    indexed_glossary={e.get('glossary') for e in json.loads((root/'config/index-terms.json').read_text(encoding='utf-8'))['entries']}
+    missing_terms=sorted(set(book_index.glossary_chapters(text))-indexed_glossary)
+    if missing_terms: errors.append(f"Glossary terms without an index entry: {missing_terms}")
+    for e in index_entries:
+        if not found[e['term']]: errors.append(f"Index term never located: {e['term']}")
+        elif any(d not in found[e['term']] for d in e['defined']): errors.append(f"Index term {e['term']!r} is not located in its defining unit(s) {e['defined']}")
+    checks['index_terms']=len(index_entries); checks['index_locators']=sum(len(v) for v in found.values())
+    md_index=text[text.rfind('\n# '+book_index.INDEX_HEADING+'\n'):]
+    md_entries=re.findall(r'^- (.+?) — ',md_index,re.M)
+    if md_entries!=[e['term'] for e in index_entries if found[e['term']]]: errors.append('Markdown index entries differ from config/index-terms.json')
     # Fenced code must be masked before scanning for headings: a Python comment
     # like "# Captures OpenAI calls" is indistinguishable from an H1 otherwise,
     # and the book's examples are full of them. Replacing each fenced block with
@@ -185,6 +207,10 @@ def main() -> int:
             doc_appendices=sum(1 for p in doc.paragraphs if p.style.name=='Heading 1' and p.text.startswith('Appendix '))
             checks['docx_chapters']=doc_chapters; checks['docx_appendices']=doc_appendices
             if doc_chapters!=28 or doc_appendices!=12: errors.append(f"DOCX heading counts differ: chapters={doc_chapters}, appendices={doc_appendices}")
+            body=zipfile.ZipFile(docx_path).read('word/document.xml').decode('utf-8')
+            checks['docx_index_marks']=len(re.findall(r' XE "',body)); checks['docx_index_fields']=body.count(' INDEX ')
+            if checks['docx_index_marks']!=checks['index_locators']: errors.append(f"DOCX has {checks['docx_index_marks']} index marks; the index has {checks['index_locators']} locators")
+            if checks['docx_index_fields']!=1: errors.append(f"DOCX must hold one INDEX field, found {checks['docx_index_fields']}")
             # Derived, not fixed: cover + registered diagrams + chapter covers.
             cc=root/'config/chapter-covers.json'
             cover_spec=json.loads(cc.read_text(encoding='utf-8')) if cc.exists() else {'output_dir':'','chapters':[]}

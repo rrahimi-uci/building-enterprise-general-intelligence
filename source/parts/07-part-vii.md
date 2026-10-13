@@ -1,13 +1,15 @@
 # PART VII — EVIDENCE, EVALUATION, AND IMPROVEMENT
 
 You cannot improve a system you cannot explain, and you cannot call a change an
-improvement by looking only at its average score. This Part connects causal
-traces, evaluation, slices, regression cases, and governed learning. Earlier
-chapters listed what each pattern must emit and how a run accepts its own
-result; Chapter 24 joins those signals into one causal trace, and Chapter 25
-turns traces into release evidence. The aim is not more telemetry for its own
-sake; it is evidence that helps a team decide what to fix, what to release, and
-what to leave alone.
+improvement by looking only at its average score. Earlier chapters listed what
+each pattern must emit and how a run accepts its own result; this Part puts
+those signals to work:
+
+- **Chapter 24** joins them into one causal trace of each run.
+- **Chapter 25** turns traces into evaluation, slices, regression cases, and release evidence for governed improvement.
+
+The aim is not more telemetry for its own sake; it is evidence that helps a team
+decide what to fix, what to release, and what to leave alone.
 
 # 24 — Follow a Run from Request to Verified Outcome
 
@@ -225,7 +227,7 @@ loss-intolerant path with completeness and integrity controls plus monitoring.
 | --- | --- | --- |
 | Telemetry maturity | OTLP and the general span model are mature, but the dedicated OpenTelemetry GenAI semantic conventions are still in Development. Version the mapping and retain a stable internal event schema. | R19 |
 
-The discussion above draws on R19. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R19. Appendix J lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -550,7 +552,7 @@ cause, and prefer deterministic code when the decision has become stable.
 | MLflow baseline | This book pins MLflow 3.15.2 as a reproducibility baseline for its examples. It is not labeled latest; feature availability, experimental status, and compatibility must be re-verified against release notes and current documentation before implementation. | R21 |
 | Evaluation limit | R20 documents model judges alongside human feedback attached to traces; R13 asks evaluators to document possible train/test contamination of benchmarks. The book's recommendation, not a sourced finding, is that a passing judge is probabilistic evidence, not proof, and that security, authorization, schema, budget, effect, and acceptance invariants remain deterministic release blockers. | R20; R13 |
 
-The discussion above draws on R13; R20; R21. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R13; R20; R21. Appendix J lists the complete sources and records their authority, version, and scope.
 
 |  |
 | --- |

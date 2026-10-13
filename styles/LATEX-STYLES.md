@@ -63,7 +63,8 @@ Every semantic color is paired with a text label, heading, border, or structure.
 | multi-column GFM table | `longtable` with repeated dark header and alternating rows |
 | fenced code | page-breakable `listings` panel with line numbers and wrapping |
 | diagram marker | figure with `keepaspectratio`, maximum page-aware height, caption, and label |
-| `[Rxx]` | hyperlink to the matching Appendix K reference target |
+| `[Rxx]` | hyperlink to the matching Appendix J reference target |
+| `# Index` | `\BookIndex`: two-column makeindex page index (`latex/bookindex.ist`), listed in the TOC after the last appendix |
 
 ## 6. Tables
 

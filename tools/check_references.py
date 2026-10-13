@@ -57,9 +57,9 @@ def main() -> int:
     unknown=sorted(set(marker_ids)-set(ids)); uncited=sorted(set(ids)-set(marker_ids))
     if unknown: errors.append(f"Unknown citation markers: {unknown}")
     if uncited: errors.append(f"Uncited registry entries: {uncited}")
-    if manuscript.count("# Appendix K — References")!=1: errors.append("Appendix K References heading must occur exactly once")
-    # The traceability matrix lives in Appendix K, next to the entries it scopes.
-    if manuscript.count("## Where each claim is supported")!=1: errors.append("Where each claim is supported must occur exactly once inside Appendix K")
+    if manuscript.count("# Appendix J — References")!=1: errors.append("Appendix J References heading must occur exactly once")
+    # The traceability matrix lives in Appendix J, next to the entries it scopes.
+    if manuscript.count("## Where each claim is supported")!=1: errors.append("Where each claim is supported must occur exactly once inside Appendix J")
     online=[]
     if args.online:
         for r in refs:

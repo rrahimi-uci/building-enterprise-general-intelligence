@@ -2,8 +2,8 @@
 
 **Result:** PASS
 **References:** 58
-**Citation occurrences:** 156
-**Verified:** 2026-10-11
+**Citation occurrences:** 158
+**Verified:** 2026-10-13
 
 All sources were checked against their recorded claim scope. The audit validates attribution, not the book's independently authored architecture recommendations.
 
@@ -39,7 +39,7 @@ All sources were checked against their recorded claim scope. The audit validates
 | R26 | verified | direct primary-source review | Living documentation; no visible date, so the year is n.d. |
 | R27 | verified_with_caveat | direct primary-source review | Article published 19 December 2024. The page now carries a note that much of the tooling landscape it describes has changed since December 2024; cite it for the workflow/agent distinction, not as current tooling guidance. |
 | R28 | verified | direct primary-source review | Article published 13 June 2025 (shown on the page). |
-| R29 | verified | direct primary-source review | Living documentation; no visible date, so the year is n.d. The pinned SDK baseline is R30. |
+| R29 | verified | direct primary-source review | Living documentation; no visible date, so the year is n.d. The pinned SDK baseline is R30. On 2026-10-13 the Running agents page (turn limit, sessions, RunState resumption, durable-execution integrations) and the Tracing page (enabled by default, OpenAI backend export, trace_include_sensitive_data default true) were re-read, and the defaults were confirmed in the v0.22.2 source: DEFAULT_MAX_TURNS = 10 and OPENAI_AGENTS_TRACE_INCLUDE_SENSITIVE_DATA defaulting to true. |
 | R30 | verified | direct primary-source review | GitHub release v0.22.2 fetched; published 9 September 2026. Matches examples/requirements.txt. |
 | R31 | verified | direct primary-source review | Living documentation; the page shows 'Last updated on 2026-08-25', so the year is 2026. |
 | R32 | verified | direct primary-source review | Living documentation at adk.dev (self-canonical); no visible date, so the year is n.d. |
