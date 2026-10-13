@@ -1,6 +1,6 @@
 {
-  "diagrams": 44,
-  "with_vector": 44,
+  "diagrams": 45,
+  "with_vector": 45,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -83,6 +83,22 @@
       "placement_scale": 1.004
     },
     {
+      "id": "boundary-tests",
+      "source": "boundary-tests.tikz.tex",
+      "pixels": [
+        2143,
+        2254
+      ],
+      "effective_dpi": 313,
+      "vector": true,
+      "sha256": "560595b4f957a93b15bc998ee85d44058619f48eb509e0e1476a3ee1ee11959a",
+      "natural_inches": [
+        7.14,
+        7.51
+      ],
+      "placement_scale": 0.988
+    },
+    {
       "id": "capability-ladder",
       "source": "capability-ladder.tikz.tex",
       "pixels": [
@@ -91,7 +107,7 @@
       ],
       "effective_dpi": 306,
       "vector": true,
-      "sha256": "23614608e30b6813f7bacda67f170b500c9788f5f9d1f93ebac9602ad9f074ba",
+      "sha256": "5cb30a5d102d4bdff07bb5a4a614510ce8d5e96b324ac39ceae8e91e0c09c168",
       "natural_inches": [
         6.99,
         3.93

@@ -2,6 +2,17 @@
 
 Book v1.0.0 is the canonical foundation for *Building an Enterprise General Intelligence Platform* by Reza Rahimi, PhD.
 
+## Part I review comments — 2026-10-13
+
+Eight comments left on Part I of the distributed DOCX were reconciled into the
+canonical sources. The title-page date now follows the build; the glossary is the
+last appendix (L) and a generated index follows it in every edition; Part pages
+are structured as a lead, a chapter list and a closing line; Chapter 1's level
+three no longer claims an agent loop runs forever and loses everything on
+restart; Chapter 2's stale-reasoning principle is restated; Chapter 3 gains a
+concrete example of SDK integration drift and Figure 3-2 for the two boundary
+tests. See CHANGELOG.md for details.
+
 ## Cover artwork and version alignment — 2026-10-10
 
 The book cover and all 28 chapter cover images no longer print a release number. Their editable generators retain the title, author, chapter identity, and diagrams; the v1.0.0 release identifier remains in the book metadata, title page, running footer, and artifact filenames. The chapter contact sheet, DOCX, XeLaTeX source, checksum registry, and package were regenerated from the updated artwork. The changelog now presents one v1.0.0 release record, and the continuity review map names the current book version.

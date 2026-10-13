@@ -1,12 +1,15 @@
 # PART I — FOUNDATIONS
 
-This is the starting point for the whole book. Chapter 1 names the pieces and
-draws the boundary around the model; Chapter 2 makes every model output a
-proposal that crosses six deterministic gates; Chapter 3 puts the agent
-framework behind a platform-owned runtime seam. These three chapters carry the
-companion repository's implemented checkpoints, C01–C03; later case boxes
-describe the target design. The later Parts add capabilities to this
-foundation; they do not replace it.
+This Part is the foundation for the rest of the book. Its three chapters build
+one boundary around the model, one step at a time:
+
+- **Chapter 1** names the parts of an enterprise agentic system and draws the boundary around the model.
+- **Chapter 2** turns every model output into a proposal that must cross six deterministic gates.
+- **Chapter 3** places the agent framework behind a runtime seam that the platform owns.
+
+The companion code implements the mortgage checkpoints of these three chapters,
+C01–C03; from Chapter 4 on, the case boxes describe the target design. Later
+Parts add capabilities to this foundation; they do not replace it.
 
 # 01 — What Turns an LLM Call into a Production System
 
@@ -194,11 +197,12 @@ step, until it decides it is finished.
 
 **What changes at this level:** The ability to handle tasks whose shape is not known in advance — where the second step depends on what the first returned.
 
-**What is still missing:** Survival. The loop lives in one process. If that process restarts, everything it knew is gone, including the knowledge that it already requested a mortgage document. It also decides for itself when to stop, which means *termination is now a property of a text generator*.
+**What is still missing:** Survival, and a stopping rule the system owns. As written, the loop keeps its run state in one process; if that process restarts mid-run, the run is gone, including the knowledge that it already requested a mortgage document. Frameworks narrow this gap. The OpenAI Agents SDK stops a run at a turn limit (ten by default; this listing sets eight), can keep conversation history in a session store, and can serialize a paused run so it resumes later; durable-execution integrations such as Temporal and DBOS checkpoint the loop itself [R29]. Each of these restores the agent's conversation, not the business's facts: whether the document request committed is something only the downstream system and an effect record can establish. And below the turn limit, the loop still decides for itself when to stop, which means *termination is now a property of a text generator*.
 
 That last point is worth sitting with. At level two, a bug produces a wrong
-answer. At level three, a bug produces an unbounded loop that spends money and
-takes actions. The failure modes change category, not just severity. Chapter 3
+answer. At level three, a bug produces a loop that keeps spending money and
+taking actions until a limit trips. The failure modes change category, not just
+severity. Chapter 3
 moves the step's limits into a platform-owned request, and Chapter 10 moves the
 loop's limits into an external controller.
 
@@ -216,7 +220,7 @@ management.
 | --- | --- | --- |
 | Model | Language understanding | Confidently wrong about facts it cannot access |
 | Model + tools | Contact with current reality | Acts on data the caller was not authorized to see |
-| Agent | Adaptive multi-step work | Runs forever; loses everything on restart |
+| Agent | Adaptive multi-step work | Stops only at a turn limit; a restart loses state the runtime did not save |
 | Enterprise system | Durability, authority, evidence, control | Complexity — which is why the boundaries must be explicit |
 
 Notice that the fourth level adds no intelligence at all. Everything it adds is
@@ -358,7 +362,7 @@ chapters; this is enough to read on with.
 | **Trace** | A causal graph of one run's steps, decisions, versions and effects — not a log file | Chapter 24 |
 
 If a term in this book seems to be doing more work than its ordinary meaning
-would suggest, that is usually deliberate. Appendix H defines further terms.
+would suggest, that is usually deliberate. Appendix L defines further terms.
 
 ### Anti-pattern — the autonomous monolith
 
@@ -462,7 +466,7 @@ effect ledger.
 | Reported capability and risk | ReAct reports benchmark results for interleaved reasoning and action; NIST's generative-AI profile lists confabulation, confidently stated false content, among generative-AI risks. | R01; R13 |
 | Grounding boundary (book-authored recommendation) | Separate model capability from system correctness. A benchmark or demo does not establish authorization, durability, privacy, or business acceptance, so every material output should carry evidence references and uncertainty. | — |
 
-The discussion above draws on R01; R13. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R01; R13. Appendix J lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -618,7 +622,15 @@ state reconsidered rather than silently overwriting the newer change.
 
 This is an important principle for agentic systems:
 
-> The model is allowed to reason from stale information; stale reasoning is not allowed to become an authoritative write.
+> Every context is a snapshot, so a model can always end up reasoning from information that has since changed; stale reasoning must never become an authoritative write.
+
+The point is not that stale reasoning is acceptable. The platform reduces it by
+building each step's context from authoritative stores rather than carrying it
+forward in the conversation (design principle 4 below; Chapter 6), and by recording the
+version each read observed. It cannot eliminate it: the case can change while
+the model reasons, or during a three-hour approval wait. Freshness is therefore
+enforced at commit, by comparing the expected version with the current one, not
+assumed in the prompt.
 
 Together, these controls protect two different boundaries: authorization
 prevents an invalid actor from making a valid-looking change, while version
@@ -875,6 +887,22 @@ A prototype can call `Runner.run(agent, input)` directly. That is a reasonable w
 
 If the mortgage service, compliance service, customer service, fraud service, and document service each integrate the SDK directly, they will gradually develop incompatible assumptions about agents, tools, sessions, retries, tracing, approvals, model configuration, and error handling. The SDK has become part of every application’s architecture, while no shared component owns the cross-cutting contracts.
 
+The drift is hard to see because each integration looks reasonable on its own.
+The SDK's defaults suit a single application: a run stops after ten turns by
+raising `MaxTurnsExceeded`, tracing is on and exports to OpenAI's trace backend,
+and traces include model and tool inputs and outputs unless
+`trace_include_sensitive_data` is turned off [R29]. Now let five teams meet those
+defaults separately. The mortgage team catches `MaxTurnsExceeded` and retries the
+whole run, so a step that proposed a document request runs again; the document
+team maps the same exception to “needs review”; the customer-service team lets
+it surface as an error. One SDK event now has three business meanings. The fraud
+team keeps the tracing defaults, so pay-statement fields reach a trace store the
+platform's data policy does not cover, while the compliance team disables
+tracing and loses the evidence an audit needs. No single choice is wrong inside
+its own service. Together they leave the platform unable to say what a turn-limit
+stop means, which traces exist, or what they contain, and an SDK upgrade that
+changes any of these behaviors must be found and handled five times.
+
 The platform inserts a stable contract:
 
 **Application or workflow → AgentRuntime → framework adapter → agent framework → model and governed capabilities**
@@ -973,6 +1001,11 @@ Mortgage business state for `MORT-2026-000184` is different:
 Framework state can help resume an agent. Platform state must recover the business process. A session object is a convenience for one runtime; a workflow record is an authoritative business fact.
 
 ## Two tests for the boundary
+
+Two questions decide whether the framework has stayed in its lane. Figure 3-2
+shows both.
+
+[[DIAGRAM:boundary-tests|Figure 3-2 — The restart test and the replaceability test: business truth must survive in platform records, and a migration changes only framework-specific parts]]
 
 **The restart test.** Imagine that all agent workers crash at 2:00 a.m. Then imagine that the platform replaces the SDK and deploys a new adapter. The organization must still know that `MORT-2026-000184` exists, evidence review is incomplete, the document request is pending, approval `APR-718` is pending, policy `policy://mortgage@2026.09` applied, and no effect receipt yet records a committed document request. None of those facts should require reconstructing an SDK session object. If losing framework state means losing the business process, the framework owns too much. Apply this test to every proposed framework feature, serialization format, and persistence shortcut.
 

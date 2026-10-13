@@ -76,7 +76,8 @@ make examples-run    # execute the example test suite against the pinned SDKs
 ### Companion code correction notes
 
 These notes record fixes made to the companion code before 1.0.0. They moved
-here from Appendix I, which now covers only how to run and verify the code.
+here from the companion implementation guide (Appendix H), which now covers
+only how to run and verify the code.
 
 * SDK HITL returns a structured RunResult; it no longer throws serialized run state in an exception.
 * The protected write tool is registered, and it carries an enterprise approval ID and proposal hash to the gateway.
@@ -141,6 +142,7 @@ make pdf        # three-pass XeLaTeX -> dist/*-LaTeX.pdf
 │   ├── diagrams.json             # diagram registry
 │   ├── chapter-covers.json       # chapter cover visual specs (one per chapter)
 │   ├── examples.json             # code-example registry
+│   ├── index-terms.json          # book index: terms, match phrases, defining chapters
 │   ├── mortgage_stages.json      # C01–C28 checkpoint registry
 │   ├── references.json           # source-of-truth citation registry
 │   └── style-tokens.json         # portable design tokens
@@ -194,14 +196,14 @@ never in generated content.
 
 - `00-front-matter.md`: title marker, publication preface, reader map, table of contents.
 - `01-part-i.md` … `08-part-viii.md`: one Part divider plus its chapters.
-- `09-appendices.md`: appendix divider and Appendices A–L.
+- `09-appendices.md`: appendix divider, Appendices A–L (the glossary is Appendix L, last), and the index heading with its `[[INDEX]]` marker.
 - Every Part, chapter, and appendix begins with an H1. DOCX rendering inserts a new page before each and makes Part/appendix dividers standalone.
 - H2 is a major section, H3 a subsection, and H4 a local subtopic. Do not skip levels.
 - Keep transitions at chapter endings so prerequisites and next steps remain explicit.
 
 ## References and claim discipline
 
-`config/references.json` defines each source, version/date, URL, permitted support scope, verification date, and source class. Appendix K is generated from this registry during assembly. Cite only what the recorded scope supports. Book-authored patterns, estimates, examples, architectures, and formulas must be identified as guidance unless a reference explicitly validates them. Living documentation uses `n.d.` plus an access date. Maturity-sensitive claims must state pins and re-verification requirements rather than claiming a framework is “latest.”
+`config/references.json` defines each source, version/date, URL, permitted support scope, verification date, and source class. Appendix J is generated from this registry during assembly. Cite only what the recorded scope supports. Book-authored patterns, estimates, examples, architectures, and formulas must be identified as guidance unless a reference explicitly validates them. Living documentation uses `n.d.` plus an access date. Maturity-sensitive claims must state pins and re-verification requirements rather than claiming a framework is “latest.”
 
 Run:
 
@@ -210,6 +212,25 @@ python3 tools/check_references.py --root .
 ```
 
 Online link checking is intentionally optional because reproducible offline builds must not depend on network access.
+
+## Title-page date and the index
+
+The title page shows the month the book was built, not a fixed date: the front
+matter carries a `{{BUILD_DATE}}` token that `tools/build_info.py` resolves for
+the Markdown, DOCX and LaTeX editions alike. Set `SOURCE_DATE_EPOCH` to rebuild
+an earlier artifact byte for byte. Because the date is part of the committed
+artifacts, the first build in a new month changes them, and CI's stale-artifact
+check asks for `make build latex` until they are committed.
+
+The index is generated from `config/index-terms.json` by `tools/book_index.py`.
+One rule places every mark: a term's first mention in each chapter or appendix,
+in running text and table bodies, never in headings, code, captions, the
+references appendix or the glossary. The Markdown index lists chapter and
+appendix locators; the PDF prints page numbers (makeindex with
+`latex/bookindex.ist`); the DOCX carries Word XE fields under an INDEX field
+whose cached result is the Markdown list until Word updates it (F9). Every
+glossary term must have an index entry, and `make validate` checks that all
+three editions carry the same locators.
 
 ## Build outputs
 

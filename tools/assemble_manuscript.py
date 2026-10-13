@@ -2,27 +2,34 @@
 """Assemble the canonical Markdown book from ordered part files.
 
 Canonical editable sources live in source/parts. This assembler also renders
-Appendix K -- the reference list and the claim traceability matrix it scopes --
+Appendix J -- the reference list and the claim traceability matrix it scopes --
 from config/references.json so citation metadata has one machine-readable source
-of truth, and expands [[EXAMPLE:id]] markers from
-config/examples.json so every code listing in the book is the exact text of a
-file that CI executes.
+of truth, expands [[EXAMPLE:id]] markers from config/examples.json so every
+code listing in the book is the exact text of a file that CI executes, writes
+the index in place of [[INDEX]] from config/index-terms.json, and resolves the
+{{BUILD_DATE}} token to the build month.
 """
 from __future__ import annotations
 import argparse, hashlib, json, re
 from pathlib import Path
+
+import book_index
+from build_info import BUILD_DATE_TOKEN, build_date
 
 
 def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def replace_between(text: str, start_heading: str, end_heading: str, replacement: str) -> str:
+def replace_section(text: str, start_heading: str, replacement: str) -> str:
+    """Replace one H1 section, from its heading to the next H1."""
     start = text.find(start_heading)
-    end = text.find(end_heading, start + len(start_heading))
-    if start < 0 or end < 0:
-        raise ValueError(f"Missing section boundary: {start_heading!r} -> {end_heading!r}")
-    return text[:start] + replacement.rstrip() + "\n\n" + text[end:]
+    if start < 0:
+        raise ValueError(f"Missing section heading: {start_heading!r}")
+    end = text.find("\n# ", start + len(start_heading))
+    if end < 0:
+        raise ValueError(f"Section {start_heading!r} has no following H1")
+    return text[:start] + replacement.rstrip() + "\n\n" + text[end + 1:]
 
 
 def accessed(r: dict) -> str:
@@ -41,7 +48,7 @@ def render_reference_sections(text: str, references: list[dict]) -> str:
         ("Frameworks, evaluation, and industry implementation guidance", {"framework documentation", "framework release", "vendor documentation", "industry guidance", "industry report", "architecture pattern"}),
     ]
     ref_lines = [
-        "# Appendix K — References and Evidence Scope", "", "## Citation policy", "",
+        "# Appendix J — References and Evidence Scope", "", "## Citation policy", "",
         "References are numbered by stable registry identifier. Each citation supports only the scoped claim recorded in `config/references.json`; access dates document the verification point for online material. Standards, official guidance, community guidance, vendor documentation, research, and law are deliberately labeled rather than treated as equivalent authority.", "",
     ]
     seen = set()
@@ -57,7 +64,7 @@ def render_reference_sections(text: str, references: list[dict]) -> str:
     for r in references:
         if r["id"] not in seen:
             ref_lines.append(f"* **[{r['id']}]** {r['author_or_organization']} ({r['year']}). *{r['title']}*. {r['publication_or_version']}. [Source]({r['url']}). Accessed {accessed(r)}. **Supports:** {r['supports']}")
-    # Appendix K absorbs the former Appendix M. The matrix only ever
+    # Appendix J absorbs the former Appendix M. The matrix only ever
     # made sense next to the entries it scopes, and splitting them meant a reader
     # checking a citation had to hold two appendix letters in their head.
     ref_lines += [
@@ -68,7 +75,7 @@ def render_reference_sections(text: str, references: list[dict]) -> str:
     for r in references:
         scope = str(r["supports"]).replace("|", "\\|")
         ref_lines.append(f"| {r['id']} | {r['type']} | {scope} | Verified {r['verification']['checked_on']}; re-check living sources before use. |")
-    text = replace_between(text, "# Appendix K — References", "# Appendix L —", "\n".join(ref_lines))
+    text = replace_section(text, "# Appendix J — References", "\n".join(ref_lines))
     return text
 
 
@@ -156,6 +163,14 @@ def main() -> int:
     refs = refs_doc["references"]
     manuscript = render_reference_sections(manuscript, refs)
     manuscript, example_count = expand_examples(manuscript, root)
+    if manuscript.count(BUILD_DATE_TOKEN) != 1:
+        raise SystemExit(f"Expected one {BUILD_DATE_TOKEN} token on the title page")
+    manuscript = manuscript.replace(BUILD_DATE_TOKEN, build_date())
+    if manuscript.count(book_index.INDEX_MARKER) != 1:
+        raise SystemExit(f"Expected one {book_index.INDEX_MARKER} marker")
+    index_entries = book_index.load_terms(root, manuscript)
+    found = book_index.scan(manuscript, index_entries, book_index.excluded_units(root))
+    manuscript = manuscript.replace(book_index.INDEX_MARKER, book_index.render_markdown(found, index_entries))
 
     canonical = root / "book" / "manuscript.md"
     distribution = root / "dist" / "Enterprise-General-Intelligence-v1.0.0.md"
@@ -175,6 +190,9 @@ def main() -> int:
         "appendices": len(re.findall(r"^# Appendix ", manuscript, re.M)),
         "citation_occurrences": len(re.findall(r"\[R\d{2}\]", manuscript)),
         "expanded_examples": example_count,
+        "build_date": build_date(),
+        "index_terms": sum(1 for units in found.values() if units),
+        "index_locators": sum(len(units) for units in found.values()),
         "cited_reference_ids": ids,
     }
     (root / "reports" / "assembly-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

@@ -13,7 +13,26 @@ import re
 import shutil
 from pathlib import Path
 
+import book_index
 import callouts
+from build_info import build_date
+
+# The index tracker for the build in progress. tools/book_index.py decides where
+# a term is marked; this renderer only writes the \index commands.
+INDEX: book_index.Tracker | None = None
+
+
+def index_marks(text: str) -> str:
+    """\\index commands for the terms book_index marks in this text."""
+    if INDEX is None:
+        return ""
+    out = []
+    for term, defining in INDEX.marks(text):
+        display = escape_plain(term)
+        for special in '"!@|':
+            display = display.replace(special, '"' + special)
+        out.append(r"\index{" + book_index.sort_key(term) + "@" + display + ("|textbf" if defining else "") + "}")
+    return "".join(out)
 
 
 def chapter_covers(root: Path) -> dict[str, str]:
@@ -107,11 +126,11 @@ def parse_markdown(markdown: str):
             i += 1
             while i < len(lines) and not lines[i].strip():
                 i += 1
-            intro: list[str] = []
-            while i < len(lines) and lines[i].strip() and not lines[i].startswith("#"):
-                intro.append(lines[i].strip())
+            raw: list[str] = []
+            while i < len(lines) and not lines[i].startswith("# "):
+                raw.append(lines[i])
                 i += 1
-            yield ("part", ident, title, " ".join(intro))
+            yield ("part", ident, title, part_intro(raw))
             continue
         if line.startswith("```"):
             language = line[3:].strip() or "text"
@@ -174,6 +193,46 @@ def parse_markdown(markdown: str):
             paragraph.append(candidate_stripped)
             i += 1
         yield ("paragraph", " ".join(paragraph))
+
+
+def part_intro(raw: list[str]) -> list[tuple[str, str]]:
+    """A Part page's text: lead and closing paragraphs plus an optional list."""
+    blocks: list[tuple[str, str]] = []
+    paragraph: list[str] = []
+
+    def flush() -> None:
+        if paragraph:
+            blocks.append(("para", " ".join(paragraph)))
+            paragraph.clear()
+
+    for line in raw:
+        if not line.strip():
+            flush()
+        elif re.match(r"^[-*]\s+", line):
+            flush()
+            blocks.append(("bullet", re.sub(r"^[-*]\s+", "", line).strip()))
+        elif line[:1] in (" ", "\t") and blocks and blocks[-1][0] == "bullet" and not paragraph:
+            blocks[-1] = ("bullet", blocks[-1][1] + " " + line.strip())
+        else:
+            paragraph.append(line.strip())
+    flush()
+    return blocks
+
+
+def render_part_intro(blocks: list[tuple[str, str]]) -> str:
+    out: list[str] = []
+    in_list = False
+    for kind, text in blocks:
+        if kind == "bullet" and not in_list:
+            out.append(r"\begin{BookPartList}")
+            in_list = True
+        if kind != "bullet" and in_list:
+            out.append(r"\end{BookPartList}")
+            in_list = False
+        out.append((r"\item " if kind == "bullet" else "") + inline(text) + ("" if kind == "bullet" else r"\par"))
+    if in_list:
+        out.append(r"\end{BookPartList}")
+    return "\n".join(out)
 
 
 def list_item(lines: list[str], i: int, first: str) -> tuple[str, int]:
@@ -289,7 +348,7 @@ def render_callout(rows: list[list[str]]) -> str:
     body = callouts.strip_marker(content)
     return "\n".join([
         r"\begin{" + environment + "}[" + escape_plain(title) + "]",
-        inline(body),
+        inline(body) + index_marks(content),
         r"\end{" + environment + "}",
     ])
 
@@ -423,7 +482,7 @@ def render_table(rows: list[list[str]]) -> str:
             padded = row + [""] * (columns - len(row))
             if index % 2 == 0:
                 output.append(r"\rowcolor{BookLight}")
-            output.append(" & ".join(inline(cell, cell=True) for cell in padded) + r" \\")
+            output.append(" & ".join(inline(cell, cell=True) + index_marks(cell) for cell in padded) + r" \\")
         output.extend([r"\end{tabular}", r"\BookTableEnd"])
         return "\n".join(output)
 
@@ -449,7 +508,7 @@ def render_table(rows: list[list[str]]) -> str:
         if index % 2 == 0:
             output.append(r"\rowcolor{BookLight}")
         end = r" \\*" if index <= kept else r" \\"
-        output.append(" & ".join(inline(cell, cell=True) for cell in padded) + end)
+        output.append(" & ".join(inline(cell, cell=True) + index_marks(cell) for cell in padded) + end)
     output.extend([r"\end{longtable}", r"\BookTableEnd"])
     return "\n".join(output)
 
@@ -540,12 +599,14 @@ def render_content(blocks: list[tuple], diagram_files: dict[str, str], book_titl
                     text = symbol + " " + inline(current[2])
                 else:
                     prefix = reference_target(current[1])
-                    text = prefix + inline(current[1])
+                    text = prefix + inline(current[1]) + index_marks(current[1])
                 output.append(r"\item " + text)
                 index += 1
             output.append(r"\end{" + environment + "}")
             continue
         if kind == "part":
+            if INDEX is not None:
+                INDEX.part()
             if first_part:
                 output.append(r"\mainmatter")
                 first_part = False
@@ -555,10 +616,17 @@ def render_content(blocks: list[tuple], diagram_files: dict[str, str], book_titl
                 stats["parts"] += 1
             output.append(
                 r"\BookPartPage{" + escape_plain(block[1]) + "}{" + inline(block[2])
-                + "}{" + inline(block[3]) + "}"
+                + "}{" + render_part_intro(block[3]) + "}"
             )
         elif kind == "heading":
             level, text = block[1], block[2]
+            if INDEX is not None:
+                INDEX.heading(level, text)
+            if level == 1 and text == book_index.INDEX_HEADING:
+                # The Markdown index lists chapter locators; the PDF prints the
+                # page index makeindex builds from the \index marks instead.
+                output.append(r"\BookIndex")
+                break
             chapter = re.match(r"^(\d{2}) — (.+)$", text)
             appendix = re.match(r"^Appendix ([A-Z]) — (.+)$", text)
             if level == 1 and chapter:
@@ -603,7 +671,7 @@ def render_content(blocks: list[tuple], diagram_files: dict[str, str], book_titl
                 stats["callouts"] += 1
             output.append(render_table(block[1]))
         elif kind == "quote":
-            output.extend([r"\begin{bookquote}", inline(block[1]), r"\end{bookquote}"])
+            output.extend([r"\begin{bookquote}", inline(block[1]) + index_marks(block[1]), r"\end{bookquote}"])
         elif kind == "paragraph":
             text = block[1]
             following = blocks[index + 1] if index + 1 < len(blocks) else None
@@ -616,7 +684,7 @@ def render_content(blocks: list[tuple], diagram_files: dict[str, str], book_titl
                 output.append(r"\BookNeedspace{" + format(listing_keep(following[2]) + LISTING_LABEL_PT, ".1f") + "pt}")
                 output.append(inline(text) + r"\par\nopagebreak")
             else:
-                output.append(inline(text) + r"\par")
+                output.append(inline(text) + index_marks(text) + r"\par")
         index += 1
     joined = "\n\n".join(output) + "\n"
     stats["citations"] = joined.count(r"\BookCitation{")
@@ -631,7 +699,7 @@ def make_main(book: dict) -> str:
         r"\usepackage{latex/bookstyle}",
         r"\begin{document}",
         r"\BookCover{assets/cover/cover-v" + book["version"] + ".png}",
-        r"\BookTitlePage{" + escape_plain(book["title"]) + "}{Book v" + book["version"] + " · Publication Release · September 2026}{" + escape_plain(book["author"]) + "}{A structured enterprise reference for executives, architects, platform teams, security leaders, SREs, and senior engineers.}",
+        r"\BookTitlePage{" + escape_plain(book["title"]) + "}{Book v" + book["version"] + " · Publication Release · " + build_date() + "}{" + escape_plain(book["author"]) + "}{A structured enterprise reference for executives, architects, platform teams, security leaders, SREs, and senior engineers.}",
         r"\input{latex/content/book-content.tex}",
         r"\end{document}",
         "",
@@ -649,10 +717,16 @@ OUT="latex/build"
 PDF_SOURCE="$OUT/Enterprise-General-Intelligence-v1.0.0.pdf"
 PDF_DEST="dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf"
 mkdir -p "$OUT" "dist"
+# makeindex finds the book's index style through kpathsea, so it resolves the
+# same way when latexmk runs makeindex from inside the output directory.
+export INDEXSTYLE="$ROOT/latex:${INDEXSTYLE:-}"
 if command -v latexmk >/dev/null 2>&1; then
   latexmk -xelatex -interaction=nonstopmode -halt-on-error -file-line-error -outdir="$OUT" "$ENTRY"
 elif command -v xelatex >/dev/null 2>&1; then
-  for pass in 1 2 3; do xelatex -interaction=nonstopmode -halt-on-error -file-line-error -output-directory="$OUT" "$ENTRY"; done
+  xelatex -interaction=nonstopmode -halt-on-error -file-line-error -output-directory="$OUT" "$ENTRY"
+  # The index: makeindex sorts the marks the first pass wrote.
+  makeindex -q -s bookindex.ist -o "$OUT/Enterprise-General-Intelligence-v1.0.0.ind" "$OUT/Enterprise-General-Intelligence-v1.0.0.idx"
+  for pass in 2 3; do xelatex -interaction=nonstopmode -halt-on-error -file-line-error -output-directory="$OUT" "$ENTRY"; done
 else
   echo "XeLaTeX is required. Use the included Dockerfile.latex or CI workflow." >&2
   exit 2
@@ -670,7 +744,7 @@ printf 'XeLaTeX PDF written to %s\\n' "$PDF_DEST"
 """
     (latex_dir / "compile.sh").write_text(compile_script, encoding="utf-8", newline="\n")
     (latex_dir / "compile.sh").chmod(0o755)
-    latexmkrc = "$pdf_mode = 5;\n$xelatex = 'xelatex -interaction=nonstopmode -halt-on-error -file-line-error %O %S';\n$out_dir = 'latex/build';\n"
+    latexmkrc = "$pdf_mode = 5;\n$xelatex = 'xelatex -interaction=nonstopmode -halt-on-error -file-line-error %O %S';\n$out_dir = 'latex/build';\n$makeindex = 'makeindex -q -s bookindex.ist -o %D %S';\n"
     (root / ".latexmkrc").write_text(latexmkrc, encoding="utf-8", newline="\n")
     dockerfile = """FROM texlive/texlive:latest-full
 WORKDIR /book
@@ -726,6 +800,8 @@ def main() -> int:
         vector = Path(item["file"]).with_suffix(".pdf")
         diagram_files[item["id"]] = vector.as_posix() if (root / vector).exists() else item["file"]
     blocks = list(parse_markdown(markdown))
+    global INDEX
+    INDEX = book_index.Tracker(book_index.load_terms(root, markdown), book_index.excluded_units(root))
     book_cfg = json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]
     content, stats = render_content(blocks, diagram_files, book_cfg["title"], chapter_covers(root))
 

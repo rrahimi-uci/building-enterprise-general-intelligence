@@ -1,5 +1,8 @@
 % Figure 1-2 -- The four levels from a model to an enterprise agentic system.
-% Restyled from capability-ladder.gv; content, columns and rows are unchanged.
+% Restyled from capability-ladder.gv; columns and rows are unchanged. The
+% level-three failure was corrected in v1.0.0 review: "runs forever; loses
+% everything on restart" overstated it, since frameworks cap turns and can
+% persist sessions and run state (Chapter 1, Level three).
 %
 % Original element -> restyled element
 %   h1 LEVEL | h2 WHAT IT ADDS | h3 THE NEW FAILURE CLASS
@@ -11,8 +14,9 @@
 %           adaptive multi-step work | durability . authority, evidence . control
 %        -> four description cards, same hue as their level
 %   f1..f4  confidently wrong about facts it cannot reach | acts on data the
-%           caller was never authorized to see | runs forever; loses everything
-%           on restart | complexity -- which is why the boundaries are explicit
+%           caller was never authorized to see | stops only at a turn limit;
+%           a restart loses state the runtime did not save | complexity -- which
+%           is why the boundaries are explicit
 %        -> four failure cards: red, red, red and amber (the source's fourth is
 %           amber)
 %   edges: none (the source rows and columns are placed by invisible chains)
@@ -45,7 +49,7 @@
   \foreach \i/\role/\lvl/\name/\add/\fr/\frrole [evaluate=\i as \y using {-\i*66+0}] in {
       0/slate/1/Model/{language\\understanding}/{confidently wrong about\\facts it cannot reach}/red,
       1/cyan/2/Model + tools/{contact with\\current reality}/{acts on data the caller\\was never authorized to see}/red,
-      2/teal/3/Agent/{adaptive\\multi-step work}/{runs forever; loses\\everything on restart}/red,
+      2/teal/3/Agent/{adaptive\\multi-step work}/{stops only at a turn limit;\\a restart loses state\\the runtime did not save}/red,
       3/blue/4/Enterprise system/{durability · authority\\evidence · control}/{complexity — which is why\\the boundaries are explicit}/amber} {
     \dgrow[text width=140pt]{lv\i}{\role}{(80.5,\y)}{\lvl}{\dgcontent{\name}{}{}}
     \node[dg card=\role, text width=118pt, minimum height=52pt] (ad\i) at (242.5,\y)

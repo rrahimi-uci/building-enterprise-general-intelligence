@@ -9,12 +9,12 @@
 - **appendix_dividers:** `1`
 - **chapters:** `28`
 - **appendices:** `12`
-- **diagrams:** `44`
+- **diagrams:** `45`
 - **code_blocks:** `65`
 - **longtables:** `158`
 - **compact_tables:** `99`
 - **callout_tables:** `70`
-- **citation_occurrences:** `156`
+- **citation_occurrences:** `158`
 - **bundled_fonts:** `8`
 
 ## Quality controls

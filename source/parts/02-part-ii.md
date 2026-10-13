@@ -1,10 +1,14 @@
 # PART II — ARCHITECTURE, KNOWLEDGE, AND CONTEXT
 
-The first Part established that the model is not the system of record. This Part
-draws the system around it: who owns each fact, where policy is enforced, how
-knowledge stays current, and how one run receives only the context it is
-allowed to see. By the end, “the agent knows” has become a set of inspectable
-contracts rather than a vague claim about a prompt.
+Part I established that the model is not the system of record. This Part draws
+the system around it:
+
+- **Chapter 4** decides who owns each fact and where policy is enforced.
+- **Chapter 5** gives knowledge an owner and keeps it current as a versioned release.
+- **Chapter 6** gives each run only the context it is allowed to see.
+
+By the end, “the agent knows” has become a set of inspectable contracts rather
+than a vague claim about a prompt.
 
 # 04 — Design the Architecture Around the Model
 
@@ -262,7 +266,7 @@ A vector database is an index, not the source of truth; an agent transcript is n
 | --- | --- | --- |
 | Event contract | Use a CloudEvents 1.0-compatible envelope for interoperability, but keep domain semantics and delivery guarantees in versioned event contracts. Source plus ID supports deduplication; large or sensitive artifacts should be referenced rather than embedded. | R04 |
 
-The discussion above draws on R03; R04. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R03; R04. Appendix J lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -592,7 +596,7 @@ Ingestion fills the Semantic view with labelled text and the Normative view's ru
 | Reference implementation | At the pinned commit the author's repository has the build-time mechanisms this chapter points at; it has no release, approval, pointer, or runtime, and shows nothing about other systems. | R48 |
 | Knowledge lifecycle (book-authored recommendation) | The object model, graph presentation, planes, gates, states, and everything from approval onward are the book's own. | — |
 
-The discussion above draws on R44; R45; R46; R47; R48. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R44; R45; R46; R47; R48. Appendix J lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 
@@ -858,7 +862,7 @@ There is one RunManifest per run and one ContextManifest per AgentStepRequest; t
 | Privacy obligations | The GDPR sets purpose limitation, a lawful basis such as consent, and data-subject rights including erasure; NIST's generative-AI profile names leakage of personal data and risks to consent and purpose specification among generative-AI privacy risks. | R13; R39 |
 | Privacy lifecycle (book-authored recommendation) | Apply those obligations to context and memory: handle data-subject requests, propagate deletion to derived summaries and indexes with proof, let legal holds take precedence, and enforce residency and provider retention controls. | — |
 
-The discussion above draws on R13; R39. Appendix K lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R13; R39. Appendix J lists the complete sources and records their authority, version, and scope.
 
 ## A sensible place to start
 

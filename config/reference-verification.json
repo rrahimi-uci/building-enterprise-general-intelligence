@@ -199,8 +199,8 @@
     "id": "R29",
     "status": "verified",
     "method": "direct primary-source review",
-    "verified": "2026-10-11",
-    "caveat": "Living documentation; no visible date, so the year is n.d. The pinned SDK baseline is R30."
+    "verified": "2026-10-13",
+    "caveat": "Living documentation; no visible date, so the year is n.d. The pinned SDK baseline is R30. On 2026-10-13 the Running agents page (turn limit, sessions, RunState resumption, durable-execution integrations) and the Tracing page (enabled by default, OpenAI backend export, trace_include_sensitive_data default true) were re-read, and the defaults were confirmed in the v0.22.2 source: DEFAULT_MAX_TURNS = 10 and OPENAI_AGENTS_TRACE_INCLUDE_SENSITIVE_DATA defaulting to true."
   },
   {
     "id": "R30",

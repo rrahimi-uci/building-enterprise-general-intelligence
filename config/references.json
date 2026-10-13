@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "citation_style": "Numbered source identifiers [R01]\u2026[R58]; bibliography ordered by identifier; accessed date shown for online sources.",
   "release": "1.0.0",
-  "verified_on": "2026-10-11",
+  "verified_on": "2026-10-13",
   "references": [
     {
       "id": "R01",
@@ -432,9 +432,9 @@
       "title": "OpenAI Agents SDK for Python",
       "publication_or_version": "Current documentation",
       "url": "https://openai.github.io/openai-agents-python",
-      "supports": "Documents agents, the runner, function tools, structured output types, input/output/tool guardrails, handoffs, sessions, MCP integration, results with interruptions and resumable RunState for human-in-the-loop approval, local and hosted shell-tool skills, sandbox agents, and tracing with configurable sensitive-data capture.",
+      "supports": "Documents agents, the runner and its turn limit (MaxTurnsExceeded when a run exceeds max_turns), function tools, structured output types, input/output/tool guardrails, handoffs, sessions that persist conversation history, MCP integration, results with interruptions and resumable RunState for human-in-the-loop approval, durable-execution integrations (Temporal, Dapr, Restate, DBOS) for runs that span long waits, retries, or process restarts, local and hosted shell-tool skills, sandbox agents, and tracing that is enabled by default, exports to the OpenAI backend, and includes sensitive model and tool data unless trace_include_sensitive_data is turned off.",
       "verification": {
-        "checked_on": "2026-10-11",
+        "checked_on": "2026-10-13",
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }

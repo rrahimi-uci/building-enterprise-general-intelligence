@@ -16,14 +16,14 @@ Chapter 1's prototype failed in one week for five reasons, none of them intellig
 
 The model provides bounded reasoning; the surrounding system owns state, authority, effects, evidence, and recovery.
 
-The companion code implements the first three checkpoints (C01–C03); later checkpoints are roadmap targets, specified in this book and tracked in Appendix I.
+The companion code implements the first three checkpoints (C01–C03); later checkpoints are roadmap targets, specified in this book and tracked in Appendix H.
 
 # PART REFERENCE — APPENDICES: FIELD GUIDE AND REFERENCE
 
 The appendices are meant to be used at the desk, not admired at the end of the
-book. They collect decision aids, runbooks, contracts, framework notes, a
-glossary, the Harborlight implementation guide, and the evidence registry that
-keeps the main argument honest.
+book. They collect decision aids, runbooks, contracts, framework notes, the
+Harborlight implementation guide, the evidence registry that keeps the main
+argument honest, and a glossary. An index of key terms follows them.
 
 # Appendix A — Choosing the Right Pattern: A Decision Guide
 
@@ -408,89 +408,7 @@ Before an agent can mutate an enterprise system, require all of the following:
 * Unit, contract, workflow fault, simulation, adversarial, regression, and staging E2E tests.
 * Canary, kill switch, rollback, incident runbook, and SLOs for quality, reliability, safety, latency, and cost.
 
-# Appendix H — Glossary
-
-Chapter 1 § The vocabulary this book assumes introduces the core terms; this glossary defines them and the rest of the book's working vocabulary. Records are listed with their fields in Appendix C.
-
-| **Term** | **Definition** | **Chapter** |
-| --- | --- | --- |
-| A2A Gateway | Control point that decides whether an external agent may receive or return a task, and terminates the A2A protocol; internal delegation belongs to the Task Service | 19 |
-| Acceptance criteria | Executable checks over authoritative state that decide whether a run succeeded; evaluated by code, never asserted by the model | 2 |
-| Acceptance engine | The only component that may mark a candidate, plan node, or answer as accepted; runs deterministic checks first and calibrated judges only where a criterion cannot be computed | 13 |
-| AcceptanceDecision | The acceptance engine's record: accepted, rejected with typed defects, or escalated, with evaluator type and evidence per criterion | 13 |
-| Activity | A unit of I/O, such as a model or tool call, that a durable workflow schedules, retries, and records | 15 |
-| Actor | The workload identity performing an action on behalf of a subject | 21 |
-| AgentRuntime | Provider-neutral interface that executes one bounded agent step: `AgentRuntime.execute(AgentStepRequest) → AgentStepResult` | 3 |
-| AgentSpec | The versioned definition of an agent: instructions, required Skills, topology, and owner | 4 |
-| AgentStepRequest / AgentStepResult | The platform contract into and out of one agent step; the result's status is `completed`, `needs_input`, `proposed_action`, or `failed` | 3 |
-| API Gateway | Control point that decides whether a caller is admitted to the platform at all | 1 |
-| Approval | A human decision bound to one exact proposal and its expiry (ApprovalRequest, ApprovalDecision, Approval Service); it never replaces reauthorization at commit | 14 |
-| Artifact | Immutable output or evidence object with schema, hash, classification, and provenance | 4 |
-| Audience binding | Restricting a credential to one intended recipient so it cannot be replayed against another service | 21 |
-| Authorization | The policy decision over subject, actor, purpose, resource, and action; distinct from a human approval | 21 |
-| Canary | Exposing a change to a bounded cohort of real traffic with explicit stop conditions before full release | 27 |
-| Candidate digest | The hash over a proposed knowledge release's content, its pinned base, the live release it expects to replace, and the resolver version; an approval binds to it as an ApprovalDecision binds to a proposal hash (14), and any edit invalidates it | 5 |
-| Capability envelope | The platform-computed maximum scope a run or child task may use (actions, resources, purpose, data, region, risk, time, spend, delegation), identified by its `grant_id`; a child's envelope is a provable subset of its parent's | 21 |
-| Causal run trace | One run's linked spans across workflow, model, tools, approvals, and effects; links to the authoritative records and replaces none | 24 |
-| Change class | The classification of a proposed change; with the use-case tier it sets review depth | 25 |
-| ChangeBundle | A proposed change to versioned objects; it becomes a ReleaseManifest only when promoted | 27 |
-| Child task | Durable delegated work with one owner, carried by a TaskEnvelope and executed as a child workflow | 18 |
-| Compensation | A new, authorized business action that reverses a committed effect; it never erases the original receipt | 22 |
-| Compliance knowledge | The requirements an organization takes from regulations, standards, contracts, and internal policies, the obligations and controls derived from them, the constraints the runtime enforces, and the definitions they depend on, each with provenance to its authoritative source; managed as a versioned, released asset | 5 |
-| ContextManifest | Record of exactly what one agent step's context contained and why: ordered segments with source, trust tier, authorization decision, and token allocation | 6 |
-| Control | The mechanism by which an obligation is discharged or its breach prevented: an enforced rule, a check, an approval, or a review. Controls execute at control points (1); a guardrail is a detector, not a control | 5 |
-| Credential lease | A short-lived, audience-bound credential minted after authorization for one downstream call; the proof that accompanies a capability envelope's scope | 21 |
-| Deterministic shell | The six gates around a model proposal: propose, validate, authorize (including any human approval), commit, verify, accept | 2 |
-| Downscoping | Deriving a narrower credential from a broader one so delegated work never exceeds its delegator's authority | 21 |
-| Effect | An externally observable mutation with durable intent, state, receipt, and reconciliation | 22 |
-| Effect ledger | The Effect Service's durable record of every external change attempted, its idempotency key, and its confirmed outcome | 22 |
-| Effect risk class (R0–R4) | Classification of one tool effect, from R0 pure transform to R4 irreversible, privileged, or financial action that an agent may only propose | 22 |
-| Enforced rule | A typed rule from a pinned knowledge release that a control point evaluates before an effect, with true, false, or unknown results; unknown refuses. Distinct from a guardrail, which only detects | 5 |
-| EnvironmentBinding | Says which ReleaseManifest new runs receive for a tenant, use case, environment, and region; rollback changes it. A knowledge stream's pointer is a KnowledgeBinding | 27 |
-| EvaluationResult | One evaluator's score for one case and attempt, with evaluator type and version | 25 |
-| EvidenceRef | Source revision or artifact reference with hash, provenance, and authorization lineage | 6 |
-| Federated task | A child task that crosses a trust boundary to an external agent through the A2A Gateway | 19 |
-| Global control tier | The deployment tier that publishes signed, immutable definitions and holds no run state | 4 |
-| Guardrail | A probabilistic detector, such as an input or output check; its finding feeds a policy point and never decides authorization | 20 |
-| Handoff | An accountable transfer of task or interaction ownership that takes effect only when the recipient acknowledges; a framework handoff moves control, not accountability | 11 |
-| Idempotency key | A stable identifier the platform derives from tenant, run, and logical effect and binds to an intent hash; passed to a downstream system that supports one so it recognizes a repeated request as the same request. The model never chooses it | 22 |
-| InterventionRequired | Run, task, or effect state used when correctness cannot be established automatically; it opens an intervention task | 15, 22 |
-| Intervention task | A typed request for human help with an uncertain run; its response is an input to the run and never approves an effect | 14 |
-| Knowledge graph | The governed, versioned instance of an ontology: typed nodes and edges with provenance, scope, and permissions, frozen into a release and traversed within bounds | 5 |
-| Knowledge registry | Control-plane store of ontology versions, knowledge objects, release manifests, and the live pointer (KnowledgeBinding) per stream, tenant, environment, and region; the Knowledge Hub is its read-only runtime surface | 5 |
-| Knowledge release | The immutable, content-addressed set of knowledge objects, ontology version, and source revisions that the registry publisher activated after a complete gate record and an independent approval; what a run pins | 5 |
-| KnowledgeArtifact | The Knowledge Hub's record of a governed artifact (document, chunk, extracted field, or rule) with its source digest and region, versions, verdicts, owner, and scope | 5 |
-| Layer | A deployable unit of the architecture (for example, Model access or Durable execution); layers serve the planes | 4 |
-| LLM Gateway | Control point that decides which model may answer under which data policy, and enforces model routing, privacy, budgets, and evidence | 4 |
-| MCP Gateway | Control point that terminates MCP and decides whether an external server and tool are trusted and eligible | 19 |
-| Obligation | A duty derived from a requirement, with a subject, a scope, a modality, and an effective period. A PolicyDecision's obligations (21) and a run's obligations (13) are obligations bound to one action or one run | 5 |
-| Ontology | The schema of a knowledge graph: the entity kinds, relationships, properties, constraints, and vocabulary its objects must conform to; versioned separately from the instances it governs | 5 |
-| Plan IR | Typed representation of proposed work that is compiled and checked before any node is scheduled | 12 |
-| Plane | An ownership domain; the seven planes give every authoritative record one owner | 4 |
-| Provenance | Where content came from, under what authority it was retrieved, and how far it may be trusted | 5, 6 |
-| Purpose | Why an action is requested; carried with subject and actor so a valid identity cannot be reused for an unrelated operation | 21 |
-| Regional execution cell | The regional unit that holds a run's control, workflow, workers, gateways, context, and effect ledger | 4 |
-| Registry publisher | The knowledge registry's single service identity that merges approved content, stores and verifies a release, and moves the live pointer; no human or assistant holds it | 5 |
-| Release gate | The decision whether a candidate may be promoted, recorded as a ReleaseGateDecision | 25 |
-| ReleaseManifest | The immutable, signed graph of every behavior-relevant version in a release; fixes the eligible Skill and pack set | 27 |
-| Requirement | A statement in an authoritative source that the organization must satisfy; the source, span, and digest are its provenance | 5 |
-| Run | One admitted unit of work with a RunManifest; it contains a workflow execution whose nodes run activities, agent steps, or child tasks | 4, 15 |
-| RunManifest | Per-run record written once at admission: the ReleaseManifest digest plus what was resolved for this run | 4 |
-| Skill | Versioned capability package: interface, instructions, eligible tools, knowledge, policy, risk ceiling, evaluation, owner, digest | 8 |
-| Skill Pack | Certified, co-released set of compatible Skills with shared policy and evaluations; installing one grants nothing | 9 |
-| Subject | The principal whose delegated authority initiates a protected action | 21 |
-| TaskEnvelope | The contract every child task carries, in eight field groups | 18 |
-| Tenant extension | A tenant's additions to a shared base knowledge release (stricter rules, extra kinds, relationships, or terms), versioned and resolved against a pinned base; never a fork, and never a removal or redefinition of a base element | 5 |
-| Tool Gateway | Control point that decides whether an effect may happen for this subject and dispatches it as one logical effect under the effect ledger, so a retry cannot repeat it; it does not promise cross-system exactly-once delivery; protocol-agnostic | 2, 22 |
-| Trajectory | A run's ordered decisions viewed for evaluation | 25 |
-| Trust tier | The rank of a context segment's origin, from tier 1 system instructions to tier 4 retrieved data that can never direct behavior | 6 |
-| Unknown | Effect state when a mutation may have reached the downstream system and the platform holds neither a receipt nor proof of absence; it blocks retry and dependent work | 22 |
-| Use-case tier (T0–T4) | Classification of a whole use case that sets governance and release depth; never lower than its most dangerous eligible effect requires | 26 |
-| ValidationReport | The release evidence for one candidate: evaluation comparisons, other test results, and slice regressions | 25 |
-| Verification status | A claim's or field's verdict against its pinned source: supported, contradicted, or insufficient evidence. It shows the source says it, not that it is true; corroboration by an independent source is recorded separately | 5 |
-| Workflow execution | The durable, replayable history that owns a run's state; one active execution per run generation | 15 |
-
-# Appendix I — Companion Implementation Guide: Harborlight Mortgage
+# Appendix H — Companion Implementation Guide: Harborlight Mortgage
 
 This appendix explains how to run and verify the book's companion code.
 
@@ -539,7 +457,7 @@ patterns, not aliases for A2A AgentSkill metadata or Skills over MCP.
 
 Run `.venv-examples/bin/python -m compileall -q mortgage_case examples tests`, then repeat the three commands above. The repository README records the companion code's correction history.
 
-# Appendix J — Prompt and Acceptance Criteria for a Coding Agent
+# Appendix I — Prompt and Acceptance Criteria for a Coding Agent
 
 ## Deep-research coding-agent prompt
 
@@ -709,11 +627,11 @@ A submission is accepted only if all are true:
 * Include failure paths and operator actions, not only happy paths.
 * End with a prioritized 30/60/90-day plan, staffing/ownership model, and list of decisions that require enterprise-specific input.
 
-# Appendix K — References and Evidence Scope
+# Appendix J — References and Evidence Scope
 
 <!-- Generated at assembly from config/references.json by tools/assemble_manuscript.py. Edit the registry, not this section. -->
 
-# Appendix L — Capacity, Resilience, and Release Acceptance
+# Appendix K — Capacity, Resilience, and Release Acceptance
 
 ## Quantitative sizing method
 
@@ -738,3 +656,89 @@ A submission is accepted only if all are true:
 | Operations | SLOs, dashboards, paging, kill-switch drill, RTO/RPO restoration evidence, runbook ownership |
 | Supply chain | Lock digest, SBOM, signed provenance, trusted builder/signer, release manifest, revocation exercise |
 | Human factors | Accessible approval test, preview fidelity, reviewer calibration, fatigue/override metrics, recourse path |
+
+# Appendix L — Glossary
+
+Chapter 1 § The vocabulary this book assumes introduces the core terms; this glossary defines them and the rest of the book's working vocabulary. Records are listed with their fields in Appendix C.
+
+| **Term** | **Definition** | **Chapter** |
+| --- | --- | --- |
+| A2A Gateway | Control point that decides whether an external agent may receive or return a task, and terminates the A2A protocol; internal delegation belongs to the Task Service | 19 |
+| Acceptance criteria | Executable checks over authoritative state that decide whether a run succeeded; evaluated by code, never asserted by the model | 2 |
+| Acceptance engine | The only component that may mark a candidate, plan node, or answer as accepted; runs deterministic checks first and calibrated judges only where a criterion cannot be computed | 13 |
+| AcceptanceDecision | The acceptance engine's record: accepted, rejected with typed defects, or escalated, with evaluator type and evidence per criterion | 13 |
+| Activity | A unit of I/O, such as a model or tool call, that a durable workflow schedules, retries, and records | 15 |
+| Actor | The workload identity performing an action on behalf of a subject | 21 |
+| AgentRuntime | Provider-neutral interface that executes one bounded agent step: `AgentRuntime.execute(AgentStepRequest) → AgentStepResult` | 3 |
+| AgentSpec | The versioned definition of an agent: instructions, required Skills, topology, and owner | 4 |
+| AgentStepRequest / AgentStepResult | The platform contract into and out of one agent step; the result's status is `completed`, `needs_input`, `proposed_action`, or `failed` | 3 |
+| API Gateway | Control point that decides whether a caller is admitted to the platform at all | 1 |
+| Approval | A human decision bound to one exact proposal and its expiry (ApprovalRequest, ApprovalDecision, Approval Service); it never replaces reauthorization at commit | 14 |
+| Artifact | Immutable output or evidence object with schema, hash, classification, and provenance | 4 |
+| Audience binding | Restricting a credential to one intended recipient so it cannot be replayed against another service | 21 |
+| Authorization | The policy decision over subject, actor, purpose, resource, and action; distinct from a human approval | 21 |
+| Canary | Exposing a change to a bounded cohort of real traffic with explicit stop conditions before full release | 27 |
+| Candidate digest | The hash over a proposed knowledge release's content, its pinned base, the live release it expects to replace, and the resolver version; an approval binds to it as an ApprovalDecision binds to a proposal hash (14), and any edit invalidates it | 5 |
+| Capability envelope | The platform-computed maximum scope a run or child task may use (actions, resources, purpose, data, region, risk, time, spend, delegation), identified by its `grant_id`; a child's envelope is a provable subset of its parent's | 21 |
+| Causal run trace | One run's linked spans across workflow, model, tools, approvals, and effects; links to the authoritative records and replaces none | 24 |
+| Change class | The classification of a proposed change; with the use-case tier it sets review depth | 25 |
+| ChangeBundle | A proposed change to versioned objects; it becomes a ReleaseManifest only when promoted | 27 |
+| Child task | Durable delegated work with one owner, carried by a TaskEnvelope and executed as a child workflow | 18 |
+| Compensation | A new, authorized business action that reverses a committed effect; it never erases the original receipt | 22 |
+| Compliance knowledge | The requirements an organization takes from regulations, standards, contracts, and internal policies, the obligations and controls derived from them, the constraints the runtime enforces, and the definitions they depend on, each with provenance to its authoritative source; managed as a versioned, released asset | 5 |
+| ContextManifest | Record of exactly what one agent step's context contained and why: ordered segments with source, trust tier, authorization decision, and token allocation | 6 |
+| Control | The mechanism by which an obligation is discharged or its breach prevented: an enforced rule, a check, an approval, or a review. Controls execute at control points (1); a guardrail is a detector, not a control | 5 |
+| Credential lease | A short-lived, audience-bound credential minted after authorization for one downstream call; the proof that accompanies a capability envelope's scope | 21 |
+| Deterministic shell | The six gates around a model proposal: propose, validate, authorize (including any human approval), commit, verify, accept | 2 |
+| Downscoping | Deriving a narrower credential from a broader one so delegated work never exceeds its delegator's authority | 21 |
+| Effect | An externally observable mutation with durable intent, state, receipt, and reconciliation | 22 |
+| Effect ledger | The Effect Service's durable record of every external change attempted, its idempotency key, and its confirmed outcome | 22 |
+| Effect risk class (R0–R4) | Classification of one tool effect, from R0 pure transform to R4 irreversible, privileged, or financial action that an agent may only propose | 22 |
+| Enforced rule | A typed rule from a pinned knowledge release that a control point evaluates before an effect, with true, false, or unknown results; unknown refuses. Distinct from a guardrail, which only detects | 5 |
+| EnvironmentBinding | Says which ReleaseManifest new runs receive for a tenant, use case, environment, and region; rollback changes it. A knowledge stream's pointer is a KnowledgeBinding | 27 |
+| EvaluationResult | One evaluator's score for one case and attempt, with evaluator type and version | 25 |
+| EvidenceRef | Source revision or artifact reference with hash, provenance, and authorization lineage | 6 |
+| Federated task | A child task that crosses a trust boundary to an external agent through the A2A Gateway | 19 |
+| Global control tier | The deployment tier that publishes signed, immutable definitions and holds no run state | 4 |
+| Guardrail | A probabilistic detector, such as an input or output check; its finding feeds a policy point and never decides authorization | 20 |
+| Handoff | An accountable transfer of task or interaction ownership that takes effect only when the recipient acknowledges; a framework handoff moves control, not accountability | 11 |
+| Idempotency key | A stable identifier the platform derives from tenant, run, and logical effect and binds to an intent hash; passed to a downstream system that supports one so it recognizes a repeated request as the same request. The model never chooses it | 22 |
+| InterventionRequired | Run, task, or effect state used when correctness cannot be established automatically; it opens an intervention task | 15, 22 |
+| Intervention task | A typed request for human help with an uncertain run; its response is an input to the run and never approves an effect | 14 |
+| Knowledge graph | The governed, versioned instance of an ontology: typed nodes and edges with provenance, scope, and permissions, frozen into a release and traversed within bounds | 5 |
+| Knowledge registry | Control-plane store of ontology versions, knowledge objects, release manifests, and the live pointer (KnowledgeBinding) per stream, tenant, environment, and region; the Knowledge Hub is its read-only runtime surface | 5 |
+| Knowledge release | The immutable, content-addressed set of knowledge objects, ontology version, and source revisions that the registry publisher activated after a complete gate record and an independent approval; what a run pins | 5 |
+| KnowledgeArtifact | The Knowledge Hub's record of a governed artifact (document, chunk, extracted field, or rule) with its source digest and region, versions, verdicts, owner, and scope | 5 |
+| Layer | A deployable unit of the architecture (for example, Model access or Durable execution); layers serve the planes | 4 |
+| LLM Gateway | Control point that decides which model may answer under which data policy, and enforces model routing, privacy, budgets, and evidence | 4 |
+| MCP Gateway | Control point that terminates MCP and decides whether an external server and tool are trusted and eligible | 19 |
+| Obligation | A duty derived from a requirement, with a subject, a scope, a modality, and an effective period. A PolicyDecision's obligations (21) and a run's obligations (13) are obligations bound to one action or one run | 5 |
+| Ontology | The schema of a knowledge graph: the entity kinds, relationships, properties, constraints, and vocabulary its objects must conform to; versioned separately from the instances it governs | 5 |
+| Plan IR | Typed representation of proposed work that is compiled and checked before any node is scheduled | 12 |
+| Plane | An ownership domain; the seven planes give every authoritative record one owner | 4 |
+| Provenance | Where content came from, under what authority it was retrieved, and how far it may be trusted | 5, 6 |
+| Purpose | Why an action is requested; carried with subject and actor so a valid identity cannot be reused for an unrelated operation | 21 |
+| Regional execution cell | The regional unit that holds a run's control, workflow, workers, gateways, context, and effect ledger | 4 |
+| Registry publisher | The knowledge registry's single service identity that merges approved content, stores and verifies a release, and moves the live pointer; no human or assistant holds it | 5 |
+| Release gate | The decision whether a candidate may be promoted, recorded as a ReleaseGateDecision | 25 |
+| ReleaseManifest | The immutable, signed graph of every behavior-relevant version in a release; fixes the eligible Skill and pack set | 27 |
+| Requirement | A statement in an authoritative source that the organization must satisfy; the source, span, and digest are its provenance | 5 |
+| Run | One admitted unit of work with a RunManifest; it contains a workflow execution whose nodes run activities, agent steps, or child tasks | 4, 15 |
+| RunManifest | Per-run record written once at admission: the ReleaseManifest digest plus what was resolved for this run | 4 |
+| Skill | Versioned capability package: interface, instructions, eligible tools, knowledge, policy, risk ceiling, evaluation, owner, digest | 8 |
+| Skill Pack | Certified, co-released set of compatible Skills with shared policy and evaluations; installing one grants nothing | 9 |
+| Subject | The principal whose delegated authority initiates a protected action | 21 |
+| TaskEnvelope | The contract every child task carries, in eight field groups | 18 |
+| Tenant extension | A tenant's additions to a shared base knowledge release (stricter rules, extra kinds, relationships, or terms), versioned and resolved against a pinned base; never a fork, and never a removal or redefinition of a base element | 5 |
+| Tool Gateway | Control point that decides whether an effect may happen for this subject and dispatches it as one logical effect under the effect ledger, so a retry cannot repeat it; it does not promise cross-system exactly-once delivery; protocol-agnostic | 2, 22 |
+| Trajectory | A run's ordered decisions viewed for evaluation | 25 |
+| Trust tier | The rank of a context segment's origin, from tier 1 system instructions to tier 4 retrieved data that can never direct behavior | 6 |
+| Unknown | Effect state when a mutation may have reached the downstream system and the platform holds neither a receipt nor proof of absence; it blocks retry and dependent work | 22 |
+| Use-case tier (T0–T4) | Classification of a whole use case that sets governance and release depth; never lower than its most dangerous eligible effect requires | 26 |
+| ValidationReport | The release evidence for one candidate: evaluation comparisons, other test results, and slice regressions | 25 |
+| Verification status | A claim's or field's verdict against its pinned source: supported, contradicted, or insufficient evidence. It shows the source says it, not that it is true; corroboration by an independent source is recorded separately | 5 |
+| Workflow execution | The durable, replayable history that owns a run's state; one active execution per run generation | 15 |
+
+# Index
+
+[[INDEX]]

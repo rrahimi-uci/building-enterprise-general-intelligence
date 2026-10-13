@@ -11,6 +11,7 @@ artifacts; change book/manuscript.md, config, assets, or this renderer.
 """
 from __future__ import annotations
 from pathlib import Path
+import book_index
 import callouts
 from datetime import datetime,timezone
 from zipfile import ZipFile,ZipInfo,ZIP_DEFLATED
@@ -26,6 +27,9 @@ from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.shared import Inches,Pt,RGBColor
 
 FIXED_DT=datetime(2026,9,13,12,0,0,tzinfo=timezone.utc)
+# The index tracker for the build in progress (tools/book_index.py decides where
+# marks go; this renderer only turns them into Word XE fields).
+INDEX=None
 
 def load(root:Path):
     return json.loads((root/'config/book.json').read_text(encoding='utf-8'))
@@ -110,6 +114,19 @@ def list_item(lines,i,first):
         parts.append(lines[i].strip()); i+=1
     return ' '.join(parts),i
 
+def part_intro(raw):
+    """A Part page's text: lead and closing paragraphs plus an optional list."""
+    blocks=[]; para=[]
+    def flush():
+        if para: blocks.append(('para',' '.join(para))); para.clear()
+    for line in raw:
+        if not line.strip(): flush(); continue
+        if re.match(r'^[-*]\s+',line): flush(); blocks.append(('bullet',re.sub(r'^[-*]\s+','',line).strip())); continue
+        if line[:1] in (' ','\t') and blocks and blocks[-1][0]=='bullet' and not para:
+            blocks[-1]=('bullet',blocks[-1][1]+' '+line.strip()); continue
+        para.append(line.strip())
+    flush(); return blocks
+
 def parse(md):
     lines=md.splitlines(); i=0
     # Optional YAML front matter.
@@ -127,10 +144,10 @@ def parse(md):
         if pm:
             ident,title=pm.groups(); i+=1
             while i<len(lines) and not lines[i].strip(): i+=1
-            intro=[]
-            while i<len(lines) and lines[i].strip() and not lines[i].startswith('#'):
-                intro.append(lines[i].strip()); i+=1
-            yield ('part',ident,title,' '.join(intro)); continue
+            raw=[]
+            while i<len(lines) and not lines[i].startswith('# '):
+                raw.append(lines[i]); i+=1
+            yield ('part',ident,title,part_intro(raw)); continue
         if line.startswith('```'):
             lang=line[3:].strip() or 'text'; code=[]; i+=1
             while i<len(lines) and not lines[i].startswith('```'): code.append(lines[i]); i+=1
@@ -182,6 +199,28 @@ def add_inline(p,text,cfg,bold_override=False):
     if pos<len(text):
         r=p.add_run(md_unescape(text[pos:])); r.bold=bold_override or None
 
+def field_run(p,kind=None,instr=None):
+    r=OxmlElement('w:r')
+    if kind:
+        f=OxmlElement('w:fldChar'); f.set(qn('w:fldCharType'),kind); r.append(f)
+    else:
+        t=OxmlElement('w:instrText'); t.set(qn('xml:space'),'preserve'); t.text=instr; r.append(t)
+    return r
+
+def mark_index(p,text):
+    """Append a Word XE field for each term book_index marks in this text."""
+    if INDEX is None: return
+    for term,defining in INDEX.marks(text):
+        instr=' XE "'+term.replace('"','')+'"'+(' \\b' if defining else '')+' '
+        p._p.extend([field_run(p,'begin'),field_run(p,instr=instr),field_run(p,'end')])
+
+def open_index_field(p):
+    """Start Word's INDEX field before this paragraph's text. Its cached result
+    is the Markdown index (chapter locators) until Word updates the field."""
+    runs=[field_run(p,'begin'),field_run(p,instr=' INDEX \\h "A" \\e ", " '),field_run(p,'separate')]
+    anchor=p._p.find(qn('w:pPr'))
+    for i,r in enumerate(runs): p._p.insert((list(p._p).index(anchor)+1 if anchor is not None else 0)+i,r)
+
 # Every numbered list restarts at 1. The List Number style carries one shared
 # numbering instance, so each new list gets its own instance with a start override.
 def new_numbered_list(doc):
@@ -209,8 +248,20 @@ def add_part(doc,ident,title,intro,cfg):
     t=doc.add_table(rows=1,cols=1); t.autofit=False; row=t.rows[0]; row.height=Inches(8.45); row.height_rule=WD_ROW_HEIGHT_RULE.EXACTLY; cell=t.cell(0,0); cell.vertical_alignment=WD_CELL_VERTICAL_ALIGNMENT.CENTER; shade(cell,C['navy']); cell_margins(cell,300,320,300,320)
     p=cell.paragraphs[0]; p.alignment=WD_ALIGN_PARAGRAPH.CENTER; r=p.add_run('PART '+ident); r.font.name=cfg['design']['fonts']['sans']; r.font.size=Pt(15); r.font.bold=True; r.font.color.rgb=color(C['cyan'])
     p=cell.add_paragraph(style='Book Part'); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.add_run(title.upper())
-    if intro:
-        p=cell.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_before=Pt(18); r=p.add_run(intro); r.font.name=cfg['design']['fonts']['sans']; r.font.size=Pt(11); r.font.color.rgb=color('D8E8F5')
+    # The intro is set ragged-right in a centred measure, so a lead paragraph and
+    # a chapter list read as one block; centred multi-line text is hard to read.
+    for n,(kind,text) in enumerate(intro):
+        p=cell.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.LEFT
+        p.paragraph_format.left_indent=Inches(.75); p.paragraph_format.right_indent=Inches(.75)
+        p.paragraph_format.space_before=Pt(18 if n==0 else (3 if kind=='bullet' else 9)); p.paragraph_format.space_after=Pt(0)
+        if kind=='bullet':
+            p.paragraph_format.left_indent=Inches(1.0); p.paragraph_format.first_line_indent=Inches(-.2)
+            r=p.add_run('•\t'); r.font.color.rgb=color(C['cyan']); r.font.size=Pt(11)
+            p.paragraph_format.tab_stops.add_tab_stop(Inches(1.0))
+        add_inline(p,text,cfg)
+        for r in p.runs:
+            r.font.name=cfg['design']['fonts']['sans']; r.font.size=Pt(11)
+            if r.text!='•\t': r.font.color.rgb=color(C['white'] if r.bold else 'D8E8F5')
     # No trailing break paragraph: whatever follows starts its own page with page_break_before,
     # so a page that is already full cannot push an empty page into the book.
 
@@ -254,7 +305,7 @@ def add_table(doc,rows,cfg,spacer=True):
         # The marker stays inline here: a DOCX callout has no title bar, so the
         # bold marker is what names the box. LaTeX strips it because the tcolorbox
         # title already carries it.
-        add_inline(p,text,cfg)
+        add_inline(p,text,cfg); mark_index(p,text)
         if spacer: doc.add_paragraph().paragraph_format.space_after=Pt(1)
         return
     t=doc.add_table(rows=len(rows),cols=cols); t.style='Table Grid'; t.autofit=True
@@ -266,6 +317,7 @@ def add_table(doc,rows,cfg,spacer=True):
             cell=t.cell(ri,ci); cell.text=''; cell_margins(cell,65,80,65,80); cell.vertical_alignment=WD_CELL_VERTICAL_ALIGNMENT.CENTER
             p=cell.paragraphs[0]; p.paragraph_format.space_after=Pt(0); p.paragraph_format.line_spacing=1
             val=row[ci] if ci<len(row) else ''; add_inline(p,val,cfg,bold_override=ri==0)
+            if ri: mark_index(p,val)
             for run in p.runs: run.font.name=cfg['design']['fonts']['sans']; run.font.size=Pt(size)
             if ri==0:
                 shade(cell,C['navy']);
@@ -321,6 +373,7 @@ def normalize_zip(path:Path):
     tmp.replace(path)
 
 def build(root:Path,out:Path,template_only=False):
+    global INDEX
     cfg=load(root); C=cfg['design']['colors']; doc=Document(); configure(doc,cfg)
     doc.core_properties.title=cfg['book']['title']; doc.core_properties.subject='Enterprise general intelligence: governed agentic systems architecture'; doc.core_properties.author=cfg['book']['author']; doc.core_properties.last_modified_by=cfg['book']['author']; doc.core_properties.keywords='agentic AI, enterprise architecture, developer platform, AI agents, LLM gateway, security, evaluation'; doc.core_properties.comments='Generated deterministically from book/manuscript.md; do not hand-edit the release DOCX.'; doc.core_properties.created=FIXED_DT; doc.core_properties.modified=FIXED_DT
     if template_only:
@@ -335,13 +388,17 @@ def build(root:Path,out:Path,template_only=False):
         md=(root/cfg['source']['canonical_markdown']).read_text(encoding='utf-8')
         after_part=False; title_seen=False; lead_keep_next=False; blocks=0
         parsed=list(parse(md)); list_num_id=None
+        INDEX=book_index.Tracker(book_index.load_terms(root,md),book_index.excluded_units(root))
+        in_index=False; index_field=False
         for block_index,b in enumerate(parsed):
             blocks+=1; kind=b[0]
             if kind=='cover':
                 p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_after=Pt(0); shape=p.add_run().add_picture(str(cover),width=Inches(7.05)); set_alt_text(shape,f"Book cover: {cfg['book']['title']}, {cfg['book']['author']}"); continue
-            if kind=='part': add_part(doc,b[1],b[2],b[3],cfg); after_part=True; lead_keep_next=False; continue
+            if kind=='part': INDEX.part(); add_part(doc,b[1],b[2],b[3],cfg); after_part=True; lead_keep_next=False; continue
             if kind=='heading':
                 level,text=b[1],b[2]
+                INDEX.heading(level,text)
+                if level==1: in_index=text==book_index.INDEX_HEADING
                 if level==1 and not title_seen:
                     p=doc.add_paragraph(style='Title'); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.page_break_before=True; add_inline(p,text,cfg); title_seen=True; continue
                 style=f'Heading {level}'
@@ -368,27 +425,29 @@ def build(root:Path,out:Path,template_only=False):
                 no_spacer=bool(next_block and next_block[0]=='para' and next_block[1].startswith('**How to know the repair worked.**'))
                 add_table(doc,b[1],cfg,spacer=not no_spacer); lead_keep_next=False; continue
             if kind=='bullet':
-                p=add_paragraph(doc,b[1],cfg,'List Bullet'); p.paragraph_format.keep_together=True
+                p=add_paragraph(doc,b[1],cfg,'List Bullet'); p.paragraph_format.keep_together=True; mark_index(p,b[1])
                 if lead_keep_next: p.paragraph_format.keep_with_next=True
                 lead_keep_next=False; continue
             if kind=='number':
-                p=add_paragraph(doc,b[1],cfg,'List Number'); p.paragraph_format.keep_together=True
+                p=add_paragraph(doc,b[1],cfg,'List Number'); p.paragraph_format.keep_together=True; mark_index(p,b[1])
                 prev=parsed[block_index-1][0] if block_index else None
                 if prev!='number' or list_num_id is None: list_num_id=new_numbered_list(doc)
                 set_num(p,list_num_id)
                 if lead_keep_next: p.paragraph_format.keep_with_next=True
                 lead_keep_next=False; continue
             if kind=='quote':
-                style='Book Evidence' if b[1].startswith('**Evidence ') else 'Book Callout'; p=add_paragraph(doc,b[1],cfg,style); p.paragraph_format.left_indent=Inches(.22); p.paragraph_format.right_indent=Inches(.12); p.paragraph_format.space_before=Pt(5); p.paragraph_format.space_after=Pt(7); lead_keep_next=False; continue
+                style='Book Evidence' if b[1].startswith('**Evidence ') else 'Book Callout'; p=add_paragraph(doc,b[1],cfg,style); mark_index(p,b[1]); p.paragraph_format.left_indent=Inches(.22); p.paragraph_format.right_indent=Inches(.12); p.paragraph_format.space_before=Pt(5); p.paragraph_format.space_after=Pt(7); lead_keep_next=False; continue
             if kind=='para':
                 txt=b[1]
                 if txt.startswith('Book v1.0.0') or txt=='**'+cfg['book']['author']+'**': p=add_paragraph(doc,txt,cfg,'Subtitle',WD_ALIGN_PARAGRAPH.CENTER)
                 elif txt.startswith('A structured enterprise reference') and title_seen: p=add_paragraph(doc,txt,cfg,'Normal',WD_ALIGN_PARAGRAPH.CENTER)
                 else:
-                    style='Book Reference' if txt.startswith('* **[R') else 'Normal'; p=add_paragraph(doc,txt,cfg,style)
+                    style='Book Reference' if txt.startswith('* **[R') else 'Normal'; p=add_paragraph(doc,txt,cfg,style); mark_index(p,txt)
+                    if in_index and not index_field and re.fullmatch(r'\*\*[A-Z]\*\*',txt): open_index_field(p); index_field=True
                 if lead_keep_next: p.paragraph_format.keep_with_next=True
                 lead_keep_next=False
                 continue
+        if index_field: doc.paragraphs[-1]._p.append(field_run(None,'end'))
     out.parent.mkdir(parents=True,exist_ok=True); doc.save(out); normalize_zip(out)
     report={'output':str(out.relative_to(root)),'sha256':hashlib.sha256(out.read_bytes()).hexdigest(),'bytes':out.stat().st_size,'template_only':template_only}
     if not template_only:

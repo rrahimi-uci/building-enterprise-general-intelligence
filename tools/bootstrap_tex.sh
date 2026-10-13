@@ -42,6 +42,7 @@ REQUIREMENTS=(
   "etoolbox:etoolbox"     "tikz:pgf"
   "environ:environ"       "trimspaces:trimspaces"
   "tikzfill.image:tikzfill" "pdfcol:pdfcol"
+  "makeidx:latex"         "multicol:tools"
 )
 
 # Needed only to render TikZ figures (tools/render_diagrams.py), not to build the

@@ -11,12 +11,13 @@ This document is the visual and editorial contract for every representation of t
 | Part | `# Part <Roman> — <Title>` | Book Part | standalone page | conceptual phase and orientation |
 | Chapter cover | none (from `config/chapter-covers.json`) | full-page image, no heading | standalone page before each chapter | explains the chapter's central concept at a glance |
 | Chapter | `# Chapter NN — <Title>` | Heading 1 | new page, after its cover | primary learning unit |
-| Appendix | `# Appendix X — <Title>` | Heading 1 | new page | reference/operational material |
+| Appendix | `# Appendix X — <Title>` | Heading 1 | new page | reference/operational material; the glossary is last (L) |
+| Index | `# Index` + generated list | Heading 1 + INDEX field | new page, after the last appendix | key terms with locators: chapters/appendices in Markdown, pages in PDF and (after a field update) DOCX |
 | Section | `##` | Heading 2 | keep with next | major chapter argument |
 | Subsection | `###` | Heading 3 | keep with next | decomposed concept |
 | Local topic | `####` | Heading 4 | keep with next | limited local hierarchy |
 
-Do not skip heading levels. Do not start body content with a duplicate H1 title. Every Part page states what the reader will decide or build and how the Part connects to the previous and next layers.
+Do not skip heading levels. Do not start body content with a duplicate H1 title. Every Part page states what the reader will decide or build and how the Part connects to the previous and next layers. Its intro is a short lead paragraph, a bulleted list with one line per chapter (or chapter group) opening with the bold chapter number, and an optional closing line; both renderers set it ragged right in a centred measure.
 
 The book and chapter cover artwork carries no printed release version. Version metadata remains in the title page, running footer, and release artifact names.
 
@@ -250,8 +251,7 @@ Use the templates in `templates/`.
 
 - Registry: `config/references.json`.
 - In-text form: `[Rxx]` at the claim it supports.
-- Appendix K: generated bibliography.
-- Appendix K: generated reference list, with the claim-scope traceability matrix as its closing section. It absorbs the former Appendix M so a reader checking a citation holds one appendix letter, not two.
+- Appendix J: generated reference list, with the claim-scope traceability matrix as its closing section. It absorbs the former Appendix M so a reader checking a citation holds one appendix letter, not two.
 - Prefer primary standards, official documentation, peer-reviewed research, and binding legal texts.
 - Living documentation uses `n.d.` and an access date.
 - Versions/pins are recorded separately from publication year.
