@@ -7,12 +7,15 @@ OUT="latex/build"
 PDF_SOURCE="$OUT/Enterprise-General-Intelligence-v1.0.0.pdf"
 PDF_DEST="dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf"
 mkdir -p "$OUT" "dist"
+# makeindex finds the book's index style through kpathsea, so it resolves the
+# same way when latexmk runs makeindex from inside the output directory.
+export INDEXSTYLE="$ROOT/latex:${INDEXSTYLE:-}"
 if command -v latexmk >/dev/null 2>&1; then
   latexmk -xelatex -interaction=nonstopmode -halt-on-error -file-line-error -outdir="$OUT" "$ENTRY"
 elif command -v xelatex >/dev/null 2>&1; then
   xelatex -interaction=nonstopmode -halt-on-error -file-line-error -output-directory="$OUT" "$ENTRY"
   # The index: makeindex sorts the marks the first pass wrote.
-  makeindex -q -s latex/bookindex.ist -o "$OUT/Enterprise-General-Intelligence-v1.0.0.ind" "$OUT/Enterprise-General-Intelligence-v1.0.0.idx"
+  makeindex -q -s bookindex.ist -o "$OUT/Enterprise-General-Intelligence-v1.0.0.ind" "$OUT/Enterprise-General-Intelligence-v1.0.0.idx"
   for pass in 2 3; do xelatex -interaction=nonstopmode -halt-on-error -file-line-error -output-directory="$OUT" "$ENTRY"; done
 else
   echo "XeLaTeX is required. Use the included Dockerfile.latex or CI workflow." >&2

@@ -717,12 +717,15 @@ OUT="latex/build"
 PDF_SOURCE="$OUT/Enterprise-General-Intelligence-v1.0.0.pdf"
 PDF_DEST="dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf"
 mkdir -p "$OUT" "dist"
+# makeindex finds the book's index style through kpathsea, so it resolves the
+# same way when latexmk runs makeindex from inside the output directory.
+export INDEXSTYLE="$ROOT/latex:${INDEXSTYLE:-}"
 if command -v latexmk >/dev/null 2>&1; then
   latexmk -xelatex -interaction=nonstopmode -halt-on-error -file-line-error -outdir="$OUT" "$ENTRY"
 elif command -v xelatex >/dev/null 2>&1; then
   xelatex -interaction=nonstopmode -halt-on-error -file-line-error -output-directory="$OUT" "$ENTRY"
   # The index: makeindex sorts the marks the first pass wrote.
-  makeindex -q -s latex/bookindex.ist -o "$OUT/Enterprise-General-Intelligence-v1.0.0.ind" "$OUT/Enterprise-General-Intelligence-v1.0.0.idx"
+  makeindex -q -s bookindex.ist -o "$OUT/Enterprise-General-Intelligence-v1.0.0.ind" "$OUT/Enterprise-General-Intelligence-v1.0.0.idx"
   for pass in 2 3; do xelatex -interaction=nonstopmode -halt-on-error -file-line-error -output-directory="$OUT" "$ENTRY"; done
 else
   echo "XeLaTeX is required. Use the included Dockerfile.latex or CI workflow." >&2
@@ -741,7 +744,7 @@ printf 'XeLaTeX PDF written to %s\\n' "$PDF_DEST"
 """
     (latex_dir / "compile.sh").write_text(compile_script, encoding="utf-8", newline="\n")
     (latex_dir / "compile.sh").chmod(0o755)
-    latexmkrc = "$pdf_mode = 5;\n$xelatex = 'xelatex -interaction=nonstopmode -halt-on-error -file-line-error %O %S';\n$out_dir = 'latex/build';\n$makeindex = 'makeindex -q -s latex/bookindex.ist -o %D %S';\n"
+    latexmkrc = "$pdf_mode = 5;\n$xelatex = 'xelatex -interaction=nonstopmode -halt-on-error -file-line-error %O %S';\n$out_dir = 'latex/build';\n$makeindex = 'makeindex -q -s bookindex.ist -o %D %S';\n"
     (root / ".latexmkrc").write_text(latexmkrc, encoding="utf-8", newline="\n")
     dockerfile = """FROM texlive/texlive:latest-full
 WORKDIR /book
