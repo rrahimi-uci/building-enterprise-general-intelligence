@@ -57,9 +57,9 @@ def main() -> int:
     unknown=sorted(set(marker_ids)-set(ids)); uncited=sorted(set(ids)-set(marker_ids))
     if unknown: errors.append(f"Unknown citation markers: {unknown}")
     if uncited: errors.append(f"Uncited registry entries: {uncited}")
-    if manuscript.count("# Appendix J — References")!=1: errors.append("Appendix J References heading must occur exactly once")
-    # The traceability matrix lives in Appendix J, next to the entries it scopes.
-    if manuscript.count("## Where each claim is supported")!=1: errors.append("Where each claim is supported must occur exactly once inside Appendix J")
+    if manuscript.count("# Appendix I — References")!=1: errors.append("Appendix I References heading must occur exactly once")
+    # Permitted scopes live in the registry, not in the printed list.
+    if "## Where each claim is supported" in manuscript: errors.append("The claim-scope matrix is no longer printed; scopes stay in config/references.json")
     online=[]
     if args.online:
         for r in refs:

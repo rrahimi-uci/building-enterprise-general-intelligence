@@ -8,13 +8,13 @@
 - **narrative_parts:** `8`
 - **appendix_dividers:** `1`
 - **chapters:** `28`
-- **appendices:** `12`
+- **appendices:** `10`
 - **diagrams:** `46`
-- **code_blocks:** `65`
-- **longtables:** `159`
-- **compact_tables:** `99`
+- **code_blocks:** `64`
+- **longtables:** `158`
+- **compact_tables:** `100`
 - **callout_tables:** `70`
-- **citation_occurrences:** `157`
+- **citation_occurrences:** `183`
 - **bundled_fonts:** `8`
 
 ## Quality controls

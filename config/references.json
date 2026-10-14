@@ -873,6 +873,96 @@
         "status": "verified-primary-or-authoritative-source",
         "scope_note": "Citation supports only the stated claim scope; it does not validate book-authored architecture recommendations."
       }
+    },
+    {
+      "id": "R59",
+      "type": "research",
+      "author_or_organization": "Cutler, J., Disselkoen, C., Eline, A., et al.",
+      "year": "2024",
+      "title": "Cedar: A New Language for Expressive, Fast, Safe, and Analyzable Authorization",
+      "publication_or_version": "Proceedings of the ACM on Programming Languages 8 (OOPSLA1)",
+      "url": "https://www.amazon.science/publications/cedar-a-new-language-for-expressive-fast-safe-and-analyzable-authorization",
+      "supports": "Describes Cedar as an authorization policy language designed so that policies admit a sound and complete logical encoding for precise analysis (for example, checking that a policy refactoring does not change permissions), with key properties proved in the Lean proof assistant. Does not support claims about any specific deployment's correctness or performance.",
+      "verification": {
+        "checked_on": "2026-10-14",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Verified against the publication page at access."
+      }
+    },
+    {
+      "id": "R60",
+      "type": "vendor documentation",
+      "author_or_organization": "Amazon Web Services",
+      "year": "n.d.",
+      "title": "What is Amazon Verified Permissions?",
+      "publication_or_version": "Current documentation",
+      "url": "https://docs.aws.amazon.com/verifiedpermissions/latest/userguide/what-is-avp.html",
+      "supports": "Documents Amazon Verified Permissions as a managed, fine-grained authorization service for custom applications that externalizes authorization, evaluates open-source Cedar policies, can serve as a policy decision point, and presumes principals were authenticated elsewhere (for example through OpenID Connect). Does not support cost, latency, or suitability claims.",
+      "verification": {
+        "checked_on": "2026-10-14",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Verified against the page at access; living documentation must be re-checked before reuse."
+      }
+    },
+    {
+      "id": "R61",
+      "type": "research",
+      "author_or_organization": "Pang, R., Caceres, R., Burrows, M., et al.",
+      "year": "2019",
+      "title": "Zanzibar: Google's Consistent, Global Authorization System",
+      "publication_or_version": "2019 USENIX Annual Technical Conference (USENIX ATC '19), pp. 33\u201346",
+      "url": "https://www.usenix.org/conference/atc19/presentation/pang",
+      "supports": "Describes Google's system for storing permission data and checking whether users may access objects, shared across many services and designed for consistent authorization decisions at global scale. Does not support claims about other implementations.",
+      "verification": {
+        "checked_on": "2026-10-14",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Verified against the publication page at access."
+      }
+    },
+    {
+      "id": "R62",
+      "type": "framework documentation",
+      "author_or_organization": "OpenFGA (Cloud Native Computing Foundation)",
+      "year": "n.d.",
+      "title": "OpenFGA documentation",
+      "publication_or_version": "Current documentation",
+      "url": "https://openfga.dev/docs/fga",
+      "supports": "Documents OpenFGA as an open-source authorization system inspired by Google's Zanzibar, owned by the CNCF, implementing relationship-based access control that can also express role-based and attribute-based rules. Does not support maturity, scale, or performance claims.",
+      "verification": {
+        "checked_on": "2026-10-14",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Verified against the page at access; living documentation must be re-checked before reuse."
+      }
+    },
+    {
+      "id": "R63",
+      "type": "framework documentation",
+      "author_or_organization": "Open Policy Agent (Cloud Native Computing Foundation)",
+      "year": "n.d.",
+      "title": "Open Policy Agent documentation",
+      "publication_or_version": "Current documentation",
+      "url": "https://www.openpolicyagent.org/docs",
+      "supports": "Documents OPA as an open-source, general-purpose policy engine and graduated CNCF project, with policies written in the declarative Rego language and used across microservices, Kubernetes, CI/CD pipelines, and API gateways. Does not support claims about analyzability or business-authorization fit.",
+      "verification": {
+        "checked_on": "2026-10-14",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Verified against the page at access; living documentation must be re-checked before reuse."
+      }
+    },
+    {
+      "id": "R64",
+      "type": "vendor documentation",
+      "author_or_organization": "Microsoft",
+      "year": "n.d.",
+      "title": "What is Microsoft Entra?",
+      "publication_or_version": "Current documentation",
+      "url": "https://learn.microsoft.com/en-us/entra/fundamentals/what-is-entra",
+      "supports": "Documents Microsoft Entra ID as a cloud identity and access management service, Entra Workload ID for applications, services, and containers, risk-based Conditional Access, and Entra Agent ID, which gives AI agents governed identities with least-privilege access and an audit trail. Does not support product-comparison, maturity, or cost claims.",
+      "verification": {
+        "checked_on": "2026-10-14",
+        "status": "verified-primary-or-authoritative-source",
+        "scope_note": "Verified against the page at access; living documentation must be re-checked before reuse."
+      }
     }
   ]
 }

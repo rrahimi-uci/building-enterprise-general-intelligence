@@ -38,7 +38,7 @@ authoritative external source or domain system.
 ## Chapter-to-architecture map
 
 The headings and figures below were checked against all eight Parts, the
-Closing Perspective, and Appendices A–L. The relevant tables and examples
+Closing Perspective, and Appendices A–J. The relevant tables and examples
 were used as contracts and counterexamples; their detailed fields remain in
 the defining chapters and Appendix C.
 
@@ -181,7 +181,7 @@ not exhaust the enforcement points.
 
 | Test | Finding |
 | --- | --- |
-| Completeness | All 28 chapters and 12 appendices were mapped; the inventory accounts for human, runtime, knowledge, model/tool, trust, evidence and lifecycle concerns. |
+| Completeness | All 28 chapters and the appendices were mapped; the inventory accounts for human, runtime, knowledge, model/tool, trust, evidence and lifecycle concerns. |
 | Correctness and consistency | Chapter 4 owns records; the synthesis uses Chapter 3's step interface, Chapter 5's pinned knowledge, Chapter 22's effect semantics and Chapter 27's release assignment. |
 | Traceability | Every named major box and directed flow is mapped above to chapters or Appendix C. |
 | Connectivity and direction | Requests go to runtime, released definitions flow down, external replies return through gateways, and evidence flows to offline review. No feedback edge changes a live run's pins. |

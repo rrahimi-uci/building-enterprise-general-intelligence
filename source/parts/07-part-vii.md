@@ -13,7 +13,7 @@ decide what to fix, what to release, and what to leave alone.
 
 # 24 — Follow a Run from Request to Verified Outcome
 
-> **Evidence context:** OpenTelemetry GenAI semantic conventions remain in Development and have moved to a dedicated repository; isolate them behind an internal mapping layer. Phoenix is one implementation option for OpenInference/OTel-based tracing and evaluation. **[R19][R23]**
+> **Evidence context:** **OpenTelemetry** is the open standard most platforms use to record traces, and its **GenAI semantic conventions** propose common names for model calls, agent steps, tool calls, and token counts, so traces from different frameworks can be read the same way **[R19]**. Those conventions are still marked *Development*, meaning names can change between versions. The practical consequence is to record traces in the platform's own schema and translate to the conventions in one mapping layer, so a renamed attribute means one code change rather than broken dashboards. **Phoenix** is cited as one example of a tool that stores and evaluates such traces **[R23]**; it is not a recommendation over alternatives. What a trace must connect for a mortgage run is the book's own design.
 
 |  |
 | --- |
@@ -227,7 +227,7 @@ loss-intolerant path with completeness and integrity controls plus monitoring.
 | --- | --- | --- |
 | Telemetry maturity | OTLP and the general span model are mature, but the dedicated OpenTelemetry GenAI semantic conventions are still in Development. Version the mapping and retain a stable internal event schema. | R19 |
 
-The discussion above draws on R19. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R19. Appendix I lists each source in full, with its version and access date.
 
 ## A sensible place to start
 
@@ -306,7 +306,7 @@ Tracing explains what happened; Chapter 25 determines whether the trajectory and
 
 # 25 — Improve the System Without Handing It Control
 
-> **Evidence context:** The evaluation architecture maps to current capabilities documented by MLflow, DeepEval, Ragas, LangSmith, and OpenAI. Tool names and APIs are examples; the durable contract is dataset + release manifest + scorer versions + trace/effect evidence. **[R20][R21][R22][R24][R25][R26]**
+> **Evidence context:** Several evaluation tools, MLflow, DeepEval, Ragas, LangSmith, and OpenAI's evaluation features among them, document the capabilities this chapter assumes: versioned datasets, automated scorers and model-based judges, and runs compared across versions **[R20][R21][R22][R24][R25][R26]**. They are cited to show the capabilities exist, not to recommend one product. The part that must outlive any tool is the book's own contract: every evaluation result names the dataset version, the release it tested, the scorer versions, and the trace and effect evidence it was computed from. With those four recorded, Harborlight can switch evaluation tools and still compare this quarter's release with last quarter's.
 
 |  |
 | --- |
@@ -552,7 +552,7 @@ cause, and prefer deterministic code when the decision has become stable.
 | MLflow baseline | This book pins MLflow 3.15.2 as a reproducibility baseline for its examples. It is not labeled latest; feature availability, experimental status, and compatibility must be re-verified against release notes and current documentation before implementation. | R21 |
 | Evaluation limit | R20 documents model judges alongside human feedback attached to traces; R13 asks evaluators to document possible train/test contamination of benchmarks. The book's recommendation, not a sourced finding, is that a passing judge is probabilistic evidence, not proof, and that security, authorization, schema, budget, effect, and acceptance invariants remain deterministic release blockers. | R20; R13 |
 
-The discussion above draws on R13; R20; R21. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R13; R20; R21. Appendix I lists each source in full, with its version and access date.
 
 |  |
 | --- |

@@ -362,7 +362,7 @@ chapters; this is enough to read on with.
 | **Trace** | A causal graph of one run's steps, decisions, versions and effects — not a log file | Chapter 24 |
 
 If a term in this book seems to be doing more work than its ordinary meaning
-would suggest, that is usually deliberate. Appendix L defines further terms.
+would suggest, that is usually deliberate. Appendix J defines further terms.
 
 ### Anti-pattern — the autonomous monolith
 
@@ -466,7 +466,7 @@ effect ledger.
 | Reported capability and risk | ReAct reports benchmark results for interleaved reasoning and action; NIST's generative-AI profile lists confabulation, confidently stated false content, among generative-AI risks. | R01; R13 |
 | Grounding boundary (book-authored recommendation) | Separate model capability from system correctness. A benchmark or demo does not establish authorization, durability, privacy, or business acceptance, so every material output should carry evidence references and uncertainty. | — |
 
-The discussion above draws on R01; R13. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R01; R13. Appendix I lists each source in full, with its version and access date.
 
 ## A sensible place to start
 

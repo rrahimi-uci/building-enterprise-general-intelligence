@@ -56,13 +56,13 @@ every check — a stated failure is acceptable, a silent one is not.
 
 ## Structural invariants
 
-- Exactly 8 Parts, 28 chapters, and 12 appendices for v1.0.0 unless a versioned topology change is intentional. The glossary is the last appendix (L), and the index follows it as the book's last H1.
+- Exactly 8 Parts, 28 chapters, and 10 appendices for v1.0.0 unless a versioned topology change is intentional. References are Appendix I, the glossary is the last appendix (J), and the index follows it as the book's last H1.
 - Every Part/chapter/appendix starts with H1 and on a new DOCX and LaTeX page. Each of the 28 chapters is preceded by its standalone full-page cover (`cover-images/`); the cover page carries no heading and the H1 still opens the chapter text on the next page.
 - Part and appendices divider pages are standalone in both publication renderers.
 - Heading levels are not skipped.
 - Every diagram marker resolves to a registered asset and caption.
 - Every `[Rxx]` resolves to exactly one registry entry; every registry entry is cited or explicitly marked retained-for-future-use.
-- References and traceability sections are generated from `config/references.json`.
+- The reference list (Appendix I) is generated from `config/references.json`. Each entry's permitted scope stays in the registry, where `tools/check_references.py` enforces it; the printed list is concise and carries no scope text.
 - Canonical and distributable Markdown are byte-identical.
 - No stale release labels remain.
 - Code fences are balanced; table rows have consistent column counts.

@@ -12,16 +12,16 @@
     "source/parts/08-part-viii.md",
     "source/parts/09-appendices.md"
   ],
-  "bytes": 830531,
-  "sha256": "7e01121cd2dde694385ad0ef6921fe2d3b5af0a827d3d1893f6a13f3cd5c40ce",
+  "bytes": 809985,
+  "sha256": "7a9e974fd63448ff86b8d1758255540a05bdc0fae41e976dfd90dca021da462c",
   "parts": 8,
   "chapters": 28,
-  "appendices": 12,
-  "citation_occurrences": 157,
+  "appendices": 10,
+  "citation_occurrences": 183,
   "expanded_examples": 60,
   "build_date": "October 2026",
-  "index_terms": 97,
-  "index_locators": 665,
+  "index_terms": 157,
+  "index_locators": 902,
   "cited_reference_ids": [
     "R01",
     "R02",
@@ -80,6 +80,12 @@
     "R55",
     "R56",
     "R57",
-    "R58"
+    "R58",
+    "R59",
+    "R60",
+    "R61",
+    "R62",
+    "R63",
+    "R64"
   ]
 }

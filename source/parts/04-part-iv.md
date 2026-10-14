@@ -122,7 +122,7 @@ Plan capacity in turns per verified success (Chapter 28), not only requests per 
 
 ## What the evidence lets us conclude
 
-The discussion above draws on R01. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R01. Appendix I lists each source in full, with its version and access date.
 
 ## A sensible place to start
 
@@ -300,7 +300,7 @@ A transfer is proposed, then acknowledged, rejected, or expired; only acknowledg
 | --- | --- | --- |
 | Framework handoff | The OpenAI Agents SDK documents handoffs as a framework primitive for passing control between agents; recording ownership, acknowledgment, and authority narrowing around it is this book's recommendation. | R29 |
 
-The discussion above draws on R29. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R29. Appendix I lists each source in full, with its version and access date.
 
 ## A sensible place to start
 
@@ -544,7 +544,7 @@ New evidence can invalidate future work. Replanning starts from an explicit set 
 | --- | --- | --- |
 | Durable scheduling | Durable execution resumes work in a new process after a failure and supports reliable long waits; scheduling compiled plans through a workflow rather than an in-process loop is this book's recommendation. | R02 |
 
-The discussion above draws on R27; R02. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R27; R02. Appendix I lists each source in full, with its version and access date.
 
 ## A sensible place to start
 
@@ -677,7 +677,7 @@ The loop stops on pass, maximum revisions, maximum spend, deadline, or no-progre
 | --- | --- | --- |
 | Evaluation tooling | MLflow's evaluation documentation covers evaluation datasets, custom code-based scorers, LLM judges, and human feedback attached to traces; using judges only as evidence for an independent acceptance decision is this book's recommendation. | R20 |
 
-The discussion above draws on R20. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R20. Appendix I lists each source in full, with its version and access date.
 
 ## A sensible place to start
 
@@ -894,7 +894,7 @@ An approval follows § Approval contract; an intervention is an InterventionTask
 | Approval integrity | Book-authored recommendation, informed by R15's mitigation guidance for agentic applications: approve the exact canonical proposal, not a natural-language summary, and revalidate policy, authority, proposal hash, expiry, destination, and resource version immediately before commit. | R15 |
 | Review interfaces | Review and intervention forms should meet WCAG 2.2 success criteria; conformance does not by itself remove automation bias. | R41 |
 
-The discussion above draws on R15; R41. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R15; R41. Appendix I lists each source in full, with its version and access date.
 
 ## A sensible place to start
 
@@ -1145,7 +1145,7 @@ The base Run API is in Chapter 4. Durable execution adds these operations and tw
 | --- | --- | --- |
 | Durable progress | Durable execution is crash-proof execution: work resumes in a new process after a failure and can wait reliably for long periods. Rebuilding state by replaying recorded history, as this chapter's reducer does, is one engine design, not something the source specifies. | R02 |
 
-The discussion above draws on R02; R04. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R02; R04. Appendix I lists each source in full, with its version and access date.
 
 ## A sensible place to start
 

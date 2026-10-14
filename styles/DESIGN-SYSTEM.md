@@ -251,7 +251,7 @@ Use the templates in `templates/`.
 
 - Registry: `config/references.json`.
 - In-text form: `[Rxx]` at the claim it supports.
-- Appendix J: generated reference list, with the claim-scope traceability matrix as its closing section. It absorbs the former Appendix M so a reader checking a citation holds one appendix letter, not two.
+- Appendix I: generated reference list, one concise entry per source (author, year, title, version, link, access date). Each source's permitted scope lives in `config/references.json` and is enforced by `tools/check_references.py`; it is not printed.
 - Prefer primary standards, official documentation, peer-reviewed research, and binding legal texts.
 - Living documentation uses `n.d.` and an access date.
 - Versions/pins are recorded separately from publication year.

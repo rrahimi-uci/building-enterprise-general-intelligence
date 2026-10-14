@@ -404,5 +404,47 @@
     "method": "direct primary-source review",
     "verified": "2026-10-11",
     "caveat": "Living documentation; no visible date, so the year is n.d."
+  },
+  {
+    "id": "R59",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-10-14",
+    "caveat": "Accessed 2026-10-14; scope limited to the registry supports text."
+  },
+  {
+    "id": "R60",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-10-14",
+    "caveat": "Accessed 2026-10-14; scope limited to the registry supports text."
+  },
+  {
+    "id": "R61",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-10-14",
+    "caveat": "Accessed 2026-10-14; scope limited to the registry supports text."
+  },
+  {
+    "id": "R62",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-10-14",
+    "caveat": "Accessed 2026-10-14; scope limited to the registry supports text."
+  },
+  {
+    "id": "R63",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-10-14",
+    "caveat": "Accessed 2026-10-14; scope limited to the registry supports text."
+  },
+  {
+    "id": "R64",
+    "status": "verified",
+    "method": "direct primary-source review",
+    "verified": "2026-10-14",
+    "caveat": "Accessed 2026-10-14; scope limited to the registry supports text."
   }
 ]

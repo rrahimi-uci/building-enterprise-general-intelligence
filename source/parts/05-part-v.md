@@ -146,7 +146,7 @@ The receiver may reject, accept, request input, produce partial artifacts, compl
 | --- | --- | --- |
 | Collaboration claim | R28 reports a supervisor/specialist research architecture and its token and context costs; R33 documents a managed supervisor/collaborator pattern. The book's recommendation, not a sourced finding, is to add specialists only when capability, ownership, trust, isolation, or parallelism justifies the cost, and to evaluate against the strongest single-agent baseline. | R28; R33 |
 
-The discussion above draws on R28; R33. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R28; R33. Appendix I lists each source in full, with its version and access date.
 
 ## Supervisor/Worker at a glance
 
@@ -395,7 +395,7 @@ Local states are the task lifecycle of Chapter 18; the gateway maps each remote 
 | MCP authorization | Use protected-resource and authorization-server discovery, PKCE, audience/resource binding, short-lived tokens, step-up scopes, issuer validation, and SSRF-safe metadata retrieval. Token passthrough to an upstream API is forbidden. | R06; R09; R10 |
 | A2A correction | Pin A2A 1.0.1. Normative operations include SendMessage, GetTask, ListTasks, CancelTask, and SubscribeToTask; local /v1 bridges are platform APIs, not A2A endpoints. Cancellation is best effort and authorization must prevent task-existence leakage. | R07 |
 
-The discussion above draws on R05; R06; R07; R09; R10. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R05; R06; R07; R09; R10. Appendix I lists each source in full, with its version and access date.
 
 ## A sensible place to start
 

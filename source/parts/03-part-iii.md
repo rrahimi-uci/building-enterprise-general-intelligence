@@ -102,7 +102,7 @@ Most defects are cheaper to catch without a model. The platform makes those test
 | Framework abstractions | OpenAI, Microsoft, and Google each document their own agent abstractions; the Microsoft and Google frameworks also document workflow or multi-agent structures. | R29; R31; R32 |
 | Framework portability (book-authored recommendation) | Do not assume these SDKs share cancellation, streaming, tool, approval, or error semantics. A shared contract does not make them interchangeable; only adapter conformance tests demonstrate parity, and any gap is recorded as a known limitation rather than assumed away. | — |
 
-The discussion above draws on R29; R31; R32. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R29; R31; R32. Appendix I lists each source in full, with its version and access date.
 
 ## A sensible place to start
 
@@ -346,7 +346,7 @@ The registry scales as a read-heavy service in the global control tier with immu
 | --- | --- | --- |
 | Terminology | Skill is a platform-owned package in this book. It is not identical to A2A AgentSkill metadata, to Skills served over MCP, or to the skills the OpenAI Agents SDK can attach to its shell tool. Interchange requires an explicit adapter and loss analysis. | R05; R07; R29 |
 
-The discussion above draws on R05; R07; R29. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R05; R07; R29. Appendix I lists each source in full, with its version and access date.
 
 ## A sensible place to start
 
@@ -482,7 +482,7 @@ A pack is executable supply chain because Skill instructions direct behavior (tr
 | Supply-chain risk | OWASP's agent-security guidance lists compromise of third-party tools, APIs, and data sources as a key agent risk; SLSA defines build-provenance requirements and levels. | R16; R17 |
 | Distribution security (book-authored recommendation) | Treat a Skill Pack as executable supply chain: pin dependencies and tool schemas, produce an SBOM and signed provenance, scan transitive content and binaries, enforce publisher trust, and support revocation without rewriting historical runs. | — |
 
-The discussion above draws on R16; R17. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R16; R17. Appendix I lists each source in full, with its version and access date.
 
 ## A sensible place to start
 

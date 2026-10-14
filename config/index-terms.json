@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
-  "description": "Book index. One entry per indexed term. The assembler writes the Markdown index from it, and the DOCX and XeLaTeX renderers place index marks with the same rule (tools/book_index.py): the first mention of a term in each chapter or appendix, prose only. Glossary entries take their defining chapter (bold) from Appendix L; other entries give it in defined_in. scope=defined restricts a generic word to its defining chapters.",
+  "description": "Book index. One entry per indexed term. The assembler writes the Markdown index from it, and the DOCX and XeLaTeX renderers place index marks with the same rule (tools/book_index.py): the first mention of a term in each chapter or appendix, prose only. Glossary entries take their defining chapter (bold) from Appendix J; other entries give it in defined_in. scope=defined restricts a generic word to its defining chapters.",
   "excluded_units": [
-    "J",
-    "L"
+    "I",
+    "J"
   ],
   "entries": [
     {
@@ -770,6 +770,603 @@
         "SLO"
       ],
       "case_sensitive": true
+    },
+    {
+      "term": "Admission control",
+      "match": [
+        "admission control",
+        "admission controller"
+      ],
+      "defined_in": [
+        28
+      ]
+    },
+    {
+      "term": "Amazon Verified Permissions",
+      "match": [
+        "Verified Permissions"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        21
+      ]
+    },
+    {
+      "term": "Approval Service",
+      "match": [
+        "Approval Service"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        14
+      ]
+    },
+    {
+      "term": "ApprovalDecision",
+      "match": [
+        "ApprovalDecision"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        14
+      ]
+    },
+    {
+      "term": "Backpressure",
+      "match": [
+        "backpressure"
+      ],
+      "defined_in": [
+        28
+      ]
+    },
+    {
+      "term": "BPMN (Business Process Model and Notation)",
+      "match": [
+        "BPMN"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        5
+      ]
+    },
+    {
+      "term": "Capability catalog",
+      "match": [
+        "capability catalog"
+      ],
+      "defined_in": [
+        8
+      ]
+    },
+    {
+      "term": "CapacityPermit",
+      "match": [
+        "CapacityPermit",
+        "capacity permit"
+      ],
+      "defined_in": [
+        28
+      ]
+    },
+    {
+      "term": "Cedar (policy language)",
+      "match": [
+        "Cedar"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        21
+      ]
+    },
+    {
+      "term": "CloudEvents",
+      "match": [
+        "CloudEvents"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        4
+      ]
+    },
+    {
+      "term": "Context Service",
+      "match": [
+        "Context Service"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        6
+      ]
+    },
+    {
+      "term": "Cost per verified success",
+      "match": [
+        "cost per verified success",
+        "cost per verified successful outcome"
+      ],
+      "defined_in": [
+        28
+      ]
+    },
+    {
+      "term": "DMN (Decision Model and Notation)",
+      "match": [
+        "DMN"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        5
+      ]
+    },
+    {
+      "term": "Durable execution",
+      "match": [
+        "durable execution",
+        "durable-execution"
+      ],
+      "defined_in": [
+        15
+      ]
+    },
+    {
+      "term": "Effect receipt",
+      "match": [
+        "effect receipt",
+        "receipt"
+      ],
+      "defined_in": [
+        22
+      ]
+    },
+    {
+      "term": "Effect Service",
+      "match": [
+        "Effect Service"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        22
+      ]
+    },
+    {
+      "term": "Egress proxy",
+      "match": [
+        "egress proxy",
+        "egress grant",
+        "EgressGrant"
+      ],
+      "defined_in": [
+        23
+      ]
+    },
+    {
+      "term": "Enterprise Knowledge Hub",
+      "match": [
+        "Enterprise Knowledge Hub",
+        "Knowledge Hub",
+        "the Hub"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        5
+      ]
+    },
+    {
+      "term": "EU AI Act",
+      "match": [
+        "EU AI Act",
+        "AI Act"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        26
+      ]
+    },
+    {
+      "term": "Evaluation dataset",
+      "match": [
+        "evaluation dataset"
+      ],
+      "defined_in": [
+        25
+      ]
+    },
+    {
+      "term": "GDPR (General Data Protection Regulation)",
+      "match": [
+        "GDPR"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Golden path",
+      "match": [
+        "golden path"
+      ],
+      "defined_in": [
+        7
+      ]
+    },
+    {
+      "term": "Indirect prompt injection",
+      "match": [
+        "indirect prompt injection",
+        "indirect injection"
+      ],
+      "defined_in": [
+        20
+      ]
+    },
+    {
+      "term": "ISO/IEC 42001",
+      "match": [
+        "ISO/IEC 42001",
+        "42001"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        26
+      ]
+    },
+    {
+      "term": "LangGraph",
+      "match": [
+        "LangGraph"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Long-term memory",
+      "match": [
+        "long-term memory"
+      ],
+      "defined_in": [
+        6
+      ]
+    },
+    {
+      "term": "MemoryRecord",
+      "match": [
+        "MemoryRecord"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        6
+      ]
+    },
+    {
+      "term": "Microsoft Entra ID",
+      "match": [
+        "Microsoft Entra",
+        "Entra ID",
+        "Entra Agent ID"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        21
+      ]
+    },
+    {
+      "term": "Model-based judge",
+      "match": [
+        "LLM judge",
+        "model judge",
+        "model-based judge",
+        "calibrated judge",
+        "judge calibration"
+      ],
+      "defined_in": [
+        25
+      ]
+    },
+    {
+      "term": "Multi-agent system",
+      "match": [
+        "multi-agent"
+      ],
+      "defined_in": [
+        18
+      ]
+    },
+    {
+      "term": "NIST AI Risk Management Framework",
+      "match": [
+        "NIST AI Risk Management Framework",
+        "AI Risk Management Framework",
+        "AI RMF"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        26
+      ]
+    },
+    {
+      "term": "OAuth token exchange",
+      "match": [
+        "token exchange"
+      ],
+      "defined_in": [
+        21
+      ]
+    },
+    {
+      "term": "Open Policy Agent (OPA)",
+      "match": [
+        "Open Policy Agent",
+        "OPA"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        21
+      ]
+    },
+    {
+      "term": "OpenFGA",
+      "match": [
+        "OpenFGA"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        21
+      ]
+    },
+    {
+      "term": "Plan compiler",
+      "match": [
+        "plan compiler"
+      ],
+      "defined_in": [
+        12
+      ]
+    },
+    {
+      "term": "Policy decision point (PDP)",
+      "match": [
+        "policy decision point",
+        "PDP"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        21
+      ]
+    },
+    {
+      "term": "PolicyDecision",
+      "match": [
+        "PolicyDecision"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        21
+      ]
+    },
+    {
+      "term": "Prompt bundle",
+      "match": [
+        "prompt bundle"
+      ],
+      "defined_in": [
+        27
+      ]
+    },
+    {
+      "term": "RBAC and ABAC",
+      "match": [
+        "RBAC",
+        "ABAC"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        21
+      ]
+    },
+    {
+      "term": "Reconciliation",
+      "match": [
+        "reconciliation",
+        "reconcile"
+      ],
+      "defined_in": [
+        22
+      ]
+    },
+    {
+      "term": "Reflection (pattern)",
+      "match": [
+        "reflection"
+      ],
+      "defined_in": [
+        13
+      ]
+    },
+    {
+      "term": "Regional recovery",
+      "match": [
+        "regional recovery"
+      ],
+      "defined_in": [
+        27
+      ]
+    },
+    {
+      "term": "Retrieval-augmented generation (RAG)",
+      "match": [
+        "Retrieval-augmented generation",
+        "retrieval-augmented generation",
+        "RAG"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        5
+      ]
+    },
+    {
+      "term": "Run Service",
+      "match": [
+        "Run Service"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        4
+      ]
+    },
+    {
+      "term": "Sandbox",
+      "match": [
+        "sandbox"
+      ],
+      "defined_in": [
+        23
+      ]
+    },
+    {
+      "term": "Skill discovery and resolution",
+      "match": [
+        "Skill resolution",
+        "discovery and resolution",
+        "Discovery is semantic",
+        "resolution pins"
+      ],
+      "defined_in": [
+        8
+      ]
+    },
+    {
+      "term": "Skill Registry",
+      "match": [
+        "Skill Registry"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        8
+      ]
+    },
+    {
+      "term": "Software bill of materials (SBOM)",
+      "match": [
+        "software bill of materials",
+        "SBOM"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        27
+      ]
+    },
+    {
+      "term": "SLSA build provenance",
+      "match": [
+        "SLSA"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        27
+      ]
+    },
+    {
+      "term": "Supervisor-worker pattern",
+      "match": [
+        "supervisor"
+      ],
+      "defined_in": [
+        18
+      ]
+    },
+    {
+      "term": "Supply-chain security",
+      "match": [
+        "supply chain",
+        "supply-chain"
+      ],
+      "defined_in": [
+        27
+      ]
+    },
+    {
+      "term": "Task Service",
+      "match": [
+        "Task Service"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        18
+      ]
+    },
+    {
+      "term": "Temporal",
+      "match": [
+        "Temporal"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        15
+      ]
+    },
+    {
+      "term": "ToolManifest",
+      "match": [
+        "ToolManifest"
+      ],
+      "case_sensitive": true
+    },
+    {
+      "term": "Transactional outbox",
+      "match": [
+        "transactional outbox"
+      ],
+      "defined_in": [
+        22
+      ]
+    },
+    {
+      "term": "Vector index",
+      "match": [
+        "vector index",
+        "vector store",
+        "semantic index"
+      ],
+      "defined_in": [
+        5
+      ]
+    },
+    {
+      "term": "Working memory",
+      "match": [
+        "working memory"
+      ],
+      "defined_in": [
+        6
+      ]
+    },
+    {
+      "term": "Workload identity",
+      "match": [
+        "workload identity",
+        "workload identities"
+      ],
+      "defined_in": [
+        21
+      ]
+    },
+    {
+      "term": "Zanzibar",
+      "match": [
+        "Zanzibar"
+      ],
+      "case_sensitive": true,
+      "defined_in": [
+        21
+      ]
+    },
+    {
+      "term": "Zero trust",
+      "match": [
+        "zero trust",
+        "zero-trust"
+      ],
+      "defined_in": [
+        20
+      ]
     }
   ]
 }

@@ -4,6 +4,17 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Parts VI–VIII and appendix review comments (DOCX review, 2026-10-14)
+
+- **Topology: 10 appendices.** Appendix I (coding-agent prompt) and Appendix K (capacity, resilience, and release acceptance) are removed. References become Appendix I and the glossary Appendix J (still last, before the index). Every cross-reference, the front-matter contents and reader table, Chapter 28's transition, validators (`validate_book`, `validate_latex`, `check_references`), `config/book.json`, the index configuration, AGENTS.md, README, the style guides, the citation skill and the PR template follow. Appendix K's sizing table, which Chapter 28 relied on, now sits in Chapter 28 § Measure the whole journey; its release-acceptance table, cited nowhere, is dropped.
+- **References are concise.** Each entry is now author, year, title, version, link and access date. The "Supports" text and the "Where each claim is supported" matrix are no longer printed; each source's permitted scope stays in `config/references.json`, where `check_references.py` still enforces it. R48's version prints only the pinned commit.
+- **Chapter 20:** every threat card (T-01 to T-16) gains a concrete Harborlight mortgage example.
+- **Chapter 21:** identity comes from the enterprise identity provider (Microsoft Entra ID, including Agent ID), and the policy decision point is chosen by the kind of rule: Cedar / Amazon Verified Permissions for analyzable role and attribute rules, a Zanzibar-style relationship service such as OpenFGA for per-object sharing, OPA/Rego for platform policy. Six new verified references (R59–R64); Appendix D's baseline stack gains Identity and Authorization rows.
+- **Evidence-context boxes in Chapters 20–28** are rewritten in plain language: each source is explained, why it is cited, a Harborlight example, and what is the book's own recommendation (SBOM and SLSA, GDPR, NIST AI RMF, ISO/IEC 42001, the EU AI Act, Little's Law, OAuth token exchange, OpenTelemetry, evaluation tools).
+- **Appendix D:** the framework table's cautions are organized around five enterprise questions (state, authority, lifecycle, exit, evidence) and every row cites its sources.
+- **Appendix E** explains its purpose and adds a table of open research questions; **Appendix F**'s numbered limits are no longer bold.
+- **Index:** 60 new entries (157 in all), covering services, records, standards, protocols, tools and patterns the earlier index missed; defining chapters checked against the text.
+
 ### Figure S-1 visual polish
 
 - **Figure S-1** (`unified-enterprise-architecture`) is restyled with no change to its content: zone titles become filled header tabs with icons, every box gets a role-coloured icon and a soft shadow, and the grid is regularised. Edges that crowded boxes or frame borders are rerouted: Run pin enters Run and workflow from above, Receipt / outcome and Knowledge pin use side corridors, runtime evidence clears the improvement title, and the release return runs outside the frames. The key sits in its own panel. The Closing Perspective notes that icons carry no meaning beyond the labels.

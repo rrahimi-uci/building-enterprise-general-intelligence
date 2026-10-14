@@ -11,7 +11,7 @@ this Part decides what happens to them:
 
 # 26 — Make Governance Part of How the Platform Runs
 
-> **Evidence context:** NIST AI RMF and its Generative AI Profile are voluntary risk guidance; ISO/IEC 42001 specifies an AI management system; the EU AI Act source provides official implementation context. Applicability and legal obligations require qualified jurisdiction-specific review. **[R12][R13][R14][R40]**
+> **Evidence context:** Four outside sources frame this chapter, and they carry different weight. The **NIST AI Risk Management Framework** is voluntary US guidance that organizes AI risk work into four functions: Govern, Map, Measure, and Manage **[R12]**. Its **Generative AI Profile** applies the framework to risks particular to generative models across their lifecycle **[R13]**. **ISO/IEC 42001** is an international standard that specifies requirements for an AI management system, the policies, roles, and continual-improvement cycle an organization can be audited against **[R14]**. The **EU AI Act** is law: it sorts AI systems into risk levels, and the European Commission's overview lists credit scoring that can deny someone a loan among its high-risk examples **[R40]**. A Harborlight model that influenced lending decisions for EU applicants would therefore need that classification checked; confirming it is a question for qualified legal review in each jurisdiction. The governance model in this chapter, with its risk tiers, accountable owners, and evidence produced by the pipeline, is the book's own design, built so that the same evidence can serve any of these frameworks.
 
 |  |
 | --- |
@@ -156,7 +156,7 @@ An exception starts as a request that names the exact control gap, its scope, an
 | Regulatory applicability | NIST AI RMF and its Generative AI Profile are voluntary guidance; ISO/IEC 42001 specifies a management system; the OWASP Top 10 for Agentic Applications is community security guidance; the EU AI Act creates binding obligations that vary by risk category and by whether the enterprise acts as provider or deployer. Mapping a control in this book to a clause is engineering evidence, not legal advice, and qualified jurisdiction-specific review remains required. | R12; R13; R14; R15; R40 |
 | Incident response | NIST SP 800-61 Rev. 3 integrates incident response into organizational cybersecurity risk management. Feeding incidents into the governance cadence and the GovernanceRecord is this book's recommendation. | R42 |
 
-The discussion above draws on R12; R13; R14; R15; R40; R42. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R12; R13; R14; R15; R40; R42. Appendix I lists each source in full, with its version and access date.
 
 ## If this fails in production
 
@@ -200,7 +200,7 @@ Governance defines who may release change and at what depth; Chapter 27 makes re
 
 # 27 — Release New Behavior Without Breaking Work in Flight
 
-> **Evidence context:** SBOMs describe components and SLSA provenance describes how an artifact was built; the release controls here use both **[R17][R18]**. Regional recovery mechanics are book-authored recommendations.
+> **Evidence context:** Two supply-chain sources support this chapter's release checks, and they answer different questions. A **software bill of materials (SBOM)** lists what an artifact contains, each library and version inside a container or package **[R18]**. **SLSA build provenance** is a signed statement of how the artifact was built: from which source commit, by which build system, through which steps **[R17]**. A Harborlight release uses both. Before a new runtime image for the evidence-review agent is promoted, the release checks that its SBOM shows no component with an unaccepted known vulnerability and that its provenance shows it was built from the reviewed commit by the approved pipeline, not on a developer's machine; § A sensible place to start shows the verification. The regional recovery steps later in the chapter, fencing a failed cell, restoring, reconciling effects, and resuming runs, are the book's own recommendations; no source is cited for them.
 
 |  |
 | --- |
@@ -421,7 +421,7 @@ The ordering in step 7 is this book's recommendation. Recovery is rehearsed with
 | --- | --- | --- |
 | Supply chain | An SBOM describes components; SLSA provenance describes where and how an artifact was built and by which builder. Using both, verifying signatures and builder identity before promotion, and pinning model, prompt, Skill, policy, and evaluation digests in the release manifest are this book's recommendations. | R17; R18 |
 
-The discussion above draws on R17; R18; R48. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R17; R18; R48. Appendix I lists each source in full, with its version and access date.
 
 ## A sensible place to start
 
@@ -480,7 +480,7 @@ The release lifecycle is controlled; Chapter 28 sizes the system and optimizes c
 
 # 28 — Treat Performance as a Business Decision
 
-> **Evidence context:** Little’s Law relates average items in a stable system to arrival rate and average time in system. The capacity equations in this chapter are planning approximations and must be calibrated by load tests. **[R43]**
+> **Evidence context:** One mathematical result underpins this chapter's capacity sizing. **Little’s Law** states that in a system running in a steady state, the average number of items inside it equals the rate at which items arrive multiplied by the average time each item spends inside, written L = λW **[R43]**. It holds whatever the pattern of arrivals, which makes it a dependable first estimate. If Harborlight's evidence-review workers receive 120 runs a minute and each run holds a worker for four minutes, about 480 runs are in service at any moment, so about 480 worker permits are busy; § Measure the whole journey develops the example. The formulas this chapter builds on the law, for permit pools, retries, and token demand, are the book's planning approximations, not part of the proof. Real traffic is bursty, retries arrive together during outages, and providers impose quotas, so load tests must calibrate every number before it sizes production.
 
 |  |
 | --- |
@@ -522,7 +522,16 @@ Optimization becomes confused when one number is treated as the whole system. La
 | How much can the system accept? | Queue age, service-time distribution, permits, and downstream quota | CPU utilization without provider limits |
 | Did the system do the right thing? | Acceptance rate, groundedness, effect correctness, and failure recovery | “The request returned 200” |
 
-For a stable workload, Little’s Law gives a useful first estimate: `average work in system = arrival rate × average time in system`. Apply it to each scarce resource separately. Runs *in the system* include durable waits: a mortgage run waiting nine days for the second pay statement holds history and a timer but no worker, because Chapter 15 suspends idle workflows. Work *holding a permit* counts only active service time. If the platform admits 120 runs per minute and each run spends four minutes of active service time holding a workflow-worker permit, about 480 permits are in use; waiting runs add to stored state and approval queues, not to that number. That estimate is not a capacity guarantee: fan-out, retries, provider quotas, and burstiness can require more permits. It locates the question a load test must answer; Appendix K § Quantitative sizing method gives the effective work rate and the permit-pool formula.
+For a stable workload, Little’s Law gives a useful first estimate: `average work in system = arrival rate × average time in system`. Apply it to each scarce resource separately. Runs *in the system* include durable waits: a mortgage run waiting nine days for the second pay statement holds history and a timer but no worker, because Chapter 15 suspends idle workflows. Work *holding a permit* counts only active service time. If the platform admits 120 runs per minute and each run spends four minutes of active service time holding a workflow-worker permit, about 480 permits are in use; waiting runs add to stored state and approval queues, not to that number. That estimate is not a capacity guarantee: fan-out, retries, provider quotas, and burstiness can require more permits. It locates the question a load test must answer. The table below turns the estimate into a pool size for each scarce resource.
+
+| **Quantity** | **Approximation** | **Caution** |
+| --- | --- | --- |
+| Effective work rate | lambda\_eff = lambda\_external × E[attempted activities per external run] | Measure attempted activities per run from traces for each resource class; the count already includes fan-out and retries, so do not multiply by them again. Estimate separately by tenant/risk/route. |
+| Offered concurrency | L = lambda\_eff × E[service time] | Little’s Law gives mean in-flight work under stable conditions [R43]. |
+| Permit pool | permits >= ceil(L / target\_utilization) | Use lower utilization for high-variance or rate-limited dependencies. |
+| Retry multiplier | 1 + p\_retry + p\_retry² + … up to the attempt cap | Projects attempts from first-attempt counts only when traces are unavailable. Correlated outages violate independence; simulate them. |
+| Token demand | requests × (uncached input + cached input + output tokens) | Count tool schemas as input; track by model route and ContextManifest policy. |
+| Verified-success cost | (model + tool + compute + human-review cost) / accepted outcomes | Include failed, abandoned, and reconciled runs. |
 
 ## Optimize the trajectory, not the token
 
@@ -649,7 +658,7 @@ Measure route distribution and eligibility, task success and quality by route, s
 
 ### Scalability mechanics
 
-* Size each pool with the permit-pool formula in Appendix K, then verify with queue-age SLOs.
+* Size each pool with the permit-pool formula in § Measure the whole journey, then verify with queue-age SLOs.
 * Hierarchical token buckets: organization → environment → tenant → agent → user → run → provider/tool.
 * Use hierarchical distributed rate limiting with regional allocations and periodic reconciliation; no request should require a synchronous global lock. Keep a safety margin for clock/network skew and provider quota uncertainty.
 * Partition queues and worker pools by latency class, effect risk class, region/residency, sandbox profile, model/tool compatibility, and data classification—but avoid per-tenant queues unless isolation or volume justifies the operational cardinality.
@@ -679,7 +688,7 @@ These are policy shapes, not universal numbers. Determine actual limits from tas
 | Little’s Law | In a stable system, mean work in system equals arrival rate × mean time in system (L = λW); the chapter applies it per scarce resource, counting only active service time for permits. | R43 |
 | Sizing method (book-authored recommendation) | Size from measured arrival rates and service-time distributions. Include fan-out, retry amplification, model/tool quotas, approval dwell time, tenant fairness, and headroom. Cost per verified success is more useful than token cost alone. | — |
 
-The discussion above draws on R43. Appendix J lists the complete sources and records their authority, version, and scope.
+The discussion above draws on R43. Appendix I lists each source in full, with its version and access date.
 
 ## A sensible place to start
 
@@ -724,4 +733,4 @@ Admission should mirror the `quotas:acquire` contract: grant what fits, defer wh
 
 ## Where this leads next
 
-Part VIII closes the operating loop: governance decides who may change behavior and how deeply it is reviewed, releases decide which behavior each run receives, and admission decides how much work runs and at what cost—each judged by verified outcomes. The Closing Perspective that follows returns to Chapter 1's week of failures, shows where each is now contained, and joins the book's components in one architecture. The appendices are desk tools: pattern and triage guides (A, B), contracts and framework choice (C, D), research, limits, and roadmap (E–G), the Harborlight implementation and coding-agent prompt (H, I), the evidence registry and acceptance gates (J, K), and the glossary (L).
+Part VIII closes the operating loop: governance decides who may change behavior and how deeply it is reviewed, releases decide which behavior each run receives, and admission decides how much work runs and at what cost—each judged by verified outcomes. The Closing Perspective that follows returns to Chapter 1's week of failures, shows where each is now contained, and joins the book's components in one architecture. The appendices are desk tools: pattern and triage guides (A, B), contracts and framework choice (C, D), research, limits, and roadmap (E–G), the Harborlight implementation (H), the references (I), and the glossary (J).

@@ -2,8 +2,7 @@
 """Assemble the canonical Markdown book from ordered part files.
 
 Canonical editable sources live in source/parts. This assembler also renders
-Appendix J -- the reference list and the claim traceability matrix it scopes --
-from config/references.json so citation metadata has one machine-readable source
+Appendix I -- the reference list -- from config/references.json so citation metadata has one machine-readable source
 of truth, expands [[EXAMPLE:id]] markers from config/examples.json so every
 code listing in the book is the exact text of a file that CI executes, writes
 the index in place of [[INDEX]] from config/index-terms.json, and resolves the
@@ -40,6 +39,19 @@ def accessed(r: dict) -> str:
     return f"{day} {months[month - 1]} {year}"
 
 
+def short_version(r: dict) -> str:
+    """The edition or version, without the file-level pointers some entries keep."""
+    version = str(r["publication_or_version"])
+    return version.split(":", 1)[0] if version.startswith("Repository at commit") else version
+
+
+def reference_line(r: dict) -> str:
+    """One concise entry: who, when, what, which version, where, verified when."""
+    title = r["title"] if r["title"].endswith(("?", "!")) else r["title"] + "."
+    return (f"* **[{r['id']}]** {r['author_or_organization']} ({r['year']}). *{title}* "
+            f"{short_version(r)}. [Source]({r['url']}). Accessed {accessed(r)}.")
+
+
 def render_reference_sections(text: str, references: list[dict]) -> str:
     category_order = [
         ("Research foundations", {"research"}),
@@ -48,8 +60,8 @@ def render_reference_sections(text: str, references: list[dict]) -> str:
         ("Frameworks, evaluation, and industry implementation guidance", {"framework documentation", "framework release", "vendor documentation", "industry guidance", "industry report", "architecture pattern"}),
     ]
     ref_lines = [
-        "# Appendix J — References and Evidence Scope", "", "## Citation policy", "",
-        "References are numbered by stable registry identifier. Each citation supports only the scoped claim recorded in `config/references.json`; access dates document the verification point for online material. Standards, official guidance, community guidance, vendor documentation, research, and law are deliberately labeled rather than treated as equivalent authority.", "",
+        "# Appendix I — References", "", "## Citation policy", "",
+        "References are numbered by stable registry identifier and grouped by kind of source, so a standard, official guidance, vendor documentation, research, and law are never presented as equivalent authority. Each citation supports only a narrow claim; that permitted scope is recorded in the book's source registry and checked at every build. Access dates record when online material was last verified.", "",
     ]
     seen = set()
     for heading, types in category_order:
@@ -59,23 +71,14 @@ def render_reference_sections(text: str, references: list[dict]) -> str:
         ref_lines += ["## " + heading, ""]
         for r in group:
             seen.add(r["id"])
-            ref_lines.append(f"* **[{r['id']}]** {r['author_or_organization']} ({r['year']}). *{r['title']}*. {r['publication_or_version']}. [Primary or authoritative source]({r['url']}). Accessed {accessed(r)}. **Supports:** {r['supports']}")
+            ref_lines.append(reference_line(r))
         ref_lines.append("")
     for r in references:
         if r["id"] not in seen:
-            ref_lines.append(f"* **[{r['id']}]** {r['author_or_organization']} ({r['year']}). *{r['title']}*. {r['publication_or_version']}. [Source]({r['url']}). Accessed {accessed(r)}. **Supports:** {r['supports']}")
-    # Appendix J absorbs the former Appendix M. The matrix only ever
-    # made sense next to the entries it scopes, and splitting them meant a reader
-    # checking a citation had to hold two appendix letters in their head.
-    ref_lines += [
-        "## Where each claim is supported", "",
-        "This matrix defines exactly what each citation is permitted to support. It prevents a source from being stretched beyond its evidence. Book-authored patterns, metrics, formulas, examples, and architecture recommendations remain design guidance unless a source explicitly covers them.", "",
-        "| ID | Source class | Permitted claim scope | Verification note |", "|---|---|---|---|",
-    ]
-    for r in references:
-        scope = str(r["supports"]).replace("|", "\\|")
-        ref_lines.append(f"| {r['id']} | {r['type']} | {scope} | Verified {r['verification']['checked_on']}; re-check living sources before use. |")
-    text = replace_section(text, "# Appendix J — References", "\n".join(ref_lines))
+            ref_lines.append(reference_line(r))
+    # The permitted scope of each source stays in the registry, where the
+    # citation checker enforces it; printing it made every entry a paragraph.
+    text = replace_section(text, "# Appendix I — References", "\n".join(ref_lines))
     return text
 
 

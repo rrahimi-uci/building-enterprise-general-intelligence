@@ -29,8 +29,8 @@ When representations disagree, fix the canonical source/configuration and regene
 | Code | fenced block + language | styled line-numbered panel | line-numbered wrap-safe listing | code block + language |
 | Callout | one-column table opening with the bold kind | shaded cell, `Book Callout` style | typed breakable `tcolorbox` | callout block or labeled paragraph |
 | Diagram | registered marker | embedded image + Caption | aspect-safe figure + caption | image + caption/file reference |
-| Citation | `[Rxx]` | linked/styled marker | hyperlink to Appendix J target | literal stable marker |
-| Reference | generated Appendix J | rendered bibliography | same generated bibliography | same text/order |
+| Citation | `[Rxx]` | linked/styled marker | hyperlink to Appendix I target | literal stable marker |
+| Reference | generated Appendix I | rendered bibliography | same generated bibliography | same text/order |
 | Index | `# Index` + generated list, chapter/appendix locators | XE marks + INDEX field; cached result is the Markdown list | `\index` marks + makeindex page index | the Markdown list |
 | Title-page date | `{{BUILD_DATE}}` resolved to the build month | same text | same text | same text |
 
