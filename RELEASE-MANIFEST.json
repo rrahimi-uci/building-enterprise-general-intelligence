@@ -51,13 +51,13 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 8268,
-      "sha256": "6cf656fe5c5a081b4182c4c8bccc038ddd10e5a4238ed5ef06ae97595fd5ab4b"
+      "bytes": 8327,
+      "sha256": "e96389fcaaabe31162cf3e824bb4cfab53959f7c1b82a488e2fc48fb369d8474"
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 44281,
-      "sha256": "4349776c079ba77d4861056668c5f7b433d66fd1839f246d0b5267e4a43afc34"
+      "bytes": 45215,
+      "sha256": "845bc08d1390548b6c194e37c6d98e2ef82815c66db4e8306dd937872fe88294"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -76,8 +76,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 18668,
-      "sha256": "48cfcd2b5adde3b4887af73db734ab04ba41397451ec78fdb0cf68d559458a37"
+      "bytes": 19134,
+      "sha256": "39430e40f590b3904d9a67bd891c0d82ec17723e5efd3aba35e158579e96899b"
     },
     {
       "path": "RELEASE-CHECKLIST.md",
@@ -1021,8 +1021,8 @@
     },
     {
       "path": "examples/README.md",
-      "bytes": 7718,
-      "sha256": "7dc01caced2bbe04b5264076494280d85874448c7f84103f8d35454936cf4078"
+      "bytes": 10490,
+      "sha256": "f8ce0af7a44481e9b8300f8551bfe1f7ae23d03f50328c6c3b758630c9e1fd28"
     },
     {
       "path": "examples/__init__.py",
@@ -1541,8 +1541,8 @@
     },
     {
       "path": "latex/README.md",
-      "bytes": 6304,
-      "sha256": "14516432e78d3d831cbd15855f482f877f1c2064637b603a98da03050fc3e640"
+      "bytes": 6664,
+      "sha256": "13fdb64935ce090b2a92c15b4e3741fbea6f2bae760ebe4829dcb4c7c09cda58"
     },
     {
       "path": "latex/bookindex.ist",
@@ -2911,8 +2911,8 @@
     },
     {
       "path": "styles/DESIGN-SYSTEM.md",
-      "bytes": 14978,
-      "sha256": "819b5f6241297b4c29112c512586cf9a2778004ff3af2b9cd358d16c4a39aa8d"
+      "bytes": 14844,
+      "sha256": "64341d0590e1804a660a05f0a753eb8401ff4705405a8d89b017db6959b0f674"
     },
     {
       "path": "styles/DOCX-STYLES.md",

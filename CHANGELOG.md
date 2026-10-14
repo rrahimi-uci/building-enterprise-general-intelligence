@@ -4,6 +4,13 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Documentation aligned with the current repository
+
+- **README.md:** the canonical-source steps name the TikZ diagram workflow, the LaTeX builder, and what assembly generates (examples, references, index); the requirements table lists what `make diagrams`, `make cover-art`, and `make chapter-covers` actually need; the repository map describes the code-drawn cover and TikZ-only diagram sources.
+- **latex/README.md:** the figure contract describes the 46 TikZ figures (vector PDF at 95 percent or more of final size, PNG at 300 dpi or better), the chapter covers and the makeindex index; the package list matches `bookstyle.sty`.
+- **examples/README.md:** the example table lists all 47 registered examples (25 were missing), generated from `config/examples.json`; C03 is described as the runtime interface.
+- **AGENTS.md and the design system:** every figure is TikZ; Graphviz and Mermaid remain only as renderer capabilities.
+
 ### Cover redesigned around the book's thesis; title set horizontally
 
 - **New cover art, drawn from code** (`tools/render_cover_art.py`, `make cover-art`, output `assets/cover/cover-art.png`). The former stock-style isometric artwork did not say what the book is about. The new composition does: a bounded model at the centre that only proposes, a deterministic shell of gates around it, a ring of governed knowledge, and a durable, governed workflow carrying the four platform controls (admission, policy, gateway, evaluate and release). Intent enters on the left, only a verified effect reaches the systems of record on the right, and evidence loops back into evaluation and release. It reuses the chapter covers' palette and glyphs. The old `agent-architecture-art-source.jpeg` is removed.

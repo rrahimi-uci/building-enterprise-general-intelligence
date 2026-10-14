@@ -89,7 +89,7 @@ lessons across chapters.
 |---|---:|---|---|
 | `C01` | 1 | Read-only evidence summary | Missing documents and the false confidence of a model answer |
 | `C02` | 2 | Typed proposal, Decimal calculation, read-only command | Schema validity is not authorization or verified evidence |
-| `C03` | 3 | Provider-neutral runtime boundary | SDK tool allowlists and framework state must not own enterprise truth |
+| `C03` | 3 | Provider-neutral runtime interface | SDK tool allowlists and framework state must not own enterprise truth |
 
 Run the current foundation from the repository root with the examples
 environment:
@@ -106,30 +106,58 @@ denies credit and never writes to a real loan-origination system.
 
 ## What is here
 
+Every registered example, in chapter order. `config/examples.json` is the
+authoritative list; `make examples` fails if a file, marker, or test is missing.
+
 | Example | Chapter | Exercises |
 |---|---|---|
-| `foundations/capability_levels.py` | 01 | The prototype and the four agent levels; a retry duplicates an unprotected write |
-| `foundations/agent_tool_loop.py` | 02 | Typed tool, structured output, bounded run |
-| `foundations/governed_tool_gateway.py` | 02 | Validation, authorization, freshness, and effect idempotency |
-| `foundations/effect_idempotency.py` | 22 | Logical effect keys, replay safety, Unknown outcomes |
-| `patterns/bounded_react_loop.py` | 10 | Run budget enforced outside the model |
-| `patterns/routing_handoff.py` | 11 | Handoff as an ownership transfer |
-| `patterns/approval_gate.py` | 14 | Proposal-bound human approval and expiry |
-| `security/input_guardrail.py` | 20 | Tripwire before the model is consulted |
-| `observability/mlflow_tracing.py` | 24 | Agent and tool spans |
-| `observability/mlflow_trace_configuration.py` | 24 | Autolog plus platform-owned spans |
-| `observability/mlflow_evaluation.py` | 25 | Dataset evaluation and regression detection |
-| `observability/mortgage_agents_mlflow.py` | 24 | Real Agents SDK tool run traced by MLflow |
-| `observability/mlflow_trajectory_evaluation.py` | 25 | Deterministic and model-assisted trajectory scorers |
-| `contracts.py` | 03, 04 | Shared step and platform contracts, `RiskClass` (two views) |
-| `platform/skills_registry.py` | 08, 09 | Policy-aware resolution, SemVer precedence, lifecycle outside the digest, pinned packs |
-| `patterns/react_engine.py` | 10 | Turn, tool and no-progress budgets as typed stop reasons |
-| `patterns/plan_compilation.py` | 12 | Binding a plan to its policy envelope |
-| `patterns/approval_verification.py` | 14 | Binding a human approval, self-approval, expiry |
-| `runtime/durable_state.py` | 15 | Run state as a replayable event fold |
-| `runtime/step_execution.py` | 03 | Platform-owned adapter around the SDK |
-| `runtime/adapter_conformance.py` | 07 | Adapter conformance checks that report gaps by name |
-| `mortgage/cumulative_case.py` | 01–03 | Cumulative synthetic mortgage checkpoints (`C01`–`C03`) |
+| `foundations/capability_levels.py` | 01 | Prototype sketch, deliberately without gateway or effect controls |
+| `mortgage/cumulative_case.py` | 01–03 | Cumulative synthetic mortgage case across Chapters 1-3 |
+| `foundations/agent_tool_loop.py` | 02 | Bounded agent loop with a typed tool |
+| `foundations/governed_tool_gateway.py` | 02 | A readable Tool Gateway with validation, authorization, and effect idempotency |
+| `contracts.py` | 03–18 | Provider-neutral agent-step and platform contracts |
+| `runtime/step_execution.py` | 03 | One bounded agent step behind a platform-owned adapter |
+| `knowledge/document_ingestion.py` | 05 | A document's fields verified against its bytes before they become facts |
+| `knowledge/enforced_rule.py` | 05 | A policy rule enforced at the effect boundary |
+| `knowledge/gate_record.py` | 05, 27 | Gate findings routed by kind, and a quality budget that cannot pass by rounding |
+| `knowledge/grounding_verifier.py` | 05 | Admitting a claim only on a literal span of the bytes it cites |
+| `knowledge/knowledge_graph.py` | 05 | Traversal answering a question similarity cannot |
+| `knowledge/policy_to_rule.py` | 05 | A policy sentence as a typed, scoped rule with provenance |
+| `knowledge/set_operations.py` | 05 | Union, intersection, difference and contradiction over rule sets |
+| `runtime/context_manifest.py` | 06 | One sealed ContextManifest per agent step |
+| `runtime/adapter_conformance.py` | 07 | An adapter conformance suite that reports every gap |
+| `knowledge/capability_catalog.py` | 08 | Discovering a capability with its effects and prerequisites |
+| `platform/skills_registry.py` | 08, 09 | A Skill registry: policy-bound resolution and pinned Skill Packs |
+| `patterns/bounded_react_loop.py` | 10 | Bounded ReAct loop with an explicit run budget |
+| `patterns/react_engine.py` | 10 | A ReAct controller that owns the budgets |
+| `patterns/route_validation.py` | 11 | Eligibility-first routing with validation and fallback |
+| `patterns/routing_handoff.py` | 11 | Framework handoff: passing control to a specialist within one run |
+| `patterns/plan_compilation.py` | 12 | Compiling a validated plan into a budget-bounded envelope |
+| `patterns/evaluator_optimizer.py` | 13 | A bounded evaluator-optimizer whose judge cannot accept |
+| `patterns/approval_gate.py` | 14 | A human approval gate that survives the wait |
+| `patterns/approval_verification.py` | 14 | Verifying a human approval against this exact proposal |
+| `runtime/durable_state.py` | 15 | Durable run state as a replayable event fold |
+| `antipatterns/bound_approval.py` | 17 | AP-06 and its correction: the approval covers this exact proposal |
+| `antipatterns/delegation_budget.py` | 17 | AP-11 and its correction: delegation draws on one budget |
+| `antipatterns/memory_gate.py` | 17 | AP-13 and its correction: a memory write passes a gate |
+| `antipatterns/retry_owner.py` | 17 | AP-04 and its correction: one retry owner, one shared budget |
+| `antipatterns/state_projection.py` | 17 | AP-02 and its correction: typed state projected into context |
+| `antipatterns/unknown_effect.py` | 17 | AP-05 and its correction: a timeout leaves the effect Unknown |
+| `federation/artifact_adoption.py` | 19 | Adopting a remote artifact under local policy |
+| `security/input_guardrail.py` | 20 | An input guardrail that trips before any tool runs |
+| `security/capability_envelope.py` | 21 | Capability-envelope subset proof |
+| `foundations/effect_idempotency.py` | 22 | Effect-level idempotency ledger |
+| `security/egress_url.py` | 23 | Default-deny URL authorization for an egress grant |
+| `security/kill_switch.py` | 23 | Scoped operational kill switch |
+| `observability/mlflow_trace_configuration.py` | 24 | Configuring MLflow tracing around a governed agent step |
+| `observability/mlflow_tracing.py` | 24 | Manually tracing agent and tool boundaries with MLflow |
+| `observability/mortgage_agents_mlflow.py` | 24 | Tracing the mortgage Agents SDK runtime with MLflow |
+| `observability/mlflow_evaluation.py` | 25 | Evaluating an agent against a dataset with MLflow |
+| `observability/mlflow_trajectory_evaluation.py` | 25 | Combining deterministic and model-assisted MLflow trajectory scorers |
+| `knowledge/knowledge_release.py` | 27 | A knowledge change published only after gates, an independent approval, and a verified bundle |
+| `platform/release_attestation.py` | 27 | Release attestation bound to verified identities |
+| `platform/release_compatibility.py` | 27 | Release compatibility check against a worker profile |
+| `platform/admission_permit.py` | 28 | Capacity admission that grants, defers, or rejects |
 
 ## Adding an example
 

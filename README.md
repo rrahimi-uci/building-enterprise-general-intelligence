@@ -12,9 +12,9 @@ One canonical source in `source/parts/*.md` produces three synchronized represen
 
 1. **Edit:** `source/parts/*.md` in numeric order.
 2. **Reference metadata:** edit `config/references.json`; cite sources as `[Rxx]` in prose.
-3. **Assets:** add diagrams to `assets/diagrams/` and register them in `config/diagrams.json`.
-4. **Assemble:** `tools/assemble_manuscript.py` generates `book/manuscript.md` and the distributable Markdown file.
-5. **Render:** `tools/build_book.py` generates DOCX from the assembled manuscript and configuration.
+3. **Assets:** add a diagram's editable TikZ source to `assets/diagrams/src/`, register it in `config/diagrams.json`, and render it with `make diagrams`.
+4. **Assemble:** `tools/assemble_manuscript.py` generates `book/manuscript.md` and the distributable Markdown file, expands code-example markers, writes the reference list (Appendix I) and the index.
+5. **Render:** `tools/build_book.py` generates the DOCX and `tools/build_latex.py` the XeLaTeX source from the assembled manuscript and configuration.
 6. **Validate before release:** never hand-edit generated DOCX or distributable Markdown.
 
 `source/original/` is immutable provenance. `tools/prepare_manuscript.py` is the frozen one-time migration/bootstrap tool from the v3.1 draft. Never run it during ordinary editing: it would regenerate `source/parts` from the legacy source and undo the current v1.0.0 structure.
@@ -39,7 +39,8 @@ automatically — there is no separate "activate the environment" step.
 | Markdown + DOCX | Python 3.13 and `requirements.txt` (`python-docx`, Pillow, PyMuPDF, pdfplumber, fontTools) |
 | XeLaTeX PDF | A TeX distribution with XeLaTeX. Full TeX Live works out of the box; BasicTeX/`texlive-base` needs `./tools/bootstrap_tex.sh`, which `make setup` runs for you |
 | Pagination QA (`make qa-pdf`) | LibreOffice — optional |
-| Cover/diagram regeneration | Microsoft core fonts or metric-compatible substitutes (Liberation Sans) |
+| Diagrams (`make diagrams`) | XeLaTeX with the TikZ packages (`./tools/bootstrap_tex.sh --diagrams`) and poppler (`pdftoppm`, `pdfinfo`, `pdffonts`) |
+| Cover art and chapter covers (`make cover-art`, `make chapter-covers`) | `rsvg-convert` (librsvg) and Arial or Liberation Sans. The rendered PNGs are committed, so the normal build and CI need neither |
 
 No local TeX at all? `Dockerfile.latex` builds the PDF in a container, and CI
 builds it on every push.
@@ -147,9 +148,9 @@ make pdf        # three-pass XeLaTeX -> dist/*-LaTeX.pdf
 │   ├── references.json           # source-of-truth citation registry
 │   └── style-tokens.json         # portable design tokens
 ├── assets/
-│   ├── cover/                    # source artwork and generated cover
+│   ├── cover/                    # code-drawn cover art and the composed cover
 │   ├── diagrams/                 # rendered diagrams: PDF for print, PNG for DOCX
-│   │   └── src/                  # ← editable diagram sources (.gv, .mmd, .tikz.tex)
+│   │   └── src/                  # ← editable diagram sources (.tikz.tex) and shared theme files
 ├── cover-images/                 # generated Letter-size chapter cover visuals
 │
 ├── book/manuscript.md            # generated canonical assembly; do not hand-edit

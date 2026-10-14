@@ -56,7 +56,8 @@ The same source generates Markdown and DOCX. Change presentation in `bookstyle.s
 - XeLaTeX with bundled Liberation Sans/Mono avoids host-font substitution.
 - US Letter geometry matches the DOCX contract.
 - Cover is 2550 × 3300 pixels, 300 effective dpi.
-- All 18 diagrams are 1800 × 1000 pixels and at least 255 effective dpi at publication width.
+- All 46 figures are vector PDFs drawn at final size and placed at 95 percent or more of it; their DOCX PNGs are rasterised from the same PDFs at 300 effective dpi or better at publication width (`make diagrams` enforces both).
+- Each of the 28 chapters is preceded by its full-page cover visual (`cover-images/`), and the book ends with a page index built by makeindex (`bookindex.ist`).
 - Tables use repeatable long-table headers, dark high-contrast heading rows, alternating light body rows, and responsive font sizing.
 - Code uses a line-numbered, wrap-safe, syntax-aware panel with an accessible light background.
 - Parts use standalone full-page navy dividers; every chapter and appendix begins on a new page.
@@ -69,10 +70,11 @@ A full TeX Live installation satisfies everything below. On a minimal
 distribution, run `./tools/bootstrap_tex.sh` from the repository root: it
 installs only what is missing, into your user texmf tree, without `sudo`.
 
-**Direct dependencies** — requested by `bookstyle.sty`: `fontspec`, `microtype`,
-`xcolor`, `graphicx`, `longtable`, `array`, `booktabs`, `ragged2e`, `enumitem`,
-`fancyhdr`, `titlesec`, `caption`, `hyperref`, `bookmark`, `listings`,
-`tcolorbox`, `needspace`, `setspace`, `lastpage`, `pdflscape`, `etoolbox`, and
+**Direct dependencies** — requested by `bookstyle.sty`: `fontspec`, `geometry`,
+`microtype`, `xcolor`, `graphicx`, `grffile`, `longtable`, `array`, `booktabs`,
+`ragged2e`, `enumitem`, `fancyhdr`, `titlesec`, `caption`, `hyperref`,
+`bookmark`, `listings`, `tcolorbox`, `tikz`, `needspace`, `setspace`,
+`lastpage`, `pdflscape`, `etoolbox`, `multicol`, `makeidx`, `textcomp`, and
 `amssymb`.
 
 **Diagram rendering only** (`make diagrams`, not the book build): `standalone`, `fontawesome5`, and the `tikz` libraries `arrows.meta`, `calc`, `positioning`, `fit`, `backgrounds`, `shapes.geometric`, `shapes.misc`, `shadows`, `bending`, `decorations.markings`; also `pdftoppm`, `pdfinfo`, `pdffonts` (poppler). `./tools/bootstrap_tex.sh --diagrams` installs the TeX packages.
