@@ -65,7 +65,7 @@ they need no API key. See [examples/README.md](examples/README.md).
 The cumulative mortgage implementation lives in `mortgage_case/`. Its current
 foundation follows synthetic case `MORT-2026-000184` through checkpoints `C01`–
 `C03`: read-only evidence summary, deterministic proposal validation, and the
-provider-neutral runtime seam. It never approves or denies credit and never
+provider-neutral runtime interface. It never approves or denies credit and never
 writes to a real loan-origination system.
 
 ```bash

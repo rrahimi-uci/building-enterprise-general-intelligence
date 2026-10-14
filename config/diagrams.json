@@ -246,8 +246,8 @@
       "file": "assets/diagrams/reference-architecture.png",
       "source": "assets/diagrams/src/reference-architecture.tikz.tex",
       "vector": "assets/diagrams/reference-architecture.pdf",
-      "description": "Seven ownership planes stacked in request order, from experience and channels down to systems of record, each with its components and the request path descending through them, flanked by security and governance and by evaluation and operations as spines that cross every plane",
-      "sha256": "90d22dd9b0df44cfb9f39e01bce7c9fe8966ca09c16ae280f14b6aac9c653cb7"
+      "description": "Seven ownership planes stacked in request order, from experience and channels down to systems of record, each with its components and the request path descending through them, flanked by security and governance and by evaluation and operations as spines that cross every plane; policy control reaches admission, run control, and the gateways, every plane inside the trust boundary feeds one evidence bus into the OpenTelemetry collector, and a key beneath the figure names the line styles and expands each abbreviation",
+      "sha256": "737bc3d8b328d3e41d8c8fb3014fd7752bb311f214de5a4f592180a92137360c"
     },
     {
       "id": "request-sequence",

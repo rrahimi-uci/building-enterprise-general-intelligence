@@ -59,7 +59,7 @@ before any model-owned lending decision or protected loan-origination write:
 | --- | --- | --- | --- |
 | `C01` | 1 | A read-only evidence summary that exposes the missing second pay statement | Evidence truth, authoritative calculations, lending decisions, and effects |
 | `C02` | 2 | Typed candidate facts, deterministic calculation metadata, and a case-scoped workflow command | Validation, authorization, commit, verification, and acceptance |
-| `C03` | 3 | A provider-neutral bounded runtime seam with an optional OpenAI adapter | Workflow state, policy, credentials, approvals, effects, receipts, and audit |
+| `C03` | 3 | A provider-neutral bounded runtime interface with an optional OpenAI adapter | Workflow state, policy, credentials, approvals, effects, receipts, and audit |
 
 Later checkpoints are roadmap targets, not claims that the corresponding
 production platform has already been implemented. From Chapter 4 onward, the

@@ -5,7 +5,7 @@ one boundary around the model, one step at a time:
 
 - **Chapter 1** names the parts of an enterprise agentic system and draws the boundary around the model.
 - **Chapter 2** turns every model output into a proposal that must cross six deterministic gates.
-- **Chapter 3** places the agent framework behind a runtime seam that the platform owns.
+- **Chapter 3** places the agent framework behind a runtime interface that the platform owns.
 
 The companion code implements the mortgage checkpoints of these three chapters,
 C01–C03; from Chapter 4 on, the case boxes describe the target design. Later
@@ -375,7 +375,7 @@ completion. Every concern this chapter has separated lives in one place.
 
 What makes it attractive is real: it is fast to build, it demonstrates well, and
 every capability you add is one more line in the same file. What makes it
-unsafe is that it has no seams. There is no point at which a failure can be
+unsafe is that it has no internal boundaries. There is no point at which a failure can be
 contained, because containment requires a boundary and there are none. There is
 no point at which authority can be checked, because the process holds one
 credential for everything it does. And there is no point at which the run can be
@@ -820,7 +820,7 @@ production persists these transitions atomically with the downstream effect.
 
 With tools bounded, Chapter 3 defines the runtime contract that keeps applications portable across agent frameworks and pins the model route each step uses.
 
-For the mortgage case, the remaining bottleneck is the execution seam: the
+For the mortgage case, the remaining bottleneck is the execution boundary: the
 typed shell needs one bounded evidence-review activity, but the framework must
 not become the owner of the case, policy, approval, or effect records.
 
@@ -837,7 +837,7 @@ to prove who authorized an effect.
 
 |  |
 | --- |
-| **WHERE THE MORTGAGE CASE STANDS** C02 turns the next step for MORT-2026-000184 into a typed, rejectable proposal, but nothing yet separates the model-facing loop from the workflow that owns the case. C03 adds that seam. |
+| **WHERE THE MORTGAGE CASE STANDS** C02 turns the next step for MORT-2026-000184 into a typed, rejectable proposal, but nothing yet separates the model-facing loop from the workflow that owns the case. C03 adds that boundary. |
 
 |  |
 | --- |
@@ -1083,9 +1083,9 @@ Frameworks and model clients retry on their own. If the SDK, the LLM Gateway, th
 
 ## A sensible place to start
 
-The companion code makes the seam concrete for one node of the mortgage case.
+The companion code makes the runtime interface concrete for one node of the mortgage case.
 
-### Mortgage checkpoint: the runtime seam
+### Mortgage checkpoint: the runtime interface
 
 At `C03`, the mortgage workflow submits one bounded evidence-review step for
 `MORT-2026-000184`. The framework may reason over the authorized projection and
@@ -1095,7 +1095,7 @@ session, and uses that result as a proposal for the deterministic shell.
 
 | Before | Added | After |
 | --- | --- | --- |
-| `C02` validates proposals but has no replaceable runtime contract. | `C03` adds `AgentStepRequest`, `AgentStepResult`, an offline bounded runtime, and an optional OpenAI Agents SDK adapter. | The provider can change behind the seam; an allowlist escape fails before execution and SDK state cannot become mortgage workflow truth. |
+| `C02` validates proposals but has no replaceable runtime contract. | `C03` adds `AgentStepRequest`, `AgentStepResult`, an offline bounded runtime, and an optional OpenAI Agents SDK adapter. | The provider can change behind the interface; an allowlist escape fails before execution and SDK state cannot become mortgage workflow truth. |
 
 [[EXAMPLE:mortgage-cumulative-case#c03]]
 
@@ -1153,4 +1153,4 @@ When execution behaves unexpectedly, debug the boundary in order:
 
 The difference between running an agent and operating an enterprise agentic system is now explicit: a framework runs one bounded reasoning step, while the platform owns durable truth, authority, effects, and accountability. Chapter 4 places that boundary inside the complete enterprise reference architecture.
 
-For the mortgage case, C03 is the last checkpoint the companion code implements: one bounded evidence-review step behind a provider-neutral seam, with every protected effect still outside it. From Chapter 4 onward, the case boxes describe the target design the later chapters build toward.
+For the mortgage case, C03 is the last checkpoint the companion code implements: one bounded evidence-review step behind a provider-neutral runtime interface, with every protected effect still outside it. From Chapter 4 onward, the case boxes describe the target design the later chapters build toward.
