@@ -165,8 +165,8 @@ def knowledge() -> str:
 <circle cx="{CX}" cy="{CY}" r="{R_KNOW}" fill="#0B2E55" fill-opacity="0.55" stroke="{CYAN}" stroke-width="4" stroke-dasharray="26 14"/>
 <circle cx="{CX}" cy="{CY}" r="{R_KNOW}" fill="none" stroke="{CYAN}" stroke-width="12" opacity="0.25" filter="url(#glow)"/>
 {''.join(nodes)}
-{label(CX, CY + 292, "GOVERNED KNOWLEDGE", 28, CYAN_SOFT)}
-{note(CX, CY + 330, "documents · graph · rules · memory", 24, CYAN_SOFT)}"""
+{label(CX, CY + 292, "AUTHORIZED CONTEXT", 28, CYAN_SOFT)}
+{note(CX, CY + 330, "knowledge · rules · memory", 24, CYAN_SOFT)}"""
 
 
 def shell_and_core() -> str:
@@ -199,8 +199,10 @@ def shell_and_core() -> str:
 {net}
 {''.join(gates)}
 {label(CX, CY + 162, "MODEL PROPOSES", 26, INK)}
-{label(CX - R_SHELL - 92, CY - 44, "VALIDATE", 22, AMBER)}
-{label(CX + R_SHELL + 98, CY - 44, "AUTHORIZE", 22, AMBER)}"""
+{label(CX - R_SHELL - 92, CY - 78, "BOUNDED", 22, AMBER)}
+{label(CX - R_SHELL - 92, CY - 48, "REQUEST", 22, AMBER)}
+{label(CX + R_SHELL + 98, CY - 78, "VALIDATE", 22, AMBER)}
+{label(CX + R_SHELL + 98, CY - 48, "AUTHORIZE", 22, AMBER)}"""
 
 
 def badge(x: float, y: float, kind: str, color: str, text: str, detail: str, below: bool = False) -> str:
@@ -240,15 +242,19 @@ def flows() -> str:
     # The receipt comes back from the system of record: proof of what happened.
     receipt = (f'<path d="M{xs_out - 100},{y + 40} H{CX + R_PLATFORM + 95}" stroke="{CYAN}" stroke-width="5" '
                f'stroke-dasharray="2 14" stroke-linecap="round" marker-end="url(#tip)"/>'
-               + note((CX + R_PLATFORM + xs_out) / 2 + 10, y + 82, "receipt", 24, CYAN_SOFT))
-    # Evidence loop: dotted, from the systems of record back to evaluation and release.
+               + note((CX + R_PLATFORM + xs_out) / 2 + 22, y + 82, "receipt", 24, CYAN_SOFT))
+    # Evidence: recorded by the runtime where effects are committed (traces,
+    # receipts, outcomes), and carried to offline evaluation and release.
     ex, ey = CX, CY + R_PLATFORM
-    evidence = (f'<path d="M{xs_out},{y + 262} C{xs_out},{y + 560} {ex + 520},{ey + 210} {ex + 108},{ey + 22}" '
+    gx, gy = CX + R_PLATFORM, CY
+    evidence = (f'<path d="M{gx + 30},{gy + 78} C{gx + 230},{gy + 420} {ex + 470},{ey + 200} {ex + 108},{ey + 22}" '
                 f'fill="none" stroke="{AMBER}" stroke-width="8" stroke-dasharray="2 22" stroke-linecap="round" '
                 f'marker-end="url(#tip-amber)"/>')
     gap_in = (xs_in + 94 + CX - R_PLATFORM - 82) / 2      # between intent and admission
     tags = (label(gap_in, y - 40, "REQUEST", 28, CYAN_SOFT)
-            + label(2060, CY + 690, "EVIDENCE", 30, AMBER))
+            + t(2045, CY + 530, "EVIDENCE", 30, AMBER, bold=True, spacing=5)
+            + t(2045, CY + 568, "traces · outcomes", 24, AMBER, spacing=1.5, opacity=0.78)
+            + t(2045, CY + 600, "feedback", 24, AMBER, spacing=1.5, opacity=0.78))
     return glow + beam + intent + systems + receipt + evidence + tags
 
 
@@ -273,14 +279,18 @@ def key() -> str:
          "request and verified effect"),
         (f'<path d="M{x0 + 40},{y0 + 122} h70" stroke="{AMBER}" stroke-width="7" stroke-dasharray="2 14" '
          f'stroke-linecap="round"/>', "evidence and release"),
+        (f'<path d="M{x0 + 40},{y0 + 182} h70" stroke="{CYAN}" stroke-width="5" stroke-dasharray="2 14" '
+         f'stroke-linecap="round"/>', "effect receipt"),
     ]
     rows2 = [
         (f'<polygon points="{x0 + 520},{y0 + 44} {x0 + 538},{y0 + 62} {x0 + 520},{y0 + 80} {x0 + 502},{y0 + 62}" '
          f'fill="#2B1F08" stroke="{AMBER}" stroke-width="4"/>', "deterministic gate"),
         (f'<circle cx="{x0 + 520}" cy="{y0 + 122}" r="11" fill="#062A33" stroke="{TEAL}" stroke-width="4"/>',
          "durable checkpoint"),
+        (f'<path d="M{x0 + 478},{y0 + 182} h62" stroke="{AMBER}" stroke-width="4" stroke-dasharray="12 10"/>',
+         "human approval"),
     ]
-    out = [f'<rect x="{x0}" y="{y0}" width="935" height="178" rx="26" fill="#05193A" fill-opacity="0.82" '
+    out = [f'<rect x="{x0}" y="{y0}" width="935" height="236" rx="26" fill="#05193A" fill-opacity="0.82" '
            f'stroke="{CYAN}" stroke-opacity="0.45" stroke-width="3"/>']
     for i, (glyph, text) in enumerate(rows):
         out.append(glyph + t(x0 + 135, y0 + 72 + i * 60, text, 28, INK_SOFT))
@@ -291,7 +301,7 @@ def key() -> str:
 
 def compose() -> str:
     controls = (badge(CX - R_PLATFORM, CY, "human", BLUE, "ADMISSION", "identity · risk · budgets")
-                + badge(CX, CY - R_PLATFORM, "control", AMBER, "POLICY", "decide · enforce · audit")
+                + badge(CX, CY - R_PLATFORM, "control", AMBER, "POLICY", "decide · grant · log")
                 + badge(CX + R_PLATFORM, CY, "service", BLUE, "GATEWAY", "tools · MCP · A2A")
                 + badge(CX, CY + R_PLATFORM, "graph", AMBER, "EVALUATE · RELEASE",
                         "evals · canary · rollback", below=True))
