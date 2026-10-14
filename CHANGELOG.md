@@ -4,6 +4,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Preface in the author's voice
+
+- The preface is rewritten in the first person, as the author: why the book was written (agent demos that cannot answer who approved an action, what survives a restart, or which policy version was read), where the perspective comes from (enterprise AI and agentic platforms in mortgage and financial environments), the book's path, why Harborlight, and how to read cited and uncited claims. Its substance is unchanged; the heading is now simply "Preface".
+
 ### Documentation aligned with the current repository
 
 - **README.md:** the canonical-source steps name the TikZ diagram workflow, the LaTeX builder, and what assembly generates (examples, references, index); the requirements table lists what `make diagrams`, `make cover-art`, and `make chapter-covers` actually need; the repository map describes the code-drawn cover and TikZ-only diagram sources.

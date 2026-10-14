@@ -8,37 +8,66 @@ Book v1.0.0 · Publication Release · {{BUILD_DATE}}
 
 A practitioner’s guide for architects, platform engineers, DevOps engineers, and SREs building dependable agentic systems.
 
-# Preface: The Engineering Perspective Behind This Book
+# Preface
 
-This edition starts from a deliberately unfashionable premise: an agentic
-application is still a distributed system. The model may propose a useful next
-step, but deterministic services must own authority, state, effects, evidence,
-acceptance, and release. That is the line between a convincing demo and a
-system people can safely depend on.
+I wrote this book because I kept watching the same thing happen. A team builds
+an agent demo, and it is genuinely impressive: it reads the documents, calls
+the right tools, and answers in a way that makes everyone in the room lean
+forward. Then the questions start. Who approved that action? What happens if
+the process restarts halfway through? Why did it do something different
+yesterday? Which version of the policy did it read? The demo has no answers,
+because nobody designed it to have them.
 
-The book follows that idea from the first model call to a system that has to run
-for years. We begin with the boundaries that make an agent predictable, then
-define the architecture and turn it into reusable platform capabilities. From
-there, the chapters work through the patterns, security controls, evidence,
-governance, and operating decisions that appear once real people, real data,
-and real consequences enter the picture.
+My own work has been building enterprise AI and agentic platforms in mortgage
+and financial environments, where those questions are not academic. Reliability,
+security, compliance, auditability, and cost are constraints you meet every
+day, not qualities you add once the prototype works. Over time I came to a view
+that is a little unfashionable: an agentic application is still a distributed
+system. The model can propose a useful next step, and that is real progress.
+But authority, state, effects, evidence, acceptance, and release have to belong
+to deterministic services you can reason about. That line is the difference
+between a convincing demo and a system people can safely depend on, and this
+book is my attempt to draw it clearly.
 
-The examples use a fictional Harborlight mortgage case as a thread. It is not a
-claim that mortgage underwriting can be delegated to a model; it is a useful
-stress test because the case has sensitive evidence, human judgment, policy,
-long waits, and protected effects.
+We start where every agent starts, with a single model call, and work outward
+to a system that has to run for years. The early chapters set the boundaries
+that make an agent predictable. Then we design the architecture and turn it
+into platform capabilities that teams can reuse instead of rebuilding. From
+there I cover what shows up once real people, real data, and real consequences
+arrive: the patterns that hold up and the ones that fail, security and
+identity, evidence and evaluation, governance, and the day-to-day decisions of
+running the system.
+
+To keep all of this concrete, I follow one fictional case through the book:
+Harborlight, a mortgage lender. I am not suggesting that mortgage underwriting
+should be handed to a model. I chose it because it is a demanding test, with
+sensitive documents, human judgment, policy that changes, waits that last
+weeks, and actions that cannot be taken back lightly. If an architecture holds
+up for Harborlight, it will hold up for most enterprise work.
 
 ## How to read the claims in this book
 
-When this book relies on an external fact—about a technology, standard, research finding, or regulation—the claim is tied to a numbered reference such as [R05].
+When I rely on an outside fact, about a technology, a standard, a research
+result, or a regulation, I tie it to a numbered reference such as [R05], and
+the references appendix lists each source in full.
 
-The architectural recommendations come from practical work on enterprise AI and agentic platforms in mortgage and financial environments, combined with established industry practice. They are shaped by systems in which reliability, security, compliance, auditability, scalability, and cost are constraints the design has to meet every day—not qualities that can be added after the prototype works.
+Everything without a citation is my own judgment, drawn from that practical
+work and from established engineering practice. Treat it as guidance, not law.
+Test it against your own workloads, security requirements, regulators, threat
+model, providers, and constraints. A pattern that is right for one organization
+can be the wrong trade-off for another, and I have tried to say so wherever I
+know it.
 
-Recommendations without citations are experience-based guidance, not universal laws. Test them against your workloads, security requirements, regulatory environment, threat model, providers, and operating constraints. A sound pattern in one organization can be the wrong trade-off in another.
+The sources have limits too, and I have tried to respect them. Vendor
+documentation tells you what a product supports, not whether it suits your
+environment. Community guidance is useful, but it is not law. A benchmark
+describes one result under particular conditions, not a promise about your
+workload.
 
-The sources have limits too. Vendor documentation can tell you what a technology supports; it cannot prove that the technology is right for your environment. Community guidance is useful, but it is not law. A benchmark describes a result under particular conditions, not a promise that your workload will behave the same way.
-
-Use the book as an engineering foundation rather than a prescription. Take the evidence, patterns, and hard-earned lessons, then adapt and validate them where your system will actually run.
+So please use this book as a foundation rather than a prescription. Take the
+evidence, the patterns, and the lessons that were hard to learn, and then adapt
+and test them where your system will actually run. If it helps you build
+something people can trust, it has done what I hoped.
 
 # How to Use the Book
 
