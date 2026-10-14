@@ -4,6 +4,11 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Cover redesigned around the book's thesis; title set horizontally
+
+- **New cover art, drawn from code** (`tools/render_cover_art.py`, `make cover-art`, output `assets/cover/cover-art.png`). The former stock-style isometric artwork did not say what the book is about. The new composition does: a bounded model at the centre that only proposes, a deterministic shell of gates around it, a ring of governed knowledge, and a durable, governed workflow carrying the four platform controls (admission, policy, gateway, evaluate and release). Intent enters on the left, only a verified effect reaches the systems of record on the right, and evidence loops back into evaluation and release. It reuses the chapter covers' palette and glyphs. The old `agent-architecture-art-source.jpeg` is removed.
+- The cover title is no longer broken one word per line. `tools/generate_cover.py` now fills words onto each line up to the cover's text column (165 px margins on a 2550 px page) and wraps only when the next word would cross it, giving BUILDING AN ENTERPRISE / GENERAL INTELLIGENCE / PLATFORM. It reads the book title from `config/book.json` (the hand-made `title_lines` list is gone), and the rule under the subtitle now spans the widest title line.
+
 ### Parts VI–VIII and appendix review comments (DOCX review, 2026-10-14)
 
 - **Topology: 10 appendices.** Appendix I (coding-agent prompt) and Appendix K (capacity, resilience, and release acceptance) are removed. References become Appendix I and the glossary Appendix J (still last, before the index). Every cross-reference, the front-matter contents and reader table, Chapter 28's transition, validators (`validate_book`, `validate_latex`, `check_references`), `config/book.json`, the index configuration, AGENTS.md, README, the style guides, the citation skill and the PR template follow. Appendix K's sizing table, which Chapter 28 relied on, now sits in Chapter 28 § Measure the whole journey; its release-acceptance table, cited nowhere, is dropped.

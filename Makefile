@@ -12,7 +12,7 @@ PDF_OUT := dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf
 
 PYTHON_EXAMPLES ?= $(if $(wildcard .venv-examples/bin/python),.venv-examples/bin/python,python3)
 
-.PHONY: help setup setup-examples all assemble cover chapter-covers diagrams build latex draft pdf references \
+.PHONY: help setup setup-examples all assemble cover cover-art chapter-covers diagrams build latex draft pdf references \
         examples examples-run latex-validate validate deterministic qa-pdf latex-pdf dist-pdf \
         package release clean distclean
 
@@ -26,7 +26,8 @@ help:
 	@echo ""
 	@echo "Generation"
 	@echo "  assemble        source/parts/*.md -> book/manuscript.md + dist/*.md"
-	@echo "  cover           regenerate the cover image"
+	@echo "  cover           compose the cover (title over the committed cover art)"
+	@echo "  cover-art       redraw the cover artwork from code (needs rsvg-convert)"
 	@echo "  diagrams        render every diagram from its editable source"
 	@echo "  chapter-covers  render the Letter-size chapter cover visuals"
 	@echo "  build           assemble + cover + DOCX"
@@ -76,6 +77,11 @@ assemble:
 
 cover:
 	$(PYTHON) tools/generate_cover.py --root "$(ROOT)"
+
+## cover-art: redraw assets/cover/cover-art.png from tools/render_cover_art.py. Run it
+## locally after changing the artwork; the PNG is committed so CI never needs rsvg.
+cover-art:
+	$(PYTHON) tools/render_cover_art.py --root "$(ROOT)"
 
 ## diagrams: render assets/diagrams/src/*.{gv,mmd,tikz.tex} to vector PDF for XeLaTeX
 ## and raster PNG for DOCX. Needs graphviz (.gv), mermaid-cli (.mmd) and XeLaTeX +
