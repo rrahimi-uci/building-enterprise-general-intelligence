@@ -9,9 +9,9 @@
 - **appendix_dividers:** `1`
 - **chapters:** `28`
 - **appendices:** `12`
-- **diagrams:** `45`
+- **diagrams:** `46`
 - **code_blocks:** `65`
-- **longtables:** `157`
+- **longtables:** `158`
 - **compact_tables:** `98`
 - **callout_tables:** `70`
 - **citation_occurrences:** `157`

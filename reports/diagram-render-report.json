@@ -1,6 +1,6 @@
 {
-  "diagrams": 45,
-  "with_vector": 45,
+  "diagrams": 46,
+  "with_vector": 46,
   "records": [
     {
       "id": "anti-ambient-authority",
@@ -721,6 +721,22 @@
         8.17
       ],
       "placement_scale": 1.016
+    },
+    {
+      "id": "unified-enterprise-architecture",
+      "source": "unified-enterprise-architecture.tikz.tex",
+      "pixels": [
+        2119,
+        2389
+      ],
+      "effective_dpi": 309,
+      "vector": true,
+      "sha256": "7aa74b8c66c08c0027538f7d72f904c809480862d628bd405c7f9270659a7f9d",
+      "natural_inches": [
+        7.06,
+        7.96
+      ],
+      "placement_scale": 1.0
     }
   ],
   "errors": [],

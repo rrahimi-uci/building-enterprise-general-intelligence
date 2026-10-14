@@ -4,16 +4,16 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "4f76984a4cf26781b83450a5a202c14d28fe71e94d048787a9ce6779e3a11a01",
-    "content_tex_sha256": "3051e17c0f7f922342a440d7b299692cfc12460feb6564c75fe77de5cb4db74e",
+    "content_tex_sha256": "726b90897d5a33850dee58a01853bc4d37075369d1079fa16f9bcc26c518bb8b",
     "style_sha256": "1aefe91a58bcfca37131707508139f238552d702f25f14357ceaef462d95b230",
     "narrative_parts": 8,
     "appendix_dividers": 1,
     "chapters": 28,
     "chapter_covers": 28,
     "appendices": 12,
-    "diagrams": 45,
+    "diagrams": 46,
     "code_blocks": 65,
-    "longtables": 157,
+    "longtables": 158,
     "compact_tables": 98,
     "callout_tables": 70,
     "citation_occurrences": 157,
@@ -21,7 +21,7 @@
     "index_pages": 1,
     "reference_targets": 58,
     "unique_citation_ids": 58,
-    "markdown_tables": 325,
+    "markdown_tables": 326,
     "markdown_code_blocks": 65,
     "image_quality": [
       {
@@ -391,6 +391,14 @@
           2054
         ],
         "effective_dpi": 292.1
+      },
+      {
+        "file": "assets/diagrams/unified-enterprise-architecture.png",
+        "pixels": [
+          2119,
+          2389
+        ],
+        "effective_dpi": 300.1
       },
       {
         "file": "cover-images/chapter-01-what-turns-an-llm-call-into-a-production-system.png",
