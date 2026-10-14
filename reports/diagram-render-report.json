@@ -726,17 +726,17 @@
       "id": "unified-enterprise-architecture",
       "source": "unified-enterprise-architecture.tikz.tex",
       "pixels": [
-        2119,
-        2389
+        2116,
+        2427
       ],
       "effective_dpi": 309,
       "vector": true,
-      "sha256": "90ccb2c3f62724561f8b113f9eba11b193bb332a1f54578a86c0286336808473",
+      "sha256": "7c189546741669e83eda38b1355c6e98b57409e77f24de701899857cee6e988b",
       "natural_inches": [
-        7.06,
-        7.96
+        7.05,
+        8.09
       ],
-      "placement_scale": 1.0
+      "placement_scale": 1.001
     }
   ],
   "errors": [],

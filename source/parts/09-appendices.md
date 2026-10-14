@@ -32,7 +32,8 @@ becomes the system of record by being on the request path.
 
 The pale frames separate the **global control tier**, a **regional execution
 cell**, **external systems**, and **offline evidence and improvement**. Boxes
-name services, service groups, or immutable release records. Solid blue arrows
+name services, service groups, or immutable release records. Each box's icon only helps the eye find it; the label
+carries the meaning. Solid blue arrows
 carry requests, authorized actions, and results; solid cyan arrows carry knowledge or returned
 evidence; dashed arrows carry released definitions and enforcement; dotted
 arrows carry recorded evidence, including joined task results and effect

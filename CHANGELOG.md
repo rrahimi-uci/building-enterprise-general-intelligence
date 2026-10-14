@@ -4,6 +4,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Figure S-1 visual polish
+
+- **Figure S-1** (`unified-enterprise-architecture`) is restyled with no change to its content: zone titles become filled header tabs with icons, every box gets a role-coloured icon and a soft shadow, and the grid is regularised. Edges that crowded boxes or frame borders are rerouted: Run pin enters Run and workflow from above, Receipt / outcome and Knowledge pin use side corridors, runtime evidence clears the improvement title, and the release return runs outside the frames. The key sits in its own panel. The Closing Perspective notes that icons carry no meaning beyond the labels.
+
 ### Chapter 8 and Chapter 10 review comments (DOCX review, 2026-10-14)
 
 - **Discovery is not permission (Chapter 8)** is explained step by step for one Harborlight need: what discovery returns and who runs it, the SkillRequirement it hands on, resolution's five ordered filters with what each removes, how a version is pinned or refused, and why a resolved Skill's calls still pass the Tool Gateway. The comparison table gains a "When" row.
