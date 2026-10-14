@@ -14,6 +14,12 @@ the element/edge evidence and synthesis limits. Chapter 28's final transition
 now uses the current Appendix A–L lettering. This is a logical reference
 architecture; the companion code remains at checkpoints C01–C03.
 
+A print-scale revision clarifies the behavior and knowledge release lanes,
+adds the model-response and child-task join paths, and routes the evidence
+feedback from the regional runtime boundary. The caption, legend, and
+traceability record now describe those paths. The revised figure remains
+7.06 inches wide at natural size, with vector text in the XeLaTeX edition.
+
 Local structural, diagram, deterministic DOCX, example, package, and genuine
 XeLaTeX checks passed. DOCX pagination QA remains unavailable in this
 environment because LibreOffice `soffice` is not installed; this PR is not
