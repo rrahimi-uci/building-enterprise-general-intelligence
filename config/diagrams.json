@@ -367,7 +367,7 @@
       "source": "assets/diagrams/src/unified-enterprise-architecture.tikz.tex",
       "vector": "assets/diagrams/unified-enterprise-architecture.pdf",
       "description": "Book-level synthesis: global design and knowledge release paths, regional bounded runtime and cross-cutting governance, external models and enterprise systems, and the governed evidence-to-release feedback loop",
-      "sha256": "90ccb2c3f62724561f8b113f9eba11b193bb332a1f54578a86c0286336808473"
+      "sha256": "7c189546741669e83eda38b1355c6e98b57409e77f24de701899857cee6e988b"
     }
   ],
   "note": "Diagrams are generated from the editable sources in assets/diagrams/src/ by tools/render_diagrams.py. Each source renders to a vector PDF, which XeLaTeX embeds, and a raster PNG for the DOCX edition. Never hand-edit a render."

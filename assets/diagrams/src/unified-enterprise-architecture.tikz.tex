@@ -7,154 +7,177 @@
 % feedback follow Ch 24--27. The long return edge moves a reviewed release,
 % never a live model-generated change. See reviews/unified-architecture.md
 % for the source-to-node and source-to-edge mapping.
+%
+% Visual polish (content unchanged): every node, label, edge, line style,
+% pill and key entry is kept. Presentation only -- zone titles become filled
+% header tabs with an icon (replacing the thin title rules); each card carries
+% a role-coloured icon before its title and the house soft shadow; the grid is
+% regularised; and edges that crowded cards or frame borders run through clear
+% corridors (Run pin enters Run and workflow from above, Receipt / outcome and
+% Knowledge pin use side corridors, runtime evidence passes left of the
+% improvement title, and the release return runs outside the frames). The key
+% sits in its own panel.
 \documentclass[border=4pt]{standalone}
 \usepackage{professional-diagrams}
 \begin{document}
 \begin{tikzpicture}
   \tikzset{
-    dg shadow/.style={},
-    compact/.style={dg card=#1, square, text width=92pt, minimum height=42pt,
+    compact/.style={dg card=#1, square, text width=92pt, minimum height=44pt,
       inner xsep=6pt, inner ysep=5pt, align=center},
-    wide/.style={dg card=#1, square, text width=126pt, minimum height=42pt,
+    wide/.style={dg card=#1, square, text width=126pt, minimum height=44pt,
       inner xsep=6pt, inner ysep=5pt, align=center},
-    slim/.style={dg card=#1, square, text width=88pt, minimum height=37pt,
+    slim/.style={dg card=#1, square, text width=88pt, minimum height=44pt,
       inner xsep=5pt, inner ysep=4pt, align=center},
-    zone/.style={rectangle, rounded corners=11pt, fill=dg-#1-fill!25,
-      draw=dg-#1-line!62, line width=0.85pt},
-    ztitle/.style={anchor=north west, font=\dggroupsize, text=dg-#1-ink,
-      inner sep=0pt},
+    zone/.style={rectangle, rounded corners=10pt, fill=dg-#1-fill!32,
+      draw=dg-#1-line!60, line width=0.9pt},
+    ztab/.style={rectangle, rounded corners=4pt, fill=dg-#1-line, text=white,
+      font=\fontsize{8.6}{10}\selectfont\bfseries, inner xsep=6pt, inner ysep=3.2pt,
+      anchor=north west},
   }
+  % \ct{icon}{role}{Title}: card title with a role-coloured leading icon.
+  \newcommand{\ct}[3]{{\color{dg-#2-line}\small\faIcon{#1}}\hspace{4pt}#3}
 
-  % Offline authorship and promotion: two independent, governed release paths.
+  % ===================== DESIGN TIME · GLOBAL CONTROL TIER =====================
+  % Two independent, governed release paths: behavior (top) and knowledge.
   \begin{pgfonlayer}{dgback}
-    \node[zone=navy, anchor=north west, minimum width=500pt,
+    \node[zone=navy, anchor=north west, minimum width=494pt,
       minimum height=125pt] (global) at (0,0) {};
-    \draw[draw=dg-navy-line!22, line width=0.6pt] (12,-76) -- (488,-76);
-    \node[ztitle=navy] at (10,-8) {DESIGN TIME · GLOBAL CONTROL TIER};
+    \node[ztab=navy] at (8,-7) {\faIcon{globe}\hspace{5pt}DESIGN TIME · GLOBAL CONTROL TIER};
   \end{pgfonlayer}
-  \node[compact=plum] (owners) at (68,-47)
-    {\dgcontent{People and teams}{domain · platform · risk}{}};
-  \node[wide=blue] (builder) at (249,-47)
-    {\dgcontent{Build and validate}{agents · Skills · workflows\\policy · tools · evaluations}{}};
-  \node[compact=navy] (release) at (428,-47)
-    {\dgcontent{Behavior release}{signed ReleaseManifest\\immutable versions}{}};
-  \node[compact=cyan] (knowledge) at (68,-102)
-    {\dgcontent{Knowledge release}{KnowledgeRelease\\version · provenance}{}};
+  \node[compact=plum] (owners) at (70,-49)
+    {\dgcontent{\ct{users}{plum}{People and teams}}{domain · platform · risk}{}};
+  \node[wide=blue] (builder) at (249,-49)
+    {\dgcontent{\ct{tools}{blue}{Build and validate}}{agents · Skills · workflows\\policy · tools · evaluations}{}};
+  \node[compact=navy] (release) at (428,-49)
+    {\dgcontent{\ct{file-signature}{navy}{Behavior release}}{signed ReleaseManifest\\immutable versions}{}};
+  \node[compact=cyan] (knowledge) at (70,-102)
+    {\dgcontent{\ct{book}{cyan}{Knowledge release}}{KnowledgeRelease\\version · provenance}{}};
   \node[wide=amber] (kgate) at (249,-102)
-    {\dgcontent{Knowledge gates}{extract · ground · reconcile\\independent SME approval}{}};
+    {\dgcontent{\ct{filter}{amber}{Knowledge gates}}{extract · ground · reconcile\\independent SME approval}{}};
   \node[compact=slate] (sources) at (428,-102)
-    {\dgcontent{Source intake}{policy · documents\\bytes · digests · ACLs}{}};
+    {\dgcontent{\ct{file-import}{slate}{Source intake}}{policy · documents\\bytes · digests · ACLs}{}};
   \draw[flow in=blue] (owners.east) -- (builder.west);
   \draw[flow in=blue] (builder.east) -- (release.west);
   \draw[flow in=cyan] (sources.west) -- (kgate.east);
   \draw[flow in=cyan] (kgate.west) -- (knowledge.east);
 
-  % Regional execution: one run owns transitions and a bounded agent proposes.
+  % ============ RUNTIME · REGIONAL EXECUTION CELL  and  EXTERNAL ============
   \begin{pgfonlayer}{dgback}
-    \node[zone=blue, anchor=north west, minimum width=381pt,
-      minimum height=289pt] (cell) at (0,-137) {};
-    \node[ztitle=blue] at (10,-145) {RUNTIME · REGIONAL EXECUTION CELL};
-    \node[zone=slate, anchor=north west, minimum width=109pt,
-      minimum height=289pt] (outside) at (391,-137) {};
-    \draw[draw=dg-slate-line!24, line width=0.6pt] (402,-163) -- (489,-163);
-    \node[ztitle=slate] at (400,-145) {EXTERNAL};
+    \node[zone=blue, anchor=north west, minimum width=385pt,
+      minimum height=291pt] (cell) at (0,-137) {};
+    \node[ztab=blue] at (8,-144) {\faIcon{server}\hspace{5pt}RUNTIME · REGIONAL EXECUTION CELL};
+    \node[zone=slate, anchor=north west, minimum width=102pt,
+      minimum height=291pt] (outside) at (392,-137) {};
+    \node[ztab=slate] at (400,-144) {\faIcon{cloud}\hspace{5pt}EXTERNAL};
   \end{pgfonlayer}
 
-  \node[slim=slate] (channel) at (62,-195)
-    {\dgcontent{Channels}{users · APIs · events}{}};
-  \node[slim=blue] (admit) at (189,-195)
-    {\dgcontent{Admission}{auth · risk · permits}{}};
-  \node[slim=blue] (run) at (317,-195)
-    {\dgcontent{Run and workflow}{pin · plan · durable state\\acceptance}{}};
+  % column centres 66 / 190 / 314 inside the cell; 443 outside it
+  \node[slim=slate] (channel) at (66,-199)
+    {\dgcontent{\ct{comments}{slate}{Channels}}{users · APIs · events}{}};
+  \node[slim=blue] (admit) at (190,-199)
+    {\dgcontent{\ct{sign-in-alt}{blue}{Admission}}{auth · risk · permits}{}};
+  \node[slim=blue, text width=96pt] (run) at (314,-199)
+    {\dgcontent{\ct{project-diagram}{blue}{Run and workflow}}{pin · plan · durable state\\acceptance}{}};
 
-  \node[slim=cyan] (context) at (62,-272)
-    {\dgcontent{Context Service}{authorized retrieval\\memory · provenance}{}};
-  \node[slim=teal] (agent) at (189,-272)
-    {\dgcontent{AgentRuntime}{bounded reasoning\\typed step result}{}};
-  \node[slim=blue] (modelgw) at (317,-272)
-    {\dgcontent{LLM Gateway}{eligible route\\privacy · budget}{}};
-  \node[slim=slate] (models) at (446,-272)
-    {\dgcontent{Models}{provider or hosted}{}};
+  \node[slim=cyan] (context) at (66,-275)
+    {\dgcontent{\ct{layer-group}{cyan}{Context Service}}{authorized retrieval\\memory · provenance}{}};
+  \node[slim=teal] (agent) at (190,-275)
+    {\dgcontent{\ct{robot}{teal}{AgentRuntime}}{bounded reasoning\\typed step result}{}};
+  \node[slim=blue, text width=96pt] (modelgw) at (314,-275)
+    {\dgcontent{\ct{route}{blue}{LLM Gateway}}{eligible route\\privacy · budget}{}};
+  \node[slim=slate, text width=84pt] (models) at (443,-275)
+    {\dgcontent{\ct{brain}{slate}{Models}}{provider or hosted}{}};
 
-  \node[slim=teal] (tasks) at (62,-347)
-    {\dgcontent{Task Service}{specialists · typed join\\narrowed child authority}{}};
-  \node[slim=amber] (checks) at (189,-347)
-    {\dgcontent{Workflow gates}{validate · authorize\\approve · verify}{}};
-  \node[slim=blue] (toolgw) at (317,-347)
-    {\dgcontent{Access gateways}{Tool · MCP · A2A\\effect ledger · receipt}{}};
-  \node[slim=slate] (systems) at (446,-347)
-    {\dgcontent{Enterprise systems}{records · SaaS · MCP\\partner agents}{}};
+  \node[slim=teal] (tasks) at (66,-350)
+    {\dgcontent{\ct{sitemap}{teal}{Task Service}}{specialists · typed join\\narrowed child authority}{}};
+  \node[slim=amber] (checks) at (190,-350)
+    {\dgcontent{\ct{check-double}{amber}{Workflow gates}}{validate · authorize\\approve · verify}{}};
+  \node[slim=blue, text width=96pt] (toolgw) at (314,-350)
+    {\dgcontent{\ct{plug}{blue}{Access gateways}}{Tool · MCP · A2A\\effect ledger · receipt}{}};
+  \node[slim=slate, text width=84pt] (systems) at (443,-350)
+    {\dgcontent{\ct{building}{slate}{Enterprise}\\systems}{records · SaaS · MCP\\partner agents}{}};
 
-  \node[dg card=red, square, text width=339pt, minimum height=39pt,
-    inner xsep=6pt, inner ysep=4pt, align=center] (govern) at (190,-402)
-    {\dgcontent{Shared trust, governance and enforcement}{subject + actor · policy · narrow grants · approval\\secrets · sandbox · egress · audit}{}};
+  \node[dg card=red, square, text width=341pt, minimum height=40pt,
+    inner xsep=6pt, inner ysep=4pt, align=center] (govern) at (190,-404)
+    {\dgcontent{\ct{user-shield}{red}{Shared trust, governance and enforcement}}{subject + actor · policy · narrow grants · approval\\secrets · sandbox · egress · audit}{}};
 
-  % Runtime request, evidence, inference, and effect. Orthogonal returns use
-  % the gaps between cards; no model output is drawn as a committed effect.
+  % Runtime request, evidence, inference, and effect. Returns use clear
+  % corridors between cards; no model output is drawn as a committed effect.
   \draw[flow in=blue] (channel.east) -- (admit.west);
   \draw[flow in=blue] (admit.east) -- (run.west);
+  % Run pin: from the behavior release, down the corridor between the
+  % knowledge gates and source intake, into the top of Run and workflow.
   \draw[dashed flow, draw=dg-navy-line, rounded corners=5pt]
-    ([xshift=5pt]release.south west) -- (365,-77) -- (365,-183) -- ([yshift=11pt]run.east);
-  \node[pill=navy] at (351,-118) {Run pin};
+    ([xshift=8pt]release.south west) -- ++(0,-5.5) -- (347,-75.5) -- (347,-152) -- (347,-176.5);
+  \node[pill=navy] at (347,-130) {Run pin};
+  % Knowledge pin: down the left corridor into the Context Service.
   \draw[flow in=cyan, rounded corners=5pt]
-    (knowledge.west) -- (5,-102) -- (5,-272) -- (context.west);
-  \node[pill=cyan, rotate=90] at (5,-210) {Knowledge pin};
-  \draw[flow in=blue, rounded corners=5pt] (run.south) -- (317,-231) --
-    node[pill=blue, pos=0.78]{Step request} (62,-231) -- (context.north);
+    (knowledge.west) -- (7,-102) -- (7,-275) -- (context.west);
+  \node[pill=cyan, rotate=90] at (7,-228) {Knowledge pin};
+  \draw[flow in=blue, rounded corners=5pt] ([xshift=-12pt]run.south) -- (302,-237) --
+    node[pill=blue, pos=0.78]{Step request} (66,-237) -- (context.north);
   \draw[flow in=cyan] (context.east) -- node[pill=cyan]{Context} (agent.west);
   \draw[flow in=teal] ([yshift=7pt]agent.east) -- ([yshift=7pt]modelgw.west);
   \draw[flow in=cyan] ([yshift=-7pt]modelgw.west) -- ([yshift=-7pt]agent.east);
   \draw[flow in=blue] ([yshift=8pt]modelgw.east) -- ([yshift=8pt]models.west);
   \draw[flow in=cyan] ([yshift=-8pt]models.west) -- ([yshift=-8pt]modelgw.east);
-  \draw[flow in=teal, rounded corners=5pt] (agent.south) -- (189,-307) --
-    node[pill=teal,pos=0.6]{Child task} (62,-307) -- (tasks.north);
+  \draw[flow in=teal, rounded corners=5pt] ([xshift=-14pt]agent.south) -- (176,-312) --
+    node[pill=teal,pos=0.55]{Child task} (66,-312) -- (tasks.north);
   \draw[dotted flow, draw=dg-cyan-line] (tasks.east) -- (checks.west);
-  \draw[flow in=amber] (agent.south) -- node[pill=amber,anchor=west,xshift=5pt]{Proposal} (checks.north);
+  \draw[flow in=amber] ([xshift=14pt]agent.south) -- node[pill=amber]{Proposal} ([xshift=14pt]checks.north);
   \draw[flow in=blue] (checks.east) -- (toolgw.west);
   \draw[flow in=blue] ([yshift=8pt]toolgw.east) -- ([yshift=8pt]systems.west);
   \draw[flow in=cyan] ([yshift=-8pt]systems.west) -- ([yshift=-8pt]toolgw.east);
+  % Receipt / outcome: up the right corridor of the cell back to the run.
   \draw[dotted flow, draw=dg-cyan-line, rounded corners=5pt]
-    (toolgw.north) -- (379,-324) -- (379,-207) -- ([yshift=-10pt]run.east);
-  \node[pill=cyan,anchor=east] at (371,-222) {Receipt / outcome};
-  \draw[flow in=blue, rounded corners=5pt] (run.north) -- (317,-165) --
-    node[pill=blue,pos=0.52]{Verified result} (62,-165) -- (channel.north);
+    ([yshift=17pt]toolgw.east) -- (377,-333) -- (377,-208) -- ([yshift=-9pt]run.east);
+  \node[pill=cyan] at (377,-312) {Receipt / outcome};
+  \draw[flow in=blue, rounded corners=5pt] ([xshift=-12pt]run.north) -- (302,-166) --
+    node[pill=blue,pos=0.5]{Verified result} (66,-166) -- (channel.north);
   \draw[dashed flow, draw=dg-red-line] ([xshift=30pt]govern.north -| checks) -- ([xshift=30pt]checks.south);
   \draw[dashed flow, draw=dg-red-line] (govern.north -| toolgw) -- (toolgw.south);
 
-  % Evidence flows up to people through evaluation; reviewed changes return
-  % through release promotion. Runtime cannot rewrite the global tier.
+  % ===================== OFFLINE EVIDENCE AND IMPROVEMENT =====================
+  % Runtime evidence leaves the regional boundary for observation; reviewed
+  % changes return through release promotion. Runtime cannot rewrite the
+  % global tier.
   \begin{pgfonlayer}{dgback}
-    \node[zone=amber, anchor=north west, minimum width=500pt,
-      minimum height=94pt] (improve) at (0,-439) {};
-    \draw[draw=dg-amber-line!24, line width=0.6pt] (11,-465) -- (489,-465);
-    \node[ztitle=amber] at (10,-447) {OFFLINE EVIDENCE AND IMPROVEMENT};
+    \node[zone=amber, anchor=north west, minimum width=494pt,
+      minimum height=94pt] (improve) at (0,-440) {};
+    \node[ztab=amber] at (20,-447) {\faIcon{sync-alt}\hspace{5pt}OFFLINE EVIDENCE AND IMPROVEMENT};
   \end{pgfonlayer}
-  \node[compact=amber] (observe) at (68,-493)
-    {\dgcontent{Observe}{causal trace · SLOs\\separate audit record}{}};
-  \node[wide=amber] (evaluate) at (249,-493)
-    {\dgcontent{Evaluate and calibrate}{datasets · trajectory · slices\\SME feedback · hard gates}{}};
-  \node[compact=plum] (change) at (428,-493)
-    {\dgcontent{Change review}{CI · approval\\canary · rollback}{}};
+  \node[compact=amber] (observe) at (70,-495)
+    {\dgcontent{\ct{binoculars}{amber}{Observe}}{causal trace · SLOs\\separate audit record}{}};
+  \node[wide=amber] (evaluate) at (249,-495)
+    {\dgcontent{\ct{balance-scale}{amber}{Evaluate and calibrate}}{datasets · trajectory · slices\\SME feedback · hard gates}{}};
+  \node[compact=plum] (change) at (428,-495)
+    {\dgcontent{\ct{code-branch}{plum}{Change review}}{CI · approval\\canary · rollback}{}};
   \draw[dotted flow, draw=dg-amber-line, rounded corners=6pt]
-    (11,-423) -- (11,-493) -- (observe.west);
+    (7,-428) -- (7,-495) -- (observe.west);
   \draw[flow in=amber] (observe.east) -- (evaluate.west);
   \draw[flow in=amber] (evaluate.east) -- (change.west);
+  % Release return: outside the zone frames, back into the behavior release.
   \draw[dashed flow, draw=dg-plum-line, rounded corners=8pt]
-    (change.east) -- (496,-493) -- (496,-47) -- (release.east);
+    (change.east) -- (501,-495) -- (501,-49) -- (release.east);
 
-  % Figure key: words and line styles preserve meaning in monochrome.
+  % ===================== KEY =====================
+  \begin{pgfonlayer}{dgback}
+    \node[rectangle, rounded corners=6pt, fill=dg-slate-fill!60, draw=dg-slate-line!35,
+      line width=0.6pt, anchor=north west, minimum width=494pt, minimum height=34pt]
+      (key) at (0,-542) {};
+  \end{pgfonlayer}
   \begin{scope}[every node/.style={font=\dgnotesize, text=dg-ink,
     anchor=west, inner sep=0pt}]
-    \draw[flow in=blue] (7,-550) -- (31,-550);
-    \node at (37,-550) {request / action};
-    \draw[flow in=cyan] (164,-550) -- (188,-550);
-    \node at (194,-550) {knowledge};
-    \draw[dashed flow, draw=dg-plum-line] (304,-550) -- (328,-550);
-    \node at (334,-550) {control / release};
-    \draw[dotted flow, draw=dg-amber-line] (7,-564) -- (31,-564);
-    \node at (37,-564) {evidence};
-    \node at (164,-564) {box = service / record};
-    \node at (304,-564) {pale frame = boundary};
+    \draw[flow in=blue] (10,-552) -- (34,-552);
+    \node at (40,-552) {request / action};
+    \draw[flow in=cyan] (172,-552) -- (196,-552);
+    \node at (202,-552) {knowledge};
+    \draw[dashed flow, draw=dg-plum-line] (322,-552) -- (346,-552);
+    \node at (352,-552) {control / release};
+    \draw[dotted flow, draw=dg-amber-line] (10,-566) -- (34,-566);
+    \node at (40,-566) {evidence};
+    \node at (172,-566) {box = service / record};
+    \node at (322,-566) {pale frame = boundary};
   \end{scope}
 \end{tikzpicture}
 \end{document}
