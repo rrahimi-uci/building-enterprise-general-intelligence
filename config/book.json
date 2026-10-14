@@ -11,13 +11,6 @@
     "status": "Publication release",
     "cover": {
       "eyebrow": "ENTERPRISE SYSTEMS REFERENCE",
-      "title_lines": [
-        "BUILDING AN",
-        "ENTERPRISE",
-        "GENERAL",
-        "INTELLIGENCE",
-        "PLATFORM"
-      ],
       "subtitle": "GOVERNED ARCHITECTURE AND OPERATIONS",
       "themes": [],
       "strapline": "A practical guide to reliable enterprise AI platforms"

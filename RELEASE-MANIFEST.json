@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 619,
+  "file_count": 620,
   "files": [
     {
       "path": ".gitattributes",
@@ -51,13 +51,13 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 7772,
-      "sha256": "6e519025392ce1dbff399c44bb821e4659b1b689085350e5eb5085b8b26afd71"
+      "bytes": 8268,
+      "sha256": "6cf656fe5c5a081b4182c4c8bccc038ddd10e5a4238ed5ef06ae97595fd5ab4b"
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 42311,
-      "sha256": "c419435d094a07618bcf8a35e85083e4d9b3959cbde8de7a892ffe05e9b81eeb"
+      "bytes": 43557,
+      "sha256": "99cc910046505a154845cf66cef02cd3750685d3a1a4fbdd502da9b50d38d483"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -71,13 +71,13 @@
     },
     {
       "path": "Makefile",
-      "bytes": 8036,
-      "sha256": "ce47abed351b9dcb22d917c5bf6e5657710edbb94214576ed2079267cef5e494"
+      "bytes": 8394,
+      "sha256": "8eec1bae721e49f8ed7c74ae8decdbf5f970e5d9d43703db69465313d4367bb5"
     },
     {
       "path": "README.md",
-      "bytes": 18554,
-      "sha256": "5e25e8e6f0bf002cd11db302da04050dc9429d0a6f15831b06bad509afbb51bb"
+      "bytes": 18668,
+      "sha256": "48cfcd2b5adde3b4887af73db734ab04ba41397451ec78fdb0cf68d559458a37"
     },
     {
       "path": "RELEASE-CHECKLIST.md",
@@ -85,14 +85,14 @@
       "sha256": "6cb608b38e93eb6cbaa636d8cc7cdc4b6e712b5fb80b191c22deb82f29473422"
     },
     {
-      "path": "assets/cover/agent-architecture-art-source.jpeg",
-      "bytes": 517600,
-      "sha256": "6418189550ae0cd22dbbfe12bb74529094594cd80718a088871c0663baa1ad2a"
+      "path": "assets/cover/cover-art.png",
+      "bytes": 1104821,
+      "sha256": "f35e1f5834fe0ce8ad6457359fe5b4543283a0ba3966638fce351cc18011d34f"
     },
     {
       "path": "assets/cover/cover-v1.0.0.png",
-      "bytes": 5136147,
-      "sha256": "28ad3c99a9acc73e777f9ab184406604913abd290d11c1fb2a4e187a8eaf53d4"
+      "bytes": 1180578,
+      "sha256": "fa8fb3bcb50658a7e7a69a98457d1be8cd2ef1423aa4f77a684e3da9da9a4880"
     },
     {
       "path": "assets/diagrams/anti-ambient-authority.pdf",
@@ -816,8 +816,8 @@
     },
     {
       "path": "config/book.json",
-      "bytes": 4899,
-      "sha256": "352a34373e56d2df21fbd59552fe3f2c8fd48fede4f0ead3dbd11976e1eabb7a"
+      "bytes": 4760,
+      "sha256": "8418daff37a8a6933ee28fd821946ea43a48631294168cf415b242d20309cf22"
     },
     {
       "path": "config/chapter-covers.json",
@@ -1006,8 +1006,8 @@
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.docx",
-      "bytes": 43068883,
-      "sha256": "103c6ae60b10f58abba17e8e55ff2db1714eaf0632e672d93e9aaf021c1a98a6"
+      "bytes": 39114616,
+      "sha256": "ecabdfde45c1500e0fbd7098bb770dcc6edd6d40936702c921f03e4ee0ecdf53"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.md",
@@ -1912,22 +1912,22 @@
     {
       "path": "qa/build-report.json",
       "bytes": 309,
-      "sha256": "c702603cd6ebcd07d8f2d720bccfdffbf1b256bcd2fa1b7cb824abec7850d941"
+      "sha256": "92b4234e33c0ae45e8039f5962f4ba171688c5b278bfcfb853eae13389e23fd3"
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 43068883,
-      "sha256": "103c6ae60b10f58abba17e8e55ff2db1714eaf0632e672d93e9aaf021c1a98a6"
+      "bytes": 39114616,
+      "sha256": "ecabdfde45c1500e0fbd7098bb770dcc6edd6d40936702c921f03e4ee0ecdf53"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 43068883,
-      "sha256": "103c6ae60b10f58abba17e8e55ff2db1714eaf0632e672d93e9aaf021c1a98a6"
+      "bytes": 39114616,
+      "sha256": "ecabdfde45c1500e0fbd7098bb770dcc6edd6d40936702c921f03e4ee0ecdf53"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "9138383969a0624ebe5fccbb008e1fa7942fa626203fb8b868ca73e7f437bb74"
+      "sha256": "35a68d5ef535670498fae282c765467708739d8a3661e8d2e96ad75203a91197"
     },
     {
       "path": "qa/latex-validation-report.json",
@@ -1937,7 +1937,7 @@
     {
       "path": "qa/validation-report.json",
       "bytes": 1018,
-      "sha256": "18e79b0d3b5bc788354d7da30b8cc2e1155955c396630ee35331931aa9402f25"
+      "sha256": "3953ca72794b2357e410a183bf61509cbacb3cf11197bfc7df26c80d38e397d2"
     },
     {
       "path": "reports/assembly-report.json",
@@ -2017,7 +2017,7 @@
     {
       "path": "reports/validation-summary.md",
       "bytes": 1012,
-      "sha256": "4ac175ddbda0c018aa9486170abb0bf2d4941d0001ec5039e77c936d5dffbf2e"
+      "sha256": "4060b2687ae0c39a3ddec071ce2812f41aa57953e2e079f8088d576392a7f777"
     },
     {
       "path": "requirements.txt",
@@ -3066,8 +3066,8 @@
     },
     {
       "path": "tools/generate_cover.py",
-      "bytes": 4530,
-      "sha256": "15a4ffeb08cba53d7cbf725964a1766eb7279c512abace03557438ba1ae41e49"
+      "bytes": 5402,
+      "sha256": "aea4af740091b7f9f5f30c4c897ed101f08aa38ec7e3602cf4445f348bf926bc"
     },
     {
       "path": "tools/package_release.py",
@@ -3083,6 +3083,11 @@
       "path": "tools/render_chapter_covers.py",
       "bytes": 39490,
       "sha256": "0907651b935a22958f6d1182eed2affb657f4bfef8ec4f2af7d22ee3f17f22da"
+    },
+    {
+      "path": "tools/render_cover_art.py",
+      "bytes": 14016,
+      "sha256": "b481ac9067fe6298120c2c9f6deccafec1c76062ab476f65af492c8539dfab41"
     },
     {
       "path": "tools/render_diagrams.py",

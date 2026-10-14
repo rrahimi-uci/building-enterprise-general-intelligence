@@ -22,7 +22,9 @@ def font_path(bold=False,root:Path|None=None):
 
 def generate(root:Path)->Path:
     cfg=json.loads((root/'config/book.json').read_text())['book']
-    src=root/'assets/cover/agent-architecture-art-source.jpeg'
+    # Artwork drawn from code by tools/render_cover_art.py (make cover-art): the
+    # book's thesis as one picture. Committed, so this step needs only Pillow.
+    src=root/'assets/cover/cover-art.png'
     out=root/'assets/cover/cover-v1.0.0.png'
     art=Image.open(src).convert('RGB'); W,H=2550,3300
     scale=max(W/art.width,H/art.height)
@@ -39,17 +41,31 @@ def generate(root:Path)->Path:
     # than a hunt through the generator.
     art=cfg.get('cover',{})
     eyebrow=art.get('eyebrow','ENTERPRISE ARCHITECTURE REFERENCE')
-    title_lines=art.get('title_lines',['ENTERPRISE','GENERAL','INTELLIGENCE'])
+    # The title is set horizontally and wrapped to the cover's text column:
+    # words are filled greedily onto each line until the next word would cross
+    # the right margin, so a retitle reflows without hand-made line breaks.
+    title_font=F(150,True)
+    left,right=165,W-165
+    def wrap(text):
+        lines=[]
+        for word in text.split():
+            trial=(lines[-1]+' '+word) if lines else word
+            if lines and d.textlength(trial,font=title_font)<=right-left: lines[-1]=trial
+            else: lines.append(word)
+        return lines
+    title_lines=wrap(art.get('title',cfg['title']).upper())
     subtitle=art.get('subtitle','ARCHITECTING GOVERNED AGENTIC SYSTEMS')
     d.rounded_rectangle((165,145,1215,245),radius=22,fill=(24,104,210,225))
     d.text((215,175),eyebrow,font=F(45,True),fill='white')
     y=360
     for line in title_lines:
-        d.text((165,y),line,font=F(150,True),fill='white',stroke_width=2,stroke_fill=(8,31,58)); y+=170
+        d.text((left,y),line,font=title_font,fill='white',stroke_width=2,stroke_fill=(8,31,58)); y+=170
+    title_width=max(d.textlength(line,font=title_font) for line in title_lines)
     subtitle_y=y+20
     d.text((170,subtitle_y),subtitle,font=F(44,True),fill=(81,220,234))
     divider_y=subtitle_y+110
-    d.line((170,divider_y,1600,divider_y),fill=(224,154,50),width=10)
+    # The rule under the subtitle spans the widest title line, so the block reads as one unit.
+    d.line((170,divider_y,int(left+title_width),divider_y),fill=(224,154,50),width=10)
     for i,line in enumerate(art.get('themes',[])):
         d.text((175,divider_y+60+i*68),line,font=F(41),fill=(224,238,249))
     d.rounded_rectangle((155,2740,1325,2920),radius=26,fill=(5,25,52,225),outline=(81,220,234,255),width=4)
