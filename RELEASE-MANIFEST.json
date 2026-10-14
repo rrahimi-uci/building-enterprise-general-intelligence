@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 44113,
-      "sha256": "29dbc5f7f7206ec283cb7120faca6e22ccd44fb4ab2a88242080764167052d56"
+      "bytes": 44281,
+      "sha256": "4349776c079ba77d4861056668c5f7b433d66fd1839f246d0b5267e4a43afc34"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -86,13 +86,13 @@
     },
     {
       "path": "assets/cover/cover-art.png",
-      "bytes": 1225048,
-      "sha256": "c856290c8d15939897bd085447c31dba47f36a4edd8a10832042a5e78dce7831"
+      "bytes": 1242138,
+      "sha256": "efd0841aba461d4cd87840dfaa8157ac0fa8011e5fe20028f02cb67488a93065"
     },
     {
       "path": "assets/cover/cover-v1.0.0.png",
-      "bytes": 1300818,
-      "sha256": "fdb06fba402a588abbcac1bf1fb91a637bbfeb5f50fe65e16076e3d3a6ee0db5"
+      "bytes": 1316478,
+      "sha256": "37951570bd762fce213a9f6ac727a353765a9e3355dc6a226e1ae3bb9b37ee32"
     },
     {
       "path": "assets/diagrams/anti-ambient-authority.pdf",
@@ -1006,8 +1006,8 @@
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.docx",
-      "bytes": 39234030,
-      "sha256": "8060185b0a8bb8d6173d187e2e9c97e474b2f63975559a8f29a16cddef0881ce"
+      "bytes": 39249885,
+      "sha256": "1fce2939b025aeea5c672e879252d47aba2a4f688522b8f6459add3bdd1e6969"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.md",
@@ -1912,22 +1912,22 @@
     {
       "path": "qa/build-report.json",
       "bytes": 309,
-      "sha256": "17134454b7069f69567ae2c0b0c1c53199198fcee860b607491a0ae4d1a6971e"
+      "sha256": "2b0ff036c66d6a3867ce87b7eb314ba222948a76bc6ac4c43befbe4115311d65"
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 39234030,
-      "sha256": "8060185b0a8bb8d6173d187e2e9c97e474b2f63975559a8f29a16cddef0881ce"
+      "bytes": 39249885,
+      "sha256": "1fce2939b025aeea5c672e879252d47aba2a4f688522b8f6459add3bdd1e6969"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 39234030,
-      "sha256": "8060185b0a8bb8d6173d187e2e9c97e474b2f63975559a8f29a16cddef0881ce"
+      "bytes": 39249885,
+      "sha256": "1fce2939b025aeea5c672e879252d47aba2a4f688522b8f6459add3bdd1e6969"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "3aa2523711393d10096257e87f4dee9db7da0f4197f10a980d280736501f046d"
+      "sha256": "138bf92efeb6a0717d3bce72b9fc27d4c1df7322af6267ab2043e8f9137034fb"
     },
     {
       "path": "qa/latex-validation-report.json",
@@ -1937,7 +1937,7 @@
     {
       "path": "qa/validation-report.json",
       "bytes": 1018,
-      "sha256": "7661cc9cfe776356e036aafd615bf0d1941dc9f73a9d69044294904d74fe25f7"
+      "sha256": "bd0d65ea6edf52041d06cae7a523ababa3bb1e368aebdb98d82de6164dd46438"
     },
     {
       "path": "reports/assembly-report.json",
@@ -2017,7 +2017,7 @@
     {
       "path": "reports/validation-summary.md",
       "bytes": 1012,
-      "sha256": "069c46c21283e374325bf4a5d4c4d520f0d582786798353c86590eeb89319e5a"
+      "sha256": "2b2336feecc0db423d71226697107777c164eae4087c3a2e40511f82a3492a56"
     },
     {
       "path": "requirements.txt",
@@ -3086,8 +3086,8 @@
     },
     {
       "path": "tools/render_cover_art.py",
-      "bytes": 18292,
-      "sha256": "5d94a72363aad5b7718418e0d6051cca89d34a7109a64a6aa835a90612e8112c"
+      "bytes": 18989,
+      "sha256": "2a5dcf9ae37441ccd86e2258dd5ad1115f896e2de115c299073809e8feeb907d"
     },
     {
       "path": "tools/render_diagrams.py",
