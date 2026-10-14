@@ -51,6 +51,11 @@ def label(x: float, y: float, text: str, size: int = 38, color: str = INK_SOFT, 
     return t(x, y, text, size, color, bold=True, anchor=anchor, spacing=5)
 
 
+def note(x: float, y: float, text: str, size: int = 25, color: str = INK_SOFT) -> str:
+    """A muted, lower-case detail line under a label."""
+    return t(x, y, text, size, color, anchor="middle", spacing=1.5, opacity=0.78)
+
+
 def defs() -> str:
     return f"""<defs>
 <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
@@ -117,24 +122,51 @@ def platform() -> str:
 <circle cx="{CX}" cy="{CY}" r="{R_PLATFORM}" fill="none" stroke="{BLUE}" stroke-width="5"/>
 <circle cx="{CX}" cy="{CY}" r="{R_PLATFORM - 22}" fill="none" stroke="{BLUE}" stroke-width="2" opacity="0.45"/>
 <path d="{' '.join(ticks)}" stroke="{CYAN_SOFT}" stroke-width="3" opacity="0.35"/>
+{checkpoints()}
+{release_arc()}
 {label(CX, CY - R_PLATFORM + 150, "DURABLE · GOVERNED WORKFLOW", 30, CYAN_SOFT)}"""
+
+
+def checkpoints() -> str:
+    """Durable checkpoints on the workflow ring: where a run can resume."""
+    out = []
+    for deg in (32, 58, 122, 148, 212, 238, 302, 328):
+        a = math.radians(deg)
+        x, y = CX + R_PLATFORM * math.cos(a), CY + R_PLATFORM * math.sin(a)
+        out.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="17" fill="{TEAL}" opacity="0.35" filter="url(#soft)"/>'
+                   f'<circle cx="{x:.1f}" cy="{y:.1f}" r="11" fill="#062A33" stroke="{TEAL}" stroke-width="4"/>'
+                   f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4" fill="#B9FFF6"/>')
+    return "".join(out)
+
+
+def release_arc() -> str:
+    """A reviewed release flows from evaluation back up into the platform's policy."""
+    r = 468
+    a0, a1 = math.radians(103), math.radians(226)
+    x0, y0 = CX + r * math.cos(a0), CY + r * math.sin(a0)
+    x1, y1 = CX + r * math.cos(a1), CY + r * math.sin(a1)
+    bx, by = CX - 58, CY + R_PLATFORM - 58          # leaves the evaluate-and-release badge
+    return (f'<path d="M{bx},{by} L{x0:.1f},{y0:.1f} A{r},{r} 0 0 1 {x1:.1f},{y1:.1f}" fill="none" '
+            f'stroke="{AMBER}" stroke-width="7" stroke-dasharray="2 18" stroke-linecap="round" '
+            f'marker-end="url(#tip-amber)"/>')
 
 
 def knowledge() -> str:
     """Middle ring: governed, pinned knowledge and context."""
+    # Four kinds of governed knowledge, each a released, pinned artifact:
+    # documents, the knowledge graph, enforceable rules, and governed memory.
     nodes = []
-    for deg in (205, 240, 300, 335):
+    for deg, kind in ((205, "record"), (240, "graph"), (300, "control"), (335, "store")):
         a = math.radians(deg)
         x, y = CX + R_KNOW * math.cos(a), CY + R_KNOW * math.sin(a)
-        nodes.append(f'<rect x="{x - 26:.1f}" y="{y - 26:.1f}" width="52" height="52" rx="10" fill="#0A2A44" '
-                     f'stroke="{CYAN}" stroke-width="3"/>'
-                     f'<path d="M{x - 12:.1f},{y - 8:.1f} H{x + 12:.1f} M{x - 12:.1f},{y + 1:.1f} H{x + 12:.1f} '
-                     f'M{x - 12:.1f},{y + 10:.1f} H{x + 4:.1f}" stroke="{CYAN_SOFT}" stroke-width="3" stroke-linecap="round"/>')
+        nodes.append(f'<rect x="{x - 32:.1f}" y="{y - 32:.1f}" width="64" height="64" rx="12" fill="#0A2A44" '
+                     f'stroke="{CYAN}" stroke-width="3"/>' + icon(kind, x, y, 21, CYAN_SOFT))
     return f"""
 <circle cx="{CX}" cy="{CY}" r="{R_KNOW}" fill="#0B2E55" fill-opacity="0.55" stroke="{CYAN}" stroke-width="4" stroke-dasharray="26 14"/>
 <circle cx="{CX}" cy="{CY}" r="{R_KNOW}" fill="none" stroke="{CYAN}" stroke-width="12" opacity="0.25" filter="url(#glow)"/>
 {''.join(nodes)}
-{label(CX, CY + 300, "GOVERNED KNOWLEDGE", 28, CYAN_SOFT)}"""
+{label(CX, CY + 292, "GOVERNED KNOWLEDGE", 28, CYAN_SOFT)}
+{note(CX, CY + 330, "documents · graph · rules · memory", 24, CYAN_SOFT)}"""
 
 
 def shell_and_core() -> str:
@@ -166,15 +198,19 @@ def shell_and_core() -> str:
 <polygon points="{hexagon(CX, CY, R_CORE)}" fill="url(#core)" stroke="#B9FFF6" stroke-width="4"/>
 {net}
 {''.join(gates)}
-{label(CX, CY + 162, "MODEL PROPOSES", 26, INK)}"""
+{label(CX, CY + 162, "MODEL PROPOSES", 26, INK)}
+{label(CX - R_SHELL - 92, CY - 44, "VALIDATE", 22, AMBER)}
+{label(CX + R_SHELL + 98, CY - 44, "AUTHORIZE", 22, AMBER)}"""
 
 
-def badge(x: float, y: float, kind: str, color: str, text: str, text_dy: float) -> str:
-    """One platform control on the outer ring: a lit disc with a role glyph."""
+def badge(x: float, y: float, kind: str, color: str, text: str, detail: str, below: bool = False) -> str:
+    """One platform control on the outer ring: a lit disc with a role glyph,
+    its name, and a muted line naming what it checks."""
+    ly, ny = (y + 150, y + 192) if below else (y - 166, y - 124)
     return (f'<circle cx="{x}" cy="{y}" r="104" fill="{color}" opacity="0.30" filter="url(#glow)"/>'
             f'<circle cx="{x}" cy="{y}" r="82" fill="url(#card)" stroke="{color}" stroke-width="6"/>'
             + icon(kind, x, y, 40, color)
-            + label(x, y + text_dy, text, 36, INK))
+            + label(x, ly, text, 36, INK) + note(x, ny, detail))
 
 
 def flows() -> str:
@@ -190,7 +226,7 @@ def flows() -> str:
     intent = (f'<circle cx="{xs_in}" cy="{y}" r="112" fill="{BLUE}" opacity="0.25" filter="url(#glow)"/>'
               f'<circle cx="{xs_in}" cy="{y}" r="94" fill="url(#card)" stroke="{BLUE}" stroke-width="6"/>'
               + icon("actor", xs_in, y, 46, BLUE)
-              + label(xs_in, y + 170, "INTENT", 38, INK))
+              + label(xs_in, y + 170, "INTENT", 38, INK) + note(xs_in, y + 210, "users · APIs · events"))
     stack = []
     for i, dy in enumerate((-70, 0, 70)):
         stack.append(f'<g transform="translate({xs_out},{y + dy})">'
@@ -199,27 +235,68 @@ def flows() -> str:
                      f'<path d="M-92,0 A92,22 0 0 0 92,0" fill="none" stroke="{PLUM}" stroke-width="3" opacity="0.6"/></g>')
     systems = (f'<ellipse cx="{xs_out}" cy="{y}" rx="190" ry="190" fill="{PLUM}" opacity="0.18" filter="url(#bigglow)"/>'
                + "".join(reversed(stack))
-               + label(xs_out, y + 190, "SYSTEMS OF RECORD", 36, INK))
+               + label(xs_out, y + 190, "SYSTEMS OF RECORD", 36, INK)
+               + note(xs_out, y + 230, "records · SaaS · partners"))
+    # The receipt comes back from the system of record: proof of what happened.
+    receipt = (f'<path d="M{xs_out - 100},{y + 40} H{CX + R_PLATFORM + 95}" stroke="{CYAN}" stroke-width="5" '
+               f'stroke-dasharray="2 14" stroke-linecap="round" marker-end="url(#tip)"/>'
+               + note((CX + R_PLATFORM + xs_out) / 2 + 10, y + 82, "receipt", 24, CYAN_SOFT))
     # Evidence loop: dotted, from the systems of record back to evaluation and release.
     ex, ey = CX, CY + R_PLATFORM
-    evidence = (f'<path d="M{xs_out},{y + 235} C{xs_out},{y + 560} {ex + 520},{ey + 210} {ex + 108},{ey + 22}" '
+    evidence = (f'<path d="M{xs_out},{y + 262} C{xs_out},{y + 560} {ex + 520},{ey + 210} {ex + 108},{ey + 22}" '
                 f'fill="none" stroke="{AMBER}" stroke-width="8" stroke-dasharray="2 22" stroke-linecap="round" '
                 f'marker-end="url(#tip-amber)"/>')
     gap_in = (xs_in + 94 + CX - R_PLATFORM - 82) / 2      # between intent and admission
-    gap_out = (CX + R_PLATFORM + 82 + xs_out - 92) / 2     # between gateway and the records
     tags = (label(gap_in, y - 40, "REQUEST", 28, CYAN_SOFT)
-            + label(gap_out, y - 92, "VERIFIED", 26, CYAN_SOFT)
-            + label(gap_out, y - 58, "EFFECT", 26, CYAN_SOFT)
             + label(2060, CY + 690, "EVIDENCE", 30, AMBER))
-    return glow + beam + intent + systems + evidence + tags
+    return glow + beam + intent + systems + receipt + evidence + tags
+
+
+def approval() -> str:
+    """Proposal-bound human approval, consulted by the gateway for protected effects."""
+    gx, gy = CX + R_PLATFORM, CY
+    ax, ay = gx + 305, gy - 262
+    return (f'<path d="M{ax - 40},{ay + 40} L{gx + 72},{gy - 42}" stroke="{AMBER}" stroke-width="4" '
+            f'stroke-dasharray="12 10" opacity="0.9"/>'
+            f'<circle cx="{ax}" cy="{ay}" r="70" fill="{AMBER}" opacity="0.25" filter="url(#glow)"/>'
+            f'<circle cx="{ax}" cy="{ay}" r="56" fill="url(#card)" stroke="{AMBER}" stroke-width="5"/>'
+            + icon("human", ax, ay, 28, AMBER)
+            + label(ax + 82, ay - 6, "HUMAN", 26, INK, anchor="start")
+            + label(ax + 82, ay + 28, "APPROVAL", 26, INK, anchor="start"))
+
+
+def key() -> str:
+    """A compact key beside the author block."""
+    x0, y0 = 1460, 2742
+    rows = [
+        (f'<path d="M{x0 + 40},{y0 + 62} h70" stroke="{CYAN_SOFT}" stroke-width="8" stroke-linecap="round"/>',
+         "request and verified effect"),
+        (f'<path d="M{x0 + 40},{y0 + 122} h70" stroke="{AMBER}" stroke-width="7" stroke-dasharray="2 14" '
+         f'stroke-linecap="round"/>', "evidence and release"),
+    ]
+    rows2 = [
+        (f'<polygon points="{x0 + 520},{y0 + 44} {x0 + 538},{y0 + 62} {x0 + 520},{y0 + 80} {x0 + 502},{y0 + 62}" '
+         f'fill="#2B1F08" stroke="{AMBER}" stroke-width="4"/>', "deterministic gate"),
+        (f'<circle cx="{x0 + 520}" cy="{y0 + 122}" r="11" fill="#062A33" stroke="{TEAL}" stroke-width="4"/>',
+         "durable checkpoint"),
+    ]
+    out = [f'<rect x="{x0}" y="{y0}" width="935" height="178" rx="26" fill="#05193A" fill-opacity="0.82" '
+           f'stroke="{CYAN}" stroke-opacity="0.45" stroke-width="3"/>']
+    for i, (glyph, text) in enumerate(rows):
+        out.append(glyph + t(x0 + 135, y0 + 72 + i * 60, text, 28, INK_SOFT))
+    for i, (glyph, text) in enumerate(rows2):
+        out.append(glyph + t(x0 + 560, y0 + 72 + i * 60, text, 28, INK_SOFT))
+    return "".join(out)
 
 
 def compose() -> str:
-    controls = (badge(CX - R_PLATFORM, CY, "human", BLUE, "ADMISSION", -128)
-                + badge(CX, CY - R_PLATFORM, "control", AMBER, "POLICY", -128)
-                + badge(CX + R_PLATFORM, CY, "service", BLUE, "GATEWAY", -128)
-                + badge(CX, CY + R_PLATFORM, "graph", AMBER, "EVALUATE · RELEASE", 150))
-    body = background() + platform() + knowledge() + flows() + shell_and_core() + controls
+    controls = (badge(CX - R_PLATFORM, CY, "human", BLUE, "ADMISSION", "identity · risk · budgets")
+                + badge(CX, CY - R_PLATFORM, "control", AMBER, "POLICY", "decide · enforce · audit")
+                + badge(CX + R_PLATFORM, CY, "service", BLUE, "GATEWAY", "tools · MCP · A2A")
+                + badge(CX, CY + R_PLATFORM, "graph", AMBER, "EVALUATE · RELEASE",
+                        "evals · canary · rollback", below=True))
+    body = (background() + platform() + knowledge() + flows() + shell_and_core() + controls
+            + approval() + key())
     return (f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{W}" height="{H}" viewBox="0 0 {W} {H}">'
             f'{defs()}{body}</svg>')
 
