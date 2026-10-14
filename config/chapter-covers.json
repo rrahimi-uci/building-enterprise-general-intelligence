@@ -2075,7 +2075,7 @@
      {
       "id": "ctl",
       "label": "Loop controller",
-      "sub": "turns · cost · no-progress",
+      "sub": "turns · tools · time · cost · no progress",
       "kind": "control",
       "at": [
        8.0,

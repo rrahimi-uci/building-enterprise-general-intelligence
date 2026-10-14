@@ -375,14 +375,14 @@
       "source": "pattern-react.tikz.tex",
       "pixels": [
         2089,
-        1403
+        1427
       ],
       "effective_dpi": 305,
       "vector": true,
-      "sha256": "2383790864651ff0c3cebc36180308d82dcd50bbb85634dea18d9a722f9a3c81",
+      "sha256": "ebc892827d21c3629360806a2b3bfb68ee457e9db0b82458141258bc939b698c",
       "natural_inches": [
         6.96,
-        4.68
+        4.76
       ],
       "placement_scale": 1.014
     },
@@ -678,17 +678,17 @@
       "id": "skill-resolution",
       "source": "skill-resolution.tikz.tex",
       "pixels": [
-        2084,
-        1973
+        2110,
+        2512
       ],
-      "effective_dpi": 304,
+      "effective_dpi": 308,
       "vector": true,
-      "sha256": "78ba56a45301bff805f72c11379595f78571c5c6eab93c7e853e83fc2cbdc9af",
+      "sha256": "2f71ed67bf7c0fbe17590e956ce9777ed0c06aab5c109432ebf52095a7435cf7",
       "natural_inches": [
-        6.94,
-        6.57
+        7.03,
+        8.37
       ],
-      "placement_scale": 1.017
+      "placement_scale": 0.992
     },
     {
       "id": "supervisor-worker",

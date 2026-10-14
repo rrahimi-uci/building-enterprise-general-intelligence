@@ -191,7 +191,7 @@
       "source": "assets/diagrams/src/pattern-react.tikz.tex",
       "vector": "assets/diagrams/pattern-react.pdf",
       "description": "Bounded ReAct: the reason-act-observe loop with the controller and limits outside it",
-      "sha256": "2383790864651ff0c3cebc36180308d82dcd50bbb85634dea18d9a722f9a3c81"
+      "sha256": "ebc892827d21c3629360806a2b3bfb68ee457e9db0b82458141258bc939b698c"
     },
     {
       "id": "pattern-reflection",
@@ -342,8 +342,8 @@
       "file": "assets/diagrams/skill-resolution.png",
       "source": "assets/diagrams/src/skill-resolution.tikz.tex",
       "vector": "assets/diagrams/skill-resolution.pdf",
-      "description": "Semantic discovery proposes candidates; deterministic resolution pins one digest or refuses",
-      "sha256": "78ba56a45301bff805f72c11379595f78571c5c6eab93c7e853e83fc2cbdc9af"
+      "description": "One Harborlight need worked through both steps: semantic discovery returns three candidates, one capability is chosen and recorded as a SkillRequirement, and deterministic resolution passes its versions through five ordered filters (capability and version range, release stage for this run, run envelope, risk ceiling, health and cost), listing the versions each leaves, then pins the highest remaining digest in the RunManifest or refuses naming the filter; the pinned release is bound into the AgentStepRequest, and the Tool Gateway still authorizes every call it proposes",
+      "sha256": "2f71ed67bf7c0fbe17590e956ce9777ed0c06aab5c109432ebf52095a7435cf7"
     },
     {
       "id": "supervisor-worker",

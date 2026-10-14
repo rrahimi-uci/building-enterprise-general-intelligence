@@ -1,52 +1,90 @@
-% Figure 8-1 -- Discovery proposes; resolution disposes.
-% Restyled from skill-resolution.gv; nodes, labels, edges, edge styles and
-% meaning are unchanged. Layout only is new: the two side headings become the
-% titles of two groups (discovery above, resolution below).
+% Figure 8-1 -- Discovery proposes candidates; a requirement names one capability;
+% resolution narrows its versions against the run envelope and pins one, or fails.
+% Same lesson as the original skill-resolution figure, now worked through one
+% Harborlight requirement so every step shows its input and its result.
 %
-% Original element -> restyled element
-%   need  Capability need / "read mortgage evidence"          -> teal card
-%   cat   Catalog search / semantic, broad                    -> cyan card
-%   cand  Candidates / mortgage.evidence.read @ 0.1.0, 0.1.1 (note) -> cyan card
-%   pol   Policy evaluation against the run envelope / tenant . purpose . grants . region . risk (diamond) -> amber diamond
-%   pin   Pinned release / sha256:9f3c... exactly one         -> blue card
-%   no    Refusal / naming the rule that denied it            -> red card
-%   d1    heading "DISCOVERY . what exists"                   -> title of the cyan group around need, cat, cand
-%   d2    heading "RESOLUTION . what this run may use"        -> title of the amber group around pol, pin, no
-%   mr    "the model may describe the need -- and nothing below" (red text beside Candidates) -> red callout beside Candidates
-%   edges need>cat, cat>cand, cand>pol, pol>pin (solid, unlabelled); pol>no (dashed, red, unlabelled)
+%   DISCOVERY (cyan group): Capability need "read income evidence against policy"
+%        -> Catalog search (semantic; lists only what the caller may see)
+%        -> Candidates: mortgage.evidence.read 0.1.0 and 0.1.1, mortgage.income.verify 1.0.0
+%   "Choose one capability" -> SkillRequirement: mortgage.evidence.read ^0.1, purpose, risk R1
+%        (carried by the AgentSpec or the plan); red callout: the model may describe the
+%        need but never sees unfiltered candidates or influences resolution
+%   RESOLUTION (amber group): five filters in order, each with the versions it leaves --
+%        1 capability and version range (0.1.0, 0.1.1); 2 release stage allows this run
+%        (0.1.0; 0.1.1 is Staged for a canary this run is not in); 3 run envelope (0.1.0); 4 risk within ceiling (0.1.0);
+%        5 health and cost (0.1.0). The run envelope (tenant, purpose, subject and
+%        actor grants, data classes, region) feeds filter 3.
+%        Decision "Any version left?": yes -> Pinned release (highest left, 0.1.0,
+%        sha256:9f3c..., recorded in the RunManifest); no -> Refusal naming the filter
+%        that emptied the set (dashed red)
+%   After resolution: the pinned release is bound into the AgentStepRequest (tier-2
+%        instructions, eligible tools, runtime bounds); every call it proposes still
+%        passes the Tool Gateway -- resolution is not call authorization
 \documentclass[border=6pt]{standalone}
 \usepackage{professional-diagrams}
 \begin{document}
 \begin{tikzpicture}
-  % ---- discovery ----
-  \node[dg card=teal, text width=196pt] (need) at (170,0)
-    {\dgcontent{Capability need}{``read mortgage evidence''}{}};
-  \node[dg card=cyan, icon=search, text width=196pt] (cat) at (170,-66)
-    {\dgcontent{Catalog search}{Semantic, broad}{}};
-  \node[dg card=cyan, text width=196pt] (cand) at (170,-132)
-    {\dgcontent{Candidates}{mortgage.evidence.read @ 0.1.0, 0.1.1}{}};
-  \coordinate (dl) at (18,-66);
-  \coordinate (dr) at (322,-66);
-  \dggroup{discovery}{cyan}{DISCOVERY · what exists}{(need)(cat)(cand)(dl)(dr)}
-  \node[callout=red, text=dg-red-ink, text width=118pt] (mr) at (428,-132)
-    {\dgdescsize The model may describe the need — and nothing below};
+  \tikzset{
+    fchip/.style={rectangle, rounded corners=4pt, line width=0.8pt, fill=dg-amber-fill,
+      draw=dg-amber-line, text=dg-ink, font=\dgnotesize, text width=176pt, align=left,
+      inner xsep=6pt, inner ysep=3pt, minimum height=24pt},
+    left note/.style={font=\dgnotesize, text=dg-ink, anchor=west, inner sep=0pt},
+  }
 
-  % ---- resolution ----
-  \node[dg decision=amber, minimum width=300pt, minimum height=92pt] (pol) at (170,-274)
-    {\dgcontent{Policy evaluation against the run envelope}{tenant · purpose · grants · region · risk}{}};
-  \node[dg card=blue, text width=130pt] (pin) at (95,-380)
-    {\dgcontent{Pinned release}{sha256:9f3c… — exactly one}{}};
-  \node[dg card=red, text width=110pt] (no) at (245,-380)
-    {\dgcontent{Refusal}{Naming the rule that denied it}{}};
-  \coordinate (rl) at (18,-274);
-  \coordinate (rr) at (322,-274);
-  \dggroup{resolution}{amber}{RESOLUTION · what this run may use}{(pol)(pin)(no)(rl)(rr)}
+  % ---- discovery ----
+  \node[dg card=teal, text width=100pt] (need) at (72,-34)
+    {\dgcontent{Capability need}{``read income evidence against policy''}{}};
+  \node[dg card=cyan, icon=search, text width=100pt] (cat) at (242,-34)
+    {\dgcontent{Catalog search}{Semantic; lists only what the caller may see}{}};
+  \node[dg card=cyan, text width=100pt] (cand) at (412,-34)
+    {\dgcontent{Candidates}{mortgage.evidence.read\\0.1.0 · 0.1.1\\mortgage.income.verify\\1.0.0}{}};
+  \dggroup{discovery}{cyan}{DISCOVERY · what exists}{(need)(cat)(cand)}
+
+  % ---- the requirement discovery hands to resolution ----
+  \node[dg card=teal, text width=176pt] (req) at (262,-118)
+    {\dgcontent{SkillRequirement}{mortgage.evidence.read \textasciicircum{}0.1 · purpose · risk R1, carried by the AgentSpec or plan}{}};
+  \node[callout=red, text=dg-red-ink, text width=100pt] (mr) at (66,-118)
+    {\dgnotesize The model may describe the need. It never sees unfiltered candidates or influences resolution.};
+
+  % ---- resolution: five filters in order, with the versions each leaves ----
+  \node[fchip] (f1) at (262,-206) {\textbf{1} \enspace Capability and version range};
+  \node[fchip] (f2) at (262,-240) {\textbf{2} \enspace Release stage allows this run};
+  \node[fchip] (f3) at (262,-274) {\textbf{3} \enspace Run envelope admits it};
+  \node[fchip] (f4) at (262,-308) {\textbf{4} \enspace Risk within certified ceiling};
+  \node[fchip] (f5) at (262,-342) {\textbf{5} \enspace Health and cost};
+  \node[font=\dgnotesize\bfseries, text=dg-amber-ink, anchor=west, inner sep=0pt] (vh) at (366,-186) {Versions left};
+  \node[left note] at (366,-206) {0.1.0 · 0.1.1};
+  \node[left note] at (366,-240) {0.1.0 \enspace (0.1.1 is a canary)};
+  \node[left note] at (366,-274) {0.1.0};
+  \node[left note] at (366,-308) {0.1.0 \enspace (R1 within R1)};
+  \node[left note] at (366,-342) {0.1.0};
+  \node[dg card=slate, text width=100pt] (env) at (72,-274)
+    {\dgcontent{Run envelope}{tenant · purpose · subject and actor grants · data classes · region}{}};
+  \node[dg decision=amber, minimum width=136pt, minimum height=36pt] (any) at (262,-390)
+    {\dgcontent{Any version left?}{}{}};
+  \node[dg card=red, text width=90pt] (no) at (427,-390)
+    {\dgcontent{Refusal}{Names the filter that emptied the set}{}};
+  \node[dg card=blue, text width=150pt] (pin) at (150,-452)
+    {\dgcontent{Pinned release}{Highest left: 0.1.0, sha256:9f3c…, recorded in the RunManifest}{}};
+  \dggroup{resolution}{amber}{RESOLUTION · what this run may use}{(f1)(f5)(vh)(env)(any)(pin)(no)}
+
+  % ---- after resolution ----
+  \node[dg card=teal, text width=150pt] (bind) at (150,-534)
+    {\dgcontent{Bound into the step}{AgentStepRequest: tier-2 instructions, eligible tools, runtime bounds}{}};
+  \node[dg card=blue, icon=shield-alt, text width=118pt] (gw) at (404,-534)
+    {\dgcontent{Tool Gateway}{Still authorizes every call the Skill proposes}{}};
 
   % ---- connectors ----
-  \draw[flow in=blue] (need.south) -- (cat.north);
-  \draw[flow in=blue] (cat.south) -- (cand.north);
-  \draw[flow in=blue] (cand.south) -- (pol.north);
-  \draw[flow in=blue] (95,-297) -- (pin.north);
-  \draw[dashed flow, draw=dg-red-line] (245,-297) -- (no.north);
+  \draw[flow in=teal] (need.east) -- (cat.west);
+  \draw[flow in=teal] (cat.east) -- (cand.west);
+  \draw[flow in=teal, turn] (cand.south) |- node[pill=teal, pos=0.35] {Choose one capability} (req.east);
+  \draw[flow in=blue] (req.south) -- (f1.north);
+  \foreach \a/\b in {f1/f2, f2/f3, f3/f4, f4/f5} \draw[flow in=amber] (\a.south) -- (\b.north);
+  \draw[flow in=slate] (env.east) -- (f3.west);
+  \draw[flow in=amber] (f5.south) -- (any.north);
+  \draw[flow in=blue, turn] (any.west) -| node[pill=blue, pos=0.75] {Yes: pin the highest} (pin.north);
+  \draw[dashed flow, draw=dg-red-line] (any.east) -- node[edge text, above] {No} (no.west);
+  \draw[flow in=blue] (pin.south) -- (bind.north);
+  \draw[flow in=blue] (bind.east) -- node[pill=blue] {Each call} (gw.west);
 \end{tikzpicture}
 \end{document}

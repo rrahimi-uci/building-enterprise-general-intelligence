@@ -4,6 +4,13 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Chapter 8 and Chapter 10 review comments (DOCX review, 2026-10-14)
+
+- **Discovery is not permission (Chapter 8)** is explained step by step for one Harborlight need: what discovery returns and who runs it, the SkillRequirement it hands on, resolution's five ordered filters with what each removes, how a version is pinned or refused, and why a resolved Skill's calls still pass the Tool Gateway. The comparison table gains a "When" row.
+- **Figure 8-1** (`skill-resolution`) is redrawn as that worked example: candidates, the requirement, the filters with the versions each leaves, the pin or refusal, binding into the AgentStepRequest, and the Tool Gateway.
+- **Correction:** the release-stage filter now admits a Staged release for runs in its staging, shadow, or canary cohort, matching the lifecycle table; the earlier text implied only Active releases ever resolve.
+- **Chapter 10's design choice** is reworded and explained: when ReAct is worth a loop, and a table of the five external limits (what the controller counts, Harborlight's settings from the Skill manifest and the reference loop, and the stop reason each produces). Figure 10-1 and the Chapter 10 cover now list all five limits.
+
 ### Unified enterprise architecture
 
 - The Closing Perspective now contains Figure S-1, a publication-size TikZ synthesis of the book's global control tier, regional execution cell, external dependencies, cross-cutting trust controls, and offline evidence-to-release loop. It distinguishes pinned KnowledgeReleases from the full behavior ReleaseManifest and bounded AgentRuntime steps from durable workflow ownership.
