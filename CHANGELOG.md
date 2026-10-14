@@ -4,6 +4,12 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Unified enterprise architecture
+
+- The Closing Perspective now contains Figure S-1, a publication-size TikZ synthesis of the book's global control tier, regional execution cell, external dependencies, cross-cutting trust controls, and offline evidence-to-release loop. It distinguishes pinned KnowledgeReleases from the full behavior ReleaseManifest and bounded AgentRuntime steps from durable workflow ownership.
+- The accompanying legend, seven-plane layer explanation, runtime and knowledge lifecycles, improvement loop, and chapter map connect the figure to the 28 chapters. `reviews/unified-architecture.md` records the source inventory, directed-edge contracts, chapter traceability, reconciliation decisions, and final critique.
+- Chapter 28's transition now names Appendices A–L in their current order. The diagram source, PNG/PDF renders, registry digest, manuscript, DOCX, and XeLaTeX sources are regenerated from canonical inputs.
+
 ### Part II review comments (DOCX review, 2026-10-13)
 
 - **"Seam" becomes "runtime interface".** Chapter 3's `AgentRuntime` boundary is called the runtime interface everywhere: Part I and III prose, the front-matter checkpoint table, the Chapter 3 cover, README, example and companion-code docstrings.

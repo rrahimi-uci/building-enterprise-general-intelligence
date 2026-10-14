@@ -2,6 +2,23 @@
 
 Book v1.0.0 is the canonical foundation for *Building an Enterprise General Intelligence Platform* by Reza Rahimi, PhD.
 
+## Unreleased architecture synthesis — 2026-10-14
+
+The Closing Perspective adds a unified, publication-size architecture (Figure
+S-1) that traces a request from admission through bounded reasoning, governed
+effects, and verified outcome. It also traces source material into an approved,
+pinned knowledge release and production evidence into evaluation, review, and
+the next immutable release. The prose supplies the legend, layer ownership,
+end-to-end flows, and a chapter map; `reviews/unified-architecture.md` records
+the element/edge evidence and synthesis limits. Chapter 28's final transition
+now uses the current Appendix A–L lettering. This is a logical reference
+architecture; the companion code remains at checkpoints C01–C03.
+
+Local structural, diagram, deterministic DOCX, example, package, and genuine
+XeLaTeX checks passed. DOCX pagination QA remains unavailable in this
+environment because LibreOffice `soffice` is not installed; this PR is not
+claimed as a completed publication release.
+
 ## Part I review comments — 2026-10-13
 
 Eight comments left on Part I of the distributed DOCX were reconciled into the

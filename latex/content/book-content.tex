@@ -13269,7 +13269,7 @@ Why can the cheapest model be more expensive? & Lower reliability may cause more
 
 \section{Where this leads next}
 
-Part VIII closes the operating loop: governance decides who may change behavior and how deeply it is reviewed, releases decide which behavior each run receives, and admission decides how much work runs and at what cost—each judged by verified outcomes. The Closing Perspective that follows returns to Chapter 1's week of failures and shows where each is now contained. The appendices are desk tools: pattern and triage guides (A, B), contracts and framework choice (C, D), research, limits, roadmap, and glossary (E–H), the Harborlight implementation and coding-agent prompt (I, J), and the evidence registry and acceptance gates (K, L).\par
+Part VIII closes the operating loop: governance decides who may change behavior and how deeply it is reviewed, releases decide which behavior each run receives, and admission decides how much work runs and at what cost—each judged by verified outcomes. The Closing Perspective that follows returns to Chapter 1's week of failures, shows where each is now contained, and joins the book's components in one architecture. The appendices are desk tools: pattern and triage guides (A, B), contracts and framework choice (C, D), research, limits, and roadmap (E–G), the Harborlight implementation and coding-agent prompt (H, I), the evidence registry and acceptance gates (J, K), and the glossary (L).\par
 
 \BookFrontChapter{Closing Perspective: What Production-Grade Intelligence Requires}
 
@@ -13296,6 +13296,64 @@ Friday & A cheaper model shipped with no code change and missed incomplete evide
 \BookTableEnd
 
 The model provides bounded reasoning; the surrounding system owns state, authority, effects, evidence, and recovery.\par
+
+\section{The unified enterprise architecture}
+
+Figure S-1 is the book's canonical \textbf{logical} architecture. Chapter 4's seven ownership planes determine who writes each record; the figure groups their deployable services by design time, regional runtime, external boundary, and offline improvement. The deterministic workflow owns the run. A bounded agent step proposes; independent controls decide whether its proposal may change anything outside the run. No model, framework, vector index, or trace store becomes the system of record by being on the request path.\par
+
+\BookDiagram{assets/diagrams/unified-enterprise-architecture.pdf}{Figure S-1 — The unified enterprise architecture: governed releases and knowledge enter a regional run; bounded reasoning proposes, deterministic gates control effects, and evidence returns through an offline improvement loop}{unified-enterprise-architecture}
+
+\subsection{Read the boundaries and line styles}
+
+The pale frames separate the \textbf{global control tier}, a \textbf{regional execution cell}, \textbf{external systems}, and \textbf{offline evidence and improvement}. Square cards are services or service groups. Solid blue arrows carry requests, authorized actions, and results; solid cyan arrows carry knowledge or returned evidence; dashed arrows carry released definitions and enforcement; dotted arrows carry observations. Each arrow's direction is the direction of the named transfer. Paired arrows to models and enterprise systems mean a governed request crosses the boundary and a response or receipt returns. A release arrow is a reviewed promotion, not a runtime write.\par
+
+\BookTableStart
+\small
+\begin{longtable}{@{}Y{\dimexpr(\linewidth-4\tabcolsep)/3\relax}Y{\dimexpr(\linewidth-4\tabcolsep)/3\relax}Y{\dimexpr(\linewidth-4\tabcolsep)/3\relax}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Architectural area} & \color{white}\bfseries \textbf{Responsibility in the figure} & \color{white}\bfseries \textbf{Ownership planes and chapters} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Architectural area} & \color{white}\bfseries \textbf{Responsibility in the figure} & \color{white}\bfseries \textbf{Ownership planes and chapters} \\
+\endhead
+Experience and admission & Users, APIs, and events enter through authenticated, risk- and capacity-aware admission; verified results return through the same channel. & Experience and channels; 1, 4, 14, 21, 28 \\*
+\rowcolor{BookLight}
+Durable runtime and agent applications & The Run Service pins a manifest, schedules bounded agent steps and child tasks, owns workflow history and acceptance, and survives waits and failures. AgentRuntime owns only one step's reasoning and typed result. & Runtime and workflow; Agent applications; 2–4, 10–18 \\
+Knowledge, context, and memory & The registry releases governed knowledge. The Context Service assembles an authorized, token-bounded ContextManifest from pinned knowledge, current workflow state, conversation, evidence, and eligible memory. & Knowledge, context, and memory; 5–6 \\
+\rowcolor{BookLight}
+Model and tool access & The LLM Gateway selects an eligible model and enforces privacy and budgets. Separate Tool, MCP, and A2A gateways terminate their respective boundaries; the Effect Service records mutating intent, outcome, and reconciliation. & Gateways and integration; 2, 4, 19, 22, 28 \\
+Trust and governance & Subject and actor identity, policy, narrow grants, proposal-bound approval, secret leases, sandbox and egress control, and a separate audit path apply at admission, retrieval, inference, delegation, and effects. & Security and governance; 14, 20–23, 26 \\
+\rowcolor{BookLight}
+Evidence and operations & Linked traces, metrics, SLOs, cost, incidents, and human feedback diagnose runs; the audit ledger preserves protected decisions separately from sampled telemetry. & Evaluation and operations; 24, 28 \\
+Engineering and release & Domain and platform owners build and test agents, Skills and packs, workflows, policies, tools, and evaluation cases. Risk-tiered validation and approval promote immutable release bundles; canaries and rollback control new assignments. & Agent applications; Evaluation and operations; 7–9, 25–27 \\
+\end{longtable}
+\BookTableEnd
+
+\subsection{Follow one request to a verified outcome}
+
+\begin{enumerate}
+
+\item A channel authenticates a subject and acting workload; admission checks tenant, purpose, risk, deadline, and capacity. The Run Service writes one RunManifest from a promoted ReleaseManifest, including Skill and knowledge release digests, model eligibility, capability envelope, and budgets (Chapters 4, 21, 27, and 28).
+
+\item The workflow asks the Context Service for a step-specific ContextManifest. Authorization and source ACL checks happen \emph{before} retrieval. The manifest records source revisions, trust tiers, redactions, and token allocation; retrieved text stays data, never an instruction or a grant (Chapters 5–6).
+
+\item AgentRuntime executes one bounded step. Its framework may reason, choose an eligible tool façade, plan, critique, or request a specialist, but returns a typed AgentStepResult to the workflow. The Task Service owns durable child tasks and joins; MCP and A2A terminate at local gateways when work crosses those boundaries (Chapters 3, 10–13, and 18–19).
+
+\item The workflow validates the proposal, asks policy for the exact subject, actor, purpose, action, and resource, and pauses for a proposal-bound human approval when required. After reauthorization, the Tool Gateway commits a permitted effect under one logical key. A receipt confirms it; an ambiguous timeout becomes \textbf{Unknown} and is reconciled before dependent work proceeds (Chapters 2, 14, and 20–22).
+
+\item The workflow checks executable acceptance criteria against authoritative state and effects, records the terminal outcome, and returns the authorized result. A model's completion claim cannot close the run. Traces and audit records link the request, versions, decisions, effects, and outcome (Chapters 13, 15, and 24).
+
+\end{enumerate}
+
+\subsection{Follow knowledge from source to use}
+
+Enterprise policy, documents, and structured source records enter an intake process as bytes with source digests and permissions. Extraction proposes fields, requirements, terms, relationships, and rules; source-span grounding, schema, consistency, regression, staleness, and independent SME review gate the candidate. The registry publisher activates an immutable KnowledgeRelease. At admission, each required stream resolves once to a digest in the RunManifest. The Context Service consumes authorized views of that pin, while control points evaluate its enforceable rules against verified facts. Runtime contradictions, refusals, and corrections become evidence for a \emph{new} reviewed knowledge change; they never edit the pinned release in place (Chapters 5–6 and 27).\par
+
+\subsection{Close the evidence and improvement loop}
+
+Runtime emits causal traces, operational metrics, protected audit records, effect receipts, and feedback. Evaluation joins these with reviewed cases and ground truth, checks outcome and trajectory per risk slice, calibrates judges against human labels, and gives deterministic security and effect invariants precedence. Owners diagnose failures and propose the smallest ChangeBundle; CI, review, approval, canary, and release promotion move a new immutable bundle to eligible \emph{new} runs. Active runs remain pinned to compatible workers; rollback changes new assignment, not their history (Chapters 24–27).\par
+
+The figure deliberately groups plan compilation, intervention, budgeting, sandboxing, cache policy, and incident response with their owning services; their separate contracts remain in Chapters 12, 14, 23, and 28 and Appendix C. Likewise, the source-intake card represents governed copies and digests of enterprise material, not authority over the external system of record. This logical view does not prescribe one vendor or one deployment product.\par
 
 The companion code implements the first three checkpoints (C01–C03); later checkpoints are roadmap targets, specified in this book and tracked in Appendix H.\par
 
