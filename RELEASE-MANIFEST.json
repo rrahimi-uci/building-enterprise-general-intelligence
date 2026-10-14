@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 36708,
-      "sha256": "014d66d69712e0c185126b7c84e009236c1393c5ff6dd128d64ccaba78a1f1aa"
+      "bytes": 37911,
+      "sha256": "824fbf2e0ff8432352ec4f57dee9ab9ab4db2fc7452eb6df260085b2230ac3a6"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -376,13 +376,13 @@
     },
     {
       "path": "assets/diagrams/pattern-react.pdf",
-      "bytes": 26707,
-      "sha256": "52027bf02a23db3f1ed92f7b87902c4ebf346ef95bf0091fd75450fd397ba3bf"
+      "bytes": 26786,
+      "sha256": "d1b592ff493c430a534f398d92d54dd670e2ffe9dd5ce1d933bbd31a100dd80e"
     },
     {
       "path": "assets/diagrams/pattern-react.png",
-      "bytes": 111698,
-      "sha256": "2383790864651ff0c3cebc36180308d82dcd50bbb85634dea18d9a722f9a3c81"
+      "bytes": 114605,
+      "sha256": "ebc892827d21c3629360806a2b3bfb68ee457e9db0b82458141258bc939b698c"
     },
     {
       "path": "assets/diagrams/pattern-reflection.pdf",
@@ -516,13 +516,13 @@
     },
     {
       "path": "assets/diagrams/skill-resolution.pdf",
-      "bytes": 29572,
-      "sha256": "ba8090b11110791e01512f838aa4212ba71798a0df9fd11f8837cf19714fd793"
+      "bytes": 35623,
+      "sha256": "b02c726b6ad9f272d3025e2f3178e80598b9410fc1f43367afc7482140afd8cf"
     },
     {
       "path": "assets/diagrams/skill-resolution.png",
-      "bytes": 182627,
-      "sha256": "78ba56a45301bff805f72c11379595f78571c5c6eab93c7e853e83fc2cbdc9af"
+      "bytes": 388082,
+      "sha256": "2f71ed67bf7c0fbe17590e956ce9777ed0c06aab5c109432ebf52095a7435cf7"
     },
     {
       "path": "assets/diagrams/src/_before-after.tex",
@@ -686,8 +686,8 @@
     },
     {
       "path": "assets/diagrams/src/pattern-react.tikz.tex",
-      "bytes": 2441,
-      "sha256": "6e6b79c329e02df2365d36cc9c166b35439066e7569eb60650e9e31d565ecaa0"
+      "bytes": 2485,
+      "sha256": "052dba9026bbe197ee4440d967fbe1097f346035a650f95394650f61daeb257f"
     },
     {
       "path": "assets/diagrams/src/pattern-reflection.tikz.tex",
@@ -756,8 +756,8 @@
     },
     {
       "path": "assets/diagrams/src/skill-resolution.tikz.tex",
-      "bytes": 3030,
-      "sha256": "1ff6b9839b902b83e9822827656ed610c036708e17c78f6aa506aa4cb6db0138"
+      "bytes": 5929,
+      "sha256": "4cbc5e7d9e36a8bcd5cefbc42a89a619f7a4637bcba31e86981ac5d06d725009"
     },
     {
       "path": "assets/diagrams/src/supervisor-worker.tikz.tex",
@@ -791,8 +791,8 @@
     },
     {
       "path": "book/manuscript.md",
-      "bytes": 818716,
-      "sha256": "68f4e94fc40a07a6c7d636ac5ba6740134d63fd10f27d8da64de3b986577c705"
+      "bytes": 822979,
+      "sha256": "f0913b5996a0cdff42e5159bd5d8810d665a29fd36f1e1a7bab19654e60fd971"
     },
     {
       "path": "code-gap.md",
@@ -806,13 +806,13 @@
     },
     {
       "path": "config/chapter-covers.json",
-      "bytes": 116838,
-      "sha256": "7b0ff321ee797057d42649997aae1de5fbe25c34bcdbad7d3f5f0fd64badf5e6"
+      "bytes": 116855,
+      "sha256": "98432c701e3d86601f3e72a15b5279bad91aa61788cf21e4bde9cbd140ff0a39"
     },
     {
       "path": "config/diagrams.json",
-      "bytes": 24595,
-      "sha256": "91449a9add47319faf5214627e2939d3dc7ac6b2e793ccf9cd2c4b0223874564"
+      "bytes": 25078,
+      "sha256": "f845287d95e7cea82186d848de460a2f5284737aabef5df533fe0f7552e3ae7e"
     },
     {
       "path": "config/examples.json",
@@ -846,8 +846,8 @@
     },
     {
       "path": "cover-images/00-overview-all-chapters.png",
-      "bytes": 4565036,
-      "sha256": "7263ec2a7893cc6fe78a7487624589cebef78b670f8844e92e8c230471157604"
+      "bytes": 4565609,
+      "sha256": "d7e7690e94fdef513f02e21f6666724c0762a2acd9b8433e4c7b5b20a135bdf7"
     },
     {
       "path": "cover-images/chapter-01-what-turns-an-llm-call-into-a-production-system.png",
@@ -896,8 +896,8 @@
     },
     {
       "path": "cover-images/chapter-10-use-react-without-creating-a-runaway-loop.png",
-      "bytes": 1182724,
-      "sha256": "fe8e36b7f8b5b0e658309c5e69d1b3033b4db6d0140c77d65d2cf10cad21420a"
+      "bytes": 1185407,
+      "sha256": "f82d49f548ca1774553d6afebdfcf382e5952ecca742bb1bf5efc72e4b2af250"
     },
     {
       "path": "cover-images/chapter-11-route-the-work-without-losing-ownership.png",
@@ -991,13 +991,13 @@
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.docx",
-      "bytes": 42320787,
-      "sha256": "9223f7f5763d03ec94e3e527a7ccdba08298ae64fb4c0494ad42a9063f5caf7d"
+      "bytes": 42533034,
+      "sha256": "e8e53f825d845bcd33a2f3fd125fe0bd9824a2e65d1d651ac539bc2b31f131de"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.md",
-      "bytes": 818716,
-      "sha256": "68f4e94fc40a07a6c7d636ac5ba6740134d63fd10f27d8da64de3b986577c705"
+      "bytes": 822979,
+      "sha256": "f0913b5996a0cdff42e5159bd5d8810d665a29fd36f1e1a7bab19654e60fd971"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.tex",
@@ -1546,8 +1546,8 @@
     },
     {
       "path": "latex/content/book-content.tex",
-      "bytes": 1019917,
-      "sha256": "3051e17c0f7f922342a440d7b299692cfc12460feb6564c75fe77de5cb4db74e"
+      "bytes": 1026112,
+      "sha256": "46f7bd24c797b2847bbceb9d1b1dcc67f5fba90712f9506717b6c1f9010acf15"
     },
     {
       "path": "latex/fonts/LICENSE-SIL-OFL-1.1.txt",
@@ -1897,42 +1897,42 @@
     {
       "path": "qa/build-report.json",
       "bytes": 309,
-      "sha256": "6e6736ecc37f80075eabbcdaaa3ef3571863a31a34e6c1593198387433416d1c"
+      "sha256": "228f0ea5a43cbc1d071f444888ad862cc375620613ec0e3b225114938f2ca4b6"
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 42320787,
-      "sha256": "9223f7f5763d03ec94e3e527a7ccdba08298ae64fb4c0494ad42a9063f5caf7d"
+      "bytes": 42533034,
+      "sha256": "e8e53f825d845bcd33a2f3fd125fe0bd9824a2e65d1d651ac539bc2b31f131de"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 42320787,
-      "sha256": "9223f7f5763d03ec94e3e527a7ccdba08298ae64fb4c0494ad42a9063f5caf7d"
+      "bytes": 42533034,
+      "sha256": "e8e53f825d845bcd33a2f3fd125fe0bd9824a2e65d1d651ac539bc2b31f131de"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "adec945244b358fd6bf1cd724bcc1653cd778e07301427bf678a9dd3ac52ffc3"
+      "sha256": "75571246c155de09063c3a6d9cd1d274cae2e837258522f925ee0affaf7eec38"
     },
     {
       "path": "qa/latex-validation-report.json",
       "bytes": 17105,
-      "sha256": "2a269428c020ac1ea8b9156bf495dd3dd06f75e8d54e8074d44326d245cb1979"
+      "sha256": "5a84dfeaadc7318bde58af72326cd8eacc0d76becb0d1480486d722818409fcc"
     },
     {
       "path": "qa/validation-report.json",
       "bytes": 1017,
-      "sha256": "73f926ad90709b86bdb0e616ad34ad6c305d71f1205cbafd873223a4101770f0"
+      "sha256": "4a7dd991fd8ec0854a7cd1bd6b2270712c2d0dbb96741e9bfe9c6572c64cbd7d"
     },
     {
       "path": "reports/assembly-report.json",
       "bytes": 1377,
-      "sha256": "459cfd19bba96b099571579a7f7bb25c16844f696a63a03193dd18fc9d5282ad"
+      "sha256": "895186a7f5efa696e6376afeea5d10c5cead3e3f7351158c4766dfcee81f7e13"
     },
     {
       "path": "reports/chapter-cover-report.json",
       "bytes": 6750,
-      "sha256": "1e8c36bc8d02eef9464c8468bd30a4d7ac7784b6279996b092379314f84e439d"
+      "sha256": "10d25affb13b423445d70508e30543dfd1fdf40d56c275e958b6ab0552c32910"
     },
     {
       "path": "reports/chapter-insert-map.json",
@@ -1952,7 +1952,7 @@
     {
       "path": "reports/diagram-render-report.json",
       "bytes": 16794,
-      "sha256": "ee829a31837f827b6999df2b785fd54d309c6b37f71d03031447d4add3f152aa"
+      "sha256": "64af1d36883d7f67c18c7c7f107b861c2543ff05cc01702f1e0d0e08dd1e6284"
     },
     {
       "path": "reports/editorial-audit.md",
@@ -1977,12 +1977,12 @@
     {
       "path": "reports/latex-build-report.json",
       "bytes": 2430,
-      "sha256": "7e0140eedbea6ef83e9f79e3ea9f3669e4f5f10e367e8fc82cf359817b2ef6c9"
+      "sha256": "a4bfa97c2f13d75defd3dcb213f89aa704509c17a55f2377d35425dc3ef8a7b1"
     },
     {
       "path": "reports/latex-validation.md",
       "bytes": 722,
-      "sha256": "4ae238e9314f2d889223eb0fffdc984019f7702354f6efa1aacccc7c64098f77"
+      "sha256": "9edaaa5492f42b256c6cbe55d448e84b27c96ff1302747e1601d422d2833597e"
     },
     {
       "path": "reports/release-notes.md",
@@ -2002,7 +2002,7 @@
     {
       "path": "reports/validation-summary.md",
       "bytes": 1011,
-      "sha256": "21a2b9068da7152b0ce30bec11a33d684ea5f5b34a4cc2b5026e5a7c8b0c231e"
+      "sha256": "751f13682705e492f2871379f123833f0a4166fe29fe7aeb6d77a546eade0a00"
     },
     {
       "path": "requirements.txt",
@@ -2851,13 +2851,13 @@
     },
     {
       "path": "source/parts/03-part-iii.md",
-      "bytes": 39341,
-      "sha256": "70465e87a55c7877c178fded16e6099a4860b9ef384bb09cc7ff8ef02ab3556b"
+      "bytes": 41933,
+      "sha256": "f276f1cb2625583b8314ad82ef0e9ed987fe0cfe91631a005ad500fb36e11361"
     },
     {
       "path": "source/parts/04-part-iv.md",
-      "bytes": 126810,
-      "sha256": "e545fd84b8ae31233af49b7d9c09600a4c838e821b76b212434251170720398a"
+      "bytes": 128477,
+      "sha256": "954a80db455e0a52e09a0d6193193a552809461e101bcab2d97e4c8bb1602213"
     },
     {
       "path": "source/parts/05-part-v.md",

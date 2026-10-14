@@ -12,8 +12,8 @@
     "source/parts/08-part-viii.md",
     "source/parts/09-appendices.md"
   ],
-  "bytes": 818716,
-  "sha256": "68f4e94fc40a07a6c7d636ac5ba6740134d63fd10f27d8da64de3b986577c705",
+  "bytes": 822979,
+  "sha256": "f0913b5996a0cdff42e5159bd5d8810d665a29fd36f1e1a7bab19654e60fd971",
   "parts": 8,
   "chapters": 28,
   "appendices": 12,
@@ -21,7 +21,7 @@
   "expanded_examples": 60,
   "build_date": "October 2026",
   "index_terms": 97,
-  "index_locators": 664,
+  "index_locators": 665,
   "cited_reference_ids": [
     "R01",
     "R02",

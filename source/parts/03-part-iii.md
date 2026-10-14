@@ -233,29 +233,61 @@ One deterministic operation with an effect is a tool; model judgment over severa
 
 ### Discovery is not permission
 
-This is the distinction the chapter turns on: conflating discovery with resolution is how
-governed capability quietly becomes ungoverned.
+Every capability raises two questions: does something exist that can do this,
+and may this run use it—and if so, exactly which version? Discovery answers
+the first; resolution answers the second. This is the distinction the chapter
+turns on, because treating an answer to the first question as an answer to the
+second is how governed capability quietly becomes ungoverned. Figure 8-1
+follows one Harborlight need through both.
 
-[[DIAGRAM:skill-resolution|Figure 8-1 — Discovery proposes candidates; resolution pins exactly one version, or fails]]
+[[DIAGRAM:skill-resolution|Figure 8-1 — Discovery proposes candidates; a requirement names one capability; resolution narrows its versions against the run envelope and pins exactly one, or fails]]
 
-**Discovery** is semantic and broad. It searches a catalog for Skills that
-might satisfy a stated need, and it may legitimately return several. It answers
-*what exists*. Its candidates are input to resolution, not a menu for the
-model. When a model must choose among Skills, it sees only a shortlist that
-resolution has already made eligible (AP-12 in Chapter 17).
+**Discovery** is semantic and broad. Someone describes a need in ordinary
+words—a developer assembling the evidence-review agent, or a planner composing
+a plan (Chapter 12): "read the applicant's income evidence against policy." A
+semantic search over the capability catalog returns whatever might fit: two
+versions of `mortgage.evidence.read` and a near neighbour,
+`mortgage.income.verify`. The catalog already hides what the caller may never
+invoke, but nothing it returns is permitted yet. Discovery answers *what
+exists*.
 
-**Resolution** is deterministic and restrictive. Given one requirement and the
-run's envelope, it filters by tenant, purpose, subject and actor grants, data
-class, region, risk, compatibility, release stage, health, and cost — then pins
-exactly one version by digest. It answers *what this run may use, right now*.
+Its output is a choice of capability, recorded as a **SkillRequirement**: the
+capability, a compatible version range (`^0.1`), the purpose, and the risk
+class the use needs. That requirement, not a candidate, is what the AgentSpec
+or the plan carries. When a model must choose among Skills—a router deciding
+between two capabilities, say—it sees only a shortlist that resolution has
+already made eligible, never raw search results (AP-12 in Chapter 17).
+
+**Resolution** is deterministic and restrictive. It runs when the run is
+admitted or the step is bound. It takes one requirement and the run's
+envelope—the tenant, purpose, subject and actor grants, data classes, and
+region the run acts under—and narrows the registry's versions through a fixed
+sequence of filters:
+
+| **Filter** | **Keeps a version only if** | **In Figure 8-1** |
+| --- | --- | --- |
+| Capability and version range | It provides the capability, within the requirement's range | 0.1.0 and 0.1.1 remain; `mortgage.income.verify` was never requested |
+| Release stage | Its release record allows this run: Active, or Staged only for a run in its staging, shadow, or canary cohort (§ Skill lifecycle) | 0.1.1 is Staged and this production run is not in its canary; only 0.1.0 remains |
+| Run envelope | Its manifest admits this tenant, purpose, subject and actor grants, data classes, and region | 0.1.0 admits `mortgage_financial` data in `us` |
+| Risk | The requirement's risk class is within the Skill's certified ceiling | R1 within R1 |
+| Health and cost | It is healthy and within the run's budget | 0.1.0 passes |
+
+Of the versions that survive every filter, resolution pins the highest by
+digest—here `sha256:9f3c…`, version 0.1.0—and records it in the RunManifest.
+If any filter leaves nothing, resolution fails closed, and the refusal names
+the filter that emptied the set, so the owner knows whether to fix a grant, a
+region, or a release. Resolution answers *what this run may use, right now*,
+and given the same registry state and envelope it always gives the same
+answer.
 
 | | Discovery | Resolution |
 | --- | --- | --- |
-| Input | A capability need in natural terms | A requirement plus the run envelope |
-| Method | Semantic search over the catalog | Deterministic policy evaluation |
-| Output | Zero or more candidates | Exactly one pinned digest, or a failure |
+| When | While an agent or plan is designed, or a planner composes one | At run admission or step binding |
+| Input | A capability need in ordinary words | A SkillRequirement plus the run envelope |
+| Method | Semantic search over the catalog | Deterministic filters, then the highest eligible version |
+| Output | Zero or more candidates | Exactly one pinned digest, or a refusal |
 | May a model influence it? | Yes — it can describe the need. It never sees unfiltered candidates. | **No** |
-| Failure mode | Returns nothing useful | Fails closed, with the rule that refused |
+| Failure mode | Returns nothing useful | Fails closed, naming the filter that refused |
 
 The asymmetry matters. Discovery may be fuzzy because nothing it returns is yet
 permitted. Resolution may not, because its output is what will actually run.
@@ -270,7 +302,7 @@ A capability the caller may not invoke should never appear, because a listed-but
 
 The pinned release is compiled into the step. Its instructions enter the ContextManifest at trust tier 2 (Chapter 6 § The trust hierarchy of instructions); its `requires.tools` becomes the step's eligible tool versions and its `runtime` block the step's bounds in the AgentStepRequest (Chapter 3 § The request is bounded before the model sees it); its digest is recorded in the RunManifest (Chapter 4 § RunManifest).
 
-Resolution decides which Skill may run. It authorizes none of the calls that Skill proposes: each still passes the six gates at the Tool Gateway (Chapter 2) against the subject, purpose, and exact resource (Chapter 22). Because Skill instructions direct behavior, Skill content is executable supply chain, which is why Chapter 9 signs and attests packs.
+Resolution decides which Skill may run. It authorizes none of the calls that Skill proposes: each still passes the six gates at the Tool Gateway (Chapter 2) against the subject, purpose, and exact resource (Chapter 22). If version 0.1.0 asks `mortgage.document.read@1` for a document outside the run's case, the Tool Gateway refuses the call even though the Skill itself was resolved. Because Skill instructions direct behavior, Skill content is executable supply chain, which is why Chapter 9 signs and attests packs.
 
 A Skill is bound four times, and each binding fixes something different:
 

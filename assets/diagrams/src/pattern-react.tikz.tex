@@ -2,7 +2,7 @@
 % Restyled from pattern-react.gv; content, flow and the three exits are unchanged.
 %
 % Original element -> restyled element
-%   ctl Controller / turns . time . cost . no-progress -> blue card (outside the loop)
+%   ctl Controller / limits: turns . tool calls . time . cost . no progress -> blue card (outside the loop)
 %   rea Reason                                  -> teal card
 %   act Act / (read tools only)                 -> cyan card
 %   obs Observe / typed . provenance            -> cyan card
@@ -18,7 +18,7 @@
 \begin{document}
 \begin{tikzpicture}
   \node[dg card=blue, icon=sliders-h, text width=170pt] (ctl) at (150,0)
-    {\dgcontent{Controller}{turns · time · cost · no-progress}{}};
+    {\dgcontent{Controller}{Limits: turns · tool calls · time ·\\cost · no progress}{}};
   \node[dg card=teal, icon=brain, text width=170pt] (rea) at (150,-100)
     {\dgcontent{Reason}{}{}};
   \node[dg card=cyan, icon=wrench, text width=120pt] (act) at (150,-195)

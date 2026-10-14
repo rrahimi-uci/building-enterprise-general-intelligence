@@ -25,11 +25,33 @@ this fail in production?”
 
 |  |
 | --- |
-| **THE DESIGN CHOICE** Use ReAct only for information-dependent next steps and impose external turn, tool, time, cost, and no-progress limits. |
+| **THE DESIGN CHOICE** Use ReAct only when the next step depends on what the last observation returned, and let the controller—never the model—end the loop at a turn, tool-call, time, cost, or no-progress limit. |
 
-ReAct is valuable when the next question depends on the last observation. It
-is dangerous when the loop is allowed to decide its own limits or call tools
-without a clear stopping rule.
+The choice has two halves. The first decides whether to loop at all. ReAct
+earns its cost only when the next action cannot be known until the last
+observation arrives. When Harborlight's loan officer asks why a case is not
+ready, whether the agent next needs the income-verification artifact or the
+policy text depends on what the application projection showed. The next
+section draws the line between that and a sequence a workflow should own.
+
+The second half decides how the loop ends. A model asked whether it is done can
+always find one more thing to check, so the stopping rules sit outside it, in
+the controller that runs the loop. Each limit is fixed before the first turn,
+from the Skill's `runtime` block and the step's budget in the AgentStepRequest
+(Chapters 3 and 8), and the controller counts it on every turn. Nothing the
+model writes can raise a limit or reset a counter.
+
+| **Limit** | **What the controller counts** | **Harborlight setting** | **When it trips** |
+| --- | --- | --- | --- |
+| Turns | Model decisions in this activity | 6 (the Skill's `max_turns`) | Stop with `budget_exhausted` |
+| Tool calls | Read-tool calls, across every tool | 4 | Refuse the next call; stop with `budget_exhausted` |
+| Time | Wall-clock time since the activity started | 45 s (the Skill's `deadline_s`) | Stop with `budget_exhausted` |
+| Cost | Tokens and spend, drawn from the run budget | The share of the run budget granted to this step | Stop with `budget_exhausted` |
+| No progress | Repeats of the same action returning the same observation, and turns that add no accepted evidence | A second identical observation | Stop with `no_progress` |
+
+A tripped limit is an expected outcome, not a crash: the controller returns it
+as a typed stop reason, and the workflow decides what happens next
+(§ Acceptance and failure semantics).
 
 | **State owner** | **Trust boundary** | **Scale unit** | **Failure containment** | **Core contracts** |
 | --- | --- | --- | --- | --- |
@@ -37,7 +59,7 @@ without a clear stopping rule.
 
 ## Use ReAct only when observations change the next step
 
-Use ReAct when a new observation can genuinely change the next useful question. If the sequence is already known—read the case, validate required fields, calculate a ratio, request approval—a durable workflow is clearer and usually cheaper. That avoids paying a model to rediscover a process the organization already understands. Even when ReAct is justified, the controller should stop when the loop repeats, exhausts its budget, or cannot obtain missing evidence. The tools a ReAct step can call are the slice resolved for that step from its pinned Skills (Chapter 8) and exposed through the Tool Gateway (Chapter 2); the loop never discovers tools on its own.
+If the sequence is already known—read the case, validate required fields, calculate a ratio, request approval—a durable workflow is clearer and usually cheaper. That avoids paying a model to rediscover a process the organization already understands. Even when ReAct is justified, the loop also ends when the evidence it needs cannot be obtained: the model returns `needs_input` rather than searching on. The tools a ReAct step can call are the slice resolved for that step from its pinned Skills (Chapter 8) and exposed through the Tool Gateway (Chapter 2); the loop never discovers tools on its own.
 
 ## Keep the feedback loop inside external limits
 
