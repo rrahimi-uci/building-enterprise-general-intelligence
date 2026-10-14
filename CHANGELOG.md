@@ -4,6 +4,18 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Part II review comments (DOCX review, 2026-10-13)
+
+- **"Seam" becomes "runtime interface".** Chapter 3's `AgentRuntime` boundary is called the runtime interface everywhere: Part I and III prose, the front-matter checkpoint table, the Chapter 3 cover, README, example and companion-code docstrings.
+- **Chapter 4 opening.** The "return to it" sentence now names the two design-review symptoms it is for (overlapping authority; a fact with no named owner) with a Harborlight example of each.
+- **Figure 4-1** (`reference-architecture`): a key beneath the figure names the three line styles and expands every abbreviation (A2A, IdP, MCP, OTel, PDP, PEP, SLO, STS, WAF, WORM); runtime and workflow and the knowledge plane now feed evidence to evaluation and operations through one evidence bus; the control edge reaches the gateway plane rather than the LLM Gateway alone; the request-path label into the Tool Gateway reads "Proposed action", since the gateway checks it before anything commits.
+- **Centralize/federate rewritten.** "The decisions that shape the system" becomes "What the platform team owns and what domain teams own": a table of what each side owns, why, and a Harborlight example, plus what the platform standardizes (interfaces and evidence, not frameworks). Chapter 7's cross-reference follows.
+- **Planes and layers without repetition.** The planes-versus-layers explanation appears once; the Figure 1-3 band mapping is a column of the plane table instead of a separate table; the plane-to-layer split table and the layer table are merged into one layer table with a Plane column; abbreviations in it are expanded.
+- **Chapter 4 "What the evidence lets us conclude"** removed (one row; its sources stay cited in the Event contract callout).
+- **Chapter 5:** the author-reported 44% rejection figure is removed from the prose and the evidence table, and R48's permitted scope no longer covers any measurement. A short paragraph explains how the semantic index and the knowledge graph complement each other.
+- **Chapter 5 cover** shows the semantic index and the knowledge graph side by side in the Knowledge Hub, with the typed rule, the pinned release, and enforcement at the effect boundary; the cover renderer gains a `graph` component kind.
+- **Chapter 6:** the "Where the mortgage case stands" box is rewritten in plain language.
+
 ### Part I review comments (DOCX review, 2026-10-13)
 
 - **Title-page date is the build month.** The front matter carries `{{BUILD_DATE}}`; `tools/build_info.py` resolves it for the Markdown, DOCX and LaTeX editions (the LaTeX entry point no longer hard-codes "September 2026"). `SOURCE_DATE_EPOCH` pins it for byte-for-byte rebuilds.

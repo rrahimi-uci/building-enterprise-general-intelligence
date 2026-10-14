@@ -41,7 +41,7 @@ def run(scenario: str = "happy_path") -> StageReport:
         scenario=scenario,
         case_id=case.case_id,
         status=status,
-        before="The deterministic shell has typed proposals but no provider-neutral runtime seam.",
+        before="The deterministic shell has typed proposals but no provider-neutral runtime interface.",
         added="A bounded AgentRuntime request/result contract and an offline implementation enforce the tool allowlist outside the model.",
         after=(
             "The step returns a platform-owned result; framework state remains replaceable and cannot authorize a write."

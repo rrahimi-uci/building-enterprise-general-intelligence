@@ -156,7 +156,7 @@ async def execute_with_agents_sdk(
             summary="The bounded agent step exceeded its workflow deadline.",
             error_code="DEADLINE_EXPIRED",
         )
-    except Exception as exc:  # provider errors are not allowed across the seam
+    except Exception as exc:  # provider errors are not allowed across the runtime interface
         return AgentStepResult(
             status="failed",
             summary="The provider failed before the workflow received a result.",

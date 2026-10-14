@@ -479,7 +479,7 @@
    "title": "Keep the Agent Framework in Its Lane",
    "focus": "Let the framework run the agent; let the platform run the business.",
    "themes": [
-    "AgentRuntime seam",
+    "AgentRuntime interface",
     "Restart test",
     "Replaceability test"
    ],
@@ -528,7 +528,7 @@
      {
       "id": "runtime",
       "label": "AgentRuntime",
-      "sub": "platform-owned seam",
+      "sub": "platform-owned interface",
       "kind": "control",
       "at": [
        1.95,
@@ -713,7 +713,7 @@
     "components": [
      {
       "ref": "runtime",
-      "name": "AgentRuntime seam"
+      "name": "AgentRuntime interface"
      },
      {
       "ref": "adapter",
@@ -952,33 +952,20 @@
     "Rules as enforced constraints"
    ],
    "diagram": {
-    "title": "From context to constraint",
+    "title": "Search, graph, and rules from one pinned release",
     "groups": [
      {
-      "id": "before",
-      "label": "Corpus with search",
+      "id": "hub",
+      "label": "Enterprise Knowledge Hub",
       "box": [
-       3.0,
+       3.45,
        0.3,
-       11.95,
-       3.4
+       8.05,
+       7.8
       ],
-      "style": "band",
-      "tone": "red",
-      "label_at": "top-right"
-     },
-     {
-      "id": "after",
-      "label": "Knowledge as constraint",
-      "box": [
-       3.0,
-       3.9,
-       11.95,
-       7.85
-      ],
-      "style": "band",
+      "style": "zone",
       "tone": "cyan",
-      "label_at": "bottom-right"
+      "label_at": "top-left"
      }
     ],
     "nodes": [
@@ -988,65 +975,65 @@
       "sub": "authoritative prose",
       "kind": "record",
       "at": [
-       1.4,
-       3.3
+       1.3,
+       1.45
       ],
-      "w": 2.55
+      "w": 2.45
+     },
+     {
+      "id": "release",
+      "label": "Knowledge release",
+      "sub": "owner, version, scope",
+      "kind": "record",
+      "at": [
+       1.3,
+       4.15
+      ],
+      "w": 2.45
      },
      {
       "id": "index",
       "label": "Semantic index",
-      "sub": "similarity only",
+      "sub": "what text is relevant?",
       "kind": "store",
       "at": [
-       4.4,
-       1.25
+       5.75,
+       1.6
       ],
-      "w": 2.4
+      "w": 3.4
      },
      {
-      "id": "quote",
-      "label": "Model quotes",
-      "sub": "rule as context",
-      "kind": "model",
+      "id": "graph",
+      "label": "Knowledge graph",
+      "sub": "what is related to what?",
+      "kind": "graph",
       "at": [
-       7.35,
-       2.4
+       5.75,
+       4.15
       ],
-      "w": 2.2
-     },
-     {
-      "id": "proceeds",
-      "label": "Effect proceeds",
-      "sub": "policy violated",
-      "kind": "bad",
-      "at": [
-       10.85,
-       1.25
-      ],
-      "w": 2.0
+      "w": 3.4
      },
      {
       "id": "rule",
       "label": "Typed rule",
-      "sub": "owner, version, scope",
+      "sub": "what is required or forbidden?",
       "kind": "record",
       "at": [
-       4.4,
-       4.85
+       5.75,
+       6.7
       ],
-      "w": 2.8
+      "w": 3.4
      },
      {
-      "id": "intent",
-      "label": "Agent intent",
-      "sub": "proposed action",
-      "kind": "actor",
+      "id": "agent",
+      "label": "Agent",
+      "sub": "proposes an action",
+      "kind": "model",
       "at": [
-       4.4,
-       6.95
+       10.3,
+       2.75
       ],
-      "w": 2.4
+      "w": 2.8
      },
      {
       "id": "guard",
@@ -1054,10 +1041,10 @@
       "sub": "at effect boundary",
       "kind": "control",
       "at": [
-       7.35,
-       6.0
+       10.3,
+       5.0
       ],
-      "w": 2.2
+      "w": 2.8
      },
      {
       "id": "outcome",
@@ -1065,84 +1052,100 @@
       "sub": "or refusal",
       "kind": "effect",
       "at": [
-       10.85,
-       6.0
+       10.3,
+       7.0
       ],
-      "w": 2.0
+      "w": 2.8
      }
     ],
     "edges": [
      {
       "from": "source",
-      "to": "index",
-      "label": "embed",
-      "route": "straight"
-     },
-     {
-      "from": "index",
-      "to": "quote",
-      "label": "passage",
-      "route": "straight"
-     },
-     {
-      "from": "quote",
-      "to": "proceeds",
-      "label": "not enforced",
-      "style": "prohibited",
-      "route": "straight",
-      "label_t": 0.62
-     },
-     {
-      "from": "source",
-      "to": "rule",
+      "to": "release",
       "label": "extract, verify",
-      "from_side": "bottom",
-      "to_side": "left",
-      "route": "ortho",
-      "label_t": 0.35
-     },
-     {
-      "from": "rule",
-      "to": "guard",
-      "label": "enforce",
       "route": "straight",
-      "to_side": "top",
-      "label_t": 0.12,
-      "label_fixed": true
+      "from_side": "bottom",
+      "to_side": "top"
      },
      {
-      "from": "intent",
-      "to": "guard",
-      "label": "action",
+      "from": "release",
+      "to": "hub",
+      "label": "pinned",
       "route": "straight",
       "from_side": "right",
       "to_side": "left"
      },
      {
-      "from": "guard",
-      "to": "outcome",
-      "label": "permit/refuse"
-     }
-    ],
-    "legend": {
-     "bad": "violation"
-    },
-    "components": [
-     {
-      "ref": "proceeds",
-      "name": "Quoted, then violated"
+      "from": "index",
+      "to": "graph",
+      "label": "link entities",
+      "route": "straight",
+      "from_side": "bottom",
+      "to_side": "top"
      },
      {
-      "ref": "rule",
-      "name": "Owned, versioned rule"
+      "from": "graph",
+      "to": "rule",
+      "label": "terms and scope",
+      "route": "straight",
+      "from_side": "bottom",
+      "to_side": "top"
+     },
+     {
+      "from": "index",
+      "to": "agent",
+      "label": "context",
+      "route": "curve",
+      "from_side": "right",
+      "to_side": "top"
+     },
+     {
+      "from": "graph",
+      "to": "agent",
+      "label": "related facts",
+      "from_side": "right",
+      "to_side": "left"
+     },
+     {
+      "from": "rule",
+      "to": "guard",
+      "label": "enforce",
+      "from_side": "right",
+      "to_side": "left"
+     },
+     {
+      "from": "agent",
+      "to": "guard",
+      "label": "action",
+      "route": "straight",
+      "from_side": "bottom",
+      "to_side": "top"
+     },
+     {
+      "from": "guard",
+      "to": "outcome",
+      "label": "permit/refuse",
+      "route": "straight",
+      "from_side": "bottom",
+      "to_side": "top"
+     }
+    ],
+    "components": [
+     {
+      "ref": "index",
+      "name": "Similarity finds relevant text"
+     },
+     {
+      "ref": "graph",
+      "name": "Traversal finds what is related"
      },
      {
       "ref": "guard",
-      "name": "Effect-boundary rule check"
+      "name": "Rule checked at the effect boundary"
      },
      {
-      "ref": "outcome",
-      "name": "Unknown means refuse"
+      "ref": "release",
+      "name": "One release, pinned per run"
      }
     ]
    }

@@ -56,7 +56,7 @@ The developer platform lets teams build differentiated agents without repeatedly
 | Human-in-the-Loop | Proposal, preview, grants, queues, SLAs, recourse | Reviewer policy, domain evidence, decision rights | Ch 14 |
 | Deployment & Versioning | Packaging, manifests, environments, gates, canary, rollback | Application release and risk sign-off | Ch 27 |
 
-Two kinds of team sit on the application side. Application teams own an agent: its AgentSpec, topology, and acceptance. Domain-capability owners own the Skills and Skill Packs that several applications reuse (Chapters 8–9). Chapter 4 § The decisions that shape the system already federates both to accountable owners.
+Two kinds of team sit on the application side. Application teams own an agent: its AgentSpec, topology, and acceptance. Domain-capability owners own the Skills and Skill Packs that several applications reuse (Chapters 8–9). Chapter 4 § What the platform team owns and what domain teams own already assigns both to accountable domain owners.
 
 The Tool SDK is the authoring side of the Tool Gateway. A developer writes a typed operation; the SDK emits the ToolManifest (Chapter 22 § What a ToolManifest must declare) that the gateway enforces on every call (Chapter 2).
 
@@ -64,7 +64,7 @@ The Tool SDK is the authoring side of the Tool Gateway. A developer writes a typ
 
 [[DIAGRAM:portability|Figure 7-2 — Platform contracts with replaceable framework and provider adapters]]
 
-Chapter 3 put the framework behind `AgentRuntime.execute(AgentStepRequest) → AgentStepResult`; the platform's job is to own that seam for every team. The stable contracts are AgentSpec (Chapter 4), AgentStepRequest/AgentStepResult (Chapter 3), ToolManifest (Chapter 22), ContextManifest and MemoryRecord (Chapter 6), TaskEnvelope (Chapter 18), EvaluationResult (Chapter 25), and ReleaseManifest (Chapter 27). Compatibility suites verify cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.
+Chapter 3 put the framework behind `AgentRuntime.execute(AgentStepRequest) → AgentStepResult`; the platform's job is to own that interface for every team. The stable contracts are AgentSpec (Chapter 4), AgentStepRequest/AgentStepResult (Chapter 3), ToolManifest (Chapter 22), ContextManifest and MemoryRecord (Chapter 6), TaskEnvelope (Chapter 18), EvaluationResult (Chapter 25), and ReleaseManifest (Chapter 27). Compatibility suites verify cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.
 
 ## Make the safe path the easy path
 
@@ -106,7 +106,7 @@ The discussion above draws on R29; R31; R32. Appendix J lists the complete sourc
 
 ## A sensible place to start
 
-The suite below makes the portability row executable. It drives any adapter with scripted test models and checks four promises of the Chapter 3 seam: a typed disposition, reported usage, cancellation that reaches the model call, and SDK errors mapped to the platform's result shape. A failed check is reported as a named gap to publish as a known limitation of that adapter.
+The suite below makes the portability row executable. It drives any adapter with scripted test models and checks four promises of the Chapter 3 runtime interface: a typed disposition, reported usage, cancellation that reaches the model call, and SDK errors mapped to the platform's result shape. A failed check is reported as a named gap to publish as a known limitation of that adapter.
 
 [[EXAMPLE:adapter-conformance]]
 

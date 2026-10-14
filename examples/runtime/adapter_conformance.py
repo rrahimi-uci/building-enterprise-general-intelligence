@@ -2,7 +2,7 @@
 
 A shared contract does not make two agent SDKs interchangeable. The platform
 proves what an adapter actually does by driving it with scripted test models
-and checking the promises of the Chapter 3 seam. A failing check becomes a
+and checking the promises of the Chapter 3 runtime interface. A failing check becomes a
 named gap to publish as a known limitation, not a difference to assume away.
 
 The suite accepts any adapter with the shape

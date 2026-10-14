@@ -31,7 +31,7 @@ class AgentStepRequest(BaseModel):
 
 
 class AgentStepResult(BaseModel):
-    """Platform-owned result; no SDK result or session object crosses the seam."""
+    """Platform-owned result; no SDK result or session object crosses the runtime interface."""
 
     model_config = ConfigDict(extra="forbid")
 

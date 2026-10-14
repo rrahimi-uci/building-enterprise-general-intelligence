@@ -55,6 +55,7 @@ KIND_COLOR = {
     "store": "#8C9BFF",      # stores, ledgers (indigo)
     "record": "#8C9BFF",
     "knowledge": "#3CCBEA",  # knowledge, policy, evidence (cyan)
+    "graph": "#3CCBEA",      # knowledge graph: entities and relationships (cyan)
     "control": "#F2B35A",    # gates and policy checks (amber)
     "human": "#F2B35A",
     "external": "#8FA3BC",   # outside the trust boundary (slate)
@@ -155,6 +156,13 @@ def icon(kind: str, cx: float, cy: float, r: float, color: str) -> str:
                 f'<rect x="{cx - 7.5 * u}" y="{cy - 5.5 * u}" width="{11 * u}" height="{14.5 * u}" rx="{1.5 * u}" fill="{PANEL_FILL}" {sf}/>'
                 f'<line x1="{cx - 4.8 * u}" y1="{cy - 1 * u}" x2="{cx + 0.8 * u}" y2="{cy - 1 * u}" {s}/>'
                 f'<line x1="{cx - 4.8 * u}" y1="{cy + 3 * u}" x2="{cx + 0.8 * u}" y2="{cy + 3 * u}" {s}/>')
+    if kind == "graph":  # entities joined by relationships
+        pts = [(-6.5, -5), (6.5, -6.5), (5, 6), (-5.5, 6.5)]
+        lines = "".join(f'<line x1="{cx + a[0] * u:.1f}" y1="{cy + a[1] * u:.1f}" x2="{cx + b[0] * u:.1f}" '
+                        f'y2="{cy + b[1] * u:.1f}" {s}/>' for a, b in ((pts[0], pts[1]), (pts[1], pts[2]),
+                                                                       (pts[0], pts[2]), (pts[2], pts[3])))
+        return lines + "".join(f'<circle cx="{cx + x * u:.1f}" cy="{cy + y * u:.1f}" r="{2.6 * u:.1f}" '
+                               f'fill="{PANEL_FILL}" {sf}/>' for x, y in pts)
     if kind == "human":  # person
         return (f'<circle cx="{cx}" cy="{cy - 4.5 * u}" r="{3.8 * u}" {s}/>'
                 f'<path d="M{cx - 7.5 * u},{cy + 9 * u} C{cx - 7.5 * u},{cy + 1 * u} {cx + 7.5 * u},{cy + 1 * u} {cx + 7.5 * u},{cy + 9 * u}" {s}/>')
@@ -630,7 +638,7 @@ def badge(x: float, y: float, number: int, accent: str) -> str:
 
 def legend_keys(d: dict) -> list[tuple[str, str]]:
     names = {"model": "reasoning", "control": "gate / policy", "store": "store", "record": "record",
-             "knowledge": "knowledge", "human": "human", "effect": "effect", "external": "external",
+             "knowledge": "knowledge", "graph": "graph", "human": "human", "effect": "effect", "external": "external",
              "actor": "actor", "service": "service", "bad": "refusal"}
     names.update(d.get("legend", {}))
     seen, keys = set(), []

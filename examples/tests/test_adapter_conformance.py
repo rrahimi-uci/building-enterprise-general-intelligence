@@ -73,7 +73,7 @@ async def test_a_leaked_sdk_exception_is_reported_as_a_gap():
     assert report.gaps == ("sdk_errors_mapped",)
 
 
-async def test_chapter_3_adapter_meets_the_seam_and_names_any_gap():
+async def test_chapter_3_adapter_meets_the_runtime_interface_and_names_any_gap():
     # The deliberately small Chapter 3 adapter must keep the core promises;
     # anything it does not yet do must surface as a named gap, never silently.
     report = await run_conformance(execute_step, REQUEST, CONTEXT)

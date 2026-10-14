@@ -41,7 +41,7 @@ The cumulative implementation path follows one synthetic Harborlight Home Financ
 \lstinline[style=bookinline,basicstyle=\ttfamily\color{BookNavyTwo}]!C01! & 1 & A read-only evidence summary that exposes the missing second pay statement & Evidence truth, authoritative calculations, lending decisions, and effects \\
 \rowcolor{BookLight}
 \lstinline[style=bookinline,basicstyle=\ttfamily\color{BookNavyTwo}]!C02! & 2 & Typed candidate facts, deterministic calculation metadata, and a case-scoped workflow command & Validation, authorization, commit, verification, and acceptance \\
-\lstinline[style=bookinline,basicstyle=\ttfamily\color{BookNavyTwo}]!C03! & 3 & A provider-neutral bounded runtime seam with an optional OpenAI adapter & Workflow state, policy, credentials, approvals, effects, receipts, and audit \\
+\lstinline[style=bookinline,basicstyle=\ttfamily\color{BookNavyTwo}]!C03! & 3 & A provider-neutral bounded runtime interface with an optional OpenAI adapter & Workflow state, policy, credentials, approvals, effects, receipts, and audit \\
 \end{tabular}
 \BookTableEnd
 
@@ -253,7 +253,7 @@ Together, these principles establish a simple operating contract: agents provide
 \begin{BookPartList}
 \item \textbf{Chapter 1} names the parts of an enterprise agentic system and draws the boundary around the model.
 \item \textbf{Chapter 2} turns every model output into a proposal that must cross six deterministic gates.
-\item \textbf{Chapter 3} places the agent framework behind a runtime seam that the platform owns.
+\item \textbf{Chapter 3} places the agent framework behind a runtime interface that the platform owns.
 \end{BookPartList}
 The companion code implements the mortgage checkpoints of these three chapters, C01–C03; from Chapter 4 on, the case boxes describe the target design. Later Parts add capabilities to this foundation; they do not replace it.\par}
 
@@ -619,7 +619,7 @@ It is worth naming the shape that all of this is arguing against, because it is 
 
 A single process receives a prompt, holds a broad user token, queries databases, calls arbitrary APIs, stores memory, retries writes, and declares its own completion. Every concern this chapter has separated lives in one place.\par
 
-What makes it attractive is real: it is fast to build, it demonstrates well, and every capability you add is one more line in the same file. What makes it unsafe is that it has no seams. There is no point at which a failure can be contained, because containment requires a boundary and there are none. There is no point at which authority can be checked, because the process holds one credential for everything it does. And there is no point at which the run can be resumed, because the run's state is the process's memory.\par
+What makes it attractive is real: it is fast to build, it demonstrates well, and every capability you add is one more line in the same file. What makes it unsafe is that it has no internal boundaries. There is no point at which a failure can be contained, because containment requires a boundary and there are none. There is no point at which authority can be checked, because the process holds one credential for everything it does. And there is no point at which the run can be resumed, because the run's state is the process's memory.\par
 
 The correction is not to remove intelligence from the system. It is to give intelligence explicit contracts and failure boundaries — to make the reasoning component small, sharp, and surrounded by components that can say no. Chapter 17 catalogs this failure as AP-01, together with fifteen relatives.\par
 
@@ -1472,7 +1472,7 @@ What is the trade-off of a stronger deterministic shell? & More contracts and pl
 
 With tools bounded, Chapter 3 defines the runtime contract that keeps applications portable across agent frameworks and pins the model route each step uses.\par
 
-For the mortgage case, the remaining bottleneck is the execution seam: the typed shell needs one bounded evidence-review activity, but the framework must not become the owner of the case, policy, approval, or effect records.\par
+For the mortgage case, the remaining bottleneck is the execution boundary: the typed shell needs one bounded evidence-review activity, but the framework must not become the owner of the case, policy, approval, or effect records.\par
 
 \BookChapterCover{cover-images/chapter-03-keep-the-agent-framework-in-its-lane.png}
 
@@ -1487,7 +1487,7 @@ For the mortgage case, the remaining bottleneck is the execution seam: the typed
 Frameworks make the local reasoning loop pleasant to write, but they are not the place to hide workflow truth or enterprise authority. This chapter shows how to use OpenAI Agents SDK 0.22.2 as a replaceable adapter, what belongs inside that adapter, and what must remain durable outside it. The boundary becomes important when a framework changes, a run pauses, or a connector needs to prove who authorized an effect.\par
 
 \begin{bookcallout}[Where The Mortgage Case Stands]
-C02 turns the next step for MORT-2026-000184 into a typed, rejectable proposal, but nothing yet separates the model-facing loop from the workflow that owns the case. C03 adds that seam.\index{harborlight mortgage case@Harborlight mortgage case}
+C02 turns the next step for MORT-2026-000184 into a typed, rejectable proposal, but nothing yet separates the model-facing loop from the workflow that owns the case. C03 adds that boundary.\index{harborlight mortgage case@Harborlight mortgage case}
 \end{bookcallout}
 
 \begin{bookcallout}[The Design Choice]
@@ -1868,9 +1868,9 @@ Frameworks and model clients retry on their own. If the SDK, the LLM Gateway, th
 
 \section{A sensible place to start}
 
-The companion code makes the seam concrete for one node of the mortgage case.\par
+The companion code makes the runtime interface concrete for one node of the mortgage case.\par
 
-\subsection{Mortgage checkpoint: the runtime seam}
+\subsection{Mortgage checkpoint: the runtime interface}
 
 At \lstinline[style=bookinline]!C03!, the mortgage workflow submits one bounded evidence-review step for \lstinline[style=bookinline]!MORT-2026-000184!. The framework may reason over the authorized projection and request \lstinline[style=bookinline]!mortgage.case.read@1! or \lstinline[style=bookinline]!mortgage.policy.read@1!; it cannot request a loan-origination write. The platform receives an \lstinline[style=bookinline]!AgentStepResult!, not an SDK session, and uses that result as a proposal for the deterministic shell.\index{deterministic shell@Deterministic shell}\par
 
@@ -1883,7 +1883,7 @@ At \lstinline[style=bookinline]!C03!, the mortgage workflow submits one bounded 
 \rowcolor{BookNavy}
 \color{white}\bfseries Before & \color{white}\bfseries Added & \color{white}\bfseries After \\
 \endhead
-\lstinline[style=bookinline,basicstyle=\ttfamily\color{BookNavyTwo}]!C02! validates proposals but has no replaceable runtime contract. & \lstinline[style=bookinline,basicstyle=\ttfamily\color{BookNavyTwo}]!C03! adds \lstinline[style=bookinline,basicstyle=\ttfamily\color{BookNavyTwo}]!AgentStepRequest!, \lstinline[style=bookinline,basicstyle=\ttfamily\color{BookNavyTwo}]!AgentStepResult!, an offline bounded runtime, and an optional OpenAI Agents SDK adapter. & The provider can change behind the seam; an allowlist escape fails before execution and SDK state cannot become mortgage workflow truth. \\
+\lstinline[style=bookinline,basicstyle=\ttfamily\color{BookNavyTwo}]!C02! validates proposals but has no replaceable runtime contract. & \lstinline[style=bookinline,basicstyle=\ttfamily\color{BookNavyTwo}]!C03! adds \lstinline[style=bookinline,basicstyle=\ttfamily\color{BookNavyTwo}]!AgentStepRequest!, \lstinline[style=bookinline,basicstyle=\ttfamily\color{BookNavyTwo}]!AgentStepResult!, an offline bounded runtime, and an optional OpenAI Agents SDK adapter. & The provider can change behind the interface; an allowlist escape fails before execution and SDK state cannot become mortgage workflow truth. \\
 \end{longtable}
 \BookTableEnd
 
@@ -1980,7 +1980,7 @@ How should SDK upgrades be released? & As behavioral changes: run adapter and sc
 
 The difference between running an agent and operating an enterprise agentic system is now explicit: a framework runs one bounded reasoning step, while the platform owns durable truth, authority, effects, and accountability. Chapter 4 places that boundary inside the complete enterprise reference architecture.\par
 
-For the mortgage case, C03 is the last checkpoint the companion code implements: one bounded evidence-review step behind a provider-neutral seam, with every protected effect still outside it. From Chapter 4 onward, the case boxes describe the target design the later chapters build toward.\par
+For the mortgage case, C03 is the last checkpoint the companion code implements: one bounded evidence-review step behind a provider-neutral runtime interface, with every protected effect still outside it. From Chapter 4 onward, the case boxes describe the target design the later chapters build toward.\par
 
 \BookPartPage{II}{ARCHITECTURE, KNOWLEDGE, AND CONTEXT}{Part I established that the model is not the system of record. This Part draws the system around it:\par
 \begin{BookPartList}
@@ -2004,59 +2004,36 @@ Give every authoritative record one owning plane and one writer; deploy global d
 
 \section{Why the model cannot own the architecture}
 
-Chapter 3 drew one seam: AgentRuntime runs a bounded step from an AgentStepRequest and returns an AgentStepResult. This chapter places that seam, and every service around it, so that each record has one writer. The agent is a decision component—not the workflow, authorization service, database, policy engine, or proof of completion. Principles become useful when they tell a team where a fact lives, who may change it, and what happens when a dependency fails; this chapter turns the book's boundary rules into planes, services, contracts, stores, and regional cells. Return to it when a design review has too many boxes with overlapping authority—or when nobody can say which service owns the truth.\index{agentruntime@AgentRuntime}\index{agentsteprequest and agentstepresult@AgentStepRequest and AgentStepResult}\index{policy engine@Policy engine}\par
+Chapter 3 defined one interface: AgentRuntime runs a bounded step from an AgentStepRequest and returns an AgentStepResult. This chapter places that interface, and every service around it, so that each record has one writer. The agent is a decision component—not the workflow, authorization service, database, policy engine, or proof of completion. Principles become useful when they tell a team where a fact lives, who may change it, and what happens when a dependency fails; this chapter turns the book's boundary rules into planes, services, contracts, stores, and regional cells.\index{agentruntime@AgentRuntime}\index{agentsteprequest and agentstepresult@AgentStepRequest and AgentStepResult}\index{policy engine@Policy engine}\par
+
+Return to this chapter in design review when you see either of two symptoms. The first is overlapping authority: two components each act as if they decide the same thing, so the agent marks Harborlight's document request complete while the workflow engine still shows it open. The second is a fact with no named owner: the agent's summary, the workflow history, and the loan-origination system disagree about whether the second pay statement arrived, and nobody can say which one to believe. The planes and tables that follow settle both by naming one owner and one writer for every record.\par
 
 \section{Seven planes, one owner per record}
 
-The planes and layers are two views of the same system. Planes tell you who owns a class of decisions—runtime and workflow, knowledge and context, security and governance. Layers show what is deployed and the path a request follows. The LLM Gateway may sit on every model call, but it should not own business workflow simply because every call passes through it. Without a clear line, central components accumulate authority they were never designed to hold.\index{layer@Layer|textbf}\index{llm gateway@LLM Gateway|textbf}\par
+A \textbf{plane} groups the decisions one owner is accountable for: running the workflow, governing knowledge, authorizing an action. Figure 4-1 draws the seven planes and the main components in each.\par
 
 \BookDiagram{assets/diagrams/reference-architecture.pdf}{Figure 4-1 — The reference architecture: seven ownership planes, the components in each, and the two planes that cross them all}{reference-architecture}
 
-Read the figure downward: each band is one ownership plane and lists its main components, and the solid path traces one request from intent to committed effect, narrowing in authority at every step. \emph{Security and governance} and \emph{Evaluation and operations} are drawn as vertical spines rather than bands because neither sits between two planes — the policy decision point is consulted at admission, at run control, and again at the gateways, and the collector gathers from every plane. Dashed edges are control, dotted edges are evidence, and the bottom band sits outside the trust boundary: nothing there is assumed, and everything returned from it is revalidated.\par
+Read the figure downward: each band is one ownership plane, and the solid path traces one request from intent to committed effect, narrowing in authority at every step. \emph{Security and governance} and \emph{Evaluation and operations} are drawn as vertical spines rather than bands because neither sits between two planes — the policy decision point is consulted at admission, at run control, and again at the gateways, and the collector gathers evidence from every plane inside the trust boundary. Dashed edges are control, dotted edges are evidence, and the bottom band sits outside the trust boundary: nothing there is assumed, and everything returned from it is revalidated. The key beneath the figure expands its abbreviations.\par
 
-Chapter 1's Figure 1-3 drew the same system as orientation bands; Figure 4-1 refines them into ownership planes:\par
+The planes refine the bands of Chapter 1's Figure 1-3, and the second column below names the band or bands each one refines. Two bands do not become planes: systems of record stay outside the trust boundary, and the platform that builds, releases, and runs the system belongs to Parts III and VIII.\par
 
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{\dimexpr(\linewidth-2\tabcolsep)/2\relax}Y{\dimexpr(\linewidth-2\tabcolsep)/2\relax}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries Figure 1-3 band & \color{white}\bfseries Chapter 4 plane \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries Figure 1-3 band & \color{white}\bfseries Chapter 4 plane \\
-\endhead
-Channels & Experience and channels \\*
-\rowcolor{BookLight}
-Agent runtime & Agent applications; Runtime and workflow \\*
-Collaboration & Runtime and workflow (child tasks); Gateways and integration (A2A)\index{a2a agent2agent protocol@A2A (Agent2Agent protocol)}\index{child task@Child task} \\
-\rowcolor{BookLight}
-Knowledge & Knowledge, context, and memory \\
-Control points & Gateways and integration; admission sits in Experience and channels, approval in Security and governance \\
-\rowcolor{BookLight}
-Security & Security and governance \\
-Systems of record & Outside the planes \\
-\rowcolor{BookLight}
-Evidence & Evaluation and operations \\
-Platform and operations & Part III; not drawn here \\
-\end{longtable}
-\BookTableEnd
-
-\BookNeedspace{222.8pt}
+\BookNeedspace{294.6pt}
 \BookTableStart
 \fontsize{7.2}{9}\selectfont
-\begin{tabular}{@{}Y{\dimexpr(\linewidth-6\tabcolsep)/4\relax}Y{\dimexpr(\linewidth-6\tabcolsep)/4\relax}Y{\dimexpr(\linewidth-6\tabcolsep)/4\relax}Y{\dimexpr(\linewidth-6\tabcolsep)/4\relax}@{}}
+\begin{tabular}{@{}Y{\dimexpr(\linewidth-8\tabcolsep)/5\relax}Y{\dimexpr(\linewidth-8\tabcolsep)/5\relax}Y{\dimexpr(\linewidth-8\tabcolsep)/5\relax}Y{\dimexpr(\linewidth-8\tabcolsep)/5\relax}Y{\dimexpr(\linewidth-8\tabcolsep)/5\relax}@{}}
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Plane} & \color{white}\bfseries \textbf{Responsibilities} & \color{white}\bfseries \textbf{Authoritative records} & \color{white}\bfseries \textbf{Boundary} \\
-Experience and channels & Intent, interaction, review, accessibility, recourse & Request and interaction record & UI state is not approval or workflow truth \\
+\color{white}\bfseries \textbf{Plane} & \color{white}\bfseries \textbf{Refines Figure 1-3 band} & \color{white}\bfseries \textbf{Responsibilities} & \color{white}\bfseries \textbf{Authoritative records} & \color{white}\bfseries \textbf{Boundary} \\
+Experience and channels & Channels; Control points (admission) & Intent, interaction, review, accessibility, recourse & Request and interaction record & UI state is not approval or workflow truth \\
 \rowcolor{BookLight}
-Agent applications & Domain instructions, topology, response assembly & AgentSpec, Skill manifest, application release\index{agentspec@AgentSpec|textbf}\index{skill@Skill} & Cannot mint authority or directly commit protected effects \\
-Runtime and workflow & Run graph, deadlines, budgets, retries, cancellation, checkpoints, joins & RunManifest, run state, TaskEnvelope\index{runmanifest@RunManifest|textbf}\index{taskenvelope@TaskEnvelope} & Transcript is evidence, not execution state \\
+Agent applications & Agent runtime & Domain instructions, topology, response assembly & AgentSpec, Skill manifest, application release\index{agentspec@AgentSpec|textbf}\index{skill@Skill} & Cannot mint authority or directly commit protected effects \\
+Runtime and workflow & Agent runtime; Collaboration (child tasks)\index{child task@Child task} & Run graph, deadlines, budgets, retries, cancellation, checkpoints, joins & RunManifest, run state, TaskEnvelope\index{runmanifest@RunManifest|textbf}\index{taskenvelope@TaskEnvelope} & Transcript is evidence, not execution state \\
 \rowcolor{BookLight}
-Knowledge, context, and memory & Governed knowledge, authorized evidence, provenance, snapshots, governed persistence\index{provenance@Provenance} & KnowledgeRelease, ContextManifest, MemoryRecord\index{contextmanifest@ContextManifest} & Retrieved text remains untrusted data \\
-Gateways and integration & LLM routing, tool façades, effects, MCP\slash{}A2A, APIs, events\index{mcp model context protocol@MCP (Model Context Protocol)} & RoutingDecision, ToolManifest, EffectRecord, protocol envelope & Revalidate identity, policy, schema, and tenancy \\
+Knowledge, context, and memory & Knowledge & Governed knowledge, authorized evidence, provenance, snapshots, governed persistence\index{provenance@Provenance} & KnowledgeRelease, ContextManifest, MemoryRecord\index{contextmanifest@ContextManifest} & Retrieved text remains untrusted data \\
+Gateways and integration & Control points; Collaboration (A2A)\index{a2a agent2agent protocol@A2A (Agent2Agent protocol)} & LLM routing, tool façades, effects, MCP\slash{}A2A, APIs, events\index{mcp model context protocol@MCP (Model Context Protocol)} & RoutingDecision, ToolManifest, EffectRecord, protocol envelope & Revalidate identity, policy, schema, and tenancy \\
 \rowcolor{BookLight}
-Security and governance & Identity, least privilege, RBAC\slash{}ABAC, guardrails, approval, DLP, audit\index{data loss prevention dlp@Data loss prevention (DLP)}\index{guardrail@Guardrail} & PolicyDecision, CapabilityEnvelope, ApprovalRequest\slash{}Decision & Protected actions fail closed; ambiguous effects become unknown \\
-Evaluation and operations & Tracing, evaluation, SLOs, incidents, release, capacity, learning\index{servicelevel objective slo@Service-level objective (SLO)} & Trace graph, EvaluationResult, ChangeBundle, ReleaseManifest\index{changebundle@ChangeBundle}\index{evaluationresult@EvaluationResult}\index{releasemanifest@ReleaseManifest} & Monitoring cannot self-promote behavior change \\
+Security and governance & Security; Control points (approval) & Identity, least privilege, RBAC\slash{}ABAC, guardrails, approval, DLP, audit\index{data loss prevention dlp@Data loss prevention (DLP)}\index{guardrail@Guardrail} & PolicyDecision, CapabilityEnvelope, ApprovalRequest\slash{}Decision & Protected actions fail closed; ambiguous effects become unknown \\
+Evaluation and operations & Evidence & Tracing, evaluation, SLOs, incidents, release, capacity, learning\index{servicelevel objective slo@Service-level objective (SLO)} & Trace graph, EvaluationResult, ChangeBundle, ReleaseManifest\index{changebundle@ChangeBundle}\index{evaluationresult@EvaluationResult}\index{releasemanifest@ReleaseManifest} & Monitoring cannot self-promote behavior change \\
 \end{tabular}
 \BookTableEnd
 
@@ -2095,68 +2072,56 @@ Learning & Evaluation, dataset, release services & Recommend a candidate & Self-
 \end{tabular}
 \BookTableEnd
 
-\section{The decisions that shape the system}
+\section{What the platform team owns and what domain teams own}
 
-Centralize identity, policy, gateways, tool/effect contracts, telemetry schemas, evaluation infrastructure, release evidence, and incident controls. Federate domain prompts, accepted outcomes, tools, Skills, knowledge, datasets, and SLOs to accountable owners. Standardize interfaces and evidence—not every framework implementation.\par
+Records have owners, and so do the components that produce them. When many agent teams share one platform, each component is either built once by the platform team or owned by the domain team that knows the work. The test is what makes the component correct.\par
+
+\BookTableStart
+\fontsize{7.2}{9}\selectfont
+\begin{longtable}{@{}Y{\dimexpr(\linewidth-6\tabcolsep)/4\relax}Y{\dimexpr(\linewidth-6\tabcolsep)/4\relax}Y{\dimexpr(\linewidth-6\tabcolsep)/4\relax}Y{\dimexpr(\linewidth-6\tabcolsep)/4\relax}@{}}
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Ownership} & \color{white}\bfseries \textbf{Components} & \color{white}\bfseries \textbf{Why} & \color{white}\bfseries \textbf{At Harborlight} \\
+\endfirsthead
+\rowcolor{BookNavy}
+\color{white}\bfseries \textbf{Ownership} & \color{white}\bfseries \textbf{Components} & \color{white}\bfseries \textbf{Why} & \color{white}\bfseries \textbf{At Harborlight} \\
+\endhead
+Platform team builds once, for every agent & Identity, policy, the gateways, tool and effect contracts, the telemetry schema, evaluation infrastructure, release evidence, incident controls & A control each team implements its own way is no longer one control; auditors, security reviewers, and incident responders need the same answer for every agent & Every agent's document request crosses the same Tool Gateway and is checked by the same policy decision point\index{tool gateway@Tool Gateway} \\*
+\rowcolor{BookLight}
+Domain team owns, inside platform contracts & Domain prompts, the definition of an accepted outcome, domain tools and Skills, domain knowledge, evaluation datasets, service-level objectives & Only the domain knows what a correct result is, which evidence is enough, and what service level the business needs & The underwriting policy owner decides when an evidence file is complete and owns the policy knowledge the agent reads \\
+\end{longtable}
+\BookTableEnd
+
+What the platform standardizes is interfaces and evidence, not frameworks. Every team calls the same Run API, exchanges the same AgentStepRequest and AgentStepResult, and leaves the same records behind; the agent framework inside a step is the team's choice, provided its adapter passes Chapter 7's conformance suite. Chapter 7 applies this split to each platform capability, and Chapter 26 applies it to governance.\par
 
 \section{From planes to deployable layers}
 
-This chapter presents two decompositions, and they are easy to mistake for a contradiction. They are not: they answer different questions.\par
-
-The \textbf{plane} table is the conceptual model. It answers \emph{who owns which decision}, and it is what you reason with when deciding where a responsibility belongs. Seven planes are enough to keep every authoritative record in exactly one place.\par
-
-The \textbf{layer} table below is the deployable decomposition. It answers \emph{what you build, run, and page someone about}. Planes split into layers wherever two parts of one responsibility have different scaling, failure, or trust properties.\par
-
-\BookNeedspace{180.6pt}
-\BookTableStart
-\small
-\begin{tabular}{@{}Y{\dimexpr(\linewidth-4\tabcolsep)/3\relax}Y{\dimexpr(\linewidth-4\tabcolsep)/3\relax}Y{\dimexpr(\linewidth-4\tabcolsep)/3\relax}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries Plane & \color{white}\bfseries Splits into layers & \color{white}\bfseries Why it splits \\
-Experience and channels & Experience · Edge and admission & Admission is a security surface with its own scaling and failure profile \\
-\rowcolor{BookLight}
-Agent applications & Agent registry and release & Defining and releasing capability is separate from running it \\
-Runtime and workflow & Run control · Durable execution & Deciding a transition and durably surviving it are different problems \\
-\rowcolor{BookLight}
-Gateways and integration & Model access · Tool and protocol access · Sandboxed execution & Inference, effects, and sandboxed code have unrelated blast radii \\
-Knowledge, context, and memory & Knowledge and context services & — \\
-\rowcolor{BookLight}
-Security and governance & Trust and governance & — \\
-Evaluation and operations & Operations and improvement & — \\
-\end{tabular}
-\BookTableEnd
-
-Use planes when you are arguing about ownership and boundaries. Use layers when you are drawing a deployment diagram or assigning an on-call rota. If the two ever disagree about who owns a record, the plane model wins — the layer exists to serve it.\par
-
-\BookNeedspace{163.7pt}
-
-\subsection{Architecture layers}
+Planes say who owns a decision; they are what you reason with in an ownership argument. A deployment diagram or an on-call rota needs a finer cut: what you build, run, and page someone about. Each plane therefore deploys as one or more \textbf{layers}, and it splits wherever its parts scale, fail, or are trusted differently. Admission is a security surface with its own scaling and failure profile; deciding a run's next transition is a different problem from durably surviving a crash; and inference, effects, and sandboxed code have unrelated blast radii. A layer never changes ownership: if the two views ever disagree about who owns a record, the plane wins.\index{layer@Layer|textbf}\par
 
 \BookTableStart
-\small
-\begin{longtable}{@{}Y{\dimexpr(\linewidth-4\tabcolsep)/3\relax}Y{\dimexpr(\linewidth-4\tabcolsep)/3\relax}Y{\dimexpr(\linewidth-4\tabcolsep)/3\relax}@{}}
+\fontsize{7.2}{9}\selectfont
+\begin{longtable}{@{}Y{\dimexpr(\linewidth-6\tabcolsep)/4\relax}Y{\dimexpr(\linewidth-6\tabcolsep)/4\relax}Y{\dimexpr(\linewidth-6\tabcolsep)/4\relax}Y{\dimexpr(\linewidth-6\tabcolsep)/4\relax}@{}}
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Layer} & \color{white}\bfseries \textbf{Major components} & \color{white}\bfseries \textbf{Primary responsibility} \\
+\color{white}\bfseries \textbf{Layer} & \color{white}\bfseries \textbf{Plane} & \color{white}\bfseries \textbf{Major components} & \color{white}\bfseries \textbf{Primary responsibility} \\
 \endfirsthead
 \rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Layer} & \color{white}\bfseries \textbf{Major components} & \color{white}\bfseries \textbf{Primary responsibility} \\
+\color{white}\bfseries \textbf{Layer} & \color{white}\bfseries \textbf{Plane} & \color{white}\bfseries \textbf{Major components} & \color{white}\bfseries \textbf{Primary responsibility} \\
 \endhead
-Experience & Chat\slash{}UI, API clients, event subscriptions, operator console & Intent capture, progress, approvals, cancel\slash{}override \\*
+Experience & Experience and channels & Chat\slash{}UI, API clients, event subscriptions, operator console & Intent capture, progress, approvals, cancel\slash{}override \\*
 \rowcolor{BookLight}
-Edge and admission & API Gateway, WAF, tenant router, request validator\index{api gateway@API Gateway} & Authentication, quotas, schema validation, risk classification \\*
-Agent registry and release & Agent registry, policy bundles, prompt bundle registry and Skill Registry (Chapter 8), release manager & Define, version, approve, discover, and deploy capabilities \\
+Edge and admission & Experience and channels & API Gateway, web application firewall (WAF), tenant router, request validator\index{api gateway@API Gateway} & Authentication, quotas, schema validation, risk classification \\*
+Agent registry and release & Agent applications & Agent registry, policy bundles, prompt bundle registry and Skill Registry (Chapter 8), release manager & Define, version, approve, discover, and deploy capabilities \\
 \rowcolor{BookLight}
-Run control & Run API, planner, coordinator, budget manager & Own the run lifecycle and deterministic transition decisions \\
-Durable execution & Workflow engine, timers, signal handlers, checkpoint\slash{}event store & Crash recovery, pause\slash{}resume, retries, compensation, replay\index{compensation@Compensation} \\
+Run control & Runtime and workflow & Run API, planner, coordinator, budget manager & Own the run lifecycle and deterministic transition decisions \\
+Durable execution & Runtime and workflow & Workflow engine, timers, signal handlers, checkpoint\slash{}event store & Crash recovery, pause\slash{}resume, retries, compensation, replay\index{compensation@Compensation} \\
 \rowcolor{BookLight}
-Model access & LLM Gateway, router, prompt assembler, structured-output validator & Provider abstraction, routing, caching, quotas, redaction \\
-Tool and protocol access & Tool Gateway, Effect Service, MCP Gateway, A2A Gateway, connectors\index{a2a gateway@A2A Gateway}\index{mcp gateway@MCP Gateway}\index{tool gateway@Tool Gateway} & Discovery, authorization, invocation, effects, isolation, versioning \\
+Knowledge and context services & Knowledge, context, and memory & Context Service, Enterprise Knowledge Hub and knowledge registry (Chapter 5), search\slash{}vector index, catalog\slash{}lineage, memory service & Authorized retrieval, provenance, ACLs, governed memory; shared stores: see § Where each kind of state belongs \\
+Model access & Gateways and integration & LLM Gateway, router, prompt assembler, structured-output validator\index{llm gateway@LLM Gateway|textbf} & Provider abstraction, routing, caching, quotas, redaction \\
 \rowcolor{BookLight}
-Knowledge and context services & Context Service, Enterprise Knowledge Hub and knowledge registry (Chapter 5), search\slash{}vector index, catalog\slash{}lineage, memory service & Authorized retrieval, provenance, ACLs, governed memory; shared stores: see § Where each kind of state belongs \\
-Sandboxed execution & Sandboxed workers, code\slash{}browser runners, egress proxy & Resource isolation and constrained side effects \\
+Tool and protocol access & Gateways and integration & Tool Gateway, Effect Service, MCP Gateway, A2A Gateway, connectors\index{a2a gateway@A2A Gateway}\index{mcp gateway@MCP Gateway} & Discovery, authorization, invocation, effects, isolation, versioning \\
+Sandboxed execution & Gateways and integration & Sandboxed workers, code\slash{}browser runners, egress proxy & Resource isolation and constrained side effects \\
 \rowcolor{BookLight}
-Trust and governance & IdP, STS, workload identity, PDP\slash{}PEP, Approval Service, secrets, audit\slash{}WORM & Least privilege, tenant isolation, policy, approval, evidence and retention \\
-Operations and improvement & OTel collector, trace store, metrics, eval service, incident tooling & Debug, replay, evaluate, optimize, alert, and promote \\
+Trust and governance & Security and governance & Identity provider (IdP), security token service (STS), workload identity, policy decision and enforcement points (PDP\slash{}PEP), Approval Service, secrets, write-once (WORM) audit archive & Least privilege, tenant isolation, policy, approval, evidence and retention \\
+Operations and improvement & Evaluation and operations & OpenTelemetry (OTel) collector, trace store, metrics, eval service, incident tooling\index{opentelemetry@OpenTelemetry} & Debug, replay, evaluate, optimize, alert, and promote \\
 \end{longtable}
 \BookTableEnd
 
@@ -2378,25 +2343,6 @@ Cache & Model, retrieval, tool-read, schema and policy-safe results & Scope-awar
 \BookTableEnd
 
 A vector database is an index, not the source of truth; an agent transcript is not workflow state; a trace store is not the audit ledger; and a queue is not a business transaction. Keeping these responsibilities separate prevents attractive shortcuts from becoming systemic risks.\par
-
-\BookNeedspace{175.3pt}
-
-\section{What the evidence lets us conclude}
-
-\BookTableStart
-\small
-\begin{longtable}{@{}Y{\dimexpr(\linewidth-4\tabcolsep)/3\relax}Y{\dimexpr(\linewidth-4\tabcolsep)/3\relax}Y{\dimexpr(\linewidth-4\tabcolsep)/3\relax}@{}}
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
-\endfirsthead
-\rowcolor{BookNavy}
-\color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
-\endhead
-Event contract & Use a CloudEvents 1.0-compatible envelope for interoperability, but keep domain semantics and delivery guarantees in versioned event contracts. Source plus ID supports deduplication; large or sensitive artifacts should be referenced rather than embedded. & R04 \\
-\end{longtable}
-\BookTableEnd
-
-The discussion above draws on R03; R04. Appendix J lists the complete sources and records their authority, version, and scope.\par
 
 \section{A sensible place to start}
 
@@ -2664,6 +2610,8 @@ A retrieved passage should never reach a model without the metadata that decides
 \subsection{Ontology and knowledge graph}
 
 Entities, relationships, dependencies, and the organization's own semantics. Traversal answers questions similarity cannot: \emph{what depends on this system three hops away?} No wording links a payments API to a regulatory filing obligation, so no embedding will connect them. The graph does.\par
+
+Search and graph complement each other. The semantic index finds the passages relevant to a question; the platform links the entities those passages name to nodes in the graph, and a bounded traversal from them returns related facts that no single passage states. The ontology, in turn, supplies the terms and scope a typed rule is written in.\par
 
 \BookNeedspace{422.4pt}
 
@@ -3016,7 +2964,7 @@ def verify(quote: str, source_ref, corpus: dict[str, str]) -> Verdict:
     return Verdict("supported", "quoted text found in the cited span", evidence)
 \end{lstlisting}
 
-A model that invents a rule will invent a plausible citation, so a well-formed citation proves nothing; what matters is whether the cited passage \emph{says what the rule says}. In one run of the author's own compliance extraction pipeline built on this design, independent verification rejected 44\% of the model-proposed dependency and conflict claims that a single structural screen had already accepted \BookCitation{R48}. That figure is author-reported, one measurement on one corpus, not a general rate.\par
+A model that invents a rule will invent a plausible citation, so a well-formed citation proves nothing; what matters is whether the cited passage \emph{says what the rule says}.\par
 
 \textbf{Approve.} An eligible owner accepts the interpretation; the approval, the source digest, and the rule version are recorded together. Verification shows the rule matches the text; approval makes it the organization's rule, bound to the candidate digest of the whole change (§ Change compliance knowledge the way you change software).\par
 
@@ -3497,7 +3445,7 @@ Capability & Tools, APIs, effects, prerequisites & What can be done, and at what
 
 Ingestion fills the Semantic view with labelled text and the Normative view's rules with supported facts. The Hub is the knowledge half of Chapter 4's knowledge, context, and memory plane, with two callers: the Context Service before a step (Chapter 6) and read-only tools through the Tool Gateway during one (Chapter 3). Both resolve against the run's pinned release with the same permissions and attribution; neither holds store connections.\par
 
-\BookNeedspace{162.7pt}
+\BookNeedspace{239.2pt}
 
 \section{What the evidence lets us conclude}
 
@@ -3510,11 +3458,9 @@ Ingestion fills the Semantic view with labelled text and the Normative view's ru
 \rowcolor{BookNavy}
 \color{white}\bfseries \textbf{Claim or correction} & \color{white}\bfseries \textbf{Grounded statement} & \color{white}\bfseries \textbf{Source IDs} \\
 \endhead
-Standards scope & BPMN, DMN, CMMN, and SBVR are OMG specifications; each citation supports the existence and semantics of its own standard and nothing about its suitability for agentic systems. That assessment is book-authored. & R44; R45; R46; R47 \\
+Standards scope & BPMN, DMN, CMMN, and SBVR are OMG specifications; each citation supports the existence and semantics of its own standard and nothing about its suitability for agentic systems. That assessment is book-authored. & R44; R45; R46; R47 \\*
 \rowcolor{BookLight}
-Verification measurement & On one documented run of the author's own pipeline, independent re-verification against the corpus rejected 44\% of model-proposed dependency and conflict claims that a single structural screen had accepted. Evidence that structure checks are not grounding; not an error rate for extraction, rules, or documents. & R48 \\
 Reference implementation & At the pinned commit the author's repository has the build-time mechanisms this chapter points at; it has no release, approval, pointer, or runtime, and shows nothing about other systems. & R48 \\
-\rowcolor{BookLight}
 Knowledge lifecycle (book-authored recommendation) & The object model, graph presentation, planes, gates, states, and everything from approval onward are the book's own. & — \\
 \end{longtable}
 \BookTableEnd
@@ -3618,7 +3564,7 @@ The knowledge layer defines what the organization knows and what agents may do w
 \BookChapter{06}{Build Context Without Losing the Plot}
 
 \begin{bookcallout}[Where The Mortgage Case Stands]
-As Harborlight's evidence runs grow, prompts mix conversation, workflow state, retrieved policy, summaries, and remembered preferences. The platform keeps these sources separate and records exactly which authorized projection reached each model call.\index{harborlight mortgage case@Harborlight mortgage case}
+Harborlight's evidence runs are getting longer, and each prompt now mixes the conversation, the workflow's current state, retrieved policy, summaries, and remembered preferences. These come from different places and deserve different levels of trust, so the platform stores them separately, gives each model call only what that step is allowed to see, and records exactly what the model was shown.\index{harborlight mortgage case@Harborlight mortgage case}
 \end{bookcallout}
 
 \begin{bookcallout}[The Design Choice]
@@ -4181,7 +4127,7 @@ Deployment \& Versioning & Packaging, manifests, environments, gates, canary, ro
 \end{longtable}
 \BookTableEnd
 
-Two kinds of team sit on the application side. Application teams own an agent: its AgentSpec, topology, and acceptance. Domain-capability owners own the Skills and Skill Packs that several applications reuse (Chapters 8–9). Chapter 4 § The decisions that shape the system already federates both to accountable owners.\index{skill pack@Skill Pack}\par
+Two kinds of team sit on the application side. Application teams own an agent: its AgentSpec, topology, and acceptance. Domain-capability owners own the Skills and Skill Packs that several applications reuse (Chapters 8–9). Chapter 4 § What the platform team owns and what domain teams own already assigns both to accountable domain owners.\index{skill pack@Skill Pack}\par
 
 The Tool SDK is the authoring side of the Tool Gateway. A developer writes a typed operation; the SDK emits the ToolManifest (Chapter 22 § What a ToolManifest must declare) that the gateway enforces on every call (Chapter 2).\index{tool gateway@Tool Gateway}\par
 
@@ -4189,7 +4135,7 @@ The Tool SDK is the authoring side of the Tool Gateway. A developer writes a typ
 
 \BookDiagram{assets/diagrams/portability.pdf}{Figure 7-2 — Platform contracts with replaceable framework and provider adapters}{portability}
 
-Chapter 3 put the framework behind \lstinline[style=bookinline]!AgentRuntime.execute(AgentStepRequest) → AgentStepResult!; the platform's job is to own that seam for every team. The stable contracts are AgentSpec (Chapter 4), AgentStepRequest/AgentStepResult (Chapter 3), ToolManifest (Chapter 22), ContextManifest and MemoryRecord (Chapter 6), TaskEnvelope (Chapter 18), EvaluationResult (Chapter 25), and ReleaseManifest (Chapter 27). Compatibility suites verify cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.\index{agentruntime@AgentRuntime}\index{contextmanifest@ContextManifest}\index{evaluationresult@EvaluationResult}\index{taskenvelope@TaskEnvelope}\par
+Chapter 3 put the framework behind \lstinline[style=bookinline]!AgentRuntime.execute(AgentStepRequest) → AgentStepResult!; the platform's job is to own that interface for every team. The stable contracts are AgentSpec (Chapter 4), AgentStepRequest/AgentStepResult (Chapter 3), ToolManifest (Chapter 22), ContextManifest and MemoryRecord (Chapter 6), TaskEnvelope (Chapter 18), EvaluationResult (Chapter 25), and ReleaseManifest (Chapter 27). Compatibility suites verify cancellation, tools, streaming, approvals, errors, telemetry, usage, and version behavior.\index{agentruntime@AgentRuntime}\index{contextmanifest@ContextManifest}\index{evaluationresult@EvaluationResult}\index{taskenvelope@TaskEnvelope}\par
 
 \section{Make the safe path the easy path}
 
@@ -4256,7 +4202,7 @@ The discussion above draws on R29; R31; R32. Appendix J lists the complete sourc
 
 \section{A sensible place to start}
 
-The suite below makes the portability row executable. It drives any adapter with scripted test models and checks four promises of the Chapter 3 seam: a typed disposition, reported usage, cancellation that reaches the model call, and SDK errors mapped to the platform's result shape. A failed check is reported as a named gap to publish as a known limitation of that adapter.\par
+The suite below makes the portability row executable. It drives any adapter with scripted test models and checks four promises of the Chapter 3 runtime interface: a typed disposition, reported usage, cancellation that reaches the model call, and SDK errors mapped to the platform's result shape. A failed check is reported as a named gap to publish as a known limitation of that adapter.\par
 
 \BookNeedspace{624.8pt}
 
@@ -14365,7 +14311,7 @@ References are numbered by stable registry identifier. Each citation supports on
 
 \item \BookReferenceTarget{R38}\textbf{\BookCitation{R38}} DBOS (n.d.). \emph{DBOS AI Quickstart}. Current documentation. \href{\detokenize{https://docs.dbos.dev/ai/ai-quickstart}}{Primary or authoritative source}. Accessed 11 October 2026. \textbf{Supports:} Documents durable long-running agent workflows, queues, waits, and framework integrations.
 
-\item \BookReferenceTarget{R48}\textbf{\BookCitation{R48}} Rahimi, R. (2026). \emph{Policy Logic Forge: compiling compliance policy text into typed, source-grounded executable decision logic}. Repository at commit c22dc450 (2026-09-11): ARCHITECTURE.md §§ 1.1, 2.1, 2.3, 2.4, 2.5, 5, 5.1, 6, 6.4; docs/ir-semantics-v1.md; docs/executable-models.md; docs/smt-query-protocol.md; technical-report/report.tex § Scope and limitations; and the modules and tests named in the supports text. \href{\detokenize{https://github.com/rrahimi-uci/policy-logic-forge/blob/393364fae6700c10f4f6f7f024e67a63631a2f9a/ARCHITECTURE.md#11-the-evidence-spine}}{Primary or authoritative source}. Accessed 11 October 2026. \textbf{Supports:} Book-authored implementation. Supports (1) the reported measurement that, on one documented historical run, independent grounding verification rejected 44\% of model-proposed dependency and conflict claims that a single structural screen had already accepted (ARCHITECTURE.md §§ 1.1, 2.3) — a measurement of relationship claims on one run, not an error rate for rules, fields, extraction, or any other system; and (2) the existence in the repository at the pinned commit of the following architectural elements, each attributable only as what the named component does: a build-time, thirteen-stage, checkpointed extraction pipeline with no runtime consumer, whose exit-code contract distinguishes data-quality review from failure and in which a stage may never exit 0 for work it did not do (§§ 2.1, 2.4; cli/extract.py; tests/test\_pipeline\_end\_to\_end.py); per-chunk and per-corpus content digests and per-field source references with evidence spans whose offsets are excerpt-local (utils/kg\_readiness.py; utils/rule\_contract.py; docs/ir-semantics-v1.md); four deterministic readiness invariants gated on blocking defects alone, with evidence gaps held rather than failed (§ 2.3 agent\_07; utils/kg\_readiness.py); targeted remediation of only the failed fields (§ 2.3 agent\_08); review routing in which only a positive contradiction or an explicit judgment finding enters the human queue, contract defects go to machine repair and evidence gaps to case management (utils/semantic\_routing.py; docs/executable-models.md); independent claim-level grounding that rebuilds evidence from the corpus, admits a supported or contradicted verdict only when it names an evidence record resolved as literal corpus text, records the quote from that record, verifies derived values structurally, and treats verifier completeness as a fail-closed check distinct from verdict counts (§ 2.3 agent\_09; agents/agent\_09\_grounding\_verifier.py; utils/citations.py); a grounding certificate bound to the corpus and graph hashes, and intermediate results keyed by a content fingerprint and rejected when it changes (§ 2.5; agent\_09 certification\_issues); exact-duplicate merge with evidence union (§ 2.3 agent\_06); typing from declared units and value sets with refinement reported separately from contradiction, model validation that reports and never repairs, and a fail-closed unresolved concept kind in an SBVR-aligned vocabulary profile that is explicitly not full interchange (§ 2.3 agent\_12; § 6.4; utils/information\_model.py); fail-closed lowering in which a rule is emitted completely or refused with a typed reason, Kleene three-valued evaluation in which a missing input is unknown and unknown at a table boundary means refuse, a conflict between rules refused rather than adjudicated, decision-table hit-policy obligations proved by bounded enumeration on finite domains with unknown and timeout never a pass, and refusal of any rule whose scope needs jurisdiction, party or date context the evaluator does not have (docs/ir-semantics-v1.md; docs/smt-query-protocol.md; utils/feel.py; tests/test\_feel.py; tests/test\_hit\_policy\_proofs.py); fail-closed DMN and BPMN projections in which BPMN is emitted only for source-explicit ordered process semantics (§ 6; utils/executable\_models.py; utils/semantic\_routing.py); version-to-version change detection that aligns rules by exact id then by unique source citation, classifies change ignoring provenance, propagates impact over the dependency graph, resolves every rule to exactly one of changed, unchanged, unresolved-review or refused with held rules never auto-resolved and kept in every denominator, and states full replay as the oracle (§ 5; utils/regdelta\_engine.py; utils/rule\_alignment.py; utils/semantic\_diff.py; utils/impact\_propagation.py); a fixed-denominator quality budget with an integer floor and reconciled cohorts, and a decision-material claim classification, both defined and tested but not wired into the stages (utils/quality\_budget.py; utils/claim\_admission.py); the documented limit that scope dimensions outside a hard-coded allowlist are refused (§ 5.1); and the repository's own stated limits (technical-report/report.tex § Scope and limitations). Does not support: any general error rate for language-model extraction; any claim about document or OCR extraction accuracy; any claim about runtime enforcement, releases, approval, activation, promotion, rollback, per-run pinning or a knowledge registry (the repository has none); the counts in quality-baselines/, the refinement counts, compile rates or research results unless this entry is widened to name them; or any claim about systems other than the documented runs.
+\item \BookReferenceTarget{R48}\textbf{\BookCitation{R48}} Rahimi, R. (2026). \emph{Policy Logic Forge: compiling compliance policy text into typed, source-grounded executable decision logic}. Repository at commit c22dc450 (2026-09-11): ARCHITECTURE.md §§ 1.1, 2.1, 2.3, 2.4, 2.5, 5, 5.1, 6, 6.4; docs/ir-semantics-v1.md; docs/executable-models.md; docs/smt-query-protocol.md; technical-report/report.tex § Scope and limitations; and the modules and tests named in the supports text. \href{\detokenize{https://github.com/rrahimi-uci/policy-logic-forge/blob/393364fae6700c10f4f6f7f024e67a63631a2f9a/ARCHITECTURE.md#11-the-evidence-spine}}{Primary or authoritative source}. Accessed 11 October 2026. \textbf{Supports:} Book-authored implementation. Supports the existence in the repository at the pinned commit of the following architectural elements, each attributable only as what the named component does: a build-time, thirteen-stage, checkpointed extraction pipeline with no runtime consumer, whose exit-code contract distinguishes data-quality review from failure and in which a stage may never exit 0 for work it did not do (§§ 2.1, 2.4; cli/extract.py; tests/test\_pipeline\_end\_to\_end.py); per-chunk and per-corpus content digests and per-field source references with evidence spans whose offsets are excerpt-local (utils/kg\_readiness.py; utils/rule\_contract.py; docs/ir-semantics-v1.md); four deterministic readiness invariants gated on blocking defects alone, with evidence gaps held rather than failed (§ 2.3 agent\_07; utils/kg\_readiness.py); targeted remediation of only the failed fields (§ 2.3 agent\_08); review routing in which only a positive contradiction or an explicit judgment finding enters the human queue, contract defects go to machine repair and evidence gaps to case management (utils/semantic\_routing.py; docs/executable-models.md); independent claim-level grounding that rebuilds evidence from the corpus, admits a supported or contradicted verdict only when it names an evidence record resolved as literal corpus text, records the quote from that record, verifies derived values structurally, and treats verifier completeness as a fail-closed check distinct from verdict counts (§ 2.3 agent\_09; agents/agent\_09\_grounding\_verifier.py; utils/citations.py); a grounding certificate bound to the corpus and graph hashes, and intermediate results keyed by a content fingerprint and rejected when it changes (§ 2.5; agent\_09 certification\_issues); exact-duplicate merge with evidence union (§ 2.3 agent\_06); typing from declared units and value sets with refinement reported separately from contradiction, model validation that reports and never repairs, and a fail-closed unresolved concept kind in an SBVR-aligned vocabulary profile that is explicitly not full interchange (§ 2.3 agent\_12; § 6.4; utils/information\_model.py); fail-closed lowering in which a rule is emitted completely or refused with a typed reason, Kleene three-valued evaluation in which a missing input is unknown and unknown at a table boundary means refuse, a conflict between rules refused rather than adjudicated, decision-table hit-policy obligations proved by bounded enumeration on finite domains with unknown and timeout never a pass, and refusal of any rule whose scope needs jurisdiction, party or date context the evaluator does not have (docs/ir-semantics-v1.md; docs/smt-query-protocol.md; utils/feel.py; tests/test\_feel.py; tests/test\_hit\_policy\_proofs.py); fail-closed DMN and BPMN projections in which BPMN is emitted only for source-explicit ordered process semantics (§ 6; utils/executable\_models.py; utils/semantic\_routing.py); version-to-version change detection that aligns rules by exact id then by unique source citation, classifies change ignoring provenance, propagates impact over the dependency graph, resolves every rule to exactly one of changed, unchanged, unresolved-review or refused with held rules never auto-resolved and kept in every denominator, and states full replay as the oracle (§ 5; utils/regdelta\_engine.py; utils/rule\_alignment.py; utils/semantic\_diff.py; utils/impact\_propagation.py); a fixed-denominator quality budget with an integer floor and reconciled cohorts, and a decision-material claim classification, both defined and tested but not wired into the stages (utils/quality\_budget.py; utils/claim\_admission.py); the documented limit that scope dimensions outside a hard-coded allowlist are refused (§ 5.1); and the repository's own stated limits (technical-report/report.tex § Scope and limitations). Does not support: any measurement from the documented runs, including the rejection rate reported in ARCHITECTURE.md §§ 1.1 and 2.3; any general error rate for language-model extraction; any claim about document or OCR extraction accuracy; any claim about runtime enforcement, releases, approval, activation, promotion, rollback, per-run pinning or a knowledge registry (the repository has none); the counts in quality-baselines/, the refinement counts, compile rates or research results unless this entry is widened to name them; or any claim about systems other than the documented runs.
 
 \item \BookReferenceTarget{R55}\textbf{\BookCitation{R55}} Anthropic (n.d.). \emph{Agent SDK overview}. Current documentation. \href{\detokenize{https://code.claude.com/docs/en/agent-sdk/overview}}{Primary or authoritative source}. Accessed 11 October 2026. \textbf{Supports:} Documents the Claude Agent SDK as Claude Code's agent loop packaged as a Python and TypeScript library with built-in tools, hooks, subagents, MCP, permissions, and sessions. Does not support maturity, cost, or enterprise-governance claims.
 
@@ -14461,7 +14407,7 @@ R45 & standard & Defines DMN decision tables, hit policies, and FEEL. Supports t
 R46 & standard & Defines CMMN case modelling for unordered, event-driven work. Supports the existence and semantics of the standard only. & Verified 2026-10-11; re-check living sources before use. \\
 R47 & standard & Defines SBVR business vocabulary and rule expression. Supports the existence and semantics of the standard only. & Verified 2026-10-11; re-check living sources before use. \\
 \rowcolor{BookLight}
-R48 & framework documentation & Book-authored implementation. Supports (1) the reported measurement that, on one documented historical run, independent grounding verification rejected 44\% of model-proposed dependency and conflict claims that a single structural screen had already accepted (ARCHITECTURE.md §§ 1.1, 2.3) — a measurement of relationship claims on one run, not an error rate for rules, fields, extraction, or any other system; and (2) the existence in the repository at the pinned commit of the following architectural elements, each attributable only as what the named component does: a build-time, thirteen-stage, checkpointed extraction pipeline with no runtime consumer, whose exit-code contract distinguishes data-quality review from failure and in which a stage may never exit 0 for work it did not do (§§ 2.1, 2.4; cli\slash{}extract.py; tests\slash{}test\_pipeline\_end\_to\_end.py); per-chunk and per-corpus content digests and per-field source references with evidence spans whose offsets are excerpt-local (utils\slash{}kg\_readiness.py; utils\slash{}rule\_contract.py; docs\slash{}ir-semantics-v1.md); four deterministic readiness invariants gated on blocking defects alone, with evidence gaps held rather than failed (§ 2.3 agent\_07; utils\slash{}kg\_readiness.py); targeted remediation of only the failed fields (§ 2.3 agent\_08); review routing in which only a positive contradiction or an explicit judgment finding enters the human queue, contract defects go to machine repair and evidence gaps to case management (utils\slash{}semantic\_routing.py; docs\slash{}executable-models.md); independent claim-level grounding that rebuilds evidence from the corpus, admits a supported or contradicted verdict only when it names an evidence record resolved as literal corpus text, records the quote from that record, verifies derived values structurally, and treats verifier completeness as a fail-closed check distinct from verdict counts (§ 2.3 agent\_09; agents\slash{}agent\_09\_grounding\_verifier.py; utils\slash{}citations.py); a grounding certificate bound to the corpus and graph hashes, and intermediate results keyed by a content fingerprint and rejected when it changes (§ 2.5; agent\_09 certification\_issues); exact-duplicate merge with evidence union (§ 2.3 agent\_06); typing from declared units and value sets with refinement reported separately from contradiction, model validation that reports and never repairs, and a fail-closed unresolved concept kind in an SBVR-aligned vocabulary profile that is explicitly not full interchange (§ 2.3 agent\_12; § 6.4; utils\slash{}information\_model.py); fail-closed lowering in which a rule is emitted completely or refused with a typed reason, Kleene three-valued evaluation in which a missing input is unknown and unknown at a table boundary means refuse, a conflict between rules refused rather than adjudicated, decision-table hit-policy obligations proved by bounded enumeration on finite domains with unknown and timeout never a pass, and refusal of any rule whose scope needs jurisdiction, party or date context the evaluator does not have (docs\slash{}ir-semantics-v1.md; docs\slash{}smt-query-protocol.md; utils\slash{}feel.py; tests\slash{}test\_feel.py; tests\slash{}test\_hit\_policy\_proofs.py); fail-closed DMN and BPMN projections in which BPMN is emitted only for source-explicit ordered process semantics (§ 6; utils\slash{}executable\_models.py; utils\slash{}semantic\_routing.py); version-to-version change detection that aligns rules by exact id then by unique source citation, classifies change ignoring provenance, propagates impact over the dependency graph, resolves every rule to exactly one of changed, unchanged, unresolved-review or refused with held rules never auto-resolved and kept in every denominator, and states full replay as the oracle (§ 5; utils\slash{}regdelta\_engine.py; utils\slash{}rule\_alignment.py; utils\slash{}semantic\_diff.py; utils\slash{}impact\_propagation.py); a fixed-denominator quality budget with an integer floor and reconciled cohorts, and a decision-material claim classification, both defined and tested but not wired into the stages (utils\slash{}quality\_budget.py; utils\slash{}claim\_admission.py); the documented limit that scope dimensions outside a hard-coded allowlist are refused (§ 5.1); and the repository's own stated limits (technical-report\slash{}report.tex § Scope and limitations). Does not support: any general error rate for language-model extraction; any claim about document or OCR extraction accuracy; any claim about runtime enforcement, releases, approval, activation, promotion, rollback, per-run pinning or a knowledge registry (the repository has none); the counts in quality-baselines\slash{}, the refinement counts, compile rates or research results unless this entry is widened to name them; or any claim about systems other than the documented runs. & Verified 2026-10-11; re-check living sources before use. \\
+R48 & framework documentation & Book-authored implementation. Supports the existence in the repository at the pinned commit of the following architectural elements, each attributable only as what the named component does: a build-time, thirteen-stage, checkpointed extraction pipeline with no runtime consumer, whose exit-code contract distinguishes data-quality review from failure and in which a stage may never exit 0 for work it did not do (§§ 2.1, 2.4; cli\slash{}extract.py; tests\slash{}test\_pipeline\_end\_to\_end.py); per-chunk and per-corpus content digests and per-field source references with evidence spans whose offsets are excerpt-local (utils\slash{}kg\_readiness.py; utils\slash{}rule\_contract.py; docs\slash{}ir-semantics-v1.md); four deterministic readiness invariants gated on blocking defects alone, with evidence gaps held rather than failed (§ 2.3 agent\_07; utils\slash{}kg\_readiness.py); targeted remediation of only the failed fields (§ 2.3 agent\_08); review routing in which only a positive contradiction or an explicit judgment finding enters the human queue, contract defects go to machine repair and evidence gaps to case management (utils\slash{}semantic\_routing.py; docs\slash{}executable-models.md); independent claim-level grounding that rebuilds evidence from the corpus, admits a supported or contradicted verdict only when it names an evidence record resolved as literal corpus text, records the quote from that record, verifies derived values structurally, and treats verifier completeness as a fail-closed check distinct from verdict counts (§ 2.3 agent\_09; agents\slash{}agent\_09\_grounding\_verifier.py; utils\slash{}citations.py); a grounding certificate bound to the corpus and graph hashes, and intermediate results keyed by a content fingerprint and rejected when it changes (§ 2.5; agent\_09 certification\_issues); exact-duplicate merge with evidence union (§ 2.3 agent\_06); typing from declared units and value sets with refinement reported separately from contradiction, model validation that reports and never repairs, and a fail-closed unresolved concept kind in an SBVR-aligned vocabulary profile that is explicitly not full interchange (§ 2.3 agent\_12; § 6.4; utils\slash{}information\_model.py); fail-closed lowering in which a rule is emitted completely or refused with a typed reason, Kleene three-valued evaluation in which a missing input is unknown and unknown at a table boundary means refuse, a conflict between rules refused rather than adjudicated, decision-table hit-policy obligations proved by bounded enumeration on finite domains with unknown and timeout never a pass, and refusal of any rule whose scope needs jurisdiction, party or date context the evaluator does not have (docs\slash{}ir-semantics-v1.md; docs\slash{}smt-query-protocol.md; utils\slash{}feel.py; tests\slash{}test\_feel.py; tests\slash{}test\_hit\_policy\_proofs.py); fail-closed DMN and BPMN projections in which BPMN is emitted only for source-explicit ordered process semantics (§ 6; utils\slash{}executable\_models.py; utils\slash{}semantic\_routing.py); version-to-version change detection that aligns rules by exact id then by unique source citation, classifies change ignoring provenance, propagates impact over the dependency graph, resolves every rule to exactly one of changed, unchanged, unresolved-review or refused with held rules never auto-resolved and kept in every denominator, and states full replay as the oracle (§ 5; utils\slash{}regdelta\_engine.py; utils\slash{}rule\_alignment.py; utils\slash{}semantic\_diff.py; utils\slash{}impact\_propagation.py); a fixed-denominator quality budget with an integer floor and reconciled cohorts, and a decision-material claim classification, both defined and tested but not wired into the stages (utils\slash{}quality\_budget.py; utils\slash{}claim\_admission.py); the documented limit that scope dimensions outside a hard-coded allowlist are refused (§ 5.1); and the repository's own stated limits (technical-report\slash{}report.tex § Scope and limitations). Does not support: any measurement from the documented runs, including the rejection rate reported in ARCHITECTURE.md §§ 1.1 and 2.3; any general error rate for language-model extraction; any claim about document or OCR extraction accuracy; any claim about runtime enforcement, releases, approval, activation, promotion, rollback, per-run pinning or a knowledge registry (the repository has none); the counts in quality-baselines\slash{}, the refinement counts, compile rates or research results unless this entry is widened to name them; or any claim about systems other than the documented runs. & Verified 2026-10-11; re-check living sources before use. \\
 R49 & research & Presents AutoGen, a framework in which multiple agents converse using LLMs, human input, and tools. Supports only the description of multi-agent conversation as a composition mechanism. & Verified 2026-10-11; re-check living sources before use. \\
 \rowcolor{BookLight}
 R50 & research & Introduces an eight-environment agent benchmark and reports wide performance differences between models, attributed mainly to weak long-term reasoning, decision-making, and instruction following. & Verified 2026-10-11; re-check living sources before use. \\

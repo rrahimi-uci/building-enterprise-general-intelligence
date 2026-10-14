@@ -487,16 +487,16 @@
       "source": "reference-architecture.tikz.tex",
       "pixels": [
         2056,
-        2494
+        2590
       ],
       "effective_dpi": 300,
       "vector": true,
-      "sha256": "90d22dd9b0df44cfb9f39e01bce7c9fe8966ca09c16ae280f14b6aac9c653cb7",
+      "sha256": "737bc3d8b328d3e41d8c8fb3014fd7752bb311f214de5a4f592180a92137360c",
       "natural_inches": [
         6.8,
-        8.26
+        8.58
       ],
-      "placement_scale": 1.005
+      "placement_scale": 0.968
     },
     {
       "id": "request-sequence",

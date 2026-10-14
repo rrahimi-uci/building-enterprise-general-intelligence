@@ -4,7 +4,7 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "4f76984a4cf26781b83450a5a202c14d28fe71e94d048787a9ce6779e3a11a01",
-    "content_tex_sha256": "ef3e11be16524b534afe7c15678f27c717d354c70fca4da148c04c9be320513f",
+    "content_tex_sha256": "3051e17c0f7f922342a440d7b299692cfc12460feb6564c75fe77de5cb4db74e",
     "style_sha256": "1aefe91a58bcfca37131707508139f238552d702f25f14357ceaef462d95b230",
     "narrative_parts": 8,
     "appendix_dividers": 1,
@@ -13,15 +13,15 @@
     "appendices": 12,
     "diagrams": 45,
     "code_blocks": 65,
-    "longtables": 158,
-    "compact_tables": 99,
+    "longtables": 157,
+    "compact_tables": 98,
     "callout_tables": 70,
-    "citation_occurrences": 158,
-    "index_marks": 663,
+    "citation_occurrences": 157,
+    "index_marks": 664,
     "index_pages": 1,
     "reference_targets": 58,
     "unique_citation_ids": 58,
-    "markdown_tables": 327,
+    "markdown_tables": 325,
     "markdown_code_blocks": 65,
     "image_quality": [
       {
@@ -100,7 +100,7 @@
         "file": "assets/diagrams/reference-architecture.png",
         "pixels": [
           2056,
-          2494
+          2590
         ],
         "effective_dpi": 291.2
       },
