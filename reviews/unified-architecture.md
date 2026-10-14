@@ -101,6 +101,7 @@ multiple services, this table names the real owner of the transfer.
 | Context Service → AgentRuntime | Authorized ContextManifest: ordered, provenance-labelled, token-bounded segments | Runtime read | 3, 6 |
 | AgentRuntime ↔ LLM Gateway ↔ Models | Eligible inference request and normalized model result | Runtime synchronous or streamed call | 3–4, 28 |
 | AgentRuntime → Task Service | Narrowed TaskEnvelope; Task Service owns child work, cancellation and join | Runtime durable child task, often asynchronous | 11, 18–19 |
+| Task Service → Workflow gates | Typed joined child result returned to the run-owned workflow for validation and transition | Runtime result/event after child completion | 15, 18–19 |
 | AgentRuntime → Workflow gates | Typed AgentStepResult / proposed action returned to workflow; the workflow invokes validation, policy and approval | Runtime control, may pause for human | 2–3, 13–14 |
 | Governance → Workflow gates / Access gateways | Policy decision, capability envelope, proposal-bound approval and last-hop credential lease | Runtime enforcement, rechecked at commit | 14, 20–23 |
 | Workflow gates → Access gateways | Validated, authorized effect intent with expected version and logical key | Runtime command | 2, 21–22 |
@@ -119,6 +120,21 @@ contains remote systems and providers; its cards do not imply one shared
 protocol or transaction. The returned cyan arrows are normal replies; the
 effect receipt is additionally captured in the Effect Service before the run
 can accept it.
+
+## Print-scale visual revision
+
+The second pass softened and separated the four architectural frames and gave
+the behavior and knowledge release records distinct, readable names. It
+restored the missing model-gateway return and
+the child-task join result, so neither path visually ends at its downstream
+service. The dotted evidence route now starts at the regional runtime boundary
+rather than the governance card: telemetry and audit are produced across the
+cell, while the audit record remains separate from sampled traces. The legend
+calls a box a service or record because the two release boxes are immutable
+records. The shared trust band names the governing services; the surrounding
+prose specifies enforcement at admission, retrieval, inference, delegation,
+and effects. The two short red taps identify protected action gates and do
+not exhaust the enforcement points.
 
 ## Reconciliation decisions and remaining limits
 

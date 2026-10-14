@@ -10272,7 +10272,7 @@ The model provides bounded reasoning; the surrounding system owns state, authori
 
 Figure S-1 is the book's canonical **logical** architecture. Chapter 4's seven
 ownership planes determine who writes each record; the figure groups their
-deployable services by design time, regional runtime, external boundary, and
+components by design time, regional runtime, external boundary, and
 offline improvement. The deterministic workflow owns the run. A bounded agent
 step proposes; independent controls decide whether its proposal may change
 anything outside the run. No model, framework, vector index, or trace store
@@ -10283,12 +10283,13 @@ becomes the system of record by being on the request path.
 ### Read the boundaries and line styles
 
 The pale frames separate the **global control tier**, a **regional execution
-cell**, **external systems**, and **offline evidence and improvement**. Square
-cards are services or service groups. Solid blue arrows carry requests,
-authorized actions, and results; solid cyan arrows carry knowledge or returned
+cell**, **external systems**, and **offline evidence and improvement**. Boxes
+name services, service groups, or immutable release records. Solid blue arrows
+carry requests, authorized actions, and results; solid cyan arrows carry knowledge or returned
 evidence; dashed arrows carry released definitions and enforcement; dotted
-arrows carry observations. Each arrow's direction is the direction of the
-named transfer. Paired arrows to models and enterprise systems mean a governed
+arrows carry recorded evidence, including joined task results and effect
+receipts. Each arrow points in the direction of the named transfer. Paired
+arrows to models and enterprise systems mean a governed
 request crosses the boundary and a response or receipt returns. A release
 arrow is a reviewed promotion, not a runtime write.
 

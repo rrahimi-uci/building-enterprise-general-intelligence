@@ -19,8 +19,8 @@
       inner xsep=6pt, inner ysep=5pt, align=center},
     slim/.style={dg card=#1, square, text width=88pt, minimum height=37pt,
       inner xsep=5pt, inner ysep=4pt, align=center},
-    zone/.style={rectangle, rounded corners=8pt, fill=dg-#1-fill!36,
-      draw=dg-#1-line!70, line width=0.8pt},
+    zone/.style={rectangle, rounded corners=11pt, fill=dg-#1-fill!25,
+      draw=dg-#1-line!62, line width=0.85pt},
     ztitle/.style={anchor=north west, font=\dggroupsize, text=dg-#1-ink,
       inner sep=0pt},
   }
@@ -29,6 +29,7 @@
   \begin{pgfonlayer}{dgback}
     \node[zone=navy, anchor=north west, minimum width=500pt,
       minimum height=125pt] (global) at (0,0) {};
+    \draw[draw=dg-navy-line!22, line width=0.6pt] (12,-76) -- (488,-76);
     \node[ztitle=navy] at (10,-8) {DESIGN TIME · GLOBAL CONTROL TIER};
   \end{pgfonlayer}
   \node[compact=plum] (owners) at (68,-47)
@@ -36,13 +37,13 @@
   \node[wide=blue] (builder) at (249,-47)
     {\dgcontent{Build and validate}{agents · Skills · workflows\\policy · tools · evaluations}{}};
   \node[compact=navy] (release) at (428,-47)
-    {\dgcontent{ReleaseManifest}{review · promote\\immutable versions}{}};
+    {\dgcontent{Behavior release}{signed ReleaseManifest\\immutable versions}{}};
   \node[compact=cyan] (knowledge) at (68,-102)
-    {\dgcontent{KnowledgeRelease}{registry · approved\\version and provenance}{}};
+    {\dgcontent{Knowledge release}{KnowledgeRelease\\version · provenance}{}};
   \node[wide=amber] (kgate) at (249,-102)
     {\dgcontent{Knowledge gates}{extract · ground · reconcile\\independent SME approval}{}};
   \node[compact=slate] (sources) at (428,-102)
-    {\dgcontent{Source intake}{policy · documents\\data bytes and digests}{}};
+    {\dgcontent{Source intake}{policy · documents\\bytes · digests · ACLs}{}};
   \draw[flow in=blue] (owners.east) -- (builder.west);
   \draw[flow in=blue] (builder.east) -- (release.west);
   \draw[flow in=cyan] (sources.west) -- (kgate.east);
@@ -55,6 +56,7 @@
     \node[ztitle=blue] at (10,-145) {RUNTIME · REGIONAL EXECUTION CELL};
     \node[zone=slate, anchor=north west, minimum width=109pt,
       minimum height=289pt] (outside) at (391,-137) {};
+    \draw[draw=dg-slate-line!24, line width=0.6pt] (402,-163) -- (489,-163);
     \node[ztitle=slate] at (400,-145) {EXTERNAL};
   \end{pgfonlayer}
 
@@ -66,9 +68,9 @@
     {\dgcontent{Run and workflow}{pin · plan · durable state\\acceptance}{}};
 
   \node[slim=cyan] (context) at (62,-272)
-    {\dgcontent{Context Service}{authorized retrieval\\memory · manifest}{}};
+    {\dgcontent{Context Service}{authorized retrieval\\memory · provenance}{}};
   \node[slim=teal] (agent) at (189,-272)
-    {\dgcontent{AgentRuntime}{bounded agent step\\typed proposal}{}};
+    {\dgcontent{AgentRuntime}{bounded reasoning\\typed step result}{}};
   \node[slim=blue] (modelgw) at (317,-272)
     {\dgcontent{LLM Gateway}{eligible route\\privacy · budget}{}};
   \node[slim=slate] (models) at (446,-272)
@@ -77,7 +79,7 @@
   \node[slim=teal] (tasks) at (62,-347)
     {\dgcontent{Task Service}{specialists · typed join\\narrowed child authority}{}};
   \node[slim=amber] (checks) at (189,-347)
-    {\dgcontent{Workflow gates}{validate · authorize\\approve if required}{}};
+    {\dgcontent{Workflow gates}{validate · authorize\\approve · verify}{}};
   \node[slim=blue] (toolgw) at (317,-347)
     {\dgcontent{Access gateways}{Tool · MCP · A2A\\effect ledger · receipt}{}};
   \node[slim=slate] (systems) at (446,-347)
@@ -85,7 +87,7 @@
 
   \node[dg card=red, square, text width=339pt, minimum height=39pt,
     inner xsep=6pt, inner ysep=4pt, align=center] (govern) at (190,-402)
-    {\dgcontent{Cross-cutting trust and governance}{subject + actor · policy decision and enforcement · least privilege · approval · sandbox / egress · audit}{}};
+    {\dgcontent{Shared trust, governance and enforcement}{subject + actor · policy · narrow grants · approval\\secrets · sandbox · egress · audit}{}};
 
   % Runtime request, evidence, inference, and effect. Orthogonal returns use
   % the gaps between cards; no model output is drawn as a committed effect.
@@ -100,11 +102,13 @@
   \draw[flow in=blue, rounded corners=5pt] (run.south) -- (317,-231) --
     node[pill=blue, pos=0.78]{Step request} (62,-231) -- (context.north);
   \draw[flow in=cyan] (context.east) -- node[pill=cyan]{Context} (agent.west);
-  \draw[flow in=teal] (agent.east) -- (modelgw.west);
+  \draw[flow in=teal] ([yshift=7pt]agent.east) -- ([yshift=7pt]modelgw.west);
+  \draw[flow in=cyan] ([yshift=-7pt]modelgw.west) -- ([yshift=-7pt]agent.east);
   \draw[flow in=blue] ([yshift=8pt]modelgw.east) -- ([yshift=8pt]models.west);
   \draw[flow in=cyan] ([yshift=-8pt]models.west) -- ([yshift=-8pt]modelgw.east);
   \draw[flow in=teal, rounded corners=5pt] (agent.south) -- (189,-307) --
     node[pill=teal,pos=0.6]{Child task} (62,-307) -- (tasks.north);
+  \draw[dotted flow, draw=dg-cyan-line] (tasks.east) -- (checks.west);
   \draw[flow in=amber] (agent.south) -- node[pill=amber,anchor=west,xshift=5pt]{Proposal} (checks.north);
   \draw[flow in=blue] (checks.east) -- (toolgw.west);
   \draw[flow in=blue] ([yshift=8pt]toolgw.east) -- ([yshift=8pt]systems.west);
@@ -122,6 +126,7 @@
   \begin{pgfonlayer}{dgback}
     \node[zone=amber, anchor=north west, minimum width=500pt,
       minimum height=94pt] (improve) at (0,-439) {};
+    \draw[draw=dg-amber-line!24, line width=0.6pt] (11,-465) -- (489,-465);
     \node[ztitle=amber] at (10,-447) {OFFLINE EVIDENCE AND IMPROVEMENT};
   \end{pgfonlayer}
   \node[compact=amber] (observe) at (68,-493)
@@ -131,7 +136,7 @@
   \node[compact=plum] (change) at (428,-493)
     {\dgcontent{Change review}{CI · approval\\canary · rollback}{}};
   \draw[dotted flow, draw=dg-amber-line, rounded corners=6pt]
-    (govern.west) -- (11,-402) -- (11,-493) -- (observe.west);
+    (11,-423) -- (11,-493) -- (observe.west);
   \draw[flow in=amber] (observe.east) -- (evaluate.west);
   \draw[flow in=amber] (evaluate.east) -- (change.west);
   \draw[dashed flow, draw=dg-plum-line, rounded corners=8pt]
@@ -148,7 +153,7 @@
     \node at (334,-550) {control / release};
     \draw[dotted flow, draw=dg-amber-line] (7,-564) -- (31,-564);
     \node at (37,-564) {evidence};
-    \node at (164,-564) {square = service};
+    \node at (164,-564) {box = service / record};
     \node at (304,-564) {pale frame = boundary};
   \end{scope}
 \end{tikzpicture}
