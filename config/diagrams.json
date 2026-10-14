@@ -360,6 +360,14 @@
       "vector": "assets/diagrams/system-overview.pdf",
       "description": "The whole system as seven bands, each mapped to the Parts that develop it, with the request descending from proposal through authorization to committed effect, evidence looping back to the runtime, and security and the platform drawn as spines beside every band",
       "sha256": "272008849b20e77ab36b697f98ca05041f1c132e7ae2d4f3cbb1add2364e1943"
+    },
+    {
+      "id": "unified-enterprise-architecture",
+      "file": "assets/diagrams/unified-enterprise-architecture.png",
+      "source": "assets/diagrams/src/unified-enterprise-architecture.tikz.tex",
+      "vector": "assets/diagrams/unified-enterprise-architecture.pdf",
+      "description": "Book-level synthesis: global design and knowledge release paths, regional bounded runtime and cross-cutting governance, external models and enterprise systems, and the governed evidence-to-release feedback loop",
+      "sha256": "7aa74b8c66c08c0027538f7d72f904c809480862d628bd405c7f9270659a7f9d"
     }
   ],
   "note": "Diagrams are generated from the editable sources in assets/diagrams/src/ by tools/render_diagrams.py. Each source renders to a vector PDF, which XeLaTeX embeds, and a raster PNG for the DOCX edition. Never hand-edit a render."

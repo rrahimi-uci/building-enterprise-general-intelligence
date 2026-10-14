@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 615,
+  "file_count": 619,
   "files": [
     {
       "path": ".gitattributes",
@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 37911,
-      "sha256": "824fbf2e0ff8432352ec4f57dee9ab9ab4db2fc7452eb6df260085b2230ac3a6"
+      "bytes": 38860,
+      "sha256": "be5c44e2326f03e7915ec26c8fa8df0974fa303145ae937db4f2cae7b4123168"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -770,6 +770,11 @@
       "sha256": "95691732b245f5b2d746245f4999d75ee9b0f9d6e685a7ab4bc61a3adf45e7fc"
     },
     {
+      "path": "assets/diagrams/src/unified-enterprise-architecture.tikz.tex",
+      "bytes": 8663,
+      "sha256": "625aae5214e47ddcb669f5a0ecf5b09708ff38096a2a8a95659c902faac1637a"
+    },
+    {
       "path": "assets/diagrams/supervisor-worker.pdf",
       "bytes": 27255,
       "sha256": "fb0f9919c3af9748fe5af0d2f34951dad1fd198fbc63bd52c8f036bf51c29a7e"
@@ -790,9 +795,19 @@
       "sha256": "272008849b20e77ab36b697f98ca05041f1c132e7ae2d4f3cbb1add2364e1943"
     },
     {
+      "path": "assets/diagrams/unified-enterprise-architecture.pdf",
+      "bytes": 35698,
+      "sha256": "85f9d14ca77f727e411ce0d00d3f71084cbec8ff13fb9286c3d6051d4a671d7b"
+    },
+    {
+      "path": "assets/diagrams/unified-enterprise-architecture.png",
+      "bytes": 516258,
+      "sha256": "7aa74b8c66c08c0027538f7d72f904c809480862d628bd405c7f9270659a7f9d"
+    },
+    {
       "path": "book/manuscript.md",
-      "bytes": 822979,
-      "sha256": "f0913b5996a0cdff42e5159bd5d8810d665a29fd36f1e1a7bab19654e60fd971"
+      "bytes": 830392,
+      "sha256": "15f519a3005f24dd61564530d7e0b13024618f8658aaf618b41e79da726264fa"
     },
     {
       "path": "code-gap.md",
@@ -811,8 +826,8 @@
     },
     {
       "path": "config/diagrams.json",
-      "bytes": 25078,
-      "sha256": "f845287d95e7cea82186d848de460a2f5284737aabef5df533fe0f7552e3ae7e"
+      "bytes": 25676,
+      "sha256": "06d8936e0e1bcb3c127aecefc3ddeda126223a1b559b9a33c61e70317fec61c3"
     },
     {
       "path": "config/examples.json",
@@ -991,13 +1006,13 @@
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.docx",
-      "bytes": 42533034,
-      "sha256": "e8e53f825d845bcd33a2f3fd125fe0bd9824a2e65d1d651ac539bc2b31f131de"
+      "bytes": 43037282,
+      "sha256": "7dd4e9ec9e953f0431894494b9983b48a2edca43509f02093de41dae77887150"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.md",
-      "bytes": 822979,
-      "sha256": "f0913b5996a0cdff42e5159bd5d8810d665a29fd36f1e1a7bab19654e60fd971"
+      "bytes": 830392,
+      "sha256": "15f519a3005f24dd61564530d7e0b13024618f8658aaf618b41e79da726264fa"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.tex",
@@ -1546,8 +1561,8 @@
     },
     {
       "path": "latex/content/book-content.tex",
-      "bytes": 1026112,
-      "sha256": "46f7bd24c797b2847bbceb9d1b1dcc67f5fba90712f9506717b6c1f9010acf15"
+      "bytes": 1034256,
+      "sha256": "fc79de639394e6810b04e8fd23081c2d6307466035d1586ac25d0f15df0bf2f7"
     },
     {
       "path": "latex/fonts/LICENSE-SIL-OFL-1.1.txt",
@@ -1897,37 +1912,37 @@
     {
       "path": "qa/build-report.json",
       "bytes": 309,
-      "sha256": "228f0ea5a43cbc1d071f444888ad862cc375620613ec0e3b225114938f2ca4b6"
+      "sha256": "8fafc9ad06266d96e09123f08c4643e07feeab7a86063a6e1ea94acfee55d78a"
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 42533034,
-      "sha256": "e8e53f825d845bcd33a2f3fd125fe0bd9824a2e65d1d651ac539bc2b31f131de"
+      "bytes": 43037282,
+      "sha256": "7dd4e9ec9e953f0431894494b9983b48a2edca43509f02093de41dae77887150"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 42533034,
-      "sha256": "e8e53f825d845bcd33a2f3fd125fe0bd9824a2e65d1d651ac539bc2b31f131de"
+      "bytes": 43037282,
+      "sha256": "7dd4e9ec9e953f0431894494b9983b48a2edca43509f02093de41dae77887150"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "75571246c155de09063c3a6d9cd1d274cae2e837258522f925ee0affaf7eec38"
+      "sha256": "361d7571981803fc7e224706610d9c0983b828e4e1f46de0702f1f0eca47b7e9"
     },
     {
       "path": "qa/latex-validation-report.json",
-      "bytes": 17105,
-      "sha256": "5a84dfeaadc7318bde58af72326cd8eacc0d76becb0d1480486d722818409fcc"
+      "bytes": 17286,
+      "sha256": "e9840b76c97c8a731c2fd94ce355565480ecf2fc6bf7080e1ceafb0e9dfcbe64"
     },
     {
       "path": "qa/validation-report.json",
       "bytes": 1017,
-      "sha256": "4a7dd991fd8ec0854a7cd1bd6b2270712c2d0dbb96741e9bfe9c6572c64cbd7d"
+      "sha256": "8bb538530e17a8f8ac53176cc42f395258aa80314a73aaf31839e7a0866654ce"
     },
     {
       "path": "reports/assembly-report.json",
       "bytes": 1377,
-      "sha256": "895186a7f5efa696e6376afeea5d10c5cead3e3f7351158c4766dfcee81f7e13"
+      "sha256": "f8d20dc3d986b950751bfd44f0dd4cc2a3594e990d1bc61440901f721493dbee"
     },
     {
       "path": "reports/chapter-cover-report.json",
@@ -1951,8 +1966,8 @@
     },
     {
       "path": "reports/diagram-render-report.json",
-      "bytes": 16794,
-      "sha256": "64af1d36883d7f67c18c7c7f107b861c2543ff05cc01702f1e0d0e08dd1e6284"
+      "bytes": 17193,
+      "sha256": "f98d70bca17a068bfcd153e10cb4ae193dbcd42a0af61cde828aa88d41df48b0"
     },
     {
       "path": "reports/editorial-audit.md",
@@ -1977,17 +1992,17 @@
     {
       "path": "reports/latex-build-report.json",
       "bytes": 2430,
-      "sha256": "a4bfa97c2f13d75defd3dcb213f89aa704509c17a55f2377d35425dc3ef8a7b1"
+      "sha256": "1a41b224c093af391f029355d79cd1f3995707ed1c9633615fec14ab54c6b671"
     },
     {
       "path": "reports/latex-validation.md",
       "bytes": 722,
-      "sha256": "9edaaa5492f42b256c6cbe55d448e84b27c96ff1302747e1601d422d2833597e"
+      "sha256": "2ee781f0d57fa15c2a5ef05d76adb2e7657aedf8b9c8b5ab9f7446ad2ddc4a10"
     },
     {
       "path": "reports/release-notes.md",
-      "bytes": 7759,
-      "sha256": "52400e5edfa92a3330a237da580e17ba5652ec173ee6d6a7e1b2304843616cba"
+      "bytes": 8769,
+      "sha256": "87bf31349a7cc8822cbceea796c23a500dd06fdbc3102b7d4d07d4132aa1512f"
     },
     {
       "path": "reports/restructure-map.json",
@@ -2002,7 +2017,7 @@
     {
       "path": "reports/validation-summary.md",
       "bytes": 1011,
-      "sha256": "751f13682705e492f2871379f123833f0a4166fe29fe7aeb6d77a546eade0a00"
+      "sha256": "174b7c46494f47348b61e37ec7c5321447309a2c8c1dda3c4fb7a900bb46d3ed"
     },
     {
       "path": "requirements.txt",
@@ -2710,6 +2725,11 @@
       "sha256": "fb3e64229bb25e954b658563e2638cb28143c6582fbb1f0134ca94916af3cd5e"
     },
     {
+      "path": "reviews/unified-architecture.md",
+      "bytes": 17366,
+      "sha256": "b78147311d0a019204c06e84b7558eb3224007b763c80f76ea3b71cfd871c3b3"
+    },
+    {
       "path": "skills/book-maintainer/SKILL.md",
       "bytes": 1785,
       "sha256": "f86867e0be69d4fd0e749b7563663326887c58a9d690854d0479ced0b834d5c7"
@@ -2876,13 +2896,13 @@
     },
     {
       "path": "source/parts/08-part-viii.md",
-      "bytes": 68768,
-      "sha256": "70093ef6c644de11825283a416e4bec3a2bb7494dee5c36ed0351d6f4c5233e9"
+      "bytes": 68826,
+      "sha256": "57f42d303a95c3b33d9219f3d21b8282fc4631f74049718ddec90f9378428977"
     },
     {
       "path": "source/parts/09-appendices.md",
-      "bytes": 70066,
-      "sha256": "482518aca8d59e72fdbd7394ad4865313c4346a8c29b9b7b3f9ef154ed233a1d"
+      "bytes": 77421,
+      "sha256": "b7111c89ac7e7f13fede01f51713c47599ec580a0d9e883d38aa3acd9939cd64"
     },
     {
       "path": "styles/CROSS-FORMAT-CONTRACT.md",
