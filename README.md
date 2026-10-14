@@ -196,14 +196,14 @@ never in generated content.
 
 - `00-front-matter.md`: title marker, publication preface, reader map, table of contents.
 - `01-part-i.md` … `08-part-viii.md`: one Part divider plus its chapters.
-- `09-appendices.md`: appendix divider, Appendices A–L (the glossary is Appendix L, last), and the index heading with its `[[INDEX]]` marker.
+- `09-appendices.md`: appendix divider, Appendices A–J (references are Appendix I; the glossary is Appendix J, last), and the index heading with its `[[INDEX]]` marker.
 - Every Part, chapter, and appendix begins with an H1. DOCX rendering inserts a new page before each and makes Part/appendix dividers standalone.
 - H2 is a major section, H3 a subsection, and H4 a local subtopic. Do not skip levels.
 - Keep transitions at chapter endings so prerequisites and next steps remain explicit.
 
 ## References and claim discipline
 
-`config/references.json` defines each source, version/date, URL, permitted support scope, verification date, and source class. Appendix J is generated from this registry during assembly. Cite only what the recorded scope supports. Book-authored patterns, estimates, examples, architectures, and formulas must be identified as guidance unless a reference explicitly validates them. Living documentation uses `n.d.` plus an access date. Maturity-sensitive claims must state pins and re-verification requirements rather than claiming a framework is “latest.”
+`config/references.json` defines each source, version/date, URL, permitted support scope, verification date, and source class. Appendix I, the printed reference list, is generated from this registry during assembly; the permitted scope is enforced by the citation checker rather than printed. Cite only what the recorded scope supports. Book-authored patterns, estimates, examples, architectures, and formulas must be identified as guidance unless a reference explicitly validates them. Living documentation uses `n.d.` plus an access date. Maturity-sensitive claims must state pins and re-verification requirements rather than claiming a framework is “latest.”
 
 Run:
 

@@ -1,8 +1,8 @@
 # Citation Audit — Book v1.0.0
 
 **Result:** PASS
-**References:** 58
-**Citation occurrences:** 157
+**References:** 64
+**Citation occurrences:** 183
 **Verified:** 2026-10-13
 
 All sources were checked against their recorded claim scope. The audit validates attribution, not the book's independently authored architecture recommendations.
@@ -69,6 +69,12 @@ All sources were checked against their recorded claim scope. The audit validates
 | R56 | verified | direct primary-source review | Living documentation; the page labels Managed Agents beta and shows no date, so the year is n.d. |
 | R57 | verified | direct primary-source review | Living documentation; /en/introduction resolves to the current versioned path (v1.15.27) and shows no date, so the year is n.d. and the version at access is recorded. |
 | R58 | verified | direct primary-source review | Living documentation; no visible date, so the year is n.d. |
+| R59 | verified | direct primary-source review | Accessed 2026-10-14; scope limited to the registry supports text. |
+| R60 | verified | direct primary-source review | Accessed 2026-10-14; scope limited to the registry supports text. |
+| R61 | verified | direct primary-source review | Accessed 2026-10-14; scope limited to the registry supports text. |
+| R62 | verified | direct primary-source review | Accessed 2026-10-14; scope limited to the registry supports text. |
+| R63 | verified | direct primary-source review | Accessed 2026-10-14; scope limited to the registry supports text. |
+| R64 | verified | direct primary-source review | Accessed 2026-10-14; scope limited to the registry supports text. |
 
 ## Errors
 

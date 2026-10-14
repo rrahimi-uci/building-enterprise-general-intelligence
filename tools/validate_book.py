@@ -97,18 +97,19 @@ def main() -> int:
     if '\r' in text: errors.append('Canonical Markdown contains CR characters')
     if distmd.exists() and distmd.read_bytes()!=md.read_bytes(): errors.append('Canonical and distributable Markdown are not byte-identical')
     checks['parts']=len(re.findall(r'^# PART [IVXLCDM]+ — ',text,re.M)); checks['chapters']=len(re.findall(r'^# \d{2} — ',text,re.M)); checks['appendices']=len(re.findall(r'^# Appendix [A-Z] — ',text,re.M))
-    # Current topology: 8 Parts, 28 chapters, 12 appendices (Appendix M folded into
-    # the references appendix), the glossary last among them, then the index.
-    expected={'parts':8,'chapters':28,'appendices':12}
+    # Current topology: 8 Parts, 28 chapters, 10 appendices (the coding-agent prompt
+    # and the capacity appendix were removed; references are I), the glossary last
+    # among them (J), then the index.
+    expected={'parts':8,'chapters':28,'appendices':10}
     for k,v in expected.items():
         if checks[k]!=v: errors.append(f"Expected {v} {k}, found {checks[k]}")
     chapter_nums=[int(x) for x in re.findall(r'^# (\d{2}) — ',text,re.M)]
     if chapter_nums!=list(range(1,29)): errors.append(f"Chapter sequence is invalid: {chapter_nums}")
     appendix_ids=re.findall(r'^# Appendix ([A-Z]) — ',text,re.M)
-    if appendix_ids!=[chr(ord('A')+i) for i in range(12)]: errors.append(f"Appendix sequence is invalid: {appendix_ids}")
+    if appendix_ids!=[chr(ord('A')+i) for i in range(10)]: errors.append(f"Appendix sequence is invalid: {appendix_ids}")
     h1s=re.findall(r'^# (.+)$',re.sub(r'(?ms)^```.*?^```','',text),re.M)
     if not h1s or h1s[-1]!=book_index.INDEX_HEADING: errors.append(f"The index must be the book's last H1, found {h1s[-1:]}")
-    if len(h1s)<2 or h1s[-2]!='Appendix L — Glossary': errors.append(f"The glossary must be the last appendix, found {h1s[-2:-1]}")
+    if len(h1s)<2 or h1s[-2]!='Appendix J — Glossary': errors.append(f"The glossary must be the last appendix, found {h1s[-2:-1]}")
     # The title-page date is the build month (tools/build_info.py), never a literal.
     if '{{BUILD_DATE}}' in text: errors.append('Unresolved {{BUILD_DATE}} token in the manuscript')
     if not re.search(r'^Book v\d+\.\d+\.\d+ · Publication Release · (January|February|March|April|May|June|July|August|September|October|November|December) \d{4}$',text,re.M): errors.append('Title-page build date line is missing or malformed')
@@ -206,7 +207,7 @@ def main() -> int:
             doc_chapters=sum(1 for p in doc.paragraphs if p.style.name=='Heading 1' and re.match(r'^\d{2} — ',p.text))
             doc_appendices=sum(1 for p in doc.paragraphs if p.style.name=='Heading 1' and p.text.startswith('Appendix '))
             checks['docx_chapters']=doc_chapters; checks['docx_appendices']=doc_appendices
-            if doc_chapters!=28 or doc_appendices!=12: errors.append(f"DOCX heading counts differ: chapters={doc_chapters}, appendices={doc_appendices}")
+            if doc_chapters!=28 or doc_appendices!=10: errors.append(f"DOCX heading counts differ: chapters={doc_chapters}, appendices={doc_appendices}")
             body=zipfile.ZipFile(docx_path).read('word/document.xml').decode('utf-8')
             checks['docx_index_marks']=len(re.findall(r' XE "',body)); checks['docx_index_fields']=body.count(' INDEX ')
             if checks['docx_index_marks']!=checks['index_locators']: errors.append(f"DOCX has {checks['docx_index_marks']} index marks; the index has {checks['index_locators']} locators")

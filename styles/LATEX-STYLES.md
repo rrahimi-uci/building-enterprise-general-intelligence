@@ -63,7 +63,7 @@ Every semantic color is paired with a text label, heading, border, or structure.
 | multi-column GFM table | `longtable` with repeated dark header and alternating rows |
 | fenced code | page-breakable `listings` panel with line numbers and wrapping |
 | diagram marker | figure with `keepaspectratio`, maximum page-aware height, caption, and label |
-| `[Rxx]` | hyperlink to the matching Appendix J reference target |
+| `[Rxx]` | hyperlink to the matching Appendix I reference target |
 | `# Index` | `\BookIndex`: two-column makeindex page index (`latex/bookindex.ist`), listed in the TOC after the last appendix |
 
 ## 6. Tables
@@ -106,7 +106,7 @@ Every semantic color is paired with a text label, heading, border, or structure.
 A LaTeX release must prove:
 
 1. 8 narrative Parts plus one appendices divider.
-2. 28 chapters and 12 appendices.
+2. 28 chapters and 10 appendices.
 3. Current diagram and citation totals are derived from the canonical manuscript and diagram/reference registries. Historical totals must not be hard-coded into the style contract; code-block and table totals are likewise derived by the validators.
 4. Balanced braces/environments outside verbatim code.
 5. Every image and bundled font exists and passes minimum resolution/file-integrity gates.

@@ -156,7 +156,7 @@ def main() -> int:
         "appendix_dividers": 1,
         "chapters": 28,
         "chapter_covers": 28,
-        "appendices": 12,
+        "appendices": 10,
     }
     for key, value in expected.items():
         if measurements[key] != value:

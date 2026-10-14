@@ -72,8 +72,8 @@ checkpoints.
 | Enterprise / solution architect | Parts I–VIII | Boundaries, contracts, topology, integration, security, and lifecycle |
 | Platform engineer | Parts I–III, Chapter 15, Parts V–VIII | Reusable platform services, SDKs, gateways, telemetry, release, and operations |
 | Application developer | Parts I–IV, Chapter 22, Part VII | Agent design, knowledge, tools, Skills, tests, debugging, and improvement |
-| Security / risk / privacy | Chapter 1, Parts II, V, VI, VIII and Appendices F, J | Knowledge governance, threat controls, evidence, approvals, exceptions, and assurance |
-| SRE / operations | Chapter 1, Chapter 15, Parts VII, VIII and Appendices B, K | SLOs, incidents, recovery, capacity, and verified-success economics |
+| Security / risk / privacy | Chapter 1, Parts II, V, VI, VIII and Appendices F, I | Knowledge governance, threat controls, evidence, approvals, exceptions, and assurance |
+| SRE / operations | Chapter 1, Chapter 15, Parts VII, VIII and Appendix B | SLOs, incidents, recovery, capacity, and verified-success economics |
 
 Every path assumes Chapter 1's vocabulary.
 
@@ -167,10 +167,8 @@ Together, these principles establish a simple operating contract: agents provide
 - F. Known Limits and the Controls That Contain Them
 - G. A Practical Roadmap for Enterprise Adoption
 - H. Companion Implementation Guide: Harborlight Mortgage
-- I. Prompt and Acceptance Criteria for a Coding Agent
-- J. References and Evidence Scope
-- K. Capacity, Resilience, and Release Acceptance
-- L. Glossary
+- I. References
+- J. Glossary
 
 ## Index
 
