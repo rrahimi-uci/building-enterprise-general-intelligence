@@ -31,8 +31,8 @@
     },
     {
       "path": ".github/workflows/latex.yml",
-      "bytes": 3510,
-      "sha256": "a5a327cc35abc263638f80e08bb0f8bf269b9800d1fe74ca4eeb63c2ac679623"
+      "bytes": 3498,
+      "sha256": "30ad90a50913a24143167cf567d70b465225e40b1924399ed4000efba65152ae"
     },
     {
       "path": ".github/workflows/validate.yml",
@@ -56,13 +56,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 49292,
-      "sha256": "c0c796d0d295db3ee53e8a0da33fe1ddefd8d7af82daee407c7ffd07f3d279e1"
+      "bytes": 49720,
+      "sha256": "9f99cbaf106693a6621cbcfa89d3111192a30673a7b9a806ec114da275fd2f44"
     },
     {
       "path": "CONTRIBUTING.md",
-      "bytes": 3404,
-      "sha256": "d7186a6b9bbb98e7bfc27dbee5dd300b451351526634c84c5ed4693be2800b3b"
+      "bytes": 3398,
+      "sha256": "b26fe672200a1482aecf6fad0bd39298a675652b6dca7c0a8a36d0146d3362df"
     },
     {
       "path": "Dockerfile.latex",
@@ -81,13 +81,13 @@
     },
     {
       "path": "Makefile",
-      "bytes": 8394,
-      "sha256": "8eec1bae721e49f8ed7c74ae8decdbf5f970e5d9d43703db69465313d4367bb5"
+      "bytes": 8376,
+      "sha256": "c5be71892415bc4131bfa0d036b29afe4623678fde5906e11f2eddc0434a1f3e"
     },
     {
       "path": "README.md",
-      "bytes": 24280,
-      "sha256": "722c402c402d677181e993392d3e0a37d15dde2c2a4840f840f652235c4e56a4"
+      "bytes": 24297,
+      "sha256": "4c5d842c793662b90cd429bebc5037c5a74038d44205105c83a5c1cd282c56c0"
     },
     {
       "path": "RELEASE-CHECKLIST.md",
@@ -1546,8 +1546,8 @@
     },
     {
       "path": "latex/README.md",
-      "bytes": 6664,
-      "sha256": "13fdb64935ce090b2a92c15b4e3741fbea6f2bae760ebe4829dcb4c7c09cda58"
+      "bytes": 6681,
+      "sha256": "6fdbed424cb48bc9474bc6d23b95c021d596d0ab0112834f55f795649d908564"
     },
     {
       "path": "latex/bookindex.ist",
@@ -1561,8 +1561,8 @@
     },
     {
       "path": "latex/compile.sh",
-      "bytes": 1534,
-      "sha256": "f452bf2e9343b0b3943c0c60d882267f692a4989cac4a748ad64fc7e564e0dd5"
+      "bytes": 1528,
+      "sha256": "a92dbe721e96ed0794d11b819b6668a9f75d4364b695c9aabc67a0f8f737abbc"
     },
     {
       "path": "latex/content/book-content.tex",
@@ -1921,18 +1921,18 @@
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 39250823,
-      "sha256": "a3955f79db506f96410fcc0f69ce650f49270d3bff319267bbcf6af9afffa194"
+      "bytes": 39250786,
+      "sha256": "ed704af85145ced0afb9147b1cb0e390868b67384dbdda1b89e211e399f4e863"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 39250823,
-      "sha256": "a3955f79db506f96410fcc0f69ce650f49270d3bff319267bbcf6af9afffa194"
+      "bytes": 39250786,
+      "sha256": "ed704af85145ced0afb9147b1cb0e390868b67384dbdda1b89e211e399f4e863"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "c7d6712b690e76014de3acca0fcb484f848dfd2d48ed440be925fb5eeab4f5cb"
+      "sha256": "31f635ad42bac37f86c66ebf510ead75869defd396a14074b51080f4156410cf"
     },
     {
       "path": "qa/latex-validation-report.json",
@@ -2346,8 +2346,8 @@
     },
     {
       "path": "tools/build_latex.py",
-      "bytes": 37811,
-      "sha256": "754909cf1f2f5883d443939872eafbfe03061cb07e1ff3313484b9d260f4f265"
+      "bytes": 37805,
+      "sha256": "767d3bca1b190e1a75d88fd3423f9608c3ab0b84f3f26069dd2ea8257dd5e718"
     },
     {
       "path": "tools/callouts.py",

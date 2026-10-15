@@ -6,7 +6,7 @@ PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 ROOT := $(CURDIR)
 ZIP ?= $(abspath ../Enterprise-Agentic-AI-Book-v1.0.0-Complete-Package-with-LaTeX.zip)
 TEX_ENTRY := latex/Enterprise-General-Intelligence-v1.0.0.tex
-PDF_OUT := dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf
+PDF_OUT := dist/Enterprise-General-Intelligence-v1.0.0.pdf
 
 .DEFAULT_GOAL := help
 
@@ -21,7 +21,7 @@ help:
 	@echo "Authoring loop"
 	@echo "  setup           create .venv, install Python deps, install missing TeX packages"
 	@echo "  draft           assemble + one XeLaTeX pass; fastest way to eyeball a change"
-	@echo "  pdf             full three-pass XeLaTeX build -> dist/*-LaTeX.pdf"
+	@echo "  pdf             full three-pass XeLaTeX build -> dist/*.pdf"
 	@echo "  all             build + latex + validate + the PDF in dist/ (rebuilt only when stale)"
 	@echo ""
 	@echo "Generation"
@@ -143,7 +143,7 @@ latex-pdf: latex-validate
 	@./tools/bootstrap_tex.sh --check
 	./latex/compile.sh
 
-## dist-pdf: keep dist/*-LaTeX.pdf current. Compiles only when the PDF is missing
+## dist-pdf: keep dist/*.pdf current. Compiles only when the PDF is missing
 ## or the content of anything it is built from (generated LaTeX, styles, diagram
 ## and cover renders, fonts) changed since the last compile -- compared by hash,
 ## because the generated LaTeX is rewritten on every run and timestamps would

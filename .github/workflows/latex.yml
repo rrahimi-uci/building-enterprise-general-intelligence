@@ -59,7 +59,7 @@ jobs:
           name: enterprise-agentic-ai-book-v1.0.0-xelatex
           retention-days: 14
           path: |
-            dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf
+            dist/Enterprise-General-Intelligence-v1.0.0.pdf
             latex/build/*.log
             latex/build/*.toc
 
@@ -82,7 +82,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release upload "${GITHUB_REF_NAME}" \
-            "artifacts/dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf" \
+            "artifacts/dist/Enterprise-General-Intelligence-v1.0.0.pdf" \
             "dist/Enterprise-General-Intelligence-v1.0.0.docx" \
             "dist/Enterprise-General-Intelligence-v1.0.0.md" \
             --clobber
