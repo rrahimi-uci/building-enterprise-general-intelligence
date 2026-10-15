@@ -4,9 +4,21 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Preface in the author's voice
+
+- The preface is rewritten in the first person, as the author: why the book was written (agent demos that cannot answer who approved an action, what survives a restart, or which policy version was read), where the perspective comes from (enterprise AI and agentic platforms in mortgage and financial environments), the book's path, why Harborlight, and how to read cited and uncited claims. Its substance is unchanged; the heading is now simply "Preface".
+
+### Documentation aligned with the current repository
+
+- **README.md:** the canonical-source steps name the TikZ diagram workflow, the LaTeX builder, and what assembly generates (examples, references, index); the requirements table lists what `make diagrams`, `make cover-art`, and `make chapter-covers` actually need; the repository map describes the code-drawn cover and TikZ-only diagram sources.
+- **latex/README.md:** the figure contract describes the 46 TikZ figures (vector PDF at 95 percent or more of final size, PNG at 300 dpi or better), the chapter covers and the makeindex index; the package list matches `bookstyle.sty`.
+- **examples/README.md:** the example table lists all 47 registered examples (25 were missing), generated from `config/examples.json`; C03 is described as the runtime interface.
+- **AGENTS.md and the design system:** every figure is TikZ; Graphviz and Mermaid remain only as renderer capabilities.
+
 ### Cover redesigned around the book's thesis; title set horizontally
 
 - **New cover art, drawn from code** (`tools/render_cover_art.py`, `make cover-art`, output `assets/cover/cover-art.png`). The former stock-style isometric artwork did not say what the book is about. The new composition does: a bounded model at the centre that only proposes, a deterministic shell of gates around it, a ring of governed knowledge, and a durable, governed workflow carrying the four platform controls (admission, policy, gateway, evaluate and release). Intent enters on the left, only a verified effect reaches the systems of record on the right, and evidence loops back into evaluation and release. It reuses the chapter covers' palette and glyphs. The old `agent-architecture-art-source.jpeg` is removed.
+- **Cover detail.** Each control carries a line naming what it checks (identity · risk · budgets; decide · grant · log; tools · MCP · A2A; evals · canary · rollback). The context ring shows knowledge, rules, and memory feeding authorized context; the shell's entry gate bounds the request and its exit gate validates and authorizes the proposal, matching Chapter 2's six gates; durable checkpoints sit on the workflow ring; a release arc carries evaluated changes back into the platform; human approval feeds the gateway; a receipt returns from the systems of record; evidence (traces, outcomes, feedback) leaves the runtime at the gateway for evaluation, as in Figure S-1; and a key explains every line style used.
 - The cover title is no longer broken one word per line. `tools/generate_cover.py` now fills words onto each line up to the cover's text column (165 px margins on a 2550 px page) and wraps only when the next word would cross it, giving BUILDING AN ENTERPRISE / GENERAL INTELLIGENCE / PLATFORM. It reads the book title from `config/book.json` (the hand-made `title_lines` list is gone), and the rule under the subtitle now spans the widest title line.
 
 ### Parts VI–VIII and appendix review comments (DOCX review, 2026-10-14)

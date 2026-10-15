@@ -193,16 +193,14 @@ Every diagram is generated from an editable source in `assets/diagrams/src/` and
 rendered twice: a **vector PDF** that XeLaTeX embeds, and a **raster PNG** for the
 DOCX edition, which cannot embed PDF. Never hand-edit a render.
 
-Graphviz (`.gv`) is the default for figures not yet converted. Mermaid (`.mmd`)
-is used where a sequence diagram genuinely reads better than a box-and-arrow
-graph. TikZ (`.tikz.tex`) is the publication style: soft pastel cards with
+Every figure in the book is TikZ (`.tikz.tex`), the publication style: soft pastel cards with
 darker same-hue borders, pill edge labels, icons, and curved feedback paths,
 drawn with the shared package `latex/styles/professional-diagrams.sty` and
 compiled with XeLaTeX in the book's own font. Its palette, type scale, spacing
-constants and rules are in `reviews/diagram-modernization/style-guide.md`. The
-Graphviz house style lives in `assets/diagrams/src/_theme.gv` and is spliced in
-at render time, so restyling the Graphviz figures is one edit; restyling the
-TikZ figures is one edit to the `.sty`.
+constants and rules are in `reviews/diagram-modernization/style-guide.md`, and
+restyling every figure is one edit to the `.sty`. The renderer still accepts
+Graphviz (`.gv`, themed by `_theme.gv`) and Mermaid (`.mmd`) sources, but no
+figure uses them; a new figure should be TikZ.
 
 A TikZ figure is drawn at final size: the canvas is about 7 in wide (the 7.06 in
 text width) so 9 pt in the source is 9 pt on the page, and it is never shrunk
