@@ -2,7 +2,7 @@
 
 **Result:** PASS
 **References:** 64
-**Citation occurrences:** 183
+**Citation occurrences:** 182
 **Verified:** 2026-10-13
 
 All sources were checked against their recorded claim scope. The audit validates attribution, not the book's independently authored architecture recommendations.
