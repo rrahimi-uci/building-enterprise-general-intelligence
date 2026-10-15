@@ -16,6 +16,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 - The README now starts with the cover, title, and a reader-facing description of the book (thesis, what readers learn, the Harborlight case study, contents by Part, audience, and where to read it). The maintainer guide follows under "Maintaining the book", unchanged. The GitHub repository description now reads "A practical guide to building enterprise AI agents that are secure, governed, auditable, and dependable in production."
 
+### Release report no longer records a local path
+
+- `reports/release-package.json` named the packaged ZIP by absolute path, which put the packager's temporary directory into a committed file. `tools/package_release.py` now records the archive's file name only. No manuscript or edition changes.
+
 ### Back cover
 
 - The DOCX and PDF editions now end with a back cover: the book description (headline, the "model proposes, system decides, evidence proves" principle, six outcomes, the Harborlight case study, audience, and author line) over the cover art. `tools/generate_cover.py` renders it from `cover.back` in `config/book.json`; both renderers place it after the index; validators check its size and resolution and the DOCX image count. The Markdown edition has no back cover. No manuscript text changes.
