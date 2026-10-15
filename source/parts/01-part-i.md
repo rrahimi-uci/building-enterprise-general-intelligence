@@ -418,7 +418,9 @@ releases and runs the system is drawn the same way and for the same reason.
 
 Chapter 4 opens these bands into planes and components in Figure 4-1 and
 maps its names to these. The notation carries over — solid is the request,
-dashed is control, dotted is evidence.
+dashed is control, dotted is evidence. The book ends with the same system drawn
+once more, in Figure S-1 of the Closing Perspective, with every service the
+chapters introduce in place; come back and compare the two when you finish.
 
 ## Each control point answers a different question
 

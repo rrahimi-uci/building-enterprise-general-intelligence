@@ -50,7 +50,7 @@ seven planes and the main components in each.
 
 Read the figure downward: each band is one ownership plane, and the solid path traces one request from intent to committed effect, narrowing in authority at every step. *Security and governance* and *Evaluation and operations* are drawn as vertical spines rather than bands because neither sits between two planes — the policy decision point is consulted at admission, at run control, and again at the gateways, and the collector gathers evidence from every plane inside the trust boundary. Dashed edges are control, dotted edges are evidence, and the bottom band sits outside the trust boundary: nothing there is assumed, and everything returned from it is revalidated. The key beneath the figure expands its abbreviations.
 
-The planes refine the bands of Chapter 1's Figure 1-3, and the second column below names the band or bands each one refines. Two bands do not become planes: systems of record stay outside the trust boundary, and the platform that builds, releases, and runs the system belongs to Parts III and VIII.
+The planes refine the bands of Chapter 1's Figure 1-3, and the second column below names the band or bands each one refines. Two bands do not become planes: systems of record stay outside the trust boundary, and the platform that builds, releases, and runs the system belongs to Parts III and VIII. Figure S-1 in the Closing Perspective later regroups these seven planes into the four frames a deployment uses (global control, regional runtime, external systems, and offline improvement) without changing who owns any record.
 
 | **Plane** | **Refines Figure 1-3 band** | **Responsibilities** | **Authoritative records** | **Boundary** |
 | --- | --- | --- | --- | --- |

@@ -104,7 +104,11 @@ checkpoints.
 | Security / risk / privacy | Chapter 1, Parts II, V, VI, VIII and Appendices F, I | Knowledge governance, threat controls, evidence, approvals, exceptions, and assurance |
 | SRE / operations | Chapter 1, Chapter 15, Parts VII, VIII and Appendix B | SLOs, incidents, recovery, capacity, and verified-success economics |
 
-Every path assumes Chapter 1's vocabulary.
+Every path assumes Chapter 1's vocabulary. If you want the whole picture before
+the details, look at Figure S-1 in the Closing Perspective, the unified
+architecture, and keep Appendix C's contracts beside it; the chapters then fill
+in each part of that picture. Its labels will make full sense only after the
+chapters that define them.
 
 ## How the book is organized
 

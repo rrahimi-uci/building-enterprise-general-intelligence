@@ -104,7 +104,11 @@ checkpoints.
 | Security / risk / privacy | Chapter 1, Parts II, V, VI, VIII and Appendices F, I | Knowledge governance, threat controls, evidence, approvals, exceptions, and assurance |
 | SRE / operations | Chapter 1, Chapter 15, Parts VII, VIII and Appendix B | SLOs, incidents, recovery, capacity, and verified-success economics |
 
-Every path assumes Chapter 1's vocabulary.
+Every path assumes Chapter 1's vocabulary. If you want the whole picture before
+the details, look at Figure S-1 in the Closing Perspective, the unified
+architecture, and keep Appendix C's contracts beside it; the chapters then fill
+in each part of that picture. Its labels will make full sense only after the
+chapters that define them.
 
 ## How the book is organized
 
@@ -659,7 +663,9 @@ releases and runs the system is drawn the same way and for the same reason.
 
 Chapter 4 opens these bands into planes and components in Figure 4-1 and
 maps its names to these. The notation carries over — solid is the request,
-dashed is control, dotted is evidence.
+dashed is control, dotted is evidence. The book ends with the same system drawn
+once more, in Figure S-1 of the Closing Perspective, with every service the
+chapters introduce in place; come back and compare the two when you finish.
 
 ## Each control point answers a different question
 
@@ -1823,7 +1829,7 @@ seven planes and the main components in each.
 
 Read the figure downward: each band is one ownership plane, and the solid path traces one request from intent to committed effect, narrowing in authority at every step. *Security and governance* and *Evaluation and operations* are drawn as vertical spines rather than bands because neither sits between two planes — the policy decision point is consulted at admission, at run control, and again at the gateways, and the collector gathers evidence from every plane inside the trust boundary. Dashed edges are control, dotted edges are evidence, and the bottom band sits outside the trust boundary: nothing there is assumed, and everything returned from it is revalidated. The key beneath the figure expands its abbreviations.
 
-The planes refine the bands of Chapter 1's Figure 1-3, and the second column below names the band or bands each one refines. Two bands do not become planes: systems of record stay outside the trust boundary, and the platform that builds, releases, and runs the system belongs to Parts III and VIII.
+The planes refine the bands of Chapter 1's Figure 1-3, and the second column below names the band or bands each one refines. Two bands do not become planes: systems of record stay outside the trust boundary, and the platform that builds, releases, and runs the system belongs to Parts III and VIII. Figure S-1 in the Closing Perspective later regroups these seven planes into the four frames a deployment uses (global control, regional runtime, external systems, and offline improvement) without changing who owns any record.
 
 | **Plane** | **Refines Figure 1-3 band** | **Responsibilities** | **Authoritative records** | **Boundary** |
 | --- | --- | --- | --- | --- |
