@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 622,
+  "file_count": 483,
   "files": [
     {
       "path": ".gitattributes",
@@ -41,8 +41,8 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 819,
-      "sha256": "0f10338c9bcb2d4027973f269939fa80d9c25c6d6816204689ebff1f2643647d"
+      "bytes": 1025,
+      "sha256": "2b39b2ee3016ab90046b684ac0e0158d17b5a234fc924e3764f77489b78720f2"
     },
     {
       "path": ".latexmkrc",
@@ -51,13 +51,13 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 8327,
-      "sha256": "e96389fcaaabe31162cf3e824bb4cfab53959f7c1b82a488e2fc48fb369d8474"
+      "bytes": 8312,
+      "sha256": "01d85b33c25da54b685e5f3252ee3cf5f724715667f1e8abf4aa8a5c9f800445"
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 48549,
-      "sha256": "a93d337be5a1b22198c2e175734c26531f3cb3cf72375f31c9a593f0dfd81df5"
+      "bytes": 49250,
+      "sha256": "c5c3f6774cfb967f0f8516c197941ef84628f18e0f4cf87d0a6cf7f93b137758"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -86,8 +86,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 19644,
-      "sha256": "92643b3b3c3b6a6757cabae035dd299d4f868653db178fe837c167e7318dc967"
+      "bytes": 20122,
+      "sha256": "ac2cc9037bd39fdc2dcc668a1846cd549f762dc89d0718923f5548753cc499ce"
     },
     {
       "path": "RELEASE-CHECKLIST.md",
@@ -781,8 +781,8 @@
     },
     {
       "path": "assets/diagrams/src/unified-enterprise-architecture.tikz.tex",
-      "bytes": 11214,
-      "sha256": "626e1139005b8c8a3ebd6e41f66f7773830312e8c209ec6529d2cfa177a5f0b8"
+      "bytes": 11125,
+      "sha256": "753fe46402c9d292170781ecd659aff1940301e4aa81aacc143404673db77b8f"
     },
     {
       "path": "assets/diagrams/supervisor-worker.pdf",
@@ -816,13 +816,8 @@
     },
     {
       "path": "book/manuscript.md",
-      "bytes": 812599,
-      "sha256": "c4f93ac54e443a553069f7f97810a05736a1450d229f88935199fa2e91be8e7b"
-    },
-    {
-      "path": "code-gap.md",
-      "bytes": 98411,
-      "sha256": "50f0fc651b5fc9fe2adcc95aca2a355a64d18f0193040225a90de39fb450ed57"
+      "bytes": 812527,
+      "sha256": "4545bbdd38018d2372f00a04b66a7db3fc9b6c74d9dfa7aa0e6c7bc84bb1af20"
     },
     {
       "path": "config/book.json",
@@ -1016,13 +1011,13 @@
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.docx",
-      "bytes": 39250823,
-      "sha256": "a3955f79db506f96410fcc0f69ce650f49270d3bff319267bbcf6af9afffa194"
+      "bytes": 39250786,
+      "sha256": "ed704af85145ced0afb9147b1cb0e390868b67384dbdda1b89e211e399f4e863"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.md",
-      "bytes": 812599,
-      "sha256": "c4f93ac54e443a553069f7f97810a05736a1450d229f88935199fa2e91be8e7b"
+      "bytes": 812527,
+      "sha256": "4545bbdd38018d2372f00a04b66a7db3fc9b6c74d9dfa7aa0e6c7bc84bb1af20"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.tex",
@@ -1571,8 +1566,8 @@
     },
     {
       "path": "latex/content/book-content.tex",
-      "bytes": 1022665,
-      "sha256": "7f3e6bb5b61f9db449972db868ec8d07f1f216607cedaafd64ab42ad049de85c"
+      "bytes": 1022560,
+      "sha256": "b6513210d7614fabc93c69e0fcd3a53fe8f9ca5a4fc037ef0dd7840082338728"
     },
     {
       "path": "latex/fonts/LICENSE-SIL-OFL-1.1.txt",
@@ -1626,8 +1621,8 @@
     },
     {
       "path": "latex/styles/professional-diagrams.sty",
-      "bytes": 10130,
-      "sha256": "6f3e4ccf8ca7493ac89e49c4b89c3c57500a4d7d7b40b37c185156b04f7bf177"
+      "bytes": 10115,
+      "sha256": "d87c19db4571481c0feb324199065063375427bce5376266ad249b573775d183"
     },
     {
       "path": "mortgage_case/__init__.py",
@@ -1921,38 +1916,38 @@
     },
     {
       "path": "qa/build-report.json",
-      "bytes": 309,
-      "sha256": "6bbc5a1af5bc4644fe67a1fdd03b8007dfed3de7f0d05ecc238966124d7fc87b"
+      "bytes": 288,
+      "sha256": "d23cb9c1677d11f189a8d116964d9c69586761b5d94f66c17b7317d1b6c2dd33"
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 39250823,
-      "sha256": "a3955f79db506f96410fcc0f69ce650f49270d3bff319267bbcf6af9afffa194"
+      "bytes": 39250786,
+      "sha256": "ed704af85145ced0afb9147b1cb0e390868b67384dbdda1b89e211e399f4e863"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 39250823,
-      "sha256": "a3955f79db506f96410fcc0f69ce650f49270d3bff319267bbcf6af9afffa194"
+      "bytes": 39250786,
+      "sha256": "ed704af85145ced0afb9147b1cb0e390868b67384dbdda1b89e211e399f4e863"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "c7d6712b690e76014de3acca0fcb484f848dfd2d48ed440be925fb5eeab4f5cb"
+      "sha256": "31f635ad42bac37f86c66ebf510ead75869defd396a14074b51080f4156410cf"
     },
     {
       "path": "qa/latex-validation-report.json",
       "bytes": 17287,
-      "sha256": "e1108703262cb6d44b4ebbcf69b8909adc484f410d41d24911858e2d1643fef7"
+      "sha256": "0e9ad1872eb16c33029fb3809bf0c6846150c1be181f79c884bdaca329d8c507"
     },
     {
       "path": "qa/validation-report.json",
       "bytes": 1018,
-      "sha256": "85ee6550e7feb56eb7e1a9023e2868cdd115d46642b0cee8c574391710ee76e9"
+      "sha256": "7e5fe1b934cae9e5620b02d03c5265a0216ad4a637e2284d13d272917108451f"
     },
     {
       "path": "reports/assembly-report.json",
       "bytes": 1444,
-      "sha256": "6eb136c119aeca7c033ee737d571da6c091a4a234639f4d0f9083efd4163ed6f"
+      "sha256": "d59fbc5a9e0bf23c6da767cb563b951aabb7894504d37e65bb70efdf5662b6a3"
     },
     {
       "path": "reports/chapter-cover-report.json",
@@ -1981,8 +1976,8 @@
     },
     {
       "path": "reports/editorial-audit.md",
-      "bytes": 18980,
-      "sha256": "86a9fb5f0f48a58f2303c33f0a54e7903159e10a3eb13e47c384ded90dcacd11"
+      "bytes": 18948,
+      "sha256": "cb517269616ce0f993bbfb1ee0f641d88d4788e292f2161028cc63a429dbc228"
     },
     {
       "path": "reports/editorial-transformation.json",
@@ -2002,7 +1997,7 @@
     {
       "path": "reports/latex-build-report.json",
       "bytes": 2430,
-      "sha256": "93b93a8b95ebb6f21d4c9e79c74be02e93001294d9e05c63359bf14bd9b568c6"
+      "sha256": "35aaf7327f8df29dd8deff73ace97463f8eaff9d83bbdd8db2f631d96185a84d"
     },
     {
       "path": "reports/latex-validation.md",
@@ -2027,717 +2022,12 @@
     {
       "path": "reports/validation-summary.md",
       "bytes": 1012,
-      "sha256": "4f217898a403f04a3143413281d7a71b281d7122345a9c2d97b9ff6530119c27"
+      "sha256": "c11411874119d8aae27f691c7d471b900f1ae291bda3e4884ea7343e0f6c0868"
     },
     {
       "path": "requirements.txt",
       "bytes": 105,
       "sha256": "49c4ffba917032e2de9d2bb8b5c2178a1109fad0e4e7e1aecaea2445b0f1b6a5"
-    },
-    {
-      "path": "reviews/content-correctness-validation/appendices-validation.md",
-      "bytes": 12348,
-      "sha256": "626539f91dd8563f68b7f29bb17136f72750e3d428bbe6af14950e19017e1d35"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-01.md",
-      "bytes": 4784,
-      "sha256": "b50a054a1802ec5324e2900225e6d1405148aa5771f4858f0e645da3f14785ef"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-02.md",
-      "bytes": 3592,
-      "sha256": "4996148430642ca6395a72f1e0693bbcd6367414edbb4c73a1530296add3c79f"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-03.md",
-      "bytes": 3836,
-      "sha256": "02cabb70f57ef1f2ae07ac2bd9cbf72c43a6a96a787f5c2f1c50f05b0720bbd4"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-04.md",
-      "bytes": 3787,
-      "sha256": "56bd6441408b60f2bc3b8f919af37267cef03271cf6fb57fa93e41227c9b0704"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-05.md",
-      "bytes": 4634,
-      "sha256": "cff6433905c1d7fe6c0d3289f14fe9126beff69be34f1ab0d8e7108374cb1032"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-06.md",
-      "bytes": 4448,
-      "sha256": "54e1d16d3c0f3ab5a77641deb46ea28c7dacc5e396dcfcfb34f323dcb1b495bd"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-07.md",
-      "bytes": 4741,
-      "sha256": "e8d70d9784d669b1879087aca21d9c62cfc0287db07b053914f08ff70aa88a87"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-08.md",
-      "bytes": 3558,
-      "sha256": "40a7d002a49c8828a496a575cde1786534348a7007e24d3b2986a62c19a9c974"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-09.md",
-      "bytes": 3791,
-      "sha256": "1b0d8a63b8465b400952c32c3ad1101891b816f3bbdb921734e1fef129576d07"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-10.md",
-      "bytes": 3681,
-      "sha256": "8341914dcc328589c6352eacfacd92d59e01baf8314936e2470707e760aef0f2"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-11.md",
-      "bytes": 3686,
-      "sha256": "86cad65560bcd136db4ee0e3cb3f46cb2e3169f99186359252b8fe7b61c65945"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-12.md",
-      "bytes": 3686,
-      "sha256": "32636e70e4003c27c6f5185066af7c0a355448ea47fb396f0eac6ac0635303a4"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-13.md",
-      "bytes": 7600,
-      "sha256": "6f5db87b85ffb1f04e8f995e0c92bec9a39c4fe540267086cb64cfe9f7b61083"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-14.md",
-      "bytes": 3682,
-      "sha256": "7f1cc3d0e685eee1a680f13937bbbdfbddfd505955b3f57b60e402d13d80f5ce"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-15.md",
-      "bytes": 4946,
-      "sha256": "368f3a8a5133e505d5b4909457991cfba2028ea27c4e513b03bbfb0e3926a9fc"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-16.md",
-      "bytes": 3660,
-      "sha256": "190ae9c54e93b11d72561b9f4c89f9191e579b664074d1b80ce786fc4af50fa3"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-17.md",
-      "bytes": 4024,
-      "sha256": "ab0bef66dae50f500b1815fc93acc3647c594a304e56cddff3540cdb36fca23d"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-18.md",
-      "bytes": 3545,
-      "sha256": "830108c417cf44acb0fa1fa0238eae26dcf340d873f050eeaf91cb9c41fcd059"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-19.md",
-      "bytes": 3622,
-      "sha256": "15e59cfaac5f4ecce281adc1ad7906263518fefa553bba0c85d7b6de369fc2c0"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-20.md",
-      "bytes": 5103,
-      "sha256": "102fb7f03c25f38146339c13c9c230dff1eba7d6213c7457c20651a212a4d1ef"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-21.md",
-      "bytes": 3678,
-      "sha256": "01fe999326620ee8b9be4259661860c1274f04482f2dd8d4a572148ff6b9ec97"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-22.md",
-      "bytes": 6391,
-      "sha256": "a86d27f510d76dca23e2caeceaaa8a03a5bc954fdfac6087437b4b10e6b7d5e1"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-23.md",
-      "bytes": 3683,
-      "sha256": "53ab0cbf8b827315b11740ac65bb6cab5d456f97bece30a16b1613f21845d877"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-24.md",
-      "bytes": 6568,
-      "sha256": "b69cc432fa20f2613c4822cd199d3d8983a73c4a00ddf4597a1a0a7fd5f8ca17"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-25.md",
-      "bytes": 5200,
-      "sha256": "5052689211d574bed197ab1b669f2ad20b854a36572ceb594361b1aa813d6ce4"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-26.md",
-      "bytes": 3663,
-      "sha256": "774be3f33b55509e9b874ebc8d880abc1312c441fdc0fa8038c27f4e2ac174ac"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-27.md",
-      "bytes": 3728,
-      "sha256": "d7867fd7ef0efc533f8487a494143388a9a066fd0e308819a2903ccd16712bf6"
-    },
-    {
-      "path": "reviews/content-correctness-validation/chapter-28.md",
-      "bytes": 4752,
-      "sha256": "c01d7b82b0b772c46db502be18931ee0aa9e9e15938ed664cc73aac864936633"
-    },
-    {
-      "path": "reviews/content-correctness-validation/evidence-ledger.md",
-      "bytes": 13012,
-      "sha256": "42641e753d1f012efe0c3e3a4d3699e87ac9df6c56050407099b959f10f1bd93"
-    },
-    {
-      "path": "reviews/content-correctness-validation/metadata-title-drift.md",
-      "bytes": 5632,
-      "sha256": "3238d92708be3dfaa558dfba770514a20ab685ee5f11be9e5689eca3f6c4e28c"
-    },
-    {
-      "path": "reviews/content-correctness-validation/overall-book-validation.md",
-      "bytes": 24915,
-      "sha256": "9e0030fd1199e4e8ae7b1e27f9b79616b88e15a9640154aafde5962c6d44ce38"
-    },
-    {
-      "path": "reviews/content-correctness-validation/pass-2/README.md",
-      "bytes": 5025,
-      "sha256": "1bea0ac0cd8d72da82d4142db1a961d36c9e8790dab05163f996234f6b68ac58"
-    },
-    {
-      "path": "reviews/content-correctness-validation/pass-2/citations-and-numbers-front-to-part-iv.md",
-      "bytes": 15548,
-      "sha256": "8700fb52676d9ce4228afeca9b9df0d51eee4192e2c60d964e3d8b9124221348"
-    },
-    {
-      "path": "reviews/content-correctness-validation/pass-2/citations-and-numbers-part-v-to-appendices.md",
-      "bytes": 20409,
-      "sha256": "40e9f9008eaafd35713e7282ea6b6bdf0024fdcf2953faa2e5dc4fd81dfff9d3"
-    },
-    {
-      "path": "reviews/content-correctness-validation/pass-2/reference-registry-audit.md",
-      "bytes": 14757,
-      "sha256": "e576cba9f4d666f4c36a5a04fd51873184542f6bbd83c4d51fafbeb569b1a7b7"
-    },
-    {
-      "path": "reviews/content-correctness-validation/pass-2/visual-and-layout-qa.md",
-      "bytes": 14297,
-      "sha256": "179ad1781c8ac5c8d0e535114bf5682ddc6e8779ef1520bf11e8577e121f778c"
-    },
-    {
-      "path": "reviews/content-correctness-validation/reference-access-check.md",
-      "bytes": 7088,
-      "sha256": "2c9943bc18585d76443743171b4fa6ead8459bcc0ac11b1aa8ae33393a50e2e7"
-    },
-    {
-      "path": "reviews/content-plans/chapter-05-document-ingestion-plan.md",
-      "bytes": 57217,
-      "sha256": "8dfa2c9a09ea919a44d58f4da88da462be324e35b3a720f4c54dd17294affb1b"
-    },
-    {
-      "path": "reviews/continuity-and-flow/book-concept-map.md",
-      "bytes": 121501,
-      "sha256": "12172a7f105a208d03f4ce992b437b25538cf0c8d9156d1bcd30a5d729f484f1"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-01.md",
-      "bytes": 46795,
-      "sha256": "5b495847180195d920ca6ee67b6fae1ae42e1211cd7fe1108c642aa7f2688a66"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-02.md",
-      "bytes": 34212,
-      "sha256": "181497861c1bd8e04834d0d5466340157b3d69c8085c69ed4114a1da604989fc"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-03.md",
-      "bytes": 49267,
-      "sha256": "f828888b7a75c5b889f9c7275640d4e8664cc37f9854b189500588962eca5a4d"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-04.md",
-      "bytes": 46905,
-      "sha256": "3eb2e172683241879df0875993ea9b330933186cf54ab25231470f286f31ee03"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-05.md",
-      "bytes": 25271,
-      "sha256": "adeaf78666b2a2ee04ca8eaa5d57dc6c0f405f6bf10bc648582f323f154bf4e8"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-06.md",
-      "bytes": 32498,
-      "sha256": "cea4ac01a8b68155dbf5467a26e5025293ec89aa689c2ad8ac6daa825f027411"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-07.md",
-      "bytes": 39629,
-      "sha256": "f9a6347f3cedb1a09f8f4fdbf26326732ab7b09edfebef8c18c17f781bfb1186"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-08.md",
-      "bytes": 37647,
-      "sha256": "32f58e656572c753c1e58ac0d65d9f108738f71ca086b221de917ea5817b66c2"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-09.md",
-      "bytes": 26809,
-      "sha256": "dc8e279ba548afd9e90bf96cf407aef36aa03d72df5e482e63cbfb0703efb24d"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-10.md",
-      "bytes": 27536,
-      "sha256": "15496cb5ed8ba39614d88e9b3d4180493e5bb3c818c05eeb7f05c9bc5069029f"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-11.md",
-      "bytes": 29092,
-      "sha256": "2424d84a6463fa4a84ffcac5dc61d18b605e7ef2fda2d86fe975f0208fd5d28a"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-12.md",
-      "bytes": 32115,
-      "sha256": "4eb9e374dd2995fd5bfb0203903d96fc049db97fdf447fab854365d36b44b1aa"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-13.md",
-      "bytes": 28989,
-      "sha256": "869ba60ac9f2bbbdf8c776ba2b632b83e4112d611a1e6eb113f0e5e47ec7946d"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-14.md",
-      "bytes": 33891,
-      "sha256": "a8d1ea2ca80619d8b2239bc82a7ca88898024433d2f17eee24cf7174bfdc624b"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-15.md",
-      "bytes": 33921,
-      "sha256": "e58dc6c7766f08086688c8191fdab0b4051fc5c26df5beb5d28e5234b62cf804"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-16.md",
-      "bytes": 26711,
-      "sha256": "81fb281d48cd7510db3c3575515fd857d88d536d280627154486362e496ae427"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-17.md",
-      "bytes": 31838,
-      "sha256": "ea3cd1435e463a700f4988b817d5666cfb791cf5e321fbf9732adedc86bc8674"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-18.md",
-      "bytes": 38412,
-      "sha256": "0fa28b6a73c0a8737fdf71617f0708b46ea5e082589a520dda8dae9bb12a6f27"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-19.md",
-      "bytes": 39772,
-      "sha256": "b92929c2ca9dd7f8158e6c43cec38fd8197bc0c489782b13d86593885c84c69b"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-20.md",
-      "bytes": 33435,
-      "sha256": "ec8ae42bbae01a274a61e11b54a361e00d4a1b3eb818158a1cd263b04a1a486a"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-21.md",
-      "bytes": 29412,
-      "sha256": "a3baa43dd1d35f7075fbccc079b2549e0512d903343c2e08a6b6d01325160b21"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-22.md",
-      "bytes": 42243,
-      "sha256": "b3b5f962a290ecbee27c2c19c46f8baa407b57f239849aecf785f6a3b9604efb"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-23.md",
-      "bytes": 31435,
-      "sha256": "aaf7eb74ecf1bb75ef62b2c97a7440f979ef6a9a359d18c7d2fe7af523a7c081"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-24.md",
-      "bytes": 43499,
-      "sha256": "9f2786dba85985768a87e1afc741d32c525e789df2e28b3e416f238297b963b3"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-25.md",
-      "bytes": 45738,
-      "sha256": "508c5edaedc644f89da575ee02214f054a3486a19d523c625281a153038c15ec"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-26.md",
-      "bytes": 33024,
-      "sha256": "b9266a81930274f545e26e945441a36b868498549a8c270907e81d6de33fe657"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-27.md",
-      "bytes": 39454,
-      "sha256": "1deac2be3e680010a335ed6e9233c460729056116d3e4314dfed6da89df2e803"
-    },
-    {
-      "path": "reviews/continuity-and-flow/chapter-28.md",
-      "bytes": 39023,
-      "sha256": "5be9ff7318dfa316ca6f58dc3d1b1c2eedbbe4352f04450a917fb4834a5afde5"
-    },
-    {
-      "path": "reviews/continuity-and-flow/overall-book-review.md",
-      "bytes": 89569,
-      "sha256": "267ce100c4acc0e30b1c9e0cddd1042c0bab150dcc5dc32a8759cf8dd62f496a"
-    },
-    {
-      "path": "reviews/correctness-and-consistency/README.md",
-      "bytes": 398,
-      "sha256": "5e8a81ad70d605fd65f42a8a8a3eccfefa957215a7bdea5201237a71c399cf39"
-    },
-    {
-      "path": "reviews/diagram-modernization/content-observations.md",
-      "bytes": 5832,
-      "sha256": "2b0a034c73a1e7c8509290c846575163eca00b96e11b87f39c95311835cf2a05"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-a/dx-golden-path-before-after.png",
-      "bytes": 154890,
-      "sha256": "599ac993f7f890358ebb75f6c9c044ee4bd0ffa01cc9c605a98f4616fb3ae3ba"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-a/learning-loop-before-after.png",
-      "bytes": 122003,
-      "sha256": "22ec7f549420e3377ed6dccc795f14624d4b1ec67457e33d7d4b2519f57c1cca"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-a/pattern-durable-before-after.png",
-      "bytes": 151857,
-      "sha256": "62d6ed899b2d957da87a5c9554394b9eda6b7ca14d41eb9bc839d31e759092b8"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-a/pattern-planning-before-after.png",
-      "bytes": 166611,
-      "sha256": "b0317d7495d5d36f47431923e8414a4c5649f16ba364710772424e0995b8f802"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-a/pattern-react-before-after.png",
-      "bytes": 143893,
-      "sha256": "937b54c27297c2e0ae12f84c1a914b0d1fedd6182fa267792d41f9e646c6facd"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-a/reliability-economics-before-after.png",
-      "bytes": 235180,
-      "sha256": "1f9c238cfc07a45c228edce35a1f27fe7ba3ce8b9874cf1f5e74399e8076621b"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-a/supervisor-worker-before-after.png",
-      "bytes": 211025,
-      "sha256": "ec56ebbdd9ef2a287cebee18438aee8debe398661d705582cf58c52425f8506a"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-a-report.md",
-      "bytes": 5348,
-      "sha256": "91172389f1e72758288d0b753ca9a0f91e679f831c39d9f1cd07388f97b0493b"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-b1/causal-trace-before-after.png",
-      "bytes": 272781,
-      "sha256": "ebb6ed13953914f709b310a856936c87ebd2650eec961ba65f6051ea2aaeb089"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-b1/context-pipeline-before-after.png",
-      "bytes": 201420,
-      "sha256": "dbdf0ddef869ed1c93d3427e698a3363cd00ef3776696b3b8259cb005457efa7"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-b1/document-ingestion-before-after.png",
-      "bytes": 351983,
-      "sha256": "8c62ffb68c91d0aab1bb348e5275ccc352e4dd53863f43e8ae6656d50f825cbc"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-b1/evaluation-gate-before-after.png",
-      "bytes": 319408,
-      "sha256": "54efe7d8b4482d454510a9fd754c58ada3790821e1efe27f3bdc5dd358ccdedb"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-b1/identity-delegation-before-after.png",
-      "bytes": 285710,
-      "sha256": "f88fa65b3fc2d0dc7bb9cf71486894e3da1d9c4323db7a7b74b155597c5e7e4b"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-b1-report.md",
-      "bytes": 8325,
-      "sha256": "11846653c0f0d85d4e195b1fb803a5c021bc9c886bac9b9b549e973a3552d9cf"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-b2/mortgage-case-lifecycle-before-after.png",
-      "bytes": 232728,
-      "sha256": "eaec75e851e28c5343c6ca7435cbef2a91d5ea996d9e1eec28592944cb9f1b9f"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-b2/policy-to-guardrail-before-after.png",
-      "bytes": 212385,
-      "sha256": "db5ac220a737ed8acc72e98cf18afa0c01d07e4a8ca68bcd9f283d669673783b"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-b2/release-recovery-before-after.png",
-      "bytes": 245174,
-      "sha256": "28c378e6d00d9b919c09b1a5974ed442ebfdae3b7cacc68df0e25d0f86755463"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-b2/sandbox-egress-before-after.png",
-      "bytes": 302325,
-      "sha256": "6119231c6d240c8ef3603be88763cacffa39b2513ef1f231100dc76b5c7fbbca"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-b2/skill-resolution-before-after.png",
-      "bytes": 177952,
-      "sha256": "b0a09b8efdf58661dd7187029cd14f15189b2e94227d715d9d2f9aa0ba3ad90e"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-b2-report.md",
-      "bytes": 7436,
-      "sha256": "1b5faa9b0e2c4b760354b90ecabac979e73d2b61869f519a185d7630cbfc5ae1"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-c1/developer-platform-before-after.png",
-      "bytes": 246113,
-      "sha256": "6c626ac390c027a4da75811e0228ac1ce8503b15a6788c53f11fc4eedc3e24ac"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-c1/gateway-roles-before-after.png",
-      "bytes": 319418,
-      "sha256": "f6a4d5f2bda1266f45ae3a54638df225d4597161620b4008f8b7bb634bcb49ef"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-c1/knowledge-fabric-before-after.png",
-      "bytes": 226770,
-      "sha256": "10efee953b7baf1ccf3e275ce847ca6b1847689eb973b78965c4d4ac7fe74198"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-c1/portability-before-after.png",
-      "bytes": 157499,
-      "sha256": "2adb7bd305175d5847aa460cf200ad9402398d919b688c9d346708b4655075ac"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-c1/runtime-boundary-before-after.png",
-      "bytes": 338023,
-      "sha256": "e7128b64c63d799c5f250b7afcc64fe722edcfb15dd04c3a896b972460d63c2b"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-c1/runtime-offline-before-after.png",
-      "bytes": 205305,
-      "sha256": "b68bef619bb55540f876a3998dffa9769ffe90c3bc40b1b42a44ac8ab5baf8ac"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-c1/security-boundaries-before-after.png",
-      "bytes": 244447,
-      "sha256": "9445ebd708f2cfc5e70900fdd2dbf21441c942be7efb4bf5cafd0c5cf96c2e89"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-c1-report.md",
-      "bytes": 8258,
-      "sha256": "6066fe5e67ad2ef05f422d2f61700dd97f7ed3b29d9d1df26167c4366e79628d"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-c2/knowledge-lifecycle-before-after.png",
-      "bytes": 168020,
-      "sha256": "fd8df851ee80bf5c0a41b00727d654f2120548298839fd9d3b25cf0209801ee2"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-c2/reference-architecture-before-after.png",
-      "bytes": 124201,
-      "sha256": "8a94b07846fe1e90ef92542089b738dc8ccec4ea209773af05723c145ceb480a"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-c2/system-overview-before-after.png",
-      "bytes": 85920,
-      "sha256": "291c0552bd55fc634ff9e085ec8cac04de4f4f87ca8fec85808f8a22d054809b"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-c2-report.md",
-      "bytes": 6746,
-      "sha256": "5f7ca762be044f008bd484da66287194f337f47d4137837d342417cbfc0ad8af"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-de/book-map-before-after.png",
-      "bytes": 228391,
-      "sha256": "51b0e6f7fa99499ff397ff8991edfb8def7d4704ca61e3a50c5aabb74bfa8067"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-de/capability-ladder-before-after.png",
-      "bytes": 175063,
-      "sha256": "dd421652ad1eaead8ad8aa77b74f632724a33c38e19c5b219975f253dc96c046"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-de/deterministic-shell-before-after.png",
-      "bytes": 226366,
-      "sha256": "74ad1478e58f92fbf0f299f1cbb672611ad07d1f59459d4bf7fbdf89b564938b"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-de/model-routing-before-after.png",
-      "bytes": 223966,
-      "sha256": "82c205fab2858270141820d1e713cf40b1465167db36d1e5f3def93840f3427b"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-de/pattern-decision-tree-before-after.png",
-      "bytes": 306702,
-      "sha256": "53851819aa350424096be28409fb5756a4664785616dfde2f23ad52f8d75cd4a"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-de/pattern-routing-before-after.png",
-      "bytes": 153155,
-      "sha256": "6480d01da58366e61e5cf5715709e9b9932756baaaac045933f5c6f95dd5d4ca"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-de/security-depth-before-after.png",
-      "bytes": 264696,
-      "sha256": "edc213c96a9c74f463046465e6ed6e4970541ca718ec5f853a0caa40ecb3fe6f"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-de-report.md",
-      "bytes": 7773,
-      "sha256": "07effebfc8fe500debbe26487f93d01480ae5d70b5aad6cbeaf77fbb151201d5"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-f/anti-ambient-authority-before-after.png",
-      "bytes": 303968,
-      "sha256": "493776065337ccc9bf819e069368b7a606d810b30304ef4b466eee19fdd48ade"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-f/anti-approval-binding-before-after.png",
-      "bytes": 271920,
-      "sha256": "f54ca4949d4dc0a422e39835770f900c5a5140b91bde39f9b3fc314680f5d6f2"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-f/anti-before-after-before-after.png",
-      "bytes": 306843,
-      "sha256": "5bce33e67a47b742fc47bcb2832349cb6fe75408b3d6f476fb497bd6e3a96db0"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-f/anti-retry-storm-before-after.png",
-      "bytes": 252599,
-      "sha256": "399f0e12be50c3b8c397ec31a58d8ed67f06013e7da62f642aa97029618023d7"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-f/pattern-hitl-before-after.png",
-      "bytes": 297548,
-      "sha256": "13db249bfdd0b199a4c56e410a5febf688dfa999f2c9b7c15db0167b2f18d080"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-f-report.md",
-      "bytes": 3662,
-      "sha256": "1bb0f84b1fdd503fa345457ecd58a9500dd333e93374c4de9bd7b9206213cfcd"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-g/guardrail-sequence-before-after.png",
-      "bytes": 430808,
-      "sha256": "744c541f42296476cb7011f777946a22fd7c3eaa95867ea193fa90213930cd71"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-g/request-sequence-before-after.png",
-      "bytes": 452847,
-      "sha256": "53482a6a6c6154150c7c0887058f5b132b5b04662c46d61d2b5d23677e756b76"
-    },
-    {
-      "path": "reviews/diagram-modernization/group-g-report.md",
-      "bytes": 5408,
-      "sha256": "6eff64f5fe57f6d04df816fbbcf1d0129e55a3418b342aa3e0708cd832e425fc"
-    },
-    {
-      "path": "reviews/diagram-modernization/inventory.md",
-      "bytes": 10542,
-      "sha256": "b2a297e94b8da4aaa5e80af66bedeba537ca94c2076b4bc13a8a6134e07159b5"
-    },
-    {
-      "path": "reviews/diagram-modernization/observations-a.md",
-      "bytes": 2109,
-      "sha256": "59c239aaef4a7b6a13eeb8805ae4a16e6ca138c12eed623586b43e0bef29c71f"
-    },
-    {
-      "path": "reviews/diagram-modernization/observations-b1.md",
-      "bytes": 4596,
-      "sha256": "e385b3fa8504b8026ebea66316fe7775bf6c81ac5628d16ff0f14cbdf90e6843"
-    },
-    {
-      "path": "reviews/diagram-modernization/observations-b2.md",
-      "bytes": 1698,
-      "sha256": "e4161c08e5f80fb10e7e47570dccc1fa714fefa1f7960a8e6ccafa5d5c1828eb"
-    },
-    {
-      "path": "reviews/diagram-modernization/observations-c1.md",
-      "bytes": 3653,
-      "sha256": "e1a2a6f5306534437f4d9313be2fc8173ae37fb28a482e4cc30094c33b05e3f6"
-    },
-    {
-      "path": "reviews/diagram-modernization/observations-c2.md",
-      "bytes": 1395,
-      "sha256": "ae102504ae649b5639a8a6dc5c61c87cc9717cc6c542846024823871f4ca9478"
-    },
-    {
-      "path": "reviews/diagram-modernization/observations-de.md",
-      "bytes": 2140,
-      "sha256": "6fb45354f4c15cfb72e538c71924d24ace13258a1e292a8518722d2052bb6ef8"
-    },
-    {
-      "path": "reviews/diagram-modernization/observations-f.md",
-      "bytes": 715,
-      "sha256": "73bfa20e71a3557dceb6c8a33ef91af3f447ae02c13cdcb1063a80257abd502b"
-    },
-    {
-      "path": "reviews/diagram-modernization/observations-g.md",
-      "bytes": 2048,
-      "sha256": "62d1b358af927109c013522df9450fa716fb0f513a97657213adccc7835c7430"
-    },
-    {
-      "path": "reviews/diagram-modernization/pilot/effect-lifecycle-before-after.png",
-      "bytes": 86236,
-      "sha256": "baf63bbfa1d68241aaecc9a2ab87dec74211ada7b2ca361ac59bdc573fd02b50"
-    },
-    {
-      "path": "reviews/diagram-modernization/pilot/governance-model-before-after.png",
-      "bytes": 47940,
-      "sha256": "ae9f4f59bc87bb0138ec70290b9500d93ba3a7cf2c2bc0d0abbbc1ea58c48fe9"
-    },
-    {
-      "path": "reviews/diagram-modernization/pilot/pattern-reflection-before-after.png",
-      "bytes": 59672,
-      "sha256": "c1f0cd9d9069ec08a9635b85b01c21cb5d0208a8a56e5b78b0342c5e7cdbc5b5"
-    },
-    {
-      "path": "reviews/diagram-modernization/pilot-report.md",
-      "bytes": 12781,
-      "sha256": "494c0bcd3ea1fa1ed472c5d869d24395fe3135383b3c6f6b023828f12c86a5f9"
-    },
-    {
-      "path": "reviews/diagram-modernization/style-guide.md",
-      "bytes": 9434,
-      "sha256": "71bcd4f1f4a3a948f8a52e860505a4b43f69bea580180822f606c0373486d17e"
-    },
-    {
-      "path": "reviews/diagram-modernization/style-sheet.png",
-      "bytes": 33446,
-      "sha256": "c47b52d6793d9dcf241ad661304c2d1d1993db16def99264cecaab250ab564fd"
-    },
-    {
-      "path": "reviews/diagram-modernization/style-sheet.tikz.tex",
-      "bytes": 3397,
-      "sha256": "7c7749657ca3bac5553c5951dfe8cd9a9f91575e9d47b78d5bd69bde6f8a0373"
-    },
-    {
-      "path": "reviews/knowledge-management-in-enterprise/chapter-update-plan.md",
-      "bytes": 199556,
-      "sha256": "b711bbf3d2ec5ecaf2b18c1edb9cc8ae2820db43cee006be989fcb44629778e5"
-    },
-    {
-      "path": "reviews/knowledge-management-in-enterprise/current-coverage-inventory.md",
-      "bytes": 40499,
-      "sha256": "08c3d61a94230923efa38827e7555d4603ff827b42a6cc1b499f103e09435d34"
-    },
-    {
-      "path": "reviews/knowledge-management-in-enterprise/diagrams.md",
-      "bytes": 13764,
-      "sha256": "e966560166b1a584fb9c65c100faa9063d4d46dbf932c52ccfff8d25ac619dee"
-    },
-    {
-      "path": "reviews/knowledge-management-in-enterprise/knowledge-cicd-model.md",
-      "bytes": 39499,
-      "sha256": "fb3e64229bb25e954b658563e2638cb28143c6582fbb1f0134ca94916af3cd5e"
-    },
-    {
-      "path": "reviews/unified-architecture.md",
-      "bytes": 18435,
-      "sha256": "59f2fc254b61bf675cb9fc17504b74f28c7a34c19bd777f455e328e506e15de3"
     },
     {
       "path": "skills/book-maintainer/SKILL.md",
@@ -2911,8 +2201,8 @@
     },
     {
       "path": "source/parts/09-appendices.md",
-      "bytes": 70487,
-      "sha256": "a3257419b4966bee5451273aeaeb5639afe85cd253c302e89b13162af798d3b0"
+      "bytes": 70415,
+      "sha256": "7f1032bc94dfdb82226ca06631f0c098912985bc84f8343ddb5d33c3f8d02dda"
     },
     {
       "path": "styles/CROSS-FORMAT-CONTRACT.md",
@@ -2921,8 +2211,13 @@
     },
     {
       "path": "styles/DESIGN-SYSTEM.md",
-      "bytes": 14844,
-      "sha256": "64341d0590e1804a660a05f0a753eb8401ff4705405a8d89b017db6959b0f674"
+      "bytes": 14829,
+      "sha256": "ee4dfd3fffd1031bc3413f5abd7f6f7f63bf57e960ecf0b7ad34ac8c66834a8d"
+    },
+    {
+      "path": "styles/DIAGRAM-STYLE-GUIDE.md",
+      "bytes": 9176,
+      "sha256": "b2c70703078d8058ec78d92833178a0ac87ea9ee624c7f0afd5bb1ec1ed31b81"
     },
     {
       "path": "styles/DOCX-STYLES.md",
@@ -2933,6 +2228,16 @@
       "path": "styles/LATEX-STYLES.md",
       "bytes": 8173,
       "sha256": "a1a975e8d4094b0c38793653c2f7bb1b0b183309ccdfa377c4771d90a0522348"
+    },
+    {
+      "path": "styles/diagram-style-sheet.png",
+      "bytes": 33446,
+      "sha256": "c47b52d6793d9dcf241ad661304c2d1d1993db16def99264cecaab250ab564fd"
+    },
+    {
+      "path": "styles/diagram-style-sheet.tikz.tex",
+      "bytes": 3397,
+      "sha256": "7c7749657ca3bac5553c5951dfe8cd9a9f91575e9d47b78d5bd69bde6f8a0373"
     },
     {
       "path": "templates/book-style-template.docx",
@@ -3081,8 +2386,8 @@
     },
     {
       "path": "tools/package_release.py",
-      "bytes": 4364,
-      "sha256": "73b840062d3a4fa4d6594a0040fca8915a0346835e1628fb90e5291cde8ddd7d"
+      "bytes": 4388,
+      "sha256": "ea1752988b6ffb3864f72a78acccebdad8587217d067214a704cbbb8ab609486"
     },
     {
       "path": "tools/prepare_manuscript.py",

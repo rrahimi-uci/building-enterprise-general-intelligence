@@ -47,3 +47,8 @@ dist/*.pdf
 .pytest_cache/
 mlflow.db
 
+# Maintainer working notes: review passes, validation evidence, and the
+# companion-code roadmap. Kept on disk, never published or packaged
+# (tools/package_release.py skips them too).
+reviews/
+code-gap.md

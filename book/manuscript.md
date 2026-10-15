@@ -10902,7 +10902,6 @@ requires credentials or a network connection.
 * `examples/_harness/scripted_model.py` — offline implementation of the Agents SDK model interface
 * `examples/observability/mortgage_agents_mlflow.py` — real Agents SDK run with MLflow tracing
 * `examples/observability/mlflow_evaluation.py` — `mlflow.genai.evaluate` dataset/scorer orchestration
-* `code-gap.md` — chapter-by-chapter C04–C28 implementation roadmap
 
 The live provider path still requires credentials and should be treated as an
 explicit integration test, not as evidence supplied by the offline suite. As

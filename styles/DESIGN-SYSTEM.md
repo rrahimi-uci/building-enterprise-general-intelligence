@@ -197,7 +197,7 @@ Every figure in the book is TikZ (`.tikz.tex`), the publication style: soft past
 darker same-hue borders, pill edge labels, icons, and curved feedback paths,
 drawn with the shared package `latex/styles/professional-diagrams.sty` and
 compiled with XeLaTeX in the book's own font. Its palette, type scale, spacing
-constants and rules are in `reviews/diagram-modernization/style-guide.md`, and
+constants and rules are in `styles/DIAGRAM-STYLE-GUIDE.md`, and
 restyling every figure is one edit to the `.sty`. The renderer still accepts
 Graphviz (`.gv`, themed by `_theme.gv`) and Mermaid (`.mmd`) sources, but no
 figure uses them; a new figure should be TikZ.
