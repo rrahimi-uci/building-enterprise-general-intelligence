@@ -2,11 +2,11 @@
   "release": "1.0.0",
   "engine": "XeLaTeX",
   "canonical_markdown": "book/manuscript.md",
-  "canonical_markdown_sha256": "571f294950b367191433bc21b69e4c13783cfd4df500da5edfbb5e5aecb5b4eb",
+  "canonical_markdown_sha256": "c4f93ac54e443a553069f7f97810a05736a1450d229f88935199fa2e91be8e7b",
   "main_tex": "latex/Enterprise-General-Intelligence-v1.0.0.tex",
   "main_tex_sha256": "4f76984a4cf26781b83450a5a202c14d28fe71e94d048787a9ce6779e3a11a01",
   "content_tex": "latex/content/book-content.tex",
-  "content_tex_sha256": "1b1fe4841c99e441a2bf9a950f424a98d9829def7772f1e485abd511a2a0045c",
+  "content_tex_sha256": "7f3e6bb5b61f9db449972db868ec8d07f1f216607cedaafd64ab42ad049de85c",
   "style": "latex/bookstyle.sty",
   "fonts": [
     {
@@ -60,8 +60,8 @@
     "code_blocks": 64,
     "tables": 328,
     "callouts": 70,
-    "citations": 183
+    "citations": 182
   },
-  "source_bytes": 1024106,
+  "source_bytes": 1023217,
   "compile_command": "latex/compile.sh"
 }
