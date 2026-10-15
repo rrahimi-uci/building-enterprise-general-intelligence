@@ -4,6 +4,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Preface replaced with the author's text
+
+- The preface body is now the author's own text (why the book was written, the regulated healthcare and financial-services background, the distributed-systems thesis, the path through the book, and why Harborlight), signed "Reza Rahimi, Jazzx AI, Palo Alto, California". The trailing editorial note in the supplied text ("I especially strengthened…") is not part of the preface and is omitted. "How to read the claims in this book" follows the signature as a reader's note, with its first sentence made self-contained.
+
 ### Pointers to Figure S-1
 
 - Readers now meet the unified architecture early without it being repeated: Chapter 1 (after Figure 1-3) says the book ends with the same system in full in Figure S-1; the reading guide ("How to Use the Book") points readers who want the whole picture first to Figure S-1 with Appendix C; and Chapter 4 notes that Figure S-1 regroups the seven planes into four deployment frames without changing ownership.

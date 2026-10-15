@@ -8,23 +8,47 @@
 
 \BookFrontChapter{Preface}
 
-I wrote this book because I kept watching the same thing happen. A team builds an agent demo, and it is genuinely impressive: it reads the documents, calls the right tools, and answers in a way that makes everyone in the room lean forward. Then the questions start. Who approved that action? What happens if the process restarts halfway through? Why did it do something different yesterday? Which version of the policy did it read? The demo has no answers, because nobody designed it to have them.\par
+I wrote this book because I kept watching the same thing happen. A team builds an agent demo, and it is genuinely impressive: it reads the documents, calls the right tools, and answers in a way that makes everyone in the room lean forward. Then the harder questions start. Who approved that action? What happens if the process restarts halfway through? Why did it behave differently yesterday? Which version of the policy did it use? Can we reproduce the decision six months from now?\par
 
-My own work has been building enterprise AI and agentic platforms in mortgage and financial environments, where those questions are not academic. Reliability, security, compliance, auditability, and cost are constraints you meet every day, not qualities you add once the prototype works. Over time I came to a view that is a little unfashionable: an agentic application is still a distributed system. The model can propose a useful next step, and that is real progress. But authority, state, effects, evidence, acceptance, and release have to belong to deterministic services you can reason about. That line is the difference between a convincing demo and a system people can safely depend on, and this book is my attempt to draw it clearly.\par
+Too often, the demo has no good answers, because nobody designed the system to have them.\par
 
-We start where every agent starts, with a single model call, and work outward to a system that has to run for years. The early chapters set the boundaries that make an agent predictable. Then we design the architecture and turn it into platform capabilities that teams can reuse instead of rebuilding. From there I cover what shows up once real people, real data, and real consequences arrive: the patterns that hold up and the ones that fail, security and identity, evidence and evaluation, governance, and the day-to-day decisions of running the system.\par
+For the past several years, I have worked in highly regulated enterprise environments, particularly healthcare and financial services, including mortgage systems. I have led the architecture and development of multiple enterprise AI and agentic applications where models operate alongside sensitive data, complex business processes, evolving policies, regulatory requirements, and human decision-makers.\par
 
-To keep all of this concrete, I follow one fictional case through the book: Harborlight, a mortgage lender. I am not suggesting that mortgage underwriting should be handed to a model. I chose it because it is a demanding test, with sensitive documents, human judgment, policy that changes, waits that last weeks, and actions that cannot be taken back lightly. If an architecture holds up for Harborlight, it will hold up for most enterprise work.\par
+This book grew directly out of the last three years of that experience.\par
+
+In these environments, reliability, security, privacy, compliance, auditability, explainability, and cost are not theoretical architecture qualities or features that can be added after a prototype succeeds. They are constraints you encounter from the beginning. An impressive answer is not enough. You need to know what information produced it, which policy and knowledge versions were used, what the agent was authorized to do, what actions it actually took, how those actions can be audited, and whether the result can be evaluated and reproduced.\par
+
+That experience led me to a view that may sound unfashionable in an era dominated by increasingly capable models: an agentic application is still a distributed system.\par
+
+The model can reason, interpret context, and propose a useful next step, and that is an important capability. But the model should not become the system of record or the ultimate source of authority. Identity, authorization, durable state, side effects, evidence, policy enforcement, acceptance, and release need to live in deterministic services and governed boundaries that engineers and operators can reason about.\par
+
+That distinction is one of the most important differences between a convincing AI demo and an enterprise system that people can safely depend on. This book is my attempt to make that distinction concrete and show how to build around it.\par
+
+We start where almost every agent starts: with a model call. From there, we progressively work outward toward a system that may need to operate reliably for years.\par
+
+The early chapters establish the boundaries and primitives that make agent behavior controllable and predictable. We then develop the architecture around those principles and turn it into reusable platform capabilities so that individual teams do not have to reinvent security, knowledge, orchestration, evaluation, observability, governance, and release mechanisms for every new agent.\par
+
+From there, we address what happens when these systems meet the real enterprise: real users, real data, changing knowledge, long-running workflows, failures, security boundaries, regulatory obligations, and actions with consequences. I cover the architectural patterns that have held up, the approaches that tend to fail, and the practical concerns around identity, security, knowledge, evidence, evaluation, governance, observability, and operating these systems in production.\par
+
+To keep these ideas concrete, I follow one fictional organization throughout the book: Harborlight, a mortgage lender.\par
+
+I chose mortgage lending deliberately. It reflects many of the architectural pressures I have encountered in regulated financial systems: sensitive documents and personal information, complex workflows, human judgment, changing policies and regulations, external systems, processes that can remain active for days or weeks, and decisions whose consequences cannot simply be rolled back.\par
+
+I am not suggesting that mortgage underwriting—or any other consequential decision—should simply be handed over to a model. The point is precisely the opposite. It provides a demanding environment in which we can ask what an enterprise agent should be allowed to reason about, what it should be allowed to do, where deterministic controls must exist, when humans must remain involved, and what evidence must survive after the agent has finished.\par
+
+If an agentic architecture can remain secure, governed, observable, reproducible, and dependable under those conditions, the same principles can carry surprisingly far across the rest of the enterprise.\par
+
+This book is therefore not a collection of patterns derived from idealized agent demos. It is an attempt to capture what I have learned while architecting and building agentic systems in environments where trust has to be engineered, not assumed.\par
+
+Reza Rahimi, Jazzx AI, Palo Alto, California\par
 
 \section{How to read the claims in this book}
 
-When I rely on an outside fact, about a technology, a standard, a research result, or a regulation, I tie it to a numbered reference such as \BookCitation{R05}, and the references appendix lists each source in full.\par
+When I rely on an outside fact, about a technology, a standard, a research result, or a regulation, I tie it to a numbered reference such as \BookCitation{R05}; the references appendix lists each source in full.\par
 
-Everything without a citation is my own judgment, drawn from that practical work and from established engineering practice. Treat it as guidance, not law. Test it against your own workloads, security requirements, regulators, threat model, providers, and constraints. A pattern that is right for one organization can be the wrong trade-off for another, and I have tried to say so wherever I know it.\par
+Everything without a citation is my own judgment, drawn from my work building enterprise AI systems and from established engineering practice. Treat it as guidance, not law, and test it against your own workloads, regulators, threat model, and constraints; a pattern that is right for one organization can be wrong for another. Sources have limits too: vendor documentation says what a product supports, not whether it suits you, and a benchmark describes one result under particular conditions.\par
 
-The sources have limits too, and I have tried to respect them. Vendor documentation tells you what a product supports, not whether it suits your environment. Community guidance is useful, but it is not law. A benchmark describes one result under particular conditions, not a promise about your workload.\par
-
-So please use this book as a foundation rather than a prescription. Take the evidence, the patterns, and the lessons that were hard to learn, and then adapt and test them where your system will actually run. If it helps you build something people can trust, it has done what I hoped.\par
+So please use this book as a foundation rather than a prescription, and adapt and test it where your system will actually run.\par
 
 \BookFrontChapter{How to Use the Book}
 
