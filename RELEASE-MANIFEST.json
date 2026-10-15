@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 620,
+  "file_count": 622,
   "files": [
     {
       "path": ".gitattributes",
@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 47731,
-      "sha256": "b669bad20b8e4a565b6eb8791c33b15ad89095247955e73c819a2f8b0bef11b4"
+      "bytes": 48591,
+      "sha256": "f265f27cbe7f0f16e77afaa3414ae5bf0c38bb8615a166fcaff866d728422508"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -70,14 +70,24 @@
       "sha256": "8c966652ba2bc25aad4ee616a25393edb2920b9202c00cc2fafb23e19741e2ac"
     },
     {
+      "path": "LICENSE",
+      "bytes": 20525,
+      "sha256": "9eded315f4c45bdbe87a74e84a63b0b6069cd6e67035844dad48cb1278bad07f"
+    },
+    {
+      "path": "LICENSE-CODE",
+      "bytes": 1073,
+      "sha256": "7595821aad3f32825e2c696a4dfcb2b3f0e22a9f3a9a9b63932bd5d1d8781414"
+    },
+    {
       "path": "Makefile",
       "bytes": 8394,
       "sha256": "8eec1bae721e49f8ed7c74ae8decdbf5f970e5d9d43703db69465313d4367bb5"
     },
     {
       "path": "README.md",
-      "bytes": 19134,
-      "sha256": "39430e40f590b3904d9a67bd891c0d82ec17723e5efd3aba35e158579e96899b"
+      "bytes": 23802,
+      "sha256": "82ec534a46f3de43858600d2542b3b2f7e1a7c93f8cba9005055d04c4767c5dc"
     },
     {
       "path": "RELEASE-CHECKLIST.md",
