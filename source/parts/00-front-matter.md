@@ -42,15 +42,11 @@ If an agentic architecture can remain secure, governed, observable, reproducible
 
 This book is therefore not a collection of patterns derived from idealized agent demos. It is an attempt to capture what I have learned while architecting and building agentic systems in environments where trust has to be engineered, not assumed.
 
-Reza Rahimi, Jazzx AI, Palo Alto, California
+Reza Rahimi
 
-## How to read the claims in this book
+Jazzx AI
 
-When I rely on an outside fact, about a technology, a standard, a research result, or a regulation, I tie it to a numbered reference such as [R05]; the references appendix lists each source in full.
-
-Everything without a citation is my own judgment, drawn from my work building enterprise AI systems and from established engineering practice. Treat it as guidance, not law, and test it against your own workloads, regulators, threat model, and constraints; a pattern that is right for one organization can be wrong for another. Sources have limits too: vendor documentation says what a product supports, not whether it suits you, and a benchmark describes one result under particular conditions.
-
-So please use this book as a foundation rather than a prescription, and adapt and test it where your system will actually run.
+Palo Alto, California
 
 # How to Use the Book
 

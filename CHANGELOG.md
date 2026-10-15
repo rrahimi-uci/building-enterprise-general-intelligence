@@ -4,6 +4,11 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Preface: signature block; claims section removed
+
+- The signature closes the preface as a conventional sign-off, name then affiliation then place, each on its own line, instead of one comma-separated line.
+- "How to read the claims in this book" is removed from the preface. Nothing else referred to it; citations are explained where they appear and in Appendix I.
+
 ### Preface replaced with the author's text
 
 - The preface body is now the author's own text (why the book was written, the regulated healthcare and financial-services background, the distributed-systems thesis, the path through the book, and why Harborlight), signed "Reza Rahimi, Jazzx AI, Palo Alto, California". The trailing editorial note in the supplied text ("I especially strengthened…") is not part of the preface and is omitted. "How to read the claims in this book" follows the signature as a reader's note, with its first sentence made self-contained.

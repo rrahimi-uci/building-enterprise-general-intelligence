@@ -14,7 +14,7 @@
 - **longtables:** `158`
 - **compact_tables:** `100`
 - **callout_tables:** `70`
-- **citation_occurrences:** `183`
+- **citation_occurrences:** `182`
 - **bundled_fonts:** `8`
 
 ## Quality controls
