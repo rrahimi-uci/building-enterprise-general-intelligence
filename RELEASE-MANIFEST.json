@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 49250,
-      "sha256": "c5c3f6774cfb967f0f8516c197941ef84628f18e0f4cf87d0a6cf7f93b137758"
+      "bytes": 49720,
+      "sha256": "9f99cbaf106693a6621cbcfa89d3111192a30673a7b9a806ec114da275fd2f44"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -86,8 +86,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 20122,
-      "sha256": "ac2cc9037bd39fdc2dcc668a1846cd549f762dc89d0718923f5548753cc499ce"
+      "bytes": 24297,
+      "sha256": "4c5d842c793662b90cd429bebc5037c5a74038d44205105c83a5c1cd282c56c0"
     },
     {
       "path": "RELEASE-CHECKLIST.md",

@@ -12,6 +12,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 - The repository now carries an explicit license ahead of going public. The book (prose, generated editions, cover, chapter covers, diagrams) is under CC BY-NC-ND 4.0 (`LICENSE`); the build system and companion code are under MIT (`LICENSE-CODE`). The bundled Liberation fonts keep their OFL. The README gains a License section. No manuscript or generated artifact changes.
 
+### README opens with a book page
+
+- The README now starts with the cover, title, and a reader-facing description of the book (thesis, what readers learn, the Harborlight case study, contents by Part, audience, and where to read it). The maintainer guide follows under "Maintaining the book", unchanged. The GitHub repository description now reads "A practical guide to building enterprise AI agents that are secure, governed, auditable, and dependable in production."
+
 ### Code listings show their language once
 
 - Every listing used to show its language twice: in the caption above the panel ("🐍 · Title") and again on the panel's own tab. In all 64 listings (60 Python, 3 JSON, 1 YAML) the caption is now the title alone, and the language appears once, on the tab, with the snake for Python. The assembler writes title-only captions for registered examples, the four hand-written captions are rewritten, and the LaTeX builder keeps a caption with its code by shape (one short unpunctuated line above a listing) instead of by the old prefix. `validate_book.py` now fails on any caption that repeats the language.

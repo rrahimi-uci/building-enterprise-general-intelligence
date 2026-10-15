@@ -1,7 +1,83 @@
-# Building an Enterprise General Intelligence Platform
+<p align="center">
+  <img src="assets/cover/cover-v1.0.0.png" alt="Cover of Building an Enterprise General Intelligence Platform" width="300">
+</p>
+
+<h1 align="center">Building an Enterprise General Intelligence Platform</h1>
+
+<p align="center">
+  <strong>Governed Architecture and Operations</strong><br>
+  Reza Rahimi, PhD
+</p>
+
+<p align="center">
+  <em>A practical guide to building enterprise AI agents that are secure, governed, auditable, and dependable in production.</em>
+</p>
+
+---
+
+## About the book
+
+An impressive agent demo is easy to build. A system that people can safely depend on is not.
+
+Enterprise agents have to answer hard questions. Who was authorized to take that action? What happens if the process restarts halfway through? Which policy and knowledge versions were used? Can the decision be reproduced six months later? In regulated industries, these are requirements from the first day, not features to add after the prototype works.
+
+This book is built on one idea: **an agentic application is still a distributed system.**
+
+> **The model proposes. The system decides. The evidence proves.**
+>
+> The model interprets, reasons, and proposes the next step. Deterministic, governed services decide what is allowed to happen: identity, authorization, policy, state, and side effects. The evidence records what the agent knew, why it acted, and what changed, in a form engineers can test and auditors can verify.
+
+Across 28 chapters in eight parts, the book takes you from a single model call to a platform that can run reliably for years.
+
+### What you will learn
+
+- Separate model reasoning from authority, state, and side effects
+- Give knowledge an owner and build context that stays accurate
+- Package reusable skills so teams stop reinventing security, evaluation, and release for every agent
+- Choose patterns that hold up in production, and recognize the ones that fail
+- Carry identity, narrow permissions, and make external actions safe to retry
+- Contain a manipulated model and treat untrusted content as data
+- Trace, evaluate, and improve a system without handing it control of itself
+- Release new behavior without breaking work in flight, and treat performance as a business decision
+
+### One demanding case study
+
+A fictional mortgage lender, **Harborlight**, runs through every chapter. Mortgage lending brings sensitive documents, workflows that last weeks, human judgment, changing regulation, and decisions that cannot be undone. If an agent architecture holds up there, it carries a long way across the enterprise. Every code listing in the book is a file under `examples/` that CI executes, and the cumulative Harborlight implementation lives in `mortgage_case/`.
+
+### Inside the book
+
+| Part | Theme | Chapters |
+|---|---|---|
+| I | Foundations | 1–3 |
+| II | Architecture, Knowledge, and Context | 4–6 |
+| III | The Developer Platform | 7–9 |
+| IV | Patterns That Work—and Those That Fail | 10–17 |
+| V | Working Together Across Boundaries | 18–19 |
+| VI | Security, Identity, and Control | 20–23 |
+| VII | Evidence, Evaluation, and Improvement | 24–25 |
+| VIII | Running the System in the Real World | 26–28 |
+
+Ten appendices add a pattern decision guide, triage runbooks, core platform contracts, framework selection, implications for research, known limits, an adoption roadmap, the companion implementation guide, references, and a glossary.
+
+### Who it is for
+
+Architects, engineers, and technical leaders taking AI agents from prototype to production, especially where security, compliance, and auditability are not optional.
+
+### About the author
+
+Reza Rahimi, PhD, has led the architecture and development of enterprise AI and agentic applications in highly regulated environments, particularly healthcare and financial services, including mortgage systems.
+
+### Read it
+
+- **Word:** [dist/Enterprise-General-Intelligence-v1.0.0.docx](dist/Enterprise-General-Intelligence-v1.0.0.docx)
+- **Markdown:** [dist/Enterprise-General-Intelligence-v1.0.0.md](dist/Enterprise-General-Intelligence-v1.0.0.md)
+- **PDF:** download the XeLaTeX artifact from the latest **Build XeLaTeX edition** workflow run, or build it with `make pdf` (see [Build outputs](#build-outputs))
+
+---
+
+# Maintaining the book
 
 **Book v1.0.0 development system**  
-Author: **Reza Rahimi, PhD**  
 Release date: 2026-09-13
 
 This repository is both the publication release and the reproducible source system for future editions. A new maintainer should be able to edit, validate, rebuild, and package the book using only this repository.
