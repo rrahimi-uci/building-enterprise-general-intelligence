@@ -112,7 +112,7 @@ open for the author's review.
 ## Addendum — Cumulative Northstar implementation review
 
 **Reviewed:** 2026-09-16
-**Roadmap:** [code-gap.md](../code-gap.md)
+**Roadmap:** `code-gap.md`
 
 ### Scope and finding
 
@@ -133,7 +133,7 @@ does not yet let a reader run the system described across the chapters.
 
 ### Resolutions for this audit
 
-- Created [code-gap.md](../code-gap.md) as the implementation roadmap rather
+- Created `code-gap.md` as the implementation roadmap rather
   than making a speculative large code change in this review PR.
 - Defined one canonical Northstar case, actors, inputs, outputs, state machine,
   constraints, success criteria, technology ownership, and cumulative
