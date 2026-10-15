@@ -292,3 +292,7 @@ Notion is a published representation, not the build source. Publish only after l
 ## Release integrity
 
 See `RELEASE-MANIFEST.json`, `CHECKSUMS.sha256`, `qa/validation-report.json`, `reports/citation-audit.md`, and `CHANGELOG.md`. Treat the package as invalid if required checks fail or if release artifacts do not match the manifest.
+
+## License
+
+The book (prose, generated editions, cover, chapter covers, and diagrams) is licensed under [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/): you may read and share it unchanged, non-commercially, with attribution. The build system and companion code (`tools/`, `examples/`, `mortgage_case/`, `tests/`, and the other paths listed in [LICENSE](LICENSE)) are under the [MIT License](LICENSE-CODE). The bundled Liberation fonts keep their SIL Open Font License.
