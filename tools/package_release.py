@@ -70,7 +70,7 @@ def main():
         for p in files(root):
             rel=Path(root.name)/p.relative_to(root); info=zipfile.ZipInfo(rel.as_posix(),FIXED); info.compress_type=zipfile.ZIP_DEFLATED; info.external_attr=(0o644&0xFFFF)<<16
             z.writestr(info,p.read_bytes(),compress_type=zipfile.ZIP_DEFLATED,compresslevel=9)
-    result={'zip':str(out),'bytes':out.stat().st_size,'sha256':sha(out),'entries':len(zipfile.ZipFile(out).namelist()),'manifest_files':manifest['file_count']+2}
+    result={'zip':out.name,'bytes':out.stat().st_size,'sha256':sha(out),'entries':len(zipfile.ZipFile(out).namelist()),'manifest_files':manifest['file_count']+2}
     (root/'reports/release-package.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(result,indent=2)); return 0
 if __name__=='__main__': sys.exit(main())

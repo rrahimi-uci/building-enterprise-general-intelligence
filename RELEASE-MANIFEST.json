@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 50232,
-      "sha256": "243c8cae78380cf4788324468e307d99bbcc3e0524e6b11d1279b360cdb1cb50"
+      "bytes": 50529,
+      "sha256": "3359fe883256ed85301184feee7a3c3d3c037128f1ed7c3774f21df699d60532"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -2392,7 +2392,7 @@
     {
       "path": "tools/package_release.py",
       "bytes": 4388,
-      "sha256": "ea1752988b6ffb3864f72a78acccebdad8587217d067214a704cbbb8ab609486"
+      "sha256": "40916a79e2c8aabb1703fbda367da0c32410e33b850fc54aaa561b20094b4da6"
     },
     {
       "path": "tools/prepare_manuscript.py",
