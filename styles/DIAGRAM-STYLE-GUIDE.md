@@ -1,8 +1,8 @@
 # Diagram style guide (TikZ)
 
-The publication style for the book's figures. Everything here is implemented once in `latex/styles/professional-diagrams.sty`; a figure source is `assets/diagrams/src/<id>.tikz.tex`, registered in `config/diagrams.json` with that path as `source`. `make diagrams` compiles it with XeLaTeX to a cropped vector PDF (embedded by the book) and rasterises the PNG (embedded by the DOCX edition) from that PDF. All constructs on one sheet: `style-sheet.png` (source `style-sheet.tikz.tex`).
+The publication style for the book's figures. Everything here is implemented once in `latex/styles/professional-diagrams.sty`; a figure source is `assets/diagrams/src/<id>.tikz.tex`, registered in `config/diagrams.json` with that path as `source`. `make diagrams` compiles it with XeLaTeX to a cropped vector PDF (embedded by the book) and rasterises the PNG (embedded by the DOCX edition) from that PDF. All constructs on one sheet: `diagram-style-sheet.png` (source `diagram-style-sheet.tikz.tex`).
 
-![Style sheet](style-sheet.png)
+![Style sheet](diagram-style-sheet.png)
 
 ## Principles
 
@@ -85,7 +85,7 @@ Card padding 10 / 7 pt; card gap in a row 20 to 32 pt; row pitch 66 to 90 pt (a 
 | Put the mapping comment (original element to restyled element) at the top of the source | Change an arrow direction to make the layout easier |
 | Draw at 7 in wide and let the validator check it | `\resizebox` or `scale` to fit |
 | Offset anchors so lines do not overlap | Run a connector through a card or a pill |
-| Record a technical doubt in `content-observations.md` | Silently fix it in the figure |
+| Raise a technical doubt with the maintainer or in the pull request | Silently fix it in the figure |
 
 ## How to add or convert a diagram
 
@@ -95,13 +95,3 @@ Card padding 10 / 7 pt; card gap in a row 20 to 32 pt; row pitch 66 to 90 pt (a 
 4. Register: set `source` to `assets/diagrams/src/<id>.tikz.tex` in `config/diagrams.json` (the renderer writes the new checksum), and delete the old `.gv`/`.mmd` (history keeps it).
 5. `make assemble build references latex latex-validate validate`, then `make pdf` and inspect the figure's page.
 6. Fast loop while drawing: `TEXINPUTS=latex/styles: xelatex -output-directory=/tmp assets/diagrams/src/<id>.tikz.tex` from the repository root, then `pdftoppm -r 150 -png`.
-
-## Pilot results
-
-Each pair is rendered the way the book places it (7.06 in wide, at most 8.3 in tall).
-
-![pattern-reflection](pilot/pattern-reflection-before-after.png)
-
-![governance-model](pilot/governance-model-before-after.png)
-
-![effect-lifecycle](pilot/effect-lifecycle-before-after.png)

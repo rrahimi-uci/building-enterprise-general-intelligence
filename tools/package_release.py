@@ -28,7 +28,7 @@ SKIP_DIRS={'.git','venv','env','__pycache__','node_modules','.pytest_cache',
 # Any virtualenv, however it is named: .venv, .venv-examples, .venv-anything.
 SKIP_DIR_PREFIXES=('.venv',)
 # Regenerable or environment-specific outputs.
-SKIP_PATH_PREFIXES=('latex/build/',)
+SKIP_PATH_PREFIXES=('latex/build/','reviews/','code-gap.md')
 SKIP_NAMES={'release-package.json'}
 SKIP_SUFFIXES={'.pyc','.tmp','.zip'}
 
