@@ -224,7 +224,7 @@ make pdf        # three-pass XeLaTeX -> dist/*.pdf
 │   ├── references.json           # source-of-truth citation registry
 │   └── style-tokens.json         # portable design tokens
 ├── assets/
-│   ├── cover/                    # code-drawn cover art and the composed cover
+│   ├── cover/                    # code-drawn cover art; composed front and back covers
 │   ├── diagrams/                 # rendered diagrams: PDF for print, PNG for DOCX
 │   │   └── src/                  # ← editable diagram sources (.tikz.tex) and shared theme files
 ├── cover-images/                 # generated Letter-size chapter cover visuals
@@ -325,7 +325,7 @@ Committed — tracked release evidence, listed in `CHECKSUMS.sha256`:
 - `dist/Enterprise-General-Intelligence-v1.0.0.docx`
 - `dist/Enterprise-General-Intelligence-v1.0.0.tex`
 - `latex/content/book-content.tex`
-- `assets/cover/cover-v1.0.0.png` (title composed over `assets/cover/cover-art.png`, which `make cover-art` draws from `tools/render_cover_art.py`)
+- `assets/cover/cover-v1.0.0.png` (title composed over `assets/cover/cover-art.png`, which `make cover-art` draws from `tools/render_cover_art.py`) and `assets/cover/back-cover-v1.0.0.png` (the book description, from `cover.back` in `config/book.json`; `make cover` writes both; the last page of the DOCX and PDF)
 - `assets/diagrams/*.pdf` and `*.png` — rendered from `assets/diagrams/src/` by `make diagrams`
 - `cover-images/chapter-*.png` — chapter cover visuals, rendered from `config/chapter-covers.json` by `make chapter-covers` and embedded as the page before each chapter in the DOCX and XeLaTeX editions
 - `templates/book-style-template.docx`

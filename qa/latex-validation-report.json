@@ -3,7 +3,7 @@
   "validated_on": "2026-09-13",
   "format": "XeLaTeX",
   "measurements": {
-    "main_tex_sha256": "4f76984a4cf26781b83450a5a202c14d28fe71e94d048787a9ce6779e3a11a01",
+    "main_tex_sha256": "48caeb47b1aacc265363507b3c3ee874c7ba53a2e364bb00161f25b7466a0c5f",
     "content_tex_sha256": "b6513210d7614fabc93c69e0fcd3a53fe8f9ca5a4fc037ef0dd7840082338728",
     "style_sha256": "1aefe91a58bcfca37131707508139f238552d702f25f14357ceaef462d95b230",
     "narrative_parts": 8,
@@ -26,6 +26,14 @@
     "image_quality": [
       {
         "file": "assets/cover/cover-v1.0.0.png",
+        "pixels": [
+          2550,
+          3300
+        ],
+        "effective_dpi": 300.0
+      },
+      {
+        "file": "assets/cover/back-cover-v1.0.0.png",
         "pixels": [
           2550,
           3300

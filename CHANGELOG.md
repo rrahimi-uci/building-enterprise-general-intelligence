@@ -16,6 +16,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 - The README now starts with the cover, title, and a reader-facing description of the book (thesis, what readers learn, the Harborlight case study, contents by Part, audience, and where to read it). The maintainer guide follows under "Maintaining the book", unchanged. The GitHub repository description now reads "A practical guide to building enterprise AI agents that are secure, governed, auditable, and dependable in production."
 
+### Back cover
+
+- The DOCX and PDF editions now end with a back cover: the book description (headline, the "model proposes, system decides, evidence proves" principle, six outcomes, the Harborlight case study, audience, and author line) over the cover art. `tools/generate_cover.py` renders it from `cover.back` in `config/book.json`; both renderers place it after the index; validators check its size and resolution and the DOCX image count. The Markdown edition has no back cover. No manuscript text changes.
+
 ### Code listings show their language once
 
 - Every listing used to show its language twice: in the caption above the panel ("🐍 · Title") and again on the panel's own tab. In all 64 listings (60 Python, 3 JSON, 1 YAML) the caption is now the title alone, and the language appears once, on the tab, with the snake for Python. The assembler writes title-only captions for registered examples, the four hand-written captions are rewritten, and the LaTeX builder keeps a caption with its code by shape (one short unpunctuated line above a listing) instead of by the old prefix. `validate_book.py` now fails on any caption that repeats the language.
