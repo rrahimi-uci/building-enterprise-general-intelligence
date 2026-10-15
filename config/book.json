@@ -13,7 +13,27 @@
       "eyebrow": "ENTERPRISE SYSTEMS REFERENCE",
       "subtitle": "GOVERNED ARCHITECTURE AND OPERATIONS",
       "themes": [],
-      "strapline": "A practical guide to reliable enterprise AI platforms"
+      "strapline": "A practical guide to reliable enterprise AI platforms",
+      "back": {
+        "headline": "An impressive agent demo is easy to build. A system people can safely depend on is not.",
+        "paragraphs": [
+          "Enterprise agents must answer hard questions: who was authorized to act, what survives a restart, which policy was used, and whether the decision can be reproduced six months later. In regulated industries these are requirements from the first day, not features to add after the prototype works.",
+          "This book rests on one idea: an agentic application is still a distributed system."
+        ],
+        "principle": ["The model proposes.", "The system decides.", "The evidence proves."],
+        "learn_heading": "INSIDE THE BOOK",
+        "learn": [
+          "Separate model reasoning from authority, state, and side effects",
+          "Give knowledge an owner and build context that stays accurate",
+          "Choose patterns that hold up in production, and spot those that fail",
+          "Carry identity, narrow permissions, and make effects safe to retry",
+          "Contain a manipulated model and treat untrusted content as data",
+          "Evaluate and release new behavior without breaking work in flight"
+        ],
+        "case": "One running case study, a mortgage lender named Harborlight, across 28 chapters, 10 appendices, and runnable companion code.",
+        "audience": "For architects, engineers, and technical leaders taking AI agents from prototype to production.",
+        "author_line": "Has led the architecture of enterprise AI and agentic systems in healthcare and financial services, including mortgage."
+      }
     }
   },
   "structure": {

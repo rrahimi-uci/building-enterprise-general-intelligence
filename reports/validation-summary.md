@@ -19,16 +19,17 @@
 - **diagram_markers:** `46`
 - **registered_diagrams:** `46`
 - **cover_dimensions:** `[2550, 3300]`
-- **docx_sha256:** `ed704af85145ced0afb9147b1cb0e390868b67384dbdda1b89e211e399f4e863`
-- **docx_bytes:** `39250786`
-- **docx_paragraphs:** `3164`
+- **back_cover_dimensions:** `[2550, 3300]`
+- **docx_sha256:** `2cd8efe36f659af286903beae5bbe4e388fe14b5726d20ca762865b21d17e09f`
+- **docx_bytes:** `39825280`
+- **docx_paragraphs:** `3165`
 - **docx_tables:** `401`
-- **docx_inline_images:** `75`
+- **docx_inline_images:** `76`
 - **docx_chapters:** `28`
 - **docx_appendices:** `10`
 - **docx_index_marks:** `902`
 - **docx_index_fields:** `1`
-- **expected_docx_images:** `75`
+- **expected_docx_images:** `76`
 - **docx_callout_contrast_failures:** `0`
 
 ## Errors

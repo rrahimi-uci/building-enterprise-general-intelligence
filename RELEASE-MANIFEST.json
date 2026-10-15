@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 483,
+  "file_count": 484,
   "files": [
     {
       "path": ".gitattributes",
@@ -51,13 +51,13 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 8312,
-      "sha256": "01d85b33c25da54b685e5f3252ee3cf5f724715667f1e8abf4aa8a5c9f800445"
+      "bytes": 8474,
+      "sha256": "5880b34b8ece55ef0f3664ff379dfaaf42c35fed44a8052e778e37c4786751ac"
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 49720,
-      "sha256": "9f99cbaf106693a6621cbcfa89d3111192a30673a7b9a806ec114da275fd2f44"
+      "bytes": 50232,
+      "sha256": "243c8cae78380cf4788324468e307d99bbcc3e0524e6b11d1279b360cdb1cb50"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -86,13 +86,18 @@
     },
     {
       "path": "README.md",
-      "bytes": 24297,
-      "sha256": "4c5d842c793662b90cd429bebc5037c5a74038d44205105c83a5c1cd282c56c0"
+      "bytes": 24472,
+      "sha256": "cbdf971a44852416068d15c040b8cc57bbfa23b83c487ed0db6174a7041ef86d"
     },
     {
       "path": "RELEASE-CHECKLIST.md",
       "bytes": 2327,
       "sha256": "6cb608b38e93eb6cbaa636d8cc7cdc4b6e712b5fb80b191c22deb82f29473422"
+    },
+    {
+      "path": "assets/cover/back-cover-v1.0.0.png",
+      "bytes": 601087,
+      "sha256": "455a67bcc0557fd1f14b2fcb5bcee03347b4d714d849577d728c4073930f42ef"
     },
     {
       "path": "assets/cover/cover-art.png",
@@ -821,8 +826,8 @@
     },
     {
       "path": "config/book.json",
-      "bytes": 4760,
-      "sha256": "8418daff37a8a6933ee28fd821946ea43a48631294168cf415b242d20309cf22"
+      "bytes": 6380,
+      "sha256": "b0dc8638b49f2be409724fa2f6fe49d2c42f28a3485ee0b1f62775ca934fa895"
     },
     {
       "path": "config/chapter-covers.json",
@@ -1011,8 +1016,8 @@
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.docx",
-      "bytes": 39250786,
-      "sha256": "ed704af85145ced0afb9147b1cb0e390868b67384dbdda1b89e211e399f4e863"
+      "bytes": 39825280,
+      "sha256": "2cd8efe36f659af286903beae5bbe4e388fe14b5726d20ca762865b21d17e09f"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.md",
@@ -1021,8 +1026,8 @@
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.tex",
-      "bytes": 552,
-      "sha256": "4f76984a4cf26781b83450a5a202c14d28fe71e94d048787a9ce6779e3a11a01"
+      "bytes": 599,
+      "sha256": "48caeb47b1aacc265363507b3c3ee874c7ba53a2e364bb00161f25b7466a0c5f"
     },
     {
       "path": "examples/README.md",
@@ -1541,8 +1546,8 @@
     },
     {
       "path": "latex/Enterprise-General-Intelligence-v1.0.0.tex",
-      "bytes": 552,
-      "sha256": "4f76984a4cf26781b83450a5a202c14d28fe71e94d048787a9ce6779e3a11a01"
+      "bytes": 599,
+      "sha256": "48caeb47b1aacc265363507b3c3ee874c7ba53a2e364bb00161f25b7466a0c5f"
     },
     {
       "path": "latex/README.md",
@@ -1917,32 +1922,32 @@
     {
       "path": "qa/build-report.json",
       "bytes": 309,
-      "sha256": "f45d597a0cb79db13e6d5c788eaf02a6f4c0236dc3de619b18200f119a60b1e5"
+      "sha256": "030798f5c42ac7d9d221c5572b7540dbaff2e0e3c8348864fbbca31025d5836f"
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 39250786,
-      "sha256": "ed704af85145ced0afb9147b1cb0e390868b67384dbdda1b89e211e399f4e863"
+      "bytes": 39825280,
+      "sha256": "2cd8efe36f659af286903beae5bbe4e388fe14b5726d20ca762865b21d17e09f"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 39250786,
-      "sha256": "ed704af85145ced0afb9147b1cb0e390868b67384dbdda1b89e211e399f4e863"
+      "bytes": 39825280,
+      "sha256": "2cd8efe36f659af286903beae5bbe4e388fe14b5726d20ca762865b21d17e09f"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "31f635ad42bac37f86c66ebf510ead75869defd396a14074b51080f4156410cf"
+      "sha256": "379723cdeeecd29d8e16f2cfbd6ceff040476feb668df5856c5a223a90d41957"
     },
     {
       "path": "qa/latex-validation-report.json",
-      "bytes": 17287,
-      "sha256": "0e9ad1872eb16c33029fb3809bf0c6846150c1be181f79c884bdaca329d8c507"
+      "bytes": 17451,
+      "sha256": "15dd89e8f810407ec5593e43e9b501ea1c2929a7f731701ea97ce39216493061"
     },
     {
       "path": "qa/validation-report.json",
-      "bytes": 1018,
-      "sha256": "7e5fe1b934cae9e5620b02d03c5265a0216ad4a637e2284d13d272917108451f"
+      "bytes": 1079,
+      "sha256": "1e8eaed76acdf747a8a525b0e47fc112a43b1f895a990ab7fe7f9b4fbe4fb18b"
     },
     {
       "path": "reports/assembly-report.json",
@@ -1997,7 +2002,7 @@
     {
       "path": "reports/latex-build-report.json",
       "bytes": 2430,
-      "sha256": "35aaf7327f8df29dd8deff73ace97463f8eaff9d83bbdd8db2f631d96185a84d"
+      "sha256": "6f3f7b2f81da4ea69e5fe0301b5931ddcb219a76c2d044fcdce362a26a0b7966"
     },
     {
       "path": "reports/latex-validation.md",
@@ -2021,8 +2026,8 @@
     },
     {
       "path": "reports/validation-summary.md",
-      "bytes": 1012,
-      "sha256": "c11411874119d8aae27f691c7d471b900f1ae291bda3e4884ea7343e0f6c0868"
+      "bytes": 1056,
+      "sha256": "80f9487920a0e039e5f504fce0ac2ef18db5dcb7f3bdc9bce133c75d0abe3720"
     },
     {
       "path": "requirements.txt",
@@ -2206,8 +2211,8 @@
     },
     {
       "path": "styles/CROSS-FORMAT-CONTRACT.md",
-      "bytes": 5694,
-      "sha256": "1ef0a9c8c3fcdcce9fe860ed7a41dacbfddc1af79c5b3f0a1c2c2365e92f2b91"
+      "bytes": 5832,
+      "sha256": "b01a6b852859e804833f2b06657f2e490d5e7603200dfe9fece78ea21b396875"
     },
     {
       "path": "styles/DESIGN-SYSTEM.md",
@@ -2336,8 +2341,8 @@
     },
     {
       "path": "tools/build_book.py",
-      "bytes": 31227,
-      "sha256": "28049e54f8905a523086d260c4913811b5e75ebe41e926f8bbb982a84773625b"
+      "bytes": 31800,
+      "sha256": "29089bff9f379ccf0d632f6b05c8a66fcd2b4746341c68f06deaaaa3c5d179c4"
     },
     {
       "path": "tools/build_info.py",
@@ -2346,8 +2351,8 @@
     },
     {
       "path": "tools/build_latex.py",
-      "bytes": 37805,
-      "sha256": "767d3bca1b190e1a75d88fd3423f9608c3ab0b84f3f26069dd2ea8257dd5e718"
+      "bytes": 37882,
+      "sha256": "cec896d36eae56af6a64a3276e26d4235d2556e7d36cd96c842aa1f88a955662"
     },
     {
       "path": "tools/callouts.py",
@@ -2381,8 +2386,8 @@
     },
     {
       "path": "tools/generate_cover.py",
-      "bytes": 5402,
-      "sha256": "aea4af740091b7f9f5f30c4c897ed101f08aa38ec7e3602cf4445f348bf926bc"
+      "bytes": 9495,
+      "sha256": "f3c2475742bea0f727c4f1951a946f6be78c70639d7791d38e45817c10d6b22d"
     },
     {
       "path": "tools/package_release.py",
@@ -2416,13 +2421,13 @@
     },
     {
       "path": "tools/validate_book.py",
-      "bytes": 18952,
-      "sha256": "38ec1fd9b0badb874e7fc94dfa18f704252ab671f6c86c9cec8caf8b94a592df"
+      "bytes": 19209,
+      "sha256": "61a2f2b0297360c567a8043fef2f70172e836b16d58a4681cbc135da54b1fabd"
     },
     {
       "path": "tools/validate_latex.py",
-      "bytes": 23242,
-      "sha256": "925c1acdb01245b8b4b0f10902151048b47b542354465eb2e9a92f136e7e7c3d"
+      "bytes": 23324,
+      "sha256": "3d42549c587d1caf619e539da441d1673e9a071c0fd77df4069f1162c1814283"
     },
     {
       "path": "tools/validate_mortgage_stage_registry.py",

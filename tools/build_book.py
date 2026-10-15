@@ -13,6 +13,7 @@ from __future__ import annotations
 from pathlib import Path
 import book_index
 import callouts
+import generate_cover
 from datetime import datetime,timezone
 from zipfile import ZipFile,ZipInfo,ZIP_DEFLATED
 import argparse,hashlib,json,re,subprocess,sys,tempfile
@@ -448,6 +449,11 @@ def build(root:Path,out:Path,template_only=False):
                 lead_keep_next=False
                 continue
         if index_field: doc.paragraphs[-1]._p.append(field_run(None,'end'))
+        # Back cover: one full-bleed-style page after the index, set like the front cover.
+        back=root/f"assets/cover/back-cover-v{cfg['book']['version']}.png"
+        if not back.exists(): subprocess.run([sys.executable,str(root/'tools/generate_cover.py'),'--root',str(root)],check=True)
+        p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.space_after=Pt(0); p.paragraph_format.page_break_before=True
+        set_alt_text(p.add_run().add_picture(str(back),width=Inches(7.05)),generate_cover.back_alt(root))
     out.parent.mkdir(parents=True,exist_ok=True); doc.save(out); normalize_zip(out)
     report={'output':str(out.relative_to(root)),'sha256':hashlib.sha256(out.read_bytes()).hexdigest(),'bytes':out.stat().st_size,'template_only':template_only}
     if not template_only:

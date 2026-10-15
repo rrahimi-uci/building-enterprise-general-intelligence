@@ -710,6 +710,7 @@ def make_main(book: dict) -> str:
         r"\BookCover{assets/cover/cover-v" + book["version"] + ".png}",
         r"\BookTitlePage{" + escape_plain(book["title"]) + "}{Book v" + book["version"] + " · Publication Release · " + build_date() + "}{" + escape_plain(book["author"]) + "}{A structured enterprise reference for executives, architects, platform teams, security leaders, SREs, and senior engineers.}",
         r"\input{latex/content/book-content.tex}",
+        r"\BookCover{assets/cover/back-cover-v" + book["version"] + ".png}",
         r"\end{document}",
         "",
     ])

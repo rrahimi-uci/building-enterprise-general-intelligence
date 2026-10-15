@@ -194,11 +194,14 @@ def main() -> int:
             with Image.open(p) as im:
                 if im.width<1200 or im.height<600: warnings.append(f"Diagram may be low resolution: {d['file']} ({im.width}x{im.height})")
         except Exception as exc: errors.append(f"Cannot decode diagram {d['file']}: {exc}")
-    cover=root/f"assets/cover/cover-v{book_release(root)}.png"
-    if cover.exists():
+    for label,name in (('cover','cover'),('back_cover','back-cover')):
+        cover=root/f"assets/cover/{name}-v{book_release(root)}.png"
+        if not cover.exists():
+            if label=='back_cover': errors.append(f"Missing back cover: {cover.relative_to(root)}")
+            continue
         with Image.open(cover) as im:
-            checks['cover_dimensions']=[im.width,im.height]
-            if (im.width,im.height)!=(2550,3300): errors.append(f"Unexpected cover dimensions: {im.size}")
+            checks[f'{label}_dimensions']=[im.width,im.height]
+            if (im.width,im.height)!=(2550,3300): errors.append(f"Unexpected {label.replace('_',' ')} dimensions: {im.size}")
     if docx_path.exists():
         try:
             with zipfile.ZipFile(docx_path) as z:
@@ -217,13 +220,13 @@ def main() -> int:
             checks['docx_index_marks']=len(re.findall(r' XE "',body)); checks['docx_index_fields']=body.count(' INDEX ')
             if checks['docx_index_marks']!=checks['index_locators']: errors.append(f"DOCX has {checks['docx_index_marks']} index marks; the index has {checks['index_locators']} locators")
             if checks['docx_index_fields']!=1: errors.append(f"DOCX must hold one INDEX field, found {checks['docx_index_fields']}")
-            # Derived, not fixed: cover + registered diagrams + chapter covers.
+            # Derived, not fixed: front and back cover + registered diagrams + chapter covers.
             cc=root/'config/chapter-covers.json'
             cover_spec=json.loads(cc.read_text(encoding='utf-8')) if cc.exists() else {'output_dir':'','chapters':[]}
             covers=cover_spec['chapters']
-            expected_images=1+len(diags)+len(covers)
+            expected_images=2+len(diags)+len(covers)
             checks['expected_docx_images']=expected_images
-            if len(doc.inline_shapes)!=expected_images: errors.append(f"Expected {expected_images} DOCX images (cover + {len(diags)} diagrams + {len(covers)} chapter covers), found {len(doc.inline_shapes)}")
+            if len(doc.inline_shapes)!=expected_images: errors.append(f"Expected {expected_images} DOCX images (front and back cover + {len(diags)} diagrams + {len(covers)} chapter covers), found {len(doc.inline_shapes)}")
             if covers and len(covers)!=28: errors.append(f"Expected 28 chapter covers, registered {len(covers)}")
             report_path=root/'reports/chapter-cover-report.json'
             cover_hashes={r['file']:r['sha256'] for r in json.loads(report_path.read_text(encoding='utf-8'))['records']} if report_path.exists() else {}

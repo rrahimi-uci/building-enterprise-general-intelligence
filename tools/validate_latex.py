@@ -268,7 +268,8 @@ def main() -> int:
     # the only render where pixel density can be wrong.
     raster_for = {d["vector"]: d["file"] for d in diagram_registry if d.get("vector")}
     cover = f"assets/cover/cover-v{book_release(root)}.png"
-    for value in [cover] + [raster_for.get(p, p) for p in diagram_paths]:
+    back_cover = f"assets/cover/back-cover-v{book_release(root)}.png"
+    for value in [cover, back_cover] + [raster_for.get(p, p) for p in diagram_paths]:
         path = root / value
         if not path.exists():
             errors.append("Missing image: " + value)
