@@ -163,6 +163,11 @@ def main() -> int:
     checks['chapter_title_mismatches']=title_mismatches
     if text.count('```')%2: errors.append('Unbalanced fenced code blocks')
     checks['code_blocks']=len(re.findall(r'^```[^\n]*$',text,re.M))//2
+    # The language is shown once per listing, on the code panel's tab (a snake for
+    # Python). A caption that also starts with it ("🐍 · Title", "JSON · Title")
+    # prints the language twice.
+    dup=re.findall(r'^(?:🐍|[A-Z]{2,5}) · .+$',re.sub(r'(?ms)^```.*?^```','',text),re.M)
+    if dup: errors.append(f"Listing captions must be the title alone; the language belongs on the code tab. Found {len(dup)}: {dup[:2]}")
     errors.extend(check_table_shapes(text))
     # Labels from pre-release drafts (v2.x, v3.x) must not survive in the manuscript.
     stale=sorted(set(re.findall(r'\bv(?:2|3)\.\d+(?:\.\d+)?\b',text)))

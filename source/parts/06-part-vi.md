@@ -604,7 +604,7 @@ and enforcement point; detectors feed the first and never replace the second.
 
 Representative authorization response:
 
-JSON · implementation excerpt
+Implementation excerpt
 
 ```json
 {

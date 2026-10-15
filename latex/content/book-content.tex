@@ -297,7 +297,7 @@ The sketch below is deliberately incomplete; its gateway and effect controls are
 
 \BookNeedspace{128.0pt}
 
-\BookSnake · Prototype sketch, deliberately without gateway or effect controls\par\nopagebreak
+Prototype sketch, deliberately without gateway or effect controls\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 agent = Agent(
@@ -408,7 +408,7 @@ A language model maps input tokens to output tokens. That is the whole contract.
 
 \BookNeedspace{91.2pt}
 
-\BookSnake · Prototype sketch, deliberately without gateway or effect controls\par\nopagebreak
+Prototype sketch, deliberately without gateway or effect controls\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def summarize(client: OpenAI, evidence_metadata: str) -> str:
@@ -429,7 +429,7 @@ Give the model a set of typed functions and a way to request them, and it can no
 
 \BookNeedspace{72.8pt}
 
-\BookSnake · Prototype sketch, deliberately without gateway or effect controls\par\nopagebreak
+Prototype sketch, deliberately without gateway or effect controls\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @function_tool
@@ -450,7 +450,7 @@ An agent loops. It observes the result of each tool call and chooses the next st
 
 \BookNeedspace{72.8pt}
 
-\BookSnake · Prototype sketch, deliberately without gateway or effect controls\par\nopagebreak
+Prototype sketch, deliberately without gateway or effect controls\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 async def review_in_a_loop(case_id: str, model=None) -> str:
@@ -758,7 +758,7 @@ No system: a prototype answers in prose and its claims cannot be checked. & \lst
 
 \BookNeedspace{72.8pt}
 
-\BookSnake · Cumulative synthetic mortgage case across Chapters 1-3\par\nopagebreak
+Cumulative synthetic mortgage case across Chapters 1-3\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def chapter_01_case_summary() -> dict[str, object]:
@@ -868,7 +868,7 @@ The sequence above is the chapter in one line, but it only becomes useful when y
 
 \BookNeedspace{118.8pt}
 
-JSON · what the model actually emits\par\nopagebreak
+What the model actually emits\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={JSON},language=bookjson]
 {
@@ -1125,7 +1125,7 @@ The cumulative mortgage case extends the read-only summary with the smallest use
 
 \BookNeedspace{72.8pt}
 
-\BookSnake · Cumulative synthetic mortgage case across Chapters 1-3\par\nopagebreak
+Cumulative synthetic mortgage case across Chapters 1-3\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def chapter_02_deterministic_proposal() -> dict[str, object]:
@@ -1140,7 +1140,7 @@ The loop below gives the model one typed read tool; its output is a proposal the
 
 \BookNeedspace{532.8pt}
 
-\BookSnake · Bounded agent loop with a typed tool\par\nopagebreak
+Bounded agent loop with a typed tool\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class MortgageCaseStatus(BaseModel):
@@ -1205,7 +1205,7 @@ The previous listing shows the model-facing loop. The next listing shows the pla
 
 \BookNeedspace{109.6pt}
 
-\BookSnake · A readable Tool Gateway with validation, authorization, and effect idempotency\par\nopagebreak
+A readable Tool Gateway with validation, authorization, and effect idempotency\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from __future__ import annotations
@@ -1628,7 +1628,7 @@ The registered contract below is the minimal subset of these field groups the co
 
 \BookNeedspace{385.6pt}
 
-\BookSnake · Provider-neutral agent-step and platform contracts\par\nopagebreak
+Provider-neutral agent-step and platform contracts\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class EvidenceRef(BaseModel):
@@ -1681,7 +1681,7 @@ The repository’s bounded adapter example makes this boundary executable. It us
 
 \BookNeedspace{302.8pt}
 
-\BookSnake · One bounded agent step behind a platform-owned adapter\par\nopagebreak
+One bounded agent step behind a platform-owned adapter\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 async def execute_step(request, context: PlatformContext, *, model=None) -> dict[str, object]:
@@ -1909,7 +1909,7 @@ At \lstinline[style=bookinline]!C03!, the mortgage workflow submits one bounded 
 
 \BookNeedspace{72.8pt}
 
-\BookSnake · Cumulative synthetic mortgage case across Chapters 1-3\par\nopagebreak
+Cumulative synthetic mortgage case across Chapters 1-3\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def chapter_03_runtime_boundary() -> dict[str, object]:
@@ -2374,7 +2374,7 @@ Start with the three contracts every run touches: the manifest it is admitted un
 
 \BookNeedspace{109.6pt}
 
-\BookSnake · Provider-neutral agent-step and platform contracts\par\nopagebreak
+Provider-neutral agent-step and platform contracts\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 Digest = Annotated[str, Field(pattern=r"^sha256:[0-9a-f]{64}$")]
@@ -2635,7 +2635,7 @@ Search and graph complement each other. The semantic index finds the passages re
 
 \BookNeedspace{422.4pt}
 
-\BookSnake · Traversal answering a question similarity cannot\par\nopagebreak
+Traversal answering a question similarity cannot\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @dataclass
@@ -2688,7 +2688,7 @@ The \textbf{ontology} is the schema the graph conforms to: entity kinds, allowed
 
 \BookNeedspace{514.4pt}
 
-\BookSnake · Traversal answering a question similarity cannot\par\nopagebreak
+Traversal answering a question similarity cannot\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @dataclass(frozen=True)
@@ -2755,7 +2755,7 @@ The core of the layer. A rule an agent reads is documentation; a rule the platfo
 
 \BookNeedspace{505.2pt}
 
-\BookSnake · A policy sentence as a typed, scoped rule with provenance\par\nopagebreak
+A policy sentence as a typed, scoped rule with provenance\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 Modality = Literal["obligation", "permission", "prohibition"]
@@ -2817,7 +2817,7 @@ Enforcement then happens where intent becomes action:\par
 
 \BookNeedspace{615.6pt}
 
-\BookSnake · A policy rule enforced at the effect boundary\par\nopagebreak
+A policy rule enforced at the effect boundary\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class PolicyViolation(Exception):
@@ -2926,7 +2926,7 @@ Consider a policy sentence that accepts a pay statement only within an age windo
 
 \BookNeedspace{523.6pt}
 
-\BookSnake · Admitting a claim only on a literal span of the bytes it cites\par\nopagebreak
+Admitting a claim only on a literal span of the bytes it cites\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 Status = Literal["supported", "contradicted", "insufficient_evidence"]
@@ -3006,7 +3006,7 @@ An applicant's pay statement arrives through a channel the platform does not tru
 
 \BookNeedspace{450.0pt}
 
-\BookSnake · A document's fields verified against its bytes before they become facts\par\nopagebreak
+A document's fields verified against its bytes before they become facts\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 Route = Literal["human_review", "targeted_repair", "case_management"]
@@ -3064,7 +3064,7 @@ The gate in Figure 5-3 is Figure 5-2's: verification reads the bytes, not the ex
 
 \BookNeedspace{523.6pt}
 
-\BookSnake · A document's fields verified against its bytes before they become facts\par\nopagebreak
+A document's fields verified against its bytes before they become facts\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def verify_document(record, fields, text, *, case, derive, verifier=ground):
@@ -3214,7 +3214,7 @@ Gates prove form, provenance, and bounded properties; consistency is a filter fo
 
 \BookNeedspace{339.6pt}
 
-\BookSnake · Gate findings routed by kind, and a quality budget that cannot pass by rounding\par\nopagebreak
+Gate findings routed by kind, and a quality budget that cannot pass by rounding\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 Route = Literal["human_review", "targeted_repair", "case_management"]
@@ -3256,7 +3256,7 @@ Consistency rests on operations over typed rule sets. A union keeps each rule's 
 
 \BookNeedspace{109.6pt}
 
-\BookSnake · Union, intersection, difference and contradiction over rule sets\par\nopagebreak
+Union, intersection, difference and contradiction over rule sets\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @dataclass(frozen=True)
@@ -3392,7 +3392,7 @@ Three consultation rules come straight from the reference evaluator \BookCitatio
 
 \BookNeedspace{422.4pt}
 
-\BookSnake · A policy rule enforced at the effect boundary\par\nopagebreak
+A policy rule enforced at the effect boundary\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 ReleaseStatus = Literal["draft", "certified", "approved", "active", "deprecated", "revoked"]
@@ -3896,7 +3896,7 @@ Start with the record every model call should leave behind: one ContextManifest 
 
 \BookNeedspace{109.6pt}
 
-\BookSnake · One sealed ContextManifest per agent step\par\nopagebreak
+One sealed ContextManifest per agent step\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 Kind = Literal[
@@ -4226,7 +4226,7 @@ The suite below makes the portability row executable. It drives any adapter with
 
 \BookNeedspace{624.8pt}
 
-\BookSnake · An adapter conformance suite that reports every gap\par\nopagebreak
+An adapter conformance suite that reports every gap\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @dataclass(frozen=True)
@@ -4394,7 +4394,7 @@ That list is abstract until you see one. A manifest is a declaration, not code:\
 
 \BookNeedspace{256.8pt}
 
-YAML · a Skill manifest, abridged\par\nopagebreak
+A Skill manifest, abridged\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={YAML},language=bookyaml]
 skill: mortgage.evidence.read
@@ -4510,7 +4510,7 @@ The catalog discovery searches says what the agent may do, with the consequences
 
 \BookNeedspace{542.0pt}
 
-\BookSnake · Discovering a capability with its effects and prerequisites\par\nopagebreak
+Discovering a capability with its effects and prerequisites\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 Effect = Literal["read", "write", "irreversible"]
@@ -4665,7 +4665,7 @@ The resolver filters by capability, purpose, region, risk ceiling, and data clas
 
 \BookNeedspace{348.8pt}
 
-\BookSnake · A Skill registry: policy-bound resolution and pinned Skill Packs\par\nopagebreak
+A Skill registry: policy-bound resolution and pinned Skill Packs\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class SkillRegistry:
@@ -4888,7 +4888,7 @@ The discussion above draws on R16; R17. Appendix I lists each source in full, wi
 
 \BookNeedspace{597.2pt}
 
-\BookSnake · A Skill registry: policy-bound resolution and pinned Skill Packs\par\nopagebreak
+A Skill registry: policy-bound resolution and pinned Skill Packs\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class SkillPackManifest(BaseModel):
@@ -5193,7 +5193,7 @@ Two versions of the same loop follow. The first is an OpenAI Agents SDK version 
 
 \BookNeedspace{542.0pt}
 
-\BookSnake · Bounded ReAct loop with an explicit run budget\par\nopagebreak
+Bounded ReAct loop with an explicit run budget\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @dataclass
@@ -5257,7 +5257,7 @@ The second is the framework-neutral controller the chapter describes: it owns tu
 
 \BookNeedspace{109.6pt}
 
-\BookSnake · A ReAct controller that owns the budgets\par\nopagebreak
+A ReAct controller that owns the budgets\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class ReActEngine:
@@ -5652,7 +5652,7 @@ The first listing uses the SDK's framework handoff to switch agents within one r
 
 \BookNeedspace{367.2pt}
 
-\BookSnake · Framework handoff: passing control to a specialist within one run\par\nopagebreak
+Framework handoff: passing control to a specialist within one run\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 evidence_specialist = Agent(
@@ -5697,7 +5697,7 @@ The second computes the eligible set before the model proposes a route, then val
 
 \BookNeedspace{376.4pt}
 
-\BookSnake · Eligibility-first routing with validation and fallback\par\nopagebreak
+Eligibility-first routing with validation and fallback\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class DeterministicRouter:
@@ -5884,7 +5884,7 @@ Acceptance tests and reconciliation\index{reconciliation@Reconciliation} & Code\
 
 \BookNeedspace{210.8pt}
 
-JSON · implementation excerpt\par\nopagebreak
+Implementation excerpt\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={JSON},language=bookjson]
 {
@@ -6141,7 +6141,7 @@ The compiler below applies the checks above to a candidate plan: capability allo
 
 \BookNeedspace{615.6pt}
 
-\BookSnake · Compiling a validated plan into a budget-bounded envelope\par\nopagebreak
+Compiling a validated plan into a budget-bounded envelope\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, object]:
@@ -6431,7 +6431,7 @@ The judge supplies evidence; only the acceptance engine decides.\par
 
 \BookNeedspace{109.6pt}
 
-\BookSnake · A bounded evaluator-optimizer whose judge cannot accept\par\nopagebreak
+A bounded evaluator-optimizer whose judge cannot accept\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class AcceptanceEngine:
@@ -6888,7 +6888,7 @@ The first example persists the wait and verifies a signed, expiring decision; th
 
 \BookNeedspace{109.6pt}
 
-\BookSnake · A human approval gate that survives the wait\par\nopagebreak
+A human approval gate that survives the wait\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def proposal_hash(action: str, arguments: dict) -> str:
@@ -6985,7 +6985,7 @@ class PendingApprovals:
 
 \BookNeedspace{468.4pt}
 
-\BookSnake · Verifying a human approval against this exact proposal\par\nopagebreak
+Verifying a human approval against this exact proposal\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class ApprovalDecision(BaseModel):
@@ -7481,7 +7481,7 @@ The reducer folds recorded events into run state and performs no I/O, so replayi
 
 \BookNeedspace{560.4pt}
 
-\BookSnake · Durable run state as a replayable event fold\par\nopagebreak
+Durable run state as a replayable event fold\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def evolve(state: RunState, event: WorkflowEvent) -> RunState:
@@ -7744,7 +7744,7 @@ These two failures share a root cause: the model is allowed to decide when to st
 
 \BookNeedspace{293.6pt}
 
-\BookSnake · AP-11 and its correction: delegation draws on one budget\par\nopagebreak
+AP-11 and its correction: delegation draws on one budget\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @dataclass
@@ -7795,7 +7795,7 @@ Everything an agent believes arrives through one of these three channels, and al
 
 \BookNeedspace{284.4pt}
 
-\BookSnake · AP-02 and its correction: typed state projected into context\par\nopagebreak
+AP-02 and its correction: typed state projected into context\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 # Anti-pattern: the transcript is the record, so whatever survives
@@ -7853,7 +7853,7 @@ def project_context(snapshot: tuple[DecisionRecord, ...]) -> list[str]:
 
 \BookNeedspace{183.2pt}
 
-\BookSnake · AP-13 and its correction: a memory write passes a gate\par\nopagebreak
+AP-13 and its correction: a memory write passes a gate\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 # Anti-pattern: whatever the run produced becomes durable memory, with no
@@ -7936,7 +7936,7 @@ These two cards are among the most expensive in the catalog, because they produc
 
 \BookNeedspace{312.0pt}
 
-\BookSnake · AP-04 and its correction: one retry owner, one shared budget\par\nopagebreak
+AP-04 and its correction: one retry owner, one shared budget\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @dataclass
@@ -7985,7 +7985,7 @@ def build_governed(transport: Call, budget: AttemptBudget) -> Call:
 
 \BookNeedspace{284.4pt}
 
-\BookSnake · AP-05 and its correction: a timeout leaves the effect Unknown\par\nopagebreak
+AP-05 and its correction: a timeout leaves the effect Unknown\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 # Anti-pattern: a timeout is treated as proof that nothing happened.
@@ -8037,7 +8037,7 @@ Both cards here concern the moment a system decides that something is allowed, o
 
 \BookNeedspace{183.2pt}
 
-\BookSnake · AP-06 and its correction: the approval covers this exact proposal\par\nopagebreak
+AP-06 and its correction: the approval covers this exact proposal\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 # Anti-pattern: consent is a flag on the run, detached from what executes.
@@ -8514,7 +8514,7 @@ The model below carries one field or more from each group, and the Task Service 
 
 \BookNeedspace{109.6pt}
 
-\BookSnake · Provider-neutral agent-step and platform contracts\par\nopagebreak
+Provider-neutral agent-step and platform contracts\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class TaskEnvelope(BaseModel):
@@ -8906,7 +8906,7 @@ Start where remote work re-enters the platform.\par
 
 \BookNeedspace{431.6pt}
 
-\BookSnake · Adopting a remote artifact under local policy\par\nopagebreak
+Adopting a remote artifact under local policy\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 from datetime import datetime
@@ -9429,7 +9429,7 @@ This is a detector. It saves a model call when it fires; it proves nothing when 
 
 \BookNeedspace{459.2pt}
 
-\BookSnake · An input guardrail that trips before any tool runs\par\nopagebreak
+An input guardrail that trips before any tool runs\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 # Phrases that attempt to re-authorize the agent from inside the content. A real
@@ -9730,7 +9730,7 @@ Representative authorization response:\par
 
 \BookNeedspace{118.8pt}
 
-JSON · implementation excerpt\par\nopagebreak
+Implementation excerpt\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={JSON},language=bookjson]
 {
@@ -9834,7 +9834,7 @@ The proof below accepts a child envelope only when it is a subset of its parent 
 
 \BookNeedspace{578.8pt}
 
-\BookSnake · Capability-envelope subset proof\par\nopagebreak
+Capability-envelope subset proof\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def _resource_within(child: str, parent: str) -> bool:
@@ -10380,7 +10380,7 @@ The ledger below is the runnable form of this chapter's protocol: a timeout leav
 
 \BookNeedspace{109.6pt}
 
-\BookSnake · Effect-level idempotency ledger\par\nopagebreak
+Effect-level idempotency ledger\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 EffectState = Literal[
@@ -10756,7 +10756,7 @@ The first example canonicalizes an egress destination; the egress proxy must con
 
 \BookNeedspace{256.8pt}
 
-\BookSnake · Default-deny URL authorization for an egress grant\par\nopagebreak
+Default-deny URL authorization for an egress grant\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def authorize_url(
@@ -10787,7 +10787,7 @@ def authorize_url(
 
 \BookNeedspace{238.4pt}
 
-\BookSnake · Scoped operational kill switch\par\nopagebreak
+Scoped operational kill switch\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class KillSwitchRule(BaseModel):
@@ -11187,7 +11187,7 @@ Start by instrumenting what the platform owns: the first example places manual a
 
 \BookNeedspace{238.4pt}
 
-\BookSnake · Manually tracing agent and tool boundaries with MLflow\par\nopagebreak
+Manually tracing agent and tool boundaries with MLflow\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 ANCHOR_CASE_ID = load_anchor_case().case_id
@@ -11220,7 +11220,7 @@ The examples use OpenTelemetry-compatible context propagation and MLflow 3.15.2 
 
 \BookNeedspace{367.2pt}
 
-\BookSnake · Configuring MLflow tracing around a governed agent step\par\nopagebreak
+Configuring MLflow tracing around a governed agent step\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def configure_observability(experiment: str = "book-mortgage-evidence-review") -> None:
@@ -11267,7 +11267,7 @@ The cumulative mortgage runtime makes the boundary concrete: the OpenAI Agents S
 
 \BookNeedspace{109.6pt}
 
-\BookSnake · Tracing the mortgage Agents SDK runtime with MLflow\par\nopagebreak
+Tracing the mortgage Agents SDK runtime with MLflow\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class SyntheticMortgageGateway:
@@ -11726,7 +11726,7 @@ MLflow 3.x documents evaluation datasets, feedback, judges, systematic evaluatio
 
 \BookNeedspace{523.6pt}
 
-\BookSnake · Evaluating an agent against a dataset with MLflow\par\nopagebreak
+Evaluating an agent against a dataset with MLflow\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 # These are controlled synthetic cases, not production incidents. A production
@@ -11790,7 +11790,7 @@ The deterministic \lstinline[style=bookinline]!no_unknown_effects! and \lstinlin
 
 \BookNeedspace{109.6pt}
 
-\BookSnake · Combining deterministic and model-assisted MLflow trajectory scorers\par\nopagebreak
+Combining deterministic and model-assisted MLflow trajectory scorers\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @scorer(name="no_unknown_effects")
@@ -12433,7 +12433,7 @@ Publication follows Chapter 5's boundary: one approval lets the registry publish
 
 \BookNeedspace{468.4pt}
 
-\BookSnake · A knowledge change published only after gates, an independent approval, and a verified bundle\par\nopagebreak
+A knowledge change published only after gates, an independent approval, and a verified bundle\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @dataclass(frozen=True)
@@ -12489,7 +12489,7 @@ Promotion carries the identical digest, and a target whose pointer diverged bloc
 
 \BookNeedspace{247.6pt}
 
-\BookSnake · A knowledge change published only after gates, an independent approval, and a verified bundle\par\nopagebreak
+A knowledge change published only after gates, an independent approval, and a verified bundle\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 def promote(registry: Registry, stream: str, source_env: str, target_env: str,
@@ -12521,7 +12521,7 @@ Each gate record reports its denominator and holds objects against an integer bu
 
 \BookNeedspace{348.8pt}
 
-\BookSnake · Gate findings routed by kind, and a quality budget that cannot pass by rounding\par\nopagebreak
+Gate findings routed by kind, and a quality budget that cannot pass by rounding\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class BudgetError(ValueError):
@@ -12780,7 +12780,7 @@ The worker is described by a WorkerProfile—what it can execute—rather than b
 
 \BookNeedspace{468.4pt}
 
-\BookSnake · Release compatibility check against a worker profile\par\nopagebreak
+Release compatibility check against a worker profile\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class ReleaseManifest(BaseModel):
@@ -12838,7 +12838,7 @@ Signature verification itself is delegated to the signing toolchain; this check 
 
 \BookNeedspace{413.2pt}
 
-\BookSnake · Release attestation bound to verified identities\par\nopagebreak
+Release attestation bound to verified identities\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 class VerifiedSignature(BaseModel):
@@ -13308,7 +13308,7 @@ Admission should mirror the \lstinline[style=bookinline]!quotas:acquire! contrac
 
 \BookNeedspace{385.6pt}
 
-\BookSnake · Capacity admission that grants, defers, or rejects\par\nopagebreak
+Capacity admission that grants, defers, or rejects\par\nopagebreak
 
 \begin{lstlisting}[style=bookcode,title={\BookSnake},language=Python]
 @dataclass(frozen=True)

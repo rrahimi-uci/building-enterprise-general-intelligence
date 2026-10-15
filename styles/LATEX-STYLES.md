@@ -82,6 +82,7 @@ Every semantic color is paired with a text label, heading, border, or structure.
 
 - Preserve source exactly inside `lstlisting`.
 - Show language label, line numbers, whitespace, and wrapped continuation marker.
+- The language is shown once per listing, on the code panel's tab (a snake for Python); the caption above the panel is the listing's title alone. `tools/validate_book.py` fails on a caption that repeats the language.
 - Ink, syntax, comment, string, and line-number colors are dark on `#F7F9FC`.
 - Do not use shell escape, minted, remote highlighters, or network-dependent fonts.
 - A code block containing the reserved `end lstlisting` terminator must fail generation and be redesigned safely.
