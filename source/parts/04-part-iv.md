@@ -410,7 +410,7 @@ The same split decides every pattern in this Part; in a plan it is encoded as th
 
 ## Plan IR
 
-JSON · implementation excerpt
+Implementation excerpt
 
 ```json
 {

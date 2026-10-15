@@ -13,7 +13,7 @@ The executable source is `tools/build_book.py`; this file documents intended sem
 | Book Callout | custom | decision, rule, caution, implementation note |
 | Book Evidence | custom | source-scope/evidence note |
 | Book Reference | custom | hanging-indent bibliography entry |
-| Book Code Label | custom | code language label |
+| Book Code Label | custom | code language label, shown once per listing on the panel's tab (a snake for Python); the caption above is the title alone |
 
 Global rules:
 

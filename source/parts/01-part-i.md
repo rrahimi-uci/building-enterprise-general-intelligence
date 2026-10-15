@@ -566,7 +566,7 @@ The sequence above is the chapter in one line, but it only becomes useful when
 you can see what each gate rejects. Here is a single proposal from Harborlight,
 and what happens to it.
 
-JSON · what the model actually emits
+What the model actually emits
 
 ```json
 {

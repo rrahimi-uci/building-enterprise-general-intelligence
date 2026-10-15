@@ -4,7 +4,7 @@
   "format": "XeLaTeX",
   "measurements": {
     "main_tex_sha256": "4f76984a4cf26781b83450a5a202c14d28fe71e94d048787a9ce6779e3a11a01",
-    "content_tex_sha256": "182d06f776f98f07fd027410a4323d8ab1a6300b16593bdbde5f716fee067366",
+    "content_tex_sha256": "7f3e6bb5b61f9db449972db868ec8d07f1f216607cedaafd64ab42ad049de85c",
     "style_sha256": "1aefe91a58bcfca37131707508139f238552d702f25f14357ceaef462d95b230",
     "narrative_parts": 8,
     "appendix_dividers": 1,

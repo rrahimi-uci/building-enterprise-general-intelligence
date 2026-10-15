@@ -141,9 +141,10 @@ def expand_examples(text: str, root: Path) -> tuple[str, int]:
             raise SystemExit(f"Example {entry['id']} rendered empty")
         language = entry.get("language", "python")
         count += 1
-        display_language = "🐍" if language.lower() == "python" else language.upper()
-        caption = f"{display_language} · {entry['title']}"
-        return "\n".join([caption, "", "```" + language, rendered, "```"])
+        # The caption is the title alone. The language is shown once, on the
+        # code panel's tab (a snake for Python), which every renderer builds
+        # from the fence; repeating it in the caption printed it twice.
+        return "\n".join([entry["title"], "", "```" + language, rendered, "```"])
 
     return EXAMPLE_MARKER.sub(render, text), count
 

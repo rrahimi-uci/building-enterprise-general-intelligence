@@ -218,7 +218,7 @@ system is the subject of this entire book — and the gap is not intelligence.
 The sketch below is deliberately incomplete; its gateway and effect controls
 are missing, which is the point.
 
-🐍 · Prototype sketch, deliberately without gateway or effect controls
+Prototype sketch, deliberately without gateway or effect controls
 
 ```python
 agent = Agent(
@@ -366,7 +366,7 @@ A language model maps input tokens to output tokens. That is the whole contract.
 It has no memory between calls, no ability to act, and no access to anything you
 have not placed in the prompt.
 
-🐍 · Prototype sketch, deliberately without gateway or effect controls
+Prototype sketch, deliberately without gateway or effect controls
 
 ```python
 def summarize(client: OpenAI, evidence_metadata: str) -> str:
@@ -387,7 +387,7 @@ Give the model a set of typed functions and a way to request them, and it can
 now interact with the world. Critically, the model does not *execute* anything:
 it emits a structured request, and ordinary code you own decides what happens.
 
-🐍 · Prototype sketch, deliberately without gateway or effect controls
+Prototype sketch, deliberately without gateway or effect controls
 
 ```python
 @function_tool
@@ -410,7 +410,7 @@ read by this caller. Chapter 2 is entirely about making that boundary explicit.
 An agent loops. It observes the result of each tool call and chooses the next
 step, until it decides it is finished.
 
-🐍 · Prototype sketch, deliberately without gateway or effect controls
+Prototype sketch, deliberately without gateway or effect controls
 
 ```python
 async def review_in_a_loop(case_id: str, model=None) -> str:
@@ -708,7 +708,7 @@ pay statement is missing. It computes, decides, and writes nothing.
 | --- | --- | --- |
 | No system: a prototype answers in prose and its claims cannot be checked. | `C01` adds a read-only evidence summary for one synthetic case. | The missing second pay statement is visible; calculation, decision, and effects stay outside the model. |
 
-🐍 · Cumulative synthetic mortgage case across Chapters 1-3
+Cumulative synthetic mortgage case across Chapters 1-3
 
 ```python
 def chapter_01_case_summary() -> dict[str, object]:
@@ -797,7 +797,7 @@ The sequence above is the chapter in one line, but it only becomes useful when
 you can see what each gate rejects. Here is a single proposal from Harborlight,
 and what happens to it.
 
-JSON · what the model actually emits
+What the model actually emits
 
 ```json
 {
@@ -997,7 +997,7 @@ before Authorize and Commit, which is why its workflow command is read-only.
 | --- | --- | --- |
 | `C01` returns a candidate summary and a visible missing-document bottleneck. | `C02` adds typed candidate facts, deterministic calculation metadata, and a case-scoped workflow command. | The next step is reproducible and rejectable; stale state, unknown evidence, unsupported fields, and protected effects stop before dispatch. |
 
-🐍 · Cumulative synthetic mortgage case across Chapters 1-3
+Cumulative synthetic mortgage case across Chapters 1-3
 
 ```python
 def chapter_02_deterministic_proposal() -> dict[str, object]:
@@ -1011,7 +1011,7 @@ def chapter_02_deterministic_proposal() -> dict[str, object]:
 The loop below gives the model one typed read tool; its output is a proposal the
 next listing's gateway receives.
 
-🐍 · Bounded agent loop with a typed tool
+Bounded agent loop with a typed tool
 
 ```python
 class MortgageCaseStatus(BaseModel):
@@ -1078,7 +1078,7 @@ its own line and the comments call out the decisions that must remain
 deterministic. The in-memory ledger keeps the example runnable offline;
 production persists these transitions atomically with the downstream effect.
 
-🐍 · A readable Tool Gateway with validation, authorization, and effect idempotency
+A readable Tool Gateway with validation, authorization, and effect idempotency
 
 ```python
 from __future__ import annotations
@@ -1463,7 +1463,7 @@ The conceptual interface is therefore `AgentRuntime.execute(AgentStepRequest) �
 
 The registered contract below is the minimal subset of these field groups the companion code enforces.
 
-🐍 · Provider-neutral agent-step and platform contracts
+Provider-neutral agent-step and platform contracts
 
 ```python
 class EvidenceRef(BaseModel):
@@ -1514,7 +1514,7 @@ The adapter then invokes the local reasoning loop and validates the returned res
 
 The repository’s bounded adapter example makes this boundary executable. It uses the SDK only inside the step, routes mortgage-policy retrieval through a Tool Gateway façade, disables sensitive trace payloads, injects a test model, and returns the platform’s own result shape:
 
-🐍 · One bounded agent step behind a platform-owned adapter
+One bounded agent step behind a platform-owned adapter
 
 ```python
 async def execute_step(request, context: PlatformContext, *, model=None) -> dict[str, object]:
@@ -1691,7 +1691,7 @@ session, and uses that result as a proposal for the deterministic shell.
 | --- | --- | --- |
 | `C02` validates proposals but has no replaceable runtime contract. | `C03` adds `AgentStepRequest`, `AgentStepResult`, an offline bounded runtime, and an optional OpenAI Agents SDK adapter. | The provider can change behind the interface; an allowlist escape fails before execution and SDK state cannot become mortgage workflow truth. |
 
-🐍 · Cumulative synthetic mortgage case across Chapters 1-3
+Cumulative synthetic mortgage case across Chapters 1-3
 
 ```python
 def chapter_03_runtime_boundary() -> dict[str, object]:
@@ -2018,7 +2018,7 @@ Start with the three contracts every run touches: the manifest it is admitted un
 
 ### Run, artifact, and event contracts
 
-🐍 · Provider-neutral agent-step and platform contracts
+Provider-neutral agent-step and platform contracts
 
 ```python
 Digest = Annotated[str, Field(pattern=r"^sha256:[0-9a-f]{64}$")]
@@ -2235,7 +2235,7 @@ Entities, relationships, dependencies, and the organization's own semantics. Tra
 
 Search and graph complement each other. The semantic index finds the passages relevant to a question; the platform links the entities those passages name to nodes in the graph, and a bounded traversal from them returns related facts that no single passage states. The ontology, in turn, supplies the terms and scope a typed rule is written in.
 
-🐍 · Traversal answering a question similarity cannot
+Traversal answering a question similarity cannot
 
 ```python
 @dataclass
@@ -2286,7 +2286,7 @@ Traversal must be bounded. An unbounded walk over an enterprise graph is a denia
 
 The **ontology** is the schema the graph conforms to: entity kinds, allowed relationships, required properties with types and units, and the SBVR vocabulary naming them. A statement is a typed node or edge, a typed rule, or a decision-table row; the graph format is the platform's choice. Conformance checks report every violation and repair none; a conforming graph freezes into an instance identified by its content digest.
 
-🐍 · Traversal answering a question similarity cannot
+Traversal answering a question similarity cannot
 
 ```python
 @dataclass(frozen=True)
@@ -2351,7 +2351,7 @@ The honest caveat: ontologies are where enterprise knowledge programs go to die.
 
 The core of the layer. A rule an agent reads is documentation; a rule the platform evaluates at the effect boundary is a control. The move from prose to knowledge is not parsing — it is committing to a shape.
 
-🐍 · A policy sentence as a typed, scoped rule with provenance
+A policy sentence as a typed, scoped rule with provenance
 
 ```python
 Modality = Literal["obligation", "permission", "prohibition"]
@@ -2411,7 +2411,7 @@ Scope is required: a rule whose applicability is implicit will be applied where 
 
 Enforcement then happens where intent becomes action:
 
-🐍 · A policy rule enforced at the effect boundary
+A policy rule enforced at the effect boundary
 
 ```python
 class PolicyViolation(Exception):
@@ -2510,7 +2510,7 @@ Consider a policy sentence that accepts a pay statement only within an age windo
 
 **Prove** is the part that decides whether to believe it. Verification does not trust the citation a rule carries; it re-opens the pinned source, admits the claim only if its quoted text is literally present in the cited span, and records the evidence sliced from those bytes. A literal span proves the quote is real, not that it supports the rule: the reference verifier [R48] lets a model judge support only over evidence resolved as literal corpus text, and the listing keeps that deterministic half.
 
-🐍 · Admitting a claim only on a literal span of the bytes it cites
+Admitting a claim only on a literal span of the bytes it cites
 
 ```python
 Status = Literal["supported", "contradicted", "insufficient_evidence"]
@@ -2588,7 +2588,7 @@ An applicant's pay statement arrives through a channel the platform does not tru
 
 **Extract and normalize.** A model proposes typed fields, each with its region, a confidence, and the extractor version: model route and prompt digest. Normalization puts the unit on the field, parses dates and money, and marks each value *extracted* (the document states it) or *derived* (the platform computed it, such as the statement's age in days). The document kind's schema, not the model, declares which fields are decision-material, and a field the schema does not declare is held, never guessed into place.
 
-🐍 · A document's fields verified against its bytes before they become facts
+A document's fields verified against its bytes before they become facts
 
 ```python
 Route = Literal["human_review", "targeted_repair", "case_management"]
@@ -2644,7 +2644,7 @@ The gate in Figure 5-3 is Figure 5-2's: verification reads the bytes, not the ex
 
 **Verify.** Verification re-opens the pinned bytes and checks, in order: the digest matches; each extracted field's quoted text is literally in its region, through the rule lane's verifier; the value parsed from those bytes equals the record's; the record is internally consistent (net equals gross minus deductions); and it agrees with the case, such as the employer on the application. Derived fields are checked against their verified inputs, never against text; no statement prints its own age. Each field receives exactly one verdict (supported, contradicted, or insufficient evidence); a verifier that skips one fails closed. Admission then follows the grounding gate (§ Change compliance knowledge the way you change software): no facts until every decision-material field is supported. Confidence plays no part.
 
-🐍 · A document's fields verified against its bytes before they become facts
+A document's fields verified against its bytes before they become facts
 
 ```python
 def verify_document(record, fields, text, *, case, derive, verifier=ground):
@@ -2765,7 +2765,7 @@ Gates run on the resolved candidate, not the textual diff. A model may locate ev
 
 Gates prove form, provenance, and bounded properties; consistency is a filter for the SME, not a proof, and only the approver judges meaning. A finding holds an object as `review-held`, excluded from evaluation but visible in the release, and routes it by kind: a contradiction or judgment call to human review, a structure defect to targeted repair that re-enters the gate, an evidence gap to case management, as for documents. Every gate reports objects examined over objects in the release; an empty suite reports zero, not a pass.
 
-🐍 · Gate findings routed by kind, and a quality budget that cannot pass by rounding
+Gate findings routed by kind, and a quality budget that cannot pass by rounding
 
 ```python
 Route = Literal["human_review", "targeted_repair", "case_management"]
@@ -2805,7 +2805,7 @@ def route(findings: Iterable[Finding]) -> Route | None:
 
 Consistency rests on operations over typed rule sets. A union keeps each rule's sources and identifiers; a contradiction is surfaced with its evidence and never settled by picking a winner; model-judged equivalence never overrides an alignment by identifier or citation. The reference implementation [R48] adds finite-domain proofs this listing omits.
 
-🐍 · Union, intersection, difference and contradiction over rule sets
+Union, intersection, difference and contradiction over rule sets
 
 ```python
 @dataclass(frozen=True)
@@ -2922,7 +2922,7 @@ Chapter 1's control points, the plan compiler, and the acceptance engine read th
 
 Three consultation rules come straight from the reference evaluator [R48]: only a completely lowered rule is evaluable, and an unproved table is refused before evaluation; unknown refuses, never defaults; incompatible assignments to one subject are refused, never adjudicated. The fourth is the platform's: that evaluator returns unknown for any rule scoped by jurisdiction or date, having no runtime context, and the control point supplies it.
 
-🐍 · A policy rule enforced at the effect boundary
+A policy rule enforced at the effect boundary
 
 ```python
 ReleaseStatus = Literal["draft", "certified", "approved", "active", "deprecated", "revoked"]
@@ -3266,7 +3266,7 @@ The discussion above draws on R13; R39. Appendix I lists each source in full, wi
 
 Start with the record every model call should leave behind: one ContextManifest whose segments carry their kind, trust tier, source revision, authorization decision, and hash, sealed so a later change is detectable.
 
-🐍 · One sealed ContextManifest per agent step
+One sealed ContextManifest per agent step
 
 ```python
 Kind = Literal[
@@ -3521,7 +3521,7 @@ The discussion above draws on R29; R31; R32. Appendix I lists each source in ful
 
 The suite below makes the portability row executable. It drives any adapter with scripted test models and checks four promises of the Chapter 3 runtime interface: a typed disposition, reported usage, cancellation that reaches the model call, and SDK errors mapped to the platform's result shape. A failed check is reported as a named gap to publish as a known limitation of that adapter.
 
-🐍 · An adapter conformance suite that reports every gap
+An adapter conformance suite that reports every gap
 
 ```python
 @dataclass(frozen=True)
@@ -3659,7 +3659,7 @@ A Skill is the smallest independently owned and versioned package that lets an a
 
 That list is abstract until you see one. A manifest is a declaration, not code:
 
-YAML · a Skill manifest, abridged
+A Skill manifest, abridged
 
 ```yaml
 skill: mortgage.evidence.read
@@ -3776,7 +3776,7 @@ is back to ungoverned capability with a registry in front of it.
 
 The catalog discovery searches says what the agent may do, with the consequences attached. A tool list says what exists; a capability catalog says whether an action mutates, what must be true first, who may invoke it, and whether a retry is safe.
 
-🐍 · Discovering a capability with its effects and prerequisites
+Discovering a capability with its effects and prerequisites
 
 ```python
 Effect = Literal["read", "write", "irreversible"]
@@ -3890,7 +3890,7 @@ The discussion above draws on R05; R07; R29. Appendix I lists each source in ful
 
 The resolver filters by capability, purpose, region, risk ceiling, and data class, then picks the highest eligible SemVer. Production resolution also takes the run envelope (subject and actor grants, tenant), evaluation, health, cost, and rollout policy, which the example omits. Lifecycle state sits in the registry's release record, so promotion never moves a digest.
 
-🐍 · A Skill registry: policy-bound resolution and pinned Skill Packs
+A Skill registry: policy-bound resolution and pinned Skill Packs
 
 ```python
 class SkillRegistry:
@@ -4063,7 +4063,7 @@ The discussion above draws on R16; R17. Appendix I lists each source in full, wi
 
 `register_pack` refuses unknown Skills, and `set_pack_state` refuses to activate a pack that references any non-active Skill. `resolve_pack` returns deprecated content only in explicit replay mode, which is Chapter 8's compatibility window in code.
 
-🐍 · A Skill registry: policy-bound resolution and pinned Skill Packs
+A Skill registry: policy-bound resolution and pinned Skill Packs
 
 ```python
 class SkillPackManifest(BaseModel):
@@ -4296,7 +4296,7 @@ The discussion above draws on R01. Appendix I lists each source in full, with it
 
 Two versions of the same loop follow. The first is an OpenAI Agents SDK version in which the run budget lives in the tool context.
 
-🐍 · Bounded ReAct loop with an explicit run budget
+Bounded ReAct loop with an explicit run budget
 
 ```python
 @dataclass
@@ -4358,7 +4358,7 @@ async def run(question: str, *, budget: RunBudget, model=None) -> str:
 
 The second is the framework-neutral controller the chapter describes: it owns turns, tool budget, and repeat detection, runs only reads, and returns a typed stop reason instead of raising.
 
-🐍 · A ReAct controller that owns the budgets
+A ReAct controller that owns the budgets
 
 ```python
 class ReActEngine:
@@ -4607,7 +4607,7 @@ The discussion above draws on R29. Appendix I lists each source in full, with it
 
 The first listing uses the SDK's framework handoff to switch agents within one run. It moves control, not accountability; the platform records ownership around it (see § Handoff transfers accountability).
 
-🐍 · Framework handoff: passing control to a specialist within one run
+Framework handoff: passing control to a specialist within one run
 
 ```python
 evidence_specialist = Agent(
@@ -4650,7 +4650,7 @@ async def run(request: str, *, model=None):
 
 The second computes the eligible set before the model proposes a route, then validates the proposal and falls back instead of guessing.
 
-🐍 · Eligibility-first routing with validation and fallback
+Eligibility-first routing with validation and fallback
 
 ```python
 class DeterministicRouter:
@@ -4790,7 +4790,7 @@ The same split decides every pattern in this Part; in a plan it is encoded as th
 
 ## Plan IR
 
-JSON · implementation excerpt
+Implementation excerpt
 
 ```json
 {
@@ -4930,7 +4930,7 @@ The discussion above draws on R27; R02. Appendix I lists each source in full, wi
 
 The compiler below applies the checks above to a candidate plan: capability allowlist, risk ceiling, unknown dependencies, cost, cycles, and a digest of what was validated.
 
-🐍 · Compiling a validated plan into a budget-bounded envelope
+Compiling a validated plan into a budget-bounded envelope
 
 ```python
 def compile_plan(plan: CandidatePlan, envelope: PlanEnvelope) -> dict[str, object]:
@@ -5129,7 +5129,7 @@ The discussion above draws on R20. Appendix I lists each source in full, with it
 
 The judge supplies evidence; only the acceptance engine decides.
 
-🐍 · A bounded evaluator-optimizer whose judge cannot accept
+A bounded evaluator-optimizer whose judge cannot accept
 
 ```python
 class AcceptanceEngine:
@@ -5417,7 +5417,7 @@ The discussion above draws on R15; R41. Appendix I lists each source in full, wi
 
 The first example persists the wait and verifies a signed, expiring decision; the second is the commit-time check that the decision still covers this exact proposal and current state.
 
-🐍 · A human approval gate that survives the wait
+A human approval gate that survives the wait
 
 ```python
 def proposal_hash(action: str, arguments: dict) -> str:
@@ -5510,7 +5510,7 @@ class PendingApprovals:
 
 ### Verify the decision at commit
 
-🐍 · Verifying a human approval against this exact proposal
+Verifying a human approval against this exact proposal
 
 ```python
 class ApprovalDecision(BaseModel):
@@ -5809,7 +5809,7 @@ The reducer folds recorded events into run state and performs no I/O, so replayi
 
 ### Replay-safe workflow reducer
 
-🐍 · Durable run state as a replayable event fold
+Durable run state as a replayable event fold
 
 ```python
 def evolve(state: RunState, event: WorkflowEvent) -> RunState:
@@ -6017,7 +6017,7 @@ These two failures share a root cause: the model is allowed to decide when to st
 
 **How to replace it.** Global budgets that decrease monotonically across delegation, an acyclic ownership graph, and explicit depth, fan-out, and no-progress limits enforced by the runtime rather than by instructions. Migrate in steps: Recursion becomes a runtime-governed task graph.
 
-🐍 · AP-11 and its correction: delegation draws on one budget
+AP-11 and its correction: delegation draws on one budget
 
 ```python
 @dataclass
@@ -6066,7 +6066,7 @@ Everything an agent believes arrives through one of these three channels, and al
 
 **How to replace it.** Canonical typed state in a service that owns it, with the prompt receiving a projection built fresh from that state on every step. Migrate in steps: Transcript-as-state becomes State Service → snapshot → prompt.
 
-🐍 · AP-02 and its correction: typed state projected into context
+AP-02 and its correction: typed state projected into context
 
 ```python
 # Anti-pattern: the transcript is the record, so whatever survives
@@ -6122,7 +6122,7 @@ def project_context(snapshot: tuple[DecisionRecord, ...]) -> list[str]:
 
 **How to replace it.** Memory writes are candidates, not side effects: purpose-bound, carrying provenance, verified before promotion, scoped to a tenant and subject, with a TTL and a deletion path. Migrate in steps: Transcript → memory becomes candidate → gate → typed record.
 
-🐍 · AP-13 and its correction: a memory write passes a gate
+AP-13 and its correction: a memory write passes a gate
 
 ```python
 # Anti-pattern: whatever the run produced becomes durable memory, with no
@@ -6203,7 +6203,7 @@ These two cards are among the most expensive in the catalog, because they produc
 
 **How to replace it.** One retry owner per failure class, with a shared attempt and deadline budget that every layer reads and no layer resets. Migrate in steps: Nested retries become classified failure → one schedule → terminal.
 
-🐍 · AP-04 and its correction: one retry owner, one shared budget
+AP-04 and its correction: one retry owner, one shared budget
 
 ```python
 @dataclass
@@ -6250,7 +6250,7 @@ def build_governed(transport: Call, budget: AttemptBudget) -> Call:
 
 **How to replace it.** An explicit Unknown effect state that blocks retry until reconciliation settles it against the downstream system of record. Only proven absence permits a retry, and the retry reuses the same key; a request still executing stays Unknown, and an outcome that cannot be proven goes to InterventionRequired. Migrate in steps: timeout → failed → retry becomes timeout → Unknown → lookup → decide.
 
-🐍 · AP-05 and its correction: a timeout leaves the effect Unknown
+AP-05 and its correction: a timeout leaves the effect Unknown
 
 ```python
 # Anti-pattern: a timeout is treated as proof that nothing happened.
@@ -6300,7 +6300,7 @@ Both cards here concern the moment a system decides that something is allowed, o
 
 **How to replace it.** An immutable proposal, hashed over the exact effect, with an ApprovalDecision bound to that hash, scoped to one action, and carrying an expiry. Revalidate policy and resource version immediately before commit, and key the commit by the logical effect, not by the proposal hash. Migrate in steps: approved=true becomes proposal hash → ApprovalDecision → revalidate → commit.
 
-🐍 · AP-06 and its correction: the approval covers this exact proposal
+AP-06 and its correction: the approval covers this exact proposal
 
 ```python
 # Anti-pattern: consent is a flag on the run, detached from what executes.
@@ -6610,7 +6610,7 @@ A TaskEnvelope carries eight field groups:
 
 The model below carries one field or more from each group, and the Task Service enforces the three rules that make delegation safe: a reused idempotency key returns the original task, a child's delegation depth and budget come out of its parent's, and the capability-envelope subset check (Chapter 21) runs before any child exists.
 
-🐍 · Provider-neutral agent-step and platform contracts
+Provider-neutral agent-step and platform contracts
 
 ```python
 class TaskEnvelope(BaseModel):
@@ -6875,7 +6875,7 @@ Start where remote work re-enters the platform.
 
 `:adoptResult` runs this check after schema and scan validation and before the parent workflow may depend on the artifact.
 
-🐍 · Adopting a remote artifact under local policy
+Adopting a remote artifact under local policy
 
 ```python
 from datetime import datetime
@@ -7358,7 +7358,7 @@ it does not. The enforcement that must hold regardless is the Tool Gateway's
 eligibility and delegated-action check in Chapter 2's governed Tool Gateway
 example.
 
-🐍 · An input guardrail that trips before any tool runs
+An input guardrail that trips before any tool runs
 
 ```python
 # Phrases that attempt to re-authorize the agent from inside the content. A real
@@ -7615,7 +7615,7 @@ and enforcement point; detectors feed the first and never replace the second.
 
 Representative authorization response:
 
-JSON · implementation excerpt
+Implementation excerpt
 
 ```json
 {
@@ -7676,7 +7676,7 @@ The discussion above draws on R08; R09; R10; R59; R60; R61; R62; R63; R64. Appen
 The proof below accepts a child envelope only when it is a subset of its parent
 on every dimension; the subject may not change, though the actor may.
 
-🐍 · Capability-envelope subset proof
+Capability-envelope subset proof
 
 ```python
 def _resource_within(child: str, parent: str) -> bool:
@@ -8068,7 +8068,7 @@ leaves the effect Unknown, and nothing re-applies it until reconciliation
 settles the outcome. The example omits Partial and compensation; exercise 1
 adds them.
 
-🐍 · Effect-level idempotency ledger
+Effect-level idempotency ledger
 
 ```python
 EffectState = Literal[
@@ -8351,7 +8351,7 @@ connect only to the addresses it returns for this grant, because resolving
 again at connect time reopens DNS rebinding. The second is a scoped kill switch
 that refuses to exist without a scope.
 
-🐍 · Default-deny URL authorization for an egress grant
+Default-deny URL authorization for an egress grant
 
 ```python
 def authorize_url(
@@ -8380,7 +8380,7 @@ def authorize_url(
     return canonical, tuple(sorted(addresses))
 ```
 
-🐍 · Scoped operational kill switch
+Scoped operational kill switch
 
 ```python
 class KillSwitchRule(BaseModel):
@@ -8679,7 +8679,7 @@ The discussion above draws on R19. Appendix I lists each source in full, with it
 Start by instrumenting what the platform owns: the first example places manual
 agent and tool spans and records a decision attribute.
 
-🐍 · Manually tracing agent and tool boundaries with MLflow
+Manually tracing agent and tool boundaries with MLflow
 
 ```python
 ANCHOR_CASE_ID = load_anchor_case().case_id
@@ -8720,7 +8720,7 @@ API key, but a deployment that must keep traces in-house should leave the
 default. `RunConfig(trace_include_sensitive_data=False)` remains a separate
 privacy control.
 
-🐍 · Configuring MLflow tracing around a governed agent step
+Configuring MLflow tracing around a governed agent step
 
 ```python
 def configure_observability(experiment: str = "book-mortgage-evidence-review") -> None:
@@ -8772,7 +8772,7 @@ queue, policy, approval, and effect spans in the worked example are not here;
 they are platform spans you add with the explicit-span pattern above. That is
 exercise 1.
 
-🐍 · Tracing the mortgage Agents SDK runtime with MLflow
+Tracing the mortgage Agents SDK runtime with MLflow
 
 ```python
 class SyntheticMortgageGateway:
@@ -9149,7 +9149,7 @@ compatibility validation. The first example uses deterministic scorers over a
 two-case synthetic dataset and reports means; a real gate also compares each
 slice against a pinned baseline, as the worked example shows.
 
-🐍 · Evaluating an agent against a dataset with MLflow
+Evaluating an agent against a dataset with MLflow
 
 ```python
 # These are controlled synthetic cases, not production incidents. A production
@@ -9214,7 +9214,7 @@ the `effect.state` attribute and the tool spans that Chapter 24's schema
 records; they are release blockers. The judge and built-in scorers add quality
 evidence and cannot override them.
 
-🐍 · Combining deterministic and model-assisted MLflow trajectory scorers
+Combining deterministic and model-assisted MLflow trajectory scorers
 
 ```python
 @scorer(name="no_unknown_effects")
@@ -9642,7 +9642,7 @@ One change is one branch. A long-lived knowledge branch goes stale: by the time 
 
 Publication follows Chapter 5's boundary: one approval lets the registry publisher recheck, store and verify the bundle, allocate the version once per attempt, and move the pointer.
 
-🐍 · A knowledge change published only after gates, an independent approval, and a verified bundle
+A knowledge change published only after gates, an independent approval, and a verified bundle
 
 ```python
 @dataclass(frozen=True)
@@ -9696,7 +9696,7 @@ def publish(registry: Registry, stream: str, env: str, candidate: Candidate,
 
 Promotion carries the identical digest, and a target whose pointer diverged blocks until reconciled. Rollback moves the pointer back, mints no version, rewrites nothing, and marks open changes Stale; in-flight runs keep their pin unless the release is revoked. A repository revert alone is not a rollback, because the pointer is runtime truth.
 
-🐍 · A knowledge change published only after gates, an independent approval, and a verified bundle
+A knowledge change published only after gates, an independent approval, and a verified bundle
 
 ```python
 def promote(registry: Registry, stream: str, source_env: str, target_env: str,
@@ -9726,7 +9726,7 @@ def resolve(registry: Registry, stream: str, env: str) -> str:
 
 Each gate record reports its denominator and holds objects against an integer budget, so rounding, dropped held objects, or a changed cohort cannot make a release pass. The listing adapts the quality budget of Policy Logic Forge [R48], the reference implementation Chapter 5 follows.
 
-🐍 · Gate findings routed by kind, and a quality budget that cannot pass by rounding
+Gate findings routed by kind, and a quality budget that cannot pass by rounding
 
 ```python
 class BudgetError(ValueError):
@@ -9884,7 +9884,7 @@ Two checks carry most of the release model: whether a worker may serve a run's p
 
 The worker is described by a WorkerProfile—what it can execute—rather than by a release of its own.
 
-🐍 · Release compatibility check against a worker profile
+Release compatibility check against a worker profile
 
 ```python
 class ReleaseManifest(BaseModel):
@@ -9940,7 +9940,7 @@ def compatible(release: ReleaseManifest, worker: WorkerProfile) -> bool:
 
 Signature verification itself is delegated to the signing toolchain; this check binds the verified identities to the allowlists.
 
-🐍 · Release attestation bound to verified identities
+Release attestation bound to verified identities
 
 ```python
 class VerifiedSignature(BaseModel):
@@ -10243,7 +10243,7 @@ Admission should mirror the `quotas:acquire` contract: grant what fits, defer wh
 
 ### Admission and capacity permit
 
-🐍 · Capacity admission that grants, defers, or rejects
+Capacity admission that grants, defers, or rejects
 
 ```python
 @dataclass(frozen=True)

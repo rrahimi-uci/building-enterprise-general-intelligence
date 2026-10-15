@@ -179,7 +179,7 @@ A Skill is the smallest independently owned and versioned package that lets an a
 
 That list is abstract until you see one. A manifest is a declaration, not code:
 
-YAML · a Skill manifest, abridged
+A Skill manifest, abridged
 
 ```yaml
 skill: mortgage.evidence.read

@@ -4,6 +4,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Code listings show their language once
+
+- Every listing used to show its language twice: in the caption above the panel ("🐍 · Title") and again on the panel's own tab. In all 64 listings (60 Python, 3 JSON, 1 YAML) the caption is now the title alone, and the language appears once, on the tab, with the snake for Python. The assembler writes title-only captions for registered examples, the four hand-written captions are rewritten, and the LaTeX builder keeps a caption with its code by shape (one short unpunctuated line above a listing) instead of by the old prefix. `validate_book.py` now fails on any caption that repeats the language.
+
 ### Preface: signature block; claims section removed
 
 - The signature closes the preface as a conventional sign-off, name then affiliation then place, each on its own line, instead of one comma-separated line.

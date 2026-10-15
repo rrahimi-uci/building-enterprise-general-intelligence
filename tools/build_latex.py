@@ -438,7 +438,7 @@ def block_reservation(block: tuple, after: tuple | None = None) -> float:
     A heading followed by another heading (H2 then H3) keeps both headings and
     whatever the second one opens with, so neither is left at a page foot.
     """
-    if block[0] == "paragraph" and after is not None and after[0] == "code" and LISTING_LABEL.match(block[1]):
+    if block[0] == "paragraph" and after is not None and after[0] == "code" and is_listing_label(block[1]):
         return listing_keep(after[2]) + LISTING_LABEL_PT
     if block[0] == "heading" and block[1] >= 2 and after is not None:
         inner = block_reservation(after)
@@ -526,8 +526,17 @@ CODE_FRAME_PT = 20.0
 CODE_MAX_RESERVE_PT = 643.0
 
 
-LISTING_LABEL = re.compile(r"^(🐍|[A-Z]{2,5}) · ")
 LISTING_LABEL_PT = 16.0
+
+
+def is_listing_label(text: str) -> bool:
+    """A listing's caption: the one short, unpunctuated line just above its code.
+
+    The caption carries the title only; the language is shown once, on the code
+    panel's tab. Prose lead-ins end in a full stop and are never captions.
+    """
+    return ("\n" not in text and len(text) <= 120 and not text.endswith((".", ":", "?", "!"))
+            and not text.startswith(("Figure", "|", "#", "-", "*")))
 
 
 def listing_keep(code: str) -> float:
@@ -663,7 +672,7 @@ def render_content(blocks: list[tuple], diagram_files: dict[str, str], book_titl
         elif kind == "code":
             stats["code_blocks"] += 1
             previous = blocks[index - 1] if index else None
-            labelled = bool(previous and previous[0] == "paragraph" and LISTING_LABEL.match(previous[1]))
+            labelled = bool(previous and previous[0] == "paragraph" and is_listing_label(previous[1]))
             output.append(render_code(block[1], block[2], labelled))
         elif kind == "table":
             stats["tables"] += 1
@@ -677,8 +686,8 @@ def render_content(blocks: list[tuple], diagram_files: dict[str, str], book_titl
             following = blocks[index + 1] if index + 1 < len(blocks) else None
             if re.match(r"^Figure\s+\d", text):
                 output.append(r"\BookFigureCaption{" + inline(text) + "}")
-            elif following and following[0] == "code" and LISTING_LABEL.match(text):
-                # A listing's label ("🐍 · …", "JSON · …") belongs to the listing:
+            elif following and following[0] == "code" and is_listing_label(text):
+                # A listing's caption (its title) belongs to the listing:
                 # reserve the label and the listing's opening together, so the
                 # label never ends a page while its code starts on the next.
                 output.append(r"\BookNeedspace{" + format(listing_keep(following[2]) + LISTING_LABEL_PT, ".1f") + "pt}")
