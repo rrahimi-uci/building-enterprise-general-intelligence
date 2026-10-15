@@ -12,6 +12,12 @@ All notable changes follow semantic versioning and are recorded here.
 
 - Every listing used to show its language twice: in the caption above the panel ("🐍 · Title") and again on the panel's own tab. In all 64 listings (60 Python, 3 JSON, 1 YAML) the caption is now the title alone, and the language appears once, on the tab, with the snake for Python. The assembler writes title-only captions for registered examples, the four hand-written captions are rewritten, and the LaTeX builder keeps a caption with its code by shape (one short unpunctuated line above a listing) instead of by the old prefix. `validate_book.py` now fails on any caption that repeats the language.
 
+### Maintainer notes taken out of the published repository
+
+- `reviews/` and `code-gap.md` are untracked and gitignored; they stay on the maintainer's disk. `tools/package_release.py` skips them, so the manifest and ZIP no longer list them (142 entries fewer).
+- The diagram style guide the pipeline points to moved from `reviews/diagram-modernization/` to `styles/DIAGRAM-STYLE-GUIDE.md`, with its style sheet (`styles/diagram-style-sheet.*`); its pilot before/after images are dropped. AGENTS.md, README, DESIGN-SYSTEM and `professional-diagrams.sty` point to the new path.
+- Appendix H no longer lists `code-gap.md` among the companion files. README gains a "Local-only maintainer notes" section.
+
 ### Preface: signature block; claims section removed
 
 - The signature closes the preface as a conventional sign-off, name then affiliation then place, each on its own line, instead of one comma-separated line.
