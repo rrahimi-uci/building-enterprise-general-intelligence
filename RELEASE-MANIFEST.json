@@ -1916,8 +1916,8 @@
     },
     {
       "path": "qa/build-report.json",
-      "bytes": 288,
-      "sha256": "d23cb9c1677d11f189a8d116964d9c69586761b5d94f66c17b7317d1b6c2dd33"
+      "bytes": 309,
+      "sha256": "f45d597a0cb79db13e6d5c788eaf02a6f4c0236dc3de619b18200f119a60b1e5"
     },
     {
       "path": "qa/determinism/build-a.docx",
