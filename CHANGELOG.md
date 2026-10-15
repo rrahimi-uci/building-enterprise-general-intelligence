@@ -4,6 +4,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Pointers to Figure S-1
+
+- Readers now meet the unified architecture early without it being repeated: Chapter 1 (after Figure 1-3) says the book ends with the same system in full in Figure S-1; the reading guide ("How to Use the Book") points readers who want the whole picture first to Figure S-1 with Appendix C; and Chapter 4 notes that Figure S-1 regroups the seven planes into four deployment frames without changing ownership.
+
 ### Preface in the author's voice
 
 - The preface is rewritten in the first person, as the author: why the book was written (agent demos that cannot answer who approved an action, what survives a restart, or which policy version was read), where the perspective comes from (enterprise AI and agentic platforms in mortgage and financial environments), the book's path, why Harborlight, and how to read cited and uncited claims. Its substance is unchanged; the heading is now simply "Preface".
