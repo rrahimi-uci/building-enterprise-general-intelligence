@@ -5,7 +5,7 @@ cd "$ROOT"
 ENTRY="latex/Enterprise-General-Intelligence-v1.0.0.tex"
 OUT="latex/build"
 PDF_SOURCE="$OUT/Enterprise-General-Intelligence-v1.0.0.pdf"
-PDF_DEST="dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf"
+PDF_DEST="dist/Enterprise-General-Intelligence-v1.0.0.pdf"
 mkdir -p "$OUT" "dist"
 # makeindex finds the book's index style through kpathsea, so it resolves the
 # same way when latexmk runs makeindex from inside the output directory.

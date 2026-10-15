@@ -23,7 +23,7 @@ One canonical source in `source/parts/*.md` produces three synchronized represen
 
 ```bash
 make setup      # .venv + Python dependencies + any missing TeX packages
-make pdf        # validate the LaTeX source, then compile to dist/*-LaTeX.pdf
+make pdf        # validate the LaTeX source, then compile to dist/*.pdf
 make all        # Markdown, DOCX, TeX and the PDF in dist/ (PDF rebuilt only when stale)
 make help       # every available target, grouped by purpose
 ```
@@ -109,7 +109,7 @@ contents are stale by design. Before sharing anything, run the real build:
 
 ```bash
 make validate   # structure, citations, assets, contrast, determinism inputs
-make pdf        # three-pass XeLaTeX -> dist/*-LaTeX.pdf
+make pdf        # three-pass XeLaTeX -> dist/*.pdf
 ```
 
 ## Repository map
@@ -249,7 +249,7 @@ Committed — tracked release evidence, listed in `CHECKSUMS.sha256`:
 Not committed — regenerable, and gitignored so rebuilds do not churn binaries
 through history:
 
-- `dist/…-LaTeX.pdf` — built and verified as a non-empty file by `make pdf`;
+- `dist/Enterprise-General-Intelligence-v1.0.0.pdf` — built and verified as a non-empty file by `make pdf`;
   published as a CI artifact on main/tag/manual runs and attached to the GitHub
   Release when a tag is pushed
 - `latex/build/` — TeX auxiliaries, logs, and the intermediate PDF

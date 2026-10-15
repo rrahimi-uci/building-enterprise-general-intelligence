@@ -58,7 +58,7 @@ Presentation changes belong in `latex/bookstyle.sty` (PDF), `config/book.json`
 (DOCX), and `styles/` (the contract both must honor) — never in generated
 content.
 
-The compiled PDF (`dist/*-LaTeX.pdf`) is gitignored. It is rebuilt on demand and
+The compiled PDF (`dist/*.pdf`) is gitignored. It is rebuilt on demand and
 published by CI, so a rebuild never churns a 7 MB binary through history.
 
 ## Versioning

@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 620,
+  "file_count": 622,
   "files": [
     {
       "path": ".gitattributes",
@@ -31,8 +31,8 @@
     },
     {
       "path": ".github/workflows/latex.yml",
-      "bytes": 3510,
-      "sha256": "a5a327cc35abc263638f80e08bb0f8bf269b9800d1fe74ca4eeb63c2ac679623"
+      "bytes": 3498,
+      "sha256": "30ad90a50913a24143167cf567d70b465225e40b1924399ed4000efba65152ae"
     },
     {
       "path": ".github/workflows/validate.yml",
@@ -56,13 +56,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 47731,
-      "sha256": "b669bad20b8e4a565b6eb8791c33b15ad89095247955e73c819a2f8b0bef11b4"
+      "bytes": 48549,
+      "sha256": "a93d337be5a1b22198c2e175734c26531f3cb3cf72375f31c9a593f0dfd81df5"
     },
     {
       "path": "CONTRIBUTING.md",
-      "bytes": 3404,
-      "sha256": "d7186a6b9bbb98e7bfc27dbee5dd300b451351526634c84c5ed4693be2800b3b"
+      "bytes": 3398,
+      "sha256": "b26fe672200a1482aecf6fad0bd39298a675652b6dca7c0a8a36d0146d3362df"
     },
     {
       "path": "Dockerfile.latex",
@@ -70,14 +70,24 @@
       "sha256": "8c966652ba2bc25aad4ee616a25393edb2920b9202c00cc2fafb23e19741e2ac"
     },
     {
+      "path": "LICENSE",
+      "bytes": 20525,
+      "sha256": "9eded315f4c45bdbe87a74e84a63b0b6069cd6e67035844dad48cb1278bad07f"
+    },
+    {
+      "path": "LICENSE-CODE",
+      "bytes": 1073,
+      "sha256": "7595821aad3f32825e2c696a4dfcb2b3f0e22a9f3a9a9b63932bd5d1d8781414"
+    },
+    {
       "path": "Makefile",
-      "bytes": 8394,
-      "sha256": "8eec1bae721e49f8ed7c74ae8decdbf5f970e5d9d43703db69465313d4367bb5"
+      "bytes": 8376,
+      "sha256": "c5be71892415bc4131bfa0d036b29afe4623678fde5906e11f2eddc0434a1f3e"
     },
     {
       "path": "README.md",
-      "bytes": 19134,
-      "sha256": "39430e40f590b3904d9a67bd891c0d82ec17723e5efd3aba35e158579e96899b"
+      "bytes": 19644,
+      "sha256": "92643b3b3c3b6a6757cabae035dd299d4f868653db178fe837c167e7318dc967"
     },
     {
       "path": "RELEASE-CHECKLIST.md",
@@ -1541,8 +1551,8 @@
     },
     {
       "path": "latex/README.md",
-      "bytes": 6664,
-      "sha256": "13fdb64935ce090b2a92c15b4e3741fbea6f2bae760ebe4829dcb4c7c09cda58"
+      "bytes": 6681,
+      "sha256": "6fdbed424cb48bc9474bc6d23b95c021d596d0ab0112834f55f795649d908564"
     },
     {
       "path": "latex/bookindex.ist",
@@ -1556,8 +1566,8 @@
     },
     {
       "path": "latex/compile.sh",
-      "bytes": 1534,
-      "sha256": "f452bf2e9343b0b3943c0c60d882267f692a4989cac4a748ad64fc7e564e0dd5"
+      "bytes": 1528,
+      "sha256": "a92dbe721e96ed0794d11b819b6668a9f75d4364b695c9aabc67a0f8f737abbc"
     },
     {
       "path": "latex/content/book-content.tex",
@@ -3031,8 +3041,8 @@
     },
     {
       "path": "tools/build_latex.py",
-      "bytes": 37811,
-      "sha256": "754909cf1f2f5883d443939872eafbfe03061cb07e1ff3313484b9d260f4f265"
+      "bytes": 37805,
+      "sha256": "767d3bca1b190e1a75d88fd3423f9608c3ab0b84f3f26069dd2ea8257dd5e718"
     },
     {
       "path": "tools/callouts.py",

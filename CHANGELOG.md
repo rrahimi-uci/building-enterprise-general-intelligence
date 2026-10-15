@@ -4,6 +4,10 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### PDF filename without renderer suffix
+
+- PDF builds now write `dist/Enterprise-General-Intelligence-v1.0.0.pdf`, without `-LaTeX`, through `make pdf`, `make all` / `make dist-pdf`, the standalone compile script, Docker, and CI. The LaTeX generator, incremental-build destination, CI artifact/release paths, and build documentation use the same filename. Existing local files with the old name are not removed automatically.
+
 ### Licensing
 
 - The repository now carries an explicit license ahead of going public. The book (prose, generated editions, cover, chapter covers, diagrams) is under CC BY-NC-ND 4.0 (`LICENSE`); the build system and companion code are under MIT (`LICENSE-CODE`). The bundled Liberation fonts keep their OFL. The README gains a License section. No manuscript or generated artifact changes.

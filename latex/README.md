@@ -15,7 +15,7 @@ make all          # builds everything and keeps the PDF in dist/ current (skips 
 The script prefers `latexmk -xelatex` and otherwise runs XeLaTeX three times to resolve the table of contents, bookmarks, references, and page count. The output is copied to:
 
 ```text
-dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf
+dist/Enterprise-General-Intelligence-v1.0.0.pdf
 ```
 
 ### Container build
@@ -23,7 +23,7 @@ dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf
 ```bash
 docker build -f Dockerfile.latex -t enterprise-agentic-ai-book .
 docker create --name book-build enterprise-agentic-ai-book
-docker cp book-build:/book/dist/Enterprise-General-Intelligence-v1.0.0-LaTeX.pdf .
+docker cp book-build:/book/dist/Enterprise-General-Intelligence-v1.0.0.pdf .
 docker rm book-build
 ```
 
@@ -108,7 +108,7 @@ There are two PDFs in this project and they must never be confused:
 | File | What it is |
 |---|---|
 | `latex/reference/DOCX-layout-reference-draft.pdf` | The **pre-release draft's cross-format visual baseline, rendered from DOCX**. Tracked in git. Never a XeLaTeX build, and must never be renamed as one. The topology has since changed, so it is a historical comparison point, not a current gate. |
-| `dist/…-LaTeX.pdf` | The genuine **XeLaTeX compilation**. Gitignored and regenerated on demand by `make pdf`, `Dockerfile.latex`, or CI. |
+| `dist/Enterprise-General-Intelligence-v1.0.0.pdf` | The genuine **XeLaTeX compilation**. Gitignored and regenerated on demand by `make pdf`, `Dockerfile.latex`, or CI. |
 
 The XeLaTeX edition compiles cleanly with zero errors and zero undefined
 references. Page count differs from the 213-page DOCX baseline because the two
