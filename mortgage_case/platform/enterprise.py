@@ -425,17 +425,45 @@ class Budget(BaseModel):
 
     max_turns: int = Field(ge=1, le=20)
     max_tool_calls: int = Field(ge=0, le=50)
-    max_cost: Decimal = Decimal("10.00")
+    max_cost: Decimal = Field(default=Decimal("10.00"), ge=0)
     max_seconds: int = Field(ge=1, le=3600)
 
 
-def bounded_react(observations: tuple[str, ...], budget: Budget) -> tuple[str, ...]:
-    """Stop on repeated observations or an exhausted external budget."""
+class ReActUsage(BaseModel):
+    """Cumulative usage recorded for one deterministic ReAct fixture."""
 
-    if len(observations) > budget.max_turns or len(observations) > budget.max_tool_calls:
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    tool_calls: int = Field(ge=0)
+    cost: Decimal = Field(ge=0)
+    elapsed_seconds: Decimal = Field(ge=0)
+
+
+def bounded_react(
+    observations: tuple[str, ...],
+    budget: Budget,
+    *,
+    usage: ReActUsage,
+    provider_available: bool = True,
+) -> tuple[str, ...]:
+    """Validate fixture observations and usage against the assigned budget.
+
+    Inputs already contain the completed offline observations and their
+    recorded usage. This check rejects an over-budget result; it does not
+    meter provider calls or interrupt live work during execution.
+    """
+
+    if (
+        len(observations) > budget.max_turns
+        or usage.tool_calls > budget.max_tool_calls
+        or usage.cost > budget.max_cost
+        or usage.elapsed_seconds > Decimal(budget.max_seconds)
+    ):
         raise ProposalRejected("REACT_BUDGET_EXCEEDED", "the controller budget ended the reasoning loop")
     if len(set(observations)) != len(observations):
         raise ProposalRejected("NO_PROGRESS", "the loop repeated an identical observation")
+    if not provider_available:
+        raise ProposalRejected("PROVIDER_UNAVAILABLE", "the bounded controller retained partial evidence and stopped")
     return observations
 
 
@@ -460,7 +488,7 @@ class OwnershipTransfer(BaseModel):
 
 
 class ApprovalRequest(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", frozen=True)
 
     approval_id: str
     case_id: str
@@ -469,6 +497,12 @@ class ApprovalRequest(BaseModel):
     proposal_hash: str
     case_version: int = Field(ge=1)
     policy_version: str
+    evidence_snapshot_digest: str = Field(
+        frozen=True,
+        min_length=64,
+        max_length=64,
+        pattern=r"^[0-9a-f]{64}$",
+    )
     expires_at: datetime
     required_role: str
     status: Literal["pending", "approved", "rejected", "expired"] = "pending"
@@ -504,17 +538,43 @@ def proposal_hash(action: str, resource: str, arguments: dict[str, Any], case_ve
     return digest({"action": action, "resource": resource, "arguments": arguments, "case_version": case_version})
 
 
-def verify_approval(request: ApprovalRequest, decision: ApprovalDecision, *, current_case_version: int, now: datetime = NOW) -> None:
+def verify_approval(
+    request: ApprovalRequest,
+    decision: ApprovalDecision,
+    *,
+    current_case_version: int,
+    current_policy_version: str,
+    current_evidence_snapshot_digest: str,
+    now: datetime = NOW,
+) -> None:
     if request.status != "approved" or decision.decision != "approve":
         raise ProposalRejected("APPROVAL_NOT_GRANTED", "approval is not active")
     if decision.approval_id != request.approval_id or decision.proposal_hash != request.proposal_hash:
         raise ProposalRejected("APPROVAL_BINDING_MISMATCH", "decision is not bound to this proposal")
+    expected_proposal_hash = proposal_hash(
+        request.action,
+        request.resource,
+        {
+            "case_id": request.case_id,
+            "policy_version": request.policy_version,
+            "evidence_snapshot_digest": request.evidence_snapshot_digest,
+            "required_role": request.required_role,
+            "expires_at": request.expires_at,
+        },
+        request.case_version,
+    )
+    if request.proposal_hash != expected_proposal_hash:
+        raise ProposalRejected("APPROVAL_BINDING_MISMATCH", "request fields do not match the approved proposal")
     if decision.approver_role != request.required_role:
         raise ProposalRejected("APPROVER_NOT_ELIGIBLE", "approver does not satisfy the role predicate")
     if now >= request.expires_at:
         raise ProposalRejected("APPROVAL_EXPIRED", "approval expired before commit")
     if current_case_version != request.case_version:
         raise ProposalRejected("STALE_CASE_VERSION", "case changed after approval")
+    if current_policy_version != request.policy_version:
+        raise ProposalRejected("STALE_POLICY_VERSION", "policy changed after approval")
+    if current_evidence_snapshot_digest != request.evidence_snapshot_digest:
+        raise ProposalRejected("STALE_EVIDENCE_SNAPSHOT", "evidence changed after approval")
 
 
 class TaskEnvelope(BaseModel):
@@ -668,20 +728,49 @@ class SyntheticLOS:
     def __init__(self) -> None:
         self.calls: list[str] = []
         self.ready_cases: set[str] = set()
+        self.request_outcomes: dict[str, tuple[str, bool]] = {}
 
-    def mark_ready(self, case_id: str, request_id: str, *, fail_after_commit: bool = False) -> str:
+    def mark_ready(
+        self,
+        case_id: str,
+        request_id: str,
+        *,
+        fail_after_commit: bool = False,
+        fail_before_commit: bool = False,
+    ) -> str:
         self.calls.append(request_id)
+        if fail_before_commit:
+            self.request_outcomes[request_id] = (case_id, False)
+            raise TimeoutError("request did not commit before the connection timed out")
         self.ready_cases.add(case_id)
+        self.request_outcomes[request_id] = (case_id, True)
         if fail_after_commit:
             raise TimeoutError("receipt lost after synthetic LOS commit")
         return f"LOS-RECEIPT-{case_id}"
+
+    def lookup_mark_ready(self, case_id: str, request_id: str) -> bool | None:
+        """Read authoritative synthetic state without retrying the effect."""
+        outcome = self.request_outcomes.get(request_id)
+        if outcome is None or outcome[0] != case_id:
+            return None
+        return outcome[1]
 
 
 class EffectLedger:
     def __init__(self) -> None:
         self.records: dict[str, EffectRecord] = {}
 
-    def commit_mark_ready(self, *, tenant_id: str, case_id: str, case_version: int, intent: dict[str, Any], los: SyntheticLOS, fail_after_commit: bool = False) -> EffectRecord:
+    def commit_mark_ready(
+        self,
+        *,
+        tenant_id: str,
+        case_id: str,
+        case_version: int,
+        intent: dict[str, Any],
+        los: SyntheticLOS,
+        fail_after_commit: bool = False,
+        fail_before_commit: bool = False,
+    ) -> EffectRecord:
         logical_key = f"{tenant_id}:case:{case_id}:mark_ready:v{case_version}"
         intent_hash = digest(intent)
         existing = self.records.get(logical_key)
@@ -689,10 +778,29 @@ class EffectLedger:
             if existing.intent_hash != intent_hash:
                 raise ProposalRejected("IDEMPOTENCY_CONFLICT", "logical effect key was reused for different intent")
             return existing
-        record = EffectRecord(effect_id=f"EFFECT-{case_id}", logical_key=logical_key, intent_hash=intent_hash, state="executing", downstream_request_id=f"REQ-{case_id}")
+        effect_identity = digest(
+            {
+                "tenant_id": tenant_id,
+                "case_id": case_id,
+                "operation": "mark_ready",
+                "case_version": case_version,
+            }
+        )
+        record = EffectRecord(
+            effect_id=f"EFFECT-{effect_identity}",
+            logical_key=logical_key,
+            intent_hash=intent_hash,
+            state="executing",
+            downstream_request_id=f"REQ-{effect_identity}",
+        )
         self.records[logical_key] = record
         try:
-            receipt = los.mark_ready(case_id, record.downstream_request_id, fail_after_commit=fail_after_commit)
+            receipt = los.mark_ready(
+                case_id,
+                record.downstream_request_id,
+                fail_after_commit=fail_after_commit,
+                fail_before_commit=fail_before_commit,
+            )
         except TimeoutError:
             record = record.model_copy(update={"state": "unknown"})
             self.records[logical_key] = record
@@ -707,6 +815,25 @@ class EffectLedger:
         record = self.records[logical_key]
         state = "reconciled" if committed else "intervention"
         updated = record.model_copy(update={"state": state})
+        self.records[logical_key] = updated
+        return updated
+
+    def reconcile_from_los(self, logical_key: str, *, case_id: str, los: SyntheticLOS) -> EffectRecord:
+        """Resolve an Unknown effect from the LOS without blind retry."""
+        if logical_key not in self.records:
+            raise ProposalRejected("EFFECT_NOT_FOUND", "reconciliation targets an unknown effect")
+        record = self.records[logical_key]
+        if record.state != "unknown" or record.downstream_request_id is None:
+            raise ProposalRejected("EFFECT_NOT_UNKNOWN", "only an Unknown effect can be reconciled")
+        committed = los.lookup_mark_ready(case_id, record.downstream_request_id)
+        if committed is None:
+            return record
+        if committed:
+            updated = record.model_copy(
+                update={"state": "reconciled", "receipt": f"LOS-RECONCILED-{record.downstream_request_id}"}
+            )
+        else:
+            updated = record.model_copy(update={"state": "intervention"})
         self.records[logical_key] = updated
         return updated
 

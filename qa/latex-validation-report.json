@@ -3,8 +3,8 @@
   "validated_on": "2026-09-13",
   "format": "XeLaTeX",
   "measurements": {
-    "main_tex_sha256": "48caeb47b1aacc265363507b3c3ee874c7ba53a2e364bb00161f25b7466a0c5f",
-    "content_tex_sha256": "b6513210d7614fabc93c69e0fcd3a53fe8f9ca5a4fc037ef0dd7840082338728",
+    "main_tex_sha256": "a25f974b6ec9e64c2376b7d69f56312cf8123a7123e26f034e5f40362f5396c7",
+    "content_tex_sha256": "d48067eab1d9df8c892ff917b0e1c067ffbccb13ef05b454b3a37c1c379d518b",
     "style_sha256": "1aefe91a58bcfca37131707508139f238552d702f25f14357ceaef462d95b230",
     "narrative_parts": 8,
     "appendix_dividers": 1,
@@ -760,7 +760,7 @@
         "ratio": 14.05
       }
     ],
-    "cross_format_reference_pdf_pages": 213,
+    "cross_format_reference_pdf_pages": 370,
     "cross_format_reference_page_size": [
       612.0,
       792.0
@@ -768,7 +768,9 @@
     "xelatex_available": true
   },
   "errors": [],
-  "warnings": [],
+  "warnings": [
+    "draft reference layout PDF is no longer the 213-page baseline it should be"
+  ],
   "source_validation_pass": true,
   "compiled_in_current_environment": true,
   "pass": true

@@ -4,6 +4,29 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Offline cumulative mortgage beta checkpoints
+
+- Registered and documented deterministic C04–C28 checkpoint façades for the
+  Harborlight synthetic mortgage case, composing the existing platform
+  contracts for events, knowledge, context, Skills, bounded reasoning,
+  approvals, replay, delegation, protocols, containment, identity, effects,
+  privacy, tracing, evaluation, governance, release compatibility, and capacity.
+- Added explicit refusal, outage, stale-state, privacy, and unknown-effect
+  scenarios plus focused integration tests. These checkpoints are offline
+  teaching evidence and do not claim production readiness, legal compliance, or
+  authority to make lending decisions.
+- Hardened review findings: C10 retains partial observations in a structured
+  needs-input report after provider outage and validates fixture-reported turn,
+  tool-call, cost, and elapsed-time budgets without implying live metering; C06
+  tests foreign-tenant access against the same authorized case ID. C11 rejects
+  tied top routes; C13 checks candidate field values against fixture-backed
+  evidence even when a critique misses the contradiction; C14 binds action,
+  resource, case, policy, evidence content digests, required role, and expiry
+  into the approval hash.
+- C15 verifies duplicate delivery deduplication; C22 gives each tenant/case/
+  versioned effect a unique downstream request identity and reconciles unknown
+  outcomes from that request's synthetic LOS record without retrying.
+
 ### PDF filename without renderer suffix
 
 - PDF builds now write `dist/Enterprise-General-Intelligence-v1.0.0.pdf`, without `-LaTeX`, through `make pdf`, `make all` / `make dist-pdf`, the standalone compile script, Docker, and CI. The LaTeX generator, incremental-build destination, CI artifact/release paths, and build documentation use the same filename. Existing local files with the old name are not removed automatically.

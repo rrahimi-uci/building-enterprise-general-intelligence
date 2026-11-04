@@ -2,7 +2,6 @@
 """Render DOCX with LibreOffice, inspect pagination, and create a contact sheet."""
 from __future__ import annotations
 import argparse, json, re, shutil, subprocess, sys, tempfile
-import json
 from pathlib import Path
 import pymupdf
 from PIL import Image, ImageDraw, ImageFont
@@ -15,6 +14,19 @@ def book_release(root: Path) -> str:
     artifact said 2.0.0 -- the evidence disagreeing with the thing it certifies.
     """
     return json.loads((root / "config" / "book.json").read_text(encoding="utf-8"))["book"]["version"]
+
+
+def normalize_extracted_text(text: str) -> str:
+    """Normalize PDF text without losing words split at a line-break hyphen.
+
+    LibreOffice can extract a heading such as ``Self-\nApprove`` as
+    ``Self- Approve``.  The visible PDF is correct, but literal matching would
+    make the pagination gate report a missing heading.  Join only a hyphen
+    followed by whitespace between word characters, then normalize the
+    remaining whitespace.
+    """
+    text = re.sub(r"(?<=\w)-\s+(?=\w)", "-", text)
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def main():
@@ -34,10 +46,10 @@ def main():
         txt=p.get_text().strip(); imgs=p.get_images(full=True)
         if len(txt)<8 and not imgs: blank.append(i+1)
         sizes.append([round(p.rect.width,1),round(p.rect.height,1)])
-        normalized.append(re.sub(r'\s+',' ',txt).strip())
+        normalized.append(normalize_extracted_text(txt))
     found=[]
     for title in headings:
-        needle=re.sub(r'\s+',' ',title).strip()
+        needle=normalize_extracted_text(title)
         candidates=[i+1 for i,txt in enumerate(normalized) if needle in txt]
         if candidates:
             pno=candidates[-1]
@@ -45,7 +57,7 @@ def main():
     unique_starts=len({x['page'] for x in found}); max_offset=max((x['text_offset'] for x in found),default=None)
     part_pages=[]
     for title in part_titles:
-        needle=re.sub(r'\s+',' ',title.replace(' — ',' ')).strip()
+        needle=normalize_extracted_text(title.replace(' — ',' '))
         candidates=[i+1 for i,txt in enumerate(normalized) if needle in txt]
         if candidates: part_pages.append(candidates[-1])
     appendix_a=next((x['page'] for x in found if x['title'].startswith('Appendix A —')),page_count+1)

@@ -1,7 +1,11 @@
 {
   "schema_version": "1.0.0",
   "anchor_case_id": "MORT-2026-000184",
-  "implemented_checkpoints": ["C01", "C02", "C03"],
+  "implemented_checkpoints": [
+    "C01", "C02", "C03", "C04", "C05", "C06", "C07", "C08", "C09",
+    "C10", "C11", "C12", "C13", "C14", "C15", "C16", "C17", "C18", "C19",
+    "C20", "C21", "C22", "C23", "C24", "C25", "C26", "C27", "C28"
+  ],
   "stages": [
     {
       "id": "C01",
@@ -34,129 +38,179 @@
       "technologies": ["custom-python", "openai-agents-optional"]
     },
     {
-      "id": "C04",
-      "chapter": 4,
-      "status": "planned"
+      "id": "C04", "chapter": 4, "status": "implemented",
+      "module": "mortgage_case.stages.c04_reference_architecture:run",
+      "entry_point": "python -m mortgage_case --chapter 4 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "duplicate_document_event"], "tests": ["tests/mortgage_case/integration/test_c04_c09.py"],
+      "technologies": ["custom-python", "pydantic", "events"]
     },
     {
-      "id": "C05",
-      "chapter": 5,
-      "status": "planned"
+      "id": "C05", "chapter": 5, "status": "implemented",
+      "module": "mortgage_case.stages.c05_knowledge:run",
+      "entry_point": "python -m mortgage_case --chapter 5 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "contradictory_employer", "stale_credit_artifact"], "tests": ["tests/mortgage_case/integration/test_c04_c09.py"],
+      "technologies": ["custom-python", "pydantic", "provenance"]
     },
     {
-      "id": "C06",
-      "chapter": 6,
-      "status": "planned"
+      "id": "C06", "chapter": 6, "status": "implemented",
+      "module": "mortgage_case.stages.c06_context:run",
+      "entry_point": "python -m mortgage_case --chapter 6 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "cross_tenant_case_reference"], "tests": ["tests/mortgage_case/integration/test_c04_c09.py"],
+      "technologies": ["custom-python", "pydantic", "authorization"]
     },
     {
-      "id": "C07",
-      "chapter": 7,
-      "status": "planned"
+      "id": "C07", "chapter": 7, "status": "implemented",
+      "module": "mortgage_case.stages.c07_paved_road:run",
+      "entry_point": "python -m mortgage_case --chapter 7 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "offline_network_attempt"], "tests": ["tests/mortgage_case/integration/test_c04_c09.py"],
+      "technologies": ["custom-python", "offline-profile"]
     },
     {
-      "id": "C08",
-      "chapter": 8,
-      "status": "planned"
+      "id": "C08", "chapter": 8, "status": "implemented",
+      "module": "mortgage_case.stages.c08_skills:run",
+      "entry_point": "python -m mortgage_case --chapter 8 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "wrong_region_skill"], "tests": ["tests/mortgage_case/integration/test_c04_c09.py"],
+      "technologies": ["custom-python", "semantic-versioning"]
     },
     {
-      "id": "C09",
-      "chapter": 9,
-      "status": "planned"
+      "id": "C09", "chapter": 9, "status": "implemented",
+      "module": "mortgage_case.stages.c09_skill_pack:run",
+      "entry_point": "python -m mortgage_case --chapter 9 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "incompatible_pack"], "tests": ["tests/mortgage_case/integration/test_c04_c09.py"],
+      "technologies": ["custom-python", "pydantic", "skill-pack"]
     },
     {
-      "id": "C10",
-      "chapter": 10,
-      "status": "planned"
+      "id": "C10", "chapter": 10, "status": "implemented",
+      "module": "mortgage_case.stages.c10_react:run",
+      "entry_point": "python -m mortgage_case --chapter 10 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "repeated_observation", "provider_outage", "turn_budget_exceeded", "tool_budget_exceeded", "cost_budget_exceeded", "time_budget_exceeded"], "tests": ["tests/mortgage_case/integration/test_c10_c19.py"],
+      "technologies": ["custom-python", "bounded-controller"]
     },
     {
-      "id": "C11",
-      "chapter": 11,
-      "status": "planned"
+      "id": "C11", "chapter": 11, "status": "implemented",
+      "module": "mortgage_case.stages.c11_routing:run",
+      "entry_point": "python -m mortgage_case --chapter 11 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "ambiguous_route"], "tests": ["tests/mortgage_case/integration/test_c10_c19.py"],
+      "technologies": ["custom-python", "ownership"]
     },
     {
-      "id": "C12",
-      "chapter": 12,
-      "status": "planned"
+      "id": "C12", "chapter": 12, "status": "implemented",
+      "module": "mortgage_case.stages.c12_planning:run",
+      "entry_point": "python -m mortgage_case --chapter 12 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "plan_cycle"], "tests": ["tests/mortgage_case/integration/test_c10_c19.py"],
+      "technologies": ["custom-python", "pydantic", "plan-compiler"]
     },
     {
-      "id": "C13",
-      "chapter": 13,
-      "status": "planned"
+      "id": "C13", "chapter": 13, "status": "implemented",
+      "module": "mortgage_case.stages.c13_reflection:run",
+      "entry_point": "python -m mortgage_case --chapter 13 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "self_approval", "contradictory_candidate"], "tests": ["tests/mortgage_case/integration/test_c10_c19.py"],
+      "technologies": ["custom-python", "deterministic-evaluator"]
     },
     {
-      "id": "C14",
-      "chapter": 14,
-      "status": "planned"
+      "id": "C14", "chapter": 14, "status": "implemented",
+      "module": "mortgage_case.stages.c14_human_review:run",
+      "entry_point": "python -m mortgage_case --chapter 14 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "approval_changed_case", "approval_changed_evidence", "approval_changed_policy"], "tests": ["tests/mortgage_case/integration/test_c10_c19.py"],
+      "technologies": ["custom-python", "proposal-bound-approval"]
     },
     {
-      "id": "C15",
-      "chapter": 15,
-      "status": "planned"
+      "id": "C15", "chapter": 15, "status": "implemented",
+      "module": "mortgage_case.stages.c15_durable:run",
+      "entry_point": "python -m mortgage_case --chapter 15 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "duplicate_document_event"], "tests": ["tests/mortgage_case/integration/test_c10_c19.py"],
+      "technologies": ["custom-python", "event-replay"]
     },
     {
-      "id": "C16",
-      "chapter": 16,
-      "status": "planned"
+      "id": "C16", "chapter": 16, "status": "implemented",
+      "module": "mortgage_case.stages.c16_patterns:run",
+      "entry_point": "python -m mortgage_case --chapter 16 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "unsafe_pattern"], "tests": ["tests/mortgage_case/integration/test_c10_c19.py"],
+      "technologies": ["custom-python", "pattern-registry"]
     },
     {
-      "id": "C17",
-      "chapter": 17,
-      "status": "planned"
+      "id": "C17", "chapter": 17, "status": "implemented",
+      "module": "mortgage_case.stages.c17_anti_patterns:run",
+      "entry_point": "python -m mortgage_case --chapter 17 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "anti_pattern_selected"], "tests": ["tests/mortgage_case/integration/test_c10_c19.py"],
+      "technologies": ["custom-python", "negative-tests"]
     },
     {
-      "id": "C18",
-      "chapter": 18,
-      "status": "planned"
+      "id": "C18", "chapter": 18, "status": "implemented",
+      "module": "mortgage_case.stages.c18_multi_agent:run",
+      "entry_point": "python -m mortgage_case --chapter 18 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "scope_expansion"], "tests": ["tests/mortgage_case/integration/test_c10_c19.py"],
+      "technologies": ["custom-python", "scope-narrowing"]
     },
     {
-      "id": "C19",
-      "chapter": 19,
-      "status": "planned"
+      "id": "C19", "chapter": 19, "status": "implemented",
+      "module": "mortgage_case.stages.c19_protocols:run",
+      "entry_point": "python -m mortgage_case --chapter 19 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "malicious_remote_artifact"], "tests": ["tests/mortgage_case/integration/test_c10_c19.py"],
+      "technologies": ["custom-python", "MCP", "A2A"]
     },
     {
-      "id": "C20",
-      "chapter": 20,
-      "status": "planned"
+      "id": "C20", "chapter": 20, "status": "implemented",
+      "module": "mortgage_case.stages.c20_containment:run",
+      "entry_point": "python -m mortgage_case --chapter 20 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "malicious_document_instruction"], "tests": ["tests/mortgage_case/integration/test_c20_c28.py"],
+      "technologies": ["custom-python", "prompt-injection-control"]
     },
     {
-      "id": "C21",
-      "chapter": 21,
-      "status": "planned"
+      "id": "C21", "chapter": 21, "status": "implemented",
+      "module": "mortgage_case.stages.c21_identity:run",
+      "entry_point": "python -m mortgage_case --chapter 21 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "revoked_loan_officer"], "tests": ["tests/mortgage_case/integration/test_c20_c28.py"],
+      "technologies": ["custom-python", "capability-envelope"]
     },
     {
-      "id": "C22",
-      "chapter": 22,
-      "status": "planned"
+      "id": "C22", "chapter": 22, "status": "implemented",
+      "module": "mortgage_case.stages.c22_effects:run",
+      "entry_point": "python -m mortgage_case --chapter 22 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "los_timeout_after_commit", "los_timeout_before_commit"], "tests": ["tests/mortgage_case/integration/test_c20_c28.py"],
+      "technologies": ["custom-python", "idempotent-effects"]
     },
     {
-      "id": "C23",
-      "chapter": 23,
-      "status": "planned"
+      "id": "C23", "chapter": 23, "status": "implemented",
+      "module": "mortgage_case.stages.c23_sandbox_privacy:run",
+      "entry_point": "python -m mortgage_case --chapter 23 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "egress_denied", "sensitive_output"], "tests": ["tests/mortgage_case/integration/test_c20_c28.py"],
+      "technologies": ["custom-python", "sandbox-contract", "DLP"]
     },
     {
-      "id": "C24",
-      "chapter": 24,
-      "status": "planned"
+      "id": "C24", "chapter": 24, "status": "implemented",
+      "module": "mortgage_case.stages.c24_tracing:run",
+      "entry_point": "python -m mortgage_case --chapter 24 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "pii_in_trace", "trace_store_outage"], "tests": ["tests/mortgage_case/integration/test_c20_c28.py"],
+      "technologies": ["custom-python", "privacy-safe-tracing"]
     },
     {
-      "id": "C25",
-      "chapter": 25,
-      "status": "planned"
+      "id": "C25", "chapter": 25, "status": "implemented",
+      "module": "mortgage_case.stages.c25_evaluation:run",
+      "entry_point": "python -m mortgage_case --chapter 25 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "fairness_slice_regression", "underpowered_slice"], "tests": ["tests/mortgage_case/integration/test_c20_c28.py"],
+      "technologies": ["custom-python", "deterministic-gates"]
     },
     {
-      "id": "C26",
-      "chapter": 26,
-      "status": "planned"
+      "id": "C26", "chapter": 26, "status": "implemented",
+      "module": "mortgage_case.stages.c26_governance:run",
+      "entry_point": "python -m mortgage_case --chapter 26 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "expired_exception"], "tests": ["tests/mortgage_case/integration/test_c20_c28.py"],
+      "technologies": ["custom-python", "governance-record"]
     },
     {
-      "id": "C27",
-      "chapter": 27,
-      "status": "planned"
+      "id": "C27", "chapter": 27, "status": "implemented",
+      "module": "mortgage_case.stages.c27_release:run",
+      "entry_point": "python -m mortgage_case --chapter 27 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "incompatible_worker"], "tests": ["tests/mortgage_case/integration/test_c20_c28.py"],
+      "technologies": ["custom-python", "release-compatibility"]
     },
     {
-      "id": "C28",
-      "chapter": 28,
-      "status": "planned"
+      "id": "C28", "chapter": 28, "status": "implemented",
+      "module": "mortgage_case.stages.c28_capacity:run",
+      "entry_point": "python -m mortgage_case --chapter 28 --scenario happy_path --offline",
+      "scenarios": ["happy_path", "provider_outage", "capacity_spike"], "tests": ["tests/mortgage_case/integration/test_c20_c28.py"],
+      "technologies": ["custom-python", "deterministic-simulation"]
     }
   ]
 }

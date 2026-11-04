@@ -112,7 +112,12 @@ Likewise, the source-intake card represents governed copies and digests of
 enterprise material, not authority over the external system of record. This
 logical view does not prescribe one vendor or one deployment product.
 
-The companion code implements the first three checkpoints (C01–C03); later checkpoints are roadmap targets, specified in this book and tracked in Appendix H.
+The companion code implements offline, deterministic checkpoint contracts for
+C01–C28. The later checkpoints compose teaching doubles for workflow, policy,
+identity, effects, evidence, governance, release, and capacity; they are not
+production mortgage underwriting and do not authorize a real lending decision.
+Each checkpoint is registered with an offline command, a failure scenario, and
+focused tests in `config/mortgage_stages.json` and `mortgage_case/docs/`.
 
 # PART REFERENCE — APPENDICES: FIELD GUIDE AND REFERENCE
 
@@ -559,7 +564,7 @@ From the repository root:
 
 1. `make examples-run` executes every registered example's tests.
 2. `.venv-examples/bin/python -m pytest tests/mortgage_case -q` runs the mortgage-case tests.
-3. `.venv-examples/bin/python -m mortgage_case --chapter 3 --scenario happy_path --offline --json` runs the deterministic demo through checkpoint C03.
+3. `.venv-examples/bin/python -m mortgage_case --chapter 28 --scenario happy_path --offline --json` runs the deterministic cumulative demo through checkpoint C28. Any chapter from 1 through 28 can be selected.
 
 The direct OpenAI Python SDK adapter and OpenAI Agents SDK adapter are optional
 provider integrations behind provider-neutral contracts. The default offline path
@@ -571,7 +576,8 @@ requires credentials or a network connection.
 
 * `mortgage_case/domain/` — synthetic case, evidence, proposal, and money contracts
 * `mortgage_case/platform/` — provider-neutral runtime and gateway boundaries
-* `mortgage_case/stages/` — cumulative C01–C03 checkpoint façades
+* `mortgage_case/stages/` — cumulative C01–C28 checkpoint façades
+* `mortgage_case/docs/C04.md` through `C28.md` — checkpoint deltas, commands, and limitations
 * `mortgage_case/adapters/openai_responses.py` — direct OpenAI Python SDK Responses adapter
 * `mortgage_case/adapters/openai_agents.py` — OpenAI Agents SDK 0.22.2 adapter
 * `examples/_harness/scripted_model.py` — offline implementation of the Agents SDK model interface
@@ -585,7 +591,10 @@ patterns, not aliases for A2A AgentSkill metadata or Skills over MCP.
 
 ## Rebuild and verify
 
-Run `.venv-examples/bin/python -m compileall -q mortgage_case examples tests`, then repeat the three commands above. The repository README records the companion code's correction history.
+Run `.venv-examples/bin/python -m compileall -q mortgage_case examples tests`,
+`.venv-examples/bin/python tools/validate_mortgage_stage_registry.py`, then
+repeat the commands above. The repository README records the companion code's
+correction history.
 
 # Appendix I — References
 

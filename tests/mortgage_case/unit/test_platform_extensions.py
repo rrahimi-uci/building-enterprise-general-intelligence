@@ -34,7 +34,7 @@ from mortgage_case.platform.observability import build_trace
 from mortgage_case.platform.planning import PlanNode, compile_plan
 from mortgage_case.platform.privacy import dlp_publish
 from mortgage_case.platform.protocols import ProtocolGateway
-from mortgage_case.platform.react import Budget, bounded_react
+from mortgage_case.platform.react import Budget, ReActUsage, bounded_react
 from mortgage_case.platform.releases import ReleaseBundle, route_worker
 from mortgage_case.platform.routing import OwnershipTransfer, RouteDecision
 from mortgage_case.platform.sandbox import SandboxProfile, check_egress
@@ -44,9 +44,11 @@ from mortgage_case.platform.workflow import fold_events
 from mortgage_case.platform.enterprise import (
     NOW,
     CapabilityScope,
+    EffectLedger as EnterpriseEffectLedger,
     MemoryRecord,
     PrincipalContext,
     RunManifest,
+    SyntheticLOS as EnterpriseSyntheticLOS,
     anchor_manifest,
 )
 
@@ -169,7 +171,17 @@ def test_scope_and_child_task_store_never_widen_authority():
 def test_approval_is_bound_to_proposal_and_case_version():
     action = "underwriting.mark_ready"
     resource = f"mortgage://case/{CASE.case_id}"
-    arguments = {"case_version": CASE.case_version}
+    policy_version = "mortgage-policy@2026.09"
+    required_role = "underwriter"
+    expires_at = NOW + timedelta(minutes=15)
+    evidence_snapshot_digest = digest({"document_ids": CASE.available_document_ids, "version": CASE.case_version})
+    arguments = {
+        "case_id": CASE.case_id,
+        "policy_version": policy_version,
+        "evidence_snapshot_digest": evidence_snapshot_digest,
+        "required_role": required_role,
+        "expires_at": expires_at,
+    }
     request = ApprovalRequest(
         approval_id="APR-1",
         case_id=CASE.case_id,
@@ -177,9 +189,10 @@ def test_approval_is_bound_to_proposal_and_case_version():
         resource=resource,
         proposal_hash=proposal_hash(action, resource, arguments, CASE.case_version),
         case_version=CASE.case_version,
-        policy_version="mortgage-policy@2026.09",
-        expires_at=NOW + timedelta(minutes=15),
-        required_role="underwriter",
+        policy_version=policy_version,
+        evidence_snapshot_digest=evidence_snapshot_digest,
+        expires_at=expires_at,
+        required_role=required_role,
         status="approved",
     )
     decision = ApprovalDecision(
@@ -191,9 +204,21 @@ def test_approval_is_bound_to_proposal_and_case_version():
         decided_at=NOW,
         reason="synthetic test decision",
     )
-    verify_approval(request, decision, current_case_version=CASE.case_version)
+    verify_approval(
+        request,
+        decision,
+        current_case_version=CASE.case_version,
+        current_policy_version=policy_version,
+        current_evidence_snapshot_digest=evidence_snapshot_digest,
+    )
     with pytest.raises(ProposalRejected, match="STALE_CASE_VERSION"):
-        verify_approval(request, decision, current_case_version=CASE.case_version + 1)
+        verify_approval(
+            request,
+            decision,
+            current_case_version=CASE.case_version + 1,
+            current_policy_version=policy_version,
+            current_evidence_snapshot_digest=evidence_snapshot_digest,
+        )
 
 
 def test_identity_authorization_binds_envelope_to_current_principal():
@@ -231,7 +256,111 @@ def test_effect_ledger_is_idempotent_and_reconciles_unknown_outcomes():
 
     unknown = ledger.commit_mark_ready(tenant_id=CASE.tenant_id, case_id="MORT-2026-000185", case_version=1, intent=intent, los=los, fail_after_commit=True)
     assert unknown.state == "unknown"
-    assert ledger.reconcile(unknown.logical_key, committed=True).state == "reconciled"
+    calls_after_unknown = len(los.calls)
+    assert ledger.commit_mark_ready(
+        tenant_id=CASE.tenant_id,
+        case_id="MORT-2026-000185",
+        case_version=1,
+        intent=intent,
+        los=los,
+    ) == unknown
+    assert len(los.calls) == calls_after_unknown
+    assert ledger.reconcile_from_los(unknown.logical_key, case_id="MORT-2026-000185", los=los).state == "reconciled"
+    assert len(los.calls) == 2
+
+    not_committed = ledger.commit_mark_ready(
+        tenant_id=CASE.tenant_id,
+        case_id="MORT-2026-000186",
+        case_version=1,
+        intent={"operation": "mark_ready", "case_id": "MORT-2026-000186"},
+        los=los,
+        fail_before_commit=True,
+    )
+    assert not_committed.state == "unknown"
+    assert ledger.reconcile_from_los(not_committed.logical_key, case_id="MORT-2026-000186", los=los).state == "intervention"
+    assert len(los.calls) == 3
+
+
+@pytest.mark.parametrize("reconcile_order", ((1, 2), (2, 1)))
+def test_versioned_effects_reconcile_their_own_los_outcomes_without_redispatch(reconcile_order):
+    ledger = EnterpriseEffectLedger()
+    los = EnterpriseSyntheticLOS()
+    case_id = "MORT-2026-VERSIONED"
+    tenant_id = CASE.tenant_id
+    intent = {"operation": "mark_ready", "case_id": case_id}
+
+    committed_then_timed_out = ledger.commit_mark_ready(
+        tenant_id=tenant_id,
+        case_id=case_id,
+        case_version=1,
+        intent=intent,
+        los=los,
+        fail_after_commit=True,
+    )
+    timed_out_before_commit = ledger.commit_mark_ready(
+        tenant_id=tenant_id,
+        case_id=case_id,
+        case_version=2,
+        intent=intent,
+        los=los,
+        fail_before_commit=True,
+    )
+    assert committed_then_timed_out.state == timed_out_before_commit.state == "unknown"
+    assert committed_then_timed_out.downstream_request_id != timed_out_before_commit.downstream_request_id
+    assert committed_then_timed_out.effect_id != timed_out_before_commit.effect_id
+    assert len(los.calls) == 2
+
+    records = {1: committed_then_timed_out, 2: timed_out_before_commit}
+    expected_states = {1: "reconciled", 2: "intervention"}
+    for version in reconcile_order:
+        updated = ledger.reconcile_from_los(
+            records[version].logical_key,
+            case_id=case_id,
+            los=los,
+        )
+        assert updated.state == expected_states[version]
+
+    assert ledger.records[committed_then_timed_out.logical_key].state == "reconciled"
+    assert ledger.records[timed_out_before_commit.logical_key].state == "intervention"
+    assert len(los.calls) == 2
+
+    # Replaying either already-recorded logical effect must return its ledger
+    # entry without dispatching another downstream request.
+    for record, version in ((committed_then_timed_out, 1), (timed_out_before_commit, 2)):
+        assert ledger.commit_mark_ready(
+            tenant_id=tenant_id,
+            case_id=case_id,
+            case_version=version,
+            intent=intent,
+            los=los,
+        ).state == expected_states[version]
+    assert len(los.calls) == 2
+
+
+def test_effect_ids_bind_tenant_case_and_version():
+    ledger = EnterpriseEffectLedger()
+    los = EnterpriseSyntheticLOS()
+    cases = (
+        ("tenant-a", "case-1", 1),
+        ("tenant-b", "case-1", 1),
+        ("tenant-a", "case-2", 1),
+        ("tenant-a", "case-1", 2),
+    )
+
+    records = [
+        ledger.commit_mark_ready(
+            tenant_id=tenant_id,
+            case_id=case_id,
+            case_version=case_version,
+            intent={"operation": "mark_ready"},
+            los=los,
+        )
+        for tenant_id, case_id, case_version in cases
+    ]
+
+    assert len({record.effect_id for record in records}) == len(cases)
+    assert len({record.downstream_request_id for record in records}) == len(cases)
+    assert len(los.calls) == len(cases)
 
 
 def test_protocol_security_sandbox_and_privacy_boundaries_fail_closed():
@@ -277,10 +406,14 @@ def test_traces_evaluation_governance_release_and_capacity_remain_bounded():
 
 
 def test_react_routing_workflow_and_contract_facades_are_executable():
-    observations = bounded_react(("missing_pay_statement",), Budget(max_turns=3, max_tool_calls=3, max_seconds=30))
+    budget = Budget(max_turns=3, max_tool_calls=3, max_cost=Decimal("2.00"), max_seconds=30)
+    usage = ReActUsage(tool_calls=3, cost=Decimal("2.00"), elapsed_seconds=Decimal("30"))
+    observations = bounded_react(("missing_pay_statement",), budget, usage=usage)
     assert observations == ("missing_pay_statement",)
     with pytest.raises(ProposalRejected, match="NO_PROGRESS"):
-        bounded_react(("same", "same"), Budget(max_turns=3, max_tool_calls=3, max_seconds=30))
+        bounded_react(("same", "same"), budget, usage=usage)
+    with pytest.raises(ProposalRejected, match="PROVIDER_UNAVAILABLE"):
+        bounded_react(("application",), budget, usage=usage, provider_available=False)
 
     route = RouteDecision(route="income", reason_code="MISSING_EVIDENCE", owner="income-specialist")
     transfer = OwnershipTransfer(transfer_id="T-1", previous_owner="parent", new_owner="income-specialist")
@@ -294,3 +427,17 @@ def test_react_routing_workflow_and_contract_facades_are_executable():
     )
     assert folded == {"status": "running", "signals": 1, "sequence": 2}
     assert MemoryRecord(memory_id="M-1", run_id="RUN-1", value="missing evidence", source_refs=("ART-1",), expires_at=NOW).run_id == "RUN-1"
+
+
+@pytest.mark.parametrize(
+    "usage",
+    (
+        ReActUsage(tool_calls=1, cost=Decimal("2.01"), elapsed_seconds=Decimal("1")),
+        ReActUsage(tool_calls=1, cost=Decimal("1"), elapsed_seconds=Decimal("30.01")),
+        ReActUsage(tool_calls=4, cost=Decimal("1"), elapsed_seconds=Decimal("1")),
+    ),
+)
+def test_react_rejects_tool_calls_cost_or_elapsed_time_over_budget(usage):
+    budget = Budget(max_turns=3, max_tool_calls=3, max_cost=Decimal("2.00"), max_seconds=30)
+    with pytest.raises(ProposalRejected, match="REACT_BUDGET_EXCEEDED"):
+        bounded_react(("application",), budget, usage=usage)
