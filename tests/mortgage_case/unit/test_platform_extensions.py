@@ -44,9 +44,11 @@ from mortgage_case.platform.workflow import fold_events
 from mortgage_case.platform.enterprise import (
     NOW,
     CapabilityScope,
+    EffectLedger as EnterpriseEffectLedger,
     MemoryRecord,
     PrincipalContext,
     RunManifest,
+    SyntheticLOS as EnterpriseSyntheticLOS,
     anchor_manifest,
 )
 
@@ -170,8 +172,16 @@ def test_approval_is_bound_to_proposal_and_case_version():
     action = "underwriting.mark_ready"
     resource = f"mortgage://case/{CASE.case_id}"
     policy_version = "mortgage-policy@2026.09"
+    required_role = "underwriter"
+    expires_at = NOW + timedelta(minutes=15)
     evidence_snapshot_digest = digest({"document_ids": CASE.available_document_ids, "version": CASE.case_version})
-    arguments = {"policy_version": policy_version, "evidence_snapshot_digest": evidence_snapshot_digest}
+    arguments = {
+        "case_id": CASE.case_id,
+        "policy_version": policy_version,
+        "evidence_snapshot_digest": evidence_snapshot_digest,
+        "required_role": required_role,
+        "expires_at": expires_at,
+    }
     request = ApprovalRequest(
         approval_id="APR-1",
         case_id=CASE.case_id,
@@ -181,8 +191,8 @@ def test_approval_is_bound_to_proposal_and_case_version():
         case_version=CASE.case_version,
         policy_version=policy_version,
         evidence_snapshot_digest=evidence_snapshot_digest,
-        expires_at=NOW + timedelta(minutes=15),
-        required_role="underwriter",
+        expires_at=expires_at,
+        required_role=required_role,
         status="approved",
     )
     decision = ApprovalDecision(
@@ -269,6 +279,88 @@ def test_effect_ledger_is_idempotent_and_reconciles_unknown_outcomes():
     assert not_committed.state == "unknown"
     assert ledger.reconcile_from_los(not_committed.logical_key, case_id="MORT-2026-000186", los=los).state == "intervention"
     assert len(los.calls) == 3
+
+
+@pytest.mark.parametrize("reconcile_order", ((1, 2), (2, 1)))
+def test_versioned_effects_reconcile_their_own_los_outcomes_without_redispatch(reconcile_order):
+    ledger = EnterpriseEffectLedger()
+    los = EnterpriseSyntheticLOS()
+    case_id = "MORT-2026-VERSIONED"
+    tenant_id = CASE.tenant_id
+    intent = {"operation": "mark_ready", "case_id": case_id}
+
+    committed_then_timed_out = ledger.commit_mark_ready(
+        tenant_id=tenant_id,
+        case_id=case_id,
+        case_version=1,
+        intent=intent,
+        los=los,
+        fail_after_commit=True,
+    )
+    timed_out_before_commit = ledger.commit_mark_ready(
+        tenant_id=tenant_id,
+        case_id=case_id,
+        case_version=2,
+        intent=intent,
+        los=los,
+        fail_before_commit=True,
+    )
+    assert committed_then_timed_out.state == timed_out_before_commit.state == "unknown"
+    assert committed_then_timed_out.downstream_request_id != timed_out_before_commit.downstream_request_id
+    assert committed_then_timed_out.effect_id != timed_out_before_commit.effect_id
+    assert len(los.calls) == 2
+
+    records = {1: committed_then_timed_out, 2: timed_out_before_commit}
+    expected_states = {1: "reconciled", 2: "intervention"}
+    for version in reconcile_order:
+        updated = ledger.reconcile_from_los(
+            records[version].logical_key,
+            case_id=case_id,
+            los=los,
+        )
+        assert updated.state == expected_states[version]
+
+    assert ledger.records[committed_then_timed_out.logical_key].state == "reconciled"
+    assert ledger.records[timed_out_before_commit.logical_key].state == "intervention"
+    assert len(los.calls) == 2
+
+    # Replaying either already-recorded logical effect must return its ledger
+    # entry without dispatching another downstream request.
+    for record, version in ((committed_then_timed_out, 1), (timed_out_before_commit, 2)):
+        assert ledger.commit_mark_ready(
+            tenant_id=tenant_id,
+            case_id=case_id,
+            case_version=version,
+            intent=intent,
+            los=los,
+        ).state == expected_states[version]
+    assert len(los.calls) == 2
+
+
+def test_effect_ids_bind_tenant_case_and_version():
+    ledger = EnterpriseEffectLedger()
+    los = EnterpriseSyntheticLOS()
+    cases = (
+        ("tenant-a", "case-1", 1),
+        ("tenant-b", "case-1", 1),
+        ("tenant-a", "case-2", 1),
+        ("tenant-a", "case-1", 2),
+    )
+
+    records = [
+        ledger.commit_mark_ready(
+            tenant_id=tenant_id,
+            case_id=case_id,
+            case_version=case_version,
+            intent={"operation": "mark_ready"},
+            los=los,
+        )
+        for tenant_id, case_id, case_version in cases
+    ]
+
+    assert len({record.effect_id for record in records}) == len(cases)
+    assert len({record.downstream_request_id for record in records}) == len(cases)
+    assert len(los.calls) == len(cases)
 
 
 def test_protocol_security_sandbox_and_privacy_boundaries_fail_closed():

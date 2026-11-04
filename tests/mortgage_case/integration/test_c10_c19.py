@@ -6,7 +6,11 @@ from importlib import import_module
 
 import pytest
 
-from mortgage_case.platform.checkpoints import SCENARIOS as CHECKPOINT_SCENARIOS
+from mortgage_case.domain.case import load_anchor_case
+from mortgage_case.platform.checkpoints import (
+    SCENARIOS as CHECKPOINT_SCENARIOS,
+    case_evidence_snapshot_digest,
+)
 
 
 STAGES = tuple(
@@ -64,6 +68,45 @@ def test_representative_refusals_are_reported_without_raising(module_name: str, 
 
     assert report.status == "refused"
     assert report.failures == (failure,)
+
+
+def test_c10_provider_outage_retains_partial_observation_in_needs_input_report():
+    from mortgage_case.stages import c10_react
+
+    report = c10_react.run("provider_outage")
+
+    assert report.status == "needs_input"
+    assert report.failures == ("PROVIDER_UNAVAILABLE",)
+    assert report.evidence == ("OBS-01",)
+    assert report.details["observations"] == ("application",)
+    assert report.details["partial_observation_retained"] is True
+
+
+def test_c13_contradictory_candidate_is_held_even_when_critique_is_empty_or_misses_it():
+    from mortgage_case.stages import c13_reflection
+
+    report = c13_reflection.run("contradictory_candidate")
+
+    assert report.status == "needs_input"
+    assert report.details["critique"]["findings"] == []
+    assert report.details["acceptance"]["accepted"] is False
+    assert "candidate_claims_contradict_evidence" in report.failures
+
+
+def test_c14_evidence_snapshot_changes_when_content_changes_under_the_same_document_id():
+    case = load_anchor_case()
+    changed_documents = tuple(
+        document.model_copy(update={"sha256": "f" * 64})
+        if index == 0
+        else document
+        for index, document in enumerate(case.available_documents)
+    )
+
+    assert tuple(document.document_id for document in changed_documents) == case.available_document_ids
+    assert case_evidence_snapshot_digest(case) != case_evidence_snapshot_digest(
+        case,
+        documents=changed_documents,
+    )
 
 
 def test_c15_duplicate_signal_is_deduplicated_in_event_projection_and_outbox():

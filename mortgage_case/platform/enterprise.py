@@ -530,6 +530,20 @@ def verify_approval(
         raise ProposalRejected("APPROVAL_NOT_GRANTED", "approval is not active")
     if decision.approval_id != request.approval_id or decision.proposal_hash != request.proposal_hash:
         raise ProposalRejected("APPROVAL_BINDING_MISMATCH", "decision is not bound to this proposal")
+    expected_proposal_hash = proposal_hash(
+        request.action,
+        request.resource,
+        {
+            "case_id": request.case_id,
+            "policy_version": request.policy_version,
+            "evidence_snapshot_digest": request.evidence_snapshot_digest,
+            "required_role": request.required_role,
+            "expires_at": request.expires_at,
+        },
+        request.case_version,
+    )
+    if request.proposal_hash != expected_proposal_hash:
+        raise ProposalRejected("APPROVAL_BINDING_MISMATCH", "request fields do not match the approved proposal")
     if decision.approver_role != request.required_role:
         raise ProposalRejected("APPROVER_NOT_ELIGIBLE", "approver does not satisfy the role predicate")
     if now >= request.expires_at:
@@ -743,7 +757,21 @@ class EffectLedger:
             if existing.intent_hash != intent_hash:
                 raise ProposalRejected("IDEMPOTENCY_CONFLICT", "logical effect key was reused for different intent")
             return existing
-        record = EffectRecord(effect_id=f"EFFECT-{case_id}", logical_key=logical_key, intent_hash=intent_hash, state="executing", downstream_request_id=f"REQ-{case_id}")
+        effect_identity = digest(
+            {
+                "tenant_id": tenant_id,
+                "case_id": case_id,
+                "operation": "mark_ready",
+                "case_version": case_version,
+            }
+        )
+        record = EffectRecord(
+            effect_id=f"EFFECT-{effect_identity}",
+            logical_key=logical_key,
+            intent_hash=intent_hash,
+            state="executing",
+            downstream_request_id=f"REQ-{effect_identity}",
+        )
         self.records[logical_key] = record
         try:
             receipt = los.mark_ready(

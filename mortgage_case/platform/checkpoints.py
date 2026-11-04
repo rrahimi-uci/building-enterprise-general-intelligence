@@ -13,7 +13,7 @@ from decimal import Decimal
 
 from pydantic import ValidationError
 
-from ..domain.case import load_anchor_case
+from ..domain.case import MortgageCase, SyntheticDocument, load_anchor_case
 from ..domain.errors import MortgageCaseError, ProposalRejected
 from ..stage_report import StageReport
 from .enterprise import (
@@ -55,7 +55,7 @@ from .enterprise import (
     TaskStore,
 )
 from .workflow import fold_events
-from .reflection_acceptance import Candidate, Critique, evaluate_acceptance
+from .reflection_acceptance import Candidate, CandidateClaim, Critique, evaluate_acceptance
 from .route_resolution import resolve_route
 
 
@@ -69,7 +69,7 @@ SCENARIOS: dict[int, frozenset[str]] = {
     10: frozenset({"happy_path", "repeated_observation", "provider_outage"}),
     11: frozenset({"happy_path", "ambiguous_route"}),
     12: frozenset({"happy_path", "plan_cycle"}),
-    13: frozenset({"happy_path", "self_approval"}),
+    13: frozenset({"happy_path", "self_approval", "contradictory_candidate"}),
     14: frozenset({"happy_path", "approval_changed_case", "approval_changed_evidence", "approval_changed_policy"}),
     15: frozenset({"happy_path", "duplicate_document_event"}),
     16: frozenset({"happy_path", "unsafe_pattern"}),
@@ -141,6 +141,26 @@ def _refused(chapter: int, scenario: str, exc: ProposalRejected) -> StageReport:
     return _report(chapter, scenario, status="refused", failures=(exc.code,), details={"reason": str(exc)})
 
 
+def case_evidence_snapshot_digest(
+    case: MortgageCase,
+    *,
+    documents: tuple[SyntheticDocument, ...] | None = None,
+) -> str:
+    """Digest the case version and the complete identity/content of available evidence."""
+
+    snapshot_documents = case.available_documents if documents is None else documents
+    return digest(
+        {
+            "case_id": case.case_id,
+            "case_version": case.case_version,
+            "documents": tuple(
+                document.model_dump(mode="json")
+                for document in sorted(snapshot_documents, key=lambda item: item.document_id)
+            ),
+        }
+    )
+
+
 def run_checkpoint(chapter: int, scenario: str = "happy_path") -> StageReport:
     """Run one C04-C28 deterministic composition checkpoint."""
 
@@ -194,11 +214,27 @@ def run_checkpoint(chapter: int, scenario: str = "happy_path") -> StageReport:
                 if scenario == "repeated_observation"
                 else (("application",) if scenario == "provider_outage" else ("application", "pay_statement", "employer_verification"))
             )
-            bounded = bounded_react(
-                observations,
-                Budget(max_turns=4, max_tool_calls=4, max_cost=Decimal("2.00"), max_seconds=30),
-                provider_available=scenario != "provider_outage",
-            )
+            try:
+                bounded = bounded_react(
+                    observations,
+                    Budget(max_turns=4, max_tool_calls=4, max_cost=Decimal("2.00"), max_seconds=30),
+                    provider_available=scenario != "provider_outage",
+                )
+            except ProposalRejected as exc:
+                if exc.code != "PROVIDER_UNAVAILABLE":
+                    raise
+                return _report(
+                    chapter,
+                    scenario,
+                    status="needs_input",
+                    evidence=tuple(f"OBS-{idx:02d}" for idx, _ in enumerate(observations, start=1)),
+                    failures=(exc.code,),
+                    details={
+                        "observations": observations,
+                        "provider_available": False,
+                        "partial_observation_retained": bool(observations),
+                    },
+                )
             return _report(chapter, scenario, evidence=tuple(f"OBS-{idx:02d}" for idx, _ in enumerate(bounded, start=1)), details={"observations": bounded})
 
         if chapter == 11:
@@ -239,10 +275,26 @@ def run_checkpoint(chapter: int, scenario: str = "happy_path") -> StageReport:
             return _report(chapter, scenario, evidence=(compiled.plan_digest,), details=compiled.model_dump(mode="json"))
 
         if chapter == 13:
+            known_facts = {
+                ("purchase_price", "PUR-000184"): case.purchase_price,
+                ("requested_principal", "APP-000184"): case.requested_principal,
+            }
             candidate = Candidate(
                 candidate_id="CANDIDATE-000184",
                 producer_id="reflection-agent",
                 evidence_refs=case.available_document_ids,
+                claims=(
+                    CandidateClaim(
+                        field_name="purchase_price",
+                        value=("USD 650000.00" if scenario == "contradictory_candidate" else case.purchase_price),
+                        evidence_ref="PUR-000184",
+                    ),
+                    CandidateClaim(
+                        field_name="requested_principal",
+                        value=case.requested_principal,
+                        evidence_ref="APP-000184",
+                    ),
+                ),
             )
             critique = Critique(
                 candidate_id=candidate.candidate_id,
@@ -254,6 +306,7 @@ def run_checkpoint(chapter: int, scenario: str = "happy_path") -> StageReport:
                 critique=critique,
                 known_evidence_refs=case.available_document_ids,
                 required_evidence_refs=case.available_document_ids,
+                known_facts=known_facts,
                 acceptance_actor_id=(
                     candidate.producer_id if scenario == "self_approval" else "acceptance-engine"
                 ),
@@ -261,7 +314,9 @@ def run_checkpoint(chapter: int, scenario: str = "happy_path") -> StageReport:
             return _report(
                 chapter,
                 scenario,
+                status="needs_input" if not acceptance.accepted else "completed",
                 evidence=(candidate.candidate_id, digest(critique), digest(acceptance)),
+                failures=acceptance.reasons,
                 details={
                     "candidate": candidate.model_dump(mode="json"),
                     "critique": critique.model_dump(mode="json"),
@@ -274,16 +329,15 @@ def run_checkpoint(chapter: int, scenario: str = "happy_path") -> StageReport:
             action = "underwriting.mark_ready"
             resource = f"mortgage://case/{case.case_id}"
             policy_version = "mortgage-policy@2026.09"
-            evidence_snapshot = digest(
-                {
-                    "case_id": case.case_id,
-                    "case_version": case.case_version,
-                    "document_ids": case.available_document_ids,
-                }
-            )
+            required_role = "underwriter"
+            approval_expires_at = NOW + timedelta(minutes=15)
+            evidence_snapshot = case_evidence_snapshot_digest(case)
             proposal_arguments = {
+                "case_id": case.case_id,
                 "policy_version": policy_version,
                 "evidence_snapshot_digest": evidence_snapshot,
+                "required_role": required_role,
+                "expires_at": approval_expires_at,
             }
             request = ApprovalRequest(
                 approval_id="APR-000184",
@@ -294,19 +348,22 @@ def run_checkpoint(chapter: int, scenario: str = "happy_path") -> StageReport:
                 case_version=case.case_version,
                 policy_version=policy_version,
                 evidence_snapshot_digest=evidence_snapshot,
-                expires_at=NOW + timedelta(minutes=15),
-                required_role="underwriter",
+                expires_at=approval_expires_at,
+                required_role=required_role,
                 status="approved",
             )
             decision = ApprovalDecision(approval_id=request.approval_id, proposal_hash=request.proposal_hash, approver_id="human-9", approver_role="underwriter", decision="approve", decided_at=NOW, reason="synthetic action authorization")
             current_evidence_snapshot = evidence_snapshot
             if scenario == "approval_changed_evidence":
-                current_evidence_snapshot = digest(
-                    {
-                        "case_id": case.case_id,
-                        "case_version": case.case_version,
-                        "document_ids": (*case.available_document_ids, "NEW-UNREVIEWED-EVIDENCE"),
-                    }
+                changed_documents = tuple(
+                    document.model_copy(update={"sha256": "f" * 64})
+                    if index == 0
+                    else document
+                    for index, document in enumerate(case.available_documents)
+                )
+                current_evidence_snapshot = case_evidence_snapshot_digest(
+                    case,
+                    documents=changed_documents,
                 )
             current_policy_version = "mortgage-policy@2026.10" if scenario == "approval_changed_policy" else policy_version
             verify_approval(

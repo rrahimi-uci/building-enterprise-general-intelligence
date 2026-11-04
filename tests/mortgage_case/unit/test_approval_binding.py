@@ -17,6 +17,8 @@ from mortgage_case.platform.enterprise import (
 CASE_ID = "CASE-APPROVAL-BINDING"
 CASE_VERSION = 7
 POLICY_VERSION = "mortgage-policy@2026.09"
+REQUIRED_ROLE = "underwriter"
+EXPIRES_AT = NOW + timedelta(minutes=15)
 EVIDENCE = {
     "documents": [
         {"document_id": "DOC-1", "content_hash": "sha256:original"},
@@ -29,8 +31,11 @@ def _approved_pair() -> tuple[ApprovalRequest, ApprovalDecision, str]:
     action = "underwriting.mark_ready"
     resource = f"mortgage://case/{CASE_ID}"
     proposal_arguments = {
+        "case_id": CASE_ID,
         "policy_version": POLICY_VERSION,
         "evidence_snapshot_digest": evidence_snapshot_digest,
+        "required_role": REQUIRED_ROLE,
+        "expires_at": EXPIRES_AT,
     }
     request = ApprovalRequest(
         approval_id="APR-BINDING-1",
@@ -41,8 +46,8 @@ def _approved_pair() -> tuple[ApprovalRequest, ApprovalDecision, str]:
         case_version=CASE_VERSION,
         policy_version=POLICY_VERSION,
         evidence_snapshot_digest=evidence_snapshot_digest,
-        expires_at=NOW + timedelta(minutes=15),
-        required_role="underwriter",
+        expires_at=EXPIRES_AT,
+        required_role=REQUIRED_ROLE,
         status="approved",
     )
     decision = ApprovalDecision(
@@ -102,18 +107,56 @@ def test_approval_rejects_a_changed_policy_version():
         )
 
 
+@pytest.mark.parametrize(
+    ("field", "tampered_value"),
+    (
+        ("action", "underwriting.cancel"),
+        ("resource", "mortgage://case/OTHER-CASE"),
+        ("case_id", "CASE-OTHER"),
+        ("case_version", CASE_VERSION + 1),
+        ("policy_version", "mortgage-policy@2026.10"),
+        ("evidence_snapshot_digest", digest({"documents": [{"document_id": "DOC-1", "content_hash": "sha256:changed"}]})),
+        ("required_role", "senior-underwriter"),
+        ("expires_at", EXPIRES_AT + timedelta(minutes=1)),
+    ),
+)
+def test_approval_rejects_request_fields_changed_after_approval(field: str, tampered_value: object):
+    request, decision, evidence_snapshot_digest = _approved_pair()
+    tampered_request = request.model_copy(update={field: tampered_value})
+
+    with pytest.raises(ProposalRejected, match="APPROVAL_BINDING_MISMATCH"):
+        _verify(
+            tampered_request,
+            decision,
+            policy_version=POLICY_VERSION,
+            evidence_digest=evidence_snapshot_digest,
+        )
+
+
 def test_approval_proposal_hash_binds_policy_and_evidence_context():
     request, _, evidence_snapshot_digest = _approved_pair()
     changed_evidence_hash = proposal_hash(
         request.action,
         request.resource,
-        {"policy_version": POLICY_VERSION, "evidence_snapshot_digest": digest({"documents": []})},
+        {
+            "case_id": request.case_id,
+            "policy_version": POLICY_VERSION,
+            "evidence_snapshot_digest": digest({"documents": []}),
+            "required_role": request.required_role,
+            "expires_at": request.expires_at,
+        },
         CASE_VERSION,
     )
     changed_policy_hash = proposal_hash(
         request.action,
         request.resource,
-        {"policy_version": "mortgage-policy@2026.10", "evidence_snapshot_digest": evidence_snapshot_digest},
+        {
+            "case_id": request.case_id,
+            "policy_version": "mortgage-policy@2026.10",
+            "evidence_snapshot_digest": evidence_snapshot_digest,
+            "required_role": request.required_role,
+            "expires_at": request.expires_at,
+        },
         CASE_VERSION,
     )
 
