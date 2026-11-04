@@ -16,10 +16,13 @@ All notable changes follow semantic versioning and are recorded here.
   teaching evidence and do not claim production readiness, legal compliance, or
   authority to make lending decisions.
 - Hardened review findings: C10 retains partial observations in a structured
-  needs-input report after provider outage; C11 rejects tied top routes; C13
-  checks candidate field values against fixture-backed evidence even when a
-  critique misses the contradiction; C14 binds action, resource, case, policy,
-  evidence content digests, required role, and expiry into the approval hash.
+  needs-input report after provider outage and validates fixture-reported turn,
+  tool-call, cost, and elapsed-time budgets without implying live metering; C06
+  tests foreign-tenant access against the same authorized case ID. C11 rejects
+  tied top routes; C13 checks candidate field values against fixture-backed
+  evidence even when a critique misses the contradiction; C14 binds action,
+  resource, case, policy, evidence content digests, required role, and expiry
+  into the approval hash.
 - C15 verifies duplicate delivery deduplication; C22 gives each tenant/case/
   versioned effect a unique downstream request identity and reconciles unknown
   outcomes from that request's synthetic LOS record without retrying.

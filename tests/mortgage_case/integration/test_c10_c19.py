@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from decimal import Decimal
 from importlib import import_module
 
 import pytest
@@ -49,6 +50,10 @@ def test_happy_path_reports_are_exposed_by_each_wrapper(label: str, chapter: int
     "module_name, scenario, failure",
     (
         ("c10_react", "repeated_observation", "NO_PROGRESS"),
+        ("c10_react", "turn_budget_exceeded", "REACT_BUDGET_EXCEEDED"),
+        ("c10_react", "tool_budget_exceeded", "REACT_BUDGET_EXCEEDED"),
+        ("c10_react", "cost_budget_exceeded", "REACT_BUDGET_EXCEEDED"),
+        ("c10_react", "time_budget_exceeded", "REACT_BUDGET_EXCEEDED"),
         ("c11_routing", "ambiguous_route", "ROUTE_AMBIGUOUS"),
         ("c12_planning", "plan_cycle", "PLAN_CYCLE"),
         ("c13_reflection", "self_approval", "SELF_APPROVAL"),
@@ -80,6 +85,34 @@ def test_c10_provider_outage_retains_partial_observation_in_needs_input_report()
     assert report.evidence == ("OBS-01",)
     assert report.details["observations"] == ("application",)
     assert report.details["partial_observation_retained"] is True
+
+
+@pytest.mark.parametrize(
+    ("scenario", "usage_key", "limit_key"),
+    (
+        ("tool_budget_exceeded", "tool_calls", "max_tool_calls"),
+        ("cost_budget_exceeded", "cost", "max_cost"),
+        ("time_budget_exceeded", "elapsed_seconds", "max_seconds"),
+    ),
+)
+def test_c10_reports_the_recorded_usage_that_exceeded_its_budget(scenario, usage_key, limit_key):
+    from mortgage_case.stages import c10_react
+
+    report = c10_react.run(scenario)
+
+    assert report.status == "refused"
+    assert report.failures == ("REACT_BUDGET_EXCEEDED",)
+    assert Decimal(str(report.details["usage"][usage_key])) > Decimal(str(report.details["budget"][limit_key]))
+
+
+def test_c10_reports_the_observations_that_exceeded_its_turn_budget():
+    from mortgage_case.stages import c10_react
+
+    report = c10_react.run("turn_budget_exceeded")
+
+    assert report.status == "refused"
+    assert report.failures == ("REACT_BUDGET_EXCEEDED",)
+    assert len(report.details["observations"]) > report.details["budget"]["max_turns"]
 
 
 def test_c13_contradictory_candidate_is_held_even_when_critique_is_empty_or_misses_it():

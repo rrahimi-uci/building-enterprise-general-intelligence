@@ -26,6 +26,7 @@ from .enterprise import (
     PrincipalChain,
     ReleaseBundle,
     RouteDecision,
+    ReActUsage,
     SandboxProfile,
     SkillPack,
     TaskEnvelope,
@@ -66,7 +67,7 @@ SCENARIOS: dict[int, frozenset[str]] = {
     7: frozenset({"happy_path", "offline_network_attempt"}),
     8: frozenset({"happy_path", "wrong_region_skill"}),
     9: frozenset({"happy_path", "incompatible_pack"}),
-    10: frozenset({"happy_path", "repeated_observation", "provider_outage"}),
+    10: frozenset({"happy_path", "repeated_observation", "provider_outage", "turn_budget_exceeded", "tool_budget_exceeded", "cost_budget_exceeded", "time_budget_exceeded"}),
     11: frozenset({"happy_path", "ambiguous_route"}),
     12: frozenset({"happy_path", "plan_cycle"}),
     13: frozenset({"happy_path", "self_approval", "contradictory_candidate"}),
@@ -95,7 +96,7 @@ _BOUNDARIES = {
     7: ("The cumulative modules have no single conformance command.", "The stage registry and offline CLI expose one chapter-aligned developer path.", "The bundled dependencies and local doubles do not prove a deployed platform."),
     8: ("Capabilities are assembled as unpinned instructions and tools.", "An immutable, policy-compatible Skill is resolved and its digest is visible.", "Skill resolution grants no authority and uses an in-memory registry."),
     9: ("Individual Skills do not form one domain-owned experience.", "A mortgage pre-underwriting pack binds Skills, workflow, policy, and evaluation metadata.", "Pack activation is metadata-only; installation cannot access a case."),
-    10: ("Adaptive evidence work has no externally enforced loop bound.", "A bounded controller stops on repeated observations, turn limits, and provider failure.", "The controller uses deterministic observations and does not prove model quality."),
+    10: ("Adaptive evidence work has no externally enforced loop bound.", "An offline acceptance check validates deterministic observations and recorded turn, tool-call, cost, and elapsed-time usage against a budget.", "It rejects over-budget fixtures after their observations have been produced; it does not meter provider calls, interrupt live work, or prove model quality."),
     11: ("One agent owns every evidence question.", "Routing and ownership-transfer records make specialization and fallback explicit.", "The router is a deterministic teaching double, not a workforce scheduler."),
     12: ("Agent choices are not an inspectable executable plan.", "A typed plan is compiled for capabilities and dependency cycles before scheduling.", "Compilation does not execute a workflow or authorize an effect."),
     13: ("A recommendation can be coherent while missing a contradiction.", "Candidate, critique, and deterministic acceptance remain separate records.", "The evaluator is a local contract double; it is not an independent production reviewer."),
@@ -189,8 +190,21 @@ def run_checkpoint(chapter: int, scenario: str = "happy_path") -> StageReport:
             return _report(chapter, scenario, evidence=(rule.rule_id, rule.object_id), details={"policy_version": rule.policy_version, "required_documents": sorted(rule.required_documents)})
 
         if chapter == 6:
-            allowed_case_id = "MORT-2026-000185" if scenario == "cross_tenant_case_reference" else case.case_id
-            context = build_context(case, manifest, artifact_ids=case.available_document_ids, source_revisions=("mortgage-policy@2026.09",), allowed_case_id=allowed_case_id)
+            if scenario == "cross_tenant_case_reference":
+                foreign_tenant = "tenant-foreign"
+                manifest = manifest.model_copy(
+                    update={
+                        "tenant_id": foreign_tenant,
+                        "principal": manifest.principal.model_copy(update={"tenant_id": foreign_tenant}),
+                    }
+                )
+            context = build_context(
+                case,
+                manifest,
+                artifact_ids=case.available_document_ids,
+                source_revisions=("mortgage-policy@2026.09",),
+                allowed_case_id=case.case_id,
+            )
             return _report(chapter, scenario, evidence=context.artifact_ids, details=context.model_dump(mode="json"))
 
         if chapter == 7:
@@ -209,20 +223,43 @@ def run_checkpoint(chapter: int, scenario: str = "happy_path") -> StageReport:
             return _report(chapter, scenario, evidence=(pack.digest,), details=pack.model_dump(mode="json"))
 
         if chapter == 10:
-            observations = (
-                ("application", "application")
-                if scenario == "repeated_observation"
-                else (("application",) if scenario == "provider_outage" else ("application", "pay_statement", "employer_verification"))
+            if scenario == "repeated_observation":
+                observations = ("application", "application")
+            elif scenario == "provider_outage":
+                observations = ("application",)
+            elif scenario == "turn_budget_exceeded":
+                observations = ("application", "pay_statement", "employer_verification", "credit_report", "property_record")
+            else:
+                observations = ("application", "pay_statement", "employer_verification")
+            budget = Budget(max_turns=4, max_tool_calls=4, max_cost=Decimal("2.00"), max_seconds=30)
+            usage = ReActUsage(
+                tool_calls=5 if scenario == "tool_budget_exceeded" else (1 if scenario == "provider_outage" else 3),
+                cost=Decimal("2.01") if scenario == "cost_budget_exceeded" else Decimal("1.25"),
+                elapsed_seconds=Decimal("31") if scenario == "time_budget_exceeded" else Decimal("4"),
             )
             try:
                 bounded = bounded_react(
                     observations,
-                    Budget(max_turns=4, max_tool_calls=4, max_cost=Decimal("2.00"), max_seconds=30),
+                    budget,
+                    usage=usage,
                     provider_available=scenario != "provider_outage",
                 )
             except ProposalRejected as exc:
                 if exc.code != "PROVIDER_UNAVAILABLE":
-                    raise
+                    if exc.code != "REACT_BUDGET_EXCEEDED":
+                        raise
+                    return _report(
+                        chapter,
+                        scenario,
+                        status="refused",
+                        evidence=tuple(f"OBS-{idx:02d}" for idx, _ in enumerate(observations, start=1)),
+                        failures=(exc.code,),
+                        details={
+                            "observations": observations,
+                            "usage": usage.model_dump(mode="json"),
+                            "budget": budget.model_dump(mode="json"),
+                        },
+                    )
                 return _report(
                     chapter,
                     scenario,
@@ -235,7 +272,12 @@ def run_checkpoint(chapter: int, scenario: str = "happy_path") -> StageReport:
                         "partial_observation_retained": bool(observations),
                     },
                 )
-            return _report(chapter, scenario, evidence=tuple(f"OBS-{idx:02d}" for idx, _ in enumerate(bounded, start=1)), details={"observations": bounded})
+            return _report(
+                chapter,
+                scenario,
+                evidence=tuple(f"OBS-{idx:02d}" for idx, _ in enumerate(bounded, start=1)),
+                details={"observations": bounded, "usage": usage.model_dump(mode="json"), "budget": budget.model_dump(mode="json")},
+            )
 
         if chapter == 11:
             confidence = Decimal("0.82") if scenario == "ambiguous_route" else Decimal("0.91")

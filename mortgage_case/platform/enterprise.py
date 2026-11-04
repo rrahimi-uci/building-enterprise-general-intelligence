@@ -425,19 +425,40 @@ class Budget(BaseModel):
 
     max_turns: int = Field(ge=1, le=20)
     max_tool_calls: int = Field(ge=0, le=50)
-    max_cost: Decimal = Decimal("10.00")
+    max_cost: Decimal = Field(default=Decimal("10.00"), ge=0)
     max_seconds: int = Field(ge=1, le=3600)
+
+
+class ReActUsage(BaseModel):
+    """Cumulative usage recorded for one deterministic ReAct fixture."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    tool_calls: int = Field(ge=0)
+    cost: Decimal = Field(ge=0)
+    elapsed_seconds: Decimal = Field(ge=0)
 
 
 def bounded_react(
     observations: tuple[str, ...],
     budget: Budget,
     *,
+    usage: ReActUsage,
     provider_available: bool = True,
 ) -> tuple[str, ...]:
-    """Stop on repeated observations or an exhausted external budget."""
+    """Validate fixture observations and usage against the assigned budget.
 
-    if len(observations) > budget.max_turns or len(observations) > budget.max_tool_calls:
+    Inputs already contain the completed offline observations and their
+    recorded usage. This check rejects an over-budget result; it does not
+    meter provider calls or interrupt live work during execution.
+    """
+
+    if (
+        len(observations) > budget.max_turns
+        or usage.tool_calls > budget.max_tool_calls
+        or usage.cost > budget.max_cost
+        or usage.elapsed_seconds > Decimal(budget.max_seconds)
+    ):
         raise ProposalRejected("REACT_BUDGET_EXCEEDED", "the controller budget ended the reasoning loop")
     if len(set(observations)) != len(observations):
         raise ProposalRejected("NO_PROGRESS", "the loop repeated an identical observation")

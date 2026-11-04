@@ -1,5 +1,5 @@
 """Bounded reasoning-loop controls."""
 
-from .enterprise import Budget, bounded_react
+from .enterprise import Budget, ReActUsage, bounded_react
 
-__all__ = ["Budget", "bounded_react"]
+__all__ = ["Budget", "ReActUsage", "bounded_react"]

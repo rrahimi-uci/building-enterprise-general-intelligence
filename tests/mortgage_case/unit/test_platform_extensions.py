@@ -34,7 +34,7 @@ from mortgage_case.platform.observability import build_trace
 from mortgage_case.platform.planning import PlanNode, compile_plan
 from mortgage_case.platform.privacy import dlp_publish
 from mortgage_case.platform.protocols import ProtocolGateway
-from mortgage_case.platform.react import Budget, bounded_react
+from mortgage_case.platform.react import Budget, ReActUsage, bounded_react
 from mortgage_case.platform.releases import ReleaseBundle, route_worker
 from mortgage_case.platform.routing import OwnershipTransfer, RouteDecision
 from mortgage_case.platform.sandbox import SandboxProfile, check_egress
@@ -406,12 +406,14 @@ def test_traces_evaluation_governance_release_and_capacity_remain_bounded():
 
 
 def test_react_routing_workflow_and_contract_facades_are_executable():
-    observations = bounded_react(("missing_pay_statement",), Budget(max_turns=3, max_tool_calls=3, max_seconds=30))
+    budget = Budget(max_turns=3, max_tool_calls=3, max_cost=Decimal("2.00"), max_seconds=30)
+    usage = ReActUsage(tool_calls=3, cost=Decimal("2.00"), elapsed_seconds=Decimal("30"))
+    observations = bounded_react(("missing_pay_statement",), budget, usage=usage)
     assert observations == ("missing_pay_statement",)
     with pytest.raises(ProposalRejected, match="NO_PROGRESS"):
-        bounded_react(("same", "same"), Budget(max_turns=3, max_tool_calls=3, max_seconds=30))
+        bounded_react(("same", "same"), budget, usage=usage)
     with pytest.raises(ProposalRejected, match="PROVIDER_UNAVAILABLE"):
-        bounded_react(("application",), Budget(max_turns=3, max_tool_calls=3, max_seconds=30), provider_available=False)
+        bounded_react(("application",), budget, usage=usage, provider_available=False)
 
     route = RouteDecision(route="income", reason_code="MISSING_EVIDENCE", owner="income-specialist")
     transfer = OwnershipTransfer(transfer_id="T-1", previous_owner="parent", new_owner="income-specialist")
@@ -425,3 +427,17 @@ def test_react_routing_workflow_and_contract_facades_are_executable():
     )
     assert folded == {"status": "running", "signals": 1, "sequence": 2}
     assert MemoryRecord(memory_id="M-1", run_id="RUN-1", value="missing evidence", source_refs=("ART-1",), expires_at=NOW).run_id == "RUN-1"
+
+
+@pytest.mark.parametrize(
+    "usage",
+    (
+        ReActUsage(tool_calls=1, cost=Decimal("2.01"), elapsed_seconds=Decimal("1")),
+        ReActUsage(tool_calls=1, cost=Decimal("1"), elapsed_seconds=Decimal("30.01")),
+        ReActUsage(tool_calls=4, cost=Decimal("1"), elapsed_seconds=Decimal("1")),
+    ),
+)
+def test_react_rejects_tool_calls_cost_or_elapsed_time_over_budget(usage):
+    budget = Budget(max_turns=3, max_tool_calls=3, max_cost=Decimal("2.00"), max_seconds=30)
+    with pytest.raises(ProposalRejected, match="REACT_BUDGET_EXCEEDED"):
+        bounded_react(("application",), budget, usage=usage)

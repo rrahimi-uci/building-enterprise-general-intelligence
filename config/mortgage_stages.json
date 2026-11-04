@@ -83,7 +83,7 @@
       "id": "C10", "chapter": 10, "status": "implemented",
       "module": "mortgage_case.stages.c10_react:run",
       "entry_point": "python -m mortgage_case --chapter 10 --scenario happy_path --offline",
-      "scenarios": ["happy_path", "repeated_observation", "provider_outage"], "tests": ["tests/mortgage_case/integration/test_c10_c19.py"],
+      "scenarios": ["happy_path", "repeated_observation", "provider_outage", "turn_budget_exceeded", "tool_budget_exceeded", "cost_budget_exceeded", "time_budget_exceeded"], "tests": ["tests/mortgage_case/integration/test_c10_c19.py"],
       "technologies": ["custom-python", "bounded-controller"]
     },
     {

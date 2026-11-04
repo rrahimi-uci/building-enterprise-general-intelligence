@@ -2,6 +2,10 @@ from __future__ import annotations
 
 import pytest
 
+from mortgage_case.domain.case import load_anchor_case
+from mortgage_case.domain.errors import ProposalRejected
+from mortgage_case.platform import checkpoints as checkpoint_composition
+from mortgage_case.platform.enterprise import anchor_manifest, build_context
 from mortgage_case.stages import c04_reference_architecture as c04
 from mortgage_case.stages import c05_knowledge as c05
 from mortgage_case.stages import c06_context as c06
@@ -43,3 +47,45 @@ def test_refusal_scenario_per_checkpoint(stage, scenario, failure):
     assert report.status == "refused"
     assert report.failures == (failure,)
     assert "Alex Morgan" not in report.as_json()
+
+
+def test_context_rejects_foreign_tenant_even_when_case_id_is_authorized():
+    case = load_anchor_case()
+    manifest = anchor_manifest(case, 6)
+    foreign_tenant = "tenant-foreign"
+    foreign_manifest = manifest.model_copy(
+        update={
+            "tenant_id": foreign_tenant,
+            "principal": manifest.principal.model_copy(update={"tenant_id": foreign_tenant}),
+        }
+    )
+
+    with pytest.raises(ProposalRejected, match="CONTEXT_SCOPE_DENIED"):
+        build_context(
+            case,
+            foreign_manifest,
+            artifact_ids=case.available_document_ids,
+            source_revisions=("mortgage-policy@2026.09",),
+            allowed_case_id=case.case_id,
+        )
+
+
+def test_cross_tenant_scenario_keeps_the_authorized_case_id(monkeypatch):
+    case = load_anchor_case()
+    original_build_context = checkpoint_composition.build_context
+    captured = {}
+
+    def capture_context(case_arg, manifest, **kwargs):
+        captured.update(
+            case_id=case_arg.case_id,
+            tenant_id=manifest.tenant_id,
+            allowed_case_id=kwargs["allowed_case_id"],
+        )
+        return original_build_context(case_arg, manifest, **kwargs)
+
+    monkeypatch.setattr(checkpoint_composition, "build_context", capture_context)
+    report = c06.run("cross_tenant_case_reference")
+
+    assert report.failures == ("CONTEXT_SCOPE_DENIED",)
+    assert captured["allowed_case_id"] == captured["case_id"] == case.case_id
+    assert captured["tenant_id"] != case.tenant_id
