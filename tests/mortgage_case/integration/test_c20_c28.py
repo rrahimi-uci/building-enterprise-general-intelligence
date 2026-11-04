@@ -52,7 +52,7 @@ def test_happy_path_wrappers_return_their_checkpoint_report(chapter, chapter_id,
     (
         (c20_containment, "malicious_document_instruction", "refused", "PROMPT_INJECTION"),
         (c21_identity, "revoked_loan_officer", "refused", "SUBJECT_REVOKED"),
-        (c22_effects, "los_timeout_after_commit", "needs_input", "UNKNOWN_EFFECT"),
+        (c22_effects, "los_timeout_before_commit", "needs_input", "EFFECT_REQUIRES_INTERVENTION"),
         (c23_sandbox_privacy, "sensitive_output", "refused", "DLP_BLOCKED"),
         (c24_tracing, "pii_in_trace", "refused", "TRACE_PRIVACY_VIOLATION"),
         (c25_evaluation, "fairness_slice_regression", "refused", "block"),
@@ -67,6 +67,27 @@ def test_representative_control_failures_are_reported(stage, scenario, expected_
 
     assert report.status == expected_status
     assert expected_failure in report.failures
+
+
+@pytest.mark.parametrize(
+    "scenario, expected_state, expected_reconciliation, expected_status, los_committed",
+    (
+        ("los_timeout_after_commit", "reconciled", "committed", "completed", True),
+        ("los_timeout_before_commit", "intervention", "not_committed", "needs_input", False),
+    ),
+)
+def test_c22_reconciles_unknown_without_blind_retry(
+    scenario, expected_state, expected_reconciliation, expected_status, los_committed
+):
+    report = c22_effects.run(scenario)
+
+    assert report.status == expected_status
+    assert report.details["initial_state"] == "unknown"
+    assert report.details["effect"]["state"] == expected_state
+    assert report.details["reconciliation"] == expected_reconciliation
+    assert report.details["los_committed"] is los_committed
+    assert report.details["los_calls"] == 1
+    assert report.details["blind_retry"] is False
 
 
 @pytest.mark.parametrize("_, chapter_id, stage", STAGES)

@@ -47,6 +47,7 @@ from .enterprise import (
     verify_approval,
     EffectLedger,
     KnowledgeStore,
+    OwnershipTransfer,
     ProtocolGateway,
     ReferenceArchitecture,
     SkillRegistry,
@@ -54,6 +55,8 @@ from .enterprise import (
     TaskStore,
 )
 from .workflow import fold_events
+from .reflection_acceptance import Candidate, Critique, evaluate_acceptance
+from .route_resolution import resolve_route
 
 
 SCENARIOS: dict[int, frozenset[str]] = {
@@ -67,7 +70,7 @@ SCENARIOS: dict[int, frozenset[str]] = {
     11: frozenset({"happy_path", "ambiguous_route"}),
     12: frozenset({"happy_path", "plan_cycle"}),
     13: frozenset({"happy_path", "self_approval"}),
-    14: frozenset({"happy_path", "approval_changed_case"}),
+    14: frozenset({"happy_path", "approval_changed_case", "approval_changed_evidence", "approval_changed_policy"}),
     15: frozenset({"happy_path", "duplicate_document_event"}),
     16: frozenset({"happy_path", "unsafe_pattern"}),
     17: frozenset({"happy_path", "anti_pattern_selected"}),
@@ -75,7 +78,7 @@ SCENARIOS: dict[int, frozenset[str]] = {
     19: frozenset({"happy_path", "malicious_remote_artifact"}),
     20: frozenset({"happy_path", "malicious_document_instruction"}),
     21: frozenset({"happy_path", "revoked_loan_officer"}),
-    22: frozenset({"happy_path", "los_timeout_after_commit"}),
+    22: frozenset({"happy_path", "los_timeout_after_commit", "los_timeout_before_commit"}),
     23: frozenset({"happy_path", "egress_denied", "sensitive_output"}),
     24: frozenset({"happy_path", "pii_in_trace", "trace_store_outage"}),
     25: frozenset({"happy_path", "fairness_slice_regression", "underpowered_slice"}),
@@ -186,17 +189,43 @@ def run_checkpoint(chapter: int, scenario: str = "happy_path") -> StageReport:
             return _report(chapter, scenario, evidence=(pack.digest,), details=pack.model_dump(mode="json"))
 
         if chapter == 10:
-            if scenario == "provider_outage":
-                raise ProposalRejected("PROVIDER_UNAVAILABLE", "bounded loop returned a safe partial result")
-            observations = ("application", "pay_statement", "employer_verification") if scenario != "repeated_observation" else ("application", "application")
-            bounded = bounded_react(observations, Budget(max_turns=4, max_tool_calls=4, max_cost=Decimal("2.00"), max_seconds=30))
+            observations = (
+                ("application", "application")
+                if scenario == "repeated_observation"
+                else (("application",) if scenario == "provider_outage" else ("application", "pay_statement", "employer_verification"))
+            )
+            bounded = bounded_react(
+                observations,
+                Budget(max_turns=4, max_tool_calls=4, max_cost=Decimal("2.00"), max_seconds=30),
+                provider_available=scenario != "provider_outage",
+            )
             return _report(chapter, scenario, evidence=tuple(f"OBS-{idx:02d}" for idx, _ in enumerate(bounded, start=1)), details={"observations": bounded})
 
         if chapter == 11:
-            if scenario == "ambiguous_route":
-                raise ProposalRejected("ROUTE_AMBIGUOUS", "no specialist owns the requested work")
-            route = RouteDecision(route="income", reason_code="EMPLOYER_EVIDENCE", owner="income-specialist")
-            return _report(chapter, scenario, evidence=("ROUTE-INCOME",), details={"route": route.model_dump(mode="json"), "ownership_transfer": {"previous_owner": "mortgage-evidence-agent", "new_owner": route.owner}})
+            confidence = Decimal("0.82") if scenario == "ambiguous_route" else Decimal("0.91")
+            candidates = (
+                RouteDecision(route="income", reason_code="EMPLOYER_EVIDENCE", confidence=confidence, owner="income-specialist"),
+                RouteDecision(route="property", reason_code="PROPERTY_EVIDENCE", confidence=confidence, owner="property-specialist"),
+            )
+            if scenario == "happy_path":
+                candidates = (
+                    candidates[0],
+                    candidates[1].model_copy(update={"confidence": Decimal("0.62")}),
+                )
+            route = resolve_route(candidates)
+            transfer = OwnershipTransfer(
+                transfer_id="TRANSFER-000184",
+                previous_owner="mortgage-evidence-agent",
+                new_owner=route.owner,
+                acknowledged=True,
+                cancellation_lineage=(manifest.run_id,),
+            )
+            return _report(
+                chapter,
+                scenario,
+                evidence=(f"ROUTE-{route.route.upper()}", transfer.transfer_id),
+                details={"route": route.model_dump(mode="json"), "ownership_transfer": transfer.model_dump(mode="json")},
+            )
 
         if chapter == 12:
             nodes = ("collect", "verify", "prepare")
@@ -210,23 +239,121 @@ def run_checkpoint(chapter: int, scenario: str = "happy_path") -> StageReport:
             return _report(chapter, scenario, evidence=(compiled.plan_digest,), details=compiled.model_dump(mode="json"))
 
         if chapter == 13:
-            if scenario == "self_approval":
-                raise ProposalRejected("SELF_APPROVAL_DENIED", "the proposing runtime cannot accept its own recommendation")
-            return _report(chapter, scenario, evidence=("CANDIDATE-000184", "CRITIQUE-000184", "ACCEPTED-000184"), details={"hard_checks": ["required_evidence", "citations", "calculations"], "model_score_is_non_authoritative": True})
+            candidate = Candidate(
+                candidate_id="CANDIDATE-000184",
+                producer_id="reflection-agent",
+                evidence_refs=case.available_document_ids,
+            )
+            critique = Critique(
+                candidate_id=candidate.candidate_id,
+                critic_id="independent-critic",
+                findings=(),
+            )
+            acceptance = evaluate_acceptance(
+                candidate=candidate,
+                critique=critique,
+                known_evidence_refs=case.available_document_ids,
+                required_evidence_refs=case.available_document_ids,
+                acceptance_actor_id=(
+                    candidate.producer_id if scenario == "self_approval" else "acceptance-engine"
+                ),
+            )
+            return _report(
+                chapter,
+                scenario,
+                evidence=(candidate.candidate_id, digest(critique), digest(acceptance)),
+                details={
+                    "candidate": candidate.model_dump(mode="json"),
+                    "critique": critique.model_dump(mode="json"),
+                    "acceptance": acceptance.model_dump(mode="json"),
+                    "model_score_is_non_authoritative": True,
+                },
+            )
 
         if chapter == 14:
             action = "underwriting.mark_ready"
             resource = f"mortgage://case/{case.case_id}"
-            request = ApprovalRequest(approval_id="APR-000184", case_id=case.case_id, action=action, resource=resource, proposal_hash=proposal_hash(action, resource, {"case_version": case.case_version}, case.case_version), case_version=case.case_version, policy_version="mortgage-policy@2026.09", expires_at=NOW + timedelta(minutes=15), required_role="underwriter", status="approved")
+            policy_version = "mortgage-policy@2026.09"
+            evidence_snapshot = digest(
+                {
+                    "case_id": case.case_id,
+                    "case_version": case.case_version,
+                    "document_ids": case.available_document_ids,
+                }
+            )
+            proposal_arguments = {
+                "policy_version": policy_version,
+                "evidence_snapshot_digest": evidence_snapshot,
+            }
+            request = ApprovalRequest(
+                approval_id="APR-000184",
+                case_id=case.case_id,
+                action=action,
+                resource=resource,
+                proposal_hash=proposal_hash(action, resource, proposal_arguments, case.case_version),
+                case_version=case.case_version,
+                policy_version=policy_version,
+                evidence_snapshot_digest=evidence_snapshot,
+                expires_at=NOW + timedelta(minutes=15),
+                required_role="underwriter",
+                status="approved",
+            )
             decision = ApprovalDecision(approval_id=request.approval_id, proposal_hash=request.proposal_hash, approver_id="human-9", approver_role="underwriter", decision="approve", decided_at=NOW, reason="synthetic action authorization")
-            verify_approval(request, decision, current_case_version=case.case_version + (1 if scenario == "approval_changed_case" else 0))
-            return _report(chapter, scenario, evidence=(request.approval_id, request.proposal_hash), details={"approval": request.model_dump(mode="json"), "decision": decision.model_dump(mode="json")})
+            current_evidence_snapshot = evidence_snapshot
+            if scenario == "approval_changed_evidence":
+                current_evidence_snapshot = digest(
+                    {
+                        "case_id": case.case_id,
+                        "case_version": case.case_version,
+                        "document_ids": (*case.available_document_ids, "NEW-UNREVIEWED-EVIDENCE"),
+                    }
+                )
+            current_policy_version = "mortgage-policy@2026.10" if scenario == "approval_changed_policy" else policy_version
+            verify_approval(
+                request,
+                decision,
+                current_case_version=case.case_version + (1 if scenario == "approval_changed_case" else 0),
+                current_policy_version=current_policy_version,
+                current_evidence_snapshot_digest=current_evidence_snapshot,
+            )
+            return _report(
+                chapter,
+                scenario,
+                evidence=(request.approval_id, request.proposal_hash, request.evidence_snapshot_digest),
+                details={"approval": request.model_dump(mode="json"), "decision": decision.model_dump(mode="json")},
+            )
 
         if chapter == 15:
             architecture = ReferenceArchitecture()
             architecture.start(manifest, idempotency_key="start-c15")
             event = architecture.signal(manifest.run_id, "appraisal.received", {"document_id": "APPRAISAL-000184"}, idempotency_key="appraisal-1")
-            return _report(chapter, scenario, evidence=(event.event_id,), details={"replayed_projection": fold_events(architecture.events.read(manifest.run_id)), "io_during_replay": False})
+            duplicate = None
+            if scenario == "duplicate_document_event":
+                duplicate = architecture.signal(
+                    manifest.run_id,
+                    "appraisal.received",
+                    {"document_id": "APPRAISAL-000184"},
+                    idempotency_key="appraisal-1",
+                )
+                if duplicate.event_id != event.event_id:
+                    raise ProposalRejected("DUPLICATE_DELIVERY", "duplicate signal created a second event")
+            events = architecture.events.read(manifest.run_id)
+            projection = fold_events(events)
+            if projection["signals"] != 1 or len(architecture.events.outbox) != 2:
+                raise ProposalRejected("DUPLICATE_DELIVERY", "signal replay changed the event projection or outbox")
+            return _report(
+                chapter,
+                scenario,
+                evidence=(event.event_id,),
+                details={
+                    "replayed_projection": projection,
+                    "duplicate_event_id": duplicate.event_id if duplicate else None,
+                    "deduplicated": duplicate is not None,
+                    "event_count": len(events),
+                    "outbox_event_count": len(architecture.events.outbox),
+                    "io_during_replay": False,
+                },
+            )
 
         if chapter in (16, 17):
             if scenario in {"unsafe_pattern", "anti_pattern_selected"}:
@@ -262,9 +389,43 @@ def run_checkpoint(chapter: int, scenario: str = "happy_path") -> StageReport:
 
         if chapter == 22:
             ledger, los = EffectLedger(), SyntheticLOS()
-            record = ledger.commit_mark_ready(tenant_id=case.tenant_id, case_id=case.case_id, case_version=case.case_version, intent={"operation": "mark_ready", "case_id": case.case_id}, los=los, fail_after_commit=scenario == "los_timeout_after_commit")
-            status = "needs_input" if record.state == "unknown" else "completed"
-            return _report(chapter, scenario, status=status, evidence=(record.effect_id,), failures=(("UNKNOWN_EFFECT",) if record.state == "unknown" else ()), details={"effect": record.model_dump(mode="json"), "los_calls": len(los.calls)})
+            record = ledger.commit_mark_ready(
+                tenant_id=case.tenant_id,
+                case_id=case.case_id,
+                case_version=case.case_version,
+                intent={"operation": "mark_ready", "case_id": case.case_id},
+                los=los,
+                fail_after_commit=scenario == "los_timeout_after_commit",
+                fail_before_commit=scenario == "los_timeout_before_commit",
+            )
+            initial_state = record.state
+            reconciliation_outcome = "not_required"
+            if record.state == "unknown":
+                reconciled = ledger.reconcile_from_los(record.logical_key, case_id=case.case_id, los=los)
+                if reconciled.state == "reconciled":
+                    reconciliation_outcome = "committed"
+                elif reconciled.state == "intervention":
+                    reconciliation_outcome = "not_committed"
+                else:
+                    reconciliation_outcome = "unresolved"
+                record = reconciled
+            status = "completed" if record.state in {"committed", "reconciled"} else "needs_input"
+            failures = () if status == "completed" else ("EFFECT_REQUIRES_INTERVENTION",)
+            return _report(
+                chapter,
+                scenario,
+                status=status,
+                evidence=(record.effect_id,),
+                failures=failures,
+                details={
+                    "effect": record.model_dump(mode="json"),
+                    "initial_state": initial_state,
+                    "reconciliation": reconciliation_outcome,
+                    "los_calls": len(los.calls),
+                    "blind_retry": False,
+                    "los_committed": case.case_id in los.ready_cases,
+                },
+            )
 
         if chapter == 23:
             profile = SandboxProfile(profile_id="SANDBOX-000184", max_seconds=30, max_memory_mb=128, max_output_bytes=1024, egress_hosts=frozenset({"api.example"}))

@@ -169,7 +169,9 @@ def test_scope_and_child_task_store_never_widen_authority():
 def test_approval_is_bound_to_proposal_and_case_version():
     action = "underwriting.mark_ready"
     resource = f"mortgage://case/{CASE.case_id}"
-    arguments = {"case_version": CASE.case_version}
+    policy_version = "mortgage-policy@2026.09"
+    evidence_snapshot_digest = digest({"document_ids": CASE.available_document_ids, "version": CASE.case_version})
+    arguments = {"policy_version": policy_version, "evidence_snapshot_digest": evidence_snapshot_digest}
     request = ApprovalRequest(
         approval_id="APR-1",
         case_id=CASE.case_id,
@@ -177,7 +179,8 @@ def test_approval_is_bound_to_proposal_and_case_version():
         resource=resource,
         proposal_hash=proposal_hash(action, resource, arguments, CASE.case_version),
         case_version=CASE.case_version,
-        policy_version="mortgage-policy@2026.09",
+        policy_version=policy_version,
+        evidence_snapshot_digest=evidence_snapshot_digest,
         expires_at=NOW + timedelta(minutes=15),
         required_role="underwriter",
         status="approved",
@@ -191,9 +194,21 @@ def test_approval_is_bound_to_proposal_and_case_version():
         decided_at=NOW,
         reason="synthetic test decision",
     )
-    verify_approval(request, decision, current_case_version=CASE.case_version)
+    verify_approval(
+        request,
+        decision,
+        current_case_version=CASE.case_version,
+        current_policy_version=policy_version,
+        current_evidence_snapshot_digest=evidence_snapshot_digest,
+    )
     with pytest.raises(ProposalRejected, match="STALE_CASE_VERSION"):
-        verify_approval(request, decision, current_case_version=CASE.case_version + 1)
+        verify_approval(
+            request,
+            decision,
+            current_case_version=CASE.case_version + 1,
+            current_policy_version=policy_version,
+            current_evidence_snapshot_digest=evidence_snapshot_digest,
+        )
 
 
 def test_identity_authorization_binds_envelope_to_current_principal():
@@ -231,7 +246,29 @@ def test_effect_ledger_is_idempotent_and_reconciles_unknown_outcomes():
 
     unknown = ledger.commit_mark_ready(tenant_id=CASE.tenant_id, case_id="MORT-2026-000185", case_version=1, intent=intent, los=los, fail_after_commit=True)
     assert unknown.state == "unknown"
-    assert ledger.reconcile(unknown.logical_key, committed=True).state == "reconciled"
+    calls_after_unknown = len(los.calls)
+    assert ledger.commit_mark_ready(
+        tenant_id=CASE.tenant_id,
+        case_id="MORT-2026-000185",
+        case_version=1,
+        intent=intent,
+        los=los,
+    ) == unknown
+    assert len(los.calls) == calls_after_unknown
+    assert ledger.reconcile_from_los(unknown.logical_key, case_id="MORT-2026-000185", los=los).state == "reconciled"
+    assert len(los.calls) == 2
+
+    not_committed = ledger.commit_mark_ready(
+        tenant_id=CASE.tenant_id,
+        case_id="MORT-2026-000186",
+        case_version=1,
+        intent={"operation": "mark_ready", "case_id": "MORT-2026-000186"},
+        los=los,
+        fail_before_commit=True,
+    )
+    assert not_committed.state == "unknown"
+    assert ledger.reconcile_from_los(not_committed.logical_key, case_id="MORT-2026-000186", los=los).state == "intervention"
+    assert len(los.calls) == 3
 
 
 def test_protocol_security_sandbox_and_privacy_boundaries_fail_closed():
@@ -281,6 +318,8 @@ def test_react_routing_workflow_and_contract_facades_are_executable():
     assert observations == ("missing_pay_statement",)
     with pytest.raises(ProposalRejected, match="NO_PROGRESS"):
         bounded_react(("same", "same"), Budget(max_turns=3, max_tool_calls=3, max_seconds=30))
+    with pytest.raises(ProposalRejected, match="PROVIDER_UNAVAILABLE"):
+        bounded_react(("application",), Budget(max_turns=3, max_tool_calls=3, max_seconds=30), provider_available=False)
 
     route = RouteDecision(route="income", reason_code="MISSING_EVIDENCE", owner="income-specialist")
     transfer = OwnershipTransfer(transfer_id="T-1", previous_owner="parent", new_owner="income-specialist")

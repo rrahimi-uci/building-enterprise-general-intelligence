@@ -15,6 +15,10 @@ All notable changes follow semantic versioning and are recorded here.
   scenarios plus focused integration tests. These checkpoints are offline
   teaching evidence and do not claim production readiness, legal compliance, or
   authority to make lending decisions.
+- Hardened review findings: C14 approvals now bind case, policy, and immutable
+  evidence state; C15 verifies duplicate delivery deduplication; C22 reconciles
+  unknown effects against the synthetic LOS without retrying; C10 routes
+  provider failure through its bounded controller.
 
 ### PDF filename without renderer suffix
 

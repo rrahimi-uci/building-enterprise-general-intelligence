@@ -111,7 +111,7 @@
       "id": "C14", "chapter": 14, "status": "implemented",
       "module": "mortgage_case.stages.c14_human_review:run",
       "entry_point": "python -m mortgage_case --chapter 14 --scenario happy_path --offline",
-      "scenarios": ["happy_path", "approval_changed_case"], "tests": ["tests/mortgage_case/integration/test_c10_c19.py"],
+      "scenarios": ["happy_path", "approval_changed_case", "approval_changed_evidence", "approval_changed_policy"], "tests": ["tests/mortgage_case/integration/test_c10_c19.py"],
       "technologies": ["custom-python", "proposal-bound-approval"]
     },
     {
@@ -167,7 +167,7 @@
       "id": "C22", "chapter": 22, "status": "implemented",
       "module": "mortgage_case.stages.c22_effects:run",
       "entry_point": "python -m mortgage_case --chapter 22 --scenario happy_path --offline",
-      "scenarios": ["happy_path", "los_timeout_after_commit"], "tests": ["tests/mortgage_case/integration/test_c20_c28.py"],
+      "scenarios": ["happy_path", "los_timeout_after_commit", "los_timeout_before_commit"], "tests": ["tests/mortgage_case/integration/test_c20_c28.py"],
       "technologies": ["custom-python", "idempotent-effects"]
     },
     {
