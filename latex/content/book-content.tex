@@ -13492,7 +13492,7 @@ Runtime emits causal traces, operational metrics, protected audit records, effec
 
 The figure deliberately groups plan compilation, intervention, budgeting, sandboxing, cache policy, and incident response with their owning services; their separate contracts remain in Chapters 12, 14, 23, and 28 and Appendix C. Likewise, the source-intake card represents governed copies and digests of enterprise material, not authority over the external system of record. This logical view does not prescribe one vendor or one deployment product.\par
 
-The companion code implements the first three checkpoints (C01–C03); later checkpoints are roadmap targets, specified in this book and tracked in Appendix H.\par
+The companion code implements offline, deterministic checkpoint contracts for C01–C28. The later checkpoints compose teaching doubles for workflow, policy, identity, effects, evidence, governance, release, and capacity; they are not production mortgage underwriting and do not authorize a real lending decision. Each checkpoint is registered with an offline command, a failure scenario, and focused tests in \lstinline[style=bookinline]!config/mortgage_stages.json! and \lstinline[style=bookinline]!mortgage_case/docs/!.\par
 
 \BookPartPage{REFERENCE}{APPENDICES: FIELD GUIDE AND REFERENCE}{The appendices are meant to be used at the desk, not admired at the end of the book. They collect decision aids, runbooks, contracts, framework notes, the Harborlight implementation guide, the evidence registry that keeps the main argument honest, and a glossary. An index of key terms follows them.\par}
 
@@ -14112,7 +14112,7 @@ From the repository root:\par
 
 \item \lstinline[style=bookinline]!.venv-examples/bin/python -m pytest tests/mortgage_case -q! runs the mortgage-case tests.
 
-\item \lstinline[style=bookinline]!.venv-examples/bin/python -m mortgage_case --chapter 3 --scenario happy_path --offline --json! runs the deterministic demo through checkpoint C03.
+\item \lstinline[style=bookinline]!.venv-examples/bin/python -m mortgage_case --chapter 28 --scenario happy_path --offline --json! runs the deterministic cumulative demo through checkpoint C28. Any chapter from 1 through 28 can be selected.
 
 \end{enumerate}
 
@@ -14126,7 +14126,9 @@ The direct OpenAI Python SDK adapter and OpenAI Agents SDK adapter are optional 
 
 \item \lstinline[style=bookinline]!mortgage_case/platform/! — provider-neutral runtime and gateway boundaries
 
-\item \lstinline[style=bookinline]!mortgage_case/stages/! — cumulative C01–C03 checkpoint façades
+\item \lstinline[style=bookinline]!mortgage_case/stages/! — cumulative C01–C28 checkpoint façades
+
+\item \lstinline[style=bookinline]!mortgage_case/docs/C04.md! through \lstinline[style=bookinline]!C28.md! — checkpoint deltas, commands, and limitations
 
 \item \lstinline[style=bookinline]!mortgage_case/adapters/openai_responses.py! — direct OpenAI Python SDK Responses adapter
 
@@ -14144,7 +14146,7 @@ The live provider path still requires credentials and should be treated as an ex
 
 \section{Rebuild and verify}
 
-Run \lstinline[style=bookinline]!.venv-examples/bin/python -m compileall -q mortgage_case examples tests!, then repeat the three commands above. The repository README records the companion code's correction history.\par
+Run \lstinline[style=bookinline]!.venv-examples/bin/python -m compileall -q mortgage_case examples tests!, \lstinline[style=bookinline]!.venv-examples/bin/python tools/validate_mortgage_stage_registry.py!, then repeat the commands above. The repository README records the companion code's correction history.\par
 
 \BookAppendix{I}{References}
 

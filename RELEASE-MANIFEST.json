@@ -12,7 +12,7 @@
     "latex_pdf": "compile with included XeLaTeX workflow",
     "notion": "synchronized release metadata"
   },
-  "file_count": 484,
+  "file_count": 538,
   "files": [
     {
       "path": ".gitattributes",
@@ -56,8 +56,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 50529,
-      "sha256": "3359fe883256ed85301184feee7a3c3d3c037128f1ed7c3774f21df699d60532"
+      "bytes": 51227,
+      "sha256": "2cfff7301c462fee0137530affdfa213b1601160ccf8e1e435b20b39bfd74a0b"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -86,8 +86,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 24472,
-      "sha256": "cbdf971a44852416068d15c040b8cc57bbfa23b83c487ed0db6174a7041ef86d"
+      "bytes": 24618,
+      "sha256": "f9a49ffdf79f96193e1b4f850c320b709770e4ed40a0a6bdbe715b9467bef799"
     },
     {
       "path": "RELEASE-CHECKLIST.md",
@@ -821,8 +821,8 @@
     },
     {
       "path": "book/manuscript.md",
-      "bytes": 812527,
-      "sha256": "4545bbdd38018d2372f00a04b66a7db3fc9b6c74d9dfa7aa0e6c7bc84bb1af20"
+      "bytes": 813055,
+      "sha256": "362f8de379519f2cf91f7bbb36d56edda792b2a87a83ed8c94b176de16349176"
     },
     {
       "path": "config/book.json",
@@ -851,8 +851,8 @@
     },
     {
       "path": "config/mortgage_stages.json",
-      "bytes": 3425,
-      "sha256": "361119f2abd2f82d0d925c8960ef3a4f1d976828c48b6b8f15be9d58b7d53565"
+      "bytes": 11928,
+      "sha256": "c18e068cb8ebd1fa5fbcdd2b2174641a7c93883cfe50ce7874f9e33cd44a2e33"
     },
     {
       "path": "config/reference-verification.json",
@@ -1016,23 +1016,23 @@
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.docx",
-      "bytes": 39825280,
-      "sha256": "2cd8efe36f659af286903beae5bbe4e388fe14b5726d20ca762865b21d17e09f"
+      "bytes": 39825528,
+      "sha256": "b759d5127ff6eca4b78b252c4c852b7f264063e6410c8e5baa2f908aa5d7db27"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.md",
-      "bytes": 812527,
-      "sha256": "4545bbdd38018d2372f00a04b66a7db3fc9b6c74d9dfa7aa0e6c7bc84bb1af20"
+      "bytes": 813055,
+      "sha256": "362f8de379519f2cf91f7bbb36d56edda792b2a87a83ed8c94b176de16349176"
     },
     {
       "path": "dist/Enterprise-General-Intelligence-v1.0.0.tex",
-      "bytes": 599,
-      "sha256": "48caeb47b1aacc265363507b3c3ee874c7ba53a2e364bb00161f25b7466a0c5f"
+      "bytes": 600,
+      "sha256": "a25f974b6ec9e64c2376b7d69f56312cf8123a7123e26f034e5f40362f5396c7"
     },
     {
       "path": "examples/README.md",
-      "bytes": 10490,
-      "sha256": "f8ce0af7a44481e9b8300f8551bfe1f7ae23d03f50328c6c3b758630c9e1fd28"
+      "bytes": 11673,
+      "sha256": "fd8c19d4315ba1b8ed04eb946efd872124445c4210b6f6d02975740a97d2eabc"
     },
     {
       "path": "examples/__init__.py",
@@ -1546,8 +1546,8 @@
     },
     {
       "path": "latex/Enterprise-General-Intelligence-v1.0.0.tex",
-      "bytes": 599,
-      "sha256": "48caeb47b1aacc265363507b3c3ee874c7ba53a2e364bb00161f25b7466a0c5f"
+      "bytes": 600,
+      "sha256": "a25f974b6ec9e64c2376b7d69f56312cf8123a7123e26f034e5f40362f5396c7"
     },
     {
       "path": "latex/README.md",
@@ -1571,8 +1571,8 @@
     },
     {
       "path": "latex/content/book-content.tex",
-      "bytes": 1022560,
-      "sha256": "b6513210d7614fabc93c69e0fcd3a53fe8f9ca5a4fc037ef0dd7840082338728"
+      "bytes": 1023232,
+      "sha256": "d48067eab1d9df8c892ff917b0e1c067ffbccb13ef05b454b3a37c1c379d518b"
     },
     {
       "path": "latex/fonts/LICENSE-SIL-OFL-1.1.txt",
@@ -1621,8 +1621,8 @@
     },
     {
       "path": "latex/reference/DOCX-layout-reference-draft.pdf",
-      "bytes": 6954693,
-      "sha256": "44ead28b866b949652c02618e8dbf95113233126915de69a768071731cf550e4"
+      "bytes": 37023643,
+      "sha256": "b205876417862a6cee1dba7c1b069f9982f41685c9c568c91ab082087e20fb51"
     },
     {
       "path": "latex/styles/professional-diagrams.sty",
@@ -1661,8 +1661,8 @@
     },
     {
       "path": "mortgage_case/cli.py",
-      "bytes": 1592,
-      "sha256": "9cb1bd2390016f4a3c65368a6be8edc2ab92660d278f8b2c3b01ef9ce7102442"
+      "bytes": 3155,
+      "sha256": "3019a5b7f9b48ea19be2b9dd3e4d51d3b5b2e1e0f783766bca9b66e8cf0f8c60"
     },
     {
       "path": "mortgage_case/docs/C01.md",
@@ -1678,6 +1678,131 @@
       "path": "mortgage_case/docs/C03.md",
       "bytes": 473,
       "sha256": "d33a3e9b8c4e6a116694d9f132d6b564f063f71f319e1fab912e0c1933d57c7b"
+    },
+    {
+      "path": "mortgage_case/docs/C04.md",
+      "bytes": 469,
+      "sha256": "f1eb2efc2655edd7a31888564cae1c988e54ab3b8150bc77b1c4a55ab3d0adcf"
+    },
+    {
+      "path": "mortgage_case/docs/C05.md",
+      "bytes": 416,
+      "sha256": "6f4404f96ee43ea163dd40e5409412d8ab1b4014bdd6feeaecdeca61028aff58"
+    },
+    {
+      "path": "mortgage_case/docs/C06.md",
+      "bytes": 404,
+      "sha256": "bf8a438041297dce3547604fde5bf7202fe6684cde1a0f5df7ef58c4aa9397f4"
+    },
+    {
+      "path": "mortgage_case/docs/C07.md",
+      "bytes": 339,
+      "sha256": "373f30542bf6bcccaa5ba126db53164ae86d5bd99e7e7c42ea5c7bbe44ad8d5c"
+    },
+    {
+      "path": "mortgage_case/docs/C08.md",
+      "bytes": 341,
+      "sha256": "113da5e295d023cf39b61c9316dfd539e8297a84ca6c962ae058a4362ef11ca8"
+    },
+    {
+      "path": "mortgage_case/docs/C09.md",
+      "bytes": 347,
+      "sha256": "3d0361a3835693d106544357361b912dfff4591a81bcc02c983f17b7cc9f771e"
+    },
+    {
+      "path": "mortgage_case/docs/C10.md",
+      "bytes": 368,
+      "sha256": "136e9407b2eb611323c7bbd6118adae97a7f1a75eaac76561ef769606ace0ddd"
+    },
+    {
+      "path": "mortgage_case/docs/C11.md",
+      "bytes": 295,
+      "sha256": "4f1b7f097cdbe62eef599db2ffd510d8fd153030135a6b44f3d63c50ac85f9af"
+    },
+    {
+      "path": "mortgage_case/docs/C12.md",
+      "bytes": 346,
+      "sha256": "35a3f06778cbeef7878a1537f7c8d597465b735a1f8387f9afae5c629c6e6591"
+    },
+    {
+      "path": "mortgage_case/docs/C13.md",
+      "bytes": 351,
+      "sha256": "7fa13d3070852c57cb6423eca0cb3b2e3cdd71d915c4740c2a97e251eb69a3c4"
+    },
+    {
+      "path": "mortgage_case/docs/C14.md",
+      "bytes": 358,
+      "sha256": "ebf50516bac10581bc98bb0dab5ff2f9c3e2d6618febfc6ac8a412175516f171"
+    },
+    {
+      "path": "mortgage_case/docs/C15.md",
+      "bytes": 370,
+      "sha256": "0113d199384eb77f868ff959c94e41b4d21fe9f664a0c0eaba9e1398a4f6841f"
+    },
+    {
+      "path": "mortgage_case/docs/C16.md",
+      "bytes": 313,
+      "sha256": "bec7d41ab4ea770616e9611bb6ca13582403da63460c479d41b43d7f1bf8c8c1"
+    },
+    {
+      "path": "mortgage_case/docs/C17.md",
+      "bytes": 328,
+      "sha256": "a7af0fadb67880dfc8a6f81d1bfd9bdd1ed104fc8125e0794915ed9ac778e71c"
+    },
+    {
+      "path": "mortgage_case/docs/C18.md",
+      "bytes": 305,
+      "sha256": "1424f54b15e9abbd6ffb957acbf7ed01114e694da2c8bb58035878da3c3a3f3f"
+    },
+    {
+      "path": "mortgage_case/docs/C19.md",
+      "bytes": 339,
+      "sha256": "92a19bf78e28ec7660d490b164df522a5b87acf414dbdfab87916f6193cb1413"
+    },
+    {
+      "path": "mortgage_case/docs/C20.md",
+      "bytes": 364,
+      "sha256": "2465cb8868f86fb887fc52d54f1a263d4dd7a34d3ca92ba89a344a8099769d7a"
+    },
+    {
+      "path": "mortgage_case/docs/C21.md",
+      "bytes": 345,
+      "sha256": "706b848247584ce794d8ebcf11c9c6326860c67a8dcedf99007b74b510c35709"
+    },
+    {
+      "path": "mortgage_case/docs/C22.md",
+      "bytes": 394,
+      "sha256": "efd5d1270130119027a5801af6c7ede07ccc976baa00da92a0c7f4d29daaf278"
+    },
+    {
+      "path": "mortgage_case/docs/C23.md",
+      "bytes": 341,
+      "sha256": "9da0d0398267f5b88e280aa66498801b9289449747cde722c6dd4b6f152f5f8d"
+    },
+    {
+      "path": "mortgage_case/docs/C24.md",
+      "bytes": 363,
+      "sha256": "3b40d2c4193c6af8c5dac3f138a7fe4fd907ddccbb59e9b9c19bd3652d01cdf2"
+    },
+    {
+      "path": "mortgage_case/docs/C25.md",
+      "bytes": 387,
+      "sha256": "3651ef45a9d586621b815c0b5038cf269c2e62e388ab2effe3299eb64b60ef27"
+    },
+    {
+      "path": "mortgage_case/docs/C26.md",
+      "bytes": 341,
+      "sha256": "0a0c55fa97d34854044b18a62dee36a339166bb27a0e9fd56d84baceb250d26b"
+    },
+    {
+      "path": "mortgage_case/docs/C27.md",
+      "bytes": 356,
+      "sha256": "0e6b2cd12a70ecb3303489b22e4b5546ec91da69cf5e954802d27e96ded9f963"
+    },
+    {
+      "path": "mortgage_case/docs/C28.md",
+      "bytes": 393,
+      "sha256": "1e47c2434eb920b50caed66feebd81e0c3a0080738883cedc4ccfd420d75d8b9"
     },
     {
       "path": "mortgage_case/domain/__init__.py",
@@ -1743,6 +1868,11 @@
       "path": "mortgage_case/platform/capacity.py",
       "bytes": 155,
       "sha256": "b87e9fbd593bc765b82e13e0b9330fe3eee1079409ad7e77dfdf4053ebe129e8"
+    },
+    {
+      "path": "mortgage_case/platform/checkpoints.py",
+      "bytes": 24865,
+      "sha256": "9c183c596e0dbff41afb570be2afcc5c644a531f0c28194d0901c107bac41a2b"
     },
     {
       "path": "mortgage_case/platform/context.py",
@@ -1885,6 +2015,131 @@
       "sha256": "afbc0397e984e7226387d58f28c30c85504eca548a26828e76949f83c317c4fb"
     },
     {
+      "path": "mortgage_case/stages/c04_reference_architecture.py",
+      "bytes": 480,
+      "sha256": "e990dd09d9cc36c6741ca26eb47d405859b01a9cbd25c6f5bce5649e0ce346f5"
+    },
+    {
+      "path": "mortgage_case/stages/c05_knowledge.py",
+      "bytes": 469,
+      "sha256": "23398aaa19e6bcdd0d56288a5ad69a5face567f66e96e95db243fe74606c827e"
+    },
+    {
+      "path": "mortgage_case/stages/c06_context.py",
+      "bytes": 475,
+      "sha256": "03c05f2ecb62fdf5c99d1435b6f0b2de8dc9409bcd8f74024ac1e75bdfe4fa25"
+    },
+    {
+      "path": "mortgage_case/stages/c07_paved_road.py",
+      "bytes": 483,
+      "sha256": "84806dcfbc671620bb1c5d94c6c6ea42b6e7271ee518529459a33c2057c16f8f"
+    },
+    {
+      "path": "mortgage_case/stages/c08_skills.py",
+      "bytes": 469,
+      "sha256": "0e1cad465030827e16d55b8be4c1ec2c29056e3291f0b112582d3b8b968acee6"
+    },
+    {
+      "path": "mortgage_case/stages/c09_skill_pack.py",
+      "bytes": 467,
+      "sha256": "4db9f97d7eac5013a9234c8195a742bf7842542b8e7bc5bc95fde3edd1c20288"
+    },
+    {
+      "path": "mortgage_case/stages/c10_react.py",
+      "bytes": 437,
+      "sha256": "c8dee8a17a22b9ae8c3541243dacd51954d7c2050ac77eb1241dabe63334b909"
+    },
+    {
+      "path": "mortgage_case/stages/c11_routing.py",
+      "bytes": 434,
+      "sha256": "32c2cd3aedebd05a5da12b44ea1ce2132f48a3df83ac83a136b707bd00983625"
+    },
+    {
+      "path": "mortgage_case/stages/c12_planning.py",
+      "bytes": 422,
+      "sha256": "fe121838151148e19a259ead639af73993dfcf6614adec83a5f41a8f7d0c9daf"
+    },
+    {
+      "path": "mortgage_case/stages/c13_reflection.py",
+      "bytes": 446,
+      "sha256": "2b62db54e890d3644e57e0574309aab0b0ba1d08a2c09cd66684313ffa469ab3"
+    },
+    {
+      "path": "mortgage_case/stages/c14_human_review.py",
+      "bytes": 446,
+      "sha256": "78dae37307664abea21ceb5724568eb41d57ad72cab3c107b8ffbf0ced46fab8"
+    },
+    {
+      "path": "mortgage_case/stages/c15_durable.py",
+      "bytes": 452,
+      "sha256": "b33418cef912eb6055b4884cd12ec6ba9c6a9b5c4e38e43293e7c67658d03f1e"
+    },
+    {
+      "path": "mortgage_case/stages/c16_patterns.py",
+      "bytes": 435,
+      "sha256": "2fda8666db006248c028a6c26a36437ca3be655f36c70a869ac4d21783588674"
+    },
+    {
+      "path": "mortgage_case/stages/c17_anti_patterns.py",
+      "bytes": 433,
+      "sha256": "51d95c0fe3d3fc46dbd8676742b1bfaad7a9e7ed9148e6e933c61722123d83e8"
+    },
+    {
+      "path": "mortgage_case/stages/c18_multi_agent.py",
+      "bytes": 435,
+      "sha256": "577c64a1cda716745d8cbecd8e92508a36466a9858b76c19a065eab2af315d9b"
+    },
+    {
+      "path": "mortgage_case/stages/c19_protocols.py",
+      "bytes": 446,
+      "sha256": "ca9f1a16a85084f5dcacb395df17d21d2246d8bb7da1c558fe8f8e72b22fc071"
+    },
+    {
+      "path": "mortgage_case/stages/c20_containment.py",
+      "bytes": 490,
+      "sha256": "a2e291e216ff88336a3c5d126f44ae66ffd37b86b973cc8a6622adeee64523ee"
+    },
+    {
+      "path": "mortgage_case/stages/c21_identity.py",
+      "bytes": 471,
+      "sha256": "418b74fffe5d341eed9503bd476933b534cabfd168ed0feb18fa1f41606c96d7"
+    },
+    {
+      "path": "mortgage_case/stages/c22_effects.py",
+      "bytes": 483,
+      "sha256": "b85a5069580f6009a40327155674561d2ccea3cca8e3e999ee0c7d9c8e62abbc"
+    },
+    {
+      "path": "mortgage_case/stages/c23_sandbox_privacy.py",
+      "bytes": 479,
+      "sha256": "e1015d672c19cae640cf81e986a10eb2a3a8132a47e200861744f5bce30bc5b8"
+    },
+    {
+      "path": "mortgage_case/stages/c24_tracing.py",
+      "bytes": 476,
+      "sha256": "7905a7ee7740bc671f549109ee429a7ee796727192f8949272a8180d6c864f85"
+    },
+    {
+      "path": "mortgage_case/stages/c25_evaluation.py",
+      "bytes": 466,
+      "sha256": "b240236eb65c8ac8c75a12b5553a4c41e08ed42817258af4ca24283a6676d220"
+    },
+    {
+      "path": "mortgage_case/stages/c26_governance.py",
+      "bytes": 461,
+      "sha256": "743e115c6de88880e1a31413cff8e76e24a21b0a1c7183b342beefe1918d5fa7"
+    },
+    {
+      "path": "mortgage_case/stages/c27_release.py",
+      "bytes": 472,
+      "sha256": "aa1aadf0e58b45f107dcda07f6fec845e0f2ed5ef1065f8ee04d5ea4027b91a8"
+    },
+    {
+      "path": "mortgage_case/stages/c28_capacity.py",
+      "bytes": 465,
+      "sha256": "198b62f35ff1929e6cec080fff227e75b62f1538080122b0c5b39df1a26a22b6"
+    },
+    {
       "path": "provenance/legacy-tools/build_final_book.py",
       "bytes": 18203,
       "sha256": "daf47778ebd72acaf7d3c9b266ba9444268e9c8115a863f36a6f14e00ba3bce8"
@@ -1922,37 +2177,37 @@
     {
       "path": "qa/build-report.json",
       "bytes": 309,
-      "sha256": "030798f5c42ac7d9d221c5572b7540dbaff2e0e3c8348864fbbca31025d5836f"
+      "sha256": "000ffa19d6e1aa18e19099a3b02db6d2ab8e42aa6e9c40feb696e81835e51fd0"
     },
     {
       "path": "qa/determinism/build-a.docx",
-      "bytes": 39825280,
-      "sha256": "2cd8efe36f659af286903beae5bbe4e388fe14b5726d20ca762865b21d17e09f"
+      "bytes": 39825528,
+      "sha256": "b759d5127ff6eca4b78b252c4c852b7f264063e6410c8e5baa2f908aa5d7db27"
     },
     {
       "path": "qa/determinism/build-b.docx",
-      "bytes": 39825280,
-      "sha256": "2cd8efe36f659af286903beae5bbe4e388fe14b5726d20ca762865b21d17e09f"
+      "bytes": 39825528,
+      "sha256": "b759d5127ff6eca4b78b252c4c852b7f264063e6410c8e5baa2f908aa5d7db27"
     },
     {
       "path": "qa/determinism/determinism-report.json",
       "bytes": 226,
-      "sha256": "379723cdeeecd29d8e16f2cfbd6ceff040476feb668df5856c5a223a90d41957"
+      "sha256": "1a5154261dcb598c837c28caeaf1fec1ab9275e221be4a367c87bbd2e1ccf50a"
     },
     {
       "path": "qa/latex-validation-report.json",
-      "bytes": 17451,
-      "sha256": "15dd89e8f810407ec5593e43e9b501ea1c2929a7f731701ea97ce39216493061"
+      "bytes": 17535,
+      "sha256": "6cae7d86a0ca6286042f1db74701d7406c5a3b3e78f751ada0b253b18bbc3f9b"
     },
     {
       "path": "qa/validation-report.json",
       "bytes": 1079,
-      "sha256": "1e8eaed76acdf747a8a525b0e47fc112a43b1f895a990ab7fe7f9b4fbe4fb18b"
+      "sha256": "20cf81c52660fa94ef7fb8d48f79c1e456203cc0bc4b8acdca15a8f7d5160247"
     },
     {
       "path": "reports/assembly-report.json",
-      "bytes": 1444,
-      "sha256": "d59fbc5a9e0bf23c6da767cb563b951aabb7894504d37e65bb70efdf5662b6a3"
+      "bytes": 1445,
+      "sha256": "41eb65902f6fa17f2ff6082a55ca056249657d546290f74e1923fcd363a35957"
     },
     {
       "path": "reports/chapter-cover-report.json",
@@ -2002,12 +2257,12 @@
     {
       "path": "reports/latex-build-report.json",
       "bytes": 2430,
-      "sha256": "6f3f7b2f81da4ea69e5fe0301b5931ddcb219a76c2d044fcdce362a26a0b7966"
+      "sha256": "48a685edcbeee5998012f86575950f49c7bfae3ef14b2627650f9f77e5303a03"
     },
     {
       "path": "reports/latex-validation.md",
-      "bytes": 723,
-      "sha256": "4a6df4a84222dd34b89090fbaf28a7fe1f354d7a5bb65b3b3de1afdb4950ee55"
+      "bytes": 792,
+      "sha256": "f6dff0f14deeffa75396f63f23a5a2c95b56522af8982d140a79768fea69151f"
     },
     {
       "path": "reports/release-notes.md",
@@ -2027,7 +2282,7 @@
     {
       "path": "reports/validation-summary.md",
       "bytes": 1056,
-      "sha256": "80f9487920a0e039e5f504fce0ac2ef18db5dcb7f3bdc9bce133c75d0abe3720"
+      "sha256": "20242a89859ec4871e91d261804a1b84a44f880e17e977081046421f020d8ffa"
     },
     {
       "path": "requirements.txt",
@@ -2206,8 +2461,8 @@
     },
     {
       "path": "source/parts/09-appendices.md",
-      "bytes": 70415,
-      "sha256": "7f1032bc94dfdb82226ca06631f0c098912985bc84f8343ddb5d33c3f8d02dda"
+      "bytes": 70942,
+      "sha256": "bd6c7ff21cba33eb858b5eed85965ad3854813aee92e6c42ed94ce0e21d7d7e4"
     },
     {
       "path": "styles/CROSS-FORMAT-CONTRACT.md",
@@ -2303,6 +2558,21 @@
       "path": "tests/mortgage_case/contract/test_provider_adapters.py",
       "bytes": 1616,
       "sha256": "f29e3885c92fe9514e60e44aa30aa4be1db2a5b669eca2ce08fe42235214a99e"
+    },
+    {
+      "path": "tests/mortgage_case/integration/test_c04_c09.py",
+      "bytes": 1577,
+      "sha256": "0b18808d35555566df9dfcac89329ad8d9f6ec63ea3a0da78ee73038a1f20c82"
+    },
+    {
+      "path": "tests/mortgage_case/integration/test_c10_c19.py",
+      "bytes": 2484,
+      "sha256": "a79c5f0e24cf8457624325a1cc1c7d213e613875d4a8ac639dd5bc7ac6b8f8b5"
+    },
+    {
+      "path": "tests/mortgage_case/integration/test_c20_c28.py",
+      "bytes": 2920,
+      "sha256": "214b6b491f4fa1ea4db64f22a1819aa9a07543ccf9b97c3f5b91dbe2ca1d9bde"
     },
     {
       "path": "tests/mortgage_case/unit/__init__.py",
@@ -2416,8 +2686,8 @@
     },
     {
       "path": "tools/render_pdf_qa.py",
-      "bytes": 4771,
-      "sha256": "0b2fcb06d6023f962fff2e680f6e2c9a5e5e32ff9c4ae432b52bb6d3d3a5ac8d"
+      "bytes": 5307,
+      "sha256": "61f107927df18831fd5e8b0b86f6efb9a0c013ee12dc14f3a8f27975f5c7d580"
     },
     {
       "path": "tools/validate_book.py",
@@ -2431,8 +2701,8 @@
     },
     {
       "path": "tools/validate_mortgage_stage_registry.py",
-      "bytes": 2860,
-      "sha256": "4add54935012ff7f914c7367d1db5b4401b725aaada58616180ef9b9ac0f11a2"
+      "bytes": 3573,
+      "sha256": "6ebb1a8858b21e55d0fb37d830355eb1f2309047755365ba3b84b215c2aec26b"
     }
   ]
 }

@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
+import sys
 from pathlib import Path
 
 
@@ -13,6 +15,7 @@ def main() -> int:
     parser.add_argument("--root", default=str(Path(__file__).resolve().parents[1]))
     args = parser.parse_args()
     root = Path(args.root).resolve()
+    sys.path.insert(0, str(root))
     registry = json.loads((root / "config" / "mortgage_stages.json").read_text(encoding="utf-8"))
     stages = registry["stages"]
     errors: list[str] = []
@@ -43,9 +46,18 @@ def main() -> int:
                 module_path = module_path.with_suffix(".py")
                 if not module_path.exists():
                     errors.append(f"{stage_id}: missing module {module_path.relative_to(root)}")
+                else:
+                    try:
+                        module = importlib.import_module(module_name)
+                        if not callable(getattr(module, function_name, None)):
+                            errors.append(f"{stage_id}: entry {module} does not expose callable {function_name}")
+                    except Exception as exc:  # pragma: no cover - reports import failures
+                        errors.append(f"{stage_id}: cannot import {module_name}: {exc}")
             for field in ("entry_point", "scenarios", "tests", "technologies"):
                 if not stage.get(field):
                     errors.append(f"{stage_id}: missing {field}")
+            if not (root / "mortgage_case" / "docs" / f"{stage_id}.md").exists():
+                errors.append(f"{stage_id}: missing checkpoint documentation")
             for test in stage.get("tests", []):
                 if not (root / test).exists():
                     errors.append(f"{stage_id}: missing test {test}")

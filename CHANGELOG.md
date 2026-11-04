@@ -4,6 +4,18 @@ All notable changes follow semantic versioning and are recorded here.
 
 ## [Unreleased]
 
+### Offline cumulative mortgage beta checkpoints
+
+- Registered and documented deterministic C04–C28 checkpoint façades for the
+  Harborlight synthetic mortgage case, composing the existing platform
+  contracts for events, knowledge, context, Skills, bounded reasoning,
+  approvals, replay, delegation, protocols, containment, identity, effects,
+  privacy, tracing, evaluation, governance, release compatibility, and capacity.
+- Added explicit refusal, outage, stale-state, privacy, and unknown-effect
+  scenarios plus focused integration tests. These checkpoints are offline
+  teaching evidence and do not claim production readiness, legal compliance, or
+  authority to make lending decisions.
+
 ### PDF filename without renderer suffix
 
 - PDF builds now write `dist/Enterprise-General-Intelligence-v1.0.0.pdf`, without `-LaTeX`, through `make pdf`, `make all` / `make dist-pdf`, the standalone compile script, Docker, and CI. The LaTeX generator, incremental-build destination, CI artifact/release paths, and build documentation use the same filename. Existing local files with the old name are not removed automatically.

@@ -90,14 +90,23 @@ lessons across chapters.
 | `C01` | 1 | Read-only evidence summary | Missing documents and the false confidence of a model answer |
 | `C02` | 2 | Typed proposal, Decimal calculation, read-only command | Schema validity is not authorization or verified evidence |
 | `C03` | 3 | Provider-neutral runtime interface | SDK tool allowlists and framework state must not own enterprise truth |
+| `C04`–`C07` | 4–7 | Events, knowledge, context, and offline CLI | State, policy, and context need platform-owned records |
+| `C08`–`C09` | 8–9 | Skills and domain Skill Pack | Resolution and installation do not grant authority |
+| `C10`–`C13` | 10–13 | Bounded reasoning, routing, plans, and critique | Model adaptation remains bounded and inspectable |
+| `C14`–`C15` | 14–15 | Proposal-bound review and replay-safe waits | Human authorization and durability are separate controls |
+| `C16`–`C19` | 16–19 | Pattern decisions, delegation, MCP, and A2A | Ownership and protocol trust must be explicit |
+| `C20`–`C23` | 20–23 | Containment, identity, effects, sandbox, and DLP | Untrusted content cannot broaden authority or publish data |
+| `C24`–`C26` | 24–26 | Tracing, evaluation, and governance | Diagnostics and synthetic gates do not replace accountability |
+| `C27`–`C28` | 27–28 | Compatible release and capacity simulation | Active work stays pinned and degradation stays safe |
 
-Run the current foundation from the repository root with the examples
-environment:
+Run representative cumulative checkpoints from the repository root with the
+examples environment:
 
 ```bash
 .venv-examples/bin/python -m mortgage_case --chapter 1 --scenario missing_income_document --offline
 .venv-examples/bin/python -m mortgage_case --chapter 2 --scenario stale_case_version --offline
 .venv-examples/bin/python -m mortgage_case --chapter 3 --scenario tool_allowlist_escape --offline
+.venv-examples/bin/python -m mortgage_case --chapter 28 --scenario provider_outage --offline
 ```
 
 Every fixture is marked `SYNTHETIC TRAINING DATA — NOT FOR CREDIT DECISIONS`.
@@ -112,7 +121,7 @@ authoritative list; `make examples` fails if a file, marker, or test is missing.
 | Example | Chapter | Exercises |
 |---|---|---|
 | `foundations/capability_levels.py` | 01 | Prototype sketch, deliberately without gateway or effect controls |
-| `mortgage/cumulative_case.py` | 01–03 | Cumulative synthetic mortgage case across Chapters 1-3 |
+| `mortgage/cumulative_case.py` | 01–03 | Book-facing cumulative synthetic mortgage listing; the full offline checkpoint path is under `mortgage_case/` |
 | `foundations/agent_tool_loop.py` | 02 | Bounded agent loop with a typed tool |
 | `foundations/governed_tool_gateway.py` | 02 | A readable Tool Gateway with validation, authorization, and effect idempotency |
 | `contracts.py` | 03–18 | Provider-neutral agent-step and platform contracts |

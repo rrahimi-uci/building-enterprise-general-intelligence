@@ -139,11 +139,13 @@ listing can drift from the file that CI runs. Agent examples execute offline
 against a scripted model that implements the Agents SDK `Model` interface, so
 they need no API key. See [examples/README.md](examples/README.md).
 
-The cumulative mortgage implementation lives in `mortgage_case/`. Its current
-foundation follows synthetic case `MORT-2026-000184` through checkpoints `C01`–
-`C03`: read-only evidence summary, deterministic proposal validation, and the
-provider-neutral runtime interface. It never approves or denies credit and never
-writes to a real loan-origination system.
+The cumulative mortgage implementation lives in `mortgage_case/`. Its offline
+checkpoint path follows synthetic case `MORT-2026-000184` through `C01`–`C28`,
+from the read-only evidence summary through governed evaluation, release, and
+capacity contracts. These are deterministic teaching doubles: the system never
+approves or denies credit and never writes to a real loan-origination system.
+The later checkpoints expose contract evidence and explicit limitations; they
+do not claim production readiness.
 
 ```bash
 make examples        # validate the registry and every [[EXAMPLE:id]] marker
