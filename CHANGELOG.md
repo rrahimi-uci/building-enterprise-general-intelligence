@@ -23,6 +23,9 @@ All notable changes follow semantic versioning and are recorded here.
 - C15 verifies duplicate delivery deduplication; C22 gives each tenant/case/
   versioned effect a unique downstream request identity and reconciles unknown
   outcomes from that request's synthetic LOS record without retrying.
+- C06 now exercises a same-case, foreign-tenant manifest and principal so the
+  context builder rejects the request at the tenant-scope boundary before
+  materialization; the focused integration test verifies that refusal.
 
 ### PDF filename without renderer suffix
 

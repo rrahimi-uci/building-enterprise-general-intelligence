@@ -189,8 +189,23 @@ def run_checkpoint(chapter: int, scenario: str = "happy_path") -> StageReport:
             return _report(chapter, scenario, evidence=(rule.rule_id, rule.object_id), details={"policy_version": rule.policy_version, "required_documents": sorted(rule.required_documents)})
 
         if chapter == 6:
-            allowed_case_id = "MORT-2026-000185" if scenario == "cross_tenant_case_reference" else case.case_id
-            context = build_context(case, manifest, artifact_ids=case.available_document_ids, source_revisions=("mortgage-policy@2026.09",), allowed_case_id=allowed_case_id)
+            if scenario == "cross_tenant_case_reference":
+                foreign_tenant_id = f"{case.tenant_id}-other"
+                manifest = manifest.model_copy(
+                    update={
+                        "tenant_id": foreign_tenant_id,
+                        "principal": manifest.principal.model_copy(
+                            update={"tenant_id": foreign_tenant_id}
+                        ),
+                    }
+                )
+            context = build_context(
+                case,
+                manifest,
+                artifact_ids=case.available_document_ids,
+                source_revisions=("mortgage-policy@2026.09",),
+                allowed_case_id=case.case_id,
+            )
             return _report(chapter, scenario, evidence=context.artifact_ids, details=context.model_dump(mode="json"))
 
         if chapter == 7:
