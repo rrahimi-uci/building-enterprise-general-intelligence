@@ -78,7 +78,9 @@ def test_cross_tenant_scenario_keeps_the_authorized_case_id(monkeypatch):
     def capture_context(case_arg, manifest, **kwargs):
         captured.update(
             case_id=case_arg.case_id,
+            manifest_case_id=manifest.case_id,
             tenant_id=manifest.tenant_id,
+            principal_tenant_id=manifest.principal.tenant_id,
             allowed_case_id=kwargs["allowed_case_id"],
         )
         return original_build_context(case_arg, manifest, **kwargs)
@@ -88,4 +90,6 @@ def test_cross_tenant_scenario_keeps_the_authorized_case_id(monkeypatch):
 
     assert report.failures == ("CONTEXT_SCOPE_DENIED",)
     assert captured["allowed_case_id"] == captured["case_id"] == case.case_id
+    assert captured["manifest_case_id"] == case.case_id
     assert captured["tenant_id"] != case.tenant_id
+    assert captured["principal_tenant_id"] == captured["tenant_id"]
