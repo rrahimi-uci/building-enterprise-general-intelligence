@@ -18,7 +18,8 @@ All notable changes follow semantic versioning and are recorded here.
 - Hardened review findings: C10 retains partial observations in a structured
   needs-input report after provider outage and validates fixture-reported turn,
   tool-call, cost, and elapsed-time budgets without implying live metering; C06
-  tests foreign-tenant access against the same authorized case ID. C11 rejects
+  derives a synthetic foreign tenant from the anchor case and tests access
+  against the same authorized case ID. C11 rejects
   tied top routes; C13 checks candidate field values against fixture-backed
   evidence even when a critique misses the contradiction; C14 binds action,
   resource, case, policy, evidence content digests, required role, and expiry

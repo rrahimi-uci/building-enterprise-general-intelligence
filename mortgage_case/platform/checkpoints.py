@@ -191,11 +191,13 @@ def run_checkpoint(chapter: int, scenario: str = "happy_path") -> StageReport:
 
         if chapter == 6:
             if scenario == "cross_tenant_case_reference":
-                foreign_tenant = "tenant-foreign"
+                foreign_tenant = f"{case.tenant_id}-other"
                 manifest = manifest.model_copy(
                     update={
                         "tenant_id": foreign_tenant,
-                        "principal": manifest.principal.model_copy(update={"tenant_id": foreign_tenant}),
+                        "principal": manifest.principal.model_copy(
+                            update={"tenant_id": foreign_tenant}
+                        ),
                     }
                 )
             context = build_context(
